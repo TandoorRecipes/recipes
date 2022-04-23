@@ -1,23 +1,37 @@
 <template>
     <div id="app">
-        <beta-warning></beta-warning>
 
         <div class="row mt-2">
             <div class="col col-md-6">
-                <generic-multiselect @change="food = $event.val; refreshList()" ref="food_multiselect"
-                                     :model="Models.FOOD"
-                                     :initial_single_selection="food"
-                                     :multiple="false"></generic-multiselect>
-                <b-button @click="generic_model = Models.FOOD; generic_action=Actions.DELETE" :disabled="food === null">
-                    <i class="fas fa-trash-alt"></i>
-                </b-button>
-                <b-button @click="generic_model = Models.FOOD; generic_action=Actions.MERGE" :disabled="food === null">
-                    <i class="fas fa-compress-arrows-alt"></i>
-                </b-button>
+                <b-input-group>
+                    <generic-multiselect @change="food = $event.val; refreshList()" ref="food_multiselect"
+                                         :model="Models.FOOD"
+                                         :initial_single_selection="food"
+                                         :multiple="false"
+                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"></generic-multiselect>
 
-                <b-button @click="generic_model = Models.FOOD; generic_action=Actions.UPDATE" :disabled="food === null">
-                    <i class="fas fa-edit"></i>
-                </b-button>
+                    <b-input-group-append>
+                        <b-dropdown no-caret right :disabled="food === null">
+                            <template #button-content>
+                                <i class="fas fa-ellipsis-v"></i>
+                            </template>
+
+                            <b-dropdown-item @click="generic_model = Models.FOOD; generic_action=Actions.UPDATE"
+                                             :disabled="food === null">
+                                <i class="fas fa-edit fa-fw"></i> {{ $t('Edit') }}
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="generic_model = Models.FOOD; generic_action=Actions.MERGE"
+                                             :disabled="food === null">
+                                <i class="fas fa-compress-arrows-alt fa-fw"></i> {{ $t('Merge') }}
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="generic_model = Models.FOOD; generic_action=Actions.DELETE"
+                                             :disabled="food === null">
+                                <i class="fas fa-trash-alt fa-fw"></i> {{ $t('Delete') }}
+                            </b-dropdown-item>
+
+                        </b-dropdown>
+                    </b-input-group-append>
+                </b-input-group>
 
                 <generic-modal-form :model="Models.FOOD" :action="generic_action" :show="generic_model === Models.FOOD"
                                     :item1="food"
@@ -25,36 +39,58 @@
             </div>
             <div class="col col-md-6">
 
-                <generic-multiselect
-                    @change="unit = $event.val; refreshList()"
-                    :model="Models.UNIT"
-                    ref="unit_multiselect"
-                    :initial_single_selection="unit"
-                    :multiple="false"></generic-multiselect>
+                <b-input-group>
 
-                <b-button @click="generic_model = Models.UNIT; generic_action=Actions.DELETE" :disabled="unit === null">
-                    <i class="fas fa-trash-alt"></i>
-                </b-button>
-                <b-button @click="generic_model = Models.UNIT; generic_action=Actions.MERGE" :disabled="unit === null">
-                    <i class="fas fa-compress-arrows-alt"></i>
-                </b-button>
-                <b-button @click="generic_model = Models.UNIT; generic_action=Actions.UPDATE" :disabled="unit === null">
-                    <i class="fas fa-edit"></i>
-                </b-button>
+                    <generic-multiselect
+                        @change="unit = $event.val; refreshList()"
+                        :model="Models.UNIT"
+                        ref="unit_multiselect"
+                        :initial_single_selection="unit"
+                        :multiple="false"
+                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"></generic-multiselect>
+
+                    <b-input-group-append>
+                        <b-dropdown no-caret right :disabled="unit === null">
+                            <template #button-content>
+                                <i class="fas fa-ellipsis-v"></i>
+                            </template>
+
+                            <b-dropdown-item @click="generic_model = Models.UNIT; generic_action=Actions.UPDATE"
+                                             :disabled="unit === null">
+                                <i class="fas fa-edit fa-fw"></i> {{ $t('Edit') }}
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="generic_model = Models.UNIT; generic_action=Actions.MERGE"
+                                             :disabled="unit === null">
+                                <i class="fas fa-compress-arrows-alt fa-fw"></i> {{ $t('Merge') }}
+                            </b-dropdown-item>
+                            <b-dropdown-item @click="generic_model = Models.UNIT; generic_action=Actions.DELETE"
+                                             :disabled="unit === null">
+                                <i class="fas fa-trash-alt fa-fw"></i> {{ $t('Delete') }}
+                            </b-dropdown-item>
+
+                        </b-dropdown>
+                    </b-input-group-append>
+                </b-input-group>
+
                 <generic-modal-form :model="Models.UNIT" :action="generic_action" :show="generic_model === Models.UNIT"
                                     :item1="unit"
                                     @finish-action="finishGenericAction()"/>
 
-
             </div>
         </div>
 
-        <b-pagination pills v-model="current_page" :total-rows="total_object_count" :per-page="page_size"
-                      @change="pageChange"></b-pagination>
+        <b-row class="mt-2">
+            <b-col cols="12">
+                <b-pagination align="center" pills v-model="current_page" :total-rows="total_object_count"
+                              :per-page="page_size"
+                              @change="pageChange"></b-pagination>
+            </b-col>
+        </b-row>
 
-        <div class="row mt-2">
-            <div class="col col-md-12">
-                <table class="table table-bordered">
+
+        <b-row class="mt-2">
+            <b-col>
+                <table class="table table-bordered table-sm">
                     <thead>
                     <tr>
                         <th>{{ $t('Amount') }}</th>
@@ -62,7 +98,8 @@
                         <th>{{ $t('Food') }}</th>
                         <th>{{ $t('Note') }}</th>
                         <th>
-                            <b-button variant="success" @click="updateIngredient()"><i class="fas fa-save"></i>
+                            <b-button variant="success" class="btn btn-sm" @click="updateIngredient()"><i
+                                class="fas fa-save"></i>
                             </b-button>
                         </th>
                     </tr>
@@ -108,15 +145,17 @@
 
                             </td>
                             <td style="width: 5vw">
-                                <b-button :disabled="i.changed !== true"
-                                          :variant="(i.changed !== true) ? 'primary' : 'success'"
-                                          @click="updateIngredient(i)">
-                                    <i class="fas fa-save"></i>
-                                </b-button>
-                                <b-button variant="danger"
-                                          @click="deleteIngredient(i)">
-                                    <i class="fas fa-trash"></i>
-                                </b-button>
+                                <b-button-group>
+                                    <b-button :disabled="i.changed !== true"
+                                              :variant="(i.changed !== true) ? 'primary' : 'success'"
+                                              @click="updateIngredient(i)">
+                                        <i class="fas fa-save"></i>
+                                    </b-button>
+                                    <b-button variant="danger"
+                                              @click="deleteIngredient(i)">
+                                        <i class="fas fa-trash"></i>
+                                    </b-button>
+                                </b-button-group>
                             </td>
 
                         </tr>
@@ -127,12 +166,17 @@
 
                 </table>
 
-                 <b-pagination pills v-model="current_page" :total-rows="total_object_count" :per-page="page_size"
-                      @change="pageChange"></b-pagination>
-            </div>
-        </div>
 
+            </b-col>
+        </b-row>
 
+        <b-row class="mt-2">
+            <b-col cols="12">
+                <b-pagination align="center" pills v-model="current_page" :total-rows="total_object_count"
+                              :per-page="page_size"
+                              @change="pageChange"></b-pagination>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
@@ -153,7 +197,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "IngredientEditorView",
     mixins: [ApiMixin, ResolveUrlMixin],
-    components: {BetaWarning, LoadingSpinner, GenericMultiselect, GenericModalForm},
+    components: {LoadingSpinner, GenericMultiselect, GenericModalForm},
     data() {
         return {
             ingredients: [],
@@ -202,7 +246,7 @@ export default {
                 if (this.unit !== null) {
                     params.query.unit = this.unit.id
                 }
-                apiClient.listIngredients(this.current_page, this.page_size,params).then(result => {
+                apiClient.listIngredients(this.current_page, this.page_size, params).then(result => {
                     this.ingredients = result.data.results
                     this.total_object_count = result.data.count
                     this.loading = false
