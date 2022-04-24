@@ -33,7 +33,7 @@
                 <template #title>
                     <b-spinner v-if="loading" type="border" small class="d-inline-block"></b-spinner>
                     <i v-if="!loading" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span class="d-none d-inline-block">{{ $t('Shopping_list') }}</span>
+                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') }}</span>
                 </template>
                 <div class="container p-0 p-md-3" id="shoppinglist">
                     <div class="row">
@@ -120,7 +120,8 @@
 
                                         <div v-for="(foods_group, category_key) in categories" :key="category_key">
                                             <div class="dropdown b-dropdown position-static inline-block"
-                                                 data-html2canvas-ignore="true" v-if="Object.entries(foods_group).length > 0">
+                                                 data-html2canvas-ignore="true"
+                                                 v-if="Object.entries(foods_group).length > 0">
                                                 <button
                                                     aria-haspopup="true"
                                                     aria-expanded="false"
@@ -143,11 +144,13 @@
                                                 </b-button>
                                             </div>
 
-                                            <div class="collapse" :id="'section-' + sectionID(checked_key, category_key)" visible
+                                            <div class="collapse"
+                                                 :id="'section-' + sectionID(checked_key, category_key)" visible
                                                  role="tabpanel" :class="{ show: checked_key == 'false' }">
                                                 <!-- passing an array of values to the table grouped by Food -->
                                                 <transition-group name="slide-fade">
-                                                    <div class="pl-4 pr-0" v-for="(entries, index) in Object.entries(foods_group)"
+                                                    <div class="pl-4 pr-0"
+                                                         v-for="(entries, index) in Object.entries(foods_group)"
                                                          :key="index">
                                                         <transition name="slide-fade" mode="out-in">
                                                             <shopping-line-item
@@ -265,7 +268,12 @@
                                 <div class="container">
                                     <b-row>
                                         <b-col cols="12" md="6">
-                                            <h5>{{ $t("Supermarkets") }}</h5>
+                                            <h5>{{ $t("Supermarkets") }}
+                                                <span class="float-right text-primary" style="cursor: pointer"><i
+                                                    class="fa fa-plus-circle" v-plus-button
+                                                    @click="addSupermarket"
+                                                    aria-hidden="true"></i
+                                                ></span></h5>
                                             <b-list-group>
                                                 <b-card no-body class="mt-1 list-group-item p-2"
                                                         v-for="(supermarket, index) in supermarkets" v-hover
@@ -301,22 +309,25 @@
                                                                 @click="deleteSupermarket(index)">
                                                             {{ $t("Delete") }}
                                                         </button>
-                                                        <button class="btn btn-primary float-right" @click="editOrSaveSupermarket(index)">
+                                                        <button class="btn btn-primary float-right"
+                                                                @click="editOrSaveSupermarket(index)">
                                                             {{ $t("Save") }}
                                                         </button>
                                                     </b-card-body>
                                                 </b-card>
                                             </b-list-group>
-                                            <button class="btn btn-success float-right mt-1"
-                                                    @click="addSupermarket">
-                                                <i class="fas fa-plus"></i>
-                                                {{ $t("New_Supermarket") }}
-                                            </button>
                                         </b-col>
                                         <b-col cols="12" md="6">
                                             <h5 v-if="editingSupermarket.length > 0">{{ $t("Shopping_Categories") }} -
                                                 {{ editingSupermarket[0].name }}</h5>
-                                            <h5 v-else>{{ $t("Shopping_Categories") }}</h5>
+                                            <h5 v-else>{{ $t("Shopping_Categories") }}
+                                                <span class="float-right text-primary" v-plus-button
+                                                      style="cursor: pointer"><i
+                                                    class="fa fa-plus-circle" v-plus-button
+                                                    @click="addSupermarketCategory"
+                                                    aria-hidden="true"></i
+                                                ></span>
+                                            </h5>
                                             <div v-if="editingSupermarket.length === 0">
                                                 <b-list-group>
                                                     <b-card no-body class="mt-1 list-group-item p-2"
@@ -361,16 +372,11 @@
                                                         </b-card-body>
                                                     </b-card>
                                                 </b-list-group>
-                                                <button class="btn btn-success float-right mt-1"
-                                                        @click="addSupermarketCategory">
-                                                    <i class="fas fa-plus"></i>
-                                                    {{ $t("New_Supermarket_Category") }}
-                                                </button>
                                             </div>
                                             <div v-else>
                                                 <draggable :list="editing_supermarket_categories" group="categories"
                                                            :empty-insert-threshold="10"
-                                                           @sort="sortSupermarketCategories"
+                                                           @change="sortSupermarketCategories"
                                                            ghost-class="ghost">
                                                     <b-card no-body class="mt-1 list-group-item p-2"
                                                             style="cursor: move"
@@ -392,8 +398,8 @@
                                                                         {{ category.name }}
                                                                         <span class="float-right text-primary"
                                                                               style="cursor: pointer"
-                                                                        ><i class="fa fa-minus-circle"
-                                                                            @click="removeSupermarketCategoryRelation(index)"
+                                                                        ><i class="fa fa-minus-circle" v-minus-button
+                                                                            @click="removeSupermarketCategoryRelationAtIndex(index)"
                                                                             aria-hidden="true"></i
                                                                         ></span>
                                                                     </h5>
@@ -405,7 +411,6 @@
                                                 <h5>{{ $t("Available") }}</h5>
                                                 <draggable :list="unusedSupermarketCategories" group="categories"
                                                            :empty-insert-threshold="10"
-                                                           @sort="sortSupermarketCategories"
                                                            ghost-class="ghost">
                                                     <b-card no-body class="mt-1 list-group-item p-2"
                                                             style="cursor: move"
@@ -422,6 +427,12 @@
                                                                 <div class="col-10">
                                                                     <h5 class="mt-1 mb-1">
                                                                         {{ category.name }}
+                                                                        <span class="float-right text-primary"
+                                                                              style="cursor: pointer"
+                                                                        ><i class="fa fa-plus-circle" v-plus-button
+                                                                            @click="addSupermarketCategoryRelation(category)"
+                                                                            aria-hidden="true"></i
+                                                                        ></span>
                                                                     </h5>
                                                                 </div>
                                                             </div>
@@ -961,7 +972,7 @@ export default {
             return [...new Map(this.items.filter((x) => x.list_recipe && !x.checked).map((item) => [item["list_recipe"], item])).values()]
         },
         supermarket_categories() {
-            return this.new_supermarket.editmode ? this.new_supermarket.value.category_to_supermarket : this.shopping_categories
+            return this.shopping_categories
         },
         notsupermarket_categories() {
             let supercats = this.new_supermarket.value.category_to_supermarket
@@ -1441,7 +1452,6 @@ export default {
                 apiClient
                     .updateSupermarket(this.supermarkets[index].id, this.supermarkets[index])
                     .then((e) => {
-                        this.periodChangedCallback(this.current_period)
                         StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
@@ -1519,21 +1529,19 @@ export default {
                     }
                 })
             })
-
-            let apiClient = new ApiApiFactory()
-
-            apiClient
-                .updateSupermarketCategory(this.supermarket_categories[index].id, this.supermarket_categories[index])
-                .then((e) => {
-                    this.periodChangedCallback(this.current_period)
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                })
-
             if (category.editing) {
                 this.$set(this.supermarket_categories[index], "editing", false)
+
+                let apiClient = new ApiApiFactory()
+
+                apiClient
+                    .updateSupermarketCategory(this.supermarket_categories[index].id, this.supermarket_categories[index])
+                    .then((e) => {
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                    })
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                    })
             } else {
                 this.supermarket_categories.forEach((market, i) => {
                     if (i !== index) {
@@ -1544,107 +1552,80 @@ export default {
                 this.$set(this.supermarket_categories[index], "editing", true)
             }
         },
-        removeSupermarketCategoryRelation(index) {
-            this.editing_supermarket_categories[index].relation_id
-
-            let apiClient = new ApiApiFactory()
-
-            apiClient.destroySupermarketCategoryRelation(this.editing_supermarket_categories[index].relation_id)
-                .then((e) => {
-                    this.editing_supermarket_categories.splice(index, 1);
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
-                })
-        },
-        sortSupermarketCategories() {
-            this.editing_supermarket_categories.forEach((element, index) => {
-                element.order = index
+        addSupermarketCategoryRelation(category) {
+            this.sortSupermarketCategories({
+                added: {
+                    element: category,
+                    newIndex: this.editing_supermarket_categories.length
+                }
             })
-
-            this.editing_supermarket_categories.forEach((element, index) => {
-                let apiClient = new ApiApiFactory()
-
-                apiClient.updateSupermarketCategoryRelation(element.relation_id, element)
-                    .then((e) => {
-
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-            })
+            this.editing_supermarket_categories.push(category);
         },
-        sortSupermarketCategoriesR(e) {
-            // TODO: all of this complexity should be moved to the backend
+        removeSupermarketCategoryRelationAtIndex(index) {
+            this.sortSupermarketCategories({
+                removed: {
+                    element: this.editing_supermarket_categories[index],
+                    oldIndex: index
+                }
+            })
+            this.editing_supermarket_categories.splice(index, 1);
+        },
+        sortSupermarketCategories(e) {
             let apiClient = new ApiApiFactory()
-            let supermarket = this.new_supermarket.value
-            let temp_supermarkets = [...this.supermarkets]
-            const updateMoved = function (supermarket) {
-                var promises = []
-                supermarket.category_to_supermarket.forEach((x, i) => {
-                    x.order = i
-                    promises.push(apiClient.partialUpdatesupermarket_categoriesRelation(x.id, {order: i}))
-                })
-                return Promise.all(promises).then(() => {
-                    return supermarket
-                })
-            }
 
             if ("removed" in e) {
-                // store current value in case it needs rolled back
-                let idx = this.supermarkets.indexOf((x) => x.id === supermarket.id)
-                Vue.set(this.supermarkets, idx, supermarket)
                 apiClient
-                    .destroysupermarket_categoriesRelation(e.removed.element.id)
+                    .destroySupermarketCategoryRelation(e.removed.element.relation_id)
                     .then((result) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+
                     })
                     .catch((err) => {
-                        console.log(err, Object.keys(err))
                         StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
-                        this.supermarkets = temp_supermarkets
+                        this.editing_supermarket_categories.splice(e.removed.oldIndex, 0, e.removed.element);
                     })
             }
 
             if ("added" in e) {
                 let apiClient = new ApiApiFactory()
-                let category = e.added.element.category
 
                 apiClient
-                    .createsupermarket_categoriesRelation({
-                        supermarket: supermarket.id,
-                        category: category,
-                        order: e.added.element.newIndex,
+                    .createSupermarketCategoryRelation({
+                        supermarket: this.editingSupermarket[0].id,
+                        category: e.added.element,
+                        order: e.added.newIndex,
                     })
                     .then((results) => {
-                        this.new_supermarket.value.category_to_supermarket.filter((x) => x.category.id === category.id)[0].id = results.data.id
-
-                        return updateMoved(this.new_supermarket.value)
-                    })
-                    .then((updated_supermarket) => {
-                        let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
-                        Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                        this.editing_supermarket_categories.splice(e.added.newIndex, 1, {
+                            name: results.data.category.name,
+                            description: results.data.category.description,
+                            id: results.data.category.id,
+                            relation_id: results.data.id,
+                            order: results.data.order,
+                            supermarket: results.data.supermarket,
+                            category: results.data.category
+                        });
                     })
                     .catch((err) => {
-                        console.log(err, Object.keys(err))
                         StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
-                        this.supermarkets = temp_supermarkets
+                        this.editing_supermarket_categories.splice(e.added.newIndex, 1);
                     })
             }
 
             if ("moved" in e) {
-                updateMoved(this.new_supermarket.value)
-                    .then((updated_supermarket) => {
-                        let idx = this.supermarkets.indexOf((x) => x.id === updated_supermarket.id)
-                        Vue.set(this.supermarkets, idx, updated_supermarket)
-                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                    })
-                    .catch((err) => {
-                        console.log(err, Object.keys(err))
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
-                        this.supermarkets = temp_supermarkets
-                    })
+                let old_order = Object.assign({}, this.editing_supermarket_categories);
+                let promises = []
+
+                this.editing_supermarket_categories.forEach((element, index) => {
+                    let apiClient = new ApiApiFactory()
+
+                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(element.relation_id, {order: element.order}))
+                })
+                return Promise.all(promises).then(() => {
+
+                }).catch((err) => {
+                    this.editing_supermarket_categories = old_order
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
             }
         },
         categoryName(item) {
@@ -1679,10 +1660,7 @@ export default {
             })
 
             // this.$bvModal.show(`shopping_${this.new_recipe.id}`)
-        },
-        handleResize: function () {
-            this.shoppinglist_height = document.body.clientHeight - 115
-        },
+        }
     },
     directives: {
         hover: {
@@ -1692,6 +1670,26 @@ export default {
                 })
                 el.addEventListener("mouseleave", () => {
                     el.classList.remove("shadow")
+                })
+            },
+        },
+        'plus-button': {
+            inserted: function (el) {
+                el.addEventListener("mouseenter", () => {
+                    el.classList.add("text-success")
+                })
+                el.addEventListener("mouseleave", () => {
+                    el.classList.remove("text-success")
+                })
+            },
+        },
+        'minus-button': {
+            inserted: function (el) {
+                el.addEventListener("mouseenter", () => {
+                    el.classList.add("text-warning")
+                })
+                el.addEventListener("mouseleave", () => {
+                    el.classList.remove("text-warning")
                 })
             },
         },
