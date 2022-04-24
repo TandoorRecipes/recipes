@@ -126,7 +126,7 @@ export class StandardToasts {
 
         let DEBUG = localStorage.getItem("DEBUG") === "True" || false
 
-        if (err !== undefined && 'response' in err) {
+        if (err !== undefined && 'response' in err && 'headers' in err.response) {
             if (DEBUG && err.response.headers['content-type'] === 'application/json' && err.response.status < 500) {
                 console.log('ERROR ', JSON.stringify(err.response.data))
                 msg = context.$createElement('div', {}, [
