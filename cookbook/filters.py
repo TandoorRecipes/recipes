@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 
 from cookbook.forms import MultiSelectWidget
-from cookbook.models import Food, Keyword, Recipe, ShoppingList
+from cookbook.models import Food, Keyword, Recipe
 
 with scopes_disabled():
     class RecipeFilter(django_filters.FilterSet):
@@ -60,22 +60,3 @@ with scopes_disabled():
         class Meta:
             model = Recipe
             fields = ['name', 'keywords', 'foods', 'internal']
-
-    # class FoodFilter(django_filters.FilterSet):
-    #     name = django_filters.CharFilter(lookup_expr='icontains')
-
-    #     class Meta:
-    #         model = Food
-    #         fields = ['name']
-
-    class ShoppingListFilter(django_filters.FilterSet):
-
-        def __init__(self, data=None, *args, **kwargs):
-            if data is not None:
-                data = data.copy()
-                data.setdefault("finished", False)
-            super().__init__(data, *args, **kwargs)
-
-        class Meta:
-            model = ShoppingList
-            fields = ['finished']

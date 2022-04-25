@@ -21,18 +21,23 @@ if [ -z "${SECRET_KEY}" ]; then
     display_warning "The environment variable 'SECRET_KEY' is not set but REQUIRED for running Tandoor!"
 fi
 
-# POSTGRES_PASSWORD must be set in .env file
-if [ -z "${POSTGRES_PASSWORD}" ]; then
-    display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
-fi
 
 echo "Waiting for database to be ready..."
 
 attempt=0
 max_attempts=20
-while pg_isready --host=${POSTGRES_HOST} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
-    sleep 5
-done
+
+if [ "${DB_ENGINE}" != 'django.db.backends.sqlite3' ]; then
+
+  # POSTGRES_PASSWORD must be set in .env file
+  if [ -z "${POSTGRES_PASSWORD}" ]; then
+      display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
+  fi
+
+  while pg_isready --host=${POSTGRES_HOST} --port=${POSTGRES_PORT} --user=${POSTGRES_USER} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
+      sleep 5
+  done
+fi
 
 if [ $attempt -gt $max_attempts ]; then
     echo -e "\nDatabase not reachable. Maximum attempts exceeded."

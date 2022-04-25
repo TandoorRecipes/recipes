@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 12:31+0100\n"
-"PO-Revision-Date: 2021-11-06 14:06+0000\n"
-"Last-Translator: Nicklas Yli-Länttä <admin@timanttikuutio.eu>\n"
+"PO-Revision-Date: 2022-03-18 16:31+0000\n"
+"Last-Translator: Stefan Werner <werner@iki.fi>\n"
 "Language-Team: Finnish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fi/>\n"
 "Language: fi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -31,10 +31,12 @@ msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Ylänavigointipalkin väri. Ei kaikki värit toimi kaikkien teemojen kanssa; "
+"kokeile!"
 
 #: .\cookbook\forms.py:55
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "Oletusmittayksikkö uuden aineksen lisäämisessä."
 
 #: .\cookbook\forms.py:57
 msgid ""
@@ -2435,7 +2437,7 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\new.py:225
-msgid "Email to user could not be send, please share link manually."
+msgid "Email could not be sent to user. Please share the link manually."
 msgstr ""
 
 #: .\cookbook\views\views.py:127

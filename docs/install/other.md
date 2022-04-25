@@ -58,3 +58,7 @@ apache:
 I used two paths `<sub path>` and `<www path>` for simplicity. In my case I have `<sub path> = recipes` and `<www path> = serve/recipes`. One could also change the matching rules of traefik to have everything under one path.
 
 I left out the TLS config in this example for simplicity.
+
+## WSL
+
+If you want to install Tandoor on the Windows Subsystem for Linux you can find a detailed post herre https://github.com/TandoorRecipes/recipes/issues/1733

@@ -26,15 +26,6 @@
                 {% endif %}
             </h3>
         </span>
-        {% if request.resolver_match.url_name in 'list_shopping_list' %}
-            <span class="col-md-3">
-                <a href="{% url 'view_shopping_new' %}" class="float-right">
-                    <button class="btn btn-outline-secondary shadow-none">
-                        <i class="fas fa-star"></i> {% trans 'Try the new shopping list' %}
-                    </button>
-                </a>
-            </span>
-        {% endif %}
 
         {% if filter %}
             <br/>

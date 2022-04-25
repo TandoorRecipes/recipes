@@ -89,7 +89,10 @@ class RecipeSearch():
 
         self._search_type = self._search_prefs.search or 'plain'
         if self._string:
-            self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+            if self._postgres:
+                self._unaccent_include = self._search_prefs.unaccent.values_list('field', flat=True)
+            else:
+                self._unaccent_include = []
             self._icontains_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.icontains.values_list('field', flat=True)]
             self._istartswith_include = [x + '__unaccent' if x in self._unaccent_include else x for x in self._search_prefs.istartswith.values_list('field', flat=True)]
             self._trigram_include = None
@@ -726,9 +729,8 @@ class RecipeFacet():
         return self.get_facets()
 
     def _recipe_count_queryset(self, field, depth=1, steplen=4):
-        return Recipe.objects.filter(**{f'{field}__path__startswith': OuterRef('path')}, id__in=self._recipe_list, space=self._request.space
-                                     ).values(child=Substr(f'{field}__path',  1, steplen*depth)
-                                              ).annotate(count=Count('pk', distinct=True)).values('count')
+        return Recipe.objects.filter(**{f'{field}__path__startswith': OuterRef('path'), f'{field}__depth__gte': depth}, id__in=self._recipe_list, space=self._request.space
+                                     ).annotate(count=Coalesce(Func('pk', function='Count'), 0)).values('count')
 
     def _keyword_queryset(self, queryset, keyword=None):
         depth = getattr(keyword, 'depth', 0) + 1

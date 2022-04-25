@@ -56,21 +56,46 @@
     {% block extra_head %} <!-- block for templates to put stuff into header -->
     {% endblock %}
 
+    <style>
+        {% if request.user.userpreference.left_handed %}
+            @media screen and (max-width: 600px) {
+                #switcher .btn-circle {
+                    left: 80px !important;
+                }
+            }
+        {% endif %}
+    </style>
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %} bg-header" id="id_main_nav"
+<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %} bg-header"
+     id="id_main_nav"
      style="{% sticky_nav request %}">
+
+    {% if not request.user.userpreference.left_handed %}
+        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
+               aria-label="Tandoor">
+                <img class="brand-icon" src="{% static 'assets/brand_logo.svg' %}" alt="Logo">
+            </a>
+        {% endif %}
+    {% endif %}
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
-        <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}" aria-label="Tandoor">
-            <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="" style="height: 5vh;">
-        </a>
+    {% if request.user.userpreference.left_handed %}
+        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
+               aria-label="Tandoor">
+                <img class="brand-icon" src="{% static 'assets/brand_logo.svg' %}" alt="Logo">
+            </a>
+        {% endif %}
     {% endif %}
+
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.resolver_match.url_name in 'view_search' %}active{% endif %}">
@@ -102,129 +127,140 @@
                         <i class="fas fa-toolbox fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
-                        <div class="row m-0">
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
-                                <a href="{% url 'list_keyword' %}" class="p-1">
+                                <a href="{% url 'list_keyword' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-tags fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Keyword' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'list_food' %}" class="p-1">
+                                <a href="{% url 'list_food' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-leaf fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Foods' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'list_unit' %}" class="p-1">
+                                <a href="{% url 'list_unit' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-balance-scale fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Units' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0">
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
-                                <a href="{% url 'list_supermarket' %}" class="p-1">
+                                <a href="{% url 'list_supermarket' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-store-alt fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Supermarket' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'list_supermarket_category' %}" class="p-1">
+                                <a href="{% url 'list_supermarket_category' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-cubes fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Supermarket Category' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'list_automation' %}" class="p-1">
+                                <a href="{% url 'list_automation' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-robot fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Automations' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0">
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
-                                <a href="{% url 'list_user_file' %}" class="p-1">
+                                <a href="{% url 'list_user_file' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-file fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Files' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'data_batch_edit' %}" class="p-1">
+                                <a href="{% url 'data_batch_edit' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-edit fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Batch Edit' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
                             <div class="col-4">
-                                <a href="{% url 'view_history' %}" class="p-1">
+                                <a href="{% url 'view_history' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-history fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'History' %}
                                         </div>
                                     </div>
                                 </a>
                             </div>
-
                         </div>
-                        <div class="row m-0">
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
-                                <a href="{% url 'view_export' %}" class="p-1">
+                                <a href="{% url 'view_ingredient_editor' %}" class="p-0 p-md-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-th-list fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
+                                            {% trans 'Ingredient Editor' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a href="{% url 'view_export' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-file-export fa-2x"></i>
                                         </div>
-                                        <div class="card-body text-break text-center p-0 no-gutters text-muted">
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
                                             {% trans 'Export' %}
                                         </div>
                                     </div>
@@ -301,7 +337,14 @@
     </div>
 {% endif %}
 
-<div class="container-fluid mt-2 mt-md-5 mt-xl-5 mt-lg-5" id="id_base_container">
+{% if HOSTED and request.space.max_recipes == 10 %}
+    <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+        {% trans 'You are using the free version of Tandor' %} <a class="btn-success btn-sm" href="https://tandoor.dev/manage">{% trans 'Upgrade Now' %}</a>
+    </div>
+{% endif %}
+
+<div class="container-fluid mt-2 mt-md-5 mt-xl-5 mt-lg-5{% if request.user.userpreference.left_handed %} left-handed {% endif %}"
+     id="id_base_container">
     <div class="row">
         <div class="col-xl-2 d-none d-xl-block">
             {% block content_xl_left %}
@@ -336,7 +379,7 @@
     {% block content_fluid %}
     {% endblock %}
 
-    {% user_prefs request as prefs%}
+    {% user_prefs request as prefs %}
     {{ prefs|json_script:'user_preference' }}
 
 </div>

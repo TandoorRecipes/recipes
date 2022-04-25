@@ -184,11 +184,11 @@ export default {
             apiClient
                 .shoppingRecipe(this.recipe.id, shopping_recipe)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     this.$emit("finish")
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
 
             this.$bvModal.hide(`shopping_${this.modal_id}`)

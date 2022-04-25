@@ -12,33 +12,33 @@ class RezKonv(Integration):
 
         ingredients = []
         directions = []
-        for line in file.replace('\r', '').split('\n'):
+        for line in file.replace('\r', '').replace('\n\n', '\n').split('\n'):
             if 'Titel:' in line:
                 title = line.replace('Titel:', '').strip()
             if 'Kategorien:' in line:
                 tags = line.replace('Kategorien:', '').strip()
-            if ingredient_mode and ('quelle' in line.lower() or 'source' in line.lower()):
+            if ingredient_mode and (
+                    'quelle' in line.lower() or 'source' in line.lower() or (line == '' and len(ingredients) > 0)):
                 ingredient_mode = False
+                direction_mode = True
             if ingredient_mode:
                 if line != '' and '===' not in line and 'Zubereitung' not in line:
                     ingredients.append(line.strip())
             if direction_mode:
                 if line.strip() != '' and line.strip() != '=====':
                     directions.append(line.strip())
-            if 'Zutaten:' in line:
+            if 'Zutaten:' in line or 'Ingredients' in line or 'Menge:' in line:
                 ingredient_mode = True
-            if 'Zubereitung:' in line:
-                ingredient_mode = False
-                direction_mode = True
 
-        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
+        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True,
+                                       space=self.request.space)
 
         for k in tags.split(','):
             keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n', space=self.request.space,
+            instruction='  \n'.join(directions) + '\n\n', space=self.request.space,
         )
 
         ingredient_parser = IngredientParser(self.request, True)
@@ -60,7 +60,8 @@ class RezKonv(Integration):
     def split_recipe_file(self, file):
         recipe_list = []
         current_recipe = ''
-        encoding_list = ['windows-1250', 'latin-1'] #TODO build algorithm to try trough encodings and fail if none work, use for all importers
+        encoding_list = ['windows-1250',
+                         'latin-1']  # TODO build algorithm to try trough encodings and fail if none work, use for all importers
         encoding = 'windows-1250'
         for fl in file.readlines():
             try:

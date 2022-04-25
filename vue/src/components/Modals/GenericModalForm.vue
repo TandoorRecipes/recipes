@@ -173,11 +173,14 @@ export default {
             this.genericAPI(this.model, this.Actions.DELETE, { id: this.item1.id })
                 .then((result) => {
                     this.$emit("finish-action")
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    if (err.response.status === 403){
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE_PROTECTED, err)
+                    }else {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    }
                     this.$emit("finish-action", "cancel")
                 })
         },
@@ -187,22 +190,21 @@ export default {
                 this.genericAPI(this.model, this.Actions.CREATE, this.form_data)
                     .then((result) => {
                         this.$emit("finish-action", { item: result.data })
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
                         this.$emit("finish-action", "cancel")
                     })
             } else {
                 this.genericAPI(this.model, this.Actions.UPDATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action")
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        this.$emit("finish-action", { item: result.data })
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        console.log(err, err.response)
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                         this.$emit("finish-action", "cancel")
                     })
             }
@@ -221,11 +223,10 @@ export default {
             this.genericAPI(this.model, this.Actions.MOVE, { source: this.item1.id, target: this.form_data.target.id })
                 .then((result) => {
                     this.$emit("finish-action", { target: this.form_data.target.id })
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MOVE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_MOVE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MOVE, err)
                     this.$emit("finish-action", "cancel")
                 })
         },
@@ -245,13 +246,11 @@ export default {
                 target: this.form_data.target.id,
             })
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id })
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_MERGE)
+                    this.$emit("finish-action", { target: this.form_data.target.id, target_object: this.form_data.target }) //TODO temporary workaround to not change other apis
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
-                    //TODO error checking not working with OpenAPI methods
-                    console.log("Error", err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_MERGE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MERGE, err)
                     this.$emit("finish-action", "cancel")
                 })
 

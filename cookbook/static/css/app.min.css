@@ -1,3 +1,15 @@
+.brand-icon {
+    height: 40px;
+}
+
+@media (max-width: 991.98px) {
+    .menu-dropdown-text {
+        font-size: 14px;
+        font-weight: 200;
+    }
+}
+
+
 .spinner-tandoor {
     animation: rotation 3s infinite linear;
     content: url("../assets/spinner.svg");

@@ -127,4 +127,10 @@ export default {
 .meal-plan-card {
     background-color: #fff;
 }
+
+@media (max-width: 767.9px) {
+    .meal-plan-card {
+        font-size: 13px;
+    }
+}
 </style>

@@ -2,7 +2,7 @@
     <div>
         <b-tabs content-class="mt-3" v-model="current_tab">
             <b-tab :title="$t('Planner')" active>
-                <div class="row">
+                <div class="row calender-row">
                     <div class="col-12 calender-parent">
                         <calendar-view
                             :show-date="showDate"
@@ -93,7 +93,7 @@
                                     <b-card-body class="p-4" v-if="meal_type.editing">
                                         <div class="form-group">
                                             <label>{{ $t("Name") }}</label>
-                                            <input class="form-control" placeholder="Name" v-model="meal_type.name" />
+                                            <input class="form-control" :placeholder="$t('Name')" v-model="meal_type.name" />
                                         </div>
                                         <div class="form-group">
                                             <emoji-input :field="'icon'" :label="$t('Icon')" :value="meal_type.icon"></emoji-input>
@@ -450,8 +450,8 @@ export default {
                 .then((e) => {
                     this.periodChangedCallback(this.current_period)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
 
             this.refreshMealTypes()
@@ -473,8 +473,8 @@ export default {
                             updated++
                         }
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                     })
             })
         },
@@ -488,10 +488,10 @@ export default {
                     .updateMealType(this.meal_types[index].id, this.meal_types[index])
                     .then((e) => {
                         this.periodChangedCallback(this.current_period)
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                     })
             } else {
                 this.$set(this.meal_types[index], "editing", true)
@@ -504,10 +504,10 @@ export default {
                 .destroyMealType(this.meal_types[index].id)
                 .then((e) => {
                     this.periodChangedCallback(this.current_period)
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                 })
         },
         updateEmoji: function (field, value) {
@@ -582,8 +582,8 @@ export default {
                         .then((e) => {
                             list.splice(index, 1)
                         })
-                        .catch((error) => {
-                            StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                        .catch((err) => {
+                            StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                         })
                 }
             })
@@ -634,8 +634,8 @@ export default {
 
             let apiClient = new ApiApiFactory()
 
-            apiClient.updateMealPlan(entry.id, entry).catch((error) => {
-                StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+            apiClient.updateMealPlan(entry.id, entry).catch((err) => {
+                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
             })
         },
         createEntry(entry) {
@@ -645,8 +645,8 @@ export default {
 
             apiClient
                 .createMealPlan(entry)
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
                 .then((entry_result) => {
                     this.plan_entries.push(entry_result.data)
@@ -693,18 +693,23 @@ export default {
     opacity: 0;
 }
 
+.calender-row {
+    height: calc(100% - 240px);
+}
+
 .calender-parent {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     overflow-x: hidden;
     overflow-y: hidden;
-    height: 70vh;
+    height: 100%
 }
 
 .cv-item {
     white-space: inherit !important;
 }
+
 
 .isHovered {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
@@ -836,5 +841,11 @@ having to override as much.
 .ghost {
     opacity: 0.5;
     background: #c8ebfb;
+}
+
+@media (max-width: 767.9px) {
+    .periodLabel {
+        font-size: 18px !important;
+    }
 }
 </style>

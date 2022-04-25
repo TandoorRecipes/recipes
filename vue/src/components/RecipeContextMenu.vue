@@ -14,10 +14,7 @@
                     <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)"><i class="fas fa-bookmark fa-fw"></i> {{ $t("Manage_Books") }}</button>
                 </a>
 
-                <a class="dropdown-item" :href="`${resolveDjangoUrl('view_shopping')}?r=[${recipe.id},${servings_value}]`" v-if="recipe.internal" target="_blank" rel="noopener noreferrer">
-                    <i class="fas fa-shopping-cart fa-fw"></i> {{ $t("Add_to_Shopping") }}
-                </a>
-                <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#"> <i class="fas fa-shopping-cart fa-fw"></i> {{ $t("create_shopping_new") }} </a>
+                <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#"> <i class="fas fa-shopping-cart fa-fw"></i> {{ $t("Add_to_Shopping") }} </a>
 
                 <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);"><i class="fas fa-calendar fa-fw"></i> {{ $t("Add_to_Plan") }} </a>
 
@@ -162,10 +159,10 @@ export default {
                         this.servings_value = result.data.servings
                         this.addToShopping()
                     }
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                 })
         },
         createMealPlan(data) {
@@ -206,11 +203,11 @@ export default {
             this.$bvModal.show(`shopping_${this.modal_id}`)
         },
         copyToNew: function () {
-            let recipename = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
+            let recipe_name = window.prompt(this.$t("copy_to_new"), this.$t("recipe_name"))
 
             let apiClient = new ApiApiFactory()
             apiClient.retrieveRecipe(this.recipe.id).then((results) => {
-                let recipe = { ...results.data, ...{ id: undefined, name: recipename } }
+                let recipe = { ...results.data, ...{ id: undefined, name: recipe_name } }
                 recipe.steps = recipe.steps.map((step) => {
                     return {
                         ...step,
@@ -222,15 +219,17 @@ export default {
                         },
                     }
                 })
-                console.log(recipe)
+                if (recipe.nutrition !== null){
+                    delete recipe.nutrition.id
+                }
                 apiClient
                     .createRecipe(recipe)
-                    .then((newrecipe) => {
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                        window.open(this.resolveDjangoUrl("view_recipe", newrecipe.data.id))
+                    .then((new_recipe) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                        window.open(this.resolveDjangoUrl("view_recipe", new_recipe.data.id))
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
                     })
             })
         },
