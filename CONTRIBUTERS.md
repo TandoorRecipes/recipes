@@ -1,7 +1,10 @@
+# Contributers
+
 Many thanks to everyone who contributed to this project! If you add something or help out feel free to add yourself
 to this list.
 
 ## Code/Features
+
 Please have a look at the [list of pull requests](https://github.com/vabene1111/recipes/pulls) for 
 a complete list of contributions.
 Below are some of the larger contributions made yet.
@@ -20,46 +23,61 @@ Below are some of the larger contributions made yet.
 
 ## Translations
 
-### Catalan 
+### Catalan
+
 [Rubenix](https://www.transifex.com/user/profile/rubenix/)
 
 ### Dutch
-[D0T1X](https://www.transifex.com/user/profile/D0T1X/)  
-[ikbenfrank](https://www.transifex.com/user/profile/ikbenfrank/)  
-[kampsj](https://www.transifex.com/user/profile/kampsj/)  
+
+[D0T1X](https://www.transifex.com/user/profile/D0T1X/)
+[ikbenfrank](https://www.transifex.com/user/profile/ikbenfrank/)
+[kampsj](https://www.transifex.com/user/profile/kampsj/)
 
 ### French
-[jt117](https://www.transifex.com/user/profile/jt117/)  
-[nerdinator](https://www.transifex.com/user/profile/nerdinator/)  
-[agaume](https://www.transifex.com/user/profile/agaume/)  
+
+[jt117](https://www.transifex.com/user/profile/jt117/)
+[nerdinator](https://www.transifex.com/user/profile/nerdinator/)
+[agaume](https://www.transifex.com/user/profile/agaume/)
 
 ### German
+
 [eTaurus](https://www.transifex.com/user/profile/eTaurus/)
 [l0c4lh057](https://www.transifex.com/user/profile/l0c4lh057/)
-[hyperbit00]
+[hyperbit00](https://github.com/hyperbit00)
 
 ### Hungarian
+
 [igazka](https://www.transifex.com/user/profile/igazka/)
 
 ### Italian
-[SK3LA](https://www.transifex.com/user/profile/SK3LA/)  
-[auanasgheps](https://www.transifex.com/user/profile/auanasgheps/)  
+
+[SK3LA](https://www.transifex.com/user/profile/SK3LA/)
+[auanasgheps](https://www.transifex.com/user/profile/auanasgheps/)
 
 ### Latvian
+
 [melkypie](https://github.com/melkypie)
 
 ### Portuguese
 
-[hds](https://www.transifex.com/user/profile/hds/)  
-[mlopezifu](https://www.transifex.com/user/profile/mlopezifu/)  
-[stormsz](https://www.transifex.com/user/profile/stormsz/)  
+[hds](https://www.transifex.com/user/profile/hds/)
+[mlopezifu](https://www.transifex.com/user/profile/mlopezifu/)
+[stormsz](https://www.transifex.com/user/profile/stormsz/)
+
+### Russian
+
+[amillerr](https://github.com/amillerr)
 
 ### Spanish
 
-[albertocp](https://www.transifex.com/user/profile/albertocp/)  
-[alfa5](https://www.transifex.com/user/profile/alfa5/)  
-[mlopezifu](https://www.transifex.com/user/profile/mlopezifu/)  
-[sergio.laya](https://www.transifex.com/user/profile/sergio.laya/)  
+[albertocp](https://www.transifex.com/user/profile/albertocp/)
+[alfa5](https://www.transifex.com/user/profile/alfa5/)
+[mlopezifu](https://www.transifex.com/user/profile/mlopezifu/)
+[sergio.laya](https://www.transifex.com/user/profile/sergio.laya/)
+
+### Swedish
+
+[makanz](https://github.com/makanz)
 
 ### Turkish
 

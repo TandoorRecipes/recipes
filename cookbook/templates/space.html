@@ -36,8 +36,7 @@
                 <li class="list-group-item">
                     {% trans 'Recipes' %} :
                     <span class="badge badge-pill badge-info"
-                        >{{ counts.recipes }} / {% if request.space.max_recipes > 0 %} {{ request.space.max_recipes }}{%
-                        else %}∞{% endif %}</span
+                        >{{ counts.recipes }} / {% if request.space.max_recipes > 0 %} {{ request.space.max_recipes }}{% else %}∞{% endif %}</span
                     >
                 </li>
                 <li class="list-group-item">

@@ -8,21 +8,21 @@
 # gimy16 <gimy16@hotmail.com>, 2021
 # Miguel Canteras <mcanteras@gmail.com>, 2021
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Miguel Canteras <mcanteras@gmail.com>, 2021\n"
-"Language-Team: Catalan (https://www.transifex.com/django-recipes/"
-"teams/110507/ca/)\n"
+"PO-Revision-Date: 2022-04-10 09:51+0000\n"
+"Last-Translator: Rubens <rubenixnagios@gmail.com>\n"
+"Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -31,66 +31,52 @@ msgid "Ingredients"
 msgstr "Ingredients"
 
 #: .\cookbook\forms.py:56
-#, fuzzy
-#| msgid "Default"
 msgid "Default unit"
-msgstr "Per defecte"
+msgstr "Unitat per defecte"
 
 #: .\cookbook\forms.py:57
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Informació de Sistema"
+msgstr "Usa fraccions"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
-msgstr ""
+msgstr "Usa KJ"
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "Color barra"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Barra Sticky"
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Default"
 msgid "Default page"
-msgstr "Per defecte"
+msgstr "Pàgina per defecte"
 
 #: .\cookbook\forms.py:63
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show recent recipes"
-msgstr "Llista de Compra de Receptes"
+msgstr "Mostra Receptes Recents"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Search"
 msgid "Search style"
-msgstr "Cerca"
+msgstr "Estil de Cerca"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
-msgstr ""
+msgstr "Comparteix pla"
 
 #: .\cookbook\forms.py:66
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Ingredients"
+msgstr "Decimals Ingredients"
 
 #: .\cookbook\forms.py:67
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "La llista de la compra està buida actualment"
+msgstr "Auto-sincronització Llista compra"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:77 .\cookbook\templates\stats.html:47
@@ -103,7 +89,7 @@ msgid ""
 "try them out!"
 msgstr ""
 "Color de la barra de navegació superior. No tots els colors funcionen amb "
-"tots els temes, només cal provar-los."
+"tots els temes, cal provar-los!"
 
 #: .\cookbook\forms.py:74
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
@@ -121,23 +107,17 @@ msgstr ""
 
 #: .\cookbook\forms.py:78
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Mostra quantitats nutricionals d'energia en joules"
 
 #: .\cookbook\forms.py:79
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Els usuaris que han creat elements d'un pla de menjars/llistat de compra "
-"s'haurien de compartir per defecte."
+"Els usuaris que han creat elements d'un pla de menjars s'haurien de "
+"compartir per defecte."
 
 #: .\cookbook\forms.py:80
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Users with whom to share shopping lists."
-msgstr "Llista de la Compra Oberta"
+msgstr "Usuaris amb qui compartir llistes de la compra."
 
 #: .\cookbook\forms.py:82
 msgid "Show recently viewed recipes on search page."
@@ -166,15 +146,17 @@ msgstr ""
 
 #: .\cookbook\forms.py:89
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Barra de navegació s'enganxi a la part superior de la pàgina."
 
 #: .\cookbook\forms.py:90 .\cookbook\forms.py:496
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
+"Afegeix automàticament els ingredients del pla d'àpats a la llista de la "
+"compra."
 
 #: .\cookbook\forms.py:91
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Exclou els ingredients que hi ha a mà."
 
 #: .\cookbook\forms.py:108
 msgid ""
@@ -221,10 +203,12 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Per evitar duplicats, s'ignoren les receptes amb el mateix nom que les "
+"existents. Marqueu aquesta casella per importar-ho tot."
 
 #: .\cookbook\forms.py:197
 msgid "Add your comment: "
-msgstr "Afegir el teu comentari:"
+msgstr "Afegir el teu comentari: "
 
 #: .\cookbook\forms.py:212
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -250,7 +234,7 @@ msgstr "Emmagatzematge"
 
 #: .\cookbook\forms.py:268
 msgid "Active"
-msgstr ""
+msgstr "Actiu"
 
 #: .\cookbook\forms.py:274
 msgid "Search String"
@@ -280,189 +264,207 @@ msgstr ""
 
 #: .\cookbook\forms.py:363
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Nombre màxim d'usuaris assolit per a aquest espai."
 
 #: .\cookbook\forms.py:369
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Adreça de correu electrònic existent!"
 
 #: .\cookbook\forms.py:377
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"No cal una adreça de correu electrònic, però si està present, s'enviarà "
+"l'enllaç d'invitació a l'usuari."
 
 #: .\cookbook\forms.py:392
 msgid "Name already taken."
-msgstr ""
+msgstr "Nom agafat."
 
 #: .\cookbook\forms.py:403
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Accepteu les condicions i la privadesa"
 
 #: .\cookbook\forms.py:435
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Determina com de difusa és una cerca si utilitza la concordança de similitud "
+"de trigrama (p. ex., els valors baixos signifiquen que s'ignoren més errors "
+"ortogràfics)."
 
 #: .\cookbook\forms.py:445
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Seleccioneu el tipus de mètode de cerca. Feu clic <a href=\"/docs/search/\""
+">aquí</a> per obtenir una descripció completa de les opcions."
 
 #: .\cookbook\forms.py:446
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Utilitzeu la concordança difusa en unitats, paraules clau i ingredients quan "
+"editeu i importeu receptes."
 
 #: .\cookbook\forms.py:448
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Camps per cercar ignorant els accents. La selecció d'aquesta opció pot "
+"millorar o degradar la qualitat de la cerca en funció de l'idioma"
 
 #: .\cookbook\forms.py:450
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Camps per cercar coincidències parcials. (p. ex., en cercar \"Pastís\" "
+"tornarà \"pastís\" i \"peça\" i \"sabó\")"
 
 #: .\cookbook\forms.py:452
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Camps per cercar l'inici de les coincidències de paraula. (p. ex., en cercar "
+"\"sa\" es tornarà \"amanida\" i \"entrepà\")"
 
 #: .\cookbook\forms.py:454
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Camps per a la cerca \"difusa\". (per exemple, si cerqueu \"recpie\" "
+"trobareu \"recepta\".) Nota: aquesta opció entrarà en conflicte amb els "
+"mètodes de cerca \"web\" i \"cru\"."
 
 #: .\cookbook\forms.py:456
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Camps per a la cerca de text complet. Nota: els mètodes de cerca \"web\", "
+"\"frase\" i \"en brut\" només funcionen amb camps de text complet."
 
 #: .\cookbook\forms.py:460
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Cerca"
+msgstr "Mètode de cerca"
 
 #: .\cookbook\forms.py:461
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Cerques difuses"
 
 #: .\cookbook\forms.py:462
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignora Accents"
 
 #: .\cookbook\forms.py:463
 msgid "Partial Match"
-msgstr ""
+msgstr "Cerca Parcial"
 
 #: .\cookbook\forms.py:464
 msgid "Starts With"
-msgstr ""
+msgstr "Comença amb"
 
 #: .\cookbook\forms.py:465
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Cerca"
+msgstr "Cerca Difusa"
 
 #: .\cookbook\forms.py:466
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Text"
+msgstr "Text Sencer"
 
 #: .\cookbook\forms.py:491
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Els usuaris veuran tots els articles que afegiu a la vostra llista de la "
+"compra. Us han d'afegir per veure els elements de la seva llista."
 
 #: .\cookbook\forms.py:497
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Quan afegiu un pla d'àpats a la llista de la compra (de manera manual o "
+"automàtica), inclou totes les receptes relacionades."
 
 #: .\cookbook\forms.py:498
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Quan afegiu un pla d'àpats a la llista de la compra (manual o automàticament)"
+", excloeu els ingredients que teniu a mà."
 
 #: .\cookbook\forms.py:499
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Nombre d'hores per defecte per retardar l'entrada d'una llista de la compra."
 
 #: .\cookbook\forms.py:500
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Filtreu la llista de compres per incloure només categories de supermercats."
 
 #: .\cookbook\forms.py:501
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Dies de les entrades recents de la llista de la compra per mostrar."
 
 #: .\cookbook\forms.py:502
 msgid "Mark food 'On Hand' when checked off shopping list."
-msgstr ""
+msgstr "Marca el menjar com a \"A mà\" quan marqueu la llista de la compra."
 
 #: .\cookbook\forms.py:503
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Delimitador per a les exportacions CSV."
 
 #: .\cookbook\forms.py:504
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "Prefix per afegir en copiar la llista al porta-retalls."
 
 #: .\cookbook\forms.py:508
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Share Shopping List"
-msgstr "Llista de la Compra"
+msgstr "Compartir Llista de la Compra"
 
 #: .\cookbook\forms.py:509
 msgid "Autosync"
-msgstr ""
+msgstr "Autosync"
 
 #: .\cookbook\forms.py:510
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Afegeix automàticament un pla d'àpats"
 
 #: .\cookbook\forms.py:511
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Exclou a mà"
 
 #: .\cookbook\forms.py:512
 msgid "Include Related"
-msgstr ""
+msgstr "Incloure Relacionats"
 
 #: .\cookbook\forms.py:513
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Hores de retard per defecte"
 
 #: .\cookbook\forms.py:514
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Seleccioni supermercat"
+msgstr "Filtrar a supermercat"
 
 #: .\cookbook\forms.py:515
 msgid "Recent Days"
-msgstr ""
+msgstr "Dies recents"
 
 #: .\cookbook\forms.py:516
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "Delimitador CSV"
 
 #: .\cookbook\forms.py:517 .\cookbook\templates\shopping_list.html:322
 msgid "List Prefix"
@@ -470,38 +472,36 @@ msgstr "Prefix de Llista"
 
 #: .\cookbook\forms.py:518
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Auto a mà"
 
 #: .\cookbook\forms.py:528
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Restablir Herència Alimentària"
 
 #: .\cookbook\forms.py:529
 msgid "Reset all food to inherit the fields configured."
-msgstr ""
+msgstr "Restableix tots els aliments per heretar els camps configurats."
 
 #: .\cookbook\forms.py:541
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Menjar que s’hauria de substituir."
+msgstr "Camps dels aliments que s'han d'heretar per defecte."
 
 #: .\cookbook\forms.py:542
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Mostra les receptes vistes recentment a la pàgina de cerca."
+msgstr "Mostra el recompte de receptes als filtres de cerca"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Per evitar spam, no s'ha enviat el correu electrònic sol·licitat. Espereu "
+"uns minuts i torneu-ho a provar."
 
 #: .\cookbook\helper\permission_helper.py:136
 #: .\cookbook\helper\permission_helper.py:159 .\cookbook\views\views.py:148
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
+msgstr "No heu iniciat la sessió, no podeu veure aquesta pàgina."
 
 #: .\cookbook\helper\permission_helper.py:140
 #: .\cookbook\helper\permission_helper.py:146
@@ -524,56 +524,53 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_search.py:486
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "S'ha de proporcionar una de queryset o hash_key"
 
 #: .\cookbook\helper\shopping_helper.py:148
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
-msgstr "Has de proporcionar com a mínim una recepta o un títol."
+msgstr "Heu de proporcionar una mida de porcions"
 
 #: .\cookbook\helper\template_helper.py:61
 #: .\cookbook\helper\template_helper.py:63
 msgid "Could not parse template code."
-msgstr ""
+msgstr "No s'ha pogut analitzar el codi de la plantilla."
 
 #: .\cookbook\integration\integration.py:213
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"S'esperava un fitxer .zip. Heu escollit el tipus d'importador correcte per a "
+"les vostres dades?"
 
 #: .\cookbook\integration\integration.py:216
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"S'ha produït un error inesperat durant la importació. Assegureu-vos que heu "
+"penjat un fitxer vàlid."
 
 #: .\cookbook\integration\integration.py:221
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Les receptes següents s'han ignorat perquè ja existien:"
 
 #: .\cookbook\integration\integration.py:225
-#, fuzzy, python-format
-#| msgid "Imported new recipe!"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "Nova Recepta importada!"
+msgstr "%s Receptes Importades."
 
 #: .\cookbook\integration\paprika.py:46
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Nota"
+msgstr "Notes"
 
 #: .\cookbook\integration\paprika.py:49
-#, fuzzy
-#| msgid "Information"
 msgid "Nutritional Information"
-msgstr "Informació"
+msgstr "Informació Nutricional"
 
 #: .\cookbook\integration\paprika.py:53 .\cookbook\templates\url_import.html:42
 msgid "Source"
-msgstr ""
+msgstr "Font"
 
 #: .\cookbook\integration\saffron.py:23
 #: .\cookbook\templates\url_import.html:231
@@ -601,19 +598,21 @@ msgstr "Secció"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Reconstrueix l'índex de cerca de text complet a Recipta"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Només les bases de dades Postgresql utilitzen la cerca de text complet, "
+"sense índex per reconstruir"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "S'ha completat la reconstrucció de l'índex de receptes."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Reconstrucció de l'índex de receptes fallida."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -636,6 +635,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Emmagatzematge màxim de fitxers per espai en MB. 0 per il·limitat, -1 per "
+"desactivar la càrrega de fitxers."
 
 #: .\cookbook\models.py:300 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\shopping_list.html:53
@@ -668,80 +669,80 @@ msgstr "Nova"
 
 #: .\cookbook\models.py:513
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " forma part d'un pas de recepta i no es pot suprimir"
 
 #: .\cookbook\models.py:1065 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: .\cookbook\models.py:1066 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Frase"
 
 #: .\cookbook\models.py:1067 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:1068 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Cru"
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Food"
 msgid "Food Alias"
-msgstr "Menjar"
+msgstr "Alies Menjar"
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Unitats"
+msgstr "Àlies Unitat"
 
 #: .\cookbook\models.py:1106
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Paraules clau"
+msgstr "Àlies Paraula clau"
 
 #: .\cookbook\serializer.py:180
 msgid "A user is required"
-msgstr ""
+msgstr "Usuari requerit"
 
 #: .\cookbook\serializer.py:200
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Càrregues de fitxers no habilitades en aquest espai."
 
 #: .\cookbook\serializer.py:211
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Límit de càrrega de fitxers Assolit."
 
 #: .\cookbook\serializer.py:977
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Llista de la compra existent a actualitzar"
 
 #: .\cookbook\serializer.py:979
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Llista d'ingredients IDs de la recepta per afegir, si no es proporciona, "
+"s'afegiran tots els ingredients."
 
 #: .\cookbook\serializer.py:980
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Proporcionant un list_recipe ID i porcions de 0, se suprimirà aquesta llista "
+"de la compra."
 
 #: .\cookbook\serializer.py:988
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Quantitat de menjar per afegir a la llista de la compra"
 
 #: .\cookbook\serializer.py:989
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID de la unitat a utilitzar per a la llista de la compra"
 
 #: .\cookbook\serializer.py:990
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Quan s'estableix a true, se suprimirà tots els aliments de les llistes de "
+"compra actives."
 
 #: .\cookbook\tables.py:35 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -778,7 +779,7 @@ msgstr "Reporta Errada"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Adreces Email"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -791,33 +792,31 @@ msgstr "Opcions"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "Adreces de correu electrònic estan associades al vostre compte:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "Verificat"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "No Verificat"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Primari"
 
 #: .\cookbook\templates\account\email.html:47
-#, fuzzy
-#| msgid "Make Header"
 msgid "Make Primary"
-msgstr "Crea Capçalera"
+msgstr "Crea Primari"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Reenvia Verificació"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:56
@@ -826,33 +825,34 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: .\cookbook\templates\account\email.html:58
-#, fuzzy
-#| msgid "Warning"
 msgid "Warning:"
-msgstr "Advertència"
+msgstr "Advertència:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Actualment no teniu cap adreça d'email configurada. Hauríes d'afegir una "
+"adreça perquè pugueu rebre notificacions, restablir la vostra contrasenya, "
+"etc."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Afegir Email"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Afegir Email"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Eliminar l'adreça de correu electrònic seleccionada?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Confirma Email"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -862,6 +862,10 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"Si us plau, confirma\n"
+"             <a href=\"mailto:%(email)s\">%(email)s</a> és una adreça "
+"d'email per a l'usuari %(user_display)s\n"
+"             ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:71
@@ -875,6 +879,9 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Enllaç de confirmació d'email ha caducat o no és vàlid. Si us plau\n"
+"             <a href=\"%(email_url)s\">emet una nova sol·licitud de "
+"confirmació d'email</a>."
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:289
 msgid "Login"
@@ -885,41 +892,41 @@ msgstr "Iniciar Sessió"
 #: .\cookbook\templates\account\signup.html:69
 #: .\cookbook\templates\account\signup_closed.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "Inicia Sessió"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "Donar Alta"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\login.html:41
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "Restablir Clau"
 
 #: .\cookbook\templates\account\login.html:40
 msgid "Lost your password?"
-msgstr ""
+msgstr "Clau Oblidada?"
 
 #: .\cookbook\templates\account\login.html:52
 msgid "Social Login"
-msgstr ""
+msgstr "Accés Social"
 
 #: .\cookbook\templates\account\login.html:53
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "Pots utilitzar els proveïdors següents per iniciar sessió."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "Tanca Sessió"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
-msgstr ""
+msgstr "Segur que vols tancar sessió?"
 
 #: .\cookbook\templates\account\password_change.html:6
 #: .\cookbook\templates\account\password_change.html:16
@@ -928,51 +935,45 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Change Password"
-msgstr "Canvis desats!"
+msgstr "Canvia clau"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:76
-#, fuzzy
-#| msgid "Settings"
 msgid "Password"
-msgstr "Opcions"
+msgstr "Clau"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Clau Oblidada?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
 #: .\cookbook\templates\account\password_reset_done.html:7
 #: .\cookbook\templates\account\password_reset_done.html:10
 msgid "Password Reset"
-msgstr ""
+msgstr "Restablir Clau"
 
 #: .\cookbook\templates\account\password_reset.html:24
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
-msgstr ""
+msgstr "Clau Oblidada? Introduïu el email i rebràs un correu per restablir-la."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
-msgstr ""
+msgstr "Deshabilitat el restabliment de Clau."
 
 #: .\cookbook\templates\account\password_reset_done.html:16
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "Email enviat."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
-#| msgid "API Token"
 msgid "Bad Token"
-msgstr "Token API"
+msgstr "Token incorrecte"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -982,53 +983,52 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Enllaç de restabliment invàlid, possiblement perquè ja utilitzat.\n"
+"                     Sol·liciteu un <a href=\"%(passwd_reset_url)s\">nou "
+"restabliment de Clau</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "change password"
-msgstr "Canvis desats!"
+msgstr "canvia clau"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Clau Canviada."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "Establir Clau"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
 msgstr "Registre"
 
 #: .\cookbook\templates\account\signup.html:12
-#, fuzzy
-#| msgid "Create your Account"
 msgid "Create an Account"
 msgstr "Crear Compte"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Accepto el Següent"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Termes i Condicions"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "i"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Política de Privadesa"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
@@ -1036,21 +1036,21 @@ msgstr "Crear Usuari"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "Ja tens un Compte?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Inicis Tancats"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Inicis de Sessió tancats temporalment."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:279
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr "Documentació API "
+msgstr "Documentació API"
 
 #: .\cookbook\templates\base.html:86
 msgid "Shopping"
@@ -1061,10 +1061,8 @@ msgid "Keyword"
 msgstr "Paraula Clau"
 
 #: .\cookbook\templates\base.html:125 .\cookbook\views\lists.py:114
-#, fuzzy
-#| msgid "Food"
 msgid "Foods"
-msgstr "Menjar"
+msgstr "Menjars"
 
 #: .\cookbook\templates\base.html:137
 #: .\cookbook\templates\forms\ingredients.html:24
@@ -1080,22 +1078,16 @@ msgid "Supermarket"
 msgstr "Supermercat"
 
 #: .\cookbook\templates\base.html:163
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Supermercat"
+msgstr "Categoria de Supermercat"
 
 #: .\cookbook\templates\base.html:175 .\cookbook\views\lists.py:180
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Informació"
+msgstr "Automatitzacions"
 
 #: .\cookbook\templates\base.html:189 .\cookbook\views\lists.py:200
-#, fuzzy
-#| msgid "File ID"
 msgid "Files"
-msgstr "ID d'Arxiu"
+msgstr "Arxius"
 
 #: .\cookbook\templates\base.html:201
 msgid "Batch Edit"
@@ -1131,10 +1123,8 @@ msgstr "Receptes Externes"
 
 #: .\cookbook\templates\base.html:262 .\cookbook\templates\space.html:8
 #: .\cookbook\templates\space.html:20 .\cookbook\templates\space.html:150
-#, fuzzy
-#| msgid "Settings"
 msgid "Space Settings"
-msgstr "Opcions"
+msgstr "Opcions d'espai"
 
 #: .\cookbook\templates\base.html:267 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1154,7 +1144,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Tradueix Tandoor"
 
 #: .\cookbook\templates\base.html:281
 msgid "API Browser"
@@ -1162,7 +1152,7 @@ msgstr "Navegador API"
 
 #: .\cookbook\templates\base.html:284
 msgid "Log out"
-msgstr ""
+msgstr "Tanca sessió"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1176,7 +1166,7 @@ msgstr "Edició per lots de Receptes"
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
 "Afegiu les paraules clau especificades a totes les receptes que continguin "
-"la paraula"
+"una paraula"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:82
 msgid "Sync"
@@ -1184,7 +1174,7 @@ msgstr "Sync"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr "Gestiona les carpetes de descoibriment"
+msgstr "Gestiona les carpetes de descobriment"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
@@ -1213,23 +1203,19 @@ msgstr "Desa"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Gestiona Emmagatzematge Extern"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
 msgstr "Sincronitza Ara!"
 
 #: .\cookbook\templates\batch\monitor.html:29
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show Recipes"
-msgstr "Llista de Compra de Receptes"
+msgstr "Mostra Receptes"
 
 #: .\cookbook\templates\batch\monitor.html:30
-#, fuzzy
-#| msgid "Show Links"
 msgid "Show Log"
-msgstr "Mostra Enllaços"
+msgstr "Mostra Logs"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
@@ -1276,9 +1262,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Es pot utilitzar el següent formulari si, de manera accidental dues (o més) "
-"unitats o ingredients es van crear hi haurien de ser el mateix.\n"
-"Combina dues unitats o ingredients i actualitza totes les receptes amb ells"
+"        Es pot utilitzar el següent formulari si, de manera accidental dues ("
+"o més) unitats o ingredients es van crear haurien\n"
+"          de ser el mateix.\n"
+"          Combina dues unitats o ingredients i actualitza totes les receptes "
+"amb ells\n"
+"    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
@@ -1296,19 +1285,19 @@ msgstr "Estàs segur que vols combinar aquests dos ingredients?"
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Segur que vols esborrar el %(title)s:<b>%(object)s</b>"
+msgstr "Segur que vols esborrar el %(title)s:<b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Protegit"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
-msgstr ""
+msgstr "Cascada"
 
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1325,10 +1314,8 @@ msgstr "Llista"
 
 #: .\cookbook\templates\generic\list_template.html:33
 #: .\cookbook\templates\shopping_list.html:33
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Try the new shopping list"
-msgstr "Llista de la Compra Oberta"
+msgstr "Prova la nova Llista de la Compra"
 
 #: .\cookbook\templates\generic\list_template.html:45
 msgid "Filter"
@@ -1403,12 +1390,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Es camps <b>contrasenya i testimoni</b> s’emmagatzemen com a <b>text pla </"
-"b> a la base de dades.\n"
-"Això és necessari perquè són necessaris per fer sol·licituds API, però també "
-"augmenta el risc que\n"
-"algú el robi<br/>\n"
-"Per limitar el possible dany de fitxes o comptes amb accés limitat."
+"        Es camps <b>contrasenya i testimoni</b> s’emmagatzemen com a <b>text "
+"pla </b> a la base de dades.\n"
+"           Això és necessari perquè són necessaris per fer sol·licituds API, "
+"però també augmenta el risc que\n"
+"           algú el robi<br/>\n"
+"           Per limitar el possible dany de fitxes o comptes amb accés "
+"limitat.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
@@ -1486,10 +1475,8 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "o bé deixant una línia en blanc entremig."
+msgstr "o deixant una línia en blanc entremig."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1511,16 +1498,12 @@ msgid "Lists"
 msgstr "Llistes"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Les llistes es poden ordenar o desordenades. És <b> important deixar una "
-"línia en blanc abans de la llista!</b>"
+"Les llistes es poden ordenar o desordenar. És <b> important deixar una línia "
+"en blanc abans de la llista!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
@@ -1578,6 +1561,10 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
+"Les taules de rebaixes són difícils de crear a mà. Es recomana utilitzar un "
+"editor de taules com\n"
+"<a href=\"https://www.tablesgenerator.com/markdown_tables\" rel=\"noreferrer "
+"noopener\" target=\"_blank\">aquest.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1598,7 +1585,7 @@ msgstr "Cel·la"
 
 #: .\cookbook\templates\meal_plan_entry.html:6
 msgid "Meal Plan View"
-msgstr "Vista del pla de menjars"
+msgstr "Vista Pla de menjars"
 
 #: .\cookbook\templates\meal_plan_entry.html:18
 msgid "Created by"
@@ -1616,7 +1603,7 @@ msgstr "Darrera cocció"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
-msgstr "No cuinat abans"
+msgstr "No cuinat abans."
 
 #: .\cookbook\templates\meal_plan_entry.html:76
 msgid "Other meals on this day"
@@ -1625,91 +1612,92 @@ msgstr "Altres menjars en aquest dia"
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr ""
+msgstr "Sense Permisos"
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
+msgstr "No teniu cap grup i, per tant, no podeu utilitzar aquesta aplicació."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Contacta amb l'administrador."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr ""
+msgstr "Sense Permisos"
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "No teniu els permisos necessaris per dur a terme aquesta acció!"
+msgstr "No teniu els permisos necessaris per dur a terme aquesta acció."
 
 #: .\cookbook\templates\no_space_info.html:6
 #: .\cookbook\templates\no_space_info.html:13
 msgid "No Space"
-msgstr ""
+msgstr "Sense Espai"
 
 #: .\cookbook\templates\no_space_info.html:17
 msgid ""
 "Recipes, foods, shopping lists and more are organized in spaces of one or "
 "more people."
 msgstr ""
+"Receptes, aliments, llistes de la compra i més s'organitzen en espais d'una "
+"o més persones."
 
 #: .\cookbook\templates\no_space_info.html:18
 msgid ""
 "You can either be invited into an existing space or create your own one."
-msgstr ""
+msgstr "Pots ser convidat a un espai existent o crear el teu propi."
 
 #: .\cookbook\templates\no_space_info.html:31
 #: .\cookbook\templates\no_space_info.html:40
 msgid "Join Space"
-msgstr ""
+msgstr "uneix-te a l'espai"
 
 #: .\cookbook\templates\no_space_info.html:34
 msgid "Join an existing space."
-msgstr ""
+msgstr "Unir-se a espai existent."
 
 #: .\cookbook\templates\no_space_info.html:35
 msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
+"Per unir-vos a un espai existent, introduïu el vostre token d'invitació o "
+"feu clic a l'enllaç d'invitació."
 
 #: .\cookbook\templates\no_space_info.html:48
 #: .\cookbook\templates\no_space_info.html:56
-#, fuzzy
-#| msgid "Create User"
 msgid "Create Space"
-msgstr "Crear Usuari"
+msgstr "Crear Espai"
 
 #: .\cookbook\templates\no_space_info.html:51
 msgid "Create your own recipe space."
-msgstr ""
+msgstr "Crear el propi espai de recepta."
 
 #: .\cookbook\templates\no_space_info.html:52
 msgid "Start your own recipe space and invite other users to it."
-msgstr ""
+msgstr "Inicieu el vostre propi espai de receptes i convideu altres usuaris."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr ""
+msgstr "Desconnectat"
 
 #: .\cookbook\templates\offline.html:19
 msgid "You are currently offline!"
-msgstr ""
+msgstr "Estàs desconnectat!"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
 "The recipes listed below are available for offline viewing because you have "
 "recently viewed them. Keep in mind that data might be outdated."
 msgstr ""
+"Les receptes a continuació estan disponibles per a la visualització fora de "
+"línia perquè les heu vist recentment. Tingueu en compte que les dades poden "
+"estar obsoletes."
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -1746,15 +1734,13 @@ msgstr "Registre de Cuines"
 
 #: .\cookbook\templates\rest_framework\api.html:5
 msgid "Recipe Home"
-msgstr "Receptes"
+msgstr "Receptari"
 
 #: .\cookbook\templates\search_info.html:5
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:172
-#, fuzzy
-#| msgid "Search String"
 msgid "Search Settings"
-msgstr "Cerca Cadena"
+msgstr "Cerca Opcions"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1769,10 +1755,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
-#, fuzzy
-#| msgid "Search"
 msgid "Search Methods"
-msgstr "Cerca"
+msgstr "Mètodes de Cerca"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1854,10 +1838,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
-#, fuzzy
-#| msgid "Search Recipe"
 msgid "Search Fields"
-msgstr "Cerca Recepta"
+msgstr "Camps de Cerca"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
@@ -1895,10 +1877,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\search_info.html:95
-#, fuzzy
-#| msgid "Search"
 msgid "Search Index"
-msgstr "Cerca"
+msgstr "Índex de Cerca"
 
 #: .\cookbook\templates\search_info.html:99
 msgid ""
@@ -1919,48 +1899,36 @@ msgstr "Compte"
 
 #: .\cookbook\templates\settings.html:35
 msgid "Preferences"
-msgstr ""
+msgstr "Preferències"
 
 #: .\cookbook\templates\settings.html:42
-#, fuzzy
-#| msgid "Settings"
 msgid "API-Settings"
-msgstr "Opcions"
+msgstr "Opcions API"
 
 #: .\cookbook\templates\settings.html:49
-#, fuzzy
-#| msgid "Search String"
 msgid "Search-Settings"
-msgstr "Cerca Cadena"
+msgstr "Cerca-Opcions"
 
 #: .\cookbook\templates\settings.html:56
-#, fuzzy
-#| msgid "Search String"
 msgid "Shopping-Settings"
-msgstr "Cerca Cadena"
+msgstr "Compres-Opcions"
 
 #: .\cookbook\templates\settings.html:65
-#, fuzzy
-#| msgid "Settings"
 msgid "Name Settings"
-msgstr "Opcions"
+msgstr "Noms Opcions"
 
 #: .\cookbook\templates\settings.html:73
-#, fuzzy
-#| msgid "Settings"
 msgid "Account Settings"
-msgstr "Opcions"
+msgstr "Opcions de Compte"
 
 #: .\cookbook\templates\settings.html:75
-#, fuzzy
-#| msgid "Settings"
 msgid "Emails"
-msgstr "Opcions"
+msgstr "Emails"
 
 #: .\cookbook\templates\settings.html:78
 #: .\cookbook\templates\socialaccount\connections.html:11
 msgid "Social"
-msgstr ""
+msgstr "Social"
 
 #: .\cookbook\templates\settings.html:91
 msgid "Language"
@@ -1999,22 +1967,28 @@ msgid ""
 "There are many options to configure the search depending on your personal "
 "preferences."
 msgstr ""
+"Hi ha moltes opcions per configurar la cerca en funció de les vostres "
+"preferències personals."
 
 #: .\cookbook\templates\settings.html:174
 msgid ""
 "Usually you do <b>not need</b> to configure any of them and can just stick "
 "with either the default or one of the following presets."
 msgstr ""
+"Normalment <b>no cal</b> configurar cap d'ells i només podeu quedar-vos amb "
+"el valor predeterminat o amb un dels següents valors predefinits."
 
 #: .\cookbook\templates\settings.html:175
 msgid ""
 "If you do want to configure the search you can read about the different "
 "options <a href=\"/docs/search/\">here</a>."
 msgstr ""
+"Si vols configurar la cerca, pots llegir les diferents opcions <a href=\"/"
+"docs/search/\">aquí</a>."
 
 #: .\cookbook\templates\settings.html:180
 msgid "Fuzzy"
-msgstr ""
+msgstr "Difusa"
 
 #: .\cookbook\templates\settings.html:181
 msgid ""
@@ -2022,35 +1996,37 @@ msgid ""
 "return more results than needed to make sure you find what you are looking "
 "for."
 msgstr ""
+"Trobeu el que necessiteu encara que la cerca o la recepta contingui errors "
+"d'ortografia. Pot ser que tornin més resultats dels necessaris."
 
 #: .\cookbook\templates\settings.html:182
 msgid "This is the default behavior"
-msgstr ""
+msgstr "Comportament per Defecte"
 
 #: .\cookbook\templates\settings.html:183
 #: .\cookbook\templates\settings.html:191
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #: .\cookbook\templates\settings.html:188
 msgid "Precise"
-msgstr ""
+msgstr "Precisar"
 
 #: .\cookbook\templates\settings.html:189
 msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Permet un control minuciós sobre els resultats de la cerca, però és possible "
+"que no es tornin si hi han errors ortogràfics."
 
 #: .\cookbook\templates\settings.html:190
 msgid "Perfect for large Databases"
-msgstr ""
+msgstr "Perfecte per BBDD Grans"
 
 #: .\cookbook\templates\settings.html:207
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Shopping Settings"
-msgstr "Llista de la Compra"
+msgstr "Opcions de Compra"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -2087,15 +2063,15 @@ msgstr "Llista de Compra de Receptes"
 
 #: .\cookbook\templates\shopping_list.html:74
 msgid "No recipes selected"
-msgstr "Recepta no sel·leccionada"
+msgstr "Receptes no seleccionades"
 
 #: .\cookbook\templates\shopping_list.html:131
 msgid "Entry Mode"
-msgstr ""
+msgstr "Mode entrada"
 
 #: .\cookbook\templates\shopping_list.html:139
 msgid "Add Entry"
-msgstr ""
+msgstr "Afegir Entrada"
 
 #: .\cookbook\templates\shopping_list.html:152
 msgid "Amount"
@@ -2120,22 +2096,19 @@ msgstr "Selecciona Menjar"
 
 #: .\cookbook\templates\shopping_list.html:218
 msgid "Select Supermarket"
-msgstr "Seleccioni supermercat"
+msgstr "Selecciona Supermercat"
 
 #: .\cookbook\templates\shopping_list.html:242
 msgid "Select User"
-msgstr "Selecciona usuari"
+msgstr "Selecciona Usuari"
 
 #: .\cookbook\templates\shopping_list.html:258
 msgid "Finished"
 msgstr "Acabat"
 
 #: .\cookbook\templates\shopping_list.html:267
-#, fuzzy
-#| msgid "You are offline, shopping list might not syncronize."
 msgid "You are offline, shopping list might not synchronize."
-msgstr ""
-"Estàs fora de línia, és possible que la llista de compra no es sincronitzi."
+msgstr "Fora de línia, és possible que la llista de compra no es sincronitzi."
 
 #: .\cookbook\templates\shopping_list.html:318
 msgid "Copy/Export"
@@ -2144,7 +2117,7 @@ msgstr "Copia/Exporta"
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
 msgid "Account Connections"
-msgstr ""
+msgstr "Connexions de Compte"
 
 #: .\cookbook\templates\socialaccount\connections.html:18
 msgid ""
@@ -2155,15 +2128,15 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
 "You currently have no social network accounts connected to this account."
-msgstr ""
+msgstr "Sense xarxes socials connectades al compte."
 
 #: .\cookbook\templates\socialaccount\connections.html:55
 msgid "Add a 3rd Party Account"
-msgstr ""
+msgstr "Afegir Compte de tercers"
 
 #: .\cookbook\templates\socialaccount\signup.html:5
 msgid "Signup"
-msgstr ""
+msgstr "Registre"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2188,15 +2161,15 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
 msgid "Sign in using"
-msgstr ""
+msgstr "Registrar emprant"
 
 #: .\cookbook\templates\space.html:25
 msgid "Space:"
-msgstr ""
+msgstr "Espai:"
 
 #: .\cookbook\templates\space.html:26
 msgid "Manage Subscription"
-msgstr ""
+msgstr "Administra Subscripció"
 
 #: .\cookbook\templates\space.html:34 .\cookbook\templates\stats.html:19
 msgid "Number of objects"
@@ -2220,57 +2193,47 @@ msgstr "Receptes Internes"
 
 #: .\cookbook\templates\space.html:89
 msgid "Members"
-msgstr ""
+msgstr "Membres"
 
 #: .\cookbook\templates\space.html:95
-#, fuzzy
-#| msgid "Invite Links"
 msgid "Invite User"
-msgstr "Enllaços Invitació"
+msgstr "Convida Usuari"
 
 #: .\cookbook\templates\space.html:107
 msgid "User"
-msgstr ""
+msgstr "Usuari"
 
 #: .\cookbook\templates\space.html:108
 msgid "Groups"
-msgstr ""
+msgstr "Grups"
 
 #: .\cookbook\templates\space.html:119
-#, fuzzy
-#| msgid "Admin"
 msgid "admin"
 msgstr "Admin"
 
 #: .\cookbook\templates\space.html:120
 msgid "user"
-msgstr ""
+msgstr "usuari"
 
 #: .\cookbook\templates\space.html:121
 msgid "guest"
-msgstr ""
+msgstr "convidat"
 
 #: .\cookbook\templates\space.html:122
-#, fuzzy
-#| msgid "Remove"
 msgid "remove"
-msgstr "Eliminar"
+msgstr "elimina"
 
 #: .\cookbook\templates\space.html:126
 msgid "Update"
-msgstr ""
+msgstr "Actualitza"
 
 #: .\cookbook\templates\space.html:130
-#, fuzzy
-#| msgid "You cannot edit this storage!"
 msgid "You cannot edit yourself."
-msgstr "No podeu editar aquest emmagatzematge."
+msgstr "No et pot editar a tu mateix."
 
 #: .\cookbook\templates\space.html:136
-#, fuzzy
-#| msgid "There are no recipes in this book yet."
 msgid "There are no members in your space yet!"
-msgstr "Encara no hi ha receptes en aquest llibre."
+msgstr "No hi ha membres en aquest espai!"
 
 #: .\cookbook\templates\space.html:143 .\cookbook\templates\system.html:21
 #: .\cookbook\views\lists.py:85
@@ -2304,15 +2267,16 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Django Recipes és una aplicació de programari lliure de codi obert. Es pot "
-"trobar a\n"
-" <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-" Els registres de canvis es poden trobar<a href=\"https://github.com/"
-"vabene1111/recipes/releases\"> aquí</a>."
+"        Django Recipes és una aplicació de programari lliure de codi obert. "
+"Es pot trobar a\n"
+"          <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+"          Els registres de canvis es poden trobar <a href=\"https://github."
+"com/vabene1111/recipes/releases\">aquí</a>.\n"
+"    "
 
 #: .\cookbook\templates\system.html:48
 msgid "Media Serving"
-msgstr "Publicació de Suports"
+msgstr "Servei Mitjans"
 
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80
@@ -2371,7 +2335,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:78
 msgid "Debug Mode"
-msgstr "Mode de depuració"
+msgstr "Mode Depuració"
 
 #: .\cookbook\templates\system.html:82
 msgid ""
@@ -2416,31 +2380,27 @@ msgstr "Importació d’URL"
 
 #: .\cookbook\templates\url_import.html:33
 msgid "Drag me to your bookmarks to import recipes from anywhere"
-msgstr ""
+msgstr "Arrossega als marcadors per importar receptes des de qualsevol lloc"
 
 #: .\cookbook\templates\url_import.html:34
-#, fuzzy
-#| msgid "Bookmark saved!"
 msgid "Bookmark Me!"
-msgstr "Marcador desat!"
+msgstr "Marca'm!"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:40
 msgid "App"
-msgstr ""
+msgstr "App"
 
 #: .\cookbook\templates\url_import.html:44
 msgid "Text"
 msgstr "Text"
 
 #: .\cookbook\templates\url_import.html:46
-#, fuzzy
-#| msgid "File ID"
 msgid "File"
-msgstr "ID d'Arxiu"
+msgstr "Arxiu"
 
 #: .\cookbook\templates\url_import.html:64
 msgid "Enter website URL"
@@ -2449,20 +2409,20 @@ msgstr "Introduïu l'URL del lloc web"
 #: .\cookbook\templates\url_import.html:104
 msgid "Select recipe files to import or drop them here..."
 msgstr ""
+"Seleccioneu fitxers de receptes per importar-los o deixeu-los anar aquí..."
 
 #: .\cookbook\templates\url_import.html:125
 msgid "Paste json or html source here to load recipe."
-msgstr ""
+msgstr "Enganxa json o html aquí per carregar la recepta."
 
 #: .\cookbook\templates\url_import.html:153
-#, fuzzy
-#| msgid "View Recipe"
 msgid "Preview Recipe Data"
-msgstr "Veure Recepta"
+msgstr "Previsualitzar dades Recepta"
 
 #: .\cookbook\templates\url_import.html:154
 msgid "Drag recipe attributes from the right into the appropriate box below."
 msgstr ""
+"Arrossega atributs de la recepta des de la dreta al quadre corresponent."
 
 #: .\cookbook\templates\url_import.html:163
 #: .\cookbook\templates\url_import.html:180
@@ -2475,43 +2435,39 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:307
 #: .\cookbook\templates\url_import.html:358
 msgid "Clear Contents"
-msgstr ""
+msgstr "Neteja comentaris"
 
 #: .\cookbook\templates\url_import.html:165
 msgid "Text dragged here will be appended to the name."
-msgstr ""
+msgstr "Text arrossegat aquí s'afegirà al nom."
 
 #: .\cookbook\templates\url_import.html:178
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #: .\cookbook\templates\url_import.html:182
 msgid "Text dragged here will be appended to the description."
-msgstr ""
+msgstr "Text arrossegat aquí s'afegirà a la descripció."
 
 #: .\cookbook\templates\url_import.html:199
 msgid "Keywords dragged here will be appended to current list"
-msgstr ""
+msgstr "Paraules clau arrossegades aquí s'afegiran a la llista actual"
 
 #: .\cookbook\templates\url_import.html:214
 msgid "Image"
-msgstr ""
+msgstr "Imatge"
 
 #: .\cookbook\templates\url_import.html:246
-#, fuzzy
-#| msgid "Preparation Time"
 msgid "Prep Time"
-msgstr "Temps de preparació"
+msgstr "Temps preparació"
 
 #: .\cookbook\templates\url_import.html:261
-#, fuzzy
-#| msgid "Time"
 msgid "Cook Time"
-msgstr "Temps"
+msgstr "Temps Cocció"
 
 #: .\cookbook\templates\url_import.html:282
 msgid "Ingredients dragged here will be appended to current list."
-msgstr ""
+msgstr "Ingredients arrossegats aquí s'afegiran a la llista actual."
 
 #: .\cookbook\templates\url_import.html:304
 #: .\cookbook\templates\url_import.html:579
@@ -2522,54 +2478,48 @@ msgstr "Instruccions"
 msgid ""
 "Recipe instructions dragged here will be appended to current instructions."
 msgstr ""
+"Instruccions de la recepta arrossegades aquí s'afegiran a les instruccions "
+"actuals."
 
 #: .\cookbook\templates\url_import.html:332
-#, fuzzy
-#| msgid "Discovered Recipes"
 msgid "Discovered Attributes"
-msgstr "Receptes Descobertes"
+msgstr "Atributs Descoberts"
 
 #: .\cookbook\templates\url_import.html:334
 msgid ""
 "Drag recipe attributes from below into the appropriate box on the left. "
 "Click any node to display its full properties."
 msgstr ""
+"Arrossega atributs de la recepta des de sota al quadre corresponent de "
+"l'esquerra. Feu clic a qualsevol node per mostrar les seves propietats."
 
 #: .\cookbook\templates\url_import.html:351
-#, fuzzy
-#| msgid "Show as header"
 msgid "Show Blank Field"
-msgstr "Mostra com a capçalera"
+msgstr "Mostra Camp en Blanc"
 
 #: .\cookbook\templates\url_import.html:356
 msgid "Blank Field"
-msgstr ""
+msgstr "Camp en Blanc"
 
 #: .\cookbook\templates\url_import.html:360
 msgid "Items dragged to Blank Field will be appended."
-msgstr ""
+msgstr "S'afegiran Elements arrossegats al camp en blanc."
 
 #: .\cookbook\templates\url_import.html:407
-#, fuzzy
-#| msgid "Delete Step"
 msgid "Delete Text"
-msgstr "Esborra Pas"
+msgstr "Esborra Text"
 
 #: .\cookbook\templates\url_import.html:420
-#, fuzzy
-#| msgid "Delete Recipe"
 msgid "Delete image"
-msgstr "Esborra Recepta"
+msgstr "Esborra Imatge"
 
 #: .\cookbook\templates\url_import.html:436
 msgid "Recipe Name"
 msgstr "Nom de la Recepta"
 
 #: .\cookbook\templates\url_import.html:440
-#, fuzzy
-#| msgid "Recipe Markup Specification"
 msgid "Recipe Description"
-msgstr "Especificació de marcatge de receptes"
+msgstr "Descripció de Recepta"
 
 #: .\cookbook\templates\url_import.html:504
 #: .\cookbook\templates\url_import.html:536
@@ -2582,10 +2532,8 @@ msgid "Note"
 msgstr "Nota"
 
 #: .\cookbook\templates\url_import.html:597
-#, fuzzy
-#| msgid "All Keywords"
 msgid "Add Keyword"
-msgstr "Totes les paraules clau"
+msgstr "Afegir paraula clau"
 
 #: .\cookbook\templates\url_import.html:610
 msgid "All Keywords"
@@ -2631,106 +2579,112 @@ msgid "Recipe Markup Specification"
 msgstr "Especificació de marcatge de receptes"
 
 #: .\cookbook\views\api.py:88 .\cookbook\views\api.py:174
-#, fuzzy
-#| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
-msgstr "El paràmetre filter_list té un format incorrecte"
+msgstr "El paràmetre updated_at té un format incorrecte"
 
 #: .\cookbook\views\api.py:194 .\cookbook\views\api.py:295
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "No {self.basename} amb id {pk} existeix"
 
 #: .\cookbook\views\api.py:198
 msgid "Cannot merge with the same object!"
-msgstr ""
+msgstr "No es pot fusionar amb el mateix objecte!"
 
 #: .\cookbook\views\api.py:205
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "No {self.basename} amb id {target} existeix"
 
 #: .\cookbook\views\api.py:210
 msgid "Cannot merge with child object!"
-msgstr ""
+msgstr "No es pot combinar amb l'objecte fill!"
 
 #: .\cookbook\views\api.py:243
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
-msgstr ""
+msgstr "{source.name} s'ha fusionat amb {target.name}"
 
 #: .\cookbook\views\api.py:248
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
-msgstr ""
+msgstr "Error en intentar combinar {source.name} amb {target.name}"
 
 #: .\cookbook\views\api.py:304
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
-msgstr ""
+msgstr "{child.name} s'ha mogut correctament a l'arrel."
 
 #: .\cookbook\views\api.py:307 .\cookbook\views\api.py:325
 msgid "An error occurred attempting to move "
-msgstr ""
+msgstr "Error a l'intentar moure "
 
 #: .\cookbook\views\api.py:310
 msgid "Cannot move an object to itself!"
-msgstr ""
+msgstr "No es pot moure un objecte cap a si mateix!"
 
 #: .\cookbook\views\api.py:316
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "No existeix {self.basename} amb identificador {parent}"
 
 #: .\cookbook\views\api.py:322
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
-msgstr ""
+msgstr "{child.name} s'ha mogut correctament al pare {parent.name}"
 
 #: .\cookbook\views\api.py:474
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} eliminat de la llista de la compra."
 
 #: .\cookbook\views\api.py:479 .\cookbook\views\api.py:729
 #: .\cookbook\views\api.py:742
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "Afegit {obj.name} a la llista de la compra."
 
 #: .\cookbook\views\api.py:591
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
-msgstr ""
+msgstr "ID de recepta forma part d'un pas. Per a múltiples repeteix paràmetre."
 
 #: .\cookbook\views\api.py:592
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "La cadena de consulta coincideix (difusa) amb el nom de l'objecte."
 
 #: .\cookbook\views\api.py:635
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"Cadena de consulta coincideix (difusa) amb el nom de la recepta. En el futur "
+"també cerca text complet."
 
 #: .\cookbook\views\api.py:636
 msgid "ID of keyword a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID de la paraula clau que hauria de tenir una recepta. Per a múltiples "
+"repeteix paràmetre."
 
 #: .\cookbook\views\api.py:637
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID d'aliments que ha de tenir una recepta. Per a múltiples repeteix "
+"paràmetres."
 
 #: .\cookbook\views\api.py:638
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID d'unitat que hauria de tenir una recepta."
 
 #: .\cookbook\views\api.py:639
 msgid "Rating a recipe should have. [0 - 5]"
-msgstr ""
+msgstr "Valoració que hauria de tenir una recepta. [0 - 5]"
 
 #: .\cookbook\views\api.py:640
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
+"ID del llibre hauria d'haver-hi en una recepta. Per al paràmetre de "
+"repetició múltiple."
 
 #: .\cookbook\views\api.py:641
 msgid ""
@@ -2782,6 +2736,7 @@ msgstr ""
 #: .\cookbook\views\edit.py:129 .\cookbook\views\new.py:95
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr ""
+"Aquesta funció encara no està disponible a la versió allotjada de tandoor!"
 
 #: .\cookbook\views\api.py:971
 msgid "Sync successful!"
@@ -2793,7 +2748,7 @@ msgstr "Error de sincronització amb emmagatzematge"
 
 #: .\cookbook\views\api.py:1055
 msgid "Nothing to do."
-msgstr ""
+msgstr "Res a fer."
 
 #: .\cookbook\views\api.py:1070
 msgid "The requested site provided malformed data and cannot be read."
@@ -2814,29 +2769,27 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1109
 msgid "Connection Refused."
-msgstr ""
+msgstr "Connexió Refusada."
 
 #: .\cookbook\views\api.py:1118
-#, fuzzy
-#| msgid "The requested page could not be found."
 msgid "No usable data could be found."
-msgstr "No s'ha pogut trobar la pàgina sol·licitada."
+msgstr "No s'han trobat dades utilitzables."
 
 #: .\cookbook\views\api.py:1134
 msgid "I couldn't find anything to do."
-msgstr ""
+msgstr "No es pot trobar res a fer."
 
 #: .\cookbook\views\data.py:34 .\cookbook\views\data.py:129
 #: .\cookbook\views\edit.py:49 .\cookbook\views\import_export.py:81
 #: .\cookbook\views\new.py:33
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Has arribat al nombre màxim de receptes per al vostre espai."
 
 #: .\cookbook\views\data.py:38 .\cookbook\views\data.py:133
 #: .\cookbook\views\edit.py:53 .\cookbook\views\import_export.py:85
 #: .\cookbook\views\new.py:37
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Tens més usuaris dels permesos al teu espai."
 
 #: .\cookbook\views\data.py:111
 #, python-format
@@ -2896,13 +2849,15 @@ msgstr "Error al desar canvis!"
 
 #: .\cookbook\views\import_export.py:107 .\cookbook\views\import_export.py:143
 msgid "Importing is not implemented for this provider"
-msgstr ""
+msgstr "Importació no implementada en aquest proveïdor"
 
 #: .\cookbook\views\import_export.py:130
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"L'exportador de PDF no està habilitat en aquesta instància perquè encara es "
+"troba en un estat experimental."
 
 #: .\cookbook\views\lists.py:25
 msgid "Import Log"
@@ -2917,26 +2872,20 @@ msgid "Shopping Lists"
 msgstr "Llistes de Compra"
 
 #: .\cookbook\views\lists.py:148
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarkets"
-msgstr "Supermercat"
+msgstr "Supermercats"
 
 #: .\cookbook\views\lists.py:164
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Shopping Categories"
-msgstr "Llista de Compra de Receptes"
+msgstr "Categories de Compres"
 
 #: .\cookbook\views\lists.py:217
 msgid "Steps"
 msgstr "Passos"
 
 #: .\cookbook\views\lists.py:232
-#, fuzzy
-#| msgid "Shopping List"
 msgid "New Shopping List"
-msgstr "Llista de la Compra"
+msgstr "Nova Llista de Compra"
 
 #: .\cookbook\views\new.py:126
 msgid "Imported new recipe!"
@@ -2948,57 +2897,62 @@ msgstr "S'ha produït un error en importar la recepta!"
 
 #: .\cookbook\views\new.py:212
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #: .\cookbook\views\new.py:212
 msgid "You have been invited by "
-msgstr ""
+msgstr "Convidat per "
 
 #: .\cookbook\views\new.py:213
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " per unir-se al seu espai de Receptes "
 
 #: .\cookbook\views\new.py:214
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Click per activar el teu compte: "
 
 #: .\cookbook\views\new.py:215
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Si l'enllaç no funciona, utilitzeu el codi següent per unir-vos a l'espai: "
 
 #: .\cookbook\views\new.py:216
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "Invitació vàlida fins "
 
 #: .\cookbook\views\new.py:217
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes és un gestor de receptes de codi obert. Comprova a GitHub "
 
 #: .\cookbook\views\new.py:220
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Invitació de receptes Tandoor"
 
 #: .\cookbook\views\new.py:227
 msgid "Invite link successfully send to user."
-msgstr ""
+msgstr "Enllaç d'invitació enviat a l'usuari."
 
 #: .\cookbook\views\new.py:230
 msgid ""
 "You have send to many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
+"Masses emails enviats, compartiu l'enllaç manualment o espereu unes hores."
 
 #: .\cookbook\views\new.py:232
-msgid "Email to user could not be send, please share link manually."
-msgstr ""
+msgid "Email could not be sent to user. Please share the link manually."
+msgstr "No es pot enviar email a l'usuari. Comparteix l'enllaç manualment."
 
 #: .\cookbook\views\views.py:126
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
+"Espai de Receptes creat correctament. Comenceu afegint algunes receptes o "
+"convida altres persones a unir-se."
 
 #: .\cookbook\views\views.py:174
 msgid "You do not have the required permissions to perform this action!"
@@ -3010,21 +2964,23 @@ msgstr "Comentari Desat!"
 
 #: .\cookbook\views\views.py:276
 msgid "This feature is not available in the demo version!"
-msgstr ""
+msgstr "Funció no està disponible a la versió de demostració!"
 
 #: .\cookbook\views\views.py:335
 msgid "You must select at least one field to search!"
-msgstr ""
+msgstr "Heu de seleccionar almenys un camp per cercar!"
 
 #: .\cookbook\views\views.py:340
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Per utilitzar aquest mètode de cerca, heu de seleccionar almenys un camp de "
+"cerca de text complet!"
 
 #: .\cookbook\views\views.py:344
 msgid "Fuzzy search is not compatible with this search method!"
-msgstr ""
+msgstr "Cerca difusa no és compatible amb aquest mètode de cerca!"
 
 #: .\cookbook\views\views.py:473
 msgid ""
@@ -3049,14 +3005,12 @@ msgid "Malformed Invite Link supplied!"
 msgstr "S'ha proporcionat un enllaç d'invitació mal format."
 
 #: .\cookbook\views\views.py:519
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You are already member of a space and therefore cannot join this one."
-msgstr "No heu iniciat la sessió i, per tant, no podeu veure aquesta pàgina."
+msgstr "Ja ets membre d'un espai, no pots unir-te a aquest."
 
 #: .\cookbook\views\views.py:530
 msgid "Successfully joined space."
-msgstr ""
+msgstr "Unit correctament a l'espai."
 
 #: .\cookbook\views\views.py:536
 msgid "Invite Link not valid or already used!"
@@ -3067,12 +3021,16 @@ msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Notificació d'enllaços compartits no activada en aquesta instància. Aviseu "
+"l'administrador per informar dels problemes."
 
 #: .\cookbook\views\views.py:623
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"L'enllaç per compartir receptes s'ha desactivat! Per obtenir informació "
+"addicional, poseu-vos en contacte amb l'administrador."
 
 #~ msgid "Time"
 #~ msgstr "Temps"

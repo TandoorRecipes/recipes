@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2021-10-23 09:06+0000\n"
-"Last-Translator: rustam <uzbekr@gmail.com>\n"
+"PO-Revision-Date: 2022-04-07 19:32+0000\n"
+"Last-Translator: Artem Aksenov <artemmillerr@gmail.com>\n"
 "Language-Team: Russian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ru/>\n"
 "Language: ru\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:270
 msgid "Ingredients"
-msgstr "ингредиенты"
+msgstr "Ингредиенты"
 
 #: .\cookbook\forms.py:50
 msgid ""
@@ -95,14 +95,14 @@ msgstr ""
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:334
 #: .\cookbook\templates\url_import.html:154
 msgid "Name"
-msgstr "Имя"
+msgstr "Название"
 
 #: .\cookbook\forms.py:104 .\cookbook\forms.py:335
 #: .\cookbook\templates\space.html:39 .\cookbook\templates\stats.html:24
 #: .\cookbook\templates\url_import.html:188
 #: .\cookbook\templates\url_import.html:573 .\cookbook\views\lists.py:112
 msgid "Keywords"
-msgstr "Ключевые поля"
+msgstr "Ключевые слова"
 
 #: .\cookbook\forms.py:105
 msgid "Preparation time in minutes"
@@ -2501,7 +2501,7 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\views\new.py:245
-msgid "Email to user could not be send, please share link manually."
+msgid "Email could not be sent to user. Please share the link manually."
 msgstr ""
 
 #: .\cookbook\views\views.py:128

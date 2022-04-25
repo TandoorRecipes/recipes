@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+{% load i18n %}
+{% load static %}
+
+{% load account socialaccount %}
+
+{% block title %}OpenID {% trans 'Login' %}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-12" style="text-align: center">
+            <h3>{% trans "Sign In" %}</h3>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
+            <hr>
+            <form id="openid_login_form" class="openid_login" method="post" action="{% url 'openid_login' %}">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="btn btn-success" type="submit">{% trans "Sign In" %}</button>
+                <a class="btn btn-secondary" href="{% url 'account_login' %}">{% trans "Back" %}</a>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $('#id_openid').focus()
+    </script>
+
+{% endblock %}
+
+

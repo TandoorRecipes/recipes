@@ -237,7 +237,7 @@ admin.site.register(Ingredient, IngredientAdmin)
 
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'name', 'created_at')
-    search_fields = ('text', 'user__username')
+    search_fields = ('text', 'created_by__username')
     date_hierarchy = 'created_at'
 
     @staticmethod

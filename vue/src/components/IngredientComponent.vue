@@ -25,7 +25,7 @@
             </td>
             <td v-if="detailed && !show_shopping">
                 <div v-if="ingredient.note">
-                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable">
+                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable p-0 pl-md-2 pr-md-2">
                         <i class="far fa-comment"></i>
                     </span>
 

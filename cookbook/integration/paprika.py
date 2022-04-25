@@ -6,6 +6,7 @@ from gettext import gettext as _
 from io import BytesIO
 
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -26,10 +27,9 @@ class Paprika(Integration):
                 recipe.description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
 
             try:
-                if re.match(r'([0-9])+\s(.)*', recipe_json['servings']):
-                    s = recipe_json['servings'].split(' ')
-                    recipe.servings = s[0]
-                    recipe.servings_text = s[1]
+                if 'servings' in recipe_json['servings']:
+                    recipe.servings = parse_servings(recipe_json['servings'])
+                    recipe.servings_text = parse_servings_text(recipe_json['servings'])
 
                 if len(recipe_json['cook_time'].strip()) > 0:
                     recipe.waiting_time = re.findall(r'\d+', recipe_json['cook_time'])[0]

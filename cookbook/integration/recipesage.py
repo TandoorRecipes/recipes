@@ -77,14 +77,13 @@ class RecipeSage(Integration):
         }
 
         for s in recipe.steps.all():
-            if s.type != Step.TIME:
-                data['recipeInstructions'].append({
-                    '@type': 'HowToStep',
-                    'text': s.instruction
-                })
+            data['recipeInstructions'].append({
+                '@type': 'HowToStep',
+                'text': s.instruction
+            })
 
-                for i in s.ingredients.all():
-                    data['recipeIngredient'].append(f'{float(i.amount)} {i.unit} {i.food}')
+            for i in s.ingredients.all():
+                data['recipeIngredient'].append(f'{float(i.amount)} {i.unit} {i.food}')
 
         return data
 

@@ -230,4 +230,4 @@ def test_shopping_with_header_ingredient(u1_s1, recipe):
     #     recipe.step_set.first().ingredient_set.add(IngredientFactory(ingredients__header=1))
     u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
     assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 10
-    assert len(json.loads(u1_s1.get(reverse('api:ingredient-list')).content)) == 11
+    assert len(json.loads(u1_s1.get(reverse('api:ingredient-list')).content)['results']) == 11
