@@ -371,7 +371,8 @@
                                                          :key="ingredient.id">
                                                         <hr class="d-md-none"/>
                                                         <div class="text-center">
-                                                            <small class="text-muted"><i class="fas fa-globe"></i> {{ingredient.original_text}}</small>
+                                                            <small class="text-muted"><i class="fas fa-globe"></i>
+                                                                {{ ingredient.original_text }}</small>
                                                         </div>
                                                         <div class="d-flex">
                                                             <div class="flex-grow-0 handle align-self-start">
@@ -821,7 +822,7 @@ export default {
                 })
                 .catch((err) => {
                     this.loading = false
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         updateRecipe: function (view_after) {
@@ -846,10 +847,16 @@ export default {
                 this.recipe.servings = 1
             }
 
+            this.recipe.steps.forEach(x => {
+                if (x.time === "") {
+                    x.time = 0
+                }
+            })
+
             apiFactory
                 .updateRecipe(this.recipe_id, this.recipe, {})
                 .then((response) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     this.recipe_changed = false
                     if (this.create_food) {
                         apiFactory.createFood({
@@ -862,7 +869,7 @@ export default {
                     }
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
         uploadImage: function (file) {
@@ -873,10 +880,10 @@ export default {
                     .then((request) => {
                         this.recipe.image = request.data.image
                         this.recipe_changed = false
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                     })
             }
         },
@@ -888,10 +895,10 @@ export default {
                     .then((request) => {
                         this.recipe.image = null
                         this.recipe_changed = false
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                     })
             }
         },
@@ -986,7 +993,7 @@ export default {
                     this.keywords_loading = false
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         searchFiles: function (query) {
@@ -1000,7 +1007,7 @@ export default {
                     this.files_loading = false
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         searchRecipes: function (query) {
@@ -1011,7 +1018,7 @@ export default {
                     this.recipes_loading = false
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         searchUnits: function (query) {
@@ -1035,7 +1042,7 @@ export default {
                     this.units_loading = false
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         searchFoods: function (query) {
@@ -1060,7 +1067,7 @@ export default {
                     this.foods_loading = false
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
         fileCreated: function (data) {
