@@ -291,6 +291,7 @@
                                                                         aria-hidden="true"></i
                                                                     ></span>
                                                                 </h5>
+                                                                 <span class="text-muted" v-if="supermarket.description !== ''">{{ supermarket.description }}</span>
                                                             </b-col>
                                                         </b-row>
                                                     </b-card-header>
