@@ -24,9 +24,8 @@
                                             <div class="row justify-content-center">
                                                 <div class="col-12 justify-content-cente">
                                                     <b-checkbox v-model="import_multiple" switch><span
-                                                        v-if="import_multiple">Multiple Recipes</span><span
-                                                        v-if="!import_multiple">Single Recipe</span></b-checkbox>
-                                                    <!-- TODO localize or maybe icons ? -->
+                                                        v-if="import_multiple"><i class="far fa-copy fa-fw"></i> {{ $t('Multiple') }}</span><span
+                                                        v-if="!import_multiple"><i class="far fa-file fa-fw"></i> {{ $t('Single') }}</span></b-checkbox>
                                                 </div>
                                             </div>
                                             <b-input-group class="mt-2" :class="{ bounce: empty_input }"
@@ -52,23 +51,25 @@
                                                       @click="autoImport()">{{ $t('Import') }}
                                             </b-button>
 
-                                            <div class="row mt-2"> <!-- TODO remove -->
-                                                <div class="col col-md-12">
-                                                    <div v-if="!import_multiple">
-                                                        <a href="#" @click="clearRecentImports()">Clear recent
-                                                            imports</a>
-                                                        <ul>
-                                                            <li v-for="x in recent_urls" v-bind:key="x">
-                                                                <a href="#"
-                                                                   @click="loadRecipe(x, false, undefined)">{{
-                                                                        x
-                                                                    }}</a>
-                                                            </li>
-                                                        </ul>
+                                            <!-- recent imports, nice for testing/development -->
+<!--                                            <div class="row mt-2"> -->
+<!--                                                <div class="col col-md-12">-->
+<!--                                                    <div v-if="!import_multiple">-->
+<!--                                                        <a href="#" @click="clearRecentImports()">Clear recent-->
+<!--                                                            imports</a>-->
+<!--                                                        <ul>-->
+<!--                                                            <li v-for="x in recent_urls" v-bind:key="x">-->
+<!--                                                                <a href="#"-->
+<!--                                                                   @click="loadRecipe(x, false, undefined)">{{-->
+<!--                                                                        x-->
+<!--                                                                    }}</a>-->
+<!--                                                            </li>-->
+<!--                                                        </ul>-->
 
-                                                    </div>
-                                                </div>
-                                            </div>
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+
                                         </div>
                                     </div>
                                 </b-collapse>
@@ -455,9 +456,7 @@ export default {
             // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
             website_url: '',
-            website_url_list: 'https://madamedessert.de/schokoladenpudding-rezept-mit-echter-schokolade/\nhttps://www.essen-und-trinken.de/rezepte/58294-rzpt-schokoladenpudding\n' +
-                'https://www.chefkoch.de/rezepte/1825781296124455/Schokoladenpudding-selbst-gemacht.html\ntest.com\nhttps://bla.com',
-
+            website_url_list: '',
             import_multiple: false,
             recent_urls: [],
             source_data: '',
