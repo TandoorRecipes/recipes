@@ -13,6 +13,10 @@ const pages = {
         entry: "./src/apps/OfflineView/main.js",
         chunks: ["chunk-vendors"],
     },
+    import_view: {
+        entry: "./src/apps/ImportView/main.js",
+        chunks: ["chunk-vendors"],
+    },
     import_response_view: {
         entry: "./src/apps/ImportResponseView/main.js",
         chunks: ["chunk-vendors"],
@@ -43,6 +47,10 @@ const pages = {
     },
     meal_plan_view: {
         entry: "./src/apps/MealPlanView/main.js",
+        chunks: ["chunk-vendors"],
+    },
+    ingredient_editor_view: {
+        entry: "./src/apps/IngredientEditorView/main.js",
         chunks: ["chunk-vendors"],
     },
     shopping_list_view: {

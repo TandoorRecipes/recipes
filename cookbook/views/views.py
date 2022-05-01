@@ -11,9 +11,9 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q, Sum
+from django.db.models import Avg, Q
 from django.db.models.functions import Lower
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -27,9 +27,9 @@ from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingP
                             SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
-from cookbook.models import (Comment, CookLog, Food, FoodInheritField, InviteLink, Keyword,
+from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
                              MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             ShoppingList, Space, Unit, UserFile, ViewLog)
+                             Space, Unit, ViewLog)
 from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
@@ -61,7 +61,8 @@ def search(request):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
+                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(
+                             Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
             table = RecipeTable(f.qs)
@@ -226,6 +227,19 @@ def supermarket(request):
 
 
 @group_required('user')
+def ingredient_editor(request):
+    template_vars = {'food_id': -1, 'unit_id': -1}
+    food_id = request.GET.get('food_id', None)
+    if food_id and re.match(r'^(\d)+$', food_id):
+        template_vars['food_id'] = food_id
+
+    unit_id = request.GET.get('unit_id', None)
+    if unit_id and re.match(r'^(\d)+$', unit_id):
+        template_vars['unit_id'] = unit_id
+    return render(request, 'ingredient_editor.html', template_vars)
+
+
+@group_required('user')
 def meal_plan_entry(request, pk):
     plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
 
@@ -240,35 +254,6 @@ def meal_plan_entry(request, pk):
         .order_by('meal_type').all()
 
     return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
-
-
-@group_required('user')
-def latest_shopping_list(request):
-    sl = ShoppingList.objects.filter(Q(created_by=request.user) | Q(shared=request.user)).filter(finished=False,
-                                                                                                 space=request.space).order_by(
-        '-created_at').first()
-
-    if sl:
-        return HttpResponseRedirect(reverse('view_shopping', kwargs={'pk': sl.pk}) + '?edit=true')
-    else:
-        return HttpResponseRedirect(reverse('view_shopping') + '?edit=true')
-
-
-@group_required('user')
-def shopping_list(request, pk=None):  # TODO deprecate
-    html_list = request.GET.getlist('r')
-
-    recipes = []
-    for r in html_list:
-        r = r.replace('[', '').replace(']', '')
-        if len(r) < 10000 and re.match(r'^([0-9])+,([0-9])+[.]*([0-9])*$', r):
-            rid, multiplier = r.split(',')
-            if recipe := Recipe.objects.filter(pk=int(rid), space=request.space).first():
-                recipes.append({'recipe': recipe.id, 'multiplier': multiplier})
-
-    edit = True if 'edit' in request.GET and request.GET['edit'] == 'true' else False
-
-    return render(request, 'shopping_list.html', {'shopping_list_id': pk, 'recipes': recipes, 'edit': edit})
 
 
 @group_required('guest')
@@ -304,6 +289,7 @@ def user_settings(request):
                 up.use_fractions = form.cleaned_data['use_fractions']
                 up.use_kj = form.cleaned_data['use_kj']
                 up.sticky_navbar = form.cleaned_data['sticky_navbar']
+                up.left_handed = form.cleaned_data['left_handed']
 
                 up.save()
 
@@ -327,10 +313,10 @@ def user_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext'])
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
                 )
                 if fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
@@ -647,11 +633,15 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    with scopes_disabled():
-        result = ShoppingList.objects.filter(
-            Q(created_by=request.user) | Q(shared=request.user)).filter(
-            space=request.space).values().distinct()
-    return JsonResponse(list(result), safe=False, json_dumps_params={'indent': 2})
+    from cookbook.helper.ingredient_parser import IngredientParser
+    parser = IngredientParser(request, False)
+
+    data = {
+        'original': '1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl'
+    }
+    data['parsed'] = parser.parse(data['original'])
+
+    return render(request, 'test.html', {'data': data})
 
 
 def test2(request):

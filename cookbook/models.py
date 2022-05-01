@@ -241,7 +241,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     max_users = models.IntegerField(default=0)
     allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
-    food_inherit = models.ManyToManyField(FoodInheritField,  blank=True)
+    food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
     def __str__(self):
@@ -337,7 +337,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
     csv_delim = models.CharField(max_length=2, default=",")
-    csv_prefix = models.CharField(max_length=10, blank=True,)
+    csv_prefix = models.CharField(max_length=10, blank=True, )
 
     created_at = models.DateTimeField(auto_now_add=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
@@ -496,11 +496,11 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     ignore_shopping = models.BooleanField(default=False)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
-    inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True)
+    inherit_fields = models.ManyToManyField(FoodInheritField, blank=True)
     substitute = models.ManyToManyField("self", blank=True)
     substitute_siblings = models.BooleanField(default=False)
     substitute_children = models.BooleanField(default=False)
-    child_inherit_fields = models.ManyToManyField(FoodInheritField,  blank=True, related_name='child_inherit')
+    child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -533,7 +533,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         if food:
             # if child inherit fields is preset children should be set to that, otherwise inherit this foods inherited fields
             inherit = list((food.child_inherit_fields.all() or food.inherit_fields.all()).values('id', 'field'))
-            tree_filter = Q(path__startswith=food.path, space=space, depth=food.depth+1)
+            tree_filter = Q(path__startswith=food.path, space=space, depth=food.depth + 1)
         else:
             inherit = list(space.food_inherit.all().values('id', 'field'))
             tree_filter = Q(space=space)
@@ -591,6 +591,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
+    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
+
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -663,9 +665,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     servings = models.IntegerField(default=1)
     servings_text = models.CharField(default='', blank=True, max_length=32)
     image = models.ImageField(upload_to='recipes/', blank=True, null=True)
-    storage = models.ForeignKey(
-        Storage, on_delete=models.PROTECT, blank=True, null=True
-    )
+    storage = models.ForeignKey(Storage, on_delete=models.PROTECT, blank=True, null=True)
     file_uid = models.CharField(max_length=256, default="", blank=True)
     file_path = models.CharField(max_length=512, default="", blank=True)
     link = models.CharField(max_length=512, null=True, blank=True)
@@ -675,9 +675,9 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     working_time = models.IntegerField(default=0)
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
-    nutrition = models.ForeignKey(
-        NutritionInformation, blank=True, null=True, on_delete=models.CASCADE
-    )
+    nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
+
+    source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

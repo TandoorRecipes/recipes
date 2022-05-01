@@ -114,10 +114,10 @@ export default {
             apiClient
                 .updateRecipeBook(this.book_copy.id, this.book_copy)
                 .then((result) => {
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_UPDATE)
+                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                 })
-                .catch((error) => {
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_UPDATE)
+                .catch((err) => {
+                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
                 })
         },
         refreshData: function () {
@@ -135,10 +135,10 @@ export default {
                     .destroyRecipeBook(this.book.id)
                     .then((result) => {
                         this.$emit("refresh")
-                        StandardToasts.makeStandardToast(StandardToasts.SUCCESS_DELETE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
                     })
-                    .catch((error) => {
-                        StandardToasts.makeStandardToast(StandardToasts.FAIL_DELETE)
+                    .catch((err) => {
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
                     })
             }
         },

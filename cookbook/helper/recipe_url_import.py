@@ -14,6 +14,9 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
 
 
+# from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
+
+
 def get_from_scraper(scrape, request):
     # converting the scrape_me object to the existing json format based on ld+json
     recipe_json = {}
@@ -28,7 +31,7 @@ def get_from_scraper(scrape, request):
             recipe_json['name'] = ''
 
     try:
-        description = scrape.description()  or None
+        description = scrape.description() or None
     except Exception:
         description = None
     if not description:
@@ -37,7 +40,7 @@ def get_from_scraper(scrape, request):
         except Exception:
             description = ''
 
-    recipe_json['description'] = parse_description(description)
+    recipe_json['internal'] = True
 
     try:
         servings = scrape.yields() or None
@@ -48,34 +51,31 @@ def get_from_scraper(scrape, request):
             servings = scrape.schema.data.get('recipeYield') or 1
         except Exception:
             servings = 1
-    if type(servings) != int:
-        try:
-            servings = int(re.findall(r'\b\d+\b', servings)[0])
-        except Exception:
-            servings = 1
-    recipe_json['servings'] = max(servings, 1)
+
+    recipe_json['servings'] = parse_servings(servings)
+    recipe_json['servings_text'] = parse_servings_text(servings)
 
     try:
-        recipe_json['prepTime'] = get_minutes(scrape.prep_time()) or 0
+        recipe_json['working_time'] = get_minutes(scrape.prep_time()) or 0
     except Exception:
         try:
-            recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
+            recipe_json['working_time'] = get_minutes(scrape.schema.data.get("prepTime")) or 0
         except Exception:
-            recipe_json['prepTime'] = 0
+            recipe_json['working_time'] = 0
     try:
-        recipe_json['cookTime'] = get_minutes(scrape.cook_time()) or 0
+        recipe_json['waiting_time'] = get_minutes(scrape.cook_time()) or 0
     except Exception:
         try:
-            recipe_json['cookTime'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
+            recipe_json['waiting_time'] = get_minutes(scrape.schema.data.get("cookTime")) or 0
         except Exception:
-            recipe_json['cookTime'] = 0
+            recipe_json['waiting_time'] = 0
 
-    if recipe_json['cookTime'] + recipe_json['prepTime'] == 0:
+    if recipe_json['working_time'] + recipe_json['waiting_time'] == 0:
         try:
-            recipe_json['prepTime'] = get_minutes(scrape.total_time()) or 0
+            recipe_json['working_time'] = get_minutes(scrape.total_time()) or 0
         except Exception:
             try:
-                recipe_json['prepTime'] = get_minutes(scrape.schema.data.get("totalTime")) or 0
+                recipe_json['working_time'] = get_minutes(scrape.schema.data.get("totalTime")) or 0
             except Exception:
                 pass
 
@@ -113,6 +113,14 @@ def get_from_scraper(scrape, request):
                 keywords += listify_keywords(scrape.schema.data.get("recipeCuisine"))
         except Exception:
             pass
+
+    if source_url := scrape.canonical_url():
+        recipe_json['source_url'] = source_url
+        try:
+            keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
+        except Exception:
+            pass
+
     try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
@@ -120,54 +128,49 @@ def get_from_scraper(scrape, request):
 
     ingredient_parser = IngredientParser(request, True)
 
-    ingredients = []
+    recipe_json['steps'] = []
+
+    for i in parse_instructions(scrape.instructions()):
+        recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
+    if len(recipe_json['steps']) == 0:
+        recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
+
+    if len(parse_description(description)) > 256:  # split at 256 as long descriptions dont look good on recipe cards
+        recipe_json['steps'][0]['instruction'] = f'*{parse_description(description)}*  \n\n' + recipe_json['steps'][0]['instruction']
+    else:
+        recipe_json['description'] = parse_description(description)[:512]
+
     try:
         for x in scrape.ingredients():
             try:
                 amount, unit, ingredient, note = ingredient_parser.parse(x)
-                ingredients.append(
-                    {
-                        'amount': amount,
-                        'unit': {
-                            'text': unit,
-                            'id': random.randrange(10000, 99999)
-                        },
-                        'ingredient': {
-                            'text': ingredient,
-                            'id': random.randrange(10000, 99999)
-                        },
-                        'note': note,
-                        'original_text': x
-                    }
-                )
+                ingredient = {
+                    'amount': amount,
+                    'food': {
+                        'name': ingredient,
+                    },
+                    'unit': None,
+                    'note': note,
+                    'original_text': x
+                }
+                if unit:
+                    ingredient['unit'] = {'name': unit, }
+                recipe_json['steps'][0]['ingredients'].append(ingredient)
             except Exception:
-                ingredients.append(
+                recipe_json['steps'][0]['ingredients'].append(
                     {
                         'amount': 0,
-                        'unit': {
-                            'text': '',
-                            'id': random.randrange(10000, 99999)
-                        },
-                        'ingredient': {
-                            'text': x,
-                            'id': random.randrange(10000, 99999)
+                        'unit': None,
+                        'food': {
+                            'name': x,
                         },
                         'note': '',
                         'original_text': x
                     }
                 )
-        recipe_json['recipeIngredient'] = ingredients
     except Exception:
-        recipe_json['recipeIngredient'] = ingredients
+        pass
 
-    try:
-        recipe_json['recipeInstructions'] = parse_instructions(scrape.instructions())
-    except Exception:
-        recipe_json['recipeInstructions'] = ""
-
-    if scrape.canonical_url():
-        recipe_json['url'] = scrape.canonical_url()
-        recipe_json['recipeInstructions'] += "\n\n" + _("Imported from") + ": " + scrape.canonical_url()
     return recipe_json
 
 
@@ -180,100 +183,44 @@ def parse_name(name):
     return normalize_string(name)
 
 
-def parse_ingredients(ingredients):
-    # some pages have comma separated ingredients in a single array entry
-    try:
-        if type(ingredients[0]) == dict:
-            return ingredients
-    except (KeyError, IndexError):
-        pass
-
-    if (len(ingredients) == 1 and type(ingredients) == list):
-        ingredients = ingredients[0].split(',')
-    elif type(ingredients) == str:
-        ingredients = ingredients.split(',')
-
-    for x in ingredients:
-        if '\n' in x:
-            ingredients.remove(x)
-            for i in x.split('\n'):
-                ingredients.insert(0, i)
-
-    ingredient_list = []
-
-    for x in ingredients:
-        if x.replace(' ', '') != '':
-            x = x.replace('&frac12;', "0.5").replace('&frac14;', "0.25").replace('&frac34;', "0.75")
-            try:
-                amount, unit, ingredient, note = parse_single_ingredient(x)
-                if ingredient:
-                    ingredient_list.append(
-                        {
-                            'amount': amount,
-                            'unit': {
-                                'text': unit,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'ingredient': {
-                                'text': ingredient,
-                                'id': random.randrange(10000, 99999)
-                            },
-                            'note': note,
-                            'original_text': x
-                        }
-                    )
-            except Exception:
-                ingredient_list.append(
-                    {
-                        'amount': 0,
-                        'unit': {
-                            'text': '',
-                            'id': random.randrange(10000, 99999)
-                        },
-                        'ingredient': {
-                            'text': x,
-                            'id': random.randrange(10000, 99999)
-                        },
-                        'note': '',
-                        'original_text': x
-                    }
-                )
-
-            ingredients = ingredient_list
-        else:
-            ingredients = []
-    return ingredients
-
-
 def parse_description(description):
     return normalize_string(description)
 
 
-def parse_instructions(instructions):
-    instruction_text = ''
-
-    # flatten instructions if they are in a list
-    if type(instructions) == list:
-        for i in instructions:
-            if type(i) == str:
-                instruction_text += i
-            else:
-                if 'text' in i:
-                    instruction_text += i['text'] + '\n\n'
-                elif 'itemListElement' in i:
-                    for ile in i['itemListElement']:
-                        if type(ile) == str:
-                            instruction_text += ile + '\n\n'
-                        elif 'text' in ile:
-                            instruction_text += ile['text'] + '\n\n'
-                else:
-                    instruction_text += str(i)
-        instructions = instruction_text
-
-    normalized_string = normalize_string(instructions)
+def clean_instruction_string(instruction):
+    normalized_string = normalize_string(instruction)
     normalized_string = normalized_string.replace('\n', '  \n')
     normalized_string = normalized_string.replace('  \n  \n', '\n\n')
     return normalized_string
+
+
+def parse_instructions(instructions):
+    """
+    Convert arbitrary instructions object from website import and turn it into a flat list of strings
+    :param instructions: any instructions object from import
+    :return: list of strings (from one to many elements depending on website)
+    """
+    instruction_list = []
+
+    if type(instructions) == list:
+        for i in instructions:
+            if type(i) == str:
+                instruction_list.append(clean_instruction_string(i))
+            else:
+                if 'text' in i:
+                    instruction_list.append(clean_instruction_string(i['text']))
+                elif 'itemListElement' in i:
+                    for ile in i['itemListElement']:
+                        if type(ile) == str:
+                            instruction_list.append(clean_instruction_string(ile))
+                        elif 'text' in ile:
+                            instruction_list.append(clean_instruction_string(ile['text']))
+                else:
+                    instruction_list.append(clean_instruction_string(str(i)))
+    else:
+        instruction_list.append(clean_instruction_string(instructions))
+
+    return instruction_list
 
 
 def parse_image(image):
@@ -310,40 +257,31 @@ def parse_servings(servings):
     return servings
 
 
-def parse_cooktime(cooktime):
-    if type(cooktime) not in [int, float]:
+def parse_servings_text(servings):
+    if type(servings) == str:
         try:
-            cooktime = float(re.search(r'\d+', cooktime).group())
+            servings = re.sub("\d+", '', servings).strip()
+        except Exception:
+            servings = ''
+    return servings
+
+
+def parse_time(recipe_time):
+    if type(recipe_time) not in [int, float]:
+        try:
+            recipe_time = float(re.search(r'\d+', recipe_time).group())
         except (ValueError, AttributeError):
             try:
-                cooktime = round(iso_parse_duration(cooktime).seconds / 60)
+                recipe_time = round(iso_parse_duration(recipe_time).seconds / 60)
             except ISO8601Error:
                 try:
-                    if (type(cooktime) == list and len(cooktime) > 0):
-                        cooktime = cooktime[0]
-                    cooktime = round(parse_duration(cooktime).seconds / 60)
+                    if (type(recipe_time) == list and len(recipe_time) > 0):
+                        recipe_time = recipe_time[0]
+                    recipe_time = round(parse_duration(recipe_time).seconds / 60)
                 except AttributeError:
-                    cooktime = 0
+                    recipe_time = 0
 
-    return cooktime
-
-
-def parse_preptime(preptime):
-    if type(preptime) not in [int, float]:
-        try:
-            preptime = float(re.search(r'\d+', preptime).group())
-        except ValueError:
-            try:
-                preptime = round(iso_parse_duration(preptime).seconds / 60)
-            except ISO8601Error:
-                try:
-                    if (type(preptime) == list and len(preptime) > 0):
-                        preptime = preptime[0]
-                    preptime = round(parse_duration(preptime).seconds / 60)
-                except AttributeError:
-                    preptime = 0
-
-    return preptime
+    return recipe_time
 
 
 def parse_keywords(keyword_json, space):
@@ -353,9 +291,9 @@ def parse_keywords(keyword_json, space):
         kw = normalize_string(kw)
         if len(kw) != 0:
             if k := Keyword.objects.filter(name=kw, space=space).first():
-                keywords.append({'id': str(k.id), 'text': str(k.name)})
+                keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
             else:
-                keywords.append({'id': random.randrange(1111111, 9999999, 1), 'text': kw})
+                keywords.append({'label': kw, 'name': kw})
 
     return keywords
 

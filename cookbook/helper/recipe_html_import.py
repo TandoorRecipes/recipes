@@ -58,18 +58,6 @@ def get_recipe_from_source(text, url, request):
                 })
         return kid_list
 
-    recipe_json = {
-        'name': '',
-                'url': '',
-                'description': '',
-                'image': '',
-                'keywords': [],
-                'recipeIngredient': [],
-                'recipeInstructions': '',
-                'servings': '',
-                'prepTime': '',
-                'cookTime': ''
-    }
     recipe_tree = []
     parse_list = []
     html_data = []

@@ -136,7 +136,7 @@ def bookmarklet(request):
     if (api_token := Token.objects.filter(user=request.user).first()) is None:
         api_token = Token.objects.create(user=request.user)
 
-    bookmark = "javascript: \
+    bookmark = "<a href='javascript: \
     (function(){ \
         if(window.bookmarkletTandoor!==undefined){ \
             bookmarkletTandoor(); \
@@ -146,8 +146,8 @@ def bookmarklet(request):
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'" \
                + server + prefix + static('js/bookmarklet.js') + "? \
-            r=\'+Math.floor(Math.random()*999999999);}})();"
-    return re.sub(r"[\n\t\s]*", "", bookmark)
+            r=\'+Math.floor(Math.random()*999999999);}})();'>Test</a>"
+    return re.sub(r"[\n\t]*", "", bookmark)
 
 
 @register.simple_tag

@@ -1,14 +1,13 @@
 from datetime import datetime
 
-from django.db.models import Q, Sum
+from django.db.models import Sum
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
-from cookbook.filters import ShoppingListFilter
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import InviteLink, RecipeImport, ShoppingList, Storage, SyncLog, UserFile
-from cookbook.tables import (ImportLogTable, InviteLinkTable, RecipeImportTable, ShoppingListTable,
+from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
+from cookbook.tables import (ImportLogTable, InviteLinkTable, RecipeImportTable,
                              StorageTable)
 
 
@@ -41,20 +40,12 @@ def recipe_import(request):
 
 @group_required('user')
 def shopping_list(request):
-    f = ShoppingListFilter(request.GET, queryset=ShoppingList.objects.filter(space=request.space).filter(
-        Q(created_by=request.user) | Q(shared=request.user)).distinct().all().order_by('finished', 'created_at'))
-
-    table = ShoppingListTable(f.qs)
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
     return render(
         request,
-        'generic/list_template.html',
+        'shoppinglist_template.html',
         {
-            'title': _("Shopping Lists"),
-            'table': table,
-            'filter': f,
-            'create_url': 'view_shopping'
+            "title": _("Shopping List"),
+
         }
     )
 
@@ -205,7 +196,7 @@ def custom_filter(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-            'file_size_kb__sum'] / 1000
+                                   'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 
@@ -235,17 +226,5 @@ def step(request):
                 'model': "STEP",  # *REQUIRED* name of the model in models.js
                 'recipe_param': 'steps',
             }
-        }
-    )
-
-
-@group_required('user')
-def shopping_list_new(request):
-    return render(
-        request,
-        'shoppinglist_template.html',
-        {
-            "title": _("New Shopping List"),
-
         }
     )

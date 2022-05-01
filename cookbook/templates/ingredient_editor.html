@@ -4,12 +4,18 @@
 {% load i18n %}
 {% load l10n %}
 
-{% block title %}{% trans 'Meal-Plan' %}{% endblock %}
+{% block title %}{% trans 'Ingredient Editor' %}{% endblock %}
 
-{% block content_fluid %}
+{% block content %}
 
+    <div class="row">
+        <div class="col col-md-12">
+            <h3>{% trans 'Ingredient Editor' %}</h3>
+        </div>
+    </div>
     <div id="app">
-        <meal-plan-view></meal-plan-view>
+
+        <ingredient-editor-view></ingredient-editor-view>
     </div>
 
 
@@ -24,13 +30,10 @@
     {% endif %}
 
     <script type="application/javascript">
-        window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
-
+        window.DEFAULT_FOOD = {{ food_id }}
+        window.DEFAULT_UNIT = {{ unit_id }}
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
-
-        window.ICAL_URL = '{% url 'api_get_plan_ical' 12345 6789 %}'
-        window.SHOPPING_URL = '{% url 'view_shopping' %}'
     </script>
 
-    {% render_bundle 'meal_plan_view' %}
+    {% render_bundle 'ingredient_editor_view' %}
 {% endblock %}

@@ -1,12 +1,13 @@
 <template>
     <div v-if="recipes !== {}">
         <div id="switcher" class="align-center">
-            <i class="btn btn-primary fas fa-receipt fa-xl fa-fw shadow-none btn-circle" v-b-toggle.related-recipes />
+            <i class="btn btn-primary fas fa-receipt fa-xl fa-fw shadow-none btn-circle" v-b-toggle.related-recipes/>
         </div>
-        <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000" @shown="updatePinnedRecipes()">
+        <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000"
+                   @shown="updatePinnedRecipes()">
             <template #default="{ hide }">
                 <div class="d-flex flex-column justify-content-end h-100 p-3 align-items-end">
-                    <h5>{{$t("Planned")}} <i class="fas fa-calendar fa-fw"></i></h5>
+                    <h5>{{ $t("Planned") }} <i class="fas fa-calendar fa-fw"></i></h5>
 
                     <div class="text-right">
                         <template v-if="planned_recipes.length > 0">
@@ -18,24 +19,25 @@
                                             hide()
                                         "
                                         href="javascript:void(0);"
-                                        >{{ r.name }}</a
+                                    >{{ r.name }}</a
                                     >
                                 </div>
                             </div>
                         </template>
                         <template v-else>
-                            <span class="text-muted">{{$t("nothing_planned_today")}}</span>
+                            <span class="text-muted">{{ $t("nothing_planned_today") }}</span>
                         </template>
                     </div>
 
-                    <h5>{{$t("Pinned")}} <i class="fas fa-thumbtack fa-fw"></i></h5>
+                    <h5>{{ $t("Pinned") }} <i class="fas fa-thumbtack fa-fw"></i></h5>
 
                     <template v-if="pinned_recipes.length > 0">
                         <div class="text-right">
                             <div v-for="r in pinned_recipes" :key="`pin${r.id}`">
                                 <b-row class="pb-1 pt-1">
                                     <b-col cols="2">
-                                        <a href="javascript:void(0)" @click="unPinRecipe(r)" class="text-muted"><i class="fas fa-times"></i></a>
+                                        <a href="javascript:void(0)" @click="unPinRecipe(r)" class="text-muted"><i
+                                            class="fas fa-times"></i></a>
                                     </b-col>
                                     <b-col cols="10">
                                         <a
@@ -45,7 +47,7 @@
                                             "
                                             href="javascript:void(0);"
                                             class="align-self-end"
-                                            >{{ r.name }}
+                                        >{{ r.name }}
                                         </a>
                                     </b-col>
                                 </b-row>
@@ -53,7 +55,7 @@
                         </div>
                     </template>
                     <template v-else>
-                        <span class="text-muted">{{$t("no_pinned_recipes")}}</span>
+                        <span class="text-muted">{{ $t("no_pinned_recipes") }}</span>
                     </template>
 
                     <template v-if="related_recipes.length > 0">
@@ -67,7 +69,7 @@
                                             hide()
                                         "
                                         href="javascript:void(0);"
-                                        >{{ r.name }}</a
+                                    >{{ r.name }}</a
                                     >
                                 </div>
                             </div>
@@ -77,8 +79,8 @@
             </template>
             <template #footer="{ hide }">
                 <div class="d-flex bg-dark text-light align-items-center px-3 py-2">
-                    <strong class="mr-auto">{{$t("Quick actions")}}</strong>
-                    <b-button size="sm" @click="hide">{{$t("Close")}}</b-button>
+                    <strong class="mr-auto">{{ $t("Quick actions") }}</strong>
+                    <b-button size="sm" @click="hide">{{ $t("Close") }}</b-button>
                 </div>
             </template>
         </b-sidebar>
@@ -86,14 +88,14 @@
 </template>
 
 <script>
-const { ApiApiFactory } = require("@/utils/openapi/api")
-import { ResolveUrlMixin } from "@/utils/utils"
+const {ApiApiFactory} = require("@/utils/openapi/api")
+import {ResolveUrlMixin} from "@/utils/utils"
 
 export default {
     name: "RecipeSwitcher",
     mixins: [ResolveUrlMixin],
     props: {
-        recipe: { type: Number, default: undefined },
+        recipe: {type: Number, default: undefined},
     },
     data() {
         return {
@@ -158,7 +160,12 @@ export default {
             // get related recipes and save them for later
             if (this.$parent.recipe) {
                 this.related_recipes = [this.$parent.recipe]
-                return apiClient.relatedRecipe(this.$parent.recipe.id, { query: { levels: 2, format: "json" } }).then((result) => {
+                return apiClient.relatedRecipe(this.$parent.recipe.id, {
+                    query: {
+                        levels: 2,
+                        format: "json"
+                    }
+                }).then((result) => {
                     this.related_recipes = this.related_recipes.concat(result.data)
                 })
             }
@@ -172,16 +179,16 @@ export default {
             // TODO move to utility function moment is in maintenance mode https://momentjs.com/docs/
             var tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
             let today = new Date(Date.now() - tzoffset).toISOString().split("T")[0]
-            return apiClient.listMealPlans({ query: { from_date: today, to_date: today } }).then((result) => {
+            return apiClient.listMealPlans({query: {from_date: today, to_date: today}}).then((result) => {
                 let promises = []
                 result.data.forEach((mealplan) => {
-                    this.planned_recipes.push({ ...mealplan?.recipe, servings: mealplan?.servings })
+                    this.planned_recipes.push({...mealplan?.recipe, servings: mealplan?.servings})
                     const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
                     promises.push(
-                        apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
+                        apiClient.relatedRecipe(mealplan?.recipe?.id, {query: {levels: 2}}).then((r) => {
                             // scale all recipes to mealplan servings
                             r.data = r.data.map((x) => {
-                                return { ...x, factor: serving_factor }
+                                return {...x, factor: serving_factor}
                             })
                             this.planned_recipes = [...this.planned_recipes, ...r.data]
                         })
@@ -213,20 +220,28 @@ export default {
     z-index: 9000;
 }
 
-@media screen and (max-width: 600px) {
+
+@media (max-width: 991.98px) {
     #switcher .btn-circle {
         position: fixed;
-        top: 9px;
-        left: 80px;
-        color: white;
+        top: 12px;
+        right: 79px;
+        color: rgba(46, 46, 46, 0.5);
+        width: 56px;
+        height: 40px;
+        font-size: 1.25rem;
+        line-height: 1;
+        background-color: transparent;
+        border: 1px solid rgba(46, 46, 46, 0.5);
+        border-radius: 0.1875rem;
     }
 }
 
-@media screen and (max-width: 2000px) {
+@media (min-width: 992px) {
     #switcher .btn-circle {
         position: fixed;
-        bottom: 10px;
-        right: 50px;
+        bottom: 40px;
+        right: 40px;
     }
 }
 </style>

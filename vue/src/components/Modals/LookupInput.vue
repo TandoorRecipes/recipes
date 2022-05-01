@@ -18,7 +18,6 @@
                 :label="list_label"
                 style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                 :placeholder="modelName"
-                @new="addNew"
             >
             </generic-multiselect>
             <em v-if="help" class="small text-muted">{{ help }}</em>
@@ -119,19 +118,6 @@ export default {
         },
     },
     methods: {
-        addNew: function (e) {
-            // if create a new item requires more than 1 parameter or the field 'name' is insufficient this will need reworked
-            // in a perfect world this would trigger a new modal and allow editing all fields
-            this.genericAPI(this.model, this.Actions.CREATE, { name: e })
-                .then((result) => {
-                    this.new_value = result.data
-                    StandardToasts.makeStandardToast(StandardToasts.SUCCESS_CREATE)
-                })
-                .catch((err) => {
-                    console.log(err)
-                    StandardToasts.makeStandardToast(StandardToasts.FAIL_CREATE)
-                })
-        },
         // ordered lookups have nested attributes that need flattened attributes to drive lookup
         flattenItems: function (itemlist) {
             let flat_items = []

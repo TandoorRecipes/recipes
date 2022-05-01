@@ -377,6 +377,7 @@ LANGUAGES = [
     ('pl', _('Polish')),
     ('ru', _('Russian')),
     ('es', _('Spanish')),
+    ('sv', _('Swedish')),
 ]
 
 # Static files (CSS, JavaScript, Images)
@@ -389,6 +390,8 @@ JS_REVERSE_SCRIPT_PREFIX = os.getenv('JS_REVERSE_SCRIPT_PREFIX', SCRIPT_NAME)
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+AWS_ENABLED = True if os.getenv('S3_ACCESS_KEY', False) else False
 
 if os.getenv('S3_ACCESS_KEY', ''):
     DEFAULT_FILE_STORAGE = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
