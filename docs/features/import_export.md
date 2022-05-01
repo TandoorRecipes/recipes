@@ -38,6 +38,8 @@ Overview of the capabilities of the different integrations.
 | Plantoeat          | ✔️      | ❌  |  ✔     |
 | CookBookApp        | ✔️      | ⌚  |  ✔️     |
 | CopyMeThat         | ✔️      | ❌  |  ✔️     |
+| Melarecipes         | ✔️      | ⌚  |  ✔️     |
+| Cookmate         | ✔️      | ⌚  |  ✔️     |
 | PDF (experimental) | ⌚️      | ✔️  |  ✔️     |
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -224,6 +226,19 @@ CookBookApp can export .zip files containing .html files. Upload the entire ZIP 
 ## CopyMeThat
 
 CopyMeThat can export .zip files containing an `.html` file as well as a folder containing all the images. Upload the entire ZIP to Tandoor to import all included recipes.
+
+## Cookmate
+Cookmate allows you to export a `.mcb` file which you can simply upload to tandoor and import all your recipes.
+
+## RecetteTek
+RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to import all your recipes. 
+
+## Melarecipes
+
+Melarecipes provides multiple export formats but only the `MelaRecipes` format can export the complete collection.
+Perform this export and open the `.melarecipes` file using your favorite archive opening program (e.g 7zip). 
+Repeat this if the file contains another `.melarecipes` file until you get a list of one or many `.melarecipe` files.
+Upload all `.melarecipe` files you want to import to tandoor and start the import.
 
 ## PDF
 

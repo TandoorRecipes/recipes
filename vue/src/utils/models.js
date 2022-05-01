@@ -612,6 +612,18 @@ export class Models {
         list: {
             params: ["filter_list"],
         },
+        create: {
+            params: [["name",]],
+            form: {
+                name: {
+                    form_field: true,
+                    type: "text",
+                    field: "name",
+                    label: "Name",
+                    placeholder: "",
+                },
+            },
+        },
     }
 
     static MEAL_PLAN = {

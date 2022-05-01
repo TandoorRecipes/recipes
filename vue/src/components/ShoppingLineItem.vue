@@ -1,34 +1,43 @@
 <template>
-    <div id="shopping_line_item">
-        <b-row align-h="start">
-            <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0" v-if="settings.left_handed">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
+    <div id="shopping_line_item" class="pt-1">
+        <b-row align-h="start" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
+               ref="shopping_line_item" class="invis-border">
+            <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
+                   v-if="settings.left_handed">
+                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
+                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
+                          variant="link">
+                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
+                                                :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
             </b-col>
-            <b-col cols="1"  class="align-items-center d-flex">
-                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, entries)">
+            <b-col cols="1" class="align-items-center d-flex">
+                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
+                     @click.stop="$emit('open-context-menu', $event, entries)">
                     <button
                         aria-haspopup="true"
                         aria-expanded="false"
                         type="button"
                         :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 dropdown-toggle-no-caret"
-                    >
+                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret">
                         <i class="fas fa-ellipsis-v"></i>
                     </button>
                 </div>
             </b-col>
             <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
+                <input type="checkbox" class="form-control form-control-sm checkbox-control"
+                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
             </b-col>
-            <b-col cols="8" >
+            <b-col cols="8">
                 <b-row class="d-flex h-100">
-                    <b-col cols="6" md="3" class="d-flex align-items-center" v-if="Object.entries(formatAmount).length == 1">
-                        <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong> {{ Object.entries(formatAmount)[0][0] }}
+                    <b-col cols="6" md="3" class="d-flex align-items-center"
+                           v-if="Object.entries(formatAmount).length == 1">
+                        <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong>
+                        {{ Object.entries(formatAmount)[0][0] }}
                     </b-col>
-                    <b-col cols="6" md="3" class="d-flex flex-column" v-if="Object.entries(formatAmount).length != 1">
+                    <b-col cols="6" md="3" class="d-flex flex-column"
+                           v-if="Object.entries(formatAmount).length != 1">
                         <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">
                             {{ x[1] }} &ensp;
                             {{ x[0] }}
@@ -38,20 +47,27 @@
                     <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
                         {{ formatFood }}
                     </b-col>
-                    <b-col cols="3" data-html2canvas-ignore="true" class="align-items-center d-none d-md-flex justify-content-end">
-                        <b-button size="sm" @click="showDetails = !showDetails" class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
+                    <b-col cols="3" data-html2canvas-ignore="true"
+                           class="align-items-center d-none d-md-flex justify-content-end">
+                        <b-button size="sm" @click="showDetails = !showDetails"
+                                  class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
                             <div class="text-nowrap">
-                                <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i> <span class="d-none d-md-inline-block">{{ $t("Details") }}</span>
+                                <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
+                                <span class="d-none d-md-inline-block"><span class="ml-2">{{ $t("Details") }}</span></span>
                             </div>
                         </b-button>
                     </b-col>
                 </b-row>
             </b-col>
-            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0" v-if="!settings.left_handed">
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0" variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i></div>
+            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0"
+                   v-if="!settings.left_handed">
+                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
+                          variant="link">
+                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
+                                                :class="showDetails ? 'rotated' : ''"></i></div>
                 </b-button>
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
+                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
             </b-col>
         </b-row>
         <b-row align-h="center" class="d-none d-md-flex">
@@ -83,24 +99,28 @@
                     </b-col>
                 </b-row>
                 <b-row align-h="start">
-                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0" v-if="settings.left_handed">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
+                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
+                           v-if="settings.left_handed">
+                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
                     </b-col>
                     <b-col cols="2" md="1" class="align-items-center d-flex">
-                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true" @click.stop="$emit('open-context-menu', $event, e)">
+                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
+                             @click.stop="$emit('open-context-menu', $event, e)">
                             <button
                                 aria-haspopup="true"
                                 aria-expanded="false"
                                 type="button"
                                 :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 dropdown-toggle-no-caret"
+                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret"
                             >
                                 <i class="fas fa-ellipsis-v fa-lg"></i>
                             </button>
                         </div>
                     </b-col>
                     <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
+                        <input type="checkbox" class="form-control form-control-sm checkbox-control"
+                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
                     </b-col>
                     <b-col cols="7" md="9">
                         <b-row class="d-flex align-items-center h-100">
@@ -111,19 +131,23 @@
                                 {{ formatOneFood(e) }}
                             </b-col>
                             <b-col cols="12" class="d-flex d-md-none">
-                                <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)" :key="i">{{ n }}</div>
+                                <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)"
+                                     :key="i">{{ n }}
+                                </div>
                             </b-col>
                         </b-row>
                     </b-col>
-                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none" v-if="!settings.left_handed">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile" :checked="formatChecked" @change="updateChecked" :key="entries[0].id" />
+                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none"
+                           v-if="!settings.left_handed">
+                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
+                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
                     </b-col>
                 </b-row>
-                <hr class="w-75" v-if="x !== entries.length - 1" />
-                <div class="pb-4" v-if="x === entries.length - 1"></div>
+                <hr class="w-75 mt-1 mb-1 mt-md-3 mb-md-3" v-if="x !== entries.length - 1"/>
+                <div class="pb-1 pb-md-4" v-if="x === entries.length - 1"></div>
             </div>
         </div>
-        <hr class="m-1" v-if="!showDetails" />
+        <hr class="m-1" v-if="!showDetails"/>
         <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width: 300">
             <template #menu="{ contextData }" v-if="recipe">
                 <ContextMenuItem>
@@ -132,7 +156,8 @@
                 <ContextMenuItem @click="$refs.menu.close()">
                     <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
                         <template #label>
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i> {{ $t("Servings") }}</a>
+                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i>
+                                {{ $t("Servings") }}</a>
                         </template>
                         <div @click.prevent.stop>
                             <b-form-input class="mt-2" min="0" type="number" v-model="servings"></b-form-input>
@@ -141,38 +166,45 @@
                 </ContextMenuItem>
             </template>
         </ContextMenu>
+        <i class="fa fa-hourglass fa-lg" style="display: none; position: absolute" aria-hidden="true"
+           ref="delay_icon"></i>
+        <i class="fa fa-check fa-lg" style="display: none; position: absolute" aria-hidden="true" ref="check_icon"></i>
     </div>
 </template>
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
+import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
-import { ApiMixin } from "@/utils/utils"
+import {ApiMixin} from "@/utils/utils"
 import RecipeCard from "./RecipeCard.vue"
+import Vue2TouchEvents from "vue2-touch-events"
 
 Vue.use(BootstrapVue)
+Vue.use(Vue2TouchEvents)
 
 export default {
     // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available
     // or i'm capturing it incorrectly
     name: "ShoppingLineItem",
     mixins: [ApiMixin],
-    components: { RecipeCard, ContextMenu, ContextMenuItem },
+    components: {RecipeCard, ContextMenu, ContextMenuItem},
     props: {
         entries: {
             type: Array,
         },
         settings: Object,
-        groupby: { type: String },
+        groupby: {type: String},
     },
     data() {
         return {
             showDetails: false,
             recipe: undefined,
             servings: 1,
+            dragStartX: 0,
+            distance_left: 0
         }
     },
     computed: {
@@ -249,6 +281,71 @@ export default {
                 timeStyle: "short",
             }).format(Date.parse(datetime))
         },
+        startHandler: function (event) {
+            if (event.changedTouches.length > 0) {
+                this.dragStartX = event.changedTouches[0].clientX
+            }
+        },
+        getOffset(el) {
+            let rect = el.getBoundingClientRect();
+            return {
+                left: rect.left + window.scrollX,
+                top: rect.top + window.scrollY,
+                right: rect.right - window.scrollX,
+            };
+        },
+        moveHandler: function (event) {
+            let item = this.$refs['shopping_line_item'];
+            this.distance_left = event.changedTouches[0].clientX - this.dragStartX;
+            item.style.marginLeft = this.distance_left
+            item.style.marginRight = -this.distance_left
+            item.style.backgroundColor = '#ddbf86'
+            item.style.border = "1px solid #000"
+
+            let delay_icon = this.$refs['delay_icon']
+            let check_icon = this.$refs['check_icon']
+
+            let color_factor = Math.abs(this.distance_left) / 100
+
+            if (this.distance_left > 0) {
+                item.parentElement.parentElement.style.backgroundColor = 'rgba(130,170,139,0)'.replace(/[^,]+(?=\))/, color_factor)
+                check_icon.style.display = "block"
+                check_icon.style.left = this.getOffset(item.parentElement.parentElement).left + 40
+                check_icon.style.top = this.getOffset(item.parentElement.parentElement).top - 92
+                check_icon.style.opacity = color_factor - 0.3
+            } else {
+                item.parentElement.parentElement.style.backgroundColor = 'rgba(185,135,102,0)'.replace(/[^,]+(?=\))/, color_factor)
+                delay_icon.style.display = "block"
+                console.log(item.parentElement.parentElement.clientWidth)
+                delay_icon.style.left = this.getOffset(item.parentElement.parentElement).right - 40
+                delay_icon.style.top = this.getOffset(item.parentElement.parentElement).top - 92
+                delay_icon.style.opacity = color_factor - 0.3
+            }
+        },
+        endHandler: function (event) {
+            let item = this.$refs['shopping_line_item'];
+            item.removeAttribute('style');
+            item.parentElement.parentElement.removeAttribute('style');
+
+            let delay_icon = this.$refs['delay_icon']
+            let check_icon = this.$refs['check_icon']
+
+            delay_icon.style.display = "none"
+            check_icon.style.display = "none"
+
+            if (Math.abs(this.distance_left) > window.screen.width / 6) {
+                if (this.distance_left > 0) {
+                    let checked = false;
+                    this.entries.forEach((cur) => {
+                        checked = cur.checked
+                    })
+                    let update = {entries: this.entries.map((x) => x.id), checked: !checked}
+                    this.$emit("update-checkbox", update)
+                } else {
+                    this.$emit("update-delaythis", this.entries)
+                }
+            }
+        },
         formatOneAmount: function (item) {
             return item?.amount ?? 1
         },
@@ -289,7 +386,7 @@ export default {
             return [this.$t("Added_by"), item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
         },
         openRecipeCard: function (e, item) {
-            this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, { id: item.recipe_mealplan.recipe }).then((result) => {
+            this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, {id: item.recipe_mealplan.recipe}).then((result) => {
                 let recipe = result.data
                 recipe.steps = undefined
                 this.recipe = true
@@ -299,10 +396,11 @@ export default {
         updateChecked: function (e, item) {
             let update = undefined
             if (!item) {
-                update = { entries: this.entries.map((x) => x.id), checked: !this.formatChecked }
+                update = {entries: this.entries.map((x) => x.id), checked: !this.formatChecked}
             } else {
-                update = { entries: [item], checked: !item.checked }
+                update = {entries: [item], checked: !item.checked}
             }
+            console.log(update)
             this.$emit("update-checkbox", update)
         },
     },
@@ -350,5 +448,21 @@ export default {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
+}
+
+.invis-border {
+    border: 1px solid transparent;
+}
+
+@media (min-width: 992px) {
+   .fa-ellipsis-v {
+       font-size: 20px;
+   }
+}
+
+@media (min-width: 576px) {
+   .fa-ellipsis-v {
+       font-size: 16px;
+   }
 }
 </style>

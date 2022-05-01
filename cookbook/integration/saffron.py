@@ -71,11 +71,10 @@ class Saffron(Integration):
         recipeInstructions = []
         recipeIngredient = []
         for s in recipe.steps.all():
-            if s.type != Step.TIME:
-                recipeInstructions.append(s.instruction)
+            recipeInstructions.append(s.instruction)
 
-                for i in s.ingredients.all():
-                    recipeIngredient.append(f'{float(i.amount)} {i.unit} {i.food}')
+            for i in s.ingredients.all():
+                recipeIngredient.append(f'{float(i.amount)} {i.unit} {i.food}')
 
         data += "Ingredients: \n"
         for ingredient in recipeIngredient:

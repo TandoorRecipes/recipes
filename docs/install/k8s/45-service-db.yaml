@@ -5,7 +5,6 @@ metadata:
     app: recipes
     tier: database
   name: recipes-postgresql
-  namespace: default
 spec:
   ports:
   - name: postgresql
