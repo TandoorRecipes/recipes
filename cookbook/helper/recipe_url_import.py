@@ -114,7 +114,7 @@ def get_from_scraper(scrape, request):
         except Exception:
             pass
 
-    if source_url := scrape.canonical_url():
+    if source_url := scrape.url:
         recipe_json['source_url'] = source_url
         try:
             keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
