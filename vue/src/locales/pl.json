@@ -383,5 +383,16 @@
     "additional_options": "Opcje dodatkowe",
     "err_deleting_protected_resource": "Obiekt, który próbujesz usunąć, jest nadal używany i nie można go usunąć.",
     "Protected": "Chroniony",
-    "Ingredient Editor": "Edytor składników"
+    "Ingredient Editor": "Edytor składników",
+    "one_url_per_line": "Jeden URL na linię",
+    "Website": "Strona internetowa",
+    "App": "Aplikacja",
+    "Bookmarklet": "Skryptozakładka",
+    "click_image_import": "Kliknij obraz, który chcesz zaimportować do tego przepisu",
+    "no_more_images_found": "Nie znaleziono dodatkowych zdjęć na stronie internetowej.",
+    "import_duplicates": "Aby zapobiec duplikatom przepisy tej samej nazwie, co istniejące, są ignorowane. Zaznacz to pole, aby zaimportować wszystko.",
+    "paste_json": "Wklej tutaj źródło json lub html, aby załadować przepis.",
+    "Click_To_Edit": "Kliknij aby edytować",
+    "Imported_From": "Zaimportowane z",
+    "Options": "Opcje"
 }
