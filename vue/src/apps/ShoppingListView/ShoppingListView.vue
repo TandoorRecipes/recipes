@@ -1624,8 +1624,7 @@ export default {
 
                 this.editing_supermarket_categories.forEach((element, index) => {
                     let apiClient = new ApiApiFactory()
-                    console.log(`relation id  ${element.relation_id} order ${element.order} element ${element.order}`)
-                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(element.relation_id, {order: element.order}))
+                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(element.relation_id, {order: index}))
                 })
                 return Promise.all(promises).then(() => {
 
