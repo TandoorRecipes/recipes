@@ -1452,6 +1452,7 @@ export default {
 
             if (supermarket.editing) {
                 this.$set(this.supermarkets[index], "editing", false)
+                this.$set(this.supermarkets[index], "category_to_supermarket", this.editing_supermarket_categories)
                 this.editing_supermarket_categories = []
 
                 let apiClient = new ApiApiFactory()
