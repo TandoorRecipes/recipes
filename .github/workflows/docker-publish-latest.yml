@@ -38,6 +38,7 @@ jobs:
         with:
           publish: true
           imageName: vabene1111/recipes
+          platform: linux/amd64,linux/arm64
           tag: latest
           dockerUser: ${{ secrets.DOCKER_USERNAME }}
           dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
