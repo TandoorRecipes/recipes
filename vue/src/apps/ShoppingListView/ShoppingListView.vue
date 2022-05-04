@@ -291,7 +291,10 @@
                                                                         aria-hidden="true"></i
                                                                     ></span>
                                                                 </h5>
-                                                                 <span class="text-muted" v-if="supermarket.description !== ''">{{ supermarket.description }}</span>
+                                                                <span class="text-muted"
+                                                                      v-if="supermarket.description !== ''">{{
+                                                                        supermarket.description
+                                                                    }}</span>
                                                             </b-col>
                                                         </b-row>
                                                     </b-card-header>
@@ -1026,20 +1029,23 @@ export default {
         "settings.shopping_auto_sync": function (newVal, oldVal) {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
-            if (!newVal) {
-                window.removeEventListener("online", this.updateOnlineStatus)
-                window.removeEventListener("offline", this.updateOnlineStatus)
-                return
-            } else if (oldVal === 0 && newVal > 0) {
-                window.addEventListener("online", this.updateOnlineStatus)
-                window.addEventListener("offline", this.updateOnlineStatus)
-            }
-            this.autosync_id = setInterval(() => {
-                if (this.online && !this.auto_sync_running) {
-                    this.auto_sync_running = true
-                    this.getShoppingList(true)
+            if (this.settings.shopping_auto_sync > 0) {
+                if (!newVal) {
+                    window.removeEventListener("online", this.updateOnlineStatus)
+                    window.removeEventListener("offline", this.updateOnlineStatus)
+                    return
+                } else if (oldVal === 0 && newVal > 0) {
+                    window.addEventListener("online", this.updateOnlineStatus)
+                    window.addEventListener("offline", this.updateOnlineStatus)
                 }
-            }, this.settings.shopping_auto_sync * 1000)
+                this.autosync_id = setInterval(() => {
+                    if (this.online && !this.auto_sync_running) {
+                        this.auto_sync_running = true
+                        this.getShoppingList(true)
+                    }
+                }, this.settings.shopping_auto_sync * 1000)
+            }
+
         },
         "settings.default_delay": function (newVal, oldVal) {
             this.delay = Number(newVal)
@@ -1618,8 +1624,7 @@ export default {
 
                 this.editing_supermarket_categories.forEach((element, index) => {
                     let apiClient = new ApiApiFactory()
-
-                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(element.relation_id, {order: element.order}))
+                    promises.push(apiClient.partialUpdateSupermarketCategoryRelation(element.relation_id, {order: index}))
                 })
                 return Promise.all(promises).then(() => {
 
