@@ -15,12 +15,7 @@ WORKDIR /opt/recipes
 
 COPY requirements.txt ./
 
-RUN \
-    if [ `dpkg --print-architecture` = "armhf" ]; then \
-    printf "[global]\nextra-index-url=https://www.piwheels.org/simple\n" > /etc/pip.conf ; \
-    fi
-
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openssl-dev openldap-dev python3-dev && \
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev libressl-dev libffi-dev cargo openldap-dev python3-dev && \
     echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
