@@ -1,27 +1,21 @@
-name: publish tagged raspi release docker
-
+name: publish beta image docker
 on:
-  release:
-    types: [published]
-
+  push:
+    branches:
+      - 'beta'
 jobs:
   build:
     if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
-    name: Build image job
     steps:
-      - name: Checkout master
-        uses: actions/checkout@master
-      - name: Get version number
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - uses: actions/checkout@master
       # Update Version number
       - name: Update version file
         uses: DamianReeves/write-file-action@v1.0
         with:
           path: recipes/version.py
           contents: |
-            VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
+            VERSION_NUMBER = 'beta'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
       # Build Vue frontend
@@ -40,15 +34,15 @@ jobs:
         with:
           publish: true
           imageName: vabene1111/recipes
+          tag: beta-raspi
           dockerFile: Dockerfile-raspi
           platform: linux/arm/v7
-          tag: ${{ steps.get_version.outputs.VERSION }}-raspi
           dockerUser: ${{ secrets.DOCKER_USERNAME }}
           dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
       # Send discord notification
       - name: Discord notification
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
-          args: '🚀 Version {{ EVENT_PAYLOAD.release.tag_name }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ EVENT_PAYLOAD.release.tag_name }}'
+          args: '🚀 The BETA Image has been updated! 🥳'

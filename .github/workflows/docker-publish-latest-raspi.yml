@@ -1,8 +1,8 @@
-name: publish latest image docker
+name: publish latest raspi image docker
 on:
   push:
-    branches:
-      - 'beta'
+    tags:
+    - '*'
 
 jobs:
   build:
