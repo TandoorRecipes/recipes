@@ -1,8 +1,8 @@
 name: publish latest image docker
 on:
   push:
-    tags:
-    - '*'
+    branches:
+      - 'beta'
 
 jobs:
   build:
