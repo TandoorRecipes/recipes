@@ -104,21 +104,32 @@ def update_food_inheritance(sender, instance=None, created=False, **kwargs):
 
 @receiver(post_save, sender=MealPlan)
 def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs):
+    print("MEAL_AUTO_ADD Signal trying to auto add to shopping")
     if not instance:
-        return
-    user = instance.get_owner()
-    with scope(space=instance.space):
-        slr_exists = instance.shoppinglistrecipe_set.exists()
-
-    if not created and slr_exists:
-        for x in instance.shoppinglistrecipe_set.all():
-            # assuming that permissions checks for the MealPlan have happened upstream
-            if instance.servings != x.servings:
-                SLR = RecipeShoppingEditor(id=x.id, user=user, space=instance.space)
-                SLR.edit_servings(servings=instance.servings)
-    elif not user.userpreference.mealplan_autoadd_shopping or not instance.recipe:
+        print("MEAL_AUTO_ADD Instance is none")
         return
 
-    if created:
-        SLR = RecipeShoppingEditor(user=user, space=instance.space)
-        SLR.create(mealplan=instance, servings=instance.servings)
+    try:
+        space = instance.get_space()
+        user = instance.get_owner()
+        with scope(space=space):
+            slr_exists = instance.shoppinglistrecipe_set.exists()
+
+        if not created and slr_exists:
+            for x in instance.shoppinglistrecipe_set.all():
+                # assuming that permissions checks for the MealPlan have happened upstream
+                if instance.servings != x.servings:
+                    SLR = RecipeShoppingEditor(id=x.id, user=user, space=instance.space)
+                    SLR.edit_servings(servings=instance.servings)
+        elif not user.userpreference.mealplan_autoadd_shopping or not instance.recipe:
+            print("MEAL_AUTO_ADD No recipe or no setting")
+            return
+
+        if created:
+            SLR = RecipeShoppingEditor(user=user, space=space)
+            SLR.create(mealplan=instance, servings=instance.servings)
+            print("MEAL_AUTO_ADD Created SLR")
+    except AttributeError:
+        pass
+
+
