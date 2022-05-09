@@ -13,10 +13,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-04-05 10:31+0000\n"
+"PO-Revision-Date: 2022-05-10 15:32+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,7 +84,7 @@ msgstr "Opmerkingen"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Linkshandigen modus"
 
 #: .\cookbook\forms.py:73
 msgid ""
@@ -161,7 +161,7 @@ msgstr "Sluit ingrediënten die op voorraad zijn uit."
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Optimaliseert de gebruikersinterface voor gebruik met je linkerhand."
 
 #: .\cookbook\forms.py:110
 msgid ""
@@ -547,7 +547,7 @@ msgstr "Sjablooncode kon niet verwerkt worden."
 #: .\cookbook\integration\copymethat.py:42
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favoriet"
 
 #: .\cookbook\integration\copymethat.py:71
 #: .\cookbook\integration\recettetek.py:53
@@ -722,10 +722,8 @@ msgid "Recipe"
 msgstr "Recept"
 
 #: .\cookbook\models.py:1163
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Ingrediënten"
+msgstr "Ingrediënt"
 
 #: .\cookbook\models.py:1164 .\cookbook\templates\base.html:138
 msgid "Keyword"
@@ -1138,10 +1136,8 @@ msgstr "Geschiedenis"
 #: .\cookbook\templates\base.html:252
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingrediënten"
+msgstr "Ingrediënteneditor"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
@@ -1198,11 +1194,11 @@ msgstr "Uitloggen"
 
 #: .\cookbook\templates\base.html:342
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Je gebruikt de gratis versie van Tandoor"
 
 #: .\cookbook\templates\base.html:342
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Upgrade nu"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1731,7 +1727,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2180,17 +2176,15 @@ msgstr "Maak Superuser acount"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Socials login"
+msgstr "Inloggen op sociaal netwerk mislukt"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "Er is een error opgetreden bij het verplaatsen "
+msgstr ""
+"Er is een fout opgetreden tijdens het inloggen via je sociale netwerk "
+"account."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2542,33 +2536,39 @@ msgstr ""
 "op volledige tekst ondersteund."
 
 #: .\cookbook\views\api.py:671
-#, fuzzy
-#| msgid "ID of keyword a recipe should have. For multiple repeat parameter."
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
-"ID van etiket dat een recept moet hebben. Herhaal parameter voor meerdere."
+"ID van etiket dat een recept moet hebben. Herhaal parameter voor meerdere. "
+"Gelijkwaardig aan keywords_or"
 
 #: .\cookbook\views\api.py:674
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"Etiket ID, herhaal voor meerdere. Geeft recepten met elk geselecteerd etiket "
+"weer"
 
 #: .\cookbook\views\api.py:677
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"Etiket ID, herhaal voor meerdere. Geeft recepten met alle geselecteerde "
+"etiketten weer."
 
 #: .\cookbook\views\api.py:680
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"Etiket ID, herhaal voor meerdere. Sluit recepten met één van de etiketten "
+"uit."
 
 #: .\cookbook\views\api.py:683
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"Etiket ID, herhaal voor meerdere. Sluit recepten met alle etiketten uit."
 
 #: .\cookbook\views\api.py:685
 msgid "ID of food a recipe should have. For multiple repeat parameter."
@@ -2579,18 +2579,25 @@ msgstr ""
 #: .\cookbook\views\api.py:688
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"Ingrediënt ID, herhaal voor meerdere. Geeft recepten met elk ingrediënt weer"
 
 #: .\cookbook\views\api.py:690
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"Ingrediënt ID, herhaal voor meerdere. Geef recepten met alle ingrediënten "
+"weer."
 
 #: .\cookbook\views\api.py:692
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"Ingrediënt ID, herhaal voor meerdere. sluit recepten met één van de "
+"ingrediënten uit."
 
 #: .\cookbook\views\api.py:694
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"Ingrediënt ID, herhaal voor meerdere. Sluit recepten met alle ingrediënten "
+"uit."
 
 #: .\cookbook\views\api.py:695
 msgid "ID of unit a recipe should have."
@@ -2600,7 +2607,7 @@ msgstr "ID van eenheid dat een recept moet hebben."
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
-msgstr ""
+msgstr "Een waardering van een recept gaat van 0 tot 5."
 
 #: .\cookbook\views\api.py:698
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
@@ -2609,19 +2616,20 @@ msgstr ""
 
 #: .\cookbook\views\api.py:700
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
-msgstr ""
+msgstr "Boek ID, herhaal voor meerdere. Geeft recepten uit alle boeken weer"
 
 #: .\cookbook\views\api.py:702
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
-msgstr ""
+msgstr "Boek IDs, herhaal voor meerdere. Geeft recepten weer uit alle boeken."
 
 #: .\cookbook\views\api.py:704
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"Boek IDs, herhaal voor meerdere. Sluit recepten uit elk van de boeken uit."
 
 #: .\cookbook\views\api.py:706
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
-msgstr ""
+msgstr "Boek IDs, herhaal voor meerdere. Sluit recepten uit alle boeken uit."
 
 #: .\cookbook\views\api.py:708
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
@@ -2642,37 +2650,46 @@ msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Filter recepten X maal of meer bereid.  Negatieve waarden geven minder dan X "
+"keer bereide recepten weer"
 
 #: .\cookbook\views\api.py:716
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filter recepten op laatst bereid op of na JJJJ-MM-DD. Voorafgaand - filters "
+"op of voor datum."
 
 #: .\cookbook\views\api.py:718
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filter recepten aangemaakt op of na JJJJ-MM-DD. Voorafgaand - filters op of "
+"voor datum."
 
 #: .\cookbook\views\api.py:720
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filter recepten op geüpdatet op of na JJJJ-MM-DD. Voorafgaand - filters op "
+"of voor datum."
 
 #: .\cookbook\views\api.py:722
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filter recepten op laatst bekeken op of na JJJJ-MM-DD. Voorafgaand - filters "
+"op of voor datum."
 
 #: .\cookbook\views\api.py:724
-#, fuzzy
-#| msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
-"Wanneer alleen interne recepten gevonden moeten worden. [waar/<b>onwaar</b>]"
+"Filter recepten die bereid kunnen worden met ingrediënten die op voorraad "
+"zijn. [waar/<b>onwaar</b>]"
 
 #: .\cookbook\views\api.py:880
 msgid ""
@@ -2718,7 +2735,7 @@ msgstr "Verbinding geweigerd."
 
 #: .\cookbook\views\api.py:1200
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Verkeerd URL schema."
 
 #: .\cookbook\views\api.py:1206
 msgid "No usable data could be found."
@@ -2812,10 +2829,8 @@ msgid "Shopping Categories"
 msgstr "Boodschappencategorieën"
 
 #: .\cookbook\views\lists.py:187
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filtreren"
+msgstr "Aangepaste filters"
 
 #: .\cookbook\views\lists.py:224
 msgid "Steps"
