@@ -192,15 +192,6 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        addToShopping(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-shopping-cart"></i>
-                        {{ $t("Add_to_Shopping") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
                         deleteEntry(contextData)
                     "
                 >
@@ -217,47 +208,13 @@
             @delete-entry="deleteEntry"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
-        <template>
-            <div>
-                <b-sidebar id="sidebar-shopping" :title="$t('Shopping_list')" backdrop right shadow="sm">
-                    <div class="row p-1 no-gutters">
-                        <div class="col-12 mt-1" v-if="shopping_list.length === 0">
-                            <p class="p-3">{{ $t("Shopping_List_Empty") }}</p>
-                        </div>
-                        <div class="col-12 mt-1" v-for="entry in shopping_list" v-bind:key="entry.id">
-                            <b-card :header="`${entry.meal_type.icon} ${entry.recipe_name}`" no-body>
-                                <template #footer>
-                                    <small class="text-muted">{{ `${$t("Servings")}: ${entry.servings}` }}</small>
-                                </template>
-                            </b-card>
-                        </div>
-                        <div class="col-12 mt-1" v-if="shopping_list.length > 0">
-                            <b-button-group>
-                                <b-button variant="success" @click="saveShoppingList"
-                                ><i class="fas fa-external-link-alt"></i>
-                                    {{ $t("Open") }}
-                                </b-button>
-                                <b-button variant="danger" @click="shopping_list = []"
-                                ><i class="fa fa-trash"></i>
-                                    {{ $t("Clear") }}
-                                </b-button>
-                            </b-button-group>
-                        </div>
-                    </div>
-                </b-sidebar>
-            </div>
-        </template>
+
         <transition name="slide-fade">
             <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)"
                  v-if="current_tab === 0">
                 <div class="col-md-3 col-6">
                     <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
                         class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                    </button>
-                </div>
-                <div class="col-md-3 col-6">
-                    <button class="btn btn-block btn-primary shadow-none" v-b-toggle.sidebar-shopping><i
-                        class="fas fa-shopping-cart"></i> {{ $t("Shopping_list") }}
                     </button>
                 </div>
                 <div class="col-md-3 col-6">
@@ -447,27 +404,6 @@ export default {
     methods: {
         openRecipe: function (recipe) {
             window.open(this.resolveDjangoUrl("view_recipe", recipe.id))
-        },
-        addToShopping(entry) {
-            if (entry.originalItem.entry.recipe !== null) {
-                this.shopping_list.push(entry.originalItem.entry)
-                makeToast(this.$t("Success"), this.$t("Added_To_Shopping_List"), "success")
-            } else {
-                makeToast(this.$t("Failure"), this.$t("Cannot_Add_Notes_To_Shopping"), "danger")
-            }
-        },
-        saveShoppingList() {
-            let url = window.SHOPPING_URL
-            let first = true
-            for (let se of this.shopping_list) {
-                if (first) {
-                    url += `?r=[${se.recipe.id},${se.servings}]`
-                    first = false
-                } else {
-                    url += `&r=[${se.recipe.id},${se.servings}]`
-                }
-            }
-            window.open(url)
         },
         setStartingDay(days) {
             if (this.settings.startingDayOfWeek + days < 0) {
