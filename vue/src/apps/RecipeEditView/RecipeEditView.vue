@@ -370,7 +370,7 @@
                                                     <div v-for="(ingredient, index) in step.ingredients"
                                                          :key="ingredient.id">
                                                         <hr class="d-md-none"/>
-                                                        <div class="text-center">
+                                                        <div class="text-center" v-if="ingredient.original_text !== null">
                                                             <small class="text-muted"><i class="fas fa-globe"></i>
                                                                 {{ ingredient.original_text }}</small>
                                                         </div>
@@ -943,6 +943,7 @@ export default {
                 order: 0,
                 is_header: false,
                 no_amount: false,
+                original_text: null,
             })
             this.sortIngredients(step)
             this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
