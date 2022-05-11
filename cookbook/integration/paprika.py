@@ -27,7 +27,7 @@ class Paprika(Integration):
                 recipe.description = '' if len(recipe_json['description'].strip()) > 500 else recipe_json['description'].strip()
 
             try:
-                if 'servings' in recipe_json['servings']:
+                if 'servings' in recipe_json:
                     recipe.servings = parse_servings(recipe_json['servings'])
                     recipe.servings_text = parse_servings_text(recipe_json['servings'])
 

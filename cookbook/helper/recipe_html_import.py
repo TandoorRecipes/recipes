@@ -9,6 +9,8 @@ from recipe_scrapers._utils import get_host_name, normalize_string
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
+from recipe_scrapers import scrape_me
+from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 
 
 def get_recipe_from_source(text, url, request):
@@ -63,34 +65,41 @@ def get_recipe_from_source(text, url, request):
     html_data = []
     images = []
     text = unquote(text)
+    scrape = None
 
-    try:
-        parse_list.append(remove_graph(json.loads(text)))
-        if not url and 'url' in parse_list[0]:
-            url = parse_list[0]['url']
-        scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
+    if url:
+        try:
+            scrape = scrape_me(url_path=url, wild_mode=True)
+        except(NoSchemaFoundInWildMode):
+            pass
+    if not scrape:
+        try:
+            parse_list.append(remove_graph(json.loads(text)))
+            if not url and 'url' in parse_list[0]:
+                url = parse_list[0]['url']
+            scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
 
-    except JSONDecodeError:
-        soup = BeautifulSoup(text, "html.parser")
-        html_data = get_from_html(soup)
-        images += get_images_from_source(soup, url)
-        for el in soup.find_all('script', type='application/ld+json'):
-            el = remove_graph(el)
-            if not url and 'url' in el:
-                url = el['url']
-            if type(el) == list:
-                for le in el:
-                    parse_list.append(le)
-            elif type(el) == dict:
-                parse_list.append(el)
-        for el in soup.find_all(type='application/json'):
-            el = remove_graph(el)
-            if type(el) == list:
-                for le in el:
-                    parse_list.append(le)
-            elif type(el) == dict:
-                parse_list.append(el)
-        scrape = text_scraper(text, url=url)
+        except JSONDecodeError:
+            soup = BeautifulSoup(text, "html.parser")
+            html_data = get_from_html(soup)
+            images += get_images_from_source(soup, url)
+            for el in soup.find_all('script', type='application/ld+json'):
+                el = remove_graph(el)
+                if not url and 'url' in el:
+                    url = el['url']
+                if type(el) == list:
+                    for le in el:
+                        parse_list.append(le)
+                elif type(el) == dict:
+                    parse_list.append(el)
+            for el in soup.find_all(type='application/json'):
+                el = remove_graph(el)
+                if type(el) == list:
+                    for le in el:
+                        parse_list.append(le)
+                elif type(el) == dict:
+                    parse_list.append(el)
+            scrape = text_scraper(text, url=url)
 
     recipe_json = helper.get_from_scraper(scrape, request)
 
