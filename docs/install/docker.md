@@ -343,6 +343,11 @@ ProxyPassReverse / http://localhost:8080/ # replace port
 !!!info
     Always wait at least 2-3 minutes after the very first start, since migrations will take some time!
 
+!!!warning
+    If you want to use Tandoor on a Raspberry Pi running a 32-bit operating system you will need to use the following
+    docker image tags: `latest-raspi`, `beta-raspi` and the versioned `<x.y.z>-raspi`
+    We strongly recommend using the new 64-bit Raspian image as the 32-bit version is not tested.
+
 If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
 follow these instructions:
 
