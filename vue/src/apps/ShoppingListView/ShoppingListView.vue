@@ -1756,12 +1756,16 @@ export default {
     flex-grow: 1;
     overflow-y: scroll;
     overflow-x: hidden;
-    height: calc(100% - 170px);
+    height: calc(100vh - 170px);
 }
 
 #id_base_container {
     padding-right: 5px;
     padding-left: 5px;
+}
+
+input {
+    font-size: 16px !important;
 }
 
 @media (max-width: 991.9px) {

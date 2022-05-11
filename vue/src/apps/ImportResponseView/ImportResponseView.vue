@@ -22,7 +22,7 @@
                                     }}!
                                 </b-badge>
                                 <b-badge variant="primary" v-else class="float-right">
-                                    {{ $t('Import_running') }}
+                                    {{ $t('import_running') }}
                                     <b-spinner small class="d-inline-block"></b-spinner>
                                 </b-badge>
                             </h4>
