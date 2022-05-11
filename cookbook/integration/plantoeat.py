@@ -78,7 +78,11 @@ class Plantoeat(Integration):
         current_recipe = ''
 
         for fl in file.readlines():
-            line = fl.decode("windows-1250")
+            try:
+                line = fl.decode("utf-8")
+            except UnicodeDecodeError:
+                line = fl.decode("windows-1250")
+
             if line.startswith('--------------'):
                 if current_recipe != '':
                     recipe_list.append(current_recipe)

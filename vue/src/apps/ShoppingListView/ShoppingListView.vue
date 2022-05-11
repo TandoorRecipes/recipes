@@ -234,7 +234,7 @@
                                         </thead>
                                         <tr v-for="r in Recipes" :key="r.list_recipe">
                                             <td>{{ r.recipe_mealplan.name }}</td>
-                                            <td>{{ r.recipe_mealplan.recipe_name }}</td>
+                                            <td><a :href="resolveDjangoUrl('view_recipe', r.recipe_mealplan.recipe)">{{ r.recipe_mealplan.recipe_name }}</a></td>
                                             <td class="block-inline">
                                                 <b-form-input min="1" type="number" :debounce="300"
                                                               :value="r.recipe_mealplan.servings"
@@ -648,7 +648,7 @@
                 <div class="col-6">
                     <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode; "
                     ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New Entry") }}
+                        {{ $t("New_Entry") }}
                     </a>
                 </div>
                 <div class="col-6">
@@ -781,7 +781,7 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import LookupInput from "@/components/Modals/LookupInput"
 import ShoppingModal from "@/components/Modals/ShoppingModal"
 
-import {ApiMixin, getUserPreference, StandardToasts, makeToast} from "@/utils/utils"
+import {ApiMixin, getUserPreference, StandardToasts, makeToast, ResolveUrlMixin} from "@/utils/utils"
 import {ApiApiFactory} from "@/utils/openapi/api"
 
 Vue.use(BootstrapVue)
@@ -790,7 +790,7 @@ let SETTINGS_COOKIE_NAME = "shopping_settings"
 
 export default {
     name: "ShoppingListView",
-    mixins: [ApiMixin],
+    mixins: [ApiMixin,ResolveUrlMixin],
     components: {
         ContextMenu,
         ContextMenuItem,
