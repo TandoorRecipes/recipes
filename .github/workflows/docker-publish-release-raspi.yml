@@ -45,10 +45,3 @@ jobs:
           tag: ${{ steps.get_version.outputs.VERSION }}-raspi
           dockerUser: ${{ secrets.DOCKER_USERNAME }}
           dockerPassword: ${{ secrets.DOCKER_PASSWORD }}
-      # Send discord notification
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
-        with:
-          args: '🚀 Version {{ EVENT_PAYLOAD.release.tag_name }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ EVENT_PAYLOAD.release.tag_name }}'
