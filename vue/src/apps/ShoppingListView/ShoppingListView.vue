@@ -648,7 +648,7 @@
                 <div class="col-6">
                     <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode; "
                     ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New Entry") }}
+                        {{ $t("New_Entry") }}
                     </a>
                 </div>
                 <div class="col-6">
