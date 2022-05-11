@@ -15,6 +15,7 @@ from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
 from recipes import settings
+from recipes.settings import STATIC_URL
 
 register = template.Library()
 
@@ -157,7 +158,7 @@ def base_path(request, path_type):
     elif path_type == 'script':
         return request.META.get('HTTP_X_SCRIPT_NAME', '')
     elif path_type == 'static_base':
-        return static('vue/manifest.json').replace('vue/manifest.json', '')
+        return STATIC_URL
 
 
 @register.simple_tag
