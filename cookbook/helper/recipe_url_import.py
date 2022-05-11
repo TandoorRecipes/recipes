@@ -114,7 +114,14 @@ def get_from_scraper(scrape, request):
         except Exception:
             pass
 
-    if source_url := scrape.url:
+    try:
+        source_url = scrape.canonical_url()
+    except Exception:
+        try: 
+            source_url = scrape.url
+        except Exception:
+            pass
+    if source_url:
         recipe_json['source_url'] = source_url
         try:
             keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
@@ -129,9 +136,11 @@ def get_from_scraper(scrape, request):
     ingredient_parser = IngredientParser(request, True)
 
     recipe_json['steps'] = []
-
-    for i in parse_instructions(scrape.instructions()):
-        recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
+    try:
+        for i in parse_instructions(scrape.instructions()):
+            recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
+    except Exception:
+        pass
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
