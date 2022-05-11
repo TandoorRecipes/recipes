@@ -1030,11 +1030,11 @@ export default {
                 .listUnits(query, 1, this.options_limit)
                 .then((response) => {
                     this.units = response.data.results
-
+                    let unique_units = this.units.map(u => u.name)
                     if (this.recipe !== undefined) {
                         for (let s of this.recipe.steps) {
                             for (let i of s.ingredients) {
-                                if (i.unit !== null && i.unit.id === undefined) {
+                                if (i.unit !== null && i.unit.id === undefined && !unique_units.includes(i.unit.name) ) {
                                     this.units.push(i.unit)
                                 }
                             }
@@ -1054,11 +1054,11 @@ export default {
                 .listFoods(query, undefined, undefined, 1, this.options_limit)
                 .then((response) => {
                     this.foods = response.data.results
-
+                    let unique_foods = this.foods.map(f => f.name)
                     if (this.recipe !== undefined) {
                         for (let s of this.recipe.steps) {
                             for (let i of s.ingredients) {
-                                if (i.food !== null && i.food.id === undefined) {
+                                if (i.food !== null && i.food.id === undefined && !unique_foods.includes(i.food.name)) {
                                     this.foods.push(i.food)
                                 }
                             }
