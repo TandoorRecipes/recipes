@@ -1,4 +1,4 @@
-name: publish beta image docker
+name: publish beta raspi image docker
 on:
   push:
     branches:
