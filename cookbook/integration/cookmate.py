@@ -28,17 +28,17 @@ class Cookmate(Integration):
             name=recipe_xml.find('title').text.strip(),
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        if recipe_xml.find('preptime') is not None:
+        if recipe_xml.find('preptime') is not None and recipe_xml.find('preptime').text is not None:
             recipe.working_time = parse_time(recipe_xml.find('preptime').text.strip())
 
-        if recipe_xml.find('cooktime') is not None:
+        if recipe_xml.find('cooktime') is not None and recipe_xml.find('cooktime').text is not None:
             recipe.waiting_time = parse_time(recipe_xml.find('cooktime').text.strip())
 
-        if recipe_xml.find('quantity') is not None:
+        if recipe_xml.find('quantity') is not None and recipe_xml.find('quantity').text is not None:
             recipe.servings = parse_servings(recipe_xml.find('quantity').text.strip())
             recipe.servings_text = parse_servings_text(recipe_xml.find('quantity').text.strip())
 
-        if recipe_xml.find('url') is not None:
+        if recipe_xml.find('url') is not None and recipe_xml.find('url').text is not None:
             recipe.source_url = recipe_xml.find('url').text.strip()
 
         if recipe_xml.find('description') is not None:  # description is a list of <li>'s with text
