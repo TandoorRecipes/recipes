@@ -60,7 +60,7 @@
     "webpack-bundle-tracker": "1.4.0",
     "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
-    "workbox-precaching": "^6.3.0",
+    "workbox-precaching": "^6.5.3",
     "workbox-routing": "^6.5.0",
     "workbox-strategies": "^6.2.4"
   },
