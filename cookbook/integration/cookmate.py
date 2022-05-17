@@ -5,6 +5,7 @@ from io import BytesIO
 from gettext import gettext as _
 
 import requests
+import validators
 from lxml import etree
 
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -64,7 +65,9 @@ class Cookmate(Integration):
 
         if recipe_xml.find('imageurl') is not None:
             try:
-                response = requests.get(recipe_xml.find('imageurl').text.strip())
+                url = recipe_xml.find('imageurl').text.strip()
+                if validators.url(url, public=True):
+                    response = requests.get(url)
                 self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
                 print('failed to import image ', str(e))

@@ -4,6 +4,8 @@ import os
 from datetime import datetime
 
 import requests
+import validators
+
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 
@@ -104,9 +106,11 @@ class Dropbox(Provider):
             recipe.link = Dropbox.get_share_link(recipe)
             recipe.save()
 
-        response = requests.get(recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.'))
+        url = recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
+        if validators.url(url, public=True):
+            response = requests.get(url)
 
-        return io.BytesIO(response.content)
+            return io.BytesIO(response.content)
 
     @staticmethod
     def rename_file(recipe, new_name):
