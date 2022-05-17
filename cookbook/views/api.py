@@ -6,6 +6,7 @@ import uuid
 from collections import OrderedDict
 
 import requests
+import validators
 from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
@@ -14,7 +15,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import (Case, Count, Exists, F, IntegerField, OuterRef, ProtectedError, Q,
+from django.db.models import (Case, Count, Exists, OuterRef, ProtectedError, Q,
                               Subquery, Value, When)
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
@@ -24,7 +25,6 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
-from recipe_scrapers import NoSchemaFoundInWildMode, WebsiteNotImplementedError, scrape_me
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -34,6 +34,7 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
+from validators import ValidationFailure
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
@@ -43,7 +44,6 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                group_required)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
-from cookbook.helper.recipe_url_import import get_from_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
@@ -774,16 +774,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             image = None
-            filetype = ".jpeg" # fall-back to .jpeg, even if wrong, at least users will know it's an image and most image viewers can open it correctly anyways
+            filetype = ".jpeg"  # fall-back to .jpeg, even if wrong, at least users will know it's an image and most image viewers can open it correctly anyways
 
             if 'image' in serializer.validated_data:
                 image = obj.image
                 filetype = mimetypes.guess_extension(serializer.validated_data['image'].content_type) or filetype
             elif 'image_url' in serializer.validated_data:
                 try:
-                    response = requests.get(serializer.validated_data['image_url'])
-                    image = File(io.BytesIO(response.content))
-                    filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
+                    url = serializer.validated_data['image_url']
+                    if validators.url(url, public=True):
+                        response = requests.get(url)
+                        image = File(io.BytesIO(response.content))
+                        filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
                 except UnidentifiedImageError as e:
                     print(e)
                     pass
@@ -1188,7 +1190,13 @@ def recipe_from_source(request):
     # in manual mode request complete page to return it later
     if url:
         try:
-            data = requests.get(url, headers=external_request_headers).content
+            if validators.url(url, public=True):
+                data = requests.get(url, headers=external_request_headers).content
+            else:
+                return JsonResponse({
+                    'error': True,
+                    'msg': _('Invalid Url')
+                }, status=400)
         except requests.exceptions.ConnectionError:
             return JsonResponse({
                 'error': True,
@@ -1199,6 +1207,7 @@ def recipe_from_source(request):
                 'error': True,
                 'msg': _('Bad URL Schema.')
             }, status=400)
+
     recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
     if len(recipe_tree) == 0 and len(recipe_json) == 0:
         return JsonResponse({

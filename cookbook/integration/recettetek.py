@@ -5,6 +5,7 @@ from io import BytesIO
 from zipfile import ZipFile
 
 import requests
+import validators
 
 from django.utils.translation import gettext as _
 from cookbook.helper.image_processing import get_filetype
@@ -123,11 +124,13 @@ class RecetteTek(Integration):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)), filetype=get_filetype(image_file_name))
             else:
                 if file['originalPicture'] != '':
-                    response = requests.get(file['originalPicture'])
-                    if imghdr.what(BytesIO(response.content)) is not None:
-                        self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
-                    else:
-                        raise Exception("Original image failed to download.")
+                    url = file['originalPicture']
+                    if validators.url(url, public=True):
+                        response = requests.get(url)
+                        if imghdr.what(BytesIO(response.content)) is not None:
+                            self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
+                        else:
+                            raise Exception("Original image failed to download.")
         except Exception as e:
             print(recipe.name, ': failed to import image ', str(e))
 
