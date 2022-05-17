@@ -801,6 +801,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
                 obj.save()
                 return Response(serializer.data)
+            else:
+                obj.image = None
+                obj.save()
+                return Response(serializer.data)
 
         return Response(serializer.errors, 400)
 
