@@ -4,7 +4,7 @@
             <i
                 class="fas"
                 v-b-popover.hover.html
-                :title="[shopping ? $t('RemoveFoodFromShopping', { food: item.name }) : $t('AddFoodToShopping', { food: item.name })]"
+                :title="[shopping ? $t('RemoveFoodFromShopping', { food: $sanitize(item.name) }) : $t('AddFoodToShopping', { food: $sanitize(item.name) })]"
                 :class="[shopping ? 'text-success fa-shopping-cart' : 'text-muted fa-cart-plus']"
             />
         </b-button>
@@ -22,6 +22,9 @@
 
 <script>
 import { ApiMixin, StandardToasts } from "@/utils/utils"
+import Vue from "vue"
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
 
 export default {
     name: "ShoppingBadge",

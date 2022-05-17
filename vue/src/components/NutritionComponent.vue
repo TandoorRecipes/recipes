@@ -55,6 +55,10 @@
 <script>
 
 import {calculateAmount, calculateEnergy, energyHeading} from "@/utils/utils";
+import Vue from "vue"
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
+
 
 export default {
   name: 'NutritionComponent',
@@ -64,13 +68,13 @@ export default {
   },
   methods: {
     calculateAmount: function (x) {
-      return calculateAmount(x, this.ingredient_factor)
+      return this.$sanitize(calculateAmount(x, this.ingredient_factor))
     },
     calculateEnergy: function (x) {
-      return calculateEnergy(x, this.ingredient_factor)
+      return this.$sanitize(calculateEnergy(x, this.ingredient_factor))
     },
     energy: function (x) {
-      return energyHeading()
+      return this.$sanitize(energyHeading())
     }
   }
 }
