@@ -59,6 +59,10 @@ import { calculateAmount, ResolveUrlMixin, ApiMixin } from "@/utils/utils"
 import OnHandBadge from "@/components/Badges/OnHand"
 import ShoppingBadge from "@/components/Badges/Shopping"
 
+import Vue from "vue"
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
+
 export default {
     name: "IngredientComponent",
     components: { OnHandBadge, ShoppingBadge },
@@ -124,7 +128,7 @@ export default {
     },
     methods: {
         calculateAmount: function (x) {
-            return calculateAmount(x, this.ingredient_factor)
+            return this.$sanitize(calculateAmount(x, this.ingredient_factor))
         },
         // sends parent recipe ingredient to notify complete has been toggled
         done: function () {

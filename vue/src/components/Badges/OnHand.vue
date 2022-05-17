@@ -1,11 +1,15 @@
 <template>
     <span>
-        <b-button v-if="!item.ignore_shopping" class="btn text-decoration-none fas px-1 py-0 border-0" variant="link" v-b-popover.hover.html :title="Title" :class="IconClass" @click="toggleOnHand" />
+        <b-button v-if="!item.ignore_shopping" class="btn text-decoration-none fas px-1 py-0 border-0" variant="link" v-b-popover.hover.html :title="$sanitize(Title)" :class="IconClass" @click="toggleOnHand" />
     </span>
 </template>
 
 <script>
 import { ApiMixin } from "@/utils/utils"
+import Vue from "vue"
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
+
 
 export default {
     name: "OnHandBadge",
