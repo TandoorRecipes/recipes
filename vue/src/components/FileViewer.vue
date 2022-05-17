@@ -14,7 +14,7 @@
       <div class="h-20 w-100 border border-primary rounded text-center">
         <i class="fas fa-eye-slash fa-2x text-primary mt-2"></i>
         <br/>
-        <a :href="url" target="_blank" rel="noreferrer nofollow" class="mt-4">{{$t('Download')}}</a>
+        <a :href="url" target="_blank" rel="noreferrer nofollow" class="mt-4" download>{{$t('Download')}}</a>
       </div>
     </div>
 
