@@ -49,6 +49,7 @@ class Plantoeat(Integration):
         )
 
         if tags:
+            tags = tags.replace('^',',')
             for k in tags.split(','):
                 keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
                 recipe.keywords.add(keyword)
