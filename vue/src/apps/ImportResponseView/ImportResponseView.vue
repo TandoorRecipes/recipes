@@ -143,7 +143,7 @@
                                 <b-card>
                                     <textarea id="id_textarea" ref="output_text" class="form-control"
                                               style="height: 50vh"
-                                              v-html="import_info.msg"
+                                              v-html="$sanitize(import_info.msg)"
                                               disabled></textarea>
                                 </b-card>
                             </b-collapse>
@@ -168,7 +168,9 @@ import {ResolveUrlMixin, ToastMixin, RandomIconMixin} from "@/utils/utils";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts";
+import VueSanitize from "vue-sanitize";
 
+Vue.use(VueSanitize);
 Vue.use(BootstrapVue)
 
 export default {

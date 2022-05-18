@@ -6,6 +6,7 @@ from gettext import gettext as _
 from io import BytesIO
 
 import requests
+import validators
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -59,8 +60,10 @@ class CookBookApp(Integration):
 
         if len(images) > 0:
             try:
-                response = requests.get(images[0])
-                self.import_recipe_image(recipe, BytesIO(response.content))
+                url = images[0]
+                if validators.url(url, public=True):
+                    response = requests.get(url)
+                    self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
                 print('failed to import image ', str(e))
 

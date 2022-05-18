@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col col-md-12">
                     <label for="id_textarea">{{ $t("Information") }}</label>
-                    <textarea id="id_textarea" ref="output_text" class="form-control" style="height: 50vh" v-html="export_info.msg" disabled></textarea>
+                    <textarea id="id_textarea" ref="output_text" class="form-control" style="height: 50vh" v-html="$sanitize(export_info.msg)" disabled></textarea>
                 </div>
             </div>
             <br />
@@ -65,7 +65,8 @@ import LoadingSpinner from "@/components/LoadingSpinner"
 import { ApiApiFactory } from "@/utils/openapi/api.ts"
 
 Vue.use(BootstrapVue)
-
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
 export default {
     name: "ExportResponseView",
     mixins: [ResolveUrlMixin, ToastMixin],
