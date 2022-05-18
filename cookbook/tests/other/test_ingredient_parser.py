@@ -40,10 +40,10 @@ def test_ingredient_parser():
         "1 small sprig of fresh rosemary": (1, "small", "sprig of fresh rosemary", ""),
         # does not always work perfectly!
         "75 g fresh breadcrumbs": (75, "g", "fresh breadcrumbs", ""),
-        "4 acorn squash , or onion squash (600-800g)": (4, "acorn", "squash , or onion squash", "600-800g"),
+        "4 acorn squash , or onion squash (600-800g)": (4, "acorn", "squash, or onion squash", "600-800g"),
         "1 x 250 g packet of cooked mixed grains , such as spelt and wild rice": (
             1, "x", "250 g packet of cooked mixed grains", "such as spelt and wild rice"),
-        "1 big bunch of fresh mint , (60g)": (1, "big", "bunch of fresh mint ,", "60g"),
+        "1 big bunch of fresh mint , (60g)": (1, "big", "bunch of fresh mint,", "60g"),
         "1 large red onion": (1, "large", "red onion", ""),
         # "2-3 TL Curry": (), # idk what it should use here either
         "1 Zwiebel gehackt": (1, "Zwiebel", "gehackt", ""),
@@ -60,12 +60,13 @@ def test_ingredient_parser():
         "2-3 c Water": (2, "c", "Water", "2-3"),
         "Pane (raffermo o secco) 80 g": (80, "g", "Pane", "raffermo o secco"),
         "1 Knoblauchzehe(n), gehackt oder gepresst": (1.0, None, 'Knoblauchzehe(n)', 'gehackt oder gepresst'),
+        "1 Porreestange(n) , ca. 200 g": (1.0, None, 'Porreestange(n)', 'ca. 200 g'),  # leading space before comma
         # test for over long food entries to get properly split into the note field
         "1 Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l": (
             1.0, 'Lorem', 'ipsum', 'dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l'),
         "1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl": (
-        1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
-        'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl')
+            1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
+            'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl')
 
     }
     # for German you could say that if an ingredient does not have
