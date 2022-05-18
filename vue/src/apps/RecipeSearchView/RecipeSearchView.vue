@@ -1162,7 +1162,7 @@ export default {
         },
         ui: {
             handler() {
-                this.$cookies.set(UI_COOKIE_NAME, this.ui)
+                this.$cookies.set(UI_COOKIE_NAME, this.ui, '100y')
             },
             deep: true,
         },
