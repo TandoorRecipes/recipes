@@ -6,12 +6,12 @@ If you like this application and want it to improve, feel free to contribute to 
 
 ## Issues
 The most basic but also very important way of contributing is reporting issues and commenting on ideas and feature requests
-over on the [GitHub issues](https://github.com/vabene1111/recipes/issues).
+over at [GitHub issues](https://github.com/vabene1111/recipes/issues).
 
-Without Feedback improvement can't happen, so don't hesitate to say what you want to say.
+Without feedback improvement can't happen, so don't hesitate to say what you want to say.
 
 ## Contributing Code
-Code contributions are always welcome. There is no special rules for what you need to do, 
+Code contributions are always welcome. There are no special rules for what you need to do, 
 just do your best and we will work together to get your idea and code merged into the project.
 
 !!! info
@@ -21,62 +21,62 @@ just do your best and we will work together to get your idea and code merged int
 This application is developed using the Django framework for Python. They have excellent 
 [documentation](https://www.djangoproject.com/start/) on how to get started, so I will only give you the basics here.
 
-1. Clone this repository wherever you like and install the Python language for your OS (I recommend using version 3.10 or above)
-2. Open it in your favorite editor/IDE (e.g. PyCharm)
-    1. If you want, create a virtual environment for all your packages.
-3. Install all required packages: `pip install -r requirements.txt`
-4. Run the migrations: `python manage.py migrate`
-5. Start the development server: `python manage.py runserver`
+1. Clone this repository wherever you like and install the Python language for your OS (I recommend using version 3.10 or above).
+2. Open it in your favorite editor/IDE (e.g. PyCharm).
+    a. If you want, create a virtual environment for all your packages.
+3. Install all required packages: `pip install -r requirements.txt`.
+4. Run the migrations: `python manage.py migrate`.
+5. Start the development server: `python manage.py runserver`.
 
-There is **no** need to set any environment variables. By default, a simple sqlite database is used and all settings are
+There is **no** need to set any environment variables. By default, a simple SQLite database is used and all settings are
 populated from default values.
 
 ### Vue.js
 Most new frontend pages are build using [Vue.js](https://vuejs.org/). 
 
-In order to work on these pages you will have to install a Javascript package manager of your choice. The following examples use yarn.
+In order to work on these pages, you will have to install a Javascript package manager of your choice. The following examples use yarn.
 
-Run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server
-and go ahead and test your changes. If you do not want to work on those pages but want the application to work properly during 
-development run `yarn build` to build the frontend pages once. 
+Run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
+and proceed to test your changes. If you do not wish to work on those pages, but instead want the application to work properly during 
+development, run `yarn build` to build the frontend pages once. 
 
 #### API Client
-The API Client is generated automatically from the openapi interface provided by the django rest framework.
+The API Client is generated automatically from the OpenAPI interface provided by the Django REST framework.
 For this [openapi-generator](https://github.com/OpenAPITools/openapi-generator) is used.
 
-Install it using your desired setup method (for example using `npm install @openapitools/openapi-generator-cli -g`).
+Install it using your desired setup method. (For example, using `npm install @openapitools/openapi-generator-cli -g`.)
 
 Navigate to `vue/src/utils/openapi`.
 
-Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/` (replace your dev server url if required)
+Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/`. (Replace your dev server url if required.)
 
 ## Contribute Documentation
-The documentation is build from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
+The documentation is built from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
 folder of the GitHub repository.
 
-In order to contribute to the documentation you can fork the repository and edit the markdown files in the browser.
+In order to contribute to the documentation, you can fork the repository and edit the markdown files in the browser.
 
 Now install mkdocs and dependencies: `pip install mkdocs-material mkdocs-include-markdown-plugin`.
 
-If you want to test the documentation locally run `mkdocs serve` from the project root.
+If you want to test the documentation, locally run `mkdocs serve` from the project root.
 
 ## Contribute Translations
 
-If you know any foreign languages that is not yet translated feel free to contribute translations.
+If you know any foreign languages that the project has not been completely translated to yet, feel free to contribute translations.
 
 Translations are managed on [translate.tandoor.dev](https://translate.tandoor.dev/), a self hosted instance of [Weblate](https://weblate.org/de/).
 
 You can simply register an account and then follow these steps to add translations:
 
-1. After registering you are asked to select your languages. This is optional but allows weblate to only show you relevant translations
-2. In the navigation click on `Projects` and then `Browse all projects`
-3. Select Tandoor and on the top right hand corner select `Watch project Tandoor` (click on `Not watching`)
-4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click the pencil icon to get started.
+1. After registering, you are asked to select your languages. This is optional but allows weblate to only show you relevant translations.
+2. In the navigation click on `Projects` and then `Browse all projects`.
+3. Select Tandoor and on the top-right hand corner, select `Watch project Tandoor` (click on `Not watching`).
+4. Go back to the dashboard. It now shows you the relevant translations for your languages. Click on the pencil icon to get started.
 
 !!! info "Creating a new language"
     To create a new language you must first select Tandoor (the project) and then a component.
     Here you will have the option to add the language. Afterwards you can also simply add it to the other components as well.
-    Once a new language is (partially) finished let me know on GitHub so I can add it to the language switcher in Tandoor itself. 
+    Once a new language is (partially) finished let me know on GitHub so I can add it to the language-switcher in Tandoor itself. 
 
 There is also [a lot of documentation](https://docs.weblate.org/en/latest/user/translating.html) available from Weblate directly.
 
@@ -84,4 +84,4 @@ There is also [a lot of documentation](https://docs.weblate.org/en/latest/user/t
 
 It is also possible to provide the translations directly by creating a new language 
 using `manage.py makemessages -l <language_code> -i venv`. Once finished, simply open a PR with the changed files. This sometimes causes issues merging 
-with weblate so I would prefer the use of weblate.
+with weblate, so I would prefer the use of weblate.
