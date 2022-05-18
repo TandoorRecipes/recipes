@@ -40,7 +40,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
         obj.space = self.request.space
         obj.internal = True
         obj.save()
-        obj.steps.add(Step.objects.create(space=self.request.space))
+        obj.steps.add(Step.objects.create(space=self.request.space, show_as_header=False))
         return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
 
     def get_success_url(self):
