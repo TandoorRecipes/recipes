@@ -9,21 +9,21 @@
 # miguel angel <mlopezifu@alumnos.unex.es>, 2020
 # Miguel Canteras <mcanteras@gmail.com>, 2021
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Miguel Canteras <mcanteras@gmail.com>, 2021\n"
-"Language-Team: Spanish (https://www.transifex.com/django-recipes/"
-"teams/110507/es/)\n"
+"PO-Revision-Date: 2022-05-17 21:32+0000\n"
+"Last-Translator: Gabriel Tapias <gtapias@gmail.com>\n"
+"Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
@@ -31,16 +31,12 @@ msgid "Ingredients"
 msgstr "Ingredientes"
 
 #: .\cookbook\forms.py:56
-#, fuzzy
-#| msgid "Default"
 msgid "Default unit"
-msgstr "Por defecto"
+msgstr "Unidad por defecto"
 
 #: .\cookbook\forms.py:57
-#, fuzzy
-#| msgid "System Information"
 msgid "Use fractions"
-msgstr "Información del Sistema"
+msgstr "Usar fracciones"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
@@ -59,38 +55,28 @@ msgid "Sticky navbar"
 msgstr ""
 
 #: .\cookbook\forms.py:62
-#, fuzzy
-#| msgid "Default"
 msgid "Default page"
-msgstr "Por defecto"
+msgstr "Página por defecto"
 
 #: .\cookbook\forms.py:63
-#, fuzzy
-#| msgid "Shopping Recipes"
 msgid "Show recent recipes"
-msgstr "Recetas en el carro de la compra"
+msgstr "Mostrar recetas recientes"
 
 #: .\cookbook\forms.py:64
-#, fuzzy
-#| msgid "Search"
 msgid "Search style"
-msgstr "Buscar"
+msgstr "Estilo de búsqueda"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
 msgstr ""
 
 #: .\cookbook\forms.py:66
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Ingredientes"
+msgstr "Número de decimales del ingrediente"
 
 #: .\cookbook\forms.py:67
-#, fuzzy
-#| msgid "Shopping list currently empty"
 msgid "Shopping list auto sync period"
-msgstr "Lista de la compra vacía"
+msgstr "Período de sincronización automática de la lista de compras"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:76 .\cookbook\templates\stats.html:47
@@ -128,20 +114,14 @@ msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr ""
 
 #: .\cookbook\forms.py:80
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Usuarios con los que las entradas recién creadas del plan de comida/lista de "
-"la compra deben compartirse de forma predeterminada."
+"Usuarios con los que las entradas recién creadas del plan de comida deben "
+"compartirse de forma predeterminada."
 
 #: .\cookbook\forms.py:81
-#, fuzzy
-#| msgid "Open Shopping List"
 msgid "Users with whom to share shopping lists."
-msgstr "Abrir Lista de la Compra"
+msgstr "Usuarios con quienes compartir listas de compra."
 
 #: .\cookbook\forms.py:83
 msgid "Show recently viewed recipes on search page."
@@ -361,10 +341,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\forms.py:466
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Buscar"
+msgstr "Método de Búsqueda"
 
 #: .\cookbook\forms.py:467
 msgid "Fuzzy Lookups"
@@ -389,10 +367,8 @@ msgid "Fuzzy Search"
 msgstr "Buscar"
 
 #: .\cookbook\forms.py:472
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Texto"
+msgstr "Texto Completo"
 
 #: .\cookbook\forms.py:497
 msgid ""
@@ -437,10 +413,8 @@ msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
 
 #: .\cookbook\forms.py:514
-#, fuzzy
-#| msgid "Shopping List"
 msgid "Share Shopping List"
-msgstr "Lista de la Compra"
+msgstr "Compartir Lista de la Compra"
 
 #: .\cookbook\forms.py:515
 msgid "Autosync"
@@ -463,10 +437,8 @@ msgid "Default Delay Hours"
 msgstr ""
 
 #: .\cookbook\forms.py:520
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Seleccionar supermercado"
+msgstr "Filtrar según Supermercado"
 
 #: .\cookbook\forms.py:521
 msgid "Recent Days"
@@ -499,10 +471,8 @@ msgid "Fields on food that should be inherited by default."
 msgstr "Alimento que se va a reemplazar."
 
 #: .\cookbook\forms.py:548
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Muestra recetas vistas recientemente en la página de búsqueda."
+msgstr "Mostrar cantidad de recetas en los filtros de búsquedas"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -546,10 +516,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:152
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
-msgstr "Debe proporcionar al menos una receta o un título."
+msgstr "Debe proporcionar un tamaño de porción"
 
 #: .\cookbook\helper\template_helper.py:64
 #: .\cookbook\helper\template_helper.py:66
@@ -586,22 +554,17 @@ msgid "The following recipes were ignored because they already existed:"
 msgstr ""
 
 #: .\cookbook\integration\integration.py:235
-#, fuzzy, python-format
-#| msgid "Imported new recipe!"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "¡Nueva receta importada!"
+msgstr "Se importaron %s recetas."
 
 #: .\cookbook\integration\paprika.py:46
-#, fuzzy
-#| msgid "Note"
 msgid "Notes"
-msgstr "Nota"
+msgstr "Notas"
 
 #: .\cookbook\integration\paprika.py:49
-#, fuzzy
-#| msgid "Information"
 msgid "Nutritional Information"
-msgstr "Información"
+msgstr "Información Nutricional"
 
 #: .\cookbook\integration\paprika.py:53
 msgid "Source"
@@ -715,10 +678,8 @@ msgid "Raw"
 msgstr ""
 
 #: .\cookbook\models.py:1138
-#, fuzzy
-#| msgid "Food"
 msgid "Food Alias"
-msgstr "Comida"
+msgstr "Alias de la Comida"
 
 #: .\cookbook\models.py:1138
 #, fuzzy

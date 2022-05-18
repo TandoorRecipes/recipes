@@ -93,7 +93,7 @@
                 "
             >
                 <i class="fas fa-expand-arrows-alt fa-fw"></i> <b>{{ $t("Move") }}</b
-                >: <span v-html="$t('move_confirmation', { child: source.name, parent: item.name })"></span>
+                >: <span v-html="$t('move_confirmation', { child: $sanitize(source.name), parent: $sanitize(item.name) })"></span>
             </b-list-group-item>
             <b-list-group-item
                 v-if="useMerge"
@@ -104,7 +104,7 @@
                 "
             >
                 <i class="fas fa-compress-arrows-alt fa-fw"></i> <b>{{ $t("Merge") }}</b
-                >: <span v-html="$t('merge_confirmation', { source: source.name, target: item.name })"></span>
+                >: <span v-html="$t('merge_confirmation', { source: $sanitize(source.name), target: $sanitize(item.name) })"></span>
             </b-list-group-item>
             <b-list-group-item
                 v-if="useMerge"
@@ -115,7 +115,7 @@
                 "
             >
                 <i class="fas fa-robot fa-fw"></i> <b>{{ $t("Merge") }} & {{ $t("Automate") }}</b
-                >: <span v-html="$t('merge_confirmation', { source: source.name, target: item.name })"></span> {{ $t("create_rule") }}
+                >: <span v-html="$t('merge_confirmation', { source: $sanitize(source.name), target: $sanitize(item.name) })"></span> {{ $t("create_rule") }}
                 <b-badge v-b-tooltip.hover :title="$t('warning_feature_beta')">BETA</b-badge>
             </b-list-group-item>
             <b-list-group-item action v-on:click="closeMenu()">
@@ -134,6 +134,9 @@ import RecipeCard from "@/components/RecipeCard"
 import { mixin as clickaway } from "vue-clickaway"
 import { createPopper } from "@popperjs/core"
 import {ApiMixin} from "@/utils/utils";
+import Vue from "vue"
+import VueSanitize from "vue-sanitize";
+Vue.use(VueSanitize);
 
 export default {
     name: "GenericHorizontalCard",
