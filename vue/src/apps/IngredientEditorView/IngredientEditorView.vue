@@ -2,7 +2,7 @@
     <div id="app">
 
         <div class="row mt-2">
-            <div class="col col-md-6">
+            <div class="col col-12 col-md-6">
                 <b-input-group>
                     <generic-multiselect @change="food = $event.val; refreshList()" ref="food_multiselect"
                                          :model="Models.FOOD"
@@ -37,7 +37,7 @@
                                     :item1="food"
                                     @finish-action="finishGenericAction"/>
             </div>
-            <div class="col col-md-6">
+            <div class="col col-12 col-md-6">
 
                 <b-input-group>
 
@@ -90,81 +90,83 @@
 
         <b-row class="mt-2">
             <b-col>
-                <table class="table table-bordered table-sm">
-                    <thead>
-                    <tr>
-                        <th>{{ $t('Amount') }}</th>
-                        <th>{{ $t('Unit') }}</th>
-                        <th>{{ $t('Food') }}</th>
-                        <th>{{ $t('Note') }}</th>
-                        <th>
-                            <b-button variant="success" class="btn btn-sm" @click="updateIngredient()"><i
-                                class="fas fa-save"></i>
-                            </b-button>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tr v-if="loading">
-                        <td colspan="4">
-                            <loading-spinner></loading-spinner>
-                        </td>
-                    </tr>
-                    <template v-if="!loading">
-                        <tbody v-for="i in ingredients" v-bind:key="i.id">
-                        <tr v-if="i.used_in_recipes.length > 0">
-                            <td colspan="5">
-                                <a v-for="r in i.used_in_recipes" :href="resolveDjangoUrl('view_recipe',r.id)"
-                                   v-bind:key="r.id" target="_blank" rel="noreferrer nofollow">{{ r.name }}</a>
-                            </td>
-                        </tr>
+                <div class="table-responsive" style="overflow: unset">
+                    <table class="table table-bordered table-sm" style="">
+                        <thead>
                         <tr>
-                            <td style="width: 5vw">
-                                <input type="number" class="form-control" v-model="i.amount"
-                                       @input="$set(i, 'changed', true)">
-                            </td>
-                            <td style="width: 30vw">
-                                <generic-multiselect @change="i.unit = $event.val; $set(i, 'changed', true)"
-                                                     :initial_single_selection="i.unit"
-                                                     :model="Models.UNIT"
-                                                     :search_on_load="false"
-                                                     :allow_create="true"
-                                                     :create_placeholder="$t('Create')"
-                                                     :multiple="false"></generic-multiselect>
-                            </td>
-                            <td style="width: 30vw">
-                                <generic-multiselect @change="i.food = $event.val; $set(i, 'changed', true)"
-                                                     :initial_single_selection="i.food"
-                                                     :model="Models.FOOD"
-                                                     :search_on_load="false"
-                                                     :allow_create="true"
-                                                     :create_placeholder="$t('Create')"
-                                                     :multiple="false"></generic-multiselect>
-                            </td>
-                            <td style="width: 30vw">
-                                <input class="form-control" v-model="i.note" @keydown="$set(i, 'changed', true)">
-
-                            </td>
-                            <td style="width: 5vw">
-                                <b-button-group>
-                                    <b-button :disabled="i.changed !== true"
-                                              :variant="(i.changed !== true) ? 'primary' : 'success'"
-                                              @click="updateIngredient(i)">
-                                        <i class="fas fa-save"></i>
-                                    </b-button>
-                                    <b-button variant="danger"
-                                              @click="deleteIngredient(i)">
-                                        <i class="fas fa-trash"></i>
-                                    </b-button>
-                                </b-button-group>
-                            </td>
-
+                            <th>{{ $t('Amount') }}</th>
+                            <th>{{ $t('Unit') }}</th>
+                            <th>{{ $t('Food') }}</th>
+                            <th>{{ $t('Note') }}</th>
+                            <th>
+                                <b-button variant="success" class="btn btn-sm" @click="updateIngredient()"><i
+                                    class="fas fa-save"></i>
+                                </b-button>
+                            </th>
                         </tr>
-                        </tbody>
+                        </thead>
+                        <tr v-if="loading">
+                            <td colspan="4">
+                                <loading-spinner></loading-spinner>
+                            </td>
+                        </tr>
+                        <template v-if="!loading">
+                            <tbody v-for="i in ingredients" v-bind:key="i.id">
+                            <tr v-if="i.used_in_recipes.length > 0">
+                                <td colspan="5">
+                                    <a v-for="r in i.used_in_recipes" :href="resolveDjangoUrl('view_recipe',r.id)"
+                                       v-bind:key="r.id" target="_blank" rel="noreferrer nofollow">{{ r.name }}</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="">
+                                    <input type="number" class="form-control" v-model="i.amount"
+                                           @input="$set(i, 'changed', true)">
+                                </td>
+                                <td style="min-width: 30vw">
+                                    <generic-multiselect @change="i.unit = $event.val; $set(i, 'changed', true)"
+                                                         :initial_single_selection="i.unit"
+                                                         :model="Models.UNIT"
+                                                         :search_on_load="false"
+                                                         :allow_create="true"
+                                                         :create_placeholder="$t('Create')"
+                                                         :multiple="false"></generic-multiselect>
+                                </td>
+                                <td style="min-width: 30vw">
+                                    <generic-multiselect @change="i.food = $event.val; $set(i, 'changed', true)"
+                                                         :initial_single_selection="i.food"
+                                                         :model="Models.FOOD"
+                                                         :search_on_load="false"
+                                                         :allow_create="true"
+                                                         :create_placeholder="$t('Create')"
+                                                         :multiple="false"></generic-multiselect>
+                                </td>
+                                <td style="min-width: 30vw">
+                                    <input class="form-control" v-model="i.note" @keydown="$set(i, 'changed', true)">
+
+                                </td>
+                                <td style="">
+                                    <b-button-group>
+                                        <b-button :disabled="i.changed !== true"
+                                                  :variant="(i.changed !== true) ? 'primary' : 'success'"
+                                                  @click="updateIngredient(i)">
+                                            <i class="fas fa-save"></i>
+                                        </b-button>
+                                        <b-button variant="danger"
+                                                  @click="deleteIngredient(i)">
+                                            <i class="fas fa-trash"></i>
+                                        </b-button>
+                                    </b-button-group>
+                                </td>
+
+                            </tr>
+                            </tbody>
 
 
-                    </template>
+                        </template>
 
-                </table>
+                    </table>
+                </div>
 
 
             </b-col>
