@@ -2226,237 +2226,238 @@ TASTE_OF_HOME = {
 THE_SPRUCE_EATS = {
     'file': ['thespruceeats.html'],
     'url': 'https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797',
+
     "name": "Creamy Potato Soup With Ham",
-    "description": "",
     "servings": 6,
-    "prepTime": 55,
-    "cookTime": 0,
-    "image": 'https://www.thespruceeats.com/thmb/KfpdKXpq4JYKIIyv8ZuKuR8GRkQ=/960x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg',
-    "keywords": [],
-    "recipeIngredient": [
+    "servings_text": "servings",
+    "working_time": 20,
+    "waiting_time": 35,
+    "image": "https://www.thespruceeats.com/thmb/X_emapo3nNw6ASJctdNpYycYFtM=/940x0/filters:no_upscale():max_bytes(150000):strip_icc()/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg",
+    "source_url": "https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
+    "keywords": [
+            {
+                "label": "soup",
+                "name": "soup",
+                "id": 18,
+            },
         {
-            "amount": 2,
-            "unit": {
-                "text": "tablespoons",
-                "id": 99364
+                "label": "lunch",
+                "name": "lunch",
             },
-            "ingredient": {
-                "text": "butter",
-                "id": 84919
-            },
-            "note": "",
-            "original_text": "2 tablespoons butter"
-        },
         {
-            "amount": 1.5,
-            "unit": {
-                "text": "to",
-                "id": 15026
+                "label": "entree",
+                "name": "entree",
             },
-            "ingredient": {
-                "text": "2 cups onion",
-                "id": 89800
-            },
-            "note": "chopped",
-            "original_text": "1 1/2 to 2 cups onion (chopped)"
-        },
         {
-            "amount": 1,
-            "unit": {
-                "text": "cup",
-                "id": 74768
+                "label": "side dish",
+                "name": "side dish",
+                "id": 14,
             },
-            "ingredient": {
-                "text": "celery",
-                "id": 70601
-            },
-            "note": "chopped",
-            "original_text": "1 cup celery (chopped)"
-        },
         {
-            "amount": 2,
-            "unit": {
-                "text": "large",
-                "id": 39225
+                "label": "www.thespruceeats.com",
+                "name": "www.thespruceeats.com",
             },
-            "ingredient": {
-                "text": "carrots",
-                "id": 72417
-            },
-            "note": "peeled and chopped",
-            "original_text": "2 large carrots (peeled and chopped)"
-        },
         {
-            "amount": 2,
-            "unit": {
-                "text": "to",
-                "id": 17146
+                "label": "southern",
+                "name": "southern",
+                "id": 27,
             },
-            "ingredient": {
-                "text": "3 cups ham",
-                "id": 14124
-            },
-            "note": "about 1 pound, diced",
-            "original_text": "2 to 3 cups ham (about 1 pound, diced)"
-        },
         {
-            "amount": 1,
-            "unit": {
-                "text": "clove",
-                "id": 59174
+                "label": "cheddar",
+                "name": "cheddar",
             },
-            "ingredient": {
-                "text": "garlic",
-                "id": 63566
-            },
-            "note": "minced",
-            "original_text": "1 clove garlic (minced)"
-        },
         {
-            "amount": 2,
-            "unit": {
-                "text": "cups",
-                "id": 38790
-            },
-            "ingredient": {
-                "text": "vegetable broth",
-                "id": 10572
-            },
-            "note": "",
-            "original_text": "2 cups vegetable broth"
-        },
+                "label": "dinner",
+                "name": "dinner",
+            }
+    ],
+    "steps": [
         {
-            "amount": 1,
-            "unit": {
-                "text": "cup",
-                "id": 91657
-            },
-            "ingredient": {
-                "text": "water",
-                "id": 28583
-            },
-            "note": "",
-            "original_text": "1 cup water"
-        },
-        {
-            "amount": 4,
-            "unit": {
-                "text": "to",
-                "id": 35482
-            },
-            "ingredient": {
-                "text": "5 cups potatoes",
-                "id": 16911
-            },
-            "note": "peeled and diced",
-            "original_text": "4 to 5 cups potatoes (peeled and diced)"
-        },
-        {
-            "amount": 3,
-            "unit": {
-                "text": "tablespoons",
-                "id": 42650
-            },
-            "ingredient": {
-                "text": "all-purpose flour",
-                "id": 40407
-            },
-            "note": "",
-            "original_text": "3 tablespoons all-purpose flour"
-        },
-        {
-            "amount": 1,
-            "unit": {
-                "text": "cup",
-                "id": 26167
-            },
-            "ingredient": {
-                "text": "heavy cream",
-                "id": 19424
-            },
-            "note": "",
-            "original_text": "1 cup heavy cream"
-        },
-        {
-            "amount": 1,
-            "unit": {
-                "text": "cup",
-                "id": 55243
-            },
-            "ingredient": {
-                "text": "half-and-half",
-                "id": 61156
-            },
-            "note": "or whole milk, more if needed to thin",
-            "original_text": "1 cup half-and-half (or whole milk, more if needed to thin)"
-        },
-        {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 48319
-            },
-            "ingredient": {
-                "text": "Dash salt",
-                "id": 75657
-            },
-            "note": "to taste",
-            "original_text": "Dash salt (to taste)"
-        },
-        {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 94308
-            },
-            "ingredient": {
-                "text": "Dash freshly ground black pepper",
-                "id": 49484
-            },
-            "note": "to taste",
-            "original_text": "Dash freshly ground black pepper (to taste)"
-        },
-        {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 15775
-            },
-            "ingredient": {
-                "text": "Optional: 2 tablespoons fresh parsley",
-                "id": 73062
-            },
-            "note": "chopped",
-            "original_text": "Optional: 2 tablespoons fresh parsley (chopped)"
-        },
-        {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 18745
-            },
-            "ingredient": {
-                "text": "Garnish: green onions or chives",
-                "id": 73287
-            },
-            "note": "sliced",
-            "original_text": "Garnish: green onions or chives (sliced)"
-        },
-        {
-            "amount": 0,
-            "unit": {
-                "text": "",
-                "id": 51247
-            },
-            "ingredient": {
-                "text": "Optional: cheddar cheese or cheddar-jack blend",
-                "id": 18932
-            },
-            "note": "shredded",
-            "original_text": "Optional: cheddar cheese or cheddar-jack blend (shredded)"
+            "instruction": "Gather the ingredients.  \nIn a large saucepan, melt butter over medium-low heat.  \nAdd onion, celery, carrots, and ham.  \nCook, stirring frequently until onions are tender, about 5 minutes.  \nAdd the garlic and continue cooking for 1 to 2 minutes longer.  \nAdd vegetable broth, water, and potatoes.  \nCover and cook for about 25 minutes, until potatoes are tender.  \nWhisk flour into the heavy cream until smooth.  \nStir into the hot mixture.  \nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.  \nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.  \nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.  \nGather the ingredients.  \nIn a large saucepan, melt butter over medium-low heat.  \nAdd onion, celery, carrots, and ham.  \nCook, stirring frequently until onions are tender, about 5 minutes.  \nAdd the garlic and continue cooking for 1 to 2 minutes longer.  \nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes.  \nCover and cook on high for about 2 to 3 hours, or until the potatoes are very tender.  \nWhisk flour into the heavy cream until smooth.  \nStir the flour-cream mixture into the slow cooker.  \nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.  \nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.  \nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.",
+            "ingredients": [
+                {
+                    "amount": 2,
+                    "food": {
+                        "name": "butter"
+                    },
+                    "unit": {
+                        "name": "tablespoons"
+                    },
+                    "note": "",
+                    "original_text": "2 tablespoons unsalted butter"
+                },
+                {
+                    "amount": 1.5,
+                    "food": {
+                        "name": "2 cups coarsely chopped onion"
+                    },
+                    "unit": {
+                        "name": "to"
+                    },
+                    "note": "",
+                    "original_text": "1 1/2 to 2 cups coarsely chopped onion"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "coarsely chopped celery"
+                    },
+                    "unit": {
+                        "name": "cups"
+                    },
+                    "note": "",
+                    "original_text": "1 cup coarsely chopped celery"
+                },
+                {
+                    "amount": 2,
+                    "food": {
+                        "name": "carrots"
+                    },
+                    "unit": {
+                        "name": "large"
+                    },
+                    "note": "peeled and coarsely chopped",
+                    "original_text": "2 large carrots, peeled and coarsely chopped"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "ham"
+                    },
+                    "unit": {
+                        "name": "pounds"
+                    },
+                    "note": "diced",
+                    "original_text": "1 pound ham, diced"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "garlic"
+                    },
+                    "unit": {
+                        "name": "cloves"
+                    },
+                    "note": "minced",
+                    "original_text": "1 clove garlic, minced"
+                },
+                {
+                    "amount": 2,
+                    "food": {
+                        "name": "vegetable broth"
+                    },
+                    "unit": {
+                        "name": "cups"
+                    },
+                    "note": "",
+                    "original_text": "2 cups vegetable broth"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "water"
+                    },
+                    "unit": {
+                        "name": "cups"
+                    },
+                    "note": "",
+                    "original_text": "1 cup water"
+                },
+                {
+                    "amount": 4,
+                    "food": {
+                        "name": "5 cups diced peeled potatoes"
+                    },
+                    "unit": {
+                        "name": "to"
+                    },
+                    "note": "",
+                    "original_text": "4 to 5 cups diced peeled potatoes"
+                },
+                {
+                    "amount": 3,
+                    "food": {
+                        "name": "all purpose flour"
+                    },
+                    "unit": {
+                        "name": "tablespoons"
+                    },
+                    "note": "",
+                    "original_text": "3 tablespoons all-purpose flour"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "heavy cream"
+                    },
+                    "unit": {
+                        "name": "cups"
+                    },
+                    "note": "",
+                    "original_text": "1 cup heavy cream"
+                },
+                {
+                    "amount": 1,
+                    "food": {
+                        "name": "half-and-half"
+                    },
+                    "unit": {
+                        "name": "cups"
+                    },
+                    "note": "or whole milk, more if needed",
+                    "original_text": "1 cup half-and-half, or whole milk, more if needed"
+                },
+                {
+                    "amount": 0,
+                    "food": {
+                        "name": "salt"
+                    },
+                    "unit": None,
+                    "note": "to taste",
+                    "original_text": "Salt, to taste"
+                },
+                {
+                    "amount": 0,
+                    "food": {
+                        "name": "Freshly ground black pepper"
+                    },
+                    "unit": None,
+                    "note": "to taste",
+                    "original_text": "Freshly ground black pepper, to taste"
+                },
+                {
+                    "amount": 2,
+                    "food": {
+                        "name": "finely chopped fresh parsley"
+                    },
+                    "unit": {
+                        "name": "tablespoons"
+                    },
+                    "note": "optional",
+                    "original_text": "2 tablespoons finely chopped fresh parsley, optional"
+                },
+                {
+                    "amount": 0,
+                    "food": {
+                        "name": "Thinly sliced green onions or chives"
+                    },
+                    "unit": None,
+                    "note": "for garnish",
+                    "original_text": "Thinly sliced green onions or chives, for garnish"
+                },
+                {
+                    "amount": 0,
+                    "food": {
+                        "name": "Shredded cheddar cheese"
+                    },
+                    "unit": None,
+                    "note": "or cheddar-jack blend, for garnish, optional",
+                    "original_text": "Shredded cheddar cheese, or cheddar-jack blend, for garnish, optional"
+                }
+            ]
         }
     ],
-    "recipeInstructions": "Gather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nAdd vegetable broth, water, and potatoes.\nCover and cook for about 25 minutes, until potatoes are tender.\nWhisk flour into the heavy cream until smooth.\nStir into the hot mixture.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\nGather the ingredients.\nIn a large saucepan, melt butter over medium-low heat.\nAdd onion, celery, carrots, and ham.\nCook, stirring frequently until onions are tender, about 5 minutes.\nAdd the garlic and continue cooking for 1 to 2 minutes longer.\nThen transfer the cooked vegetables to the slow cooker and add the broth, water, and potatoes.\nCover and cook on HIGH for about 2 to 3 hours, or until the potatoes are very tender.\nWhisk flour into the heavy cream until smooth.\nStir the flour-cream mixture into the slow cooker.\nStir in the half-and-half or milk. Taste and add salt and pepper, as desired. Continue cooking until hot.\nUsing a potato masher or fork, mash the potatoes slightly to thicken; add more milk if the soup is too thick.\nServe the potato soup garnished with parsley, sliced green onions or chives, or a little bit of shredded cheese.\n\nImported from https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
+    "description": "This is a creamy potato soup with ham, garlic, cream, and chopped vegetables. This soup is easy to prepare and is ready in under an hour."
 }
 
 TUDOGOSTOSO = {
