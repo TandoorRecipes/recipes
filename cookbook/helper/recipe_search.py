@@ -147,7 +147,7 @@ class RecipeSearch():
 
     def _build_sort_order(self):
         if self._random:
-            self._queryset = self._queryset.order_by("?")
+            self.orderby = ['?']
         else:
             order = []
             # TODO add userpreference for default sort order and replace '-favorite'

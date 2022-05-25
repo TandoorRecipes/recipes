@@ -172,6 +172,7 @@ LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
 if LDAP_AUTH:
     import ldap
     from django_auth_ldap.config import LDAPSearch
+
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
     AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
@@ -209,7 +210,7 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
 if REVERSE_PROXY_AUTH:
-    MIDDLEWARE.append('recipes.middleware.CustomRemoteUser')
+    MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
 # Password validation

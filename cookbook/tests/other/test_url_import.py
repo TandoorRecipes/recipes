@@ -2,14 +2,13 @@ import json
 import os
 
 import pytest
-
 from django.urls import reverse
 
-from ._recipes import (
-    ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
-    COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
-    MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
 from cookbook.tests.conftest import validate_recipe
+
+from ._recipes import (ALLRECIPES, AMERICAS_TEST_KITCHEN, CHEF_KOCH, CHEF_KOCH2, COOKPAD,
+                       COOKS_COUNTRY, DELISH, FOOD_NETWORK, GIALLOZAFFERANO, JOURNAL_DES_FEMMES,
+                       MADAME_DESSERT, MARMITON, TASTE_OF_HOME, THE_SPRUCE_EATS, TUDOGOSTOSO)
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
 DATA_DIR = "cookbook/tests/other/test_data/"
@@ -36,13 +35,13 @@ def test_import_permission(arg, request):
 @pytest.mark.parametrize("arg", [
     ALLRECIPES,
     # test of custom scraper ATK
-    # AMERICAS_TEST_KITCHEN, #TODO while the import trough the UI works the test fails for some reason, find out why
+    AMERICAS_TEST_KITCHEN,
     CHEF_KOCH,
     # test for empty ingredient in ingredient_parser
     CHEF_KOCH2,
     COOKPAD,
     # test of custom scraper ATK
-    #COOKS_COUNTRY,  #TODO while the import trough the UI works the test fails for some reason, find out why
+    COOKS_COUNTRY,
     DELISH,
     FOOD_NETWORK,
     GIALLOZAFFERANO,
@@ -53,7 +52,7 @@ def test_import_permission(arg, request):
     MARMITON,
     TASTE_OF_HOME,
     # example of non-json recipes_scraper
-    # THE_SPRUCE_EATS, #TODO seems to be broken in recipe scrapers
+    THE_SPRUCE_EATS,  # TODO seems to be broken in recipe scrapers
     TUDOGOSTOSO,
 ])
 def test_recipe_import(arg, u1_s1):

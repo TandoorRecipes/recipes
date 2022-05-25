@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-04-10 09:51+0000\n"
-"Last-Translator: Rubens <rubenixnagios@gmail.com>\n"
+"PO-Revision-Date: 2022-05-22 11:20+0000\n"
+"Last-Translator: Ramon Aixa Juan <juanramonaixa@gmail.com>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
 "Language: ca\n"
@@ -35,7 +35,7 @@ msgstr "Unitat per defecte"
 
 #: .\cookbook\forms.py:57
 msgid "Use fractions"
-msgstr "Usa fraccions"
+msgstr "Utilitza fraccions"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
@@ -84,7 +84,7 @@ msgstr "Comentaris"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Mode per a esquerrans"
 
 #: .\cookbook\forms.py:73
 msgid ""
@@ -163,7 +163,7 @@ msgstr "Exclou els ingredients que hi ha a mà."
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "S'optimitzarà la UI pel seu ús amb la mà esquerra."
 
 #: .\cookbook\forms.py:110
 msgid ""
@@ -230,8 +230,8 @@ msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
-"Deixeu-lo buit per a Dropbox i introduïu només l'URL base per a nextcloud "
-"(<code>/remote.php/webdav/ s'afegeix automàticament)"
+"Deixeu-lo buit per a Dropbox i introduïu només l'URL base per a Nextcloud "
+"(<code>/remote.php/webdav/</code> s'afegeix automàticament)"
 
 #: .\cookbook\forms.py:272 .\cookbook\views\edit.py:157
 msgid "Storage"
