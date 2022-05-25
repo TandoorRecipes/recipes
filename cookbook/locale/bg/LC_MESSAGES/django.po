@@ -2235,7 +2235,7 @@ msgid ""
 msgstr ""
 "Предстои ви да използвате вашия\n"
 "         %(provider_name)s профил, с който да влезете\n"
-"         %(name_site)s. Като последна стъпка, моля, попълнете следния "
+"         %(site_name)s. Като последна стъпка, моля, попълнете следния "
 "формуляр:"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
