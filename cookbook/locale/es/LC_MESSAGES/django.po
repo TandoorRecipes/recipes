@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-05-17 21:32+0000\n"
-"Last-Translator: Gabriel Tapias <gtapias@gmail.com>\n"
+"PO-Revision-Date: 2022-05-23 11:32+0000\n"
+"Last-Translator: Ramon Aixa Juan <juanramonaixa@gmail.com>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -40,19 +40,19 @@ msgstr "Usar fracciones"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
-msgstr ""
+msgstr "Usar KJ"
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "Color de la barra de navegación"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Barra de navegación pegajosa"
 
 #: .\cookbook\forms.py:62
 msgid "Default page"
@@ -85,7 +85,7 @@ msgstr "Comentarios"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Modo para zurdos"
 
 #: .\cookbook\forms.py:73
 msgid ""
@@ -111,7 +111,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:79
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Mostrar los valores nutricionales en Julios en vez de calorías"
 
 #: .\cookbook\forms.py:80
 msgid "Users with whom newly created meal plans should be shared by default."
@@ -163,7 +163,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Se optimizará la UI para su uso con la mano izquierda."
 
 #: .\cookbook\forms.py:110
 msgid ""
@@ -171,11 +171,7 @@ msgid ""
 "instead"
 msgstr ""
 "Ambos campos son opcionales. Si no se proporciona ninguno, se mostrará el "
-"nombre de usuario en su lugar\n"
-" \n"
-" \n"
-" \n"
-" "
+"nombre de usuario en su lugar"
 
 #: .\cookbook\forms.py:131 .\cookbook\forms.py:304
 msgid "Name"
@@ -212,10 +208,12 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Para evitar duplicados, las recetas con el mismo nombre serán ignoradas. "
+"Marca esta opción para importar todas las recetas."
 
 #: .\cookbook\forms.py:203
 msgid "Add your comment: "
-msgstr "Añada su comentario:"
+msgstr "Añada su comentario: "
 
 #: .\cookbook\forms.py:218
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -242,7 +240,7 @@ msgstr "Almacenamiento"
 
 #: .\cookbook\forms.py:274
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: .\cookbook\forms.py:280
 msgid "Search String"
@@ -276,21 +274,23 @@ msgstr ""
 
 #: .\cookbook\forms.py:375
 msgid "Email address already taken!"
-msgstr ""
+msgstr "¡El correo electrónico ya existe!"
 
 #: .\cookbook\forms.py:383
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"El correo electrónico es opcional. Si se añade uno se mandará un link de "
+"invitación."
 
 #: .\cookbook\forms.py:398
 msgid "Name already taken."
-msgstr ""
+msgstr "El nombre ya existe."
 
 #: .\cookbook\forms.py:409
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Aceptar términos y condiciones"
 
 #: .\cookbook\forms.py:441
 msgid ""
@@ -831,10 +831,8 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: .\cookbook\templates\account\email.html:58
-#, fuzzy
-#| msgid "Warning"
 msgid "Warning:"
-msgstr "Advertencia"
+msgstr "Advertencia:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -940,10 +938,8 @@ msgstr "¿Seguro que quieres salir?"
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Change Password"
-msgstr "¡Cambios guardados!"
+msgstr "Cambiar contraseña"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
@@ -971,10 +967,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\account\password_reset.html:32
-#, fuzzy
-#| msgid "Password reset is not implemented for the time being!"
 msgid "Password reset is disabled on this instance."
-msgstr "¡Restablecimiento de contraseña no está implementado de momento!"
+msgstr "Restablecimiento de contraseña no está implementado de momento."
 
 #: .\cookbook\templates\account\password_reset_done.html:16
 msgid ""
@@ -998,10 +992,8 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "change password"
-msgstr "¡Cambios guardados!"
+msgstr "Cambiar contraseña"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
@@ -1326,7 +1318,7 @@ msgstr "¿Estás seguro de que quieres combinar estos dos ingredientes?"
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "¿Estás seguro de que quieres borrar el %(title)s: <b>%(object)s</b>?"
+msgstr "¿Estás seguro de que quieres borrar el %(title)s: <b>%(object)s</b>? "
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
@@ -1659,12 +1651,10 @@ msgid "No Permission"
 msgstr "Sin permisos"
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to perform this action!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "¡No tienes los permisos necesarios para realizar esta acción!"
+msgstr "No tienes los permisos necesarios para realizar esta acción."
 
 #: .\cookbook\templates\no_space_info.html:6
 #: .\cookbook\templates\no_space_info.html:13
@@ -2216,21 +2206,19 @@ msgstr "Administrador"
 
 #: .\cookbook\templates\space.html:118
 msgid "user"
-msgstr ""
+msgstr "usuario"
 
 #: .\cookbook\templates\space.html:119
 msgid "guest"
-msgstr ""
+msgstr "invitado"
 
 #: .\cookbook\templates\space.html:120
-#, fuzzy
-#| msgid "Remove"
 msgid "remove"
-msgstr "Eliminar"
+msgstr "eliminar"
 
 #: .\cookbook\templates\space.html:124
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #: .\cookbook\templates\space.html:128
 #, fuzzy

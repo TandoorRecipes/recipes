@@ -232,6 +232,9 @@ class IngredientParser:
             match = re.search('\((.[^\(])+\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
+        # leading spaces before commas result in extra tokens, clean them out
+        ingredient = ingredient.replace(' ,', ',')
+
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
             # there only is one argument, that must be the food
@@ -302,5 +305,8 @@ class IngredientParser:
             else:
                 note = food + ' ' + note
                 food = food[:Food._meta.get_field('name').max_length]
+
+        if len(food.strip()) == 0:
+            raise ValueError(f'Error parsing string {ingredient}, food cannot be empty')
 
         return amount, unit, food, note[:Ingredient._meta.get_field('note').max_length].strip()
