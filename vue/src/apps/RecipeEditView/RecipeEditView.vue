@@ -185,14 +185,14 @@
                         <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5" :id="`id_card_step_${step_index}`">
                             <!-- step card header -->
                             <div class="row">
-                                <div class="col-11">
+                                <div class="col">
                                     <h4 class="handle" :id="'id_step_' + step_index">
                                         <i class="fas fa-paragraph"></i>
                                         <template v-if="step.name !== ''">{{ step.name }}</template>
                                         <template v-else>{{ $t("Step") }} {{ step_index + 1 }}</template>
                                     </h4>
                                 </div>
-                                <div class="col-1" style="text-align: right">
+                                <div class="col-auto" style="text-align: right">
                                     <a class="btn shadow-none btn-lg" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v text-muted"></i>
