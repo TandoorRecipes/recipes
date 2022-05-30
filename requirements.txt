@@ -30,7 +30,7 @@ django-webpack-loader==1.5.0
 django-js-reverse==0.9.1
 django-allauth==0.50.0
 recipe-scrapers==13.32.1
-django-scopes==1.2.0
+django-scopes==1.2.0.post1
 pytest==7.1.1
 pytest-django==4.5.2
 django-treebeard==4.5.1
