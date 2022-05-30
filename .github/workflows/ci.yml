@@ -29,7 +29,8 @@ jobs:
       run: yarn build
     - name: Install Django dependencies
       run: |
-        sudo apt-get install -y libsasl2-dev python-dev libldap2-dev libssl-dev openldap-dev
+        sudo pt-get -y update
+        sudo apt-get install -y libsasl2-dev python-dev libldap2-dev libssl-dev
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         python3 manage.py collectstatic --noinput
