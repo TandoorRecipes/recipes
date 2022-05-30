@@ -28,7 +28,7 @@
     "vue-class-component": "^7.2.3",
     "vue-click-outside": "^1.1.0",
     "vue-clickaway": "^2.2.2",
-    "vue-cookies": "^1.7.4",
+    "vue-cookies": "^1.8.1",
     "vue-i18n": "^8.26.8",
     "vue-infinite-loading": "^2.4.5",
     "vue-multiselect": "^2.1.6",
