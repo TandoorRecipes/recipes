@@ -1,5 +1,5 @@
 Django==3.2.13
-cryptography==37.0.1
+cryptography==37.0.2
 django-annoying==0.10.6
 django-autocomplete-light==3.9.4
 django-cleanup==6.0.0
@@ -12,7 +12,7 @@ bleach==4.1.0
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
 lxml==4.8.0
-Markdown==3.3.6
+Markdown==3.3.7
 Pillow==9.0.1
 psycopg2-binary==2.9.3
 python-dotenv==0.20.0
@@ -29,14 +29,14 @@ Jinja2==3.1.2
 django-webpack-loader==1.5.0
 django-js-reverse==0.9.1
 django-allauth==0.50.0
-recipe-scrapers==13.32.1
+recipe-scrapers==14.1.0
 django-scopes==1.2.0.post1
 pytest==7.1.2
 pytest-django==4.5.2
 django-treebeard==4.5.1
 django-cors-headers==3.12.0
 django-storages==1.12.3
-boto3==1.21.31
+boto3==1.23.10
 django-prometheus==2.2.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.0
