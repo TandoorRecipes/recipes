@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-05-10 15:32+0000\n"
+"PO-Revision-Date: 2022-05-31 08:32+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
@@ -727,7 +727,7 @@ msgstr "Ingrediënt"
 
 #: .\cookbook\models.py:1164 .\cookbook\templates\base.html:138
 msgid "Keyword"
-msgstr "Etiketten"
+msgstr "Etiket"
 
 #: .\cookbook\serializer.py:188
 msgid "A user is required"
@@ -1137,7 +1137,7 @@ msgstr "Geschiedenis"
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
 msgid "Ingredient Editor"
-msgstr "Ingrediënteneditor"
+msgstr "Ingrediënten editor"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
