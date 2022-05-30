@@ -270,7 +270,7 @@ import draggable from "vuedraggable"
 import VueCookies from "vue-cookies"
 
 import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
-import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
+import {CalendarView, CalendarMath} from "vue-simple-calendar"
 import {ApiApiFactory} from "@/utils/openapi/api"
 
 const {makeToast} = require("@/utils/utils")
@@ -293,7 +293,7 @@ export default {
         EmojiInput,
         draggable,
     },
-    mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
+    mixins: [CalendarMath, ApiMixin, ResolveUrlMixin],
     data: function () {
         return {
             showDate: new Date(),

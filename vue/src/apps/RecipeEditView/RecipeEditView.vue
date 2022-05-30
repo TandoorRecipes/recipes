@@ -370,7 +370,8 @@
                                                     <div v-for="(ingredient, index) in step.ingredients"
                                                          :key="ingredient.id">
                                                         <hr class="d-md-none"/>
-                                                        <div class="text-center" v-if="ingredient.original_text !== null">
+                                                        <div class="text-center"
+                                                             v-if="ingredient.original_text !== null">
                                                             <small class="text-muted"><i class="fas fa-globe"></i>
                                                                 {{ ingredient.original_text }}</small>
                                                         </div>
@@ -556,14 +557,9 @@
                             <div class="row pt-2" v-if="step.instruction_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
-                                    <v-md-editor
-                                        v-model="step.instruction"
-                                        height="30vh"
-                                        left-toolbar="undo redo | h bold italic strikethrough quote | ul ol table hr | link image code"
-                                        right-toolbar="preview sync-scroll fullscreen"
-                                        :id="'id_instruction_' + step.id"
-                                        mode="edit"
-                                    ></v-md-editor>
+                                    <mavon-editor v-model="step.instruction"
+                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id" :language="'en'"
+                                                  :toolbars="md_editor_toolbars"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -684,22 +680,12 @@ import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import LoadingSpinner from "@/components/LoadingSpinner"
 
-import VueMarkdownEditor from "@kangc/v-md-editor"
-import "@kangc/v-md-editor/lib/style/base-editor.css"
-import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js"
-import "@kangc/v-md-editor/lib/theme/style/vuepress.css"
-import Prism from "prismjs"
-
-VueMarkdownEditor.use(vuepressTheme, {
-    Prism,
-})
-
-import enUS from "@kangc/v-md-editor/lib/lang/en-US"
 import GenericModalForm from "@/components/Modals/GenericModalForm"
 
-VueMarkdownEditor.lang.use("en-US", enUS)
-
-Vue.use(VueMarkdownEditor)
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 
 Vue.use(BootstrapVue)
 
@@ -730,6 +716,35 @@ export default {
             step_for_file_create: undefined,
             additional_visible: false,
             create_food: undefined,
+            md_editor_toolbars: {
+                bold: true,
+                italic: true,
+                header: true,
+                underline: true,
+                strikethrough: true,
+                mark: true,
+                superscript: true,
+                subscript: true,
+                quote: true,
+                ol: true,
+                ul: true,
+                link: true,
+                imagelink: false,
+                code: true,
+                table: true,
+                fullscreen: true,
+                readmodel: true,
+                htmlcode: true,
+                help: true,
+                undo: true,
+                redo: true,
+                navigation: true,
+                alignleft: false,
+                aligncenter: false,
+                alignright: false,
+                subfield: true,
+                preview: true,
+            }
         }
     },
     computed: {
@@ -1034,7 +1049,7 @@ export default {
                     if (this.recipe !== undefined) {
                         for (let s of this.recipe.steps) {
                             for (let i of s.ingredients) {
-                                if (i.unit !== null && i.unit.id === undefined && !unique_units.includes(i.unit.name) ) {
+                                if (i.unit !== null && i.unit.id === undefined && !unique_units.includes(i.unit.name)) {
                                     this.units.push(i.unit)
                                 }
                             }
