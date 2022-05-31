@@ -2,7 +2,7 @@ from datetime import timedelta
 from decimal import Decimal
 from gettext import gettext as _
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db.models import Avg, Q, QuerySet, Sum
 from django.urls import reverse
 from django.utils import timezone
@@ -20,7 +20,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog)
+                             UserFile, UserPreference, ViewLog, Space, UserSpace)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import MEDIA_URL, AWS_ENABLED
 
@@ -123,6 +123,65 @@ class SpaceFilterSerializer(serializers.ListSerializer):
         return super().to_representation(data)
 
 
+class UserNameSerializer(WritableNestedModelSerializer):
+    username = serializers.SerializerMethodField('get_user_label')
+
+    def get_user_label(self, obj):
+        return obj.get_user_name()
+
+    class Meta:
+        list_serializer_class = SpaceFilterSerializer
+        model = User
+        fields = ('id', 'username')
+
+
+class GroupSerializer(WritableNestedModelSerializer):
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = Group
+        fields = ('id', 'name')
+
+
+class SpaceSerializer(serializers.ModelSerializer):
+    user_count = serializers.SerializerMethodField('get_user_count')
+    recipe_count = serializers.SerializerMethodField('get_recipe_count')
+    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
+
+    def get_user_count(self, obj):
+        return UserSpace.objects.filter(space=obj).count()
+
+    def get_recipe_count(self, obj):
+        return Recipe.objects.filter(space=obj).count()
+
+    def get_file_size_mb(self, obj):
+        try:
+            return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+        except TypeError:
+            return 0
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = Space
+        fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',)
+        read_only_fields = ('id', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
+
+
+class UserSpaceSerializer(serializers.ModelSerializer):
+    user = UserNameSerializer(read_only=True)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = UserSpace
+        fields = ('id', 'user', 'space', 'groups', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'created_at', 'updated_at', 'space')
+
+
 class SpacedModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -140,18 +199,6 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         model = MealType
         fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
-
-
-class UserNameSerializer(WritableNestedModelSerializer):
-    username = serializers.SerializerMethodField('get_user_label')
-
-    def get_user_label(self, obj):
-        return obj.get_user_name()
-
-    class Meta:
-        list_serializer_class = SpaceFilterSerializer
-        model = User
-        fields = ('id', 'username')
 
 
 class FoodInheritFieldSerializer(WritableNestedModelSerializer):

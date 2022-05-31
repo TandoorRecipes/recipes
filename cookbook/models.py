@@ -241,6 +241,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
+    def get_owner(self):
+        return self.created_by
+
     def __str__(self):
         return self.name
 

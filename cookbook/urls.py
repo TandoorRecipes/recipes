@@ -25,6 +25,7 @@ router.register(r'food', api.FoodViewSet)
 router.register(r'food-inherit-field', api.FoodInheritFieldViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'export-log', api.ExportLogViewSet)
+router.register(r'group', api.GroupViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'keyword', api.KeywordViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
@@ -35,6 +36,7 @@ router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
+router.register(r'space', api.SpaceViewSet)
 router.register(r'step', api.StepViewSet)
 router.register(r'storage', api.StorageViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
@@ -46,6 +48,7 @@ router.register(r'unit', api.UnitViewSet)
 router.register(r'user-file', api.UserFileViewSet)
 router.register(r'user-name', api.UserNameViewSet, basename='username')
 router.register(r'user-preference', api.UserPreferenceViewSet)
+router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
@@ -56,6 +59,7 @@ urlpatterns = [
          name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('space-overview', views.space_overview, name='view_space_overview'),
+    path('space-manage/<int:space_id>', views.space_manage, name='view_space_manage'),
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
     path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point

@@ -26,7 +26,7 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
                             SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
+from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
                              MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
                              Space, Unit, ViewLog, UserSpace)
@@ -144,9 +144,7 @@ def space_overview(request):
 @login_required
 def switch_space(request, space_id):
     user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
-    UserSpace.objects.filter(user=request.user).update(active=False)  # make sure to deactivate all spaces for a user
-    user_space.active = True
-    user_space.save()
+    switch_user_active_space(request.user, user_space)
     return HttpResponseRedirect(reverse('index'))
 
 
@@ -532,6 +530,12 @@ def invite_link(request, token):
 def signup(request, token):
     return HttpResponseRedirect(reverse('view_invite', args=[token]))
 
+
+@group_required('admin')
+def space_manage(request, space_id):
+    user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
+    switch_user_active_space(request.user, user_space)
+    return render(request, 'space_manage.html', {})
 
 @group_required('admin')
 def space(request):
