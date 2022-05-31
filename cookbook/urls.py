@@ -56,6 +56,7 @@ urlpatterns = [
          name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('no-space', views.no_space, name='view_no_space'),
+    path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
     path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point
     path('invite/<slug:token>', views.invite_link, name='view_invite'),

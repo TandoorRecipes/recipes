@@ -144,6 +144,15 @@ def no_space(request):
     return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
 
 
+@login_required
+def switch_space(request, space_id):
+    user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
+    UserSpace.objects.filter(user=request.user).update(active=False)  # make sure to deactivate all spaces for a user
+    user_space.active = True
+    user_space.save()
+    return HttpResponseRedirect(reverse('index'))
+
+
 def no_perm(request):
     if not request.user.is_authenticated:
         messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
