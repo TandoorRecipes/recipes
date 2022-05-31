@@ -81,8 +81,8 @@ admin.site.register(Space, SpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'space', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
-    search_fields = ('user__username', 'space__name')
+    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
+    search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page', 'search_style')
     date_hierarchy = 'created_at'
 

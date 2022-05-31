@@ -117,7 +117,7 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
-            data = data.filter(userpreference__space=self.context['request'].space)
+            data = User.objects.filter(userspace__space=self.context['request'].space).all()
         else:
             data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)

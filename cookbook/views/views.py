@@ -29,7 +29,7 @@ from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingP
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
 from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
                              MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             Space, Unit, ViewLog)
+                             Space, Unit, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
@@ -104,7 +104,7 @@ def no_groups(request):
 
 @login_required
 def no_space(request):
-    if request.user.userpreference.space:
+    if request.user.userspace_set.count() > 0:
         return HttpResponseRedirect(reverse('index'))
 
     if request.POST:
@@ -120,9 +120,8 @@ def no_space(request):
                 allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
 
-            request.user.userpreference.space = created_space
-            request.user.userpreference.save()
-            request.user.groups.add(Group.objects.filter(name='admin').get())
+            user_space = UserSpace.objects.create(space=created_space, user=request.user, active=True)
+            user_space.groups.add(Group.objects.filter(name='admin').get())
 
             messages.add_message(request, messages.SUCCESS,
                                  _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
