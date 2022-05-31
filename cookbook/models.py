@@ -2,9 +2,7 @@ import operator
 import pathlib
 import re
 import uuid
-from collections import OrderedDict
 from datetime import date, timedelta
-from decimal import Decimal
 
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
@@ -14,10 +12,9 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q, Subquery
+from django.db.models import Index, ProtectedError, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
-from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
@@ -340,11 +337,23 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_prefix = models.CharField(max_length=10, blank=True, )
 
     created_at = models.DateTimeField(auto_now_add=True)
-    space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return str(self.user)
+
+
+class UserSpace(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group)
+
+    # there should always only be one active space although permission methods are written in such a way
+    # that having more than one active space should just break certain parts of the application and not leak any data
+    active = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Storage(models.Model, PermissionModelMixin):

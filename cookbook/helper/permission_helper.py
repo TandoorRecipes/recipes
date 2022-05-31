@@ -40,8 +40,11 @@ def has_group_permission(user, groups):
         return False
     groups_allowed = get_allowed_groups(groups)
     if user.is_authenticated:
-        if bool(user.groups.filter(name__in=groups_allowed)):
-            return True
+        if user_space := user.userspace_set.filter(active=True):
+            if len(user_space) != 1:
+                return False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
+            if bool(user_space.first().groups.filter(name__in=groups_allowed)):
+                return True
     return False
 
 
