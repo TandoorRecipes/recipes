@@ -645,7 +645,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
-            'waiting_time', 'created_by', 'created_at', 'updated_at','source_url',
+            'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
             'internal', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
@@ -1099,3 +1099,11 @@ class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = ['id', 'amount', 'unit', 'delete', ]
+
+
+# non model serializers
+
+class RecipeFromSourceSerializer(serializers.Serializer):
+    url = serializers.CharField(max_length=4096, required=False, allow_null=True)
+    data = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    bookmarklet = serializers.IntegerField(required=False, allow_null=True, )
