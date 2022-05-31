@@ -26,15 +26,18 @@ class ScopeMiddleware:
             if request.path.startswith(prefix + '/accounts/'):
                 return self.get_response(request)
 
+            if request.path.startswith(prefix + '/switch-space/'):
+                return self.get_response(request)
+
             with scopes_disabled():
                 if request.user.userspace_set.count() == 0 and not reverse('account_logout') in request.path:
-                    return views.no_space(request)
+                    return views.space_overview(request)
 
             # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
             user_space = request.user.userspace_set.filter(active=True).first()
 
             if not user_space:
-                pass  # TODO show space selection page (maybe include in no space page)
+                return views.space_overview(request)
 
             if user_space.groups.count() == 0 and not reverse('account_logout') in request.path:
                 return views.no_groups(request)

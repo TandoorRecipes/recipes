@@ -166,7 +166,7 @@ class OwnerRequiredMixin(object):
 
         try:
             obj = self.get_object()
-            if obj.get_space() != request.space:
+            if not request.user.userspace.filter(space=obj.get_space()).exists():
                 messages.add_message(request, messages.ERROR,
                                      _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))

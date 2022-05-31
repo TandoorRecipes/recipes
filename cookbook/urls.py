@@ -12,7 +12,7 @@ from recipes.version import VERSION_NUMBER
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name)
+                     get_model_name, UserSpace)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken
 
@@ -55,7 +55,7 @@ urlpatterns = [
     path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member,
          name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
-    path('no-space', views.no_space, name='view_no_space'),
+    path('space-overview', views.space_overview, name='view_space_overview'),
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
     path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point
@@ -146,7 +146,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-    Comment, RecipeBookEntry, ShoppingList, InviteLink
+    Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace
 )
 
 for m in generic_models:

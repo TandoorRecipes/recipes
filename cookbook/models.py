@@ -343,7 +343,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         return str(self.user)
 
 
-class UserSpace(models.Model):
+class UserSpace(models.Model, PermissionModelMixin):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     groups = models.ManyToManyField(Group)

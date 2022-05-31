@@ -37,12 +37,9 @@ class UserPreferenceForm(forms.ModelForm):
     prefix = 'preference'
 
     def __init__(self, *args, **kwargs):
-        if x := kwargs.get('instance', None):
-            space = x.space
-        else:
-            space = kwargs.pop('space')
+        space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
-        self.fields['plan_share'].queryset = User.objects.filter(userpreference__space=space).all()
+        self.fields['plan_share'].queryset = User.objects.filter(userspace__space=space).all()
 
     class Meta:
         model = UserPreference

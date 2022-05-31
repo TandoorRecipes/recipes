@@ -103,10 +103,7 @@ def no_groups(request):
 
 
 @login_required
-def no_space(request):
-    if request.user.userspace_set.count() > 0:
-        return HttpResponseRedirect(reverse('index'))
-
+def space_overview(request):
     if request.POST:
         create_form = SpaceCreateForm(request.POST, prefix='create')
         join_form = SpaceJoinForm(request.POST, prefix='join')
@@ -125,7 +122,7 @@ def no_space(request):
 
             messages.add_message(request, messages.SUCCESS,
                                  _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.pk]))
 
         if join_form.is_valid():
             return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
@@ -141,7 +138,7 @@ def no_space(request):
         create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
         join_form = SpaceJoinForm()
 
-    return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
+    return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
 
 
 @login_required
@@ -391,7 +388,7 @@ def user_settings(request):
                     up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
                 up.save()
     if up:
-        preference_form = UserPreferenceForm(instance=up)
+        preference_form = UserPreferenceForm(instance=up, space=request.space)
         shopping_form = ShoppingPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm(space=request.space)
@@ -510,27 +507,25 @@ def invite_link(request, token):
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
             if request.user.is_authenticated:
-                if request.user.userpreference.space:
-                    messages.add_message(request, messages.WARNING,
-                                         _('You are already member of a space and therefore cannot join this one.'))
-                    return HttpResponseRedirect(reverse('index'))
-
                 link.used_by = request.user
                 link.save()
-                request.user.groups.clear()
-                request.user.groups.add(link.group)
 
-                request.user.userpreference.space = link.space
-                request.user.userpreference.save()
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
+
+                if request.user.userspace_set.count() == 1:
+                    user_space.active = True
+                    user_space.save()
+
+                user_space.groups.add(link.group)
 
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('view_space_overview'))
             else:
                 request.session['signup_token'] = str(token)
                 return HttpResponseRedirect(reverse('account_signup'))
 
     messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('view_space_overview'))
 
 
 # TODO deprecated with 0.16.2 remove at some point
@@ -540,7 +535,7 @@ def signup(request, token):
 
 @group_required('admin')
 def space(request):
-    space_users = UserPreference.objects.filter(space=request.space).all()
+    space_users = UserSpace.objects.filter(space=request.space).all()
 
     counts = Object()
     counts.recipes = Recipe.objects.filter(space=request.space).count()
