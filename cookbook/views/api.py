@@ -11,7 +11,7 @@ from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
@@ -29,26 +29,22 @@ from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import api_view, permission_classes, schema
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
-from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
-from rest_framework.schemas import AutoSchema
 from rest_framework.throttling import AnonRateThrottle
-from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
-from validators import ValidationFailure
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required)
+                                               group_required, CustomIsSpaceOwner)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -57,7 +53,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog)
+                             UserFile, UserPreference, ViewLog, Space, UserSpace)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -78,7 +74,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer, SpaceSerializer, UserSpaceSerializer, GroupSerializer)
 from recipes import settings
 
 
@@ -367,6 +363,33 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
             raise APIException('Parameter filter_list incorrectly formatted')
 
         return queryset
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [CustomIsAdmin]
+    http_method_names = ['get', ]
+
+
+class SpaceViewSet(viewsets.ModelViewSet):
+    queryset = Space.objects
+    serializer_class = SpaceSerializer
+    permission_classes = [CustomIsOwner]
+    http_method_names = ['get', 'patch']
+
+    def get_queryset(self):
+        return self.queryset.filter(id=self.request.space.id)
+
+
+class UserSpaceViewSet(viewsets.ModelViewSet):
+    queryset = UserSpace.objects
+    serializer_class = UserSpaceSerializer
+    permission_classes = [CustomIsSpaceOwner]
+    http_method_names = ['get', 'patch', 'delete']
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
 
 
 class UserPreferenceViewSet(viewsets.ModelViewSet):
