@@ -27,11 +27,15 @@ from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
+from rest_framework.decorators import api_view, permission_classes, schema
 from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
+from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 from validators import ValidationFailure
@@ -71,7 +75,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer)
 from recipes import settings
 
 
@@ -1025,7 +1029,76 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-# -------------- non django rest api views --------------------
+# -------------- DRF custom views --------------------
+
+@api_view(['POST'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser])
+# TODO add rate limiting
+def recipe_from_source(request):
+    """
+    function to retrieve a recipe from a given url or source string
+    :param request: standard request with additional post parameters
+            - url: url to use for importing recipe
+            - data: if no url is given recipe is imported from provided source data
+            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
+    :return: JsonResponse containing the parsed json, original html,json and images
+    """
+    serializer = RecipeFromSourceSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            if bookmarklet := BookmarkletImport.objects.filter(pk=serializer.validated_data['bookmarklet']).first():
+                serializer.validated_data['url'] = bookmarklet.url
+                serializer.validated_data['data'] = bookmarklet.html
+                bookmarklet.delete()
+        except KeyError:
+            pass
+
+        # headers to use for request to external sites
+        external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
+
+        if not 'url' in serializer.validated_data and not 'data' in serializer.validated_data:
+            return Response({
+                'error': True,
+                'msg': _('Nothing to do.')
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # in manual mode request complete page to return it later
+        if 'url' in serializer.validated_data:
+            try:
+                if validators.url(serializer.validated_data['url'], public=True):
+                    serializer.validated_data['data'] = requests.get(serializer.validated_data['url'], headers=external_request_headers).content
+                else:
+                    return Response({
+                        'error': True,
+                        'msg': _('Invalid Url')
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except requests.exceptions.ConnectionError:
+                return Response({
+                    'error': True,
+                    'msg': _('Connection Refused.')
+                }, status=status.HTTP_400_BAD_REQUEST)
+            except requests.exceptions.MissingSchema:
+                return Response({
+                    'error': True,
+                    'msg': _('Bad URL Schema.')
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(serializer.validated_data['data'], serializer.validated_data['url'], request)
+        if len(recipe_tree) == 0 and len(recipe_json) == 0:
+            return Response({
+                'error': True,
+                'msg': _('No usable data could be found.')
+            }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'recipe_json': recipe_json,
+                'recipe_tree': recipe_tree,
+                'recipe_html': recipe_html,
+                'recipe_images': list(dict.fromkeys(recipe_images)),
+            }, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):
@@ -1158,73 +1231,6 @@ def get_plan_ical(request, from_date, to_date):
     response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'  # noqa: E501
 
     return response
-
-
-@group_required('user')
-def recipe_from_source(request):
-    """
-    function to retrieve a recipe from a given url or source string
-    :param request: standard request with additional post parameters
-            - url: url to use for importing recipe
-            - data: if no url is given recipe is imported from provided source data
-            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
-    :return: JsonResponse containing the parsed json, original html,json and images
-    """
-    if request.method == 'GET':
-        return HttpResponse(status=405)
-    request_payload = json.loads(request.body.decode('utf-8'))
-    url = request_payload.get('url', None)
-    data = request_payload.get('data', None)
-    bookmarklet = request_payload.get('bookmarklet', None)
-
-    if bookmarklet := BookmarkletImport.objects.filter(pk=bookmarklet).first():
-        url = bookmarklet.url
-        data = bookmarklet.html
-        bookmarklet.delete()
-
-    # headers to use for request to external sites
-    external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
-
-    if not url and not data:
-        return JsonResponse({
-            'error': True,
-            'msg': _('Nothing to do.')
-        }, status=400)
-
-    # in manual mode request complete page to return it later
-    if url:
-        try:
-            if validators.url(url, public=True):
-                data = requests.get(url, headers=external_request_headers).content
-            else:
-                return JsonResponse({
-                    'error': True,
-                    'msg': _('Invalid Url')
-                }, status=400)
-        except requests.exceptions.ConnectionError:
-            return JsonResponse({
-                'error': True,
-                'msg': _('Connection Refused.')
-            }, status=400)
-        except requests.exceptions.MissingSchema:
-            return JsonResponse({
-                'error': True,
-                'msg': _('Bad URL Schema.')
-            }, status=400)
-
-    recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
-    if len(recipe_tree) == 0 and len(recipe_json) == 0:
-        return JsonResponse({
-            'error': True,
-            'msg': _('No usable data could be found.')
-        }, status=400)
-    else:
-        return JsonResponse({
-            'recipe_json': recipe_json,
-            'recipe_tree': recipe_tree,
-            'recipe_html': recipe_html,
-            'recipe_images': list(dict.fromkeys(recipe_images)),
-        })
 
 
 @group_required('admin')
