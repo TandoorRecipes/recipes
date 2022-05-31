@@ -27,6 +27,8 @@ from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes, schema
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.generics import CreateAPIView
@@ -35,6 +37,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.schemas import AutoSchema
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
@@ -1030,6 +1033,25 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 
 # -------------- DRF custom views --------------------
+
+class AuthTokenThrottle(AnonRateThrottle):
+    rate = '10/day'
+
+
+class CustomAuthToken(ObtainAuthToken):
+    throttle_classes = [AuthTokenThrottle]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+        })
+
 
 @api_view(['POST'])
 # @schema(AutoSchema()) #TODO add proper schema

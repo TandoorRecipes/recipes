@@ -14,6 +14,7 @@ from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keywor
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
                      get_model_name)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
+from .views.api import CustomAuthToken
 
 router = routers.DefaultRouter()
 router.register(r'automation', api.AutomationViewSet)
@@ -132,6 +133,7 @@ urlpatterns = [
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', CustomAuthToken.as_view()),
 
     path('offline/', views.offline, name='view_offline'),
 
