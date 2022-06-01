@@ -27,7 +27,7 @@
                             <td>
                                 <generic-multiselect
                                     class="input-group-text m-0 p-0"
-                                    @change="us.groups = $event.val"
+                                    @change="us.groups = $event.val; updateUserSpace(us)"
                                     label="name"
                                     :initial_selection="us.groups"
                                     :model="Models.GROUP"
@@ -37,7 +37,7 @@
                                 />
                             </td>
                             <td>
-                                <button @click="alert('')">{{ $t('Delete') }}</button>
+                                <button class="btn btn-danger" @click="deleteUserSpace(us)">{{ $t('Delete') }}</button>
                             </td>
                         </tr>
                     </table>
@@ -55,7 +55,7 @@ import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import {ApiMixin, ResolveUrlMixin, ToastMixin} from "@/utils/utils"
+import {ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils"
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts"
 import GenericMultiselect from "@/components/GenericMultiselect";
@@ -83,7 +83,27 @@ export default {
             this.user_spaces = r.data
         })
     },
-    methods: {},
+    methods: {
+        updateUserSpace: function (userSpace) {
+            let apiFactory = new ApiApiFactory()
+            apiFactory.partialUpdateUserSpace(userSpace.id, userSpace).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        },
+        deleteUserSpace: function (userSpace) {
+            if (confirm(this.$t('confirm_delete', {object: this.$t("User")}))) {
+                let apiFactory = new ApiApiFactory()
+                apiFactory.destroyUserSpace(userSpace.id).then(r => {
+                    this.user_spaces = this.user_spaces.filter(u => u !== userSpace)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
+                }).catch(err => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
+                })
+            }
+        }
+    },
 }
 </script>
 

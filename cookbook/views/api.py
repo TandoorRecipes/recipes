@@ -386,7 +386,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
     permission_classes = [CustomIsSpaceOwner]
-    http_method_names = ['get', 'patch', 'delete']
+    http_method_names = ['get', 'patch', 'put', 'delete']
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
