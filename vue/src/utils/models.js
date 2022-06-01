@@ -663,6 +663,41 @@ export class Models {
             },
         },
     }
+
+    static INVITE_LINK = {
+        name: "InviteLink",
+        apiName: "InviteLink",
+        paginated: false,
+        create: {
+            params: [["email", "group", "valid_until"]],
+            form: {
+                email: {
+                    form_field: true,
+                    type: "text",
+                    field: "email",
+                    label: "Email",
+                    placeholder: "",
+                },
+                group: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "group",
+                    list: "GROUP",
+                    list_label: "name",
+                    label: "Group",
+                    placeholder: "",
+                },
+                valid_until: {
+                    form_field: true,
+                    type: "date",
+                    field: "valid_until",
+                    label: "Valid Until",
+                    placeholder: "",
+                },
+            },
+        },
+    }
+
     static USER = {
         name: "User",
         apiName: "User",

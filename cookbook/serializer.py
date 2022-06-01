@@ -20,7 +20,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog, Space, UserSpace)
+                             UserFile, UserPreference, ViewLog, Space, UserSpace, InviteLink)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import MEDIA_URL, AWS_ENABLED
 
@@ -1024,6 +1024,21 @@ class AutomationSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'disabled', 'created_by',)
         read_only_fields = ('created_by',)
+
+
+class InviteLinkSerializer(WritableNestedModelSerializer):
+    group = GroupSerializer()
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = InviteLink
+        fields = (
+            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'created_by', 'created_at',)
+        read_only_fields = ('id', 'uuid', 'email', 'created_by', 'created_at',)
 
 
 # CORS, REST and Scopes aren't currently working
