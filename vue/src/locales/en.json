@@ -412,5 +412,6 @@
     "Warning_Delete_Supermarket_Category": "Deleting a supermarket category will also delete all relations to foods. Are you sure?",
     "New_Supermarket": "Create new supermarket",
     "New_Supermarket_Category": "Create new supermarket category",
-    "Are_You_Sure": "Are you sure?"
+    "Are_You_Sure": "Are you sure?",
+    "Valid Until": "Valid Until"
 }

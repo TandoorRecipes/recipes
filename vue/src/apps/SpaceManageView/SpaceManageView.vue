@@ -46,6 +46,72 @@
         </div>
 
 
+        <div class="row mt-2">
+            <div class="col col-12">
+                <button @click="show_invite_create = true">Create</button>
+                <div v-if="invite_links !== undefined">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>{{ $t('Email') }}</th>
+                            <th>{{ $t('Group') }}</th>
+                            <th>{{ $t('Token') }}</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tr v-for="il in invite_links" :key="il.id">
+                            <td>{{ il.id }}</td>
+                            <td>{{ il.email }}</td>
+                            <td>
+                                <generic-multiselect
+                                    class="input-group-text m-0 p-0"
+                                    @change="il.group = $event.val;"
+                                    label="name"
+                                    :initial_single_selection="il.group"
+                                    :model="Models.GROUP"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                    :limit="10"
+                                    :multiple="false"
+                                />
+                            </td>
+                            <td><input class="form-control" disabled v-model="il.uuid"></td>
+                            <td><input type="date" v-model="il.valid_until" class="form-control"></td>
+                            <td>
+                                <b-dropdown no-caret right>
+                                    <template #button-content>
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </template>
+
+                                    <b-dropdown-item>
+                                        <i class="fas fa-share-alt"></i>
+                                    </b-dropdown-item>
+
+                                    <b-dropdown-item>
+                                        <i class="fas fa-link"></i>
+                                    </b-dropdown-item>
+
+                                    <b-dropdown-item>
+                                        <i class="far fa-clipboard"></i>
+                                    </b-dropdown-item>
+
+                                    <b-dropdown-item>
+                                        {{ $t('Delete') }}
+                                    </b-dropdown-item>
+
+
+                                </b-dropdown>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <generic-modal-form :model="Models.INVITE_LINK" :action="Actions.CREATE" :show="show_invite_create"
+                            @finish-action="show_invite_create = false; loadInviteLinks()"/>
+
     </div>
 </template>
 
@@ -59,17 +125,20 @@ import {ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/uti
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts"
 import GenericMultiselect from "@/components/GenericMultiselect";
+import GenericModalForm from "@/components/Modals/GenericModalForm";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "SupermarketView",
     mixins: [ResolveUrlMixin, ToastMixin, ApiMixin],
-    components: {GenericMultiselect},
+    components: {GenericMultiselect, GenericModalForm},
     data() {
         return {
             space: undefined,
-            user_spaces: []
+            user_spaces: [],
+            invite_links: [],
+            show_invite_create: false
         }
     },
     mounted() {
@@ -82,8 +151,15 @@ export default {
         apiFactory.listUserSpaces().then(r => {
             this.user_spaces = r.data
         })
+        this.loadInviteLinks()
     },
     methods: {
+        loadInviteLinks: function () {
+            let apiFactory = new ApiApiFactory()
+            apiFactory.listInviteLinks().then(r => {
+                this.invite_links = r.data
+            })
+        },
         updateUserSpace: function (userSpace) {
             let apiFactory = new ApiApiFactory()
             apiFactory.partialUpdateUserSpace(userSpace.id, userSpace).then(r => {

@@ -53,7 +53,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog, Space, UserSpace)
+                             UserFile, UserPreference, ViewLog, Space, UserSpace, InviteLink)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -74,7 +74,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer, SpaceSerializer, UserSpaceSerializer, GroupSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer, SpaceSerializer, UserSpaceSerializer, GroupSerializer, InviteLinkSerializer)
 from recipes import settings
 
 
@@ -1038,6 +1038,16 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser]
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
+
+
+class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = InviteLink.objects
+    serializer_class = InviteLinkSerializer
+    permission_classes = [CustomIsSpaceOwner]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
