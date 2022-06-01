@@ -135,9 +135,12 @@ class UserNameSerializer(WritableNestedModelSerializer):
         fields = ('id', 'username')
 
 
-class GroupSerializer(WritableNestedModelSerializer):
+class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        return instance  # cannot update group
 
     class Meta:
         model = Group
@@ -170,8 +173,9 @@ class SpaceSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
 
 
-class UserSpaceSerializer(serializers.ModelSerializer):
+class UserSpaceSerializer(WritableNestedModelSerializer):
     user = UserNameSerializer(read_only=True)
+    groups = GroupSerializer(many=True)
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
