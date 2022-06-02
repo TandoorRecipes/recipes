@@ -1,9 +1,13 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from decimal import Decimal
 from gettext import gettext as _
+from html import escape
+from smtplib import SMTPException
 
 from django.contrib.auth.models import User, Group
+from django.core.mail import send_mail
 from django.db.models import Avg, Q, QuerySet, Sum
+from django.http import BadHeaderError
 from django.urls import reverse
 from django.utils import timezone
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
@@ -1032,13 +1036,35 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
+        obj = super().create(validated_data)
+
+        if obj.email:
+            try:
+                if InviteLink.objects.filter(space=self.context['request'].space, created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
+                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(self.context['request'].user.username)
+                    message += _(' to join their Tandoor Recipes space ') + escape(self.context['request'].space.name) + '.\n\n'
+                    message += _('Click the following link to activate your account: ') + self.context['request'].build_absolute_uri(reverse('view_invite', args=[str(obj.uuid)])) + '\n\n'
+                    message += _('If the link does not work use the following code to manually join the space: ') + str(obj.uuid) + '\n\n'
+                    message += _('The invitation is valid until ') + str(obj.valid_until) + '\n\n'
+                    message += _('Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub ') + 'https://github.com/vabene1111/recipes/'
+
+                    send_mail(
+                        _('Tandoor Recipes Invite'),
+                        message,
+                        None,
+                        [obj.email],
+                        fail_silently=True,
+                    )
+            except (SMTPException, BadHeaderError, TimeoutError):
+                pass
+
+        return obj
 
     class Meta:
         model = InviteLink
         fields = (
             'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'created_by', 'created_at',)
-        read_only_fields = ('id', 'uuid', 'email', 'created_by', 'created_at',)
+        read_only_fields = ('id', 'uuid', 'created_by', 'created_at',)
 
 
 # CORS, REST and Scopes aren't currently working

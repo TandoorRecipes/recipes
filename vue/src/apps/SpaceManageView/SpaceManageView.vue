@@ -4,16 +4,41 @@
         <div class="row  mt-2">
             <div class="col col-12">
                 <div v-if="space !== undefined">
-                    Recipes {{ space.recipe_count }} / {{ space.max_recipes }}
-                    Users {{ space.user_count }} / {{ space.max_users }}
-                    Files {{ space.file_size_mb }} / {{ space.max_file_storage_mb }}
+                    <h6><i class="fas fa-book"></i> {{ $t('Recipes') }}</h6>
+                    <b-progress height="1.5rem" :max="space.max_recipes" variant="success" :striped="true">
+                        <b-progress-bar :value="space.recipe_count">
+                            {{ space.recipe_count }} /
+                            <template v-if="space.max_recipes === 0">∞</template>
+                            <template v-else>{{ space.max_recipes }}</template>
+                        </b-progress-bar>
+                    </b-progress>
+
+                    <h6 class="mt-2"><i class="fas fa-users"></i> {{ $t('Users') }}</h6>
+                    <b-progress height="1.5rem" :max="space.max_users" variant="success" :striped="true">
+                        <b-progress-bar :value="space.user_count">
+                            {{ space.user_count }} /
+                            <template v-if="space.max_users === 0">∞</template>
+                            <template v-else>{{ space.max_users }}</template>
+                        </b-progress-bar>
+                    </b-progress>
+
+                    <h6 class="mt-2"><i class="fas fa-file"></i> {{ $t('Files') }}</h6>
+                    <b-progress height="1.5rem" :max="space.max_file_storage_mb" variant="success" :striped="true">
+                        <b-progress-bar :value="space.file_size_mb">
+                            {{ space.file_size_mb }} /
+                            <template v-if="space.max_file_storage_mb === 0">∞</template>
+                            <template v-else>{{ space.max_file_storage_mb }}</template>
+                        </b-progress-bar>
+                    </b-progress>
+
                 </div>
             </div>
         </div>
 
-        <div class="row mt-2">
+        <div class="row mt-4">
             <div class="col col-12">
                 <div v-if="user_spaces !== undefined">
+                    <h4 class="mt-2"><i class="fas fa-users"></i> {{ $t('Users') }}</h4>
                     <table class="table">
                         <thead>
                         <tr>
@@ -48,15 +73,15 @@
 
         <div class="row mt-2">
             <div class="col col-12">
-                <button @click="show_invite_create = true">Create</button>
                 <div v-if="invite_links !== undefined">
+                    <h4 class="mt-2"><i class="fas fa-users"></i> {{ $t('Invites') }}</h4>
                     <table class="table">
                         <thead>
                         <tr>
                             <th>#</th>
                             <th>{{ $t('Email') }}</th>
                             <th>{{ $t('Group') }}</th>
-                            <th>{{ $t('Token') }}</th>
+                            <th></th>
                             <th></th>
                         </tr>
                         </thead>
@@ -75,7 +100,6 @@
                                     :multiple="false"
                                 />
                             </td>
-                            <td><input class="form-control" disabled v-model="il.uuid"></td>
                             <td><input type="date" v-model="il.valid_until" class="form-control"></td>
                             <td>
                                 <b-dropdown no-caret right>
@@ -83,20 +107,20 @@
                                         <i class="fas fa-ellipsis-v"></i>
                                     </template>
 
-                                    <b-dropdown-item>
-                                        <i class="fas fa-share-alt"></i>
+                                    <!--                                    <b-dropdown-item>-->
+                                    <!--                                        <i class="fas fa-share-alt"></i>-->
+                                    <!--                                    </b-dropdown-item>-->
+
+                                    <b-dropdown-item @click="copyToClipboard(il, true)">
+                                        <i class="fas fa-link"></i> {{ $t('Copy Link') }}
                                     </b-dropdown-item>
 
-                                    <b-dropdown-item>
-                                        <i class="fas fa-link"></i>
+                                    <b-dropdown-item @click="copyToClipboard(il, false)">
+                                        <i class="far fa-clipboard"></i> {{ $t('Copy Token') }}
                                     </b-dropdown-item>
 
-                                    <b-dropdown-item>
-                                        <i class="far fa-clipboard"></i>
-                                    </b-dropdown-item>
-
-                                    <b-dropdown-item>
-                                        {{ $t('Delete') }}
+                                    <b-dropdown-item @click="deleteInviteLink(il)">
+                                        <i class="fas fa-trash-alt"></i> {{ $t('Delete') }}
                                     </b-dropdown-item>
 
 
@@ -105,6 +129,7 @@
                             </td>
                         </tr>
                     </table>
+                    <b-button variant="primary" @click="show_invite_create = true">{{ $t('Create') }}</b-button>
                 </div>
             </div>
         </div>
@@ -154,6 +179,13 @@ export default {
         this.loadInviteLinks()
     },
     methods: {
+        copyToClipboard: function (inviteLink, link) {
+            let content = inviteLink.uuid
+            if (link) {
+                content = localStorage.BASE_PATH + this.resolveDjangoUrl('view_invite', inviteLink.uuid)
+            }
+            navigator.clipboard.writeText(content)
+        },
         loadInviteLinks: function () {
             let apiFactory = new ApiApiFactory()
             apiFactory.listInviteLinks().then(r => {
@@ -178,7 +210,17 @@ export default {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
             }
-        }
+        },
+        deleteInviteLink: function (inviteLink) {
+            let apiFactory = new ApiApiFactory()
+            apiFactory.destroyInviteLink(inviteLink.id).then(r => {
+                this.invite_links = this.invite_links.filter(i => i !== inviteLink)
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
+            })
+
+        },
     },
 }
 </script>
