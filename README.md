@@ -61,6 +61,15 @@ a public page.
 
 Documentation can be found [here](https://docs.tandoor.dev/).
 
+## Support our work
+Tandoor is developed by volunteers in their free time just because its fun. That said earning 
+some money with the project allows us to spend more time on it and thus make improvements we otherwise couldn't.
+Because of that there are several ways you can support us
+
+- **GitHub Sponsors** You can sponsor contributors of this project on GitHub: [vabene1111](https://github.com/sponsors/vabene1111)
+- **Host at Hetzner** We have been very happy customers of Hetzner for multiple years for all of our projects. If you want to get into self-hosting or are tired of the expensive big providers, their cloud servers are a great place to get started. When you sign up via our [referral link](https://hetzner.cloud/?ref=ISdlrLmr9kGj) you will get 20€ worth of cloud credits and we get a small kickback too.
+- **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).  
+
 ## Contributing
 
 You can help out with the ongoing development by looking for potential bugs in our code base, or by contributing new features. We are always welcoming new pull requests containing bug fixes, refactors and new features. We have a list of tasks and bugs on our issue tracker on Github. Please comment on issues if you want to contribute with, to avoid duplicating effort.
