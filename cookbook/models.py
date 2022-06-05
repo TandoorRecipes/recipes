@@ -530,6 +530,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     description = models.TextField(blank=True, null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -554,6 +555,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     if SORT_TREE_BY_NAME:
         node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
     ignore_shopping = models.BooleanField(default=False)  # inherited field
@@ -654,6 +656,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
+    always_use_plural_unit = models.BooleanField(default=False)
+    always_use_plural_food = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
@@ -663,7 +667,23 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
+        food = ""
+        unit = ""
+        if self.always_use_plural_food and self.food.plural_name not in (None, "") and not self.no_amount:
+            food = self.food.plural_name
+        else:
+            if self.amount > 1 and self.food.plural_name not in (None, "") and not self.no_amount:
+                food = self.food.plural_name
+            else:
+                food = str(self.food)
+        if self.always_use_plural_unit and self.unit.plural_name not in (None, "") and not self.no_amount:
+            unit = self.unit.plural_name
+        else:
+            if self.amount > 1 and self.unit.plural_name not in (None, "") and not self.no_amount:
+                unit = self.unit.plural_name
+            else:
+                unit = str(self.unit)
+        return str(self.amount) + ' ' + str(unit) + ' ' + str(food)
 
     class Meta:
         ordering = ['order', 'pk']

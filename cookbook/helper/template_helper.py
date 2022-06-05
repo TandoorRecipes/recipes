@@ -22,10 +22,22 @@ class IngredientObject(object):
         else:
             self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='ingredient_factor'></scalable-number>"
         if ingredient.unit:
-            self.unit = bleach.clean(str(ingredient.unit))
+            if ingredient.unit.plural_name in (None, ""):
+                self.unit = bleach.clean(str(ingredient.unit))
+            else:
+                if ingredient.always_use_plural_unit or ingredient.amount > 1 and not ingredient.no_amount:
+                    self.unit = bleach.clean(ingredient.unit.plural_name)
+                else:
+                    self.unit = bleach.clean(str(ingredient.unit))
         else:
             self.unit = ""
-        self.food = bleach.clean(str(ingredient.food))
+        if ingredient.food.plural_name in (None, ""):
+            self.food = bleach.clean(str(ingredient.food))
+        else:
+            if ingredient.always_use_plural_food or ingredient.amount > 1 and not ingredient.no_amount:
+                self.food = bleach.clean(str(ingredient.food.plural_name))
+            else:
+                self.food = bleach.clean(str(ingredient.food))
         self.note = bleach.clean(str(ingredient.note))
 
     def __str__(self):

@@ -212,5 +212,11 @@
     "success_moving_resource": "Resurssin siirto onnistui!",
     "success_merging_resource": "Resurssin yhdistäminen onnistui!",
     "Search Settings": "Hakuasetukset",
-    "Shopping_Categories": "Ostoskategoriat"
+    "Shopping_Categories": "Ostoskategoriat",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }

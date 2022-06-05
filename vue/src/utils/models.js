@@ -78,6 +78,7 @@ export class Models {
             params: [
                 [
                     "name",
+                    "plural_name",
                     "description",
                     "recipe",
                     "food_onhand",
@@ -102,6 +103,13 @@ export class Models {
                     label: "Name", // form.label always translated in utils.getForm()
                     placeholder: "", // form.placeholder always translated
                     subtitle_field: "full_name",
+                },
+                plural_name: {
+                    form_field: true,
+                    type: "text",
+                    field: "plural_name",
+                    label: "Plural",
+                    placeholder: "",
                 },
                 description: {
                     form_field: true,
@@ -261,13 +269,20 @@ export class Models {
         apiName: "Unit",
         paginated: true,
         create: {
-            params: [["name", "description"]],
+            params: [["name", "plural_name", "description",]],
             form: {
                 name: {
                     form_field: true,
                     type: "text",
                     field: "name",
                     label: "Name",
+                    placeholder: "",
+                },
+                plural_name: {
+                    form_field: true,
+                    type: "text",
+                    field: "plural_name",
+                    label: "Plural name",
                     placeholder: "",
                 },
                 description: {

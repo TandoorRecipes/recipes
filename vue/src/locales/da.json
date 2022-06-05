@@ -458,5 +458,11 @@
     "Days": "Dage",
     "Message": "Besked",
     "Sticky_Nav": "Fastlåst navigation",
-    "reset_food_inheritance": "Nulstil nedarvning"
+    "reset_food_inheritance": "Nulstil nedarvning",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }
