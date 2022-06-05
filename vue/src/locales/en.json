@@ -459,5 +459,11 @@
     "New_Supermarket": "Create new supermarket",
     "New_Supermarket_Category": "Create new supermarket category",
     "Are_You_Sure": "Are you sure?",
-    "Valid Until": "Valid Until"
+    "Valid Until": "Valid Until",
+    "Plural": "Plural",
+    "plural_short": "plural",
+    "Use_Plural_Unit_Always": "Use plural form for unit always",
+    "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
+    "Use_Plural_Food_Always": "Use plural form for food always",
+    "Use_Plural_Food_Simple": "Use plural form for food dynamically"
 }

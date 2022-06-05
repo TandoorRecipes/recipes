@@ -23,6 +23,7 @@
                     <b-card-body class="m-0 py-0">
                         <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                             <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
+                            <div v-if="item[plural] !== '' && item[plural] !== null" class="m-0 text-truncate">({{ $t("plural_short") }}: {{ item[plural] }})</div>
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
                             <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
@@ -146,6 +147,7 @@ export default {
         item: { type: Object },
         model: { type: Object },
         title: { type: String, default: "name" }, // this and the following props need to be moved to model.js and made computed values
+        plural: { type: String, default: "plural_name" },
         subtitle: { type: String, default: "description" },
         child_count: { type: String, default: "numchild" },
         children: { type: String, default: "children" },

@@ -16,14 +16,33 @@
                       v-html="calculateAmount(ingredient.amount)"></span>
             </td>
             <td @click="done">
-                <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>
+                <template v-if="ingredient.unit !== null && !ingredient.no_amount">
+                    <template v-if="ingredient.unit.plural_name === '' || ingredient.unit.plural_name === null">
+                        <span>{{ ingredient.unit.name }}
+                    </template>
+                    <template v-else>
+                        <span v-if="ingredient.always_use_plural_unit">{{ ingredient.unit.plural_name}}</span>
+                        <span v-else-if="(ingredient.amount * this.ingredient_factor) > 1">{{ ingredient.unit.plural_name }}</span>
+                        <span v-else>{{ ingredient.unit.name }}</span>
+                    </template>
+                </template>
             </td>
             <td @click="done">
                 <template v-if="ingredient.food !== null">
                     <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)"
-                       v-if="ingredient.food.recipe !== null" target="_blank"
-                       rel="noopener noreferrer">{{ ingredient.food.name }}</a>
-                    <span v-if="ingredient.food.recipe === null">{{ ingredient.food.name }}</span>
+                        v-if="ingredient.food.recipe !== null" target="_blank"
+                        rel="noopener noreferrer">{{ ingredient.food.name }}</a>
+                    <template v-if="ingredient.food.recipe === null">
+                        <template v-if="ingredient.food.plural_name === '' || ingredient.food.plural_name === null">
+                            <span>{{ ingredient.food.name }}</span>
+                        </template>
+                        <template v-else>
+                            <span v-if="ingredient.always_use_plural_food">{{ ingredient.food.plural_name }}</span>
+                            <span v-else-if="ingredient.no_amount">{{ ingredient.food.name }}</span>
+                            <span v-else-if="(ingredient.amount * this.ingredient_factor) > 1">{{ ingredient.food.plural_name }}</span>
+                            <span v-else>{{ ingredient.food.name }}</span>
+                        </template>
+                    </template>
                 </template>
             </td>
             <td v-if="detailed">

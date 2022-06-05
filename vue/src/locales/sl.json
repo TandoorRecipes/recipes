@@ -284,5 +284,11 @@
     "sql_debug": "SQL razhroščevanje",
     "remember_search": "Zapomni si iskanje",
     "remember_hours": "Ure, ki si jih zapomni",
-    "tree_select": "Uporabi drevesno označbo"
+    "tree_select": "Uporabi drevesno označbo",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }

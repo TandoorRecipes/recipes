@@ -387,5 +387,11 @@
     "Copy Token": "Copiar Token",
     "warning_space_delete": "Você pode deletar seu espaço, inclusive todas as receitas, listas de mercado, planos de comida e tudo mais que você criou. Esta ação não poderá ser desfeita! Você tem certeza que quer fazer isto?",
     "food_inherit_info": "Campos no alimento que devem ser herdados por padrão.",
-    "facet_count_info": "Mostrar quantidade de receitas nos filtros de busca."
+    "facet_count_info": "Mostrar quantidade de receitas nos filtros de busca.",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }

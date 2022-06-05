@@ -460,5 +460,11 @@
     "Comments_setting": "Kommentare anzeigen",
     "reset_food_inheritance": "Vererbung zurücksetzen",
     "food_inherit_info": "Datenfelder des Lebensmittels, die standardmäßig vererbt werden sollen.",
-    "Are_You_Sure": "Bist du dir sicher?"
+    "Are_You_Sure": "Bist du dir sicher?",
+    "Plural": "Plural",
+    "plural_short": "pl.",
+    "Use_Plural_Unit_Always": "Pluralform der Maßeinheit immer verwenden",
+    "Use_Plural_Unit_Simple": "Pluralform der Maßeinheit dynamisch anpassen",
+    "Use_Plural_Food_Always": "Pluralform des Essens immer verwenden",
+    "Use_Plural_Food_Simple": "Pluralform des Essens dynamisch anpassen"
 }

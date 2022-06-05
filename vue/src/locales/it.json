@@ -346,5 +346,11 @@
     "csv_delim_help": "Delimitatore usato per le esportazioni CSV.",
     "csv_prefix_label": "Prefisso lista",
     "not": "not",
-    "Keyword": "Parola chiave"
+    "Keyword": "Parola chiave",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }

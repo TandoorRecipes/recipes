@@ -342,5 +342,11 @@
     "IgnoreThis": "Никогда не добавлять {food} в список покупок автоматически",
     "DelayFor": "Отложить на {hours} часов",
     "New_Entry": "Новая запись",
-    "GroupBy": "Сгруппировать по"
+    "GroupBy": "Сгруппировать по",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": ""
 }
