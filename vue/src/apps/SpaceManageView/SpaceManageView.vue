@@ -6,7 +6,7 @@
                 <div v-if="space !== undefined">
                     <h6><i class="fas fa-book"></i> {{ $t('Recipes') }}</h6>
                     <b-progress height="1.5rem" :max="space.max_recipes" variant="success" :striped="true">
-                        <b-progress-bar :value="space.recipe_count">
+                        <b-progress-bar :value="space.recipe_count" class="text-dark font-weight-bold">
                             {{ space.recipe_count }} /
                             <template v-if="space.max_recipes === 0">∞</template>
                             <template v-else>{{ space.max_recipes }}</template>
@@ -15,7 +15,7 @@
 
                     <h6 class="mt-2"><i class="fas fa-users"></i> {{ $t('Users') }}</h6>
                     <b-progress height="1.5rem" :max="space.max_users" variant="success" :striped="true">
-                        <b-progress-bar :value="space.user_count">
+                        <b-progress-bar :value="space.user_count" class="text-dark font-weight-bold">
                             {{ space.user_count }} /
                             <template v-if="space.max_users === 0">∞</template>
                             <template v-else>{{ space.max_users }}</template>
@@ -24,7 +24,7 @@
 
                     <h6 class="mt-2"><i class="fas fa-file"></i> {{ $t('Files') }}</h6>
                     <b-progress height="1.5rem" :max="space.max_file_storage_mb" variant="success" :striped="true">
-                        <b-progress-bar :value="space.file_size_mb">
+                        <b-progress-bar :value="space.file_size_mb" class="text-dark font-weight-bold">
                             {{ space.file_size_mb }} /
                             <template v-if="space.max_file_storage_mb === 0">∞</template>
                             <template v-else>{{ space.max_file_storage_mb }}</template>
@@ -85,7 +85,7 @@
                             <th></th>
                         </tr>
                         </thead>
-                        <tr v-for="il in invite_links" :key="il.id">
+                        <tr v-for="il in active_invite_links" :key="il.id">
                             <td>{{ il.id }}</td>
                             <td>{{ il.email }}</td>
                             <td>
@@ -134,6 +134,44 @@
             </div>
         </div>
 
+        <div class="row mt-4" v-if="space !== undefined">
+            <div class="col col-12">
+                <h4 class="mt-2"><i class="fas fa-cogs"></i> {{ $t('Settings') }}</h4>
+
+                <label>{{ $t('Message') }}</label>
+                <b-form-textarea v-model="space.message"></b-form-textarea>
+
+                <b-form-checkbox v-model="space.show_facet_count"> Facet Count</b-form-checkbox>
+                <span class="text-muted small">{{ $t('facet_count_info') }}</span><br/>
+
+                <label>{{ $t('FoodInherit') }}</label>
+                <generic-multiselect :initial_selection="space.food_inherit"
+                                     :model="Models.FOOD_INHERIT_FIELDS"
+                                     @change="space.food_inherit = $event.val;">
+                </generic-multiselect>
+                <span class="text-muted small">{{ $t('food_inherit_info') }}</span><br/>
+
+                <a class="btn btn-success" @click="updateSpace()">{{ $t('Update') }}</a><br/>
+                <a class="btn btn-warning mt-1" @click="resetInheritance()">{{ $t('reset_food_inheritance') }}</a><br/>
+                <span class="text-muted small">{{ $t('reset_food_inheritance_info') }}</span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col col-12">
+                <h4 class="mt-2"><i class="fas fa-trash"></i> {{ $t('Delete') }}</h4>
+
+                {{ $t('warning_space_delete') }}
+                <br/>
+                <a class="btn btn-danger" :href="resolveDjangoUrl('delete_space', ACTIVE_SPACE_ID)">{{
+                        $t('Delete')
+                    }}</a>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+
         <generic-modal-form :model="Models.INVITE_LINK" :action="Actions.CREATE" :show="show_invite_create"
                             @finish-action="show_invite_create = false; loadInviteLinks()"/>
 
@@ -146,11 +184,12 @@ import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import {ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils"
+import {ApiMixin, resolveDjangoUrl, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils"
 
 import {ApiApiFactory} from "@/utils/openapi/api.ts"
 import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
+import axios from "axios";
 
 Vue.use(BootstrapVue)
 
@@ -160,17 +199,23 @@ export default {
     components: {GenericMultiselect, GenericModalForm},
     data() {
         return {
+            ACTIVE_SPACE_ID: window.ACTIVE_SPACE_ID,
             space: undefined,
             user_spaces: [],
             invite_links: [],
             show_invite_create: false
         }
     },
+    computed: {
+        active_invite_links: function () {
+            return this.invite_links.filter(il => il.used_by === null)
+        },
+    },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         let apiFactory = new ApiApiFactory()
-        apiFactory.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+        apiFactory.retrieveSpace(this.ACTIVE_SPACE_ID).then(r => {
             this.space = r.data
         })
         apiFactory.listUserSpaces().then(r => {
@@ -190,6 +235,14 @@ export default {
             let apiFactory = new ApiApiFactory()
             apiFactory.listInviteLinks().then(r => {
                 this.invite_links = r.data
+            })
+        },
+        updateSpace: function () {
+            let apiFactory = new ApiApiFactory()
+            apiFactory.partialUpdateSpace(this.ACTIVE_SPACE_ID, this.space).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
         updateUserSpace: function (userSpace) {
@@ -219,7 +272,13 @@ export default {
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
-
+        },
+        resetInheritance: function () {
+            axios.get(resolveDjangoUrl('api_reset_food_inheritance')).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
         },
     },
 }

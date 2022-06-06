@@ -2,6 +2,7 @@ import io
 import json
 import mimetypes
 import re
+import traceback
 import uuid
 from collections import OrderedDict
 
@@ -172,9 +173,9 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
 
                 self.queryset = (
                     self.queryset
-                        .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
-                                              default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(filter).order_by('-starts', Lower('name').asc())
+                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
+                                          default=Value(0)))  # put exact matches at the top of the result set
+                    .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -387,6 +388,11 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
     serializer_class = UserSpaceSerializer
     permission_classes = [CustomIsSpaceOwner]
     http_method_names = ['get', 'patch', 'put', 'delete']
+
+    def destroy(self, request, *args, **kwargs):
+        if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
+            raise APIException('Cannot delete Space owner permission.')
+        return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -1154,6 +1160,22 @@ def recipe_from_source(request):
             }, status=status.HTTP_200_OK)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsAdmin])
+# TODO add rate limiting
+def reset_food_inheritance(request):
+    """
+    function to reset inheritance from api, see food method for docs
+    """
+    try:
+        Food.reset_inheritance(space=request.space)
+        return Response({'message': 'success', }, status=status.HTTP_200_OK)
+    except Exception as e:
+        traceback.print_exc()
+        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):

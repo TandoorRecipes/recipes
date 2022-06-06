@@ -3,7 +3,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "No Space" %}{% endblock %}
+{% block title %}{% trans "Overview" %}{% endblock %}
 
 
 {% block content %}
@@ -36,6 +36,11 @@
                                     <h5 class="card-title"><a
                                             href="{% url 'view_switch_space' us.space.id %}">{{ us.space.name }}</a>
                                     </h5>
+{#                                    {% if us.active %}#}
+{#                                        <i class="far fa-dot-circle fa-fw"></i>#}
+{#                                    {% else %}#}
+{#                                        <i class="far fa-circle fa-fw"></i>#}
+{#                                    {% endif %}#}
                                     <p class="card-text"><small
                                             class="text-muted">{% trans 'Owner' %}: {{ us.space.created_by }}</small>
                                         {% if us.space.created_by != us.user %}

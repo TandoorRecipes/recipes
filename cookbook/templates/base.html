@@ -294,7 +294,7 @@
                         <a class="dropdown-item" href="{% url 'data_sync' %}"><i
                                 class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                         {% if request.user == request.space.created_by %}
-                            <a class="dropdown-item" href="{% url 'view_space' %}"><i
+                            <a class="dropdown-item" href="{% url 'view_space_manage' request.space.pk %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
                         {% endif %}
                         {% if user.is_superuser %}
@@ -316,7 +316,7 @@
                                     {% endif %}
                                     {{ us.space.name }}</a>
                             {% endfor %}
-                            <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i class="fas fa-plus fa-fw"></i> {% trans 'Create New' %}</a>
+                            <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i class="fas fa-list"></i> {% trans 'Overview' %}</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
@@ -344,7 +344,7 @@
     </div>
 </nav>
 
-{% message_of_the_day as message_of_the_day %}
+{% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
     <div class="bg-success" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
         {{ message_of_the_day }}

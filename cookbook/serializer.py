@@ -151,10 +151,27 @@ class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
         fields = ('id', 'name')
 
 
-class SpaceSerializer(serializers.ModelSerializer):
+class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        return instance
+
+    class Meta:
+        model = FoodInheritField
+        fields = ('id', 'name', 'field',)
+        read_only_fields = ['id']
+
+
+class SpaceSerializer(WritableNestedModelSerializer):
     user_count = serializers.SerializerMethodField('get_user_count')
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
+    food_inherit = FoodInheritFieldSerializer(many=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
@@ -174,12 +191,17 @@ class SpaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Space
         fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',)
-        read_only_fields = ('id', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
+        read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
 
 
 class UserSpaceSerializer(WritableNestedModelSerializer):
     user = UserNameSerializer(read_only=True)
     groups = GroupSerializer(many=True)
+
+    def validate(self, data):
+        if self.instance.user == self.context['request'].space.created_by:  # cant change space owner permission
+            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
+        return super().validate(data)
 
     def create(self, validated_data):
         raise ValidationError('Cannot create using this endpoint')
@@ -207,24 +229,6 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         model = MealType
         fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
-
-
-class FoodInheritFieldSerializer(WritableNestedModelSerializer):
-    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-
-    def create(self, validated_data):
-        # don't allow writing to FoodInheritField via API
-        return FoodInheritField.objects.get(**validated_data)
-
-    def update(self, instance, validated_data):
-        # don't allow writing to FoodInheritField via API
-        return FoodInheritField.objects.get(**validated_data)
-
-    class Meta:
-        model = FoodInheritField
-        fields = ('id', 'name', 'field',)
-        read_only_fields = ['id']
 
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
@@ -1073,7 +1077,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
 class BookmarkletImportListSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
-        validated_data['space'] = self.context['request'].user.userpreference.space
+        validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     class Meta:

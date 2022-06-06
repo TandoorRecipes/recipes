@@ -111,8 +111,12 @@ def page_help(page_name):
 
 
 @register.simple_tag
-def message_of_the_day():
-    return Space.objects.first().message
+def message_of_the_day(request):
+    try:
+        if request.space.message:
+            return request.space.message
+    except (AttributeError, KeyError, ValueError):
+        pass
 
 
 @register.simple_tag

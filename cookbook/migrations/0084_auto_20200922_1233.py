@@ -4,11 +4,12 @@ from django.db import migrations
 
 
 def create_default_space(apps, schema_editor):
-    Space = apps.get_model('cookbook', 'Space')
-    Space.objects.create(
-        name='Default',
-        message=''
-    )
+    # Space = apps.get_model('cookbook', 'Space')
+    # Space.objects.create(
+    #     name='Default',
+    #     message=''
+    # )
+    pass # Beginning with the multi space tenancy version (~something around 1.3) a default space is no longer needed as the first user can create it after setup
 
 
 class Migration(migrations.Migration):

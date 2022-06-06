@@ -240,7 +240,49 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
+    
+    def safe_delete(self):
+        """
+        Safely deletes a space by deleting all objects belonging to the space first and then deleting the space itself
+        """
+        CookLog.objects.filter(space=self).delete()
+        ViewLog.objects.filter(space=self).delete()
+        ImportLog.objects.filter(space=self).delete()
+        BookmarkletImport.objects.filter(space=self).delete()
+        CustomFilter.objects.filter(space=self).delete()
 
+        Comment.objects.filter(recipe__space=self).delete()
+        Keyword.objects.filter(space=self).delete()
+        Ingredient.objects.filter(space=self).delete()
+        Food.objects.filter(space=self).delete()
+        Unit.objects.filter(space=self).delete()
+        Step.objects.filter(space=self).delete()
+        NutritionInformation.objects.filter(space=self).delete()
+        RecipeBookEntry.objects.filter(book__space=self).delete()
+        RecipeBook.objects.filter(space=self).delete()
+        MealType.objects.filter(space=self).delete()
+        MealPlan.objects.filter(space=self).delete()
+        ShareLink.objects.filter(space=self).delete()
+        Recipe.objects.filter(space=self).delete()
+
+        RecipeImport.objects.filter(space=self).delete()
+        SyncLog.objects.filter(sync__space=self).delete()
+        Sync.objects.filter(space=self).delete()
+        Storage.objects.filter(space=self).delete()
+
+        ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
+        ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
+        ShoppingList.objects.filter(space=self).delete()
+
+        SupermarketCategoryRelation.objects.filter(supermarket__space=self).delete()
+        SupermarketCategory.objects.filter(space=self).delete()
+        Supermarket.objects.filter(space=self).delete()
+
+        InviteLink.objects.filter(space=self).delete()
+        UserFile.objects.filter(space=self).delete()
+        Automation.objects.filter(space=self).delete()
+        self.delete()
+    
     def get_owner(self):
         return self.created_by
 
@@ -551,14 +593,14 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             tree_filter = Q(space=space)
 
         # remove all inherited fields from food
-        Through = Food.objects.filter(tree_filter).first().inherit_fields.through
-        Through.objects.all().delete()
+        trough = Food.objects.filter(tree_filter).first().inherit_fields.through
+        trough.objects.all().delete()
         # food is going to inherit attributes
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
-                Through.objects.bulk_create([
-                    Through(food_id=x, foodinheritfield_id=i['id'])
+                trough.objects.bulk_create([
+                    trough(food_id=x, foodinheritfield_id=i['id'])
                     for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
                 ])
 
