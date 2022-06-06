@@ -117,6 +117,8 @@ urlpatterns = [
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/get_facets/', api.get_facets, name='api_get_facets'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
+    path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
+
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints

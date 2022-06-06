@@ -45,7 +45,7 @@ from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required, CustomIsSpaceOwner)
+                                               group_required, CustomIsSpaceOwner, switch_user_active_space)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -395,7 +395,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(user=self.request.user)
 
 
 class UserPreferenceViewSet(viewsets.ModelViewSet):
@@ -1173,6 +1173,23 @@ def reset_food_inheritance(request):
     try:
         Food.reset_inheritance(space=request.space)
         return Response({'message': 'success', }, status=status.HTTP_200_OK)
+    except Exception as e:
+        traceback.print_exc()
+        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsAdmin])
+# TODO add rate limiting
+def switch_active_space(request, space_id):
+    """
+    api endpoint to switch space function
+    """
+    try:
+        user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
+        switch_user_active_space(request.user, user_space)
+        return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
     except Exception as e:
         traceback.print_exc()
         return Response(str(e), status=status.HTTP_400_BAD_REQUEST)

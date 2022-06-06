@@ -208,7 +208,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'active', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'created_at', 'updated_at', 'space')
 
 
