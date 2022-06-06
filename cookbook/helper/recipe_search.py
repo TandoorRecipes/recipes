@@ -760,6 +760,6 @@ def old_search(request):
         params = dict(request.GET)
         params['internal'] = None
         f = RecipeFilter(params,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(Lower('name').asc()),
+                         queryset=Recipe.objects.filter(space=request.space).all().order_by(Lower('name').asc()),
                          space=request.space)
         return f.qs

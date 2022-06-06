@@ -56,9 +56,9 @@ def test_get_related_recipes(request, arg, recipe, related_count, u1_s1, space_2
     ({'steps__food_recipe_count': {'step': 0, 'count': 1}}),  # shopping list from recipe with food recipe
     ({'steps__food_recipe_count': {'step': 0, 'count': 1}, 'steps__recipe_count': 1}),  # shopping list from recipe with StepRecipe and food recipe
 ], indirect=['recipe'])
-def test_related_mixed_space(request, recipe,  u1_s2):
+def test_related_mixed_space(request, recipe,  u1_s2, space_2):
     with scopes_disabled():
-        recipe.space = auth.get_user(u1_s2).userpreference.space
+        recipe.space = space_2
         recipe.save()
     assert len(json.loads(
         u1_s2.get(
