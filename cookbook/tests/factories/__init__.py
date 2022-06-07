@@ -76,8 +76,6 @@ class UserFactory(factory.django.DjangoModelFactory):
         if extracted:
             for prefs in extracted:
                 self.userpreference[prefs] = extracted[prefs]/0   # intentionally break so it can be debugged later
-        self.userpreference.space = self.space
-        self.userpreference.save()
 
     class Meta:
         model = User

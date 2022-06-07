@@ -355,7 +355,7 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        queryset = self.queryset.filter(userpreference__space=self.request.space)
+        queryset = self.queryset.filter(userspace__space=self.request.space)
         try:
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
@@ -387,7 +387,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
     permission_classes = [CustomIsSpaceOwner]
-    http_method_names = ['get', 'patch', 'put', 'delete']
+    http_method_names = ['get', 'patch', 'delete']
 
     def destroy(self, request, *args, **kwargs):
         if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
@@ -402,9 +402,11 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner, ]
+    http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        with scopes_disabled():  # need to disable scopes as user preference is no longer a spaced method
+            return self.queryset.filter(user=self.request.user)
 
 
 class StorageViewSet(viewsets.ModelViewSet):
@@ -1239,7 +1241,7 @@ def sync_all(request):
                              _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
-    monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)
+    monitors = Sync.objects.filter(active=True).filter(space=request.user.userspace_set.filter(active=1).first().space)
 
     error = False
     for monitor in monitors:
@@ -1302,7 +1304,7 @@ def log_cooking(request, recipe_id):
 def get_plan_ical(request, from_date, to_date):
     queryset = MealPlan.objects.filter(
         Q(created_by=request.user) | Q(shared=request.user)
-    ).filter(space=request.user.userpreference.space).distinct().all()
+    ).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
 
     if from_date is not None:
         queryset = queryset.filter(date__gte=from_date)

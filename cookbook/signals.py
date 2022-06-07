@@ -7,7 +7,7 @@ from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import translation
-from django_scopes import scope
+from django_scopes import scope, scopes_disabled
 
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
@@ -34,10 +34,10 @@ def skip_signal(signal_func):
 
 
 @receiver(post_save, sender=User)
-@skip_signal
-def update_recipe_search_vector(sender, instance=None, created=False, **kwargs):
+def create_user_preference(sender, instance=None, created=False, **kwargs):
     if created:
-        UserPreference.objects.get_or_create(user=instance)
+        with scopes_disabled():
+            UserPreference.objects.get_or_create(user=instance)
 
 
 @receiver(post_save, sender=Recipe)
