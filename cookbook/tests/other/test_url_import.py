@@ -22,8 +22,8 @@ DATA_DIR = "cookbook/tests/other/test_data/"
 
 
 @pytest.mark.parametrize("arg", [
-    ['a_u', 302],
-    ['g1_s1', 302],
+    ['a_u', 403],
+    ['g1_s1', 403],
     ['u1_s1', 405],
     ['a1_s1', 405],
 ])

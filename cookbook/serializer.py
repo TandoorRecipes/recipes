@@ -10,6 +10,7 @@ from django.db.models import Avg, Q, QuerySet, Sum
 from django.http import BadHeaderError
 from django.urls import reverse
 from django.utils import timezone
+from django_scopes import scopes_disabled
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
@@ -242,12 +243,12 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
 
+    def update(self, instance, validated_data):
+        with scopes_disabled():
+            return super().update(instance, validated_data)
+
     def create(self, validated_data):
-        if not validated_data.get('user', None):
-            raise ValidationError(_('A user is required'))
-        if (validated_data['user'] != self.context['request'].user):
-            raise NotFound()
-        return super().create(validated_data)
+        raise ValidationError('Cannot create using this endpoint')
 
     class Meta:
         model = UserPreference

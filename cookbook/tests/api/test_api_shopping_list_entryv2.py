@@ -32,7 +32,7 @@ def sle_2(request):
     u = request.getfixturevalue(params.get('user', 'u1_s1'))
     user = auth.get_user(u)
     count = params.get('count', 10)
-    return ShoppingListEntryFactory.create_batch(count, space=user.userpreference.space, created_by=user)
+    return ShoppingListEntryFactory.create_batch(count, space=user.userspace_set.filter(active=1).first().space, created_by=user)
 
 
 @ pytest.mark.parametrize("arg", [
