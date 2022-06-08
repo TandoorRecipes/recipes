@@ -234,6 +234,7 @@ export default {
         background-color: transparent;
         border: 1px solid rgba(46, 46, 46, 0.5);
         border-radius: 0.1875rem;
+        z-index: 1001;
     }
 }
 
