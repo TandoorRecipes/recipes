@@ -32,6 +32,19 @@ def get_user_name(self):
         return self.username
 
 
+def get_active_space(self):
+    """
+    Returns the active space of a user or in case no space is actives raises an *** exception
+    CAREFUL: cannot be used in django scopes with scope() function because passing None as a scope context means no space checking is enforced (at least I think)!!
+    :param self: user
+    :return: space currently active for user
+    """
+    try:
+        return self.userspace_set.filter(active=True).first().space
+    except AttributeError:
+        return None
+
+
 def get_shopping_share(self):
     # get list of users that shared shopping list with user. Django ORM forbids this type of query, so raw is required
     return User.objects.raw(' '.join([
@@ -46,6 +59,7 @@ def get_shopping_share(self):
 
 auth.models.User.add_to_class('get_user_name', get_user_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
+auth.models.User.add_to_class('get_active_space', get_active_space)
 
 
 def get_model_name(model):
@@ -240,7 +254,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
-    
+
     def safe_delete(self):
         """
         Safely deletes a space by deleting all objects belonging to the space first and then deleting the space itself
@@ -282,7 +296,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         UserFile.objects.filter(space=self).delete()
         Automation.objects.filter(space=self).delete()
         self.delete()
-    
+
     def get_owner(self):
         return self.created_by
 
