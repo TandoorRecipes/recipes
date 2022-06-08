@@ -122,7 +122,7 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
-            data = User.objects.filter(userspace__space=self.context['request'].space).all()
+            data = User.objects.filter(userspace__space=self.context['request'].user.get_active_space()).all()
         else:
             data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
@@ -233,11 +233,13 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
-    food_inherit_default = FoodInheritFieldSerializer(source='space.food_inherit', many=True, allow_null=True,
-                                                      required=False, read_only=True)
+    food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
     shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
+
+    def get_food_inherit_defaults(self, obj):
+        return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
 
     def get_food_children_exist(self, obj):
         space = getattr(self.context.get('request', None), 'space', None)
