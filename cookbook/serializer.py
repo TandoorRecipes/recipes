@@ -200,7 +200,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     groups = GroupSerializer(many=True)
 
     def validate(self, data):
-        if self.instance.user == self.context['request'].space.created_by:  # cant change space owner permission
+        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
             raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
         return super().validate(data)
 

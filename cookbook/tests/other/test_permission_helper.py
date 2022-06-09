@@ -6,8 +6,8 @@ from django_scopes import scopes_disabled
 
 from cookbook.forms import ImportExportBase
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import has_group_permission, is_space_owner, switch_user_active_space
-from cookbook.models import ExportLog, UserSpace, Food
+from cookbook.helper.permission_helper import has_group_permission, is_space_owner, switch_user_active_space, is_object_owner
+from cookbook.models import ExportLog, UserSpace, Food, Space, Comment, RecipeBook, RecipeBookEntry
 
 
 def test_has_group_permission(u1_s1, a_u, space_2):
@@ -36,6 +36,30 @@ def test_has_group_permission(u1_s1, a_u, space_2):
         assert not has_group_permission(auth.get_user(a_u), ('guest',))
         assert not has_group_permission(auth.get_user(a_u), ('user',))
         assert not has_group_permission(auth.get_user(a_u), ('admin',))
+
+
+def test_is_owner(u1_s1, u2_s1, u1_s2, a_u, space_1, recipe_1_s1):
+    with scopes_disabled():
+        s = Space.objects.create(name='Test', created_by=auth.get_user(u1_s1))
+
+        assert is_object_owner(auth.get_user(u1_s1), s)
+        assert not is_object_owner(auth.get_user(u2_s1), s)
+        assert not is_object_owner(auth.get_user(u1_s2), s)
+        assert not is_object_owner(auth.get_user(a_u), s)
+
+        rb = RecipeBook.objects.create(name='Test', created_by=auth.get_user(u1_s1), space=space_1)
+
+        assert is_object_owner(auth.get_user(u1_s1), rb)
+        assert not is_object_owner(auth.get_user(u2_s1), rb)
+        assert not is_object_owner(auth.get_user(u1_s2), rb)
+        assert not is_object_owner(auth.get_user(a_u), rb)
+
+        rbe = RecipeBookEntry.objects.create(book=rb, recipe=recipe_1_s1)
+
+        assert is_object_owner(auth.get_user(u1_s1), rbe)
+        assert not is_object_owner(auth.get_user(u2_s1), rbe)
+        assert not is_object_owner(auth.get_user(u1_s2), rbe)
+        assert not is_object_owner(auth.get_user(a_u), rbe)
 
 
 def test_is_space_owner(u1_s1, u2_s1, space_1, space_2):
@@ -70,5 +94,3 @@ def test_switch_user_active_space(u1_s1, u1_s2, space_1, space_2):
 
         # can switch into newly created space
         assert switch_user_active_space(auth.get_user(u1_s1), space_2) == us
-
-

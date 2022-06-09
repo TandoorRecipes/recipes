@@ -45,7 +45,7 @@ from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required, CustomIsSpaceOwner, switch_user_active_space)
+                                               group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -376,11 +376,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner & CustomIsAdmin]
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
-        return self.queryset.filter(id=self.request.space.id)
+        return self.queryset.filter(id=self.request.space.id, created_by=self.request.user)
 
 
 class UserSpaceViewSet(viewsets.ModelViewSet):
@@ -395,7 +395,10 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        if is_space_owner(self.request.user, self.request.space):
+            return self.queryset.filter(space=self.request.space)
+        else:
+            return self.queryset.filter(user=self.request.user, space=self.request.space)
 
 
 class UserPreferenceViewSet(viewsets.ModelViewSet):
@@ -1055,11 +1058,14 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = InviteLink.objects
     serializer_class = InviteLinkSerializer
-    permission_classes = [CustomIsSpaceOwner]
+    permission_classes = [CustomIsSpaceOwner & CustomIsAdmin]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+        if is_space_owner(self.request.user, self.request.space):
+            self.queryset = self.queryset.filter(space=self.request.space).all()
+            return super().get_queryset()
+        else:
+            return None
 
 
 class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
