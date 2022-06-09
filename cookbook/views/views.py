@@ -142,8 +142,8 @@ def space_overview(request):
 
 @login_required
 def switch_space(request, space_id):
-    user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
-    switch_user_active_space(request.user, user_space)
+    space = get_object_or_404(Space, id=space_id)
+    switch_user_active_space(request.user, space)
     return HttpResponseRedirect(reverse('index'))
 
 
@@ -519,8 +519,8 @@ def invite_link(request, token):
 
 @group_required('admin')
 def space_manage(request, space_id):
-    user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
-    switch_user_active_space(request.user, user_space)
+    space = get_object_or_404(Space, id=space_id)
+    switch_user_active_space(request.user, space)
     return render(request, 'space_manage.html', {})
 
 

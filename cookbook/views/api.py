@@ -1189,9 +1189,12 @@ def switch_active_space(request, space_id):
     api endpoint to switch space function
     """
     try:
-        user_space = get_object_or_404(UserSpace, space=space_id, user=request.user)
-        switch_user_active_space(request.user, user_space)
-        return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
+        space = get_object_or_404(Space, id=space_id)
+        user_space = switch_user_active_space(request.user, space)
+        if user_space:
+            return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
+        else:
+            return Response("not found", status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         traceback.print_exc()
         return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
