@@ -300,6 +300,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     def get_owner(self):
         return self.created_by
 
+    def get_space(self):
+        return self
+
     def __str__(self):
         return self.name
 
