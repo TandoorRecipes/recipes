@@ -64,6 +64,7 @@ def test_list_space(u1_s1, u2_s1, u1_s2, space_2):
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 1
 
     u = auth.get_user(u2_s1)
+    u.userspace_set.first().delete()
     UserSpace.objects.create(user=u, space=space_2)
 
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
