@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.core.cache import caches
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
@@ -326,13 +326,21 @@ def above_space_user_limit(space):
     return False, ''
 
 
-def switch_user_active_space(user, user_space):
+def switch_user_active_space(user, space):
     """
     Switch the currently active space of a user by setting all spaces to inactive and activating the one passed
     :param user: user to change active space for
-    :param user_space: user space object to activate
+    :param space: space to activate user for
+    :return user space object or none if not found/no permission
     """
-    if not user_space.active:
-        UserSpace.objects.filter(user=user).update(active=False)  # make sure to deactivate all spaces for a user
-        user_space.active = True
-        user_space.save()
+    try:
+        us = UserSpace.objects.get(space=space, user=user)
+        if not us.active:
+            UserSpace.objects.filter(user=user).update(active=False)
+            us.active = True
+            us.save()
+            return us
+        else:
+            return us
+    except ObjectDoesNotExist:
+        return None
