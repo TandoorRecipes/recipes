@@ -2,9 +2,7 @@ import operator
 import pathlib
 import re
 import uuid
-from collections import OrderedDict
 from datetime import date, timedelta
-from decimal import Decimal
 
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
@@ -14,10 +12,9 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q, Subquery
+from django.db.models import Index, ProtectedError, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
-from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
@@ -35,6 +32,19 @@ def get_user_name(self):
         return self.username
 
 
+def get_active_space(self):
+    """
+    Returns the active space of a user or in case no space is actives raises an *** exception
+    CAREFUL: cannot be used in django scopes with scope() function because passing None as a scope context means no space checking is enforced (at least I think)!!
+    :param self: user
+    :return: space currently active for user
+    """
+    try:
+        return self.userspace_set.filter(active=True).first().space
+    except AttributeError:
+        return None
+
+
 def get_shopping_share(self):
     # get list of users that shared shopping list with user. Django ORM forbids this type of query, so raw is required
     return User.objects.raw(' '.join([
@@ -49,6 +59,7 @@ def get_shopping_share(self):
 
 auth.models.User.add_to_class('get_user_name', get_user_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
+auth.models.User.add_to_class('get_active_space', get_active_space)
 
 
 def get_model_name(model):
@@ -244,6 +255,54 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
+    def safe_delete(self):
+        """
+        Safely deletes a space by deleting all objects belonging to the space first and then deleting the space itself
+        """
+        CookLog.objects.filter(space=self).delete()
+        ViewLog.objects.filter(space=self).delete()
+        ImportLog.objects.filter(space=self).delete()
+        BookmarkletImport.objects.filter(space=self).delete()
+        CustomFilter.objects.filter(space=self).delete()
+
+        Comment.objects.filter(recipe__space=self).delete()
+        Keyword.objects.filter(space=self).delete()
+        Ingredient.objects.filter(space=self).delete()
+        Food.objects.filter(space=self).delete()
+        Unit.objects.filter(space=self).delete()
+        Step.objects.filter(space=self).delete()
+        NutritionInformation.objects.filter(space=self).delete()
+        RecipeBookEntry.objects.filter(book__space=self).delete()
+        RecipeBook.objects.filter(space=self).delete()
+        MealType.objects.filter(space=self).delete()
+        MealPlan.objects.filter(space=self).delete()
+        ShareLink.objects.filter(space=self).delete()
+        Recipe.objects.filter(space=self).delete()
+
+        RecipeImport.objects.filter(space=self).delete()
+        SyncLog.objects.filter(sync__space=self).delete()
+        Sync.objects.filter(space=self).delete()
+        Storage.objects.filter(space=self).delete()
+
+        ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
+        ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
+        ShoppingList.objects.filter(space=self).delete()
+
+        SupermarketCategoryRelation.objects.filter(supermarket__space=self).delete()
+        SupermarketCategory.objects.filter(space=self).delete()
+        Supermarket.objects.filter(space=self).delete()
+
+        InviteLink.objects.filter(space=self).delete()
+        UserFile.objects.filter(space=self).delete()
+        Automation.objects.filter(space=self).delete()
+        self.delete()
+
+    def get_owner(self):
+        return self.created_by
+
+    def get_space(self):
+        return self
+
     def __str__(self):
         return self.name
 
@@ -340,11 +399,23 @@ class UserPreference(models.Model, PermissionModelMixin):
     csv_prefix = models.CharField(max_length=10, blank=True, )
 
     created_at = models.DateTimeField(auto_now_add=True)
-    space = models.ForeignKey(Space, on_delete=models.CASCADE, null=True)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return str(self.user)
+
+
+class UserSpace(models.Model, PermissionModelMixin):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group)
+
+    # there should always only be one active space although permission methods are written in such a way
+    # that having more than one active space should just break certain parts of the application and not leak any data
+    active = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Storage(models.Model, PermissionModelMixin):
@@ -539,14 +610,14 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
             tree_filter = Q(space=space)
 
         # remove all inherited fields from food
-        Through = Food.objects.filter(tree_filter).first().inherit_fields.through
-        Through.objects.all().delete()
+        trough = Food.objects.filter(tree_filter).first().inherit_fields.through
+        trough.objects.all().delete()
         # food is going to inherit attributes
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
-                Through.objects.bulk_create([
-                    Through(food_id=x, foodinheritfield_id=i['id'])
+                trough.objects.bulk_create([
+                    trough(food_id=x, foodinheritfield_id=i['id'])
                     for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
                 ])
 

@@ -12,7 +12,7 @@ from recipes.version import VERSION_NUMBER
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name)
+                     get_model_name, UserSpace, Space)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken
 
@@ -25,7 +25,9 @@ router.register(r'food', api.FoodViewSet)
 router.register(r'food-inherit-field', api.FoodInheritFieldViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'export-log', api.ExportLogViewSet)
+router.register(r'group', api.GroupViewSet)
 router.register(r'ingredient', api.IngredientViewSet)
+router.register(r'invite-link', api.InviteLinkViewSet)
 router.register(r'keyword', api.KeywordViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
 router.register(r'meal-type', api.MealTypeViewSet)
@@ -35,6 +37,7 @@ router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
+router.register(r'space', api.SpaceViewSet)
 router.register(r'step', api.StepViewSet)
 router.register(r'storage', api.StorageViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
@@ -46,18 +49,17 @@ router.register(r'unit', api.UnitViewSet)
 router.register(r'user-file', api.UserFileViewSet)
 router.register(r'user-name', api.UserNameViewSet, basename='username')
 router.register(r'user-preference', api.UserPreferenceViewSet)
+router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('setup/', views.setup, name='view_setup'),
-    path('space/', views.space, name='view_space'),
-    path('space/member/<int:user_id>/<int:space_id>/<slug:group>', views.space_change_member,
-         name='change_space_member'),
     path('no-group', views.no_groups, name='view_no_group'),
-    path('no-space', views.no_space, name='view_no_space'),
+    path('space-overview', views.space_overview, name='view_space_overview'),
+    path('space-manage/<int:space_id>', views.space_manage, name='view_space_manage'),
+    path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
     path('no-perm', views.no_perm, name='view_no_perm'),
-    path('signup/<slug:token>', views.signup, name='view_signup'),  # TODO deprecated with 0.16.2 remove at some point
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
@@ -114,6 +116,9 @@ urlpatterns = [
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/get_facets/', api.get_facets, name='api_get_facets'),
+    path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
+    path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
+
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
@@ -145,7 +150,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
-    Comment, RecipeBookEntry, ShoppingList, InviteLink
+    Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
 )
 
 for m in generic_models:

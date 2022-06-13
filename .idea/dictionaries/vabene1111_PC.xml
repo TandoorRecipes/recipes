@@ -6,6 +6,7 @@
       <w>csrftoken</w>
       <w>gunicorn</w>
       <w>ical</w>
+      <w>invitelink</w>
       <w>mealie</w>
       <w>pepperplate</w>
       <w>safron</w>

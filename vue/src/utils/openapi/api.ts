@@ -24,6 +24,31 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface AuthToken
+ */
+export interface AuthToken {
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthToken
+     */
+    username: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthToken
+     */
+    password: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthToken
+     */
+    token?: string;
+}
+/**
+ * 
+ * @export
  * @interface Automation
  */
 export interface Automation {
@@ -594,6 +619,25 @@ export interface FoodSupermarketCategory {
      * @memberof FoodSupermarketCategory
      */
     description?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface Group
+ */
+export interface Group {
+    /**
+     * 
+     * @type {number}
+     * @memberof Group
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Group
+     */
+    name: string;
 }
 /**
  * 
@@ -1270,6 +1314,61 @@ export interface InlineResponse2009 {
      * @memberof InlineResponse2009
      */
     results?: Array<SyncLog>;
+}
+/**
+ * 
+ * @export
+ * @interface InviteLink
+ */
+export interface InviteLink {
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLink
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLink
+     */
+    uuid?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLink
+     */
+    email?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLink
+     */
+    group: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLink
+     */
+    valid_until?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLink
+     */
+    used_by?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLink
+     */
+    created_by?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLink
+     */
+    created_at?: string;
 }
 /**
  * 
@@ -2869,6 +2968,103 @@ export interface ShoppingListSupermarketCategoryToSupermarket {
 /**
  * 
  * @export
+ * @interface Space
+ */
+export interface Space {
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    created_by?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    message?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    max_recipes?: number;
+    /**
+     * Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.
+     * @type {number}
+     * @memberof Space
+     */
+    max_file_storage_mb?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    max_users?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    allow_sharing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    demo?: boolean;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Space
+     */
+    food_inherit?: Array<number>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    show_facet_count?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    user_count?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    recipe_count?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    file_size_mb?: string;
+}
+/**
+ * 
+ * @export
  * @interface Step
  */
 export interface Step {
@@ -3470,6 +3666,68 @@ export enum UserPreferenceSearchStyleEnum {
 /**
  * 
  * @export
+ * @interface UserSpace
+ */
+export interface UserSpace {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserSpace
+     */
+    id?: number;
+    /**
+     * 
+     * @type {ShoppingListCreatedBy}
+     * @memberof UserSpace
+     */
+    user?: ShoppingListCreatedBy;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserSpace
+     */
+    space?: string;
+    /**
+     * 
+     * @type {Array<UserSpaceGroups>}
+     * @memberof UserSpace
+     */
+    groups: Array<UserSpaceGroups>;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserSpace
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserSpace
+     */
+    updated_at?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserSpaceGroups
+ */
+export interface UserSpaceGroups {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserSpaceGroups
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserSpaceGroups
+     */
+    name: string;
+}
+/**
+ * 
+ * @export
  * @interface ViewLog
  */
 export interface ViewLog {
@@ -3763,6 +4021,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createInviteLink: async (inviteLink?: InviteLink, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/invite-link/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4419,6 +4710,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createrecipeFromSource: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-from-source/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
@@ -4659,6 +4983,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('destroyIngredient', 'id', id)
             const localVarPath = `/api/ingredient/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyInviteLink: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyInviteLink', 'id', id)
+            const localVarPath = `/api/invite-link/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5278,6 +5635,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyUserSpace: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyUserSpace', 'id', id)
+            const localVarPath = `/api/user-space/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5606,6 +5996,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listGroups: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/group/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
@@ -5670,6 +6089,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listInviteLinks: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/invite-link/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
 
     
@@ -6130,6 +6578,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSpaces: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/space/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {string} [query] Query string matched (fuzzy) against object name.
          * @param {number} [page] A page number within the paginated result set.
@@ -6451,6 +6928,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          */
         listUserPreferences: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-preference/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUserSpaces: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/user-space/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -7044,6 +7550,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateInviteLink: async (id: string, inviteLink?: InviteLink, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateInviteLink', 'id', id)
+            const localVarPath = `/api/invite-link/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {Keyword} [keyword] 
          * @param {*} [options] Override http request option.
@@ -7369,6 +7912,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipe, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {Space} [space] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSpace: async (id: string, space?: Space, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateSpace', 'id', id)
+            const localVarPath = `/api/space/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(space, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7732,6 +8312,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateUserSpace: async (id: string, userSpace?: UserSpace, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateUserSpace', 'id', id)
+            const localVarPath = `/api/user-space/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(userSpace, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -8033,6 +8650,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this group.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveGroup: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveGroup', 'id', id)
+            const localVarPath = `/api/group/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this import log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8074,6 +8724,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveIngredient', 'id', id)
             const localVarPath = `/api/ingredient/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveInviteLink: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveInviteLink', 'id', id)
+            const localVarPath = `/api/invite-link/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8371,6 +9054,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveShoppingListRecipe', 'id', id)
             const localVarPath = `/api/shopping-list-recipe/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSpace: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveSpace', 'id', id)
+            const localVarPath = `/api/space/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8735,6 +9451,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             assertParamExists('retrieveUserPreference', 'user', user)
             const localVarPath = `/api/user-preference/{user}/`
                 .replace(`{${"user"}}`, encodeURIComponent(String(user)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUserSpace: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveUserSpace', 'id', id)
+            const localVarPath = `/api/user-space/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -9154,6 +9903,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateInviteLink: async (id: string, inviteLink?: InviteLink, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateInviteLink', 'id', id)
+            const localVarPath = `/api/invite-link/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9850,6 +10636,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserSpace: async (id: string, userSpace?: UserSpace, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateUserSpace', 'id', id)
+            const localVarPath = `/api/user-space/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(userSpace, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -9973,6 +10796,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async createIngredient(ingredient?: Ingredient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createIngredient(ingredient, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createInviteLink(inviteLink?: InviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createInviteLink(inviteLink, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10169,6 +11002,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createrecipeFromSource(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createrecipeFromSource(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
@@ -10246,6 +11089,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async destroyIngredient(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.destroyIngredient(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyInviteLink(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyInviteLink(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10430,6 +11283,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyUserSpace(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUserSpace(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10524,6 +11387,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listGroups(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Group>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listGroups(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
@@ -10542,6 +11414,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listIngredients(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listIngredients(page, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listInviteLinks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteLink>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listInviteLinks(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10664,6 +11545,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listSpaces(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Space>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSpaces(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {string} [query] Query string matched (fuzzy) against object name.
          * @param {number} [page] A page number within the paginated result set.
@@ -10761,6 +11651,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listUserPreferences(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserPreference>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUserPreferences(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listUserSpaces(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserSpace>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserSpaces(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10933,6 +11832,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateInviteLink(id: string, inviteLink?: InviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateInviteLink(id, inviteLink, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {Keyword} [keyword] 
          * @param {*} [options] Override http request option.
@@ -11028,6 +11938,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async partialUpdateShoppingListRecipe(id: string, shoppingListRecipe?: ShoppingListRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateShoppingListRecipe(id, shoppingListRecipe, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {Space} [space] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateSpace(id: string, space?: Space, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Space>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateSpace(id, space, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11134,6 +12055,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateUserSpace(id: string, userSpace?: UserSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserSpace(id, userSpace, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -11225,6 +12157,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this group.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveGroup(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Group>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveGroup(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this import log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11241,6 +12183,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveIngredient(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveIngredient(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveInviteLink(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveInviteLink(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11331,6 +12283,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveShoppingListRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveShoppingListRecipe(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveSpace(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Space>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveSpace(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11441,6 +12403,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveUserPreference(user: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPreference>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveUserPreference(user, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveUserSpace(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveUserSpace(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11561,6 +12533,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async updateIngredient(id: string, ingredient?: Ingredient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updateIngredient(id, ingredient, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateInviteLink(id: string, inviteLink?: InviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateInviteLink(id, inviteLink, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11766,6 +12749,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateUserSpace(id: string, userSpace?: UserSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserSpace(id, userSpace, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -11856,6 +12850,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         createIngredient(ingredient?: Ingredient, options?: any): AxiosPromise<Ingredient> {
             return localVarFp.createIngredient(ingredient, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createInviteLink(inviteLink?: InviteLink, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.createInviteLink(inviteLink, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12032,6 +13035,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.createViewLog(viewLog, options).then((request) => request(axios, basePath));
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createrecipeFromSource(body?: any, options?: any): AxiosPromise<any> {
+            return localVarFp.createrecipeFromSource(body, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
@@ -12102,6 +13114,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         destroyIngredient(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.destroyIngredient(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyInviteLink(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyInviteLink(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12267,6 +13288,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyUserSpace(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyUserSpace(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -12352,6 +13382,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listGroups(options?: any): AxiosPromise<Array<Group>> {
+            return localVarFp.listGroups(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
@@ -12369,6 +13407,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listIngredients(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
             return localVarFp.listIngredients(page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listInviteLinks(options?: any): AxiosPromise<Array<InviteLink>> {
+            return localVarFp.listInviteLinks(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12481,6 +13527,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSpaces(options?: any): AxiosPromise<Array<Space>> {
+            return localVarFp.listSpaces(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {string} [query] Query string matched (fuzzy) against object name.
          * @param {number} [page] A page number within the paginated result set.
@@ -12569,6 +13623,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listUserPreferences(options?: any): AxiosPromise<Array<UserPreference>> {
             return localVarFp.listUserPreferences(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listUserSpaces(options?: any): AxiosPromise<Array<UserSpace>> {
+            return localVarFp.listUserSpaces(options).then((request) => request(axios, basePath));
         },
         /**
          * optional parameters  - **filter_list**: array of user id\'s to get names for
@@ -12725,6 +13787,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateInviteLink(id: string, inviteLink?: InviteLink, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.partialUpdateInviteLink(id, inviteLink, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this keyword.
          * @param {Keyword} [keyword] 
          * @param {*} [options] Override http request option.
@@ -12812,6 +13884,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         partialUpdateShoppingListRecipe(id: string, shoppingListRecipe?: ShoppingListRecipe, options?: any): AxiosPromise<ShoppingListRecipe> {
             return localVarFp.partialUpdateShoppingListRecipe(id, shoppingListRecipe, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {Space} [space] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateSpace(id: string, space?: Space, options?: any): AxiosPromise<Space> {
+            return localVarFp.partialUpdateSpace(id, space, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -12908,6 +13990,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateUserSpace(id: string, userSpace?: UserSpace, options?: any): AxiosPromise<UserSpace> {
+            return localVarFp.partialUpdateUserSpace(id, userSpace, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -12990,6 +14082,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this group.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveGroup(id: string, options?: any): AxiosPromise<Group> {
+            return localVarFp.retrieveGroup(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this import log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13005,6 +14106,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveIngredient(id: string, options?: any): AxiosPromise<Ingredient> {
             return localVarFp.retrieveIngredient(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveInviteLink(id: string, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.retrieveInviteLink(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13086,6 +14196,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveShoppingListRecipe(id: string, options?: any): AxiosPromise<ShoppingListRecipe> {
             return localVarFp.retrieveShoppingListRecipe(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveSpace(id: string, options?: any): AxiosPromise<Space> {
+            return localVarFp.retrieveSpace(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13185,6 +14304,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveUserPreference(user: string, options?: any): AxiosPromise<UserPreference> {
             return localVarFp.retrieveUserPreference(user, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveUserSpace(id: string, options?: any): AxiosPromise<UserSpace> {
+            return localVarFp.retrieveUserSpace(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13294,6 +14422,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         updateIngredient(id: string, ingredient?: Ingredient, options?: any): AxiosPromise<Ingredient> {
             return localVarFp.updateIngredient(id, ingredient, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this invite link.
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateInviteLink(id: string, inviteLink?: InviteLink, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.updateInviteLink(id, inviteLink, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13480,6 +14618,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this user space.
+         * @param {UserSpace} [userSpace] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUserSpace(id: string, userSpace?: UserSpace, options?: any): AxiosPromise<UserSpace> {
+            return localVarFp.updateUserSpace(id, userSpace, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -13584,6 +14732,17 @@ export class ApiApi extends BaseAPI {
      */
     public createIngredient(ingredient?: Ingredient, options?: any) {
         return ApiApiFp(this.configuration).createIngredient(ingredient, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {InviteLink} [inviteLink] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createInviteLink(inviteLink?: InviteLink, options?: any) {
+        return ApiApiFp(this.configuration).createInviteLink(inviteLink, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -13799,6 +14958,17 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
+     * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+     * @param {any} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createrecipeFromSource(body?: any, options?: any) {
+        return ApiApiFp(this.configuration).createrecipeFromSource(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 
      * @param {string} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
@@ -13884,6 +15054,17 @@ export class ApiApi extends BaseAPI {
      */
     public destroyIngredient(id: string, options?: any) {
         return ApiApiFp(this.configuration).destroyIngredient(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this invite link.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyInviteLink(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyInviteLink(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14086,6 +15267,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this user space.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyUserSpace(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyUserSpace(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this view log.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -14189,6 +15381,16 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listGroups(options?: any) {
+        return ApiApiFp(this.configuration).listGroups(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
@@ -14209,6 +15411,16 @@ export class ApiApi extends BaseAPI {
      */
     public listIngredients(page?: number, pageSize?: number, options?: any) {
         return ApiApiFp(this.configuration).listIngredients(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listInviteLinks(options?: any) {
+        return ApiApiFp(this.configuration).listInviteLinks(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14340,6 +15552,16 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listSpaces(options?: any) {
+        return ApiApiFp(this.configuration).listSpaces(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
      * @param {string} [query] Query string matched (fuzzy) against object name.
      * @param {number} [page] A page number within the paginated result set.
@@ -14447,6 +15669,16 @@ export class ApiApi extends BaseAPI {
      */
     public listUserPreferences(options?: any) {
         return ApiApiFp(this.configuration).listUserPreferences(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listUserSpaces(options?: any) {
+        return ApiApiFp(this.configuration).listUserSpaces(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14634,6 +15866,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this invite link.
+     * @param {InviteLink} [inviteLink] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateInviteLink(id: string, inviteLink?: InviteLink, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateInviteLink(id, inviteLink, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this keyword.
      * @param {Keyword} [keyword] 
      * @param {*} [options] Override http request option.
@@ -14738,6 +15982,18 @@ export class ApiApi extends BaseAPI {
      */
     public partialUpdateShoppingListRecipe(id: string, shoppingListRecipe?: ShoppingListRecipe, options?: any) {
         return ApiApiFp(this.configuration).partialUpdateShoppingListRecipe(id, shoppingListRecipe, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this space.
+     * @param {Space} [space] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateSpace(id: string, space?: Space, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateSpace(id, space, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -14853,6 +16109,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this user space.
+     * @param {UserSpace} [userSpace] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateUserSpace(id: string, userSpace?: UserSpace, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateUserSpace(id, userSpace, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this view log.
      * @param {ViewLog} [viewLog] 
      * @param {*} [options] Override http request option.
@@ -14953,6 +16221,17 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this group.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveGroup(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveGroup(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this import log.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -14971,6 +16250,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveIngredient(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveIngredient(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this invite link.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveInviteLink(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveInviteLink(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15070,6 +16360,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveShoppingListRecipe(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveShoppingListRecipe(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this space.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveSpace(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveSpace(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15191,6 +16492,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveUserPreference(user: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveUserPreference(user, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this user space.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveUserSpace(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveUserSpace(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15322,6 +16634,18 @@ export class ApiApi extends BaseAPI {
      */
     public updateIngredient(id: string, ingredient?: Ingredient, options?: any) {
         return ApiApiFp(this.configuration).updateIngredient(id, ingredient, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this invite link.
+     * @param {InviteLink} [inviteLink] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateInviteLink(id: string, inviteLink?: InviteLink, options?: any) {
+        return ApiApiFp(this.configuration).updateInviteLink(id, inviteLink, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15545,6 +16869,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this user space.
+     * @param {UserSpace} [userSpace] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateUserSpace(id: string, userSpace?: UserSpace, options?: any) {
+        return ApiApiFp(this.configuration).updateUserSpace(id, userSpace, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this view log.
      * @param {ViewLog} [viewLog] 
      * @param {*} [options] Override http request option.
@@ -15553,6 +16889,132 @@ export class ApiApi extends BaseAPI {
      */
     public updateViewLog(id: string, viewLog?: ViewLog, options?: any) {
         return ApiApiFp(this.configuration).updateViewLog(id, viewLog, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * ApiTokenAuthApi - axios parameter creator
+ * @export
+ */
+export const ApiTokenAuthApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {string} username 
+         * @param {string} password 
+         * @param {string} [token] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAuthToken: async (username: string, password: string, token?: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'username' is not null or undefined
+            assertParamExists('createAuthToken', 'username', username)
+            // verify required parameter 'password' is not null or undefined
+            assertParamExists('createAuthToken', 'password', password)
+            const localVarPath = `/api-token-auth/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (username !== undefined) { 
+                localVarFormParams.append('username', username as any);
+            }
+    
+            if (password !== undefined) { 
+                localVarFormParams.append('password', password as any);
+            }
+    
+            if (token !== undefined) { 
+                localVarFormParams.append('token', token as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ApiTokenAuthApi - functional programming interface
+ * @export
+ */
+export const ApiTokenAuthApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ApiTokenAuthApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {string} username 
+         * @param {string} password 
+         * @param {string} [token] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createAuthToken(username: string, password: string, token?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createAuthToken(username, password, token, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * ApiTokenAuthApi - factory interface
+ * @export
+ */
+export const ApiTokenAuthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ApiTokenAuthApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {string} username 
+         * @param {string} password 
+         * @param {string} [token] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAuthToken(username: string, password: string, token?: string, options?: any): AxiosPromise<AuthToken> {
+            return localVarFp.createAuthToken(username, password, token, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ApiTokenAuthApi - object-oriented interface
+ * @export
+ * @class ApiTokenAuthApi
+ * @extends {BaseAPI}
+ */
+export class ApiTokenAuthApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} username 
+     * @param {string} password 
+     * @param {string} [token] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiTokenAuthApi
+     */
+    public createAuthToken(username: string, password: string, token?: string, options?: any) {
+        return ApiTokenAuthApiFp(this.configuration).createAuthToken(username, password, token, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

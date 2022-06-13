@@ -10,7 +10,7 @@ from django_scopes import scopes_disabled
 from faker import Factory as FakerFactory
 from pytest_factoryboy import register
 
-from cookbook.models import Recipe, Step
+from cookbook.models import Recipe, Step, UserSpace
 
 # this code will run immediately prior to creating the model object useful when you want a reverse relationship
 # log = factory.RelatedFactory(
@@ -65,7 +65,8 @@ class UserFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            self.groups.add(Group.objects.get(name=extracted))
+            us = UserSpace.objects.create(space=self.space, user=self, active=True)
+            us.groups.add(Group.objects.get(name=extracted))
 
     @factory.post_generation
     def userpreference(self, create, extracted, **kwargs):
@@ -75,8 +76,6 @@ class UserFactory(factory.django.DjangoModelFactory):
         if extracted:
             for prefs in extracted:
                 self.userpreference[prefs] = extracted[prefs]/0   # intentionally break so it can be debugged later
-        self.userpreference.space = self.space
-        self.userpreference.save()
 
     class Meta:
         model = User
