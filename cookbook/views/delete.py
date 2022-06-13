@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Storage, Sync)
+                             RecipeImport, Storage, Sync, UserSpace, Space)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -187,4 +187,31 @@ class InviteLinkDelete(OwnerRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(InviteLinkDelete, self).get_context_data(**kwargs)
         context['title'] = _("Invite Link")
+        return context
+
+
+class UserSpaceDelete(OwnerRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = UserSpace
+    success_url = reverse_lazy('view_space_overview')
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSpaceDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Space Membership")
+        return context
+
+
+class SpaceDelete(OwnerRequiredMixin, DeleteView):
+    template_name = "generic/delete_template.html"
+    model = Space
+    success_url = reverse_lazy('view_space_overview')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.safe_delete()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super(SpaceDelete, self).get_context_data(**kwargs)
+        context['title'] = _("Space")
         return context

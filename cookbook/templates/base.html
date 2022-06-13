@@ -294,7 +294,7 @@
                         <a class="dropdown-item" href="{% url 'data_sync' %}"><i
                                 class="fas fa-sync-alt fa-fw"></i> {% trans 'External Recipes' %}</a>
                         {% if request.user == request.space.created_by %}
-                            <a class="dropdown-item" href="{% url 'view_space' %}"><i
+                            <a class="dropdown-item" href="{% url 'view_space_manage' request.space.pk %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
                         {% endif %}
                         {% if user.is_superuser %}
@@ -303,6 +303,20 @@
                                     class="fas fa-server fa-fw"></i> {% trans 'System' %}</a>
                             <a class="dropdown-item" href="{% url 'admin:index' %}"><i
                                     class="fas fa-user-shield fa-fw"></i> {% trans 'Admin' %}</a>
+                        {% endif %}
+                        {% if request.user.is_authenticated %}
+                            <div class="dropdown-divider"></div>
+                            <h6 class="dropdown-header">{% trans 'Your Spaces' %}</h6>
+                            {% for us in request.user.userspace_set.all %}
+                                <a class="dropdown-item" href="{% url 'view_switch_space' us.space.id %}">
+                                    {% if us.active %}
+                                        <i class="far fa-dot-circle fa-fw"></i>
+                                    {% else %}
+                                        <i class="far fa-circle fa-fw"></i>
+                                    {% endif %}
+                                    {{ us.space.name }}</a>
+                            {% endfor %}
+                            <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i class="fas fa-list"></i> {% trans 'Overview' %}</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
@@ -330,16 +344,17 @@
     </div>
 </nav>
 
-{% message_of_the_day as message_of_the_day %}
+{% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
-    <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+    <div class="bg-success" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
         {{ message_of_the_day }}
     </div>
 {% endif %}
 
 {% if HOSTED and request.space.max_recipes == 10 %}
     <div class="bg-warning" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
-        {% trans 'You are using the free version of Tandor' %} <a class="btn-success btn-sm" href="https://tandoor.dev/manage">{% trans 'Upgrade Now' %}</a>
+        {% trans 'You are using the free version of Tandor' %} <a class="btn-success btn-sm"
+                                                                  href="https://tandoor.dev/manage">{% trans 'Upgrade Now' %}</a>
     </div>
 {% endif %}
 

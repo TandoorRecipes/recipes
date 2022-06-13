@@ -14,6 +14,7 @@
                 <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
+                <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" />
             </div>
             <template v-slot:modal-footer>
                 <div class="row w-100">
@@ -42,6 +43,7 @@ import { ApiMixin, StandardToasts, ToastMixin, getUserPreference } from "@/utils
 import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
+import DateInput from "@/components/Modals/DateInput"
 import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
@@ -50,7 +52,7 @@ import HelpBadge from "@/components/Badges/Help"
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge },
+    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge,DateInput },
     mixins: [ApiMixin, ToastMixin],
     props: {
         model: { required: true, type: Object },

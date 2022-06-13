@@ -204,11 +204,11 @@ def test_shopping_recipe_userpreference(recipe, sle_count, use_mealplan, user2):
             assert len(json.loads(user2.get(reverse(SHOPPING_LIST_URL)).content)) == sle_count[1]
 
 
-def test_shopping_recipe_mixed_authors(u1_s1, u2_s1):
+def test_shopping_recipe_mixed_authors(u1_s1, u2_s1,space_1):
     with scopes_disabled():
         user1 = auth.get_user(u1_s1)
         user2 = auth.get_user(u2_s1)
-        space = user1.userpreference.space
+        space = space_1
         user3 = UserFactory(space=space)
         recipe1 = RecipeFactory(created_by=user1, space=space)
         recipe2 = RecipeFactory(created_by=user2, space=space)

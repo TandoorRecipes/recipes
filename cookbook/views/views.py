@@ -26,10 +26,10 @@ from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
                             SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid
+from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
                              MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             Space, Unit, ViewLog)
+                             Space, Unit, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
                              ViewLogTable)
 from cookbook.views.data import Object
@@ -61,7 +61,7 @@ def search(request):
         if request.user.userpreference.search_style == UserPreference.NEW:
             return search_v2(request)
         f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.user.userpreference.space).all().order_by(
+                         queryset=Recipe.objects.filter(space=request.space).all().order_by(
                              Lower('name').asc()),
                          space=request.space)
         if request.user.userpreference.search_style == UserPreference.LARGE:
@@ -72,7 +72,7 @@ def search(request):
 
         if request.GET == {} and request.user.userpreference.show_recent:
             qs = Recipe.objects.filter(viewlog__created_by=request.user).filter(
-                space=request.user.userpreference.space).order_by('-viewlog__created_at').all()
+                space=request.space).order_by('-viewlog__created_at').all()
 
             recent_list = []
             for r in qs:
@@ -103,10 +103,7 @@ def no_groups(request):
 
 
 @login_required
-def no_space(request):
-    if request.user.userpreference.space:
-        return HttpResponseRedirect(reverse('index'))
-
+def space_overview(request):
     if request.POST:
         create_form = SpaceCreateForm(request.POST, prefix='create')
         join_form = SpaceJoinForm(request.POST, prefix='join')
@@ -120,21 +117,19 @@ def no_space(request):
                 allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
             )
 
-            request.user.userpreference.space = created_space
-            request.user.userpreference.save()
-            request.user.groups.add(Group.objects.filter(name='admin').get())
+            user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
+            user_space.groups.add(Group.objects.filter(name='admin').get())
 
             messages.add_message(request, messages.SUCCESS,
                                  _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
-            return HttpResponseRedirect(reverse('index'))
+            return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.space.pk]))
 
         if join_form.is_valid():
             return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS:
-            request.user.userpreference.space = Space.objects.first()
-            request.user.userpreference.save()
-            request.user.groups.add(Group.objects.get(name=settings.SOCIAL_DEFAULT_GROUP))
+            user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=True)
+            user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
             return HttpResponseRedirect(reverse('index'))
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
@@ -142,7 +137,14 @@ def no_space(request):
         create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
         join_form = SpaceJoinForm()
 
-    return render(request, 'no_space_info.html', {'create_form': create_form, 'join_form': join_form})
+    return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
+
+
+@login_required
+def switch_space(request, space_id):
+    space = get_object_or_404(Space, id=space_id)
+    switch_user_active_space(request.user, space)
+    return HttpResponseRedirect(reverse('index'))
 
 
 def no_perm(request):
@@ -383,7 +385,7 @@ def user_settings(request):
                     up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
                 up.save()
     if up:
-        preference_form = UserPreferenceForm(instance=up)
+        preference_form = UserPreferenceForm(instance=up, space=request.space)
         shopping_form = ShoppingPreferenceForm(instance=up)
     else:
         preference_form = UserPreferenceForm(space=request.space)
@@ -473,14 +475,6 @@ def setup(request):
                         user.set_password(form.cleaned_data['password'])
                         user.save()
 
-                        user.groups.add(Group.objects.get(name='admin'))
-
-                        user.userpreference.space = Space.objects.first()
-                        user.userpreference.save()
-
-                        for x in Space.objects.all():
-                            x.created_by = user
-                            x.save()
                         messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
                         return HttpResponseRedirect(reverse('account_login'))
                     except ValidationError as e:
@@ -501,102 +495,33 @@ def invite_link(request, token):
             return HttpResponseRedirect(reverse('index'))
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated:
-                if request.user.userpreference.space:
-                    messages.add_message(request, messages.WARNING,
-                                         _('You are already member of a space and therefore cannot join this one.'))
-                    return HttpResponseRedirect(reverse('index'))
-
+            if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
                 link.used_by = request.user
                 link.save()
-                request.user.groups.clear()
-                request.user.groups.add(link.group)
 
-                request.user.userpreference.space = link.space
-                request.user.userpreference.save()
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
+
+                if request.user.userspace_set.count() == 1:
+                    user_space.active = True
+                    user_space.save()
+
+                user_space.groups.add(link.group)
 
                 messages.add_message(request, messages.SUCCESS, _('Successfully joined space.'))
-                return HttpResponseRedirect(reverse('index'))
+                return HttpResponseRedirect(reverse('view_space_overview'))
             else:
                 request.session['signup_token'] = str(token)
                 return HttpResponseRedirect(reverse('account_signup'))
 
     messages.add_message(request, messages.ERROR, _('Invite Link not valid or already used!'))
-    return HttpResponseRedirect(reverse('index'))
-
-
-# TODO deprecated with 0.16.2 remove at some point
-def signup(request, token):
-    return HttpResponseRedirect(reverse('view_invite', args=[token]))
+    return HttpResponseRedirect(reverse('view_space_overview'))
 
 
 @group_required('admin')
-def space(request):
-    space_users = UserPreference.objects.filter(space=request.space).all()
-
-    counts = Object()
-    counts.recipes = Recipe.objects.filter(space=request.space).count()
-    counts.keywords = Keyword.objects.filter(space=request.space).count()
-    counts.recipe_import = RecipeImport.objects.filter(space=request.space).count()
-    counts.units = Unit.objects.filter(space=request.space).count()
-    counts.ingredients = Food.objects.filter(space=request.space).count()
-    counts.comments = Comment.objects.filter(recipe__space=request.space).count()
-
-    counts.recipes_internal = Recipe.objects.filter(internal=True, space=request.space).count()
-    counts.recipes_external = counts.recipes - counts.recipes_internal
-
-    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
-
-    invite_links = InviteLinkTable(
-        InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(invite_links)
-
-    space_form = SpacePreferenceForm(instance=request.space)
-
-    space_form.base_fields['food_inherit'].queryset = Food.inheritable_fields
-    if request.method == "POST" and 'space_form' in request.POST:
-        form = SpacePreferenceForm(request.POST, prefix='space')
-        if form.is_valid():
-            request.space.food_inherit.set(form.cleaned_data['food_inherit'])
-            request.space.show_facet_count = form.cleaned_data['show_facet_count']
-            request.space.save()
-            if form.cleaned_data['reset_food_inherit']:
-                Food.reset_inheritance(space=request.space)
-
-    return render(request, 'space.html', {
-        'space_users': space_users,
-        'counts': counts,
-        'invite_links': invite_links,
-        'space_form': space_form
-    })
-
-
-# TODO super hacky and quick solution, safe but needs rework
-# TODO move group settings to space to prevent permissions from one space to move to another
-@group_required('admin')
-def space_change_member(request, user_id, space_id, group):
-    m_space = get_object_or_404(Space, pk=space_id)
-    m_user = get_object_or_404(User, pk=user_id)
-    if request.user == m_space.created_by and m_user != m_space.created_by:
-        if m_user.userpreference.space == m_space:
-            if group == 'admin':
-                m_user.groups.clear()
-                m_user.groups.add(Group.objects.get(name='admin'))
-                return HttpResponseRedirect(reverse('view_space'))
-            if group == 'user':
-                m_user.groups.clear()
-                m_user.groups.add(Group.objects.get(name='user'))
-                return HttpResponseRedirect(reverse('view_space'))
-            if group == 'guest':
-                m_user.groups.clear()
-                m_user.groups.add(Group.objects.get(name='guest'))
-                return HttpResponseRedirect(reverse('view_space'))
-            if group == 'remove':
-                m_user.groups.clear()
-                m_user.userpreference.space = None
-                m_user.userpreference.save()
-                return HttpResponseRedirect(reverse('view_space'))
-    return HttpResponseRedirect(reverse('view_space'))
+def space_manage(request, space_id):
+    space = get_object_or_404(Space, id=space_id)
+    switch_user_active_space(request.user, space)
+    return render(request, 'space_manage.html', {})
 
 
 def report_share_abuse(request, token):

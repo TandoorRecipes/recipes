@@ -32,41 +32,7 @@ admin.site.unregister(Group)
 @admin.action(description='Delete all data from a space')
 def delete_space_action(modeladmin, request, queryset):
     for space in queryset:
-        CookLog.objects.filter(space=space).delete()
-        ViewLog.objects.filter(space=space).delete()
-        ImportLog.objects.filter(space=space).delete()
-        BookmarkletImport.objects.filter(space=space).delete()
-
-        Comment.objects.filter(recipe__space=space).delete()
-        Keyword.objects.filter(space=space).delete()
-        Ingredient.objects.filter(space=space).delete()
-        Food.objects.filter(space=space).delete()
-        Unit.objects.filter(space=space).delete()
-        Step.objects.filter(space=space).delete()
-        NutritionInformation.objects.filter(space=space).delete()
-        RecipeBookEntry.objects.filter(book__space=space).delete()
-        RecipeBook.objects.filter(space=space).delete()
-        MealType.objects.filter(space=space).delete()
-        MealPlan.objects.filter(space=space).delete()
-        ShareLink.objects.filter(space=space).delete()
-        Recipe.objects.filter(space=space).delete()
-
-        RecipeImport.objects.filter(space=space).delete()
-        SyncLog.objects.filter(sync__space=space).delete()
-        Sync.objects.filter(space=space).delete()
-        Storage.objects.filter(space=space).delete()
-
-        ShoppingListEntry.objects.filter(shoppinglist__space=space).delete()
-        ShoppingListRecipe.objects.filter(shoppinglist__space=space).delete()
-        ShoppingList.objects.filter(space=space).delete()
-
-        SupermarketCategoryRelation.objects.filter(supermarket__space=space).delete()
-        SupermarketCategory.objects.filter(space=space).delete()
-        Supermarket.objects.filter(space=space).delete()
-
-        InviteLink.objects.filter(space=space).delete()
-        UserFile.objects.filter(space=space).delete()
-        Automation.objects.filter(space=space).delete()
+        space.save()
 
 
 class SpaceAdmin(admin.ModelAdmin):
@@ -81,8 +47,8 @@ admin.site.register(Space, SpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'space', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
-    search_fields = ('user__username', 'space__name')
+    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
+    search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page', 'search_style')
     date_hierarchy = 'created_at'
 

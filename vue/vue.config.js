@@ -57,6 +57,10 @@ const pages = {
         entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors"],
     },
+    space_manage_view: {
+        entry: "./src/apps/SpaceManageView/main.js",
+        chunks: ["chunk-vendors"],
+    },
 }
 
 module.exports = {
