@@ -206,6 +206,14 @@ class CustomIsOwner(permissions.BasePermission):
         return is_object_owner(request.user, obj)
 
 
+class CustomIsOwnerReadOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method in SAFE_METHODS
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+
+
 class CustomIsSpaceOwner(permissions.BasePermission):
     """
     Custom permission class for django rest framework views
@@ -214,7 +222,7 @@ class CustomIsSpaceOwner(permissions.BasePermission):
     message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated
+        return request.user.is_authenticated and request.space.created_by == request.user
 
     def has_object_permission(self, request, view, obj):
         return is_space_owner(request.user, obj)

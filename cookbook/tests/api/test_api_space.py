@@ -29,20 +29,23 @@ def test_list_permission(arg, request, space_1, a1_s1):
         assert len(json.loads(result.content)) == arg[2]
 
 
-def test_list_permission_owner(u1_s1, space_1):
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 0
+def test_list_permission_owner(u1_s1, a1_s1, space_1):
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.save()
+    assert len(json.loads(a1_s1.get(reverse(LIST_URL)).content)) == 1
+    assert u1_s1.get(reverse(LIST_URL)).status_code == 403
     space_1.created_by = auth.get_user(u1_s1)
     space_1.save()
-    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 1
+    assert u1_s1.get(reverse(LIST_URL)).status_code == 403
 
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 404],
-    ['u1_s1', 404],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
     ['a1_s1', 200],
-    ['g1_s2', 404],
-    ['u1_s2', 404],
+    ['g1_s2', 403],
+    ['u1_s2', 403],
     ['a1_s2', 404],
 ])
 def test_update(arg, request, space_1, a1_s1):
@@ -66,8 +69,8 @@ def test_update(arg, request, space_1, a1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 405],
-    ['u1_s1', 405],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
     ['a1_s1', 405],
 ])
 def test_add(arg, request, u1_s2):
@@ -90,7 +93,7 @@ def test_delete(u1_s1, u1_s2, a1_s1, space_1):
             args={space_1.id}
         )
     )
-    assert r.status_code == 405
+    assert r.status_code == 403
 
     # event the space owner cannot delete his space over the api (this might change later but for now it's only available in the UI)
     r = a1_s1.delete(
@@ -99,4 +102,4 @@ def test_delete(u1_s1, u1_s2, a1_s1, space_1):
             args={space_1.id}
         )
     )
-    assert r.status_code == 204
+    assert r.status_code == 405

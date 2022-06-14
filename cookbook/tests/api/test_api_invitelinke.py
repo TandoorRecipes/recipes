@@ -2,11 +2,13 @@ import json
 
 import pytest
 from django.contrib import auth
+from django.contrib.auth.models import AnonymousUser
 from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Ingredient, Step, InviteLink
+from cookbook.helper.permission_helper import switch_user_active_space
+from cookbook.models import Ingredient, Step, InviteLink, UserSpace
 
 LIST_URL = 'api:invitelink-list'
 DETAIL_URL = 'api:invitelink-detail'
@@ -17,7 +19,7 @@ DETAIL_URL = 'api:invitelink-detail'
     ['g1_s1', 403, 0],
     ['u1_s1', 403, 0],
     ['a1_s1', 200, 1],
-    ['a2_s1', 200, 0],
+    ['a2_s1', 403, 0],
 ])
 def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     space_1.created_by = auth.get_user(a1_s1)
@@ -38,7 +40,7 @@ def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     ['a1_s1', 200],
     ['g1_s2', 403],
     ['u1_s2', 403],
-    ['a1_s2', 404],
+    ['a1_s2', 403],
 ])
 def test_update(arg, request, space_1, u1_s1, a1_s1):
     with scopes_disabled():
@@ -75,6 +77,7 @@ def test_add(arg, request, a1_s1, space_1):
         space_1.created_by = auth.get_user(a1_s1)
         space_1.save()
         c = request.getfixturevalue(arg[0])
+
         r = c.post(
             reverse(LIST_URL),
             {'group': {'id': 3, 'name': 'admin'}},
@@ -107,7 +110,7 @@ def test_delete(u1_s1, u1_s2, a1_s1, a2_s1, space_1):
                 args={il.id}
             )
         )
-        assert r.status_code == 404
+        assert r.status_code == 403
 
         # owner can delete
         r = a1_s1.delete(
