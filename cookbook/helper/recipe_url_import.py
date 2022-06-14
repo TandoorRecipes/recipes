@@ -1,6 +1,8 @@
 import random
 import re
 from html import unescape
+
+from pytube import YouTube
 from unicodedata import decomposition
 
 from django.utils.dateparse import parse_duration
@@ -117,7 +119,7 @@ def get_from_scraper(scrape, request):
     try:
         source_url = scrape.canonical_url()
     except Exception:
-        try: 
+        try:
             source_url = scrape.url
         except Exception:
             pass
@@ -181,6 +183,38 @@ def get_from_scraper(scrape, request):
         pass
 
     return recipe_json
+
+
+def get_from_youtube_scraper(url, request):
+    """A YouTube Information Scraper."""
+    kw, created = Keyword.objects.get_or_create(name='YouTube', space=request.space)
+    default_recipe_json = {
+        'name': '',
+        'internal': True,
+        'description': '',
+        'servings': 1,
+        'working_time': 0,
+        'waiting_time': 0,
+        'image': "",
+        'keywords': [{'name': kw.name,'label': kw.name, 'id': kw.pk}],
+        'source_url': url,
+        'steps': [
+            {
+                'ingredients': [],
+                'instruction': ''
+            }
+        ]
+    }
+
+    try:
+        video = YouTube(url=url)
+        default_recipe_json['name'] = video.title
+        default_recipe_json['image'] = video.thumbnail_url
+        default_recipe_json['steps'][0]['instruction'] = video.description
+    except Exception:
+        pass
+
+    return default_recipe_json
 
 
 def parse_name(name):

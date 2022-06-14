@@ -48,6 +48,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner, CustomIsOwnerReadOnly)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
+from cookbook.helper.recipe_url_import import get_from_youtube_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
@@ -1135,6 +1136,14 @@ def recipe_from_source(request):
 
         # in manual mode request complete page to return it later
         if 'url' in serializer.validated_data:
+            if re.match('^(https?://)?(www\.youtube\.com|youtu\.be)/.+$', serializer.validated_data['url']):
+                if validators.url(serializer.validated_data['url'], public=True):
+                    return Response({
+                        'recipe_json': get_from_youtube_scraper(serializer.validated_data['url'], request),
+                        'recipe_tree': '',
+                        'recipe_html': '',
+                        'recipe_images': [],
+                    }, status=status.HTTP_200_OK)
             try:
                 if validators.url(serializer.validated_data['url'], public=True):
                     serializer.validated_data['data'] = requests.get(serializer.validated_data['url'], headers=external_request_headers).content
