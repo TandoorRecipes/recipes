@@ -6,7 +6,7 @@
                     <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
                 </div>
                 <div class="col col-md-6 text-right" v-if="header">
-                    <h4>
+                    <h4 class="d-print-none">
                         <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2" @click="saveShopping(true)"></i>
                         <i v-if="show_shopping" class="fas fa-save text-success px-2" @click="saveShopping()"></i>
                         <i class="fas fa-shopping-cart px-2" @click="getShopping()"></i>
