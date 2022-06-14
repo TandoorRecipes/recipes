@@ -1,6 +1,8 @@
 <template>
     <div id="shopping_line_item" class="pt-1">
-        <b-row align-h="start" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
+
+        <!-- v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler" -->
+        <b-row align-h="start"
                ref="shopping_line_item" class="invis-border">
             <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
                    v-if="settings.left_handed">
