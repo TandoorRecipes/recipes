@@ -37,15 +37,15 @@
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
                                             <a class="btn btn-primary btn-block text-uppercase"
                                                :href="resolveDjangoUrl('new_recipe')">{{ $t("New_Recipe") }}</a>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
                                             <a class="btn btn-primary btn-block text-uppercase"
                                                :href="resolveDjangoUrl('data_import_url')">{{ $t("Import") }}</a>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
                                             <button
                                                 class="btn btn-block text-uppercase"
                                                 v-b-tooltip.hover
@@ -61,7 +61,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
                                             <button id="id_settings_button"
                                                     class="btn btn-primary btn-block text-uppercase"><i
                                                 class="fas fa-cog fa-lg m-1"></i></button>

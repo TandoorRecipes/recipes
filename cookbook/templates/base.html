@@ -100,19 +100,19 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {% if request.resolver_match.url_name in 'view_search' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_search' %}"><i
-                        class="fas fa-book"></i> {% trans 'Recipes' %}</a>
+                        class="fas fa-fw fa-book"></i> {% trans 'Recipes' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_plan' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_plan' %}"><i
-                        class="fas fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
+                        class="fas fa-fw fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
-                        class="fas fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
+                        class="fas fa-fw fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'view_books' %}"><i
-                        class="fas fa-book-open"></i> {% trans 'Books' %}</a>
+                        class="fas fa-fw fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
         </ul>
 
@@ -124,7 +124,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-toolbox fa-lg"></i>
+                        <i class="fas fa-fw fa-toolbox fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
                         <div class="row m-0 mt-2 mt-md-0">
@@ -272,7 +272,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'data_import_url,new_recipe' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
-                            class="fas fa-plus fa-lg"></i>
+                            class="fas fa-fw fa-plus fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center"
                          aria-labelledby="navbarDropdownMenuLink">
@@ -285,7 +285,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
-                            class="fas fa-user-alt"></i> {{ user.get_user_name }}
+                            class="fas fa-fw fa-user-alt"></i> {{ user.get_user_name }}
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -337,7 +337,7 @@
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_login' %}">{% trans 'Login' %} <i
-                            class="fas fa-sign-in-alt"></i></a>
+                            class="fas fa-fw fa-sign-in-alt"></i></a>
                 </li>
             {% endif %}
         </ul>
