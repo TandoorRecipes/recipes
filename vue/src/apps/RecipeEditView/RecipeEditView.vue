@@ -185,14 +185,14 @@
                         <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5" :id="`id_card_step_${step_index}`">
                             <!-- step card header -->
                             <div class="row">
-                                <div class="col-11">
+                                <div class="col">
                                     <h4 class="handle" :id="'id_step_' + step_index">
                                         <i class="fas fa-paragraph"></i>
                                         <template v-if="step.name !== ''">{{ step.name }}</template>
                                         <template v-else>{{ $t("Step") }} {{ step_index + 1 }}</template>
                                     </h4>
                                 </div>
-                                <div class="col-1" style="text-align: right">
+                                <div class="col-auto" style="text-align: right">
                                     <a class="btn shadow-none btn-lg" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v text-muted"></i>
@@ -238,27 +238,27 @@
                             <!-- step data visibility controller -->
                             <div class="row pt-2">
                                 <div class="col col-md-12">
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.time_visible = true" v-if="!step.time_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Time") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.ingredients_visible = true" v-if="!step.ingredients_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Ingredients") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.instruction_visible = true" v-if="!step.instruction_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Instructions") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.step_recipe_visible = true" v-if="!step.step_recipe_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Recipe") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.file_visible = true" v-if="!step.file_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("File") }}
                                     </b-button>
@@ -266,7 +266,7 @@
                                         pill
                                         variant="primary"
                                         size="sm"
-                                        class="ml-1"
+                                        class="ml-1 mb-1 mb-md-0"
                                         @click="
                                             paste_step = step.id
                                             $bvModal.show('id_modal_paste_ingredients')
@@ -605,22 +605,22 @@
             <!-- bottom buttons save/close/view -->
             <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
                  v-if="recipe !== undefined">
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 mb-1 mb-md-0">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 mb-1 mb-md-0">
                     <a :href="resolveDjangoUrl('view_recipe', recipe.id)">
                         <button class="btn btn-block btn-primary shadow-none">{{ $t("View") }}</button>
                     </a>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 mb-1 mb-md-0">
                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
                             :title="`${$t('Key_Ctrl')} + S`" class="btn btn-sm btn-block btn-info shadow-none">
                         {{ $t("Save") }}
                     </button>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-md-3 col-6 mb-1 mb-md-0">
                     <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
                             :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
                             class="btn btn-sm btn-block btn-success shadow-none">
