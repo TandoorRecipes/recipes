@@ -1136,7 +1136,7 @@ export default {
                 if (ing.trim() !== "") {
                     this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
                         let unit = null
-                        if (result.data.unit !== "") {
+                        if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
                         this.recipe.steps[step].ingredients.splice(order, 0, {

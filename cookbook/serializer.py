@@ -234,7 +234,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
-    plan_share = UserNameSerializer(many=True, allow_null=True, required=False, read_only=True)
+    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
 
