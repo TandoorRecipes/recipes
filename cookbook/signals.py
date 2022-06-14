@@ -12,7 +12,7 @@ from django_scopes import scope, scopes_disabled
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
-                             ShoppingListEntry, Step, UserPreference)
+                             ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields)
 
 SQLITE = True
 if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
@@ -38,6 +38,15 @@ def create_user_preference(sender, instance=None, created=False, **kwargs):
     if created:
         with scopes_disabled():
             UserPreference.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=SearchPreference)
+def create_search_preference(sender, instance=None, created=False, **kwargs):
+    if created:
+        with scopes_disabled():
+            instance.unaccent.add(SearchFields.objects.get(name='Name'))
+            instance.icontains.add(SearchFields.objects.get(name='Name'))
+            instance.trigram.add(SearchFields.objects.get(name='Name'))
 
 
 @receiver(post_save, sender=Recipe)
