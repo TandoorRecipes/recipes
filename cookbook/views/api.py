@@ -45,7 +45,7 @@ from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner)
+                                               group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner, CustomIsOwnerReadOnly)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -386,7 +386,7 @@ class SpaceViewSet(viewsets.ModelViewSet):
 class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [CustomIsSpaceOwner]
+    permission_classes = [CustomIsSpaceOwner | CustomIsOwnerReadOnly]
     http_method_names = ['get', 'patch', 'delete']
 
     def destroy(self, request, *args, **kwargs):

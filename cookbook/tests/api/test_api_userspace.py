@@ -78,9 +78,9 @@ def test_update_space_owner(a1_s1, space_1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 405],
-    ['u1_s1', 405],
-    ['a1_s1', 405],
+    ['g1_s1', 403],
+    ['u1_s1', 403],
+    ['a1_s1', 403],
 ])
 def test_add(arg, request, u1_s1, space_1):
     c = request.getfixturevalue(arg[0])
