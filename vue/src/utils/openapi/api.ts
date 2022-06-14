@@ -1341,10 +1341,10 @@ export interface InviteLink {
     email?: string;
     /**
      * 
-     * @type {number}
+     * @type {InviteLinkGroup}
      * @memberof InviteLink
      */
-    group: number;
+    group: InviteLinkGroup;
     /**
      * 
      * @type {string}
@@ -1369,6 +1369,25 @@ export interface InviteLink {
      * @memberof InviteLink
      */
     created_at?: string;
+}
+/**
+ * 
+ * @export
+ * @interface InviteLinkGroup
+ */
+export interface InviteLinkGroup {
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLinkGroup
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLinkGroup
+     */
+    name: string;
 }
 /**
  * 
@@ -3033,10 +3052,10 @@ export interface Space {
     demo?: boolean;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<FoodInheritFields>}
      * @memberof Space
      */
-    food_inherit?: Array<number>;
+    food_inherit: Array<FoodInheritFields>;
     /**
      * 
      * @type {boolean}
@@ -3547,10 +3566,10 @@ export interface UserPreference {
     mealplan_autoadd_shopping?: boolean;
     /**
      * 
-     * @type {Array<FoodInheritFields>}
+     * @type {string}
      * @memberof UserPreference
      */
-    food_inherit_default?: Array<FoodInheritFields> | null;
+    food_inherit_default?: string;
     /**
      * 
      * @type {string}
@@ -3689,10 +3708,16 @@ export interface UserSpace {
     space?: string;
     /**
      * 
-     * @type {Array<UserSpaceGroups>}
+     * @type {Array<InviteLinkGroup>}
      * @memberof UserSpace
      */
-    groups: Array<UserSpaceGroups>;
+    groups: Array<InviteLinkGroup>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserSpace
+     */
+    active?: boolean;
     /**
      * 
      * @type {string}
@@ -3705,25 +3730,6 @@ export interface UserSpace {
      * @memberof UserSpace
      */
     updated_at?: string;
-}
-/**
- * 
- * @export
- * @interface UserSpaceGroups
- */
-export interface UserSpaceGroups {
-    /**
-     * 
-     * @type {number}
-     * @memberof UserSpaceGroups
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserSpaceGroups
-     */
-    name: string;
 }
 /**
  * 
@@ -4645,39 +4651,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserPreference: async (userPreference?: UserPreference, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user-preference/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userPreference, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5578,39 +5551,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             assertParamExists('destroyUserFile', 'id', id)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyUserPreference: async (user: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'user' is not null or undefined
-            assertParamExists('destroyUserPreference', 'user', user)
-            const localVarPath = `/api/user-preference/{user}/`
-                .replace(`{${"user"}}`, encodeURIComponent(String(user)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6724,10 +6664,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket-category name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategorys: async (options: any = {}): Promise<RequestArgs> => {
+        listSupermarketCategorys: async (query?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket-category/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6739,6 +6680,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
 
 
     
@@ -7035,6 +6980,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * function to reset inheritance from api, see food method for docs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listresetFoodInheritances: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/reset-food-inheritance/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
 
     
@@ -9540,6 +9514,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * api endpoint to switch space function
+         * @param {string} spaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveswitchActiveSpace: async (spaceId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'spaceId' is not null or undefined
+            assertParamExists('retrieveswitchActiveSpace', 'spaceId', spaceId)
+            const localVarPath = `/api/switch-active-space/{space_id}/`
+                .replace(`{${"space_id"}}`, encodeURIComponent(String(spaceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this food.
          * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
@@ -10599,80 +10606,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserPreference: async (user: string, userPreference?: UserPreference, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'user' is not null or undefined
-            assertParamExists('updateUserPreference', 'user', user)
-            const localVarPath = `/api/user-preference/{user}/`
-                .replace(`{${"user"}}`, encodeURIComponent(String(user)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userPreference, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this user space.
-         * @param {UserSpace} [userSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserSpace: async (id: string, userSpace?: UserSpace, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('updateUserSpace', 'id', id)
-            const localVarPath = `/api/user-space/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(userSpace, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -10983,16 +10916,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createUserPreference(userPreference?: UserPreference, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPreference>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserPreference(userPreference, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11269,16 +11192,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async destroyUserFile(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUserFile(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async destroyUserPreference(user: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUserPreference(user, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11587,11 +11500,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket-category name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarketCategorys(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategorys(options);
+        async listSupermarketCategorys(query?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategorys(query, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11680,6 +11594,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20011>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(page, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * function to reset inheritance from api, see food method for docs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listresetFoodInheritances(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<any>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listresetFoodInheritances(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12426,6 +12349,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * api endpoint to switch space function
+         * @param {string} spaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveswitchActiveSpace(spaceId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveswitchActiveSpace(spaceId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this food.
          * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
@@ -12738,28 +12671,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUserPreference(user: string, userPreference?: UserPreference, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPreference>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserPreference(user, userPreference, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this user space.
-         * @param {UserSpace} [userSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUserSpace(id: string, userSpace?: UserSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserSpace(id, userSpace, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this view log.
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
@@ -13018,15 +12929,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUserPreference(userPreference?: UserPreference, options?: any): AxiosPromise<UserPreference> {
-            return localVarFp.createUserPreference(userPreference, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {ViewLog} [viewLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13276,15 +13178,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         destroyUserFile(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.destroyUserFile(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyUserPreference(user: string, options?: any): AxiosPromise<void> {
-            return localVarFp.destroyUserPreference(user, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13565,11 +13458,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket-category name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategorys(options?: any): AxiosPromise<Array<SupermarketCategory>> {
-            return localVarFp.listSupermarketCategorys(options).then((request) => request(axios, basePath));
+        listSupermarketCategorys(query?: string, options?: any): AxiosPromise<Array<SupermarketCategory>> {
+            return localVarFp.listSupermarketCategorys(query, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13649,6 +13543,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20011> {
             return localVarFp.listViewLogs(page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * function to reset inheritance from api, see food method for docs
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listresetFoodInheritances(options?: any): AxiosPromise<Array<any>> {
+            return localVarFp.listresetFoodInheritances(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14324,6 +14226,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.retrieveViewLog(id, options).then((request) => request(axios, basePath));
         },
         /**
+         * api endpoint to switch space function
+         * @param {string} spaceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveswitchActiveSpace(spaceId: string, options?: any): AxiosPromise<any> {
+            return localVarFp.retrieveswitchActiveSpace(spaceId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {string} id A unique integer value identifying this food.
          * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
@@ -14605,26 +14516,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
             return localVarFp.updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} user A unique value identifying this user preference.
-         * @param {UserPreference} [userPreference] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserPreference(user: string, userPreference?: UserPreference, options?: any): AxiosPromise<UserPreference> {
-            return localVarFp.updateUserPreference(user, userPreference, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this user space.
-         * @param {UserSpace} [userSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUserSpace(id: string, userSpace?: UserSpace, options?: any): AxiosPromise<UserSpace> {
-            return localVarFp.updateUserSpace(id, userSpace, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14937,17 +14828,6 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {UserPreference} [userPreference] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public createUserPreference(userPreference?: UserPreference, options?: any) {
-        return ApiApiFp(this.configuration).createUserPreference(userPreference, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {ViewLog} [viewLog] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -15252,17 +15132,6 @@ export class ApiApi extends BaseAPI {
      */
     public destroyUserFile(id: string, options?: any) {
         return ApiApiFp(this.configuration).destroyUserFile(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} user A unique value identifying this user preference.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public destroyUserPreference(user: string, options?: any) {
-        return ApiApiFp(this.configuration).destroyUserPreference(user, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15598,12 +15467,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [query] Query string matched against supermarket-category name.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listSupermarketCategorys(options?: any) {
-        return ApiApiFp(this.configuration).listSupermarketCategorys(options).then((request) => request(this.axios, this.basePath));
+    public listSupermarketCategorys(query?: string, options?: any) {
+        return ApiApiFp(this.configuration).listSupermarketCategorys(query, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15701,6 +15571,16 @@ export class ApiApi extends BaseAPI {
      */
     public listViewLogs(page?: number, pageSize?: number, options?: any) {
         return ApiApiFp(this.configuration).listViewLogs(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * function to reset inheritance from api, see food method for docs
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listresetFoodInheritances(options?: any) {
+        return ApiApiFp(this.configuration).listresetFoodInheritances(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16517,6 +16397,17 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
+     * api endpoint to switch space function
+     * @param {string} spaceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveswitchActiveSpace(spaceId: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveswitchActiveSpace(spaceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 
      * @param {string} id A unique integer value identifying this food.
      * @param {FoodShoppingUpdate} [foodShoppingUpdate] 
@@ -16853,30 +16744,6 @@ export class ApiApi extends BaseAPI {
      */
     public updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
         return ApiApiFp(this.configuration).updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} user A unique value identifying this user preference.
-     * @param {UserPreference} [userPreference] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public updateUserPreference(user: string, userPreference?: UserPreference, options?: any) {
-        return ApiApiFp(this.configuration).updateUserPreference(user, userPreference, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this user space.
-     * @param {UserSpace} [userSpace] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public updateUserSpace(id: string, userSpace?: UserSpace, options?: any) {
-        return ApiApiFp(this.configuration).updateUserSpace(id, userSpace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
