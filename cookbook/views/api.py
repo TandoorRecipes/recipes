@@ -451,8 +451,9 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = SupermarketCategory.objects
+    model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
     permission_classes = [CustomIsUser]
 
