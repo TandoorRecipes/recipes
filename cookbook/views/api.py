@@ -1183,7 +1183,7 @@ def reset_food_inheritance(request):
         return Response({'message': 'success', }, status=status.HTTP_200_OK)
     except Exception as e:
         traceback.print_exc()
-        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -1203,7 +1203,7 @@ def switch_active_space(request, space_id):
             return Response("not found", status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         traceback.print_exc()
-        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):
