@@ -1149,14 +1149,6 @@ class SearchFields(models.Model, PermissionModelMixin):
         return _(self.name)
 
 
-def allSearchFields():
-    return list(SearchFields.objects.values_list('id', flat=True))
-
-
-def nameSearchField():
-    return [SearchFields.objects.get(name='Name').id]
-
-
 class SearchPreference(models.Model, PermissionModelMixin):
     # Search Style (validation parsleyjs.org)
     # phrase or plain or raw (websearch and trigrams are mutually exclusive)
@@ -1175,10 +1167,10 @@ class SearchPreference(models.Model, PermissionModelMixin):
     search = models.CharField(choices=SEARCH_STYLE, max_length=32, default=SIMPLE)
 
     lookup = models.BooleanField(default=False)
-    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True, default=allSearchFields)
-    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True, default=nameSearchField)
+    unaccent = models.ManyToManyField(SearchFields, related_name="unaccent_fields", blank=True)
+    icontains = models.ManyToManyField(SearchFields, related_name="icontains_fields", blank=True)
     istartswith = models.ManyToManyField(SearchFields, related_name="istartswith_fields", blank=True)
-    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True, default=nameSearchField)
+    trigram = models.ManyToManyField(SearchFields, related_name="trigram_fields", blank=True)
     fulltext = models.ManyToManyField(SearchFields, related_name="fulltext_fields", blank=True)
     trigram_threshold = models.DecimalField(default=0.2, decimal_places=2, max_digits=3)
 
