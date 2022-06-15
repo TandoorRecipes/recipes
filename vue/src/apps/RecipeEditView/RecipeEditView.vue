@@ -605,25 +605,41 @@
             <!-- bottom buttons save/close/view -->
             <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
                  v-if="recipe !== undefined">
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
+                       class="d-block d-md-none btn btn-block btn-danger shadow-none"><i class="fa fa-trash fa-lg"></i></a>
+                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
+                       class="d-none d-md-block btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
                 </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)">
-                        <button class="btn btn-block btn-primary shadow-none">{{ $t("View") }}</button>
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
+                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
+                       class="d-block d-md-none btn btn-block btn-primary shadow-none">
+                        <i class="fa fa-eye fa-lg"></i>
+                    </a>
+                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
+                       class="d-none d-md-block btn btn-block btn-primary shadow-none">
+                        {{ $t("View") }}
                     </a>
                 </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="btn btn-sm btn-block btn-info shadow-none">
+                            :title="`${$t('Key_Ctrl')} + S`" class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
+                        <i class="fa fa-save fa-lg"></i>
+                    </button>
+                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + S`" class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
                         {{ $t("Save") }}
                     </button>
                 </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
                             :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
-                            class="btn btn-sm btn-block btn-success shadow-none">
+                            class="d-block d-md-none btn btn-sm btn-block btn-success shadow-none">
+                        <i class="fa fa-save fa-lg"></i><i class="ml-1 fa fa-eye fa-lg"></i>
+                    </button>
+                    <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
+                            class="d-none d-md-block btn btn-sm btn-block btn-success shadow-none">
                         {{ $t("Save_and_View") }}
                     </button>
                 </div>
