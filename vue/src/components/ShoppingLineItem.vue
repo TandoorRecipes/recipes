@@ -1,7 +1,5 @@
 <template>
     <div id="shopping_line_item" class="pt-1">
-
-        <!-- v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler" -->
         <b-row align-h="start"
                ref="shopping_line_item" class="invis-border">
             <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
@@ -46,7 +44,8 @@
                         </div>
                     </b-col>
 
-                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
+                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2"
+                           v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler">
                         {{ formatFood }}
                     </b-col>
                     <b-col cols="3" data-html2canvas-ignore="true"
@@ -55,7 +54,9 @@
                                   class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
                             <div class="text-nowrap">
                                 <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
-                                <span class="d-none d-md-inline-block"><span class="ml-2">{{ $t("Details") }}</span></span>
+                                <span class="d-none d-md-inline-block"><span class="ml-2">{{
+                                        $t("Details")
+                                    }}</span></span>
                             </div>
                         </b-button>
                     </b-col>
@@ -318,7 +319,6 @@ export default {
             } else {
                 item.parentElement.parentElement.style.backgroundColor = 'rgba(185,135,102,0)'.replace(/[^,]+(?=\))/, color_factor)
                 delay_icon.style.display = "block"
-                console.log(item.parentElement.parentElement.clientWidth)
                 delay_icon.style.left = this.getOffset(item.parentElement.parentElement).right - 40
                 delay_icon.style.top = this.getOffset(item.parentElement.parentElement).top - 92
                 delay_icon.style.opacity = color_factor - 0.3
@@ -457,14 +457,14 @@ export default {
 }
 
 @media (min-width: 992px) {
-   .fa-ellipsis-v {
-       font-size: 20px;
-   }
+    .fa-ellipsis-v {
+        font-size: 20px;
+    }
 }
 
 @media (min-width: 576px) {
-   .fa-ellipsis-v {
-       font-size: 16px;
-   }
+    .fa-ellipsis-v {
+        font-size: 16px;
+    }
 }
 </style>
