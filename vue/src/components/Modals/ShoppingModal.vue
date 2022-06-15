@@ -1,16 +1,14 @@
 <template>
     <div>
-        <b-modal :id="`shopping_${this.modal_id}`" @show="loadRecipe">
-            <template v-slot:modal-title
-                ><h4>{{ $t("Add_Servings_to_Shopping", { servings: recipe_servings }) }}</h4></template
-            >
+        <b-modal hide-footer :id="`shopping_${this.modal_id}`" @show="loadRecipe" body-class="p-3 pt-0 pt-md-3">
+            <template v-slot:modal-title><h5>{{ $t("Add_Servings_to_Shopping", { servings: recipe_servings }) }}</h5></template>
             <loading-spinner v-if="loading"></loading-spinner>
             <div class="accordion" role="tablist" v-if="!loading">
                 <b-card no-body class="mb-1">
-                    <b-card-header header-tag="header" class="p-1" role="tab">
+                    <b-card-header header-tag="header" class="p-0" role="tab">
                         <b-button block v-b-toggle.accordion-0 class="text-left" variant="outline-info">{{ recipe.name }}</b-button>
                     </b-card-header>
-                    <b-collapse id="accordion-0" visible accordion="my-accordion" role="tabpanel">
+                    <b-collapse id="accordion-0" class="p-2" visible accordion="my-accordion" role="tabpanel">
                         <ingredients-card
                             :steps="steps"
                             :recipe="recipe.id"
@@ -48,21 +46,20 @@
                 </b-card>
             </div>
 
-            <template #modal-footer="">
-                <b-input-group class="mr-3">
-                    <b-input-group-prepend is-text>
-                        {{ $t("Servings") }}
+            <div>
+                <b-input-group>
+                    <b-input-group-prepend is-text class="d-inline-flex">
+                        <i class="fa fa-calculator"></i>
                     </b-input-group-prepend>
-
                     <b-form-spinbutton min="1" v-model="recipe_servings" inline style="height: 3em"></b-form-spinbutton>
                     <!-- <CustomInputSpinButton v-model.number="recipe_servings" style="height: 3em" /> -->
 
-                    <b-input-group-append>
-                        <b-button variant="secondary" @click="$bvModal.hide(`shopping_${modal_id}`)">{{ $t("Cancel") }} </b-button>
-                        <b-button variant="success" @click="saveShopping">{{ $t("Save") }} </b-button>
+                    <b-input-group-append class="d-inline-flex">
+                        <b-button variant="success" @click="saveShopping" class="d-none d-lg-inline-block">{{ $t("Save") }} </b-button>
+                        <b-button variant="success" @click="saveShopping" class="d-inline-block d-lg-none"><i class="fa fa-cart-plus"></i></b-button>
                     </b-input-group-append>
                 </b-input-group>
-            </template>
+            </div>
         </b-modal>
     </div>
 </template>
