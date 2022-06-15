@@ -15,7 +15,7 @@ from django.views.generic import CreateView
 from cookbook.forms import ImportRecipeForm, InviteLinkForm, MealPlanForm, Storage, StorageForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
 from cookbook.models import (InviteLink, MealPlan, MealType, Recipe, RecipeBook, RecipeImport,
-                             ShareLink, Step, UserPreference)
+                             ShareLink, Step, UserPreference, UserSpace)
 from cookbook.views.edit import SpaceFormMixing
 from recipes import settings
 
@@ -31,7 +31,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
             messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
             return HttpResponseRedirect(reverse('index'))
 
-        if self.request.space.max_users != 0 and UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
+        if self.request.space.max_users != 0 and UserSpace.objects.filter(space=self.request.space).count() > self.request.space.max_users:
             messages.add_message(self.request, messages.WARNING, _('You have more users than allowed in your space.'))
             return HttpResponseRedirect(reverse('index'))
 
