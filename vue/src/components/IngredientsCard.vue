@@ -1,48 +1,53 @@
 <template>
     <div :class="{ 'card border-primary no-border': header }">
-        <div :class="{ 'card-body': header }">
-            <div class="row" v-if="header">
-                <div class="col col-md-6">
-                    <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
-                </div>
-                <div class="col col-md-6 text-right" v-if="header">
-                    <h4 class="d-print-none">
-                        <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2" @click="saveShopping(true)"></i>
-                        <i v-if="show_shopping" class="fas fa-save text-success px-2" @click="saveShopping()"></i>
-                        <i class="fas fa-shopping-cart px-2" @click="getShopping()"></i>
-                    </h4>
-                </div>
-            </div>
-            <div class="row text-right" v-if="ShoppingRecipes.length > 1 && !add_shopping_mode">
-                <div class="col col-md-6 offset-md-6 text-right">
-                    <b-form-select v-model="selected_shoppingrecipe" :options="ShoppingRecipes" size="sm"></b-form-select>
+        <div :class="{ 'card-body': header, 'p-0': header }">
+            <div class="card-header" v-if="header">
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}</h4>
+                    </div>
+                    <div class="col-6 text-right" v-if="header">
+                        <h4 class="d-print-none card-title">
+                            <i v-if="show_shopping && ShoppingRecipes.length > 0" class="fas fa-trash text-danger px-2"
+                               @click="saveShopping(true)"></i>
+                            <i v-if="show_shopping" class="fas fa-save text-success px-2" @click="saveShopping()"></i>
+                            <i class="fas fa-shopping-cart px-2" @click="getShopping()"></i>
+                        </h4>
+                    </div>
                 </div>
             </div>
-            <br v-if="header" />
-            <div class="row no-gutter">
-                <div class="col-md-12">
-                    <table class="table table-sm">
-                        <!-- eslint-disable vue/no-v-for-template-key-on-child -->
-                        <template v-for="s in steps">
-                            <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode">
-                                <td colspan="5">
-                                    <b>{{ s.name }}</b>
-                                </td>
-                            </tr>
-                            <template v-for="i in s.ingredients">
-                                <ingredient-component
-                                    :ingredient="prepareIngredient(i)"
-                                    :ingredient_factor="ingredient_factor"
-                                    :key="i.id"
-                                    :show_shopping="show_shopping"
-                                    :detailed="detailed"
-                                    @checked-state-changed="$emit('checked-state-changed', $event)"
-                                    @add-to-shopping="addShopping($event)"
-                                />
+            <div class="card-body p-3 p-md-5">
+                <div class="row text-right" v-if="ShoppingRecipes.length > 1 && !add_shopping_mode">
+                    <div class="col col-md-6 offset-md-6 text-right">
+                        <b-form-select v-model="selected_shoppingrecipe" :options="ShoppingRecipes"
+                                       size="sm"></b-form-select>
+                    </div>
+                </div>
+                <div class="row no-gutter">
+                    <div class="col-12 m-0" :class="{ 'p-0': !header }">
+                        <table class="table table-sm mb-0">
+                            <!-- eslint-disable vue/no-v-for-template-key-on-child -->
+                            <template v-for="s in steps">
+                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode">
+                                    <td colspan="5">
+                                        <b>{{ s.name }}</b>
+                                    </td>
+                                </tr>
+                                <template v-for="i in s.ingredients">
+                                    <ingredient-component
+                                        :ingredient="prepareIngredient(i)"
+                                        :ingredient_factor="ingredient_factor"
+                                        :key="i.id"
+                                        :show_shopping="show_shopping"
+                                        :detailed="detailed"
+                                        @checked-state-changed="$emit('checked-state-changed', $event)"
+                                        @add-to-shopping="addShopping($event)"
+                                    />
+                                </template>
                             </template>
-                        </template>
-                        <!-- eslint-enable vue/no-v-for-template-key-on-child -->
-                    </table>
+                            <!-- eslint-enable vue/no-v-for-template-key-on-child -->
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,18 +56,18 @@
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
+import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
-import { ApiMixin, StandardToasts } from "@/utils/utils"
+import {ApiMixin, StandardToasts} from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "IngredientCard",
     mixins: [ApiMixin],
-    components: { IngredientComponent },
+    components: {IngredientComponent},
     props: {
         steps: {
             type: Array,
@@ -70,13 +75,13 @@ export default {
                 return []
             },
         },
-        recipe: { type: Number },
-        ingredient_factor: { type: Number, default: 1 },
-        servings: { type: Number, default: 1 },
-        detailed: { type: Boolean, default: true },
-        header: { type: Boolean, default: false },
-        add_shopping_mode: { type: Boolean, default: false },
-        recipe_list: { type: Number, default: undefined },
+        recipe: {type: Number},
+        ingredient_factor: {type: Number, default: 1},
+        servings: {type: Number, default: 1},
+        detailed: {type: Boolean, default: true},
+        header: {type: Boolean, default: false},
+        add_shopping_mode: {type: Boolean, default: false},
+        recipe_list: {type: Number, default: undefined},
     },
     data() {
         return {
@@ -175,20 +180,20 @@ export default {
             this.genericAPI(this.Models.RECIPE, this.Actions.SHOPPING, params)
                 .then((result) => {
                     if (del_shopping) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                     } else if (this.selected_shoppingrecipe) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     } else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     }
                 })
                 .catch((err) => {
                     if (del_shopping) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                     } else if (this.selected_shoppingrecipe) {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                     } else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
                     }
                     this.$emit("shopping-failed")
                 })
