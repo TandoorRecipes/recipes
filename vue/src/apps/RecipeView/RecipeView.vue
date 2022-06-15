@@ -137,7 +137,7 @@
 
             <div v-if="recipe.source_url !== null">
                 <h6 class="d-print-none"><i class="fas fa-file-import"></i> {{ $t("Imported_From") }}</h6>
-                <span class="text-muted mt-1"><a :href="recipe.source_url">{{ recipe.source_url }}</a></span>
+                <span class="text-muted mt-1"><a style="overflow-wrap: break-word;" :href="recipe.source_url">{{ recipe.source_url }}</a></span>
             </div>
         </div>
 
