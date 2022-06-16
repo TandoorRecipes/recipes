@@ -557,7 +557,7 @@
                             <div class="row pt-2" v-if="step.instruction_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
-                                    <mavon-editor v-model="step.instruction"
+                                    <mavon-editor v-model="step.instruction" :autofocus="false"
                                                   style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id" :language="'en'"
                                                   :toolbars="md_editor_toolbars"/>
 
