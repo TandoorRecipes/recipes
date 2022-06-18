@@ -211,10 +211,10 @@ git pull
 # load envirtonment variables
 export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)
 # migrate database 
-bin/python3.9 manage.py migrate
+bin/python3 manage.py migrate
 # collect static files
-bin/python3.9 manage.py collectstatic --no-input
-bin/python3.9 manage.py collectstatic_js_reverse
+bin/python3 manage.py collectstatic --no-input
+bin/python3 manage.py collectstatic_js_reverse
 # change to frontend directory
 cd vue
 # install and build frontend
