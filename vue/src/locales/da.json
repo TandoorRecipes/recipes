@@ -97,7 +97,7 @@
     "Selected": "Valgt",
     "min": "min",
     "Servings": "Serveringer",
-    "Waiting": "Venter",
+    "Waiting": "Vente",
     "Preparation": "Forberedelse",
     "External": "Ekstern",
     "Size": "Størrelse",
@@ -179,7 +179,7 @@
     "Text": "Tekst",
     "Shopping_list": "Indkøbsliste",
     "Added_by": "Tilføjet af",
-    "Added_on": "Tilføjet d.",
+    "Added_on": "Tilføjet den",
     "AddToShopping": "Tilføj til indkøbsliste",
     "IngredientInShopping": "Denne ingrediens er i din indkøbsliste.",
     "NotInShopping": "{food} er ikke i din indkøbsliste.",
@@ -360,8 +360,8 @@
     "ChildInheritFields_help": "Børn nedarvede disse felter som standard.",
     "InheritFields_help": "Værdierne af disse felter vil blive nedarvet fra forælder (Undtagelse: tomme indkøbskategorier bliver ikke nedarvet)",
     "last_viewed": "Sidst åbnet",
-    "created_on": "Oprettet d.",
-    "updatedon": "Opdateret d.",
+    "created_on": "Oprettet den",
+    "updatedon": "Opdateret den",
     "Imported_From": "Importeret fra",
     "advanced_search_settings": "Avancerede søgeindstillinger",
     "nothing_planned_today": "Du har ikke noget planlagt for i dag!",
@@ -410,5 +410,7 @@
     "Warning_Delete_Supermarket_Category": "At slette en supermarkedskategori vil også slette alle relationer til mad. Er du sikker?",
     "New_Supermarket": "Opret nyt supermarked",
     "New_Supermarket_Category": "Opret ny supermarkedskategori",
-    "Are_You_Sure": "Er du sikker?"
+    "Are_You_Sure": "Er du sikker?",
+    "New_Entry": "Nyt punkt",
+    "Create_New_Shopping_Category": "Opret ny indkøbskategori"
 }
