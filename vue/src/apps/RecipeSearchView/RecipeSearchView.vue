@@ -1133,6 +1133,10 @@ export default {
                 }
             }
 
+            if (urlParams.has("query")) {
+                this.search.search_input = urlParams.get('query')
+            }
+
             // TODO: figure out how to find nested items and load keyword/food children for that branch
             // probably a backend change in facets to pre-load children of nested items
             for (let x of this.search.search_foods.map((x) => x.items).flat()) {
