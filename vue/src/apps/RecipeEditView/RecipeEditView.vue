@@ -185,14 +185,14 @@
                         <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5" :id="`id_card_step_${step_index}`">
                             <!-- step card header -->
                             <div class="row">
-                                <div class="col-11">
+                                <div class="col">
                                     <h4 class="handle" :id="'id_step_' + step_index">
                                         <i class="fas fa-paragraph"></i>
                                         <template v-if="step.name !== ''">{{ step.name }}</template>
                                         <template v-else>{{ $t("Step") }} {{ step_index + 1 }}</template>
                                     </h4>
                                 </div>
-                                <div class="col-1" style="text-align: right">
+                                <div class="col-auto" style="text-align: right">
                                     <a class="btn shadow-none btn-lg" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-ellipsis-v text-muted"></i>
@@ -238,27 +238,27 @@
                             <!-- step data visibility controller -->
                             <div class="row pt-2">
                                 <div class="col col-md-12">
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.time_visible = true" v-if="!step.time_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Time") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.ingredients_visible = true" v-if="!step.ingredients_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Ingredients") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.instruction_visible = true" v-if="!step.instruction_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Instructions") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.step_recipe_visible = true" v-if="!step.step_recipe_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Recipe") }}
                                     </b-button>
 
-                                    <b-button pill variant="primary" size="sm" class="ml-1"
+                                    <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.file_visible = true" v-if="!step.file_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("File") }}
                                     </b-button>
@@ -266,7 +266,7 @@
                                         pill
                                         variant="primary"
                                         size="sm"
-                                        class="ml-1"
+                                        class="ml-1 mb-1 mb-md-0"
                                         @click="
                                             paste_step = step.id
                                             $bvModal.show('id_modal_paste_ingredients')
@@ -370,7 +370,8 @@
                                                     <div v-for="(ingredient, index) in step.ingredients"
                                                          :key="ingredient.id">
                                                         <hr class="d-md-none"/>
-                                                        <div class="text-center" v-if="ingredient.original_text !== null">
+                                                        <div class="text-center"
+                                                             v-if="ingredient.original_text !== null">
                                                             <small class="text-muted"><i class="fas fa-globe"></i>
                                                                 {{ ingredient.original_text }}</small>
                                                         </div>
@@ -556,14 +557,9 @@
                             <div class="row pt-2" v-if="step.instruction_visible">
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
-                                    <v-md-editor
-                                        v-model="step.instruction"
-                                        height="30vh"
-                                        left-toolbar="undo redo | h bold italic strikethrough quote | ul ol table hr | link image code"
-                                        right-toolbar="preview sync-scroll fullscreen"
-                                        :id="'id_instruction_' + step.id"
-                                        mode="edit"
-                                    ></v-md-editor>
+                                    <mavon-editor v-model="step.instruction" :autofocus="false"
+                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id" :language="'en'"
+                                                  :toolbars="md_editor_toolbars"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -609,25 +605,41 @@
             <!-- bottom buttons save/close/view -->
             <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
                  v-if="recipe !== undefined">
-                <div class="col-md-3 col-6">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
+                       class="d-block d-md-none btn btn-block btn-danger shadow-none"><i class="fa fa-trash fa-lg"></i></a>
+                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
+                       class="d-none d-md-block btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
                 </div>
-                <div class="col-md-3 col-6">
-                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)">
-                        <button class="btn btn-block btn-primary shadow-none">{{ $t("View") }}</button>
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
+                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
+                       class="d-block d-md-none btn btn-block btn-primary shadow-none">
+                        <i class="fa fa-eye fa-lg"></i>
+                    </a>
+                    <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
+                       class="d-none d-md-block btn btn-block btn-primary shadow-none">
+                        {{ $t("View") }}
                     </a>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="btn btn-sm btn-block btn-info shadow-none">
+                            :title="`${$t('Key_Ctrl')} + S`" class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
+                        <i class="fa fa-save fa-lg"></i>
+                    </button>
+                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + S`" class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
                         {{ $t("Save") }}
                     </button>
                 </div>
-                <div class="col-md-3 col-6">
+                <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
                             :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
-                            class="btn btn-sm btn-block btn-success shadow-none">
+                            class="d-block d-md-none btn btn-sm btn-block btn-success shadow-none">
+                        <i class="fa fa-save fa-lg"></i><i class="ml-1 fa fa-eye fa-lg"></i>
+                    </button>
+                    <button type="button" @click="updateRecipe(true)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + ${$t('Key_Shift')} + S`"
+                            class="d-none d-md-block btn btn-sm btn-block btn-success shadow-none">
                         {{ $t("Save_and_View") }}
                     </button>
                 </div>
@@ -684,22 +696,12 @@ import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import LoadingSpinner from "@/components/LoadingSpinner"
 
-import VueMarkdownEditor from "@kangc/v-md-editor"
-import "@kangc/v-md-editor/lib/style/base-editor.css"
-import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js"
-import "@kangc/v-md-editor/lib/theme/style/vuepress.css"
-import Prism from "prismjs"
-
-VueMarkdownEditor.use(vuepressTheme, {
-    Prism,
-})
-
-import enUS from "@kangc/v-md-editor/lib/lang/en-US"
 import GenericModalForm from "@/components/Modals/GenericModalForm"
 
-VueMarkdownEditor.lang.use("en-US", enUS)
-
-Vue.use(VueMarkdownEditor)
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 
 Vue.use(BootstrapVue)
 
@@ -730,6 +732,35 @@ export default {
             step_for_file_create: undefined,
             additional_visible: false,
             create_food: undefined,
+            md_editor_toolbars: {
+                bold: true,
+                italic: true,
+                header: true,
+                underline: true,
+                strikethrough: true,
+                mark: true,
+                superscript: true,
+                subscript: true,
+                quote: true,
+                ol: true,
+                ul: true,
+                link: true,
+                imagelink: false,
+                code: true,
+                table: true,
+                fullscreen: true,
+                readmodel: true,
+                htmlcode: true,
+                help: true,
+                undo: true,
+                redo: true,
+                navigation: true,
+                alignleft: false,
+                aligncenter: false,
+                alignright: false,
+                subfield: true,
+                preview: true,
+            }
         }
     },
     computed: {
@@ -1034,7 +1065,7 @@ export default {
                     if (this.recipe !== undefined) {
                         for (let s of this.recipe.steps) {
                             for (let i of s.ingredients) {
-                                if (i.unit !== null && i.unit.id === undefined && !unique_units.includes(i.unit.name) ) {
+                                if (i.unit !== null && i.unit.id === undefined && !unique_units.includes(i.unit.name)) {
                                     this.units.push(i.unit)
                                 }
                             }
@@ -1121,7 +1152,7 @@ export default {
                 if (ing.trim() !== "") {
                     this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
                         let unit = null
-                        if (result.data.unit !== "") {
+                        if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
                         this.recipe.steps[step].ingredients.splice(order, 0, {

@@ -2,16 +2,17 @@ from decimal import Decimal
 from functools import wraps
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import translation
-from django_scopes import scope
+from django_scopes import scope, scopes_disabled
 
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
-                             ShoppingListEntry, Step)
+                             ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields)
 
 SQLITE = True
 if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
@@ -28,7 +29,24 @@ def skip_signal(signal_func):
         if hasattr(instance, 'skip_signal'):
             return None
         return signal_func(sender, instance, **kwargs)
+
     return _decorator
+
+
+@receiver(post_save, sender=User)
+def create_user_preference(sender, instance=None, created=False, **kwargs):
+    if created:
+        with scopes_disabled():
+            UserPreference.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=SearchPreference)
+def create_search_preference(sender, instance=None, created=False, **kwargs):
+    if created:
+        with scopes_disabled():
+            instance.unaccent.add(SearchFields.objects.get(name='Name'))
+            instance.icontains.add(SearchFields.objects.get(name='Name'))
+            instance.trigram.add(SearchFields.objects.get(name='Name'))
 
 
 @receiver(post_save, sender=Recipe)
@@ -131,5 +149,3 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
             print("MEAL_AUTO_ADD Created SLR")
     except AttributeError:
         pass
-
-

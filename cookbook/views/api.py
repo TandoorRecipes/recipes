@@ -2,6 +2,7 @@ import io
 import json
 import mimetypes
 import re
+import traceback
 import uuid
 from collections import OrderedDict
 
@@ -11,7 +12,7 @@ from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
@@ -27,30 +28,34 @@ from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
-from validators import ValidationFailure
 
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required)
+                                               group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner, CustomIsOwnerReadOnly)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
+from cookbook.helper.recipe_url_import import get_from_youtube_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
                              Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog)
+                             UserFile, UserPreference, ViewLog, Space, UserSpace, InviteLink)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -71,7 +76,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializ
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer)
+                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer, SpaceSerializer, UserSpaceSerializer, GroupSerializer, InviteLinkSerializer)
 from recipes import settings
 
 
@@ -169,9 +174,9 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
 
                 self.queryset = (
                     self.queryset
-                        .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
-                                              default=Value(0)))  # put exact matches at the top of the result set
-                        .filter(filter).order_by('-starts', Lower('name').asc())
+                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
+                                          default=Value(0)))  # put exact matches at the top of the result set
+                    .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
         updated_at = self.request.query_params.get('updated_at', None)
@@ -351,7 +356,7 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     http_method_names = ['get']
 
     def get_queryset(self):
-        queryset = self.queryset.filter(userpreference__space=self.request.space)
+        queryset = self.queryset.filter(userspace__space=self.request.space)
         try:
             filter_list = self.request.query_params.get('filter_list', None)
             if filter_list is not None:
@@ -362,13 +367,50 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = [CustomIsAdmin]
+    http_method_names = ['get', ]
+
+
+class SpaceViewSet(viewsets.ModelViewSet):
+    queryset = Space.objects
+    serializer_class = SpaceSerializer
+    permission_classes = [CustomIsOwner & CustomIsAdmin]
+    http_method_names = ['get', 'patch']
+
+    def get_queryset(self):
+        return self.queryset.filter(id=self.request.space.id, created_by=self.request.user)
+
+
+class UserSpaceViewSet(viewsets.ModelViewSet):
+    queryset = UserSpace.objects
+    serializer_class = UserSpaceSerializer
+    permission_classes = [CustomIsSpaceOwner | CustomIsOwnerReadOnly]
+    http_method_names = ['get', 'patch', 'delete']
+
+    def destroy(self, request, *args, **kwargs):
+        if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
+            raise APIException('Cannot delete Space owner permission.')
+        return super().destroy(request, *args, **kwargs)
+
+    def get_queryset(self):
+        if is_space_owner(self.request.user, self.request.space):
+            return self.queryset.filter(space=self.request.space)
+        else:
+            return self.queryset.filter(user=self.request.user, space=self.request.space)
+
+
 class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner, ]
+    http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        with scopes_disabled():  # need to disable scopes as user preference is no longer a spaced method
+            return self.queryset.filter(user=self.request.user)
 
 
 class StorageViewSet(viewsets.ModelViewSet):
@@ -410,8 +452,9 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = SupermarketCategory.objects
+    model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
     permission_classes = [CustomIsUser]
 
@@ -1014,6 +1057,19 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
+class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    queryset = InviteLink.objects
+    serializer_class = InviteLinkSerializer
+    permission_classes = [CustomIsSpaceOwner & CustomIsAdmin]
+
+    def get_queryset(self):
+        if is_space_owner(self.request.user, self.request.space):
+            self.queryset = self.queryset.filter(space=self.request.space).all()
+            return super().get_queryset()
+        else:
+            return None
+
+
 class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
@@ -1025,7 +1081,139 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-# -------------- non django rest api views --------------------
+# -------------- DRF custom views --------------------
+
+class AuthTokenThrottle(AnonRateThrottle):
+    rate = '10/day'
+
+
+class CustomAuthToken(ObtainAuthToken):
+    throttle_classes = [AuthTokenThrottle]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+        })
+
+
+@api_view(['POST'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser])
+# TODO add rate limiting
+def recipe_from_source(request):
+    """
+    function to retrieve a recipe from a given url or source string
+    :param request: standard request with additional post parameters
+            - url: url to use for importing recipe
+            - data: if no url is given recipe is imported from provided source data
+            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
+    :return: JsonResponse containing the parsed json, original html,json and images
+    """
+    serializer = RecipeFromSourceSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            if bookmarklet := BookmarkletImport.objects.filter(pk=serializer.validated_data['bookmarklet']).first():
+                serializer.validated_data['url'] = bookmarklet.url
+                serializer.validated_data['data'] = bookmarklet.html
+                bookmarklet.delete()
+        except KeyError:
+            pass
+
+        # headers to use for request to external sites
+        external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
+
+        if not 'url' in serializer.validated_data and not 'data' in serializer.validated_data:
+            return Response({
+                'error': True,
+                'msg': _('Nothing to do.')
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # in manual mode request complete page to return it later
+        if 'url' in serializer.validated_data:
+            if re.match('^(https?://)?(www\.youtube\.com|youtu\.be)/.+$', serializer.validated_data['url']):
+                if validators.url(serializer.validated_data['url'], public=True):
+                    return Response({
+                        'recipe_json': get_from_youtube_scraper(serializer.validated_data['url'], request),
+                        'recipe_tree': '',
+                        'recipe_html': '',
+                        'recipe_images': [],
+                    }, status=status.HTTP_200_OK)
+            try:
+                if validators.url(serializer.validated_data['url'], public=True):
+                    serializer.validated_data['data'] = requests.get(serializer.validated_data['url'], headers=external_request_headers).content
+                else:
+                    return Response({
+                        'error': True,
+                        'msg': _('Invalid Url')
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except requests.exceptions.ConnectionError:
+                return Response({
+                    'error': True,
+                    'msg': _('Connection Refused.')
+                }, status=status.HTTP_400_BAD_REQUEST)
+            except requests.exceptions.MissingSchema:
+                return Response({
+                    'error': True,
+                    'msg': _('Bad URL Schema.')
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(serializer.validated_data['data'], serializer.validated_data['url'], request)
+        if len(recipe_tree) == 0 and len(recipe_json) == 0:
+            return Response({
+                'error': True,
+                'msg': _('No usable data could be found.')
+            }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'recipe_json': recipe_json,
+                'recipe_tree': recipe_tree,
+                'recipe_html': recipe_html,
+                'recipe_images': list(dict.fromkeys(recipe_images)),
+            }, status=status.HTTP_200_OK)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsAdmin])
+# TODO add rate limiting
+def reset_food_inheritance(request):
+    """
+    function to reset inheritance from api, see food method for docs
+    """
+    try:
+        Food.reset_inheritance(space=request.space)
+        return Response({'message': 'success', }, status=status.HTTP_200_OK)
+    except Exception as e:
+        traceback.print_exc()
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsAdmin])
+# TODO add rate limiting
+def switch_active_space(request, space_id):
+    """
+    api endpoint to switch space function
+    """
+    try:
+        space = get_object_or_404(Space, id=space_id)
+        user_space = switch_user_active_space(request.user, space)
+        if user_space:
+            return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
+        else:
+            return Response("not found", status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        traceback.print_exc()
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):
@@ -1072,7 +1260,7 @@ def sync_all(request):
                              _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
-    monitors = Sync.objects.filter(active=True).filter(space=request.user.userpreference.space)
+    monitors = Sync.objects.filter(active=True).filter(space=request.user.userspace_set.filter(active=1).first().space)
 
     error = False
     for monitor in monitors:
@@ -1135,7 +1323,7 @@ def log_cooking(request, recipe_id):
 def get_plan_ical(request, from_date, to_date):
     queryset = MealPlan.objects.filter(
         Q(created_by=request.user) | Q(shared=request.user)
-    ).filter(space=request.user.userpreference.space).distinct().all()
+    ).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
 
     if from_date is not None:
         queryset = queryset.filter(date__gte=from_date)
@@ -1158,73 +1346,6 @@ def get_plan_ical(request, from_date, to_date):
     response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'  # noqa: E501
 
     return response
-
-
-@group_required('user')
-def recipe_from_source(request):
-    """
-    function to retrieve a recipe from a given url or source string
-    :param request: standard request with additional post parameters
-            - url: url to use for importing recipe
-            - data: if no url is given recipe is imported from provided source data
-            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
-    :return: JsonResponse containing the parsed json, original html,json and images
-    """
-    if request.method == 'GET':
-        return HttpResponse(status=405)
-    request_payload = json.loads(request.body.decode('utf-8'))
-    url = request_payload.get('url', None)
-    data = request_payload.get('data', None)
-    bookmarklet = request_payload.get('bookmarklet', None)
-
-    if bookmarklet := BookmarkletImport.objects.filter(pk=bookmarklet).first():
-        url = bookmarklet.url
-        data = bookmarklet.html
-        bookmarklet.delete()
-
-    # headers to use for request to external sites
-    external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
-
-    if not url and not data:
-        return JsonResponse({
-            'error': True,
-            'msg': _('Nothing to do.')
-        }, status=400)
-
-    # in manual mode request complete page to return it later
-    if url:
-        try:
-            if validators.url(url, public=True):
-                data = requests.get(url, headers=external_request_headers).content
-            else:
-                return JsonResponse({
-                    'error': True,
-                    'msg': _('Invalid Url')
-                }, status=400)
-        except requests.exceptions.ConnectionError:
-            return JsonResponse({
-                'error': True,
-                'msg': _('Connection Refused.')
-            }, status=400)
-        except requests.exceptions.MissingSchema:
-            return JsonResponse({
-                'error': True,
-                'msg': _('Bad URL Schema.')
-            }, status=400)
-
-    recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(data, url, request)
-    if len(recipe_tree) == 0 and len(recipe_json) == 0:
-        return JsonResponse({
-            'error': True,
-            'msg': _('No usable data could be found.')
-        }, status=400)
-    else:
-        return JsonResponse({
-            'recipe_json': recipe_json,
-            'recipe_tree': recipe_tree,
-            'recipe_html': recipe_html,
-            'recipe_images': list(dict.fromkeys(recipe_images)),
-        })
 
 
 @group_required('admin')

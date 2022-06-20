@@ -57,6 +57,10 @@ const pages = {
         entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors"],
     },
+    space_manage_view: {
+        entry: "./src/apps/SpaceManageView/main.js",
+        chunks: ["chunk-vendors"],
+    },
 }
 
 module.exports = {
@@ -79,8 +83,8 @@ module.exports = {
             swDest: "../../templates/sw.js",
             manifestTransforms: [
                 (originalManifest) => {
-                    const result = originalManifest.map((entry) => new Object({ url: "static/vue/" + entry.url }))
-                    return { manifest: result, warnings: [] }
+                    const result = originalManifest.map((entry) => new Object({url: "static/vue/" + entry.url}))
+                    return {manifest: result, warnings: []}
                 },
             ],
         },
@@ -117,17 +121,20 @@ module.exports = {
         })
         */
 
-        config.plugin("BundleTracker").use(BundleTracker, [{ relativePath: true, path: "../vue/" }])
+        config.plugin("BundleTracker").use(BundleTracker, [{relativePath: true, path: "../vue/"}])
 
         config.resolve.alias.set("__STATIC__", "static")
 
         config.devServer
-            .public("http://localhost:8080")
             .host("localhost")
             .port(8080)
-            .hotOnly(true)
-            .watchOptions({ poll: 500 })
+            .set('hot', 'only')
+            .set('static', {watch: true})
+            // old webpack dev server v3 settings
+            //  .hotOnly(true)
+            //   .watchOptions({ poll: 500 })
+            //  .public("http://localhost:8080")
             .https(false)
-            .headers({ "Access-Control-Allow-Origin": ["*"] })
+            .headers({"Access-Control-Allow-Origin": ["*"]})
     },
 }

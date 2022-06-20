@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-01-17 07:56+0000\n"
+"PO-Revision-Date: 2022-06-01 22:32+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
@@ -83,7 +83,7 @@ msgstr "Commenti"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Modalità per mancini"
 
 #: .\cookbook\forms.py:73
 msgid ""
@@ -161,14 +161,16 @@ msgstr "Fissa la barra di navigazione nella parte superiore della pagina."
 #: .\cookbook\forms.py:91 .\cookbook\forms.py:502
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
+"Aggiungi automaticamente gli ingredienti del piano alimentare alla lista "
+"della spesa."
 
 #: .\cookbook\forms.py:92
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Escludi gli ingredienti che sono già disponibili."
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "L'interfaccia verrà ottimizzata per l'uso con la mano sinistra."
 
 #: .\cookbook\forms.py:110
 msgid ""
@@ -300,6 +302,9 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Determina quanto una ricerca è vaga se utilizza la corrispondenza dei "
+"trigrammi (ad esempio, valori bassi significano che vengono ignorati più "
+"errori di battitura)."
 
 #: .\cookbook\forms.py:451
 #, fuzzy
@@ -318,6 +323,8 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Usa la corrispondenza vaga per unità, parole chiave e ingredienti durante la "
+"modifica e l'importazione di ricette."
 
 #: .\cookbook\forms.py:454
 msgid ""
@@ -355,7 +362,7 @@ msgstr "Metodo di ricerca"
 
 #: .\cookbook\forms.py:467
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Ricerche vaghe"
 
 #: .\cookbook\forms.py:468
 msgid "Ignore Accent"
@@ -373,7 +380,7 @@ msgstr "Inizia con"
 
 #: .\cookbook\forms.py:471
 msgid "Fuzzy Search"
-msgstr "Ricerca Fuzzy"
+msgstr "Ricerca vaga"
 
 #: .\cookbook\forms.py:472
 msgid "Full Text"
@@ -384,18 +391,24 @@ msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Gli utenti potranno vedere tutti gli elementi che aggiungi alla tua lista "
+"della spesa.  Devono aggiungerti per vedere gli elementi nella loro lista."
 
 #: .\cookbook\forms.py:503
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Quando si aggiunge un piano alimentare alla lista della spesa (manualmente o "
+"automaticamente), includi tutte le ricette correlate."
 
 #: .\cookbook\forms.py:504
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Quando si aggiunge un piano alimentare alla lista della spesa (manualmente o "
+"automaticamente), escludi gli ingredienti già disponibili."
 
 #: .\cookbook\forms.py:505
 msgid "Default number of hours to delay a shopping list entry."
@@ -412,6 +425,8 @@ msgstr ""
 #: .\cookbook\forms.py:508
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Contrassegna gli alimenti come 'Disponibili' quando spuntati dalla lista "
+"della spesa."
 
 #: .\cookbook\forms.py:509
 msgid "Delimiter to use for CSV exports."
@@ -437,7 +452,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:517
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Escludi Disponibile"
 
 #: .\cookbook\forms.py:518
 msgid "Include Related"
@@ -467,7 +482,7 @@ msgstr "Prefisso lista"
 
 #: .\cookbook\forms.py:524
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Disponibilità automatica"
 
 #: .\cookbook\forms.py:534
 msgid "Reset Food Inheritance"
@@ -2030,7 +2045,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:180
 msgid "Fuzzy"
-msgstr "Fuzzy"
+msgstr "Vago"
 
 #: .\cookbook\templates\settings.html:181
 msgid ""
@@ -2097,11 +2112,11 @@ msgid "Social Network Login Failure"
 msgstr "Login con social network"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "Si è verificato un errore durante lo spostamento "
+msgstr ""
+"Si è verificato un errore durante il tentativo di login con account social "
+"network."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2559,6 +2574,8 @@ msgstr ""
 #: .\cookbook\views\api.py:724
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
+"Filtra le ricette che possono essere preparate con alimenti già disponibili. "
+"[true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:880
 msgid ""
@@ -2804,7 +2821,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:331
 msgid "Fuzzy search is not compatible with this search method!"
-msgstr "La ricerca Fuzzy non è compatibile con questo metodo di ricerca!"
+msgstr "La ricerca vaga non è compatibile con questo metodo di ricerca!"
 
 #: .\cookbook\views\views.py:461
 msgid ""

@@ -98,7 +98,7 @@
                             <th>{{ $t('Unit') }}</th>
                             <th>{{ $t('Food') }}</th>
                             <th>{{ $t('Note') }}</th>
-                            <th>
+                            <th class="text-right">
                                 <b-button variant="success" class="btn btn-sm" @click="updateIngredient()"><i
                                     class="fas fa-save"></i>
                                 </b-button>
@@ -119,11 +119,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="">
+                                <td>
                                     <input type="number" class="form-control" v-model="i.amount"
                                            @input="$set(i, 'changed', true)">
                                 </td>
-                                <td style="min-width: 30vw">
+                                <td>
                                     <generic-multiselect @change="i.unit = $event.val; $set(i, 'changed', true)"
                                                          :initial_single_selection="i.unit"
                                                          :model="Models.UNIT"
@@ -132,7 +132,7 @@
                                                          :create_placeholder="$t('Create')"
                                                          :multiple="false"></generic-multiselect>
                                 </td>
-                                <td style="min-width: 30vw">
+                                <td>
                                     <generic-multiselect @change="i.food = $event.val; $set(i, 'changed', true)"
                                                          :initial_single_selection="i.food"
                                                          :model="Models.FOOD"
@@ -141,11 +141,11 @@
                                                          :create_placeholder="$t('Create')"
                                                          :multiple="false"></generic-multiselect>
                                 </td>
-                                <td style="min-width: 30vw">
+                                <td>
                                     <input class="form-control" v-model="i.note" @keydown="$set(i, 'changed', true)">
 
                                 </td>
-                                <td style="">
+                                <td class="text-right">
                                     <b-button-group>
                                         <b-button :disabled="i.changed !== true"
                                                   :variant="(i.changed !== true) ? 'primary' : 'success'"
