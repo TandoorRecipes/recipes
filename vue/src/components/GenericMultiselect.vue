@@ -149,12 +149,14 @@ export default {
     methods: {
         // this.genericAPI inherited from ApiMixin
         search: function (query) {
+
             let options = {
                 page: 1,
                 pageSize: this.limit,
                 query: query,
                 limit: this.limit,
             }
+            console.log(query, options)
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
                 if (this.nothingSelected && this.objects.length > 0) {
@@ -184,10 +186,10 @@ export default {
         },
         addNew(e) {
             //TODO add ability to choose field name other than "name"
-            console.log('CREATEING NEW with -> ' , e)
+            console.log('CREATEING NEW with -> ', e)
             this.genericAPI(this.model, this.Actions.CREATE, {name: e}).then(result => {
                 let createdObj = result.data?.results ?? result.data
-                StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                 if (this.multiple) {
                     this.selected_objects.push(createdObj)
                 } else {
@@ -196,7 +198,7 @@ export default {
                 this.objects.push(createdObj)
                 this.selectionChanged()
             }).catch((r, err) => {
-                StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
             })
         },
     },

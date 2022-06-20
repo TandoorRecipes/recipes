@@ -5,12 +5,12 @@ from urllib.parse import unquote
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from recipe_scrapers import scrape_html, scrape_me
+from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from recipe_scrapers._utils import get_host_name, normalize_string
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.scrapers.scrapers import text_scraper
-from recipe_scrapers import scrape_me
-from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 
 
 def get_recipe_from_source(text, url, request):
@@ -62,8 +62,9 @@ def get_recipe_from_source(text, url, request):
 
     recipe_tree = []
     parse_list = []
-    html_data = []
-    images = []
+    soup = BeautifulSoup(text, "html.parser")
+    html_data = get_from_html(soup)
+    images = get_images_from_source(soup, url)
     text = unquote(text)
     scrape = None
 
@@ -80,9 +81,6 @@ def get_recipe_from_source(text, url, request):
             scrape = text_scraper("<script type='application/ld+json'>" + text + "</script>", url=url)
 
         except JSONDecodeError:
-            soup = BeautifulSoup(text, "html.parser")
-            html_data = get_from_html(soup)
-            images += get_images_from_source(soup, url)
             for el in soup.find_all('script', type='application/ld+json'):
                 el = remove_graph(el)
                 if not url and 'url' in el:

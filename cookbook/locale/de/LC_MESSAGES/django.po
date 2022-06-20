@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-03-09 18:31+0000\n"
-"Last-Translator: karawedi <wedi.nick@gmail.com>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2022-05-28 16:32+0000\n"
+"Last-Translator: Tobias Reinmann <reinmanns@bluewin.ch>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "Kommentare"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Linkshänder-Modus"
 
 #: .\cookbook\forms.py:73
 msgid ""
@@ -163,7 +163,7 @@ msgstr "Zutaten, die vorrätig sind, ausschließen."
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Optimiert die Darstellung für die Benutzung mit der linken Hand."
 
 #: .\cookbook\forms.py:110
 msgid ""
@@ -558,7 +558,7 @@ msgstr "Konnte den Template code nicht verarbeiten."
 #: .\cookbook\integration\copymethat.py:42
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: .\cookbook\integration\copymethat.py:71
 #: .\cookbook\integration\recettetek.py:53
@@ -1216,11 +1216,11 @@ msgstr "Ausloggen"
 
 #: .\cookbook\templates\base.html:342
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Du benützt die Gratis-Version von Tandoor"
 
 #: .\cookbook\templates\base.html:342
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Jetzt upgraden"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1756,7 +1756,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Zurück"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
