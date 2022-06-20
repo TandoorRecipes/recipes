@@ -301,7 +301,7 @@ def parse_servings_text(servings):
             servings = re.sub("\d+", '', servings).strip()
         except Exception:
             servings = ''
-    return servings[:32]
+    return str(servings)[:32]
 
 
 def parse_time(recipe_time):
