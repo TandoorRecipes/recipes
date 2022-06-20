@@ -46,22 +46,30 @@ class Cookmate(Integration):
             if len(recipe_xml.find('description')) > 0:
                 recipe.description = recipe_xml.find('description')[0].text[:512]
 
-        for step in recipe_xml.find('recipetext').getchildren():
-            step = Step.objects.create(
-                instruction=step.text.strip(), space=self.request.space,
-            )
-            recipe.steps.add(step)
+        if recipe_text := recipe_xml.find('recipetext'):
+            for step in recipe_text.getchildren():
+                if step.text:
+                    step = Step.objects.create(
+                        instruction=step.text.strip(), space=self.request.space,
+                    )
+                    recipe.steps.add(step)
 
         ingredient_parser = IngredientParser(self.request, True)
 
-        for ingredient in recipe_xml.find('ingredient').getchildren():
-            if ingredient.text.strip() != '':
-                amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
-                f = ingredient_parser.get_food(food)
-                u = ingredient_parser.get_unit(unit)
-                recipe.steps.first().ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space,
-                ))
+        if recipe_ingredients := recipe_xml.find('ingredient'):
+            ingredient_step = recipe.steps.first()
+            if ingredient_step is None:
+                ingredient_step = Step.objects.create(space=self.request.space, instruction='')
+
+            for ingredient in recipe_ingredients.getchildren():
+                if ingredient.text:
+                    if ingredient.text.strip() != '':
+                        amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
+                        f = ingredient_parser.get_food(food)
+                        u = ingredient_parser.get_unit(unit)
+                        ingredient_step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space,
+                        ))
 
         if recipe_xml.find('imageurl') is not None:
             try:
