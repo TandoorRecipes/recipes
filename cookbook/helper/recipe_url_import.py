@@ -45,14 +45,9 @@ def get_from_scraper(scrape, request):
     recipe_json['internal'] = True
 
     try:
-        servings = scrape.yields() or None
+        servings = scrape.schema.data.get('recipeYield') or 1  # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
     except Exception:
-        servings = None
-    if not servings:
-        try:
-            servings = scrape.schema.data.get('recipeYield') or 1
-        except Exception:
-            servings = 1
+        servings = 1
 
     recipe_json['servings'] = parse_servings(servings)
     recipe_json['servings_text'] = parse_servings_text(servings)
@@ -196,7 +191,7 @@ def get_from_youtube_scraper(url, request):
         'working_time': 0,
         'waiting_time': 0,
         'image': "",
-        'keywords': [{'name': kw.name,'label': kw.name, 'id': kw.pk}],
+        'keywords': [{'name': kw.name, 'label': kw.name, 'id': kw.pk}],
         'source_url': url,
         'steps': [
             {
