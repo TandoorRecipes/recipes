@@ -414,5 +414,16 @@
     "Importer_Help": "Więcej informacji i pomoc na temat tego importera:",
     "Select_App_To_Import": "Wybierz aplikację, z której chcesz zaimportować",
     "New_Entry": "Nowy wpis",
-    "Create_New_Shopping_Category": "Dodaj nową kategorię zakupów"
+    "Create_New_Shopping_Category": "Dodaj nową kategorię zakupów",
+    "warning_space_delete": "Możesz usunąć swoją przestrzeń, w tym wszystkie przepisy, listy zakupów, plany posiłków i wszystko, co utworzyłeś. Tego nie da się cofnąć! Czy na pewno chcesz to zrobić?",
+    "Copy Link": "Skopiuj link",
+    "Users": "Użytkownicy",
+    "Invites": "Zaprasza",
+    "food_inherit_info": "Pola w pożywieniu, które powinny być domyślnie dziedziczone.",
+    "facet_count_info": "Pokaż ilości przepisów w filtrach wyszukiwania.",
+    "Copy Token": "Kopiuj Token",
+    "Message": "Wiadomość",
+    "reset_food_inheritance": "Zresetuj dziedziczenie",
+    "reset_food_inheritance_info": "Zresetuj wszystkie produkty spożywcze do domyślnych dziedziczonych pól i ich wartości nadrzędnych.",
+    "Valid Until": "Ważne do"
 }
