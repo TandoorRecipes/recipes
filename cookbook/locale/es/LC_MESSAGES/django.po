@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-05-28 16:32+0000\n"
-"Last-Translator: Frank Poppe <frank@poppe-teran.net>\n"
+"PO-Revision-Date: 2022-06-25 17:32+0000\n"
+"Last-Translator: César Blanco Guillamon <cesarblancg97@gmail.com>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -156,6 +156,8 @@ msgstr "Hace la barra de navegación fija en la parte superior de la página."
 #: .\cookbook\forms.py:91 .\cookbook\forms.py:502
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
+"Añadir de manera automática los ingredientes del plan a la lista de la "
+"compra."
 
 #: .\cookbook\forms.py:92
 msgid "Exclude ingredients that are on hand."
@@ -270,7 +272,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:369
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Se ha alcanzado el número máximo de usuarios en este espacio."
 
 #: .\cookbook\forms.py:375
 msgid "Email address already taken!"
@@ -297,12 +299,17 @@ msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Determina como de 'perezosa' es la búsqueda si utiliza la coincidencia de "
+"similitud de trigramas(Ej. Valores más pequeños indican que más fallos se "
+"van a ignorar)."
 
 #: .\cookbook\forms.py:451
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Selecciona el tipo de búsqueda.  Haz click <a href=\"/docs/search/\">aquí</"
+"a> para una descripción completa de las opciones."
 
 #: .\cookbook\forms.py:452
 msgid ""
