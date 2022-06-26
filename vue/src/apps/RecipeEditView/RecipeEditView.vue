@@ -711,6 +711,7 @@ import GenericModalForm from "@/components/Modals/GenericModalForm"
 
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import _debounce from "lodash/debounce";
 // use
 Vue.use(mavonEditor)
 
@@ -1088,7 +1089,7 @@ export default {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
-        searchFoods: function (query) {
+        searchFoods: _debounce(function (query) {
             let apiFactory = new ApiApiFactory()
 
             this.foods_loading = true
@@ -1112,7 +1113,7 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
-        },
+        }, 500),
         fileCreated: function (data) {
             if (data !== "cancel") {
                 this.step_for_file_create.file = data.item
