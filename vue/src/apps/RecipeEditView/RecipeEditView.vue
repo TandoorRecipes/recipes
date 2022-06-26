@@ -19,8 +19,14 @@
                     <label for="id_description">
                         {{ $t("Description") }}
                     </label>
-                    <textarea id="id_description" class="form-control" v-model="recipe.description"
+                    <b-input-group >
+                         <textarea id="id_description" class="form-control" v-model="recipe.description"
                               maxlength="512"></textarea>
+                        <b-input-group-append>
+                            <b-button variant="danger" @click="recipe.description=''"><i class="fas fa-trash-alt"></i></b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+
                 </div>
             </div>
 
@@ -88,6 +94,11 @@
                     >
                         <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
+                    <br/>
+                    <label for="id_name"> {{ $t("Ingredient Overview") }}</label>
+                    <b-form-checkbox v-model="recipe.show_ingredient_overview" >{{$t('show_ingredient_overview')}}</b-form-checkbox>
+
+                    <br/>
                 </div>
             </div>
 
@@ -203,16 +214,6 @@
                                             class="fa fa-trash fa-fw"></i> {{ $t("Delete") }}
                                         </button>
 
-                                        <button type="button" class="dropdown-item" v-if="!step.show_as_header"
-                                                @click="step.show_as_header = true">
-                                            <i class="fas fa-eye fa-fw"></i> {{ $t("Show_as_header") }}
-                                        </button>
-
-                                        <button type="button" class="dropdown-item" v-if="step.show_as_header"
-                                                @click="step.show_as_header = false">
-                                            <i class="fas fa-eye-slash fa-fw"></i> {{ $t("Hide_as_header") }}
-                                        </button>
-
                                         <button class="dropdown-item" @click="moveStep(step, step_index - 1)"
                                                 v-if="step_index > 0">
                                             <i class="fa fa-arrow-up fa-fw"></i>
@@ -230,8 +231,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label :for="'id_step_' + step.id + 'name'">{{ $t("Step_Name") }}</label>
-                                    <input class="form-control" v-model="step.name"
+                                    <b-input-group>
+                                        <input class="form-control" v-model="step.name"
                                            :id="'id_step_' + step.id + 'name'"/>
+                                        <b-input-group-append>
+                                            <b-button variant="success" @click="step.show_as_header = false" v-if="step.show_as_header"><i class="fas fa-eye"></i></b-button>
+                                            <b-button variant="primary"  @click="step.show_as_header = true" v-if="!step.show_as_header"><i class="fas fa-eye-slash"></i></b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+
                                 </div>
                             </div>
 
@@ -558,7 +566,8 @@
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
-                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id" :language="'en'"
+                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id"
+                                                  :language="'en'"
                                                   :toolbars="md_editor_toolbars"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
@@ -608,7 +617,7 @@
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-block d-md-none btn btn-block btn-danger shadow-none"><i class="fa fa-trash fa-lg"></i></a>
-                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
+                    <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-none d-md-block btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
                 </div>
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
@@ -623,11 +632,13 @@
                 </div>
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
+                            :title="`${$t('Key_Ctrl')} + S`"
+                            class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
                         <i class="fa fa-save fa-lg"></i>
                     </button>
-                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
+                    <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + S`"
+                            class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
                         {{ $t("Save") }}
                     </button>
                 </div>
@@ -700,6 +711,7 @@ import GenericModalForm from "@/components/Modals/GenericModalForm"
 
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import _debounce from "lodash/debounce";
 // use
 Vue.use(mavonEditor)
 
@@ -1077,7 +1089,7 @@ export default {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
         },
-        searchFoods: function (query) {
+        searchFoods: _debounce(function (query) {
             let apiFactory = new ApiApiFactory()
 
             this.foods_loading = true
@@ -1101,7 +1113,7 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
-        },
+        }, 500),
         fileCreated: function (data) {
             if (data !== "cancel") {
                 this.step_for_file_create.file = data.item

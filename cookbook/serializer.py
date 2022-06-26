@@ -708,7 +708,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
+            'internal', 'show_ingredient_overview','nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

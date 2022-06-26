@@ -371,6 +371,8 @@
     "ChildInheritFields": "Children Inherit Fields",
     "ChildInheritFields_help": "Children will inherit these fields by default.",
     "InheritFields_help": "The values of these fields will be inherited from parent (Exception: blank shopping categories are not inherited)",
+    "show_ingredient_overview": "Display a list of all ingredients at the start of the recipe.",
+    "Ingredient Overview": "Ingredient Overview",
     "last_viewed": "Last Viewed",
     "created_on": "Created On",
     "updatedon": "Updated On",
