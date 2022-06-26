@@ -214,16 +214,6 @@
                                             class="fa fa-trash fa-fw"></i> {{ $t("Delete") }}
                                         </button>
 
-                                        <button type="button" class="dropdown-item" v-if="!step.show_as_header"
-                                                @click="step.show_as_header = true">
-                                            <i class="fas fa-eye fa-fw"></i> {{ $t("Show_as_header") }}
-                                        </button>
-
-                                        <button type="button" class="dropdown-item" v-if="step.show_as_header"
-                                                @click="step.show_as_header = false">
-                                            <i class="fas fa-eye-slash fa-fw"></i> {{ $t("Hide_as_header") }}
-                                        </button>
-
                                         <button class="dropdown-item" @click="moveStep(step, step_index - 1)"
                                                 v-if="step_index > 0">
                                             <i class="fa fa-arrow-up fa-fw"></i>
@@ -241,8 +231,15 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label :for="'id_step_' + step.id + 'name'">{{ $t("Step_Name") }}</label>
-                                    <input class="form-control" v-model="step.name"
+                                    <b-input-group>
+                                        <input class="form-control" v-model="step.name"
                                            :id="'id_step_' + step.id + 'name'"/>
+                                        <b-input-group-append>
+                                            <b-button variant="success" @click="step.show_as_header = false" v-if="step.show_as_header"><i class="fas fa-eye"></i></b-button>
+                                            <b-button variant="primary"  @click="step.show_as_header = true" v-if="!step.show_as_header"><i class="fas fa-eye-slash"></i></b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+
                                 </div>
                             </div>
 
