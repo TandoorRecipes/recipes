@@ -19,8 +19,14 @@
                     <label for="id_description">
                         {{ $t("Description") }}
                     </label>
-                    <textarea id="id_description" class="form-control" v-model="recipe.description"
+                    <b-input-group >
+                         <textarea id="id_description" class="form-control" v-model="recipe.description"
                               maxlength="512"></textarea>
+                        <b-input-group-append>
+                            <b-button variant="danger" @click="recipe.description=''"><i class="fas fa-trash-alt"></i></b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+
                 </div>
             </div>
 
@@ -88,6 +94,11 @@
                     >
                         <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
+                    <br/>
+                    <label for="id_name"> {{ $t("Ingredient Overview") }}</label>
+                    <b-form-checkbox v-model="recipe.show_ingredient_overview" >{{$t('show_ingredient_overview')}}</b-form-checkbox>
+
+                    <br/>
                 </div>
             </div>
 
@@ -558,7 +569,8 @@
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
-                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id" :language="'en'"
+                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id"
+                                                  :language="'en'"
                                                   :toolbars="md_editor_toolbars"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
@@ -608,7 +620,7 @@
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-block d-md-none btn btn-block btn-danger shadow-none"><i class="fa fa-trash fa-lg"></i></a>
-                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
+                    <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-none d-md-block btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
                 </div>
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
@@ -623,11 +635,13 @@
                 </div>
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
+                            :title="`${$t('Key_Ctrl')} + S`"
+                            class="d-block d-md-none btn btn-sm btn-block btn-info shadow-none">
                         <i class="fa fa-save fa-lg"></i>
                     </button>
-                     <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
-                            :title="`${$t('Key_Ctrl')} + S`" class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
+                    <button type="button" @click="updateRecipe(false)" v-b-tooltip.hover
+                            :title="`${$t('Key_Ctrl')} + S`"
+                            class="d-none d-md-block btn btn-sm btn-block btn-info shadow-none">
                         {{ $t("Save") }}
                     </button>
                 </div>
