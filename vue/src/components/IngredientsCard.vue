@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body p-3 p-md-5">
+            <div class="card-body p-1 p-md-3">
                 <div class="row text-right" v-if="ShoppingRecipes.length > 1 && !add_shopping_mode">
                     <div class="col col-md-6 offset-md-6 text-right">
                         <b-form-select v-model="selected_shoppingrecipe" :options="ShoppingRecipes"

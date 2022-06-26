@@ -82,7 +82,7 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"
-                     v-if="recipe && ingredient_count > 0">
+                     v-if="recipe && ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)">
                     <ingredients-card
                         :recipe="recipe.id"
                         :steps="recipe.steps"
