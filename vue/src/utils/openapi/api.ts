@@ -1853,6 +1853,12 @@ export interface Recipe {
     internal?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof Recipe
+     */
+    show_ingredient_overview?: boolean;
+    /**
+     * 
      * @type {RecipeNutrition}
      * @memberof Recipe
      */

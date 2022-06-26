@@ -747,6 +747,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
+    show_ingredient_overview = models.BooleanField(default=True)
 
     source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
