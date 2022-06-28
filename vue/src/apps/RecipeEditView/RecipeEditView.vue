@@ -19,11 +19,12 @@
                     <label for="id_description">
                         {{ $t("Description") }}
                     </label>
-                    <b-input-group >
+                    <b-input-group>
                          <textarea id="id_description" class="form-control" v-model="recipe.description"
-                              maxlength="512"></textarea>
+                                   maxlength="512"></textarea>
                         <b-input-group-append>
-                            <b-button variant="danger" @click="recipe.description=''"><i class="fas fa-trash-alt"></i></b-button>
+                            <b-button variant="danger" @click="recipe.description=''"><i class="fas fa-trash-alt"></i>
+                            </b-button>
                         </b-input-group-append>
                     </b-input-group>
 
@@ -94,11 +95,7 @@
                     >
                         <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
-                    <br/>
-                    <label for="id_name"> {{ $t("Ingredient Overview") }}</label>
-                    <b-form-checkbox v-model="recipe.show_ingredient_overview" >{{$t('show_ingredient_overview')}}</b-form-checkbox>
 
-                    <br/>
                 </div>
             </div>
 
@@ -184,6 +181,17 @@
                                 {{ $t("create_food_desc") }}
                             </em>
                         </b-form-group>
+                        <br/>
+                        <label for="id_name"> {{ $t("Ingredient Overview") }}</label>
+                        <b-form-checkbox v-model="recipe.show_ingredient_overview">
+                            {{ $t('show_ingredient_overview') }}
+                        </b-form-checkbox>
+
+                        <br/>
+                        <label for="id_name"> {{ $t("Imported_From") }}</label>
+                        <b-form-input v-model="recipe.source_url">
+
+                        </b-form-input>
                     </b-collapse>
                 </div>
             </div>
@@ -233,10 +241,13 @@
                                     <label :for="'id_step_' + step.id + 'name'">{{ $t("Step_Name") }}</label>
                                     <b-input-group>
                                         <input class="form-control" v-model="step.name"
-                                           :id="'id_step_' + step.id + 'name'"/>
+                                               :id="'id_step_' + step.id + 'name'"/>
                                         <b-input-group-append>
-                                            <b-button variant="success" @click="step.show_as_header = false" v-if="step.show_as_header"><i class="fas fa-eye"></i></b-button>
-                                            <b-button variant="primary"  @click="step.show_as_header = true" v-if="!step.show_as_header"><i class="fas fa-eye-slash"></i></b-button>
+                                            <b-button variant="success" @click="step.show_as_header = false"
+                                                      v-if="step.show_as_header"><i class="fas fa-eye"></i></b-button>
+                                            <b-button variant="primary" @click="step.show_as_header = true"
+                                                      v-if="!step.show_as_header"><i class="fas fa-eye-slash"></i>
+                                            </b-button>
                                         </b-input-group-append>
                                     </b-input-group>
 
