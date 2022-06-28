@@ -28,7 +28,7 @@
                         <table class="table table-sm mb-0">
                             <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                             <template v-for="s in steps">
-                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode">
+                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && !add_shopping_mode && steps.length > 1">
                                     <td colspan="5">
                                         <b>{{ s.name }}</b>
                                     </td>
