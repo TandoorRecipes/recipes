@@ -549,6 +549,19 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
         assert getattr(obj_tree_1, field) == getattr(child, field)
 
 
+@pytest.mark.parametrize("obj_tree_1", [
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True, 'substitute_children': True, 'substitute_siblings': True}),
+], indirect=['obj_tree_1'])
+@pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
+def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
+    with scope(space=space_1):
+        parent = obj_tree_1.get_parent()
+        Food.objects.all().delete()
+
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
+        parent.reset_inheritance(space=space_1)
+
+
 def test_onhand(obj_1, u1_s1, u2_s1):
     assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
     assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
