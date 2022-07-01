@@ -770,7 +770,7 @@ export default {
                 link: true,
                 imagelink: false,
                 code: true,
-                table: true,
+                table: false,
                 fullscreen: true,
                 readmodel: true,
                 htmlcode: true,
