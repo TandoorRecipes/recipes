@@ -3,6 +3,7 @@ from gettext import gettext as _
 
 import bleach
 import markdown as md
+from django_scopes import ScopeError
 from markdown.extensions.tables import TableExtension
 from bleach_allowlist import markdown_attrs, markdown_tags
 from django import template
@@ -171,4 +172,6 @@ def user_prefs(request):
     try:
         return UserPreferenceSerializer(request.user.userpreference, context={'request': request}).data
     except AttributeError:
+        pass
+    except ScopeError:  # there are pages without an active space that still need to load but don't require prefs
         pass

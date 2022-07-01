@@ -316,7 +316,8 @@
                                     {% endif %}
                                     {{ us.space.name }}</a>
                             {% endfor %}
-                            <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i class="fas fa-list"></i> {% trans 'Overview' %}</a>
+                            <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i
+                                    class="fas fa-list"></i> {% trans 'Overview' %}</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
@@ -419,6 +420,21 @@
         }
     });
 </script>
+
+<style>
+    @media screen and (max-width: 1000px) {
+        .navbar-collapse {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .collapsing {
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+    }
+</style>
 
 </body>
 </html>
