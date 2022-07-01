@@ -34,7 +34,7 @@ django-scopes==1.2.0.post1
 pytest==7.1.2
 pytest-django==4.5.2
 django-treebeard==4.5.1
-django-cors-headers==3.12.0
+django-cors-headers==3.13.0
 django-storages==1.12.3
 boto3==1.24.21
 django-prometheus==2.2.0
