@@ -29,14 +29,14 @@ Jinja2==3.1.2
 django-webpack-loader==1.5.0
 git+https://github.com/ierror/django-js-reverse@7cab78c4531780ab4b32033d5104ccd5be1a246a
 django-allauth==0.50.0
-recipe-scrapers==14.2.0
+recipe-scrapers==14.5.2
 django-scopes==1.2.0.post1
 pytest==7.1.2
 pytest-django==4.5.2
 django-treebeard==4.5.1
-django-cors-headers==3.12.0
+django-cors-headers==3.13.0
 django-storages==1.12.3
-boto3==1.24.0
+boto3==1.24.21
 django-prometheus==2.2.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.0
