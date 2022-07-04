@@ -1,9 +1,11 @@
+import traceback
 from datetime import timedelta, datetime
 from decimal import Decimal
 from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
+from PIL import Image
 from django.contrib.auth.models import User, Group
 from django.core.mail import send_mail
 from django.db.models import Avg, Q, QuerySet, Sum
@@ -266,6 +268,20 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
 
 
 class UserFileSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(write_only=True)
+    file_download = serializers.SerializerMethodField('get_download_link')
+    preview = serializers.SerializerMethodField('get_preview_link')
+
+    def get_download_link(self, obj):
+        return self.context['request'].build_absolute_uri(reverse('api_download_file', args={obj.pk}))
+
+    def get_preview_link(self, obj):
+        try:
+            img = Image.open(obj.file.file.file)
+            return self.context['request'].build_absolute_uri(obj.file.url)
+        except Exception:
+            traceback.print_exc()
+            return ""
 
     def check_file_limit(self, validated_data):
         if 'file' in validated_data:
@@ -295,12 +311,25 @@ class UserFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFile
-        fields = ('name', 'file', 'file_size_kb', 'id',)
+        fields = ('id', 'name', 'file', 'file_download', 'preview', 'file_size_kb')
         read_only_fields = ('id', 'file_size_kb')
         extra_kwargs = {"file": {"required": False, }}
 
 
 class UserFileViewSerializer(serializers.ModelSerializer):
+    file_download = serializers.SerializerMethodField('get_download_link')
+    preview = serializers.SerializerMethodField('get_preview_link')
+
+    def get_download_link(self, obj):
+        return self.context['request'].build_absolute_uri(reverse('api_download_file', args={obj.pk}))
+
+    def get_preview_link(self, obj):
+        try:
+            img = Image.open(obj.file.file.file)
+            return self.context['request'].build_absolute_uri(obj.file.url)
+        except Exception:
+            traceback.print_exc()
+            return ""
 
     def create(self, validated_data):
         raise ValidationError('Cannot create File over this view')
@@ -310,7 +339,7 @@ class UserFileViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFile
-        fields = ('name', 'file', 'id',)
+        fields = ('id', 'name', 'file_download', 'preview')
         read_only_fields = ('id', 'file')
 
 
@@ -708,7 +737,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview','nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
+            'internal', 'show_ingredient_overview', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

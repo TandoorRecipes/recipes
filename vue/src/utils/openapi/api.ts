@@ -3438,6 +3438,12 @@ export interface Unit {
 export interface UserFile {
     /**
      * 
+     * @type {number}
+     * @memberof UserFile
+     */
+    id?: number;
+    /**
+     * 
      * @type {string}
      * @memberof UserFile
      */
@@ -3447,19 +3453,25 @@ export interface UserFile {
      * @type {any}
      * @memberof UserFile
      */
-    file?: any;
+    file: any;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    file_download?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    preview?: string;
     /**
      * 
      * @type {number}
      * @memberof UserFile
      */
     file_size_kb?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof UserFile
-     */
-    id?: number;
 }
 /**
  * 
@@ -4603,15 +4615,19 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserFile: async (name: string, file?: any, fileSizeKb?: number, id?: number, options: any = {}): Promise<RequestArgs> => {
+        createUserFile: async (name: string, file: any, id?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('createUserFile', 'name', name)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('createUserFile', 'file', file)
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4626,6 +4642,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (id !== undefined) { 
+                localVarFormParams.append('id', id as any);
+            }
+    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -4634,12 +4654,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (fileDownload !== undefined) { 
+                localVarFormParams.append('file_download', fileDownload as any);
             }
     
-            if (id !== undefined) { 
-                localVarFormParams.append('id', id as any);
+            if (preview !== undefined) { 
+                localVarFormParams.append('preview', preview as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
             }
     
     
@@ -8198,17 +8222,21 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
+        partialUpdateUserFile: async (id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('partialUpdateUserFile', 'id', id)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('partialUpdateUserFile', 'name', name)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('partialUpdateUserFile', 'file', file)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8224,6 +8252,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -8232,12 +8264,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (fileDownload !== undefined) { 
+                localVarFormParams.append('file_download', fileDownload as any);
             }
     
-            if (id2 !== undefined) { 
-                localVarFormParams.append('id', id2 as any);
+            if (preview !== undefined) { 
+                localVarFormParams.append('preview', preview as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
             }
     
     
@@ -9520,6 +9556,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * function to download a user file securely (wrapping as zip to prevent any context based XSS problems) temporary solution until a real file manager is implemented
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrievedownloadFile: async (fileId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'fileId' is not null or undefined
+            assertParamExists('retrievedownloadFile', 'fileId', fileId)
+            const localVarPath = `/api/download-file/{file_id}/`
+                .replace(`{${"file_id"}}`, encodeURIComponent(String(fileId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * api endpoint to switch space function
          * @param {string} spaceId 
          * @param {*} [options] Override http request option.
@@ -10555,17 +10624,21 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserFile: async (id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options: any = {}): Promise<RequestArgs> => {
+        updateUserFile: async (id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('updateUserFile', 'id', id)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('updateUserFile', 'name', name)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('updateUserFile', 'file', file)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -10581,6 +10654,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
 
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -10589,12 +10666,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (fileDownload !== undefined) { 
+                localVarFormParams.append('file_download', fileDownload as any);
             }
     
-            if (id2 !== undefined) { 
-                localVarFormParams.append('id', id2 as any);
+            if (preview !== undefined) { 
+                localVarFormParams.append('preview', preview as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
             }
     
     
@@ -10910,14 +10991,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserFile(name, file, fileSizeKb, id, options);
+        async createUserFile(name: string, file: any, id?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createUserFile(name, file, id, fileDownload, preview, fileSizeKb, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11961,14 +12044,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options);
+        async partialUpdateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12355,6 +12440,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * function to download a user file securely (wrapping as zip to prevent any context based XSS problems) temporary solution until a real file manager is implemented
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrievedownloadFile(fileId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrievedownloadFile(fileId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * api endpoint to switch space function
          * @param {string} spaceId 
          * @param {*} [options] Override http request option.
@@ -12665,14 +12760,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserFile(id, name, file, fileSizeKb, id2, options);
+        async updateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12924,14 +13021,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.createUserFile(name, file, fileSizeKb, id, options).then((request) => request(axios, basePath));
+        createUserFile(name: string, file: any, id?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.createUserFile(name, file, id, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13877,14 +13976,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
+        partialUpdateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.partialUpdateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14232,6 +14333,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.retrieveViewLog(id, options).then((request) => request(axios, basePath));
         },
         /**
+         * function to download a user file securely (wrapping as zip to prevent any context based XSS problems) temporary solution until a real file manager is implemented
+         * @param {string} fileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrievedownloadFile(fileId: string, options?: any): AxiosPromise<any> {
+            return localVarFp.retrievedownloadFile(fileId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * api endpoint to switch space function
          * @param {string} spaceId 
          * @param {*} [options] Override http request option.
@@ -14514,14 +14624,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
-         * @param {any} [file] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} file 
          * @param {number} [id2] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(axios, basePath));
+        updateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.updateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14821,15 +14933,17 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} name 
-     * @param {any} [file] 
-     * @param {number} [fileSizeKb] 
+     * @param {any} file 
      * @param {number} [id] 
+     * @param {string} [fileDownload] 
+     * @param {string} [preview] 
+     * @param {number} [fileSizeKb] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public createUserFile(name: string, file?: any, fileSizeKb?: number, id?: number, options?: any) {
-        return ApiApiFp(this.configuration).createUserFile(name, file, fileSizeKb, id, options).then((request) => request(this.axios, this.basePath));
+    public createUserFile(name: string, file: any, id?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any) {
+        return ApiApiFp(this.configuration).createUserFile(name, file, id, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15970,15 +16084,17 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {string} id A unique integer value identifying this user file.
      * @param {string} name 
-     * @param {any} [file] 
-     * @param {number} [fileSizeKb] 
+     * @param {any} file 
      * @param {number} [id2] 
+     * @param {string} [fileDownload] 
+     * @param {string} [preview] 
+     * @param {number} [fileSizeKb] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public partialUpdateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
-        return ApiApiFp(this.configuration).partialUpdateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
+    public partialUpdateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16403,6 +16519,17 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
+     * function to download a user file securely (wrapping as zip to prevent any context based XSS problems) temporary solution until a real file manager is implemented
+     * @param {string} fileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrievedownloadFile(fileId: string, options?: any) {
+        return ApiApiFp(this.configuration).retrievedownloadFile(fileId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * api endpoint to switch space function
      * @param {string} spaceId 
      * @param {*} [options] Override http request option.
@@ -16741,15 +16868,17 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {string} id A unique integer value identifying this user file.
      * @param {string} name 
-     * @param {any} [file] 
-     * @param {number} [fileSizeKb] 
+     * @param {any} file 
      * @param {number} [id2] 
+     * @param {string} [fileDownload] 
+     * @param {string} [preview] 
+     * @param {number} [fileSizeKb] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public updateUserFile(id: string, name: string, file?: any, fileSizeKb?: number, id2?: number, options?: any) {
-        return ApiApiFp(this.configuration).updateUserFile(id, name, file, fileSizeKb, id2, options).then((request) => request(this.axios, this.basePath));
+    public updateUserFile(id: string, name: string, file: any, id2?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any) {
+        return ApiApiFp(this.configuration).updateUserFile(id, name, file, id2, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -5,6 +5,7 @@ import re
 import traceback
 import uuid
 from collections import OrderedDict
+from zipfile import ZipFile
 
 import requests
 import validators
@@ -1211,6 +1212,31 @@ def switch_active_space(request, space_id):
             return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
         else:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        traceback.print_exc()
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser])
+def download_file(request, file_id):
+    """
+    function to download a user file securely (wrapping as zip to prevent any context based XSS problems)
+    temporary solution until a real file manager is implemented
+    """
+    try:
+        uf = UserFile.objects.get(space=request.space, pk=file_id)
+
+        in_memory = io.BytesIO()
+        zf = ZipFile(in_memory, mode="w")
+        zf.writestr(uf.file.name, uf.file.file.read())
+        zf.close()
+
+        response = HttpResponse(in_memory.getvalue(), content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="' + uf.name + '.zip"'
+        return response
+
     except Exception as e:
         traceback.print_exc()
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
