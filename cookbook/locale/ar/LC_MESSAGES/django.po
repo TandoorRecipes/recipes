@@ -8,117 +8,122 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-07-06 14:32+0000\n"
+"Last-Translator: Nidhal Brniyah <n1a1b1@gmail.com>\n"
+"Language-Team: Arabic <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
 msgid "Ingredients"
-msgstr ""
+msgstr "المقادير"
 
 #: .\cookbook\forms.py:56
 msgid "Default unit"
-msgstr ""
+msgstr "الوحدة الإفتراضية"
 
 #: .\cookbook\forms.py:57
 msgid "Use fractions"
-msgstr ""
+msgstr "إستخدم الكسور"
 
 #: .\cookbook\forms.py:58
 msgid "Use KJ"
-msgstr ""
+msgstr "إستخدم الكيلو جول"
 
 #: .\cookbook\forms.py:59
 msgid "Theme"
-msgstr ""
+msgstr "السمة"
 
 #: .\cookbook\forms.py:60
 msgid "Navbar color"
-msgstr ""
+msgstr "لون شريط التنقل"
 
 #: .\cookbook\forms.py:61
 msgid "Sticky navbar"
-msgstr ""
+msgstr "شريط تنقل ثابت"
 
 #: .\cookbook\forms.py:62
 msgid "Default page"
-msgstr ""
+msgstr "الصفحة الإفتراضية"
 
 #: .\cookbook\forms.py:63
 msgid "Show recent recipes"
-msgstr ""
+msgstr "عرض الوصفات الحديثة"
 
 #: .\cookbook\forms.py:64
 msgid "Search style"
-msgstr ""
+msgstr "أسلوب البحث"
 
 #: .\cookbook\forms.py:65
 msgid "Plan sharing"
-msgstr ""
+msgstr "مشاركة الخطة"
 
 #: .\cookbook\forms.py:66
 msgid "Ingredient decimal places"
-msgstr ""
+msgstr "المنازل العشرية للمقدار"
 
 #: .\cookbook\forms.py:67
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "فترة المزامنة التلقائية لقائمة التسوق"
 
 #: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\space.html:76 .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "التعليقات"
 
 #: .\cookbook\forms.py:69
 msgid "Left-handed mode"
-msgstr ""
+msgstr "وضع اليد اليسرى"
 
 #: .\cookbook\forms.py:73
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"لون شريط التنقل العلوي. كل الألوان لا تعمل مع جميع السمات ، جربها لتعرف!"
 
 #: .\cookbook\forms.py:75
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "الوحدة الافتراضية التي ستسخدم عند إدخال مكون جديد في الوصفة."
 
 #: .\cookbook\forms.py:77
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"إتاحة دعم الكسور في كميات المقادير (على سبيل المثال ، تحويل الكسور العشرية "
+"إلى كسور تلقائيًا)"
 
 #: .\cookbook\forms.py:79
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "عرض كميات الطاقة الغذائية بالجول بدلاً من السعرات الحرارية"
 
 #: .\cookbook\forms.py:80
 msgid "Users with whom newly created meal plans should be shared by default."
-msgstr ""
+msgstr "المستخدمون الذين ستشارك خطط وجباتهم التي أنشاؤها حديثًا بشكل افتراضي."
 
 #: .\cookbook\forms.py:81
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "المستخدمون الذين يمكن مشاركة قوائم التسوق معهم."
 
 #: .\cookbook\forms.py:83
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "عرض الوصفات التي تمت مشاهدتها مؤخراً على صفحة البحث."
 
 #: .\cookbook\forms.py:84
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "عدد الكسور العشرية لتقريب المكونات."
 
 #: .\cookbook\forms.py:85
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "إذا كنت تريد إنشاء ورؤية التعليقات أسفل الوصفات."
 
 #: .\cookbook\forms.py:87 .\cookbook\forms.py:499
 msgid ""
@@ -127,58 +132,64 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"سيؤدي الضبط على 0 إلى تعطيل المزامنة التلقائية. عند عرض قائمة التسوق يتم "
+"تحديث القائمة كل ثوانٍ محددة لمزامنة التغييرات التي ربما قام شخص آخر بها. "
+"هذه الخاصية مفيدة عند التسوق مع عدة أشخاص ولكن قد تستخدم القليل من بيانات "
+"الجوال. إذا كانت أقل من حد الوضع الحالي فسيتم إعادة تعيينها عند الحفظ."
 
 #: .\cookbook\forms.py:90
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "يجعل شريط التنقل يثبت بأعلى الصفحة."
 
 #: .\cookbook\forms.py:91 .\cookbook\forms.py:502
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
+msgstr "أضف مقادير خطة الوجبة تلقائيًا إلى قائمة التسوق."
 
 #: .\cookbook\forms.py:92
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "استبعاد المقادير الموجودة في متناول اليد."
 
 #: .\cookbook\forms.py:93
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "سيعمل على تحسين واجهة المستخدم لاستخدامها بيدك اليسرى."
 
 #: .\cookbook\forms.py:110
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"كلا الحقلين اختيارية. إذا لم يتم كتابة أي منها فسيتم عرض اسم المستخدم بدلاً "
+"من ذلك"
 
 #: .\cookbook\forms.py:131 .\cookbook\forms.py:304
 msgid "Name"
-msgstr ""
+msgstr "الإسم"
 
 #: .\cookbook\forms.py:132 .\cookbook\forms.py:305
 #: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:24
 #: .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr ""
+msgstr "الكلمات الدالة"
 
 #: .\cookbook\forms.py:133
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "وقت التحضير بالدقائق"
 
 #: .\cookbook\forms.py:134
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "مدة الانتظار (الطبخ / الخبز) بالدقائق"
 
 #: .\cookbook\forms.py:135 .\cookbook\forms.py:273 .\cookbook\forms.py:306
 msgid "Path"
-msgstr ""
+msgstr "المسار"
 
 #: .\cookbook\forms.py:136
 msgid "Storage UID"
-msgstr ""
+msgstr "معرف وحدة التخزين الفريد"
 
 #: .\cookbook\forms.py:168
 msgid "Default"
-msgstr ""
+msgstr "الإفتراضي"
 
 #: .\cookbook\forms.py:180
 msgid ""
@@ -188,15 +199,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:203
 msgid "Add your comment: "
-msgstr ""
+msgstr "أضف تعليقك: "
 
 #: .\cookbook\forms.py:218
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "اتركه فارغًا لـ dropbox وأدخل كلمة المرور لـ nextcloud."
 
 #: .\cookbook\forms.py:225
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "اتركه فارغًا لـ nextcloud وأدخل الـ token للـ API لـ dropbox."
 
 #: .\cookbook\forms.py:234
 msgid ""
@@ -206,23 +217,23 @@ msgstr ""
 
 #: .\cookbook\forms.py:272 .\cookbook\views\edit.py:157
 msgid "Storage"
-msgstr ""
+msgstr "وحدة التخزين"
 
 #: .\cookbook\forms.py:274
 msgid "Active"
-msgstr ""
+msgstr "فعال"
 
 #: .\cookbook\forms.py:280
 msgid "Search String"
-msgstr ""
+msgstr "دالة البحث"
 
 #: .\cookbook\forms.py:307
 msgid "File ID"
-msgstr ""
+msgstr "معرف الملف"
 
 #: .\cookbook\forms.py:329
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "يجب عليك تقديم وصفة أو عنوان على الأقل."
 
 #: .\cookbook\forms.py:342
 msgid "You can list default users to share recipes with in the settings."
@@ -240,7 +251,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:375
 msgid "Email address already taken!"
-msgstr ""
+msgstr "عنوان البريد الإلكتروني مأخوذ مسبقاً!"
 
 #: .\cookbook\forms.py:383
 msgid ""
@@ -250,11 +261,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:398
 msgid "Name already taken."
-msgstr ""
+msgstr "الاسم مأخوذ مسبقا."
 
 #: .\cookbook\forms.py:409
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "قبول الشروط والخصوصيات"
 
 #: .\cookbook\forms.py:441
 msgid ""
@@ -306,7 +317,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:466
 msgid "Search Method"
-msgstr ""
+msgstr "طريقة البحث"
 
 #: .\cookbook\forms.py:467
 msgid "Fuzzy Lookups"
@@ -318,19 +329,19 @@ msgstr ""
 
 #: .\cookbook\forms.py:469
 msgid "Partial Match"
-msgstr ""
+msgstr "تطابق جزئي"
 
 #: .\cookbook\forms.py:470
 msgid "Starts With"
-msgstr ""
+msgstr "إبدأ بـ"
 
 #: .\cookbook\forms.py:471
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "بحث غير محصور"
 
 #: .\cookbook\forms.py:472
 msgid "Full Text"
-msgstr ""
+msgstr "نص كامل"
 
 #: .\cookbook\forms.py:497
 msgid ""
@@ -376,15 +387,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:514
 msgid "Share Shopping List"
-msgstr ""
+msgstr "مشاركة قائمة التسوق"
 
 #: .\cookbook\forms.py:515
 msgid "Autosync"
-msgstr ""
+msgstr "مزامنة آلية"
 
 #: .\cookbook\forms.py:516
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "إضافة خطة الوجبة تلقائيًا"
 
 #: .\cookbook\forms.py:517
 msgid "Exclude On Hand"
@@ -404,7 +415,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:521
 msgid "Recent Days"
-msgstr ""
+msgstr "الأيام الأخيرة"
 
 #: .\cookbook\forms.py:522
 msgid "CSV Delimiter"
@@ -487,13 +498,13 @@ msgstr ""
 #: .\cookbook\integration\copymethat.py:42
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "مفضل"
 
 #: .\cookbook\integration\copymethat.py:71
 #: .\cookbook\integration\recettetek.py:53
 #: .\cookbook\integration\recipekeeper.py:63
 msgid "Imported from"
-msgstr ""
+msgstr "مستورد من"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -518,15 +529,15 @@ msgstr ""
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
-msgstr ""
+msgstr "ملاحظات"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Nutritional Information"
-msgstr ""
+msgstr "معلومات غذائية"
 
 #: .\cookbook\integration\paprika.py:53
 msgid "Source"
-msgstr ""
+msgstr "مصدر"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
@@ -572,15 +583,15 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "الغداء"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "العشاء"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "اخرى"
 
 #: .\cookbook\models.py:240
 msgid ""
@@ -590,7 +601,7 @@ msgstr ""
 
 #: .\cookbook\models.py:294 .\cookbook\templates\search.html:7
 msgid "Search"
-msgstr ""
+msgstr "ابحث"
 
 #: .\cookbook\models.py:295 .\cookbook\templates\base.html:107
 #: .\cookbook\templates\meal_plan.html:7 .\cookbook\views\delete.py:178
@@ -613,7 +624,7 @@ msgstr ""
 #: .\cookbook\models.py:304 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #: .\cookbook\models.py:513
 msgid " is part of a recipe step and cannot be deleted"
@@ -621,7 +632,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1097 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "بسيط"
 
 #: .\cookbook\models.py:1098 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
@@ -629,11 +640,11 @@ msgstr ""
 
 #: .\cookbook\models.py:1099 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "الشبكة"
 
 #: .\cookbook\models.py:1100 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "نيء"
 
 #: .\cookbook\models.py:1138
 msgid "Food Alias"
@@ -652,7 +663,7 @@ msgstr ""
 #: .\cookbook\views\delete.py:36 .\cookbook\views\edit.py:251
 #: .\cookbook\views\new.py:51
 msgid "Recipe"
-msgstr ""
+msgstr "وصفة"
 
 #: .\cookbook\models.py:1163
 msgid "Food"
@@ -660,11 +671,11 @@ msgstr ""
 
 #: .\cookbook\models.py:1164 .\cookbook\templates\base.html:138
 msgid "Keyword"
-msgstr ""
+msgstr "الكلمة الرئيسية"
 
 #: .\cookbook\serializer.py:188
 msgid "A user is required"
-msgstr ""
+msgstr "لابد من وجود مستخدم"
 
 #: .\cookbook\serializer.py:211
 msgid "File uploads are not enabled for this Space."
@@ -672,7 +683,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:222
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "لقد وصلت إلى حد تحميل الملف الخاص بك."
 
 #: .\cookbook\serializer.py:1080
 msgid "Existing shopping list to update"
@@ -706,7 +717,7 @@ msgstr ""
 #: .\cookbook\templates\recipes_table.html:82
 #: .\cookbook\templates\space.html:107
 msgid "Edit"
-msgstr ""
+msgstr "تعديل"
 
 #: .\cookbook\tables.py:115 .\cookbook\tables.py:130
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -714,11 +725,11 @@ msgstr ""
 #: .\cookbook\templates\generic\edit_template.html:28
 #: .\cookbook\templates\recipes_table.html:90
 msgid "Delete"
-msgstr ""
+msgstr "حذف"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "خطأ 404"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
@@ -726,11 +737,11 @@ msgstr ""
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "خذنى إلى القائمة الرئيسية"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "أبلغ عن خطأ"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
@@ -744,15 +755,15 @@ msgstr ""
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr ""
+msgstr "إعدادات"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "البريد الإلكتروني"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "عنوان البريد الإلكتروني التالي مرتبط بحسابك:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
@@ -764,11 +775,11 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "أساسي"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "ضبط كأساسي"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
@@ -778,11 +789,11 @@ msgstr ""
 #: .\cookbook\templates\generic\delete_template.html:56
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "احذف"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "تحذير:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -792,7 +803,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "أضف عنوان البريد الإلكتروني"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
@@ -832,7 +843,7 @@ msgstr ""
 #: .\cookbook\templates\account\login.html:8
 #: .\cookbook\templates\base.html:325 .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -842,19 +853,19 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "تسجيل"
 
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\login.html:41
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "إعادة تعيين كلمة المرور الخاصة بي"
 
 #: .\cookbook\templates\account\login.html:40
 msgid "Lost your password?"
@@ -872,7 +883,7 @@ msgstr ""
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "تسجيل الخروج"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
@@ -886,17 +897,17 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr ""
+msgstr "غير كلمة المرور"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 #: .\cookbook\templates\settings.html:76
 msgid "Password"
-msgstr ""
+msgstr "كلمة المرور"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "نسيت كلمة المرور؟"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
@@ -941,21 +952,21 @@ msgstr ""
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "تم تغيير كلمة المرور."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "ضبط كلمة المرور"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "تسجيل"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "انشئ حساب"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
@@ -970,16 +981,16 @@ msgstr ""
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "و"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "سياسة الخصوصية"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "إنشاء مستخدم"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
@@ -1002,11 +1013,11 @@ msgstr ""
 #: .\cookbook\templates\base.html:103 .\cookbook\templates\index.html:87
 #: .\cookbook\templates\space.html:37 .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr ""
+msgstr "الوصفات"
 
 #: .\cookbook\templates\base.html:111
 msgid "Shopping"
-msgstr ""
+msgstr "التسوق"
 
 #: .\cookbook\templates\base.html:150 .\cookbook\views\lists.py:105
 msgid "Foods"
@@ -1017,7 +1028,7 @@ msgstr ""
 #: .\cookbook\templates\space.html:46 .\cookbook\templates\stats.html:26
 #: .\cookbook\views\lists.py:122
 msgid "Units"
-msgstr ""
+msgstr "الوحدات"
 
 #: .\cookbook\templates\base.html:176 .\cookbook\templates\supermarket.html:7
 msgid "Supermarket"
@@ -1029,15 +1040,15 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:200 .\cookbook\views\lists.py:171
 msgid "Automations"
-msgstr ""
+msgstr "الأتمتات"
 
 #: .\cookbook\templates\base.html:214 .\cookbook\views\lists.py:207
 msgid "Files"
-msgstr ""
+msgstr "الملفات"
 
 #: .\cookbook\templates\base.html:226
 msgid "Batch Edit"
-msgstr ""
+msgstr "تعديل جماعي"
 
 #: .\cookbook\templates\base.html:238 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
