@@ -28,9 +28,10 @@ To create a backup of those files simply copy them elsewhere. Do it the other wa
 The filenames consist of `<random uuid4>_<recipe_id>`. In case you screw up really badly this can help restore data.
 
 ## Manual backup from docker build
-The standard docker build of tandoor uses postgresql as the back end database. This can be backed up using a function called "dumpall". This effectively generates a list of commands for a postgresql server to use to rebuild your database. You will also need to back up the media files separately.
+The standard docker build of tandoor uses postgresql as the back end database. This can be backed up using a function called "dumpall". This generates a .SQL file containing a list of commands for a postgresql server to use to rebuild your database. You will also need to back up the media files separately.
 
 Making a full copy of the docker directory can work as a back up, but only if you know you will be using the same hardware, os, and postgresql version upon restore. If not, then the different version of postgresql won't be compatible with the existing tables.
+You can back up from docker even when the tandoor container is failing, so long as the postgresql database has started successfully.
 
 To back up:
 ```
