@@ -9,16 +9,14 @@ from zipfile import ZipFile
 
 import requests
 import validators
-from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import (Case, Count, Exists, OuterRef, ProtectedError, Q,
-                              Subquery, Value, When)
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -27,6 +25,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
+from PIL import UnidentifiedImageError
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.models import Token
@@ -45,39 +44,42 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
-                                               CustomIsShare, CustomIsShared, CustomIsUser,
-                                               group_required, CustomIsSpaceOwner, switch_user_active_space, is_space_owner, CustomIsOwnerReadOnly)
+                                               CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
+                                               CustomIsSpaceOwner, CustomIsUser, group_required,
+                                               is_space_owner, switch_user_active_space)
 from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, Keyword, MealPlan, MealType,
-                             Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Step, Storage, Supermarket,
-                             SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
-                             UserFile, UserPreference, ViewLog, Space, UserSpace, InviteLink)
+                             FoodInheritField, ImportLog, Ingredient, InviteLink, Keyword, MealPlan,
+                             MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
-from cookbook.serializer import (AutomationSerializer, BookmarkletImportSerializer,
-                                 CookLogSerializer, CustomFilterSerializer, ExportLogSerializer,
+from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSerializer,
+                                 BookmarkletImportSerializer, CookLogSerializer,
+                                 CustomFilterSerializer, ExportLogSerializer,
                                  FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, ImportLogSerializer,
-                                 IngredientSerializer, KeywordSerializer, MealPlanSerializer,
+                                 FoodShoppingUpdateSerializer, GroupSerializer, ImportLogSerializer,
+                                 IngredientSerializer, IngredientSimpleSerializer,
+                                 InviteLinkSerializer, KeywordSerializer, MealPlanSerializer,
                                  MealTypeSerializer, RecipeBookEntrySerializer,
-                                 RecipeBookSerializer, RecipeImageSerializer,
-                                 RecipeOverviewSerializer, RecipeSerializer,
+                                 RecipeBookSerializer, RecipeFromSourceSerializer,
+                                 RecipeImageSerializer, RecipeOverviewSerializer, RecipeSerializer,
                                  RecipeShoppingUpdateSerializer, RecipeSimpleSerializer,
                                  ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
                                  ShoppingListRecipeSerializer, ShoppingListSerializer,
-                                 StepSerializer, StorageSerializer,
+                                 SpaceSerializer, StepSerializer, StorageSerializer,
                                  SupermarketCategoryRelationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 ViewLogSerializer, IngredientSimpleSerializer, BookmarkletImportListSerializer, RecipeFromSourceSerializer, SpaceSerializer, UserSpaceSerializer, GroupSerializer, InviteLinkSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer)
 from recipes import settings
 
 
@@ -713,7 +715,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
         QueryParam(name='keywords', description=_(
             'ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'),
-                   qtype='int'),
+            qtype='int'),
         QueryParam(name='keywords_or',
                    description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'),
                    qtype='int'),
@@ -1118,25 +1120,22 @@ def recipe_from_source(request):
     """
     serializer = RecipeFromSourceSerializer(data=request.data)
     if serializer.is_valid():
-        try:
-            if bookmarklet := BookmarkletImport.objects.filter(pk=serializer.validated_data['bookmarklet']).first():
-                serializer.validated_data['url'] = bookmarklet.url
-                serializer.validated_data['data'] = bookmarklet.html
-                bookmarklet.delete()
-        except KeyError:
-            pass
-
         # headers to use for request to external sites
         external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
 
-        if not 'url' in serializer.validated_data and not 'data' in serializer.validated_data:
+        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+            serializer.validated_data['url'] = bookmarklet.url
+            serializer.validated_data['data'] = bookmarklet.html
+            bookmarklet.delete()
+
+        elif not 'url' in serializer.validated_data and not 'data' in serializer.validated_data:
             return Response({
                 'error': True,
                 'msg': _('Nothing to do.')
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # in manual mode request complete page to return it later
-        if 'url' in serializer.validated_data:
+        elif 'url' in serializer.validated_data and serializer.validated_data['url'] != '':
             if re.match('^(https?://)?(www\.youtube\.com|youtu\.be)/.+$', serializer.validated_data['url']):
                 if validators.url(serializer.validated_data['url'], public=True):
                     return Response({
