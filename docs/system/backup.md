@@ -26,3 +26,24 @@ They can be found in the mediafiles mounted directory (depending on your install
 To create a backup of those files simply copy them elsewhere. Do it the other way around for restoring.
 
 The filenames consist of `<random uuid4>_<recipe_id>`. In case you screw up really badly this can help restore data.
+
+## Manual backup from docker build
+The standard docker build of tandoor uses postgresql as the back end database. This can be backed up using a function called "dumpall". This generates a .SQL file containing a list of commands for a postgresql server to use to rebuild your database. You will also need to back up the media files separately.
+
+Making a full copy of the docker directory can work as a back up, but only if you know you will be using the same hardware, os, and postgresql version upon restore. If not, then the different version of postgresql won't be compatible with the existing tables.
+You can back up from docker even when the tandoor container is failing, so long as the postgresql database has started successfully.
+
+the following commands assume that your docker-compose files are in a folder called "docker". replace "docker_db_recipes_1" with the name of your db container. The commands also assume you use a backup name of pgdump.sql. It's a good idea to include a date in this filename, so that successive backups do not get deleted.
+To back up:
+```
+sudo docker exec -t docker_db_recipes_1 pg_dumpall -U djangouser > pgdump.sql
+
+```
+
+To restore:
+```
+cat pgdump.sql | sudo docker exec -i docker_db_recipes_1 psql postgres -U djangouser
+
+```
+This connects to the postgres table instead of the actual dgangodb table, as the import function needs to delete the table, which can't be dropped off you're connected to it.
+
