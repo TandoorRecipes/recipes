@@ -6,7 +6,7 @@ from urllib.parse import unquote
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from recipe_scrapers import scrape_html, scrape_me
-from recipe_scrapers._exceptions import NoSchemaFoundInWildMode, WebsiteNotImplementedError
+from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from recipe_scrapers._utils import get_host_name, normalize_string
 
 from cookbook.helper import recipe_url_import as helper
@@ -70,12 +70,9 @@ def get_recipe_from_source(text, url, request):
 
     if url and not text:
         try:
-            scrape = scrape_me(url_path=url)
-        except WebsiteNotImplementedError:
-            try:
-                scrape = scrape_me(url_path=url, wild_mode=True)
-            except(NoSchemaFoundInWildMode):
-                pass
+            scrape = scrape_me(url_path=url, wild_mode=True)
+        except(NoSchemaFoundInWildMode):
+            pass
     if not scrape:
         try:
             parse_list.append(remove_graph(json.loads(text)))
