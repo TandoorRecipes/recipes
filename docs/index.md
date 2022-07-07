@@ -39,19 +39,19 @@
 
 - 🔍 Powerful & customizable **search** with fulltext support and [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
 - 🏷️ Create and search for **tags**, assign them in batch to all files matching certain filters
-- ↔️ Quickly merge and rename ingredients, tags and units 
+- ↔️ Quickly **merge** and rename ingredients, tags and units 
 - 📥️ **Import recipes** from thousands of websites supporting [ld+json or microdata](https://schema.org/Recipe)
-- ➗ Support for **fractions** or decimals
+- ➗ Support for **fractions** or **decimals**
 - 🐳 Easy setup with **Docker** and included examples for **Kubernetes**, **Unraid** and **Synology**
 - 🎨 Customize your interface with **themes**
 - 📦 **Sync** files with Dropbox and Nextcloud
   
 ## All the must haves
 
-- 📱Optimized for use on **mobile** devices
-- 🌍 localized in many languages thanks to the awesome community
+- 📱  Optimized for use on **mobile** devices
+- 🌍 Localized in many **languages** thanks to the awesome community
 - 📥️ **Import your collection** from many other [recipe managers](https://docs.tandoor.dev/features/import_export/)
-- ➕ Many more like recipe scaling, image compression, printing views and supermarkets
+- ➕ Many more like **recipe scaling, image compression, printing views and supermarkets**
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply
 store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as 

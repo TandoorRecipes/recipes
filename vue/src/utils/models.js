@@ -23,7 +23,7 @@ export class Models {
                         false: undefined,
                     },
                 },
-                tree: { default: undefined },
+                tree: {default: undefined},
             },
         },
         delete: {
@@ -50,7 +50,7 @@ export class Models {
                     type: "lookup",
                     field: "target",
                     list: "self",
-                    sticky_options: [{ id: 0, name: "tree_root" }],
+                    sticky_options: [{id: 0, name: "tree_root"}],
                 },
             },
         },
@@ -71,7 +71,7 @@ export class Models {
             food_onhand: true,
             shopping: true,
         },
-        tags: [{ field: "supermarket_category", label: "name", color: "info" }],
+        tags: [{field: "supermarket_category", label: "name", color: "info"}],
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
@@ -159,7 +159,7 @@ export class Models {
                     field: "substitute_siblings",
                     label: "substitute_siblings", // form.label always translated in utils.getForm()
                     help_text: "substitute_siblings_help", // form.help_text always translated
-                    condition: { field: "parent", value: true, condition: "field_exists" },
+                    condition: {field: "parent", value: true, condition: "field_exists"},
                 },
                 substitute_children: {
                     form_field: true,
@@ -168,7 +168,7 @@ export class Models {
                     field: "substitute_children",
                     label: "substitute_children",
                     help_text: "substitute_children_help",
-                    condition: { field: "numchild", value: 0, condition: "gt" },
+                    condition: {field: "numchild", value: 0, condition: "gt"},
                 },
                 inherit_fields: {
                     form_field: true,
@@ -178,7 +178,7 @@ export class Models {
                     field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
                     label: "InheritFields",
-                    condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
+                    condition: {field: "food_children_exist", value: true, condition: "preference_equals"},
                     help_text: "InheritFields_help",
                 },
                 child_inherit_fields: {
@@ -189,7 +189,7 @@ export class Models {
                     field: "child_inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
                     label: "ChildInheritFields", // form.label always translated in utils.getForm()
-                    condition: { field: "numchild", value: 0, condition: "gt" },
+                    condition: {field: "numchild", value: 0, condition: "gt"},
                     help_text: "ChildInheritFields_help", // form.help_text always translated
                 },
                 reset_inherit: {
@@ -199,7 +199,7 @@ export class Models {
                     field: "reset_inherit",
                     label: "reset_children",
                     help_text: "reset_children_help",
-                    condition: { field: "numchild", value: 0, condition: "gt" },
+                    condition: {field: "numchild", value: 0, condition: "gt"},
                 },
                 form_function: "FoodCreateDefault",
             },
@@ -399,7 +399,7 @@ export class Models {
     static SUPERMARKET = {
         name: "Supermarket",
         apiName: "Supermarket",
-        ordered_tags: [{ field: "category_to_supermarket", label: "category::name", color: "info" }],
+        ordered_tags: [{field: "category_to_supermarket", label: "category::name", color: "info"}],
         create: {
             params: [["name", "description", "category_to_supermarket"]],
             form: {
@@ -469,9 +469,9 @@ export class Models {
                     form_field: true,
                     type: "choice",
                     options: [
-                        { value: "FOOD_ALIAS", text: "Food_Alias" },
-                        { value: "UNIT_ALIAS", text: "Unit_Alias" },
-                        { value: "KEYWORD_ALIAS", text: "Keyword_Alias" },
+                        {value: "FOOD_ALIAS", text: "Food_Alias"},
+                        {value: "UNIT_ALIAS", text: "Unit_Alias"},
+                        {value: "KEYWORD_ALIAS", text: "Keyword_Alias"},
                     ],
                     field: "type",
                     label: "Type",
@@ -663,9 +663,50 @@ export class Models {
             },
         },
     }
+
+    static INVITE_LINK = {
+        name: "InviteLink",
+        apiName: "InviteLink",
+        paginated: false,
+        create: {
+            params: [["email", "group", "valid_until"]],
+            form: {
+                email: {
+                    form_field: true,
+                    type: "text",
+                    field: "email",
+                    label: "Email",
+                    placeholder: "",
+                },
+                group: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "group",
+                    list: "GROUP",
+                    list_label: "name",
+                    label: "Group",
+                    placeholder: "",
+                },
+                valid_until: {
+                    form_field: true,
+                    type: "date",
+                    field: "valid_until",
+                    label: "Valid Until",
+                    placeholder: "",
+                },
+            },
+        },
+    }
+
     static USER = {
         name: "User",
         apiName: "User",
+        paginated: false,
+    }
+
+    static GROUP = {
+        name: "Group",
+        apiName: "Group",
         paginated: false,
     }
 
@@ -694,7 +735,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: { function: "translate", phrase: "Save" },
+            ok_label: {function: "translate", phrase: "Save"},
         },
     }
     static UPDATE = {
@@ -729,7 +770,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: { function: "translate", phrase: "Delete" },
+            ok_label: {function: "translate", phrase: "Delete"},
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -756,17 +797,17 @@ export class Actions {
         suffix: "s",
         params: ["query", "page", "pageSize", "options"],
         config: {
-            query: { default: undefined },
-            page: { default: 1 },
-            pageSize: { default: 25 },
+            query: {default: undefined},
+            page: {default: 1},
+            pageSize: {default: 25},
         },
     }
     static MERGE = {
         function: "merge",
         params: ["source", "target"],
         config: {
-            source: { type: "string" },
-            target: { type: "string" },
+            source: {type: "string"},
+            target: {type: "string"},
         },
         form: {
             title: {
@@ -781,7 +822,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: { function: "translate", phrase: "Merge" },
+            ok_label: {function: "translate", phrase: "Merge"},
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -815,8 +856,8 @@ export class Actions {
         function: "move",
         params: ["source", "target"],
         config: {
-            source: { type: "string" },
-            target: { type: "string" },
+            source: {type: "string"},
+            target: {type: "string"},
         },
         form: {
             title: {
@@ -831,7 +872,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: { function: "translate", phrase: "Move" },
+            ok_label: {function: "translate", phrase: "Move"},
             instruction: {
                 form_field: true,
                 type: "instruction",

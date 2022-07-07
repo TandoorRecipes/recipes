@@ -2,14 +2,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.core.cache import caches
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 
-from cookbook.models import ShareLink, Recipe, UserPreference
+from cookbook.models import ShareLink, Recipe, UserPreference, UserSpace
 
 
 def get_allowed_groups(groups_required):
@@ -40,8 +40,11 @@ def has_group_permission(user, groups):
         return False
     groups_allowed = get_allowed_groups(groups)
     if user.is_authenticated:
-        if bool(user.groups.filter(name__in=groups_allowed)):
-            return True
+        if user_space := user.userspace_set.filter(active=True):
+            if len(user_space) != 1:
+                return False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
+            if bool(user_space.first().groups.filter(name__in=groups_allowed)):
+                return True
     return False
 
 
@@ -50,7 +53,6 @@ def is_object_owner(user, obj):
     Tests if a given user is the owner of a given object
     test performed by checking user against the objects user
     and create_by field (if exists)
-    superusers bypass all checks, unauthenticated users cannot own anything
     :param user django auth user object
     :param obj any object that should be tested
     :return: true if user is owner of object, false otherwise
@@ -63,11 +65,25 @@ def is_object_owner(user, obj):
         return False
 
 
+def is_space_owner(user, obj):
+    """
+    Tests if a given user is the owner the space of a given object
+    :param user django auth user object
+    :param obj any object that should be tested
+    :return: true if user is owner of the objects space, false otherwise
+    """
+    if not user.is_authenticated:
+        return False
+    try:
+        return obj.get_space().get_owner() == user
+    except Exception:
+        return False
+
+
 def is_object_shared(user, obj):
     """
     Tests if a given user is shared for a given object
     test performed by checking user against the objects shared table
-    superusers bypass all checks, unauthenticated users cannot own anything
     :param user django auth user object
     :param obj any object that should be tested
     :return: true if user is shared for object, false otherwise
@@ -163,7 +179,7 @@ class OwnerRequiredMixin(object):
 
         try:
             obj = self.get_object()
-            if obj.get_space() != request.space:
+            if not request.user.userspace.filter(space=obj.get_space()).exists():
                 messages.add_message(request, messages.ERROR,
                                      _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))
@@ -181,13 +197,35 @@ class CustomIsOwner(permissions.BasePermission):
     verifies user has ownership over object
     (either user or created_by or user is request user)
     """
-    message = _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
+    message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         return is_object_owner(request.user, obj)
+
+
+class CustomIsOwnerReadOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method in SAFE_METHODS
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+
+
+class CustomIsSpaceOwner(permissions.BasePermission):
+    """
+    Custom permission class for django rest framework views
+    verifies if the user is the owner of the space the object belongs to
+    """
+    message = _('You cannot interact with this object as it is not owned by you!')
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.space.created_by == request.user
+
+    def has_object_permission(self, request, view, obj):
+        return is_space_owner(request.user, obj)
 
 
 # TODO function duplicate/too similar name
@@ -290,7 +328,27 @@ def above_space_user_limit(space):
     :param space: Space to test for limits
     :return: Tuple (True if above or equal limit else false, message)
     """
-    limit = space.max_users != 0 and UserPreference.objects.filter(space=space).count() > space.max_users
+    limit = space.max_users != 0 and UserSpace.objects.filter(space=space).count() > space.max_users
     if limit:
         return True, _('You have more users than allowed in your space.')
     return False, ''
+
+
+def switch_user_active_space(user, space):
+    """
+    Switch the currently active space of a user by setting all spaces to inactive and activating the one passed
+    :param user: user to change active space for
+    :param space: space to activate user for
+    :return user space object or none if not found/no permission
+    """
+    try:
+        us = UserSpace.objects.get(space=space, user=user)
+        if not us.active:
+            UserSpace.objects.filter(user=user).update(active=False)
+            us.active = True
+            us.save()
+            return us
+        else:
+            return us
+    except ObjectDoesNotExist:
+        return None

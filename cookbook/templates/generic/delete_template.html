@@ -19,6 +19,7 @@
         {% csrf_token %}
         <div class="alert alert-warning" role="alert">
             {% blocktrans %}Are you sure you want to delete the {{ title }}: <b>{{ object }}</b> {% endblocktrans %}
+            {% trans 'This cannot be undone!' %}
         </div>
         {{ form|crispy }}
 

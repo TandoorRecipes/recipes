@@ -2,7 +2,12 @@
 from django_scopes import scopes_disabled
 
 from django.db import migrations, models
-from cookbook.models import nameSearchField
+
+from cookbook.models import SearchFields
+
+
+def nameSearchField():
+    return [SearchFields.objects.get(name='Name').id]
 
 
 def add_default_trigram(apps, schema_editor):

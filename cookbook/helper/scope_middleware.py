@@ -14,6 +14,12 @@ class ScopeMiddleware:
 
     def __call__(self, request):
         prefix = settings.JS_REVERSE_SCRIPT_PREFIX or ''
+
+        # need to disable scopes for writing requests into userpref and enable for loading ?
+        if request.path.startswith(prefix + '/api/user-preference/'):
+            with scopes_disabled():
+                return self.get_response(request)
+
         if request.user.is_authenticated:
 
             if request.path.startswith(prefix + '/admin/'):
@@ -26,14 +32,23 @@ class ScopeMiddleware:
             if request.path.startswith(prefix + '/accounts/'):
                 return self.get_response(request)
 
-            with scopes_disabled():
-                if request.user.userpreference.space is None and not reverse('account_logout') in request.path:
-                    return views.no_space(request)
+            if request.path.startswith(prefix + '/switch-space/'):
+                return self.get_response(request)
 
-            if request.user.groups.count() == 0 and not reverse('account_logout') in request.path:
+            with scopes_disabled():
+                if request.user.userspace_set.count() == 0 and not reverse('account_logout') in request.path:
+                    return views.space_overview(request)
+
+            # get active user space, if for some reason more than one space is active select first (group permission checks will fail, this is not intended at this point)
+            user_space = request.user.userspace_set.filter(active=True).first()
+
+            if not user_space:
+                return views.space_overview(request)
+
+            if user_space.groups.count() == 0 and not reverse('account_logout') in request.path:
                 return views.no_groups(request)
 
-            request.space = request.user.userpreference.space
+            request.space = user_space.space
             # with scopes_disabled():
             with scope(space=request.space):
                 return self.get_response(request)
@@ -41,9 +56,11 @@ class ScopeMiddleware:
             if request.path.startswith(prefix + '/api/'):
                 try:
                     if auth := TokenAuthentication().authenticate(request):
-                        request.space = auth[0].userpreference.space
-                        with scope(space=request.space):
-                            return self.get_response(request)
+                        user_space = auth[0].userspace_set.filter(active=True).first()
+                        if user_space:
+                            request.space = user_space.space
+                            with scope(space=request.space):
+                                return self.get_response(request)
                 except AuthenticationFailed:
                     pass
 

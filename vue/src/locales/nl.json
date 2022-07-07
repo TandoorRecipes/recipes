@@ -128,7 +128,7 @@
     "Meal_Plan_Days": "Toekomstige maaltijdplannen",
     "merge_title": "Voeg {type} samen",
     "move_title": "Verplaats {type}",
-    "Food": "Eten",
+    "Food": "Ingrediënt",
     "Key_Ctrl": "Ctrl",
     "Parameter": "Parameter",
     "Automation": "Automatisering",
@@ -414,5 +414,7 @@
     "Warning_Delete_Supermarket_Category": "Een supermarktcategorie verwijderen verwijdert ook alle relaties naar ingrediënten. Weet je het zeker?",
     "create_food_desc": "Maak een ingrediënt en link aan dit recept.",
     "additional_options": "Extra opties",
-    "Create Food": "Maak Ingrediënt"
+    "Create Food": "Maak Ingrediënt",
+    "Create_New_Shopping_Category": "Voeg nieuwe boodschappencategorie toe",
+    "New_Entry": "Nieuw"
 }

@@ -30,16 +30,14 @@
             </div>
 
             <hr/>
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col col-md-3">
-                    <div class="row d-flex" style="padding-left: 16px">
-                        <div class="my-auto" style="padding-right: 4px">
-                            <i class="fas fa-user-clock fa-2x text-primary"></i>
+                    <div class="d-flex">
+                        <div class="my-auto mr-1">
+                            <i class="fas fa-fw fa-user-clock fa-2x text-primary"></i>
                         </div>
-                        <div class="my-auto" style="padding-right: 4px">
-                            <span class="text-primary"
-                            ><b>{{ $t("Preparation") }}</b></span
-                            ><br/>
+                        <div class="my-auto mr-1">
+                            <span class="text-primary"><b>{{ $t("Preparation") }}</b></span><br/>
                             {{ recipe.working_time }} {{ $t("min") }}
                         </div>
                     </div>
@@ -47,27 +45,25 @@
 
                 <div class="col col-md-3">
                     <div class="row d-flex">
-                        <div class="my-auto" style="padding-right: 4px">
-                            <i class="far fa-clock fa-2x text-primary"></i>
+                        <div class="my-auto mr-1">
+                            <i class="far fa-fw fa-clock fa-2x text-primary"></i>
                         </div>
-                        <div class="my-auto" style="padding-right: 4px">
-                            <span class="text-primary"
-                            ><b>{{ $t("Waiting") }}</b></span
-                            ><br/>
+                        <div class="my-auto mr-1">
+                            <span class="text-primary"><b>{{ $t("Waiting") }}</b></span><br/>
                             {{ recipe.waiting_time }} {{ $t("min") }}
                         </div>
                     </div>
                 </div>
 
-                <div class="col col-md-4 col-10 mt-2 mt-md-0 mt-lg-0 mt-xl-0">
-                    <div class="row d-flex" style="padding-left: 16px">
-                        <div class="my-auto" style="padding-right: 4px">
-                            <i class="fas fa-pizza-slice fa-2x text-primary"></i>
+                <div class="col col-md-4 col-10 mt-2 mt-md-0">
+                    <div class="d-flex">
+                        <div class="my-auto mr-1">
+                            <i class="fas fa-fw fa-pizza-slice fa-2x text-primary"></i>
                         </div>
-                        <div class="my-auto" style="padding-right: 4px">
+                        <div class="my-auto mr-1">
                             <CustomInputSpinButton v-model.number="servings"/>
                         </div>
-                        <div class="my-auto">
+                        <div class="my-auto mr-1">
                             <span class="text-primary">
                                 <b>
                                     <template v-if="recipe.servings_text === ''">{{ $t("Servings") }}</template>
@@ -78,7 +74,7 @@
                     </div>
                 </div>
 
-                <div class="col col-md-2 col-2 my-auto" style="text-align: right; padding-right: 1vw">
+                <div class="col col-md-2 col-2 mt-2 mt-md-0 text-right">
                     <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
                 </div>
             </div>
@@ -86,7 +82,7 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"
-                     v-if="recipe && ingredient_count > 0">
+                     v-if="recipe && ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)">
                     <ingredients-card
                         :recipe="recipe.id"
                         :steps="recipe.steps"
@@ -141,7 +137,7 @@
 
             <div v-if="recipe.source_url !== null">
                 <h6 class="d-print-none"><i class="fas fa-file-import"></i> {{ $t("Imported_From") }}</h6>
-                <span class="text-muted mt-1"><a :href="recipe.source_url">{{ recipe.source_url }}</a></span>
+                <span class="text-muted mt-1"><a style="overflow-wrap: break-word;" :href="recipe.source_url">{{ recipe.source_url }}</a></span>
             </div>
         </div>
 

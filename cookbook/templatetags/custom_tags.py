@@ -3,6 +3,7 @@ from gettext import gettext as _
 
 import bleach
 import markdown as md
+from django_scopes import ScopeError
 from markdown.extensions.tables import TableExtension
 from bleach_allowlist import markdown_attrs, markdown_tags
 from django import template
@@ -111,8 +112,12 @@ def page_help(page_name):
 
 
 @register.simple_tag
-def message_of_the_day():
-    return Space.objects.first().message
+def message_of_the_day(request):
+    try:
+        if request.space.message:
+            return request.space.message
+    except (AttributeError, KeyError, ValueError):
+        pass
 
 
 @register.simple_tag
@@ -163,9 +168,10 @@ def base_path(request, path_type):
 
 @register.simple_tag
 def user_prefs(request):
-    from cookbook.serializer import \
-        UserPreferenceSerializer  # putting it with imports caused circular execution
+    from cookbook.serializer import UserPreferenceSerializer  # putting it with imports caused circular execution
     try:
         return UserPreferenceSerializer(request.user.userpreference, context={'request': request}).data
     except AttributeError:
+        pass
+    except ScopeError:  # there are pages without an active space that still need to load but don't require prefs
         pass

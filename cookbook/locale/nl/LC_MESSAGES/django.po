@@ -12,11 +12,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-05-10 15:32+0000\n"
+"POT-Creation-Date: 2022-06-26 12:09+0200\n"
+"PO-Revision-Date: 2022-05-31 08:32+0000\n"
 "Last-Translator: Jesse <jesse.kamps@pm.me>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
-"recipes-backend/nl/>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
+"backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,68 +25,68 @@ msgstr ""
 "X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
-#: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
+#: .\cookbook\templates\stats.html:28
 msgid "Ingredients"
 msgstr "Ingrediënten"
 
-#: .\cookbook\forms.py:56
+#: .\cookbook\forms.py:53
 msgid "Default unit"
 msgstr "Standaard eenheid"
 
-#: .\cookbook\forms.py:57
+#: .\cookbook\forms.py:54
 msgid "Use fractions"
 msgstr "Gebruik fracties"
 
-#: .\cookbook\forms.py:58
+#: .\cookbook\forms.py:55
 msgid "Use KJ"
 msgstr "Gebruik KJ"
 
-#: .\cookbook\forms.py:59
+#: .\cookbook\forms.py:56
 msgid "Theme"
 msgstr "Thema"
 
-#: .\cookbook\forms.py:60
+#: .\cookbook\forms.py:57
 msgid "Navbar color"
 msgstr "Navbar kleur"
 
-#: .\cookbook\forms.py:61
+#: .\cookbook\forms.py:58
 msgid "Sticky navbar"
 msgstr "Plak navbar"
 
-#: .\cookbook\forms.py:62
+#: .\cookbook\forms.py:59
 msgid "Default page"
 msgstr "Standaard pagina"
 
-#: .\cookbook\forms.py:63
+#: .\cookbook\forms.py:60
 msgid "Show recent recipes"
 msgstr "Toon recente recepten"
 
-#: .\cookbook\forms.py:64
+#: .\cookbook\forms.py:61
 msgid "Search style"
 msgstr "Zoekstijl"
 
-#: .\cookbook\forms.py:65
+#: .\cookbook\forms.py:62
 msgid "Plan sharing"
 msgstr "Plan delen"
 
-#: .\cookbook\forms.py:66
+#: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
 msgstr "Ingrediënt decimalen"
 
-#: .\cookbook\forms.py:67
+#: .\cookbook\forms.py:64
 msgid "Shopping list auto sync period"
 msgstr "Boodschappenlijst auto sync periode"
 
-#: .\cookbook\forms.py:68 .\cookbook\templates\recipe_view.html:21
-#: .\cookbook\templates\space.html:76 .\cookbook\templates\stats.html:47
+#: .\cookbook\forms.py:65 .\cookbook\templates\recipe_view.html:21
+#: .\cookbook\templates\stats.html:47
 msgid "Comments"
 msgstr "Opmerkingen"
 
-#: .\cookbook\forms.py:69
+#: .\cookbook\forms.py:66
 msgid "Left-handed mode"
 msgstr "Linkshandigen modus"
 
-#: .\cookbook\forms.py:73
+#: .\cookbook\forms.py:70
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
@@ -94,13 +94,13 @@ msgstr ""
 "De kleur van de bovenste navigatie balk. Niet alle kleuren werken met alle "
 "thema's, je dient ze dus simpelweg uit te proberen!"
 
-#: .\cookbook\forms.py:75
+#: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
 "Standaard eenheid die gebruikt wordt wanneer een nieuw ingrediënt aan een "
 "recept wordt toegevoegd."
 
-#: .\cookbook\forms.py:77
+#: .\cookbook\forms.py:74
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
@@ -108,33 +108,33 @@ msgstr ""
 "Mogelijk maken van breuken bij ingrediënt aantallen (het automatisch "
 "converteren van decimalen naar breuken)"
 
-#: .\cookbook\forms.py:79
+#: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr "Geef energiewaardes weer in joules in plaats van calorieën"
 
-#: .\cookbook\forms.py:80
+#: .\cookbook\forms.py:77
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
 "Gebruikers waarmee een nieuwe maaltijdplannen standaard gedeeld moeten "
 "worden."
 
-#: .\cookbook\forms.py:81
+#: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
 msgstr "Gebruikers waarmee boodschappenlijsten gedeeld moeten worden."
 
-#: .\cookbook\forms.py:83
+#: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
 msgstr "Geef recent bekeken recepten op de zoekpagina weer."
 
-#: .\cookbook\forms.py:84
+#: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
 msgstr "Aantal decimalen om ingrediënten op af te ronden."
 
-#: .\cookbook\forms.py:85
+#: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr "Als je opmerkingen onder recepten wil kunnen maken en zien."
 
-#: .\cookbook\forms.py:87 .\cookbook\forms.py:499
+#: .\cookbook\forms.py:84 .\cookbook\forms.py:496
 msgid ""
 "Setting to 0 will disable auto sync. When viewing a shopping list the list "
 "is updated every set seconds to sync changes someone else might have made. "
@@ -147,23 +147,23 @@ msgstr ""
 "gelijktijdig boodschappen doen maar verbruikt mogelijk extra mobiele data. "
 "Wordt gereset bij opslaan wanneer de limiet niet bereikt is."
 
-#: .\cookbook\forms.py:90
+#: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
 msgstr "Zet de navbar vast aan de bovenkant van de pagina."
 
-#: .\cookbook\forms.py:91 .\cookbook\forms.py:502
+#: .\cookbook\forms.py:88 .\cookbook\forms.py:499
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr "Zet maaltijdplan ingrediënten automatisch op boodschappenlijst."
 
-#: .\cookbook\forms.py:92
+#: .\cookbook\forms.py:89
 msgid "Exclude ingredients that are on hand."
 msgstr "Sluit ingrediënten die op voorraad zijn uit."
 
-#: .\cookbook\forms.py:93
+#: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
 msgstr "Optimaliseert de gebruikersinterface voor gebruik met je linkerhand."
 
-#: .\cookbook\forms.py:110
+#: .\cookbook\forms.py:107
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
@@ -171,37 +171,36 @@ msgstr ""
 "Beide velden zijn optioneel. Indien niks is opgegeven wordt de "
 "gebruikersnaam weergegeven"
 
-#: .\cookbook\forms.py:131 .\cookbook\forms.py:304
+#: .\cookbook\forms.py:128 .\cookbook\forms.py:301
 msgid "Name"
 msgstr "Naam"
 
-#: .\cookbook\forms.py:132 .\cookbook\forms.py:305
-#: .\cookbook\templates\space.html:43 .\cookbook\templates\stats.html:24
-#: .\cookbook\views\lists.py:88
+#: .\cookbook\forms.py:129 .\cookbook\forms.py:302
+#: .\cookbook\templates\stats.html:24 .\cookbook\views\lists.py:88
 msgid "Keywords"
 msgstr "Etiketten"
 
-#: .\cookbook\forms.py:133
+#: .\cookbook\forms.py:130
 msgid "Preparation time in minutes"
 msgstr "Voorbereidingstijd in minuten"
 
-#: .\cookbook\forms.py:134
+#: .\cookbook\forms.py:131
 msgid "Waiting time (cooking/baking) in minutes"
 msgstr "Wacht tijd in minuten (koken en bakken)"
 
-#: .\cookbook\forms.py:135 .\cookbook\forms.py:273 .\cookbook\forms.py:306
+#: .\cookbook\forms.py:132 .\cookbook\forms.py:270 .\cookbook\forms.py:303
 msgid "Path"
 msgstr "Pad"
 
-#: .\cookbook\forms.py:136
+#: .\cookbook\forms.py:133
 msgid "Storage UID"
 msgstr "Opslag UID"
 
-#: .\cookbook\forms.py:168
+#: .\cookbook\forms.py:165
 msgid "Default"
 msgstr "Standaard waarde"
 
-#: .\cookbook\forms.py:180
+#: .\cookbook\forms.py:177
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
@@ -209,19 +208,19 @@ msgstr ""
 "Om dubbelingen te voorkomen worden recepten met dezelfde naam als een "
 "bestaand recept genegeerd. Vink aan om alles te importeren."
 
-#: .\cookbook\forms.py:203
+#: .\cookbook\forms.py:200
 msgid "Add your comment: "
 msgstr "Voeg een opmerking toe: "
 
-#: .\cookbook\forms.py:218
+#: .\cookbook\forms.py:215
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr "Laat leeg voor dropbox en vul het app wachtwoord in voor nextcloud."
 
-#: .\cookbook\forms.py:225
+#: .\cookbook\forms.py:222
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr "Laat leeg voor nextcloud en vul de api token in voor dropbox."
 
-#: .\cookbook\forms.py:234
+#: .\cookbook\forms.py:231
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
@@ -229,33 +228,33 @@ msgstr ""
 "Laat leeg voor dropbox en vul enkel de base url voor nextcloud in. (<code>/"
 "remote.php/webdav/</code> wordt automatisch toegevoegd.)"
 
-#: .\cookbook\forms.py:272 .\cookbook\views\edit.py:157
+#: .\cookbook\forms.py:269 .\cookbook\views\edit.py:157
 msgid "Storage"
 msgstr "Opslag"
 
-#: .\cookbook\forms.py:274
+#: .\cookbook\forms.py:271
 msgid "Active"
 msgstr "Actief"
 
-#: .\cookbook\forms.py:280
+#: .\cookbook\forms.py:277
 msgid "Search String"
 msgstr "Zoekopdracht"
 
-#: .\cookbook\forms.py:307
+#: .\cookbook\forms.py:304
 msgid "File ID"
 msgstr "Bestands ID"
 
-#: .\cookbook\forms.py:329
+#: .\cookbook\forms.py:326
 msgid "You must provide at least a recipe or a title."
 msgstr "Je moet minimaal één recept of titel te specificeren."
 
-#: .\cookbook\forms.py:342
+#: .\cookbook\forms.py:339
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
 "Je kan in de instellingen standaard gebruikers in stellen om de recepten met "
 "te delen."
 
-#: .\cookbook\forms.py:343
+#: .\cookbook\forms.py:340
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
@@ -263,15 +262,15 @@ msgstr ""
 "Je kunt markdown gebruiken om dit veld te op te maken. Bekijk de <a href=\"/"
 "docs/markdown/\">documentatie hier</a>"
 
-#: .\cookbook\forms.py:369
+#: .\cookbook\forms.py:366
 msgid "Maximum number of users for this space reached."
 msgstr "Maximum aantal gebruikers voor deze ruimte bereikt."
 
-#: .\cookbook\forms.py:375
+#: .\cookbook\forms.py:372
 msgid "Email address already taken!"
 msgstr "E-mailadres reeds in gebruik!"
 
-#: .\cookbook\forms.py:383
+#: .\cookbook\forms.py:380
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
@@ -279,15 +278,15 @@ msgstr ""
 "Een e-mailadres is niet vereist, maar indien aanwezig zal de "
 "uitnodigingslink naar de gebruiker worden gestuurd."
 
-#: .\cookbook\forms.py:398
+#: .\cookbook\forms.py:395
 msgid "Name already taken."
 msgstr "Naam reeds in gebruik."
 
-#: .\cookbook\forms.py:409
+#: .\cookbook\forms.py:406
 msgid "Accept Terms and Privacy"
 msgstr "Accepteer voorwaarden"
 
-#: .\cookbook\forms.py:441
+#: .\cookbook\forms.py:438
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
@@ -295,7 +294,7 @@ msgstr ""
 "Bepaalt hoe 'fuzzy' een zoekopdracht is als het trigram vergelijken gebruikt "
 "(lage waarden betekenen bijvoorbeeld dat meer typefouten genegeerd worden)."
 
-#: .\cookbook\forms.py:451
+#: .\cookbook\forms.py:448
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
@@ -303,7 +302,7 @@ msgstr ""
 "Selecteer zoekmethode.  Klik <a href=\"/docs/search/\">hier</a> voor een "
 "beschrijving van de keuzes."
 
-#: .\cookbook\forms.py:452
+#: .\cookbook\forms.py:449
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
@@ -311,7 +310,7 @@ msgstr ""
 "Gebruik 'fuzzy' koppelen bij eenheden, etiketten en ingrediënten bij "
 "bewerken en importeren van recepten."
 
-#: .\cookbook\forms.py:454
+#: .\cookbook\forms.py:451
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
@@ -320,7 +319,7 @@ msgstr ""
 "deze optie kan de zoekkwaliteit afhankelijk van de taal, zowel verbeteren "
 "als verslechteren"
 
-#: .\cookbook\forms.py:456
+#: .\cookbook\forms.py:453
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
@@ -328,7 +327,7 @@ msgstr ""
 "Velden doorzoeken op gedeelde overeenkomsten. (zoeken op 'Appel' vindt "
 "'appel', 'aardappel' en 'appelsap')"
 
-#: .\cookbook\forms.py:458
+#: .\cookbook\forms.py:455
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
@@ -336,7 +335,7 @@ msgstr ""
 "Velden doorzoeken op overeenkomsten aan het begin van het woord. (zoeken op "
 "'sa' vindt 'salade' en 'sandwich')"
 
-#: .\cookbook\forms.py:460
+#: .\cookbook\forms.py:457
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
@@ -344,7 +343,7 @@ msgstr ""
 "Velden 'fuzzy' doorzoeken. (zoeken op 'recetp' vindt ook 'recept')  Noot: "
 "deze optie conflicteert met de zoekmethoden 'web' en 'raw'."
 
-#: .\cookbook\forms.py:462
+#: .\cookbook\forms.py:459
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
@@ -352,35 +351,35 @@ msgstr ""
 "Velden doorzoeken op volledige tekst.  Noot: Web, Zin en Raw zoekmethoden "
 "werken alleen met volledige tekstvelden."
 
-#: .\cookbook\forms.py:466
+#: .\cookbook\forms.py:463
 msgid "Search Method"
 msgstr "Zoekmethode"
 
-#: .\cookbook\forms.py:467
+#: .\cookbook\forms.py:464
 msgid "Fuzzy Lookups"
 msgstr "'Fuzzy' zoekopdrachten"
 
-#: .\cookbook\forms.py:468
+#: .\cookbook\forms.py:465
 msgid "Ignore Accent"
 msgstr "Negeer accent"
 
-#: .\cookbook\forms.py:469
+#: .\cookbook\forms.py:466
 msgid "Partial Match"
 msgstr "Gedeeltelijke overeenkomst"
 
-#: .\cookbook\forms.py:470
+#: .\cookbook\forms.py:467
 msgid "Starts With"
 msgstr "Begint met"
 
-#: .\cookbook\forms.py:471
+#: .\cookbook\forms.py:468
 msgid "Fuzzy Search"
 msgstr "'Fuzzy' zoeken"
 
-#: .\cookbook\forms.py:472
+#: .\cookbook\forms.py:469
 msgid "Full Text"
 msgstr "Volledige tekst"
 
-#: .\cookbook\forms.py:497
+#: .\cookbook\forms.py:494
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
@@ -388,7 +387,7 @@ msgstr ""
 "Gebruikers zien alle items die je op je boodschappenlijst zet.  Ze moeten "
 "jou toevoegen om items op hun lijst te zien."
 
-#: .\cookbook\forms.py:503
+#: .\cookbook\forms.py:500
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
@@ -396,7 +395,7 @@ msgstr ""
 "Als een maaltijdplan aan de boodschappenlijst toegevoegd wordt (handmatig of "
 "automatisch), neem dan alle recepten op."
 
-#: .\cookbook\forms.py:504
+#: .\cookbook\forms.py:501
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
@@ -404,90 +403,90 @@ msgstr ""
 "Als een maaltijdplan aan de boodschappenlijst toegevoegd wordt (handmatig of "
 "automatisch), sluit ingrediënten die op voorraad zijn dan uit."
 
-#: .\cookbook\forms.py:505
+#: .\cookbook\forms.py:502
 msgid "Default number of hours to delay a shopping list entry."
 msgstr "Standaard aantal uren om een boodschappenlijst item te vertragen."
 
-#: .\cookbook\forms.py:506
+#: .\cookbook\forms.py:503
 msgid "Filter shopping list to only include supermarket categories."
 msgstr "Filter boodschappenlijst om alleen supermarktcategorieën te bevatten."
 
-#: .\cookbook\forms.py:507
+#: .\cookbook\forms.py:504
 msgid "Days of recent shopping list entries to display."
 msgstr "Dagen van recente boodschappenlijst items weer te geven."
 
-#: .\cookbook\forms.py:508
+#: .\cookbook\forms.py:505
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
 "Markeer eten 'Op voorraad' wanneer het van het boodschappenlijstje is "
 "afgevinkt."
 
-#: .\cookbook\forms.py:509
+#: .\cookbook\forms.py:506
 msgid "Delimiter to use for CSV exports."
 msgstr "Scheidingsteken te gebruiken voor CSV exports."
 
-#: .\cookbook\forms.py:510
+#: .\cookbook\forms.py:507
 msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
 "Toe te voegen Voorvoegsel bij het kopiëren van een lijst naar het klembord."
 
-#: .\cookbook\forms.py:514
+#: .\cookbook\forms.py:511
 msgid "Share Shopping List"
 msgstr "Deel boodschappenlijst"
 
-#: .\cookbook\forms.py:515
+#: .\cookbook\forms.py:512
 msgid "Autosync"
 msgstr "Autosync"
 
-#: .\cookbook\forms.py:516
+#: .\cookbook\forms.py:513
 msgid "Auto Add Meal Plan"
 msgstr "Voeg maaltijdplan automatisch toe"
 
-#: .\cookbook\forms.py:517
+#: .\cookbook\forms.py:514
 msgid "Exclude On Hand"
 msgstr "Sluit op voorraad uit"
 
-#: .\cookbook\forms.py:518
+#: .\cookbook\forms.py:515
 msgid "Include Related"
 msgstr "Neem gerelateerde op"
 
-#: .\cookbook\forms.py:519
+#: .\cookbook\forms.py:516
 msgid "Default Delay Hours"
 msgstr "Standaard vertraging in uren"
 
-#: .\cookbook\forms.py:520
+#: .\cookbook\forms.py:517
 msgid "Filter to Supermarket"
 msgstr "Filter op supermarkt"
 
-#: .\cookbook\forms.py:521
+#: .\cookbook\forms.py:518
 msgid "Recent Days"
 msgstr "Afgelopen dagen"
 
-#: .\cookbook\forms.py:522
+#: .\cookbook\forms.py:519
 msgid "CSV Delimiter"
 msgstr "CSV scheidingsteken"
 
-#: .\cookbook\forms.py:523
+#: .\cookbook\forms.py:520
 msgid "List Prefix"
 msgstr "Lijst voorvoegsel"
 
-#: .\cookbook\forms.py:524
+#: .\cookbook\forms.py:521
 msgid "Auto On Hand"
 msgstr "Auto op voorraad"
 
-#: .\cookbook\forms.py:534
+#: .\cookbook\forms.py:531
 msgid "Reset Food Inheritance"
 msgstr "Herstel Ingrediënt overname"
 
-#: .\cookbook\forms.py:535
+#: .\cookbook\forms.py:532
 msgid "Reset all food to inherit the fields configured."
 msgstr "Herstel alle ingrediënten om de geconfigureerde velden over te nemen."
 
-#: .\cookbook\forms.py:547
+#: .\cookbook\forms.py:544
 msgid "Fields on food that should be inherited by default."
 msgstr "Velden van ingrediënten die standaard overgenomen moeten worden."
 
-#: .\cookbook\forms.py:548
+#: .\cookbook\forms.py:545
 msgid "Show recipe counts on search filters"
 msgstr "Toon recepten teller bij zoekfilters"
 
@@ -499,35 +498,36 @@ msgstr ""
 "Om spam te voorkomen werd de gevraagde e-mail niet verzonden. Wacht een paar "
 "minuten en probeer het opnieuw."
 
-#: .\cookbook\helper\permission_helper.py:133
-#: .\cookbook\helper\permission_helper.py:156 .\cookbook\views\views.py:150
+#: .\cookbook\helper\permission_helper.py:149
+#: .\cookbook\helper\permission_helper.py:172 .\cookbook\views\views.py:152
 msgid "You are not logged in and therefore cannot view this page!"
 msgstr "Je bent niet ingelogd en kan deze pagina daarom niet bekijken!"
 
-#: .\cookbook\helper\permission_helper.py:137
-#: .\cookbook\helper\permission_helper.py:143
-#: .\cookbook\helper\permission_helper.py:168
-#: .\cookbook\helper\permission_helper.py:216
-#: .\cookbook\helper\permission_helper.py:230
-#: .\cookbook\helper\permission_helper.py:241
-#: .\cookbook\helper\permission_helper.py:252 .\cookbook\views\data.py:33
-#: .\cookbook\views\views.py:161 .\cookbook\views\views.py:168
-#: .\cookbook\views\views.py:247
+#: .\cookbook\helper\permission_helper.py:153
+#: .\cookbook\helper\permission_helper.py:159
+#: .\cookbook\helper\permission_helper.py:184
+#: .\cookbook\helper\permission_helper.py:254
+#: .\cookbook\helper\permission_helper.py:268
+#: .\cookbook\helper\permission_helper.py:279
+#: .\cookbook\helper\permission_helper.py:290 .\cookbook\views\data.py:33
+#: .\cookbook\views\views.py:163 .\cookbook\views\views.py:170
+#: .\cookbook\views\views.py:249
 msgid "You do not have the required permissions to view this page!"
 msgstr "Je hebt niet de benodigde machtigingen om deze pagina te bekijken!"
 
-#: .\cookbook\helper\permission_helper.py:161
-#: .\cookbook\helper\permission_helper.py:184
-#: .\cookbook\helper\permission_helper.py:199
+#: .\cookbook\helper\permission_helper.py:177
+#: .\cookbook\helper\permission_helper.py:200
+#: .\cookbook\helper\permission_helper.py:222
+#: .\cookbook\helper\permission_helper.py:237
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
 "Interactie met dit object is niet mogelijk omdat je niet de eigenaar bent!"
 
-#: .\cookbook\helper\permission_helper.py:283 .\cookbook\views\new.py:31
+#: .\cookbook\helper\permission_helper.py:321
 msgid "You have reached the maximum number of recipes for your space."
 msgstr "Je hebt het maximaal aantal recepten voor jouw ruimte bereikt."
 
-#: .\cookbook\helper\permission_helper.py:295 .\cookbook\views\new.py:35
+#: .\cookbook\helper\permission_helper.py:333
 msgid "You have more users than allowed in your space."
 msgstr "Je hebt meer gebruikers dan toegestaan in jouw ruimte."
 
@@ -550,7 +550,7 @@ msgid "Favorite"
 msgstr "Favoriet"
 
 #: .\cookbook\integration\copymethat.py:71
-#: .\cookbook\integration\recettetek.py:53
+#: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:63
 msgid "Imported from"
 msgstr "Geïmporteerd van"
@@ -647,7 +647,7 @@ msgstr "Avondeten"
 msgid "Other"
 msgstr "Overige"
 
-#: .\cookbook\models.py:240
+#: .\cookbook\models.py:251
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
@@ -655,97 +655,135 @@ msgstr ""
 "Maximale bestandsopslag voor ruimte in MB. 0 voor onbeperkt, -1 om uploaden "
 "van bestanden uit te schakelen."
 
-#: .\cookbook\models.py:294 .\cookbook\templates\search.html:7
+#: .\cookbook\models.py:353 .\cookbook\templates\search.html:7
+#: .\cookbook\templates\space_manage.html:7
 msgid "Search"
 msgstr "Zoeken"
 
-#: .\cookbook\models.py:295 .\cookbook\templates\base.html:107
+#: .\cookbook\models.py:354 .\cookbook\templates\base.html:107
 #: .\cookbook\templates\meal_plan.html:7 .\cookbook\views\delete.py:178
-#: .\cookbook\views\edit.py:211 .\cookbook\views\new.py:182
+#: .\cookbook\views\edit.py:211 .\cookbook\views\new.py:179
 msgid "Meal-Plan"
 msgstr "Maaltijdplan"
 
-#: .\cookbook\models.py:296 .\cookbook\templates\base.html:115
+#: .\cookbook\models.py:355 .\cookbook\templates\base.html:115
 msgid "Books"
 msgstr "Boeken"
 
-#: .\cookbook\models.py:304
+#: .\cookbook\models.py:363
 msgid "Small"
 msgstr "Klein"
 
-#: .\cookbook\models.py:304
+#: .\cookbook\models.py:363
 msgid "Large"
 msgstr "Groot"
 
-#: .\cookbook\models.py:304 .\cookbook\templates\generic\new_template.html:6
+#: .\cookbook\models.py:363 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
 msgstr "Nieuw"
 
-#: .\cookbook\models.py:513
+#: .\cookbook\models.py:584
 msgid " is part of a recipe step and cannot be deleted"
 msgstr " is deel van een receptstap en kan niet verwijderd worden"
 
-#: .\cookbook\models.py:1097 .\cookbook\templates\search_info.html:28
+#: .\cookbook\models.py:1160 .\cookbook\templates\search_info.html:28
 msgid "Simple"
 msgstr "Simpel"
 
-#: .\cookbook\models.py:1098 .\cookbook\templates\search_info.html:33
+#: .\cookbook\models.py:1161 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
 msgstr "Zin"
 
-#: .\cookbook\models.py:1099 .\cookbook\templates\search_info.html:38
+#: .\cookbook\models.py:1162 .\cookbook\templates\search_info.html:38
 msgid "Web"
 msgstr "Web"
 
-#: .\cookbook\models.py:1100 .\cookbook\templates\search_info.html:47
+#: .\cookbook\models.py:1163 .\cookbook\templates\search_info.html:47
 msgid "Raw"
 msgstr "Rauw"
 
-#: .\cookbook\models.py:1138
+#: .\cookbook\models.py:1201
 msgid "Food Alias"
 msgstr "Ingrediënt alias"
 
-#: .\cookbook\models.py:1138
+#: .\cookbook\models.py:1201
 msgid "Unit Alias"
 msgstr "Eenheid alias"
 
-#: .\cookbook\models.py:1138
+#: .\cookbook\models.py:1201
 msgid "Keyword Alias"
 msgstr "Etiket alias"
 
-#: .\cookbook\models.py:1162
+#: .\cookbook\models.py:1225
 #: .\cookbook\templates\include\recipe_open_modal.html:7
 #: .\cookbook\views\delete.py:36 .\cookbook\views\edit.py:251
-#: .\cookbook\views\new.py:51
+#: .\cookbook\views\new.py:48
 msgid "Recipe"
 msgstr "Recept"
 
-#: .\cookbook\models.py:1163
+#: .\cookbook\models.py:1226
 msgid "Food"
 msgstr "Ingrediënt"
 
-#: .\cookbook\models.py:1164 .\cookbook\templates\base.html:138
+#: .\cookbook\models.py:1227 .\cookbook\templates\base.html:138
 msgid "Keyword"
-msgstr "Etiketten"
+msgstr "Etiket"
 
-#: .\cookbook\serializer.py:188
-msgid "A user is required"
-msgstr "Een gebruiker is verplicht"
+#: .\cookbook\serializer.py:204
+msgid "Cannot modify Space owner permission."
+msgstr ""
 
-#: .\cookbook\serializer.py:211
+#: .\cookbook\serializer.py:273
 msgid "File uploads are not enabled for this Space."
 msgstr "Bestandsuploads zijn niet ingeschakeld voor deze Ruimte."
 
-#: .\cookbook\serializer.py:222
+#: .\cookbook\serializer.py:284
 msgid "You have reached your file upload limit."
 msgstr "U heeft de uploadlimiet bereikt."
 
-#: .\cookbook\serializer.py:1080
+#: .\cookbook\serializer.py:1051
+msgid "Hello"
+msgstr "Hallo"
+
+#: .\cookbook\serializer.py:1051
+msgid "You have been invited by "
+msgstr "Je bent uitgenodigd door "
+
+#: .\cookbook\serializer.py:1052
+msgid " to join their Tandoor Recipes space "
+msgstr " om zijn/haar Tandoor Recepten ruimte "
+
+#: .\cookbook\serializer.py:1053
+msgid "Click the following link to activate your account: "
+msgstr "Klik om de volgende link om je account te activeren: "
+
+#: .\cookbook\serializer.py:1054
+msgid ""
+"If the link does not work use the following code to manually join the space: "
+msgstr ""
+"Als de linkt niet werkt, gebruik dan de volgende code om handmatig tot de "
+"ruimte toe te treden: "
+
+#: .\cookbook\serializer.py:1055
+msgid "The invitation is valid until "
+msgstr "De uitnodiging is geldig tot "
+
+#: .\cookbook\serializer.py:1056
+msgid ""
+"Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
+msgstr ""
+"Tandoor Recepten is een Open Source recepten manager. Bekijk het op GitHub "
+
+#: .\cookbook\serializer.py:1059
+msgid "Tandoor Recipes Invite"
+msgstr "Tandoor Recepten uitnodiging"
+
+#: .\cookbook\serializer.py:1179
 msgid "Existing shopping list to update"
 msgstr "Bestaande boodschappenlijst is bijgewerkt"
 
-#: .\cookbook\serializer.py:1082
+#: .\cookbook\serializer.py:1181
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
@@ -753,35 +791,34 @@ msgstr ""
 "Lijst van ingrediënten ID's van het toe te voegen recept, als deze niet "
 "opgegeven worden worden alle ingrediënten toegevoegd."
 
-#: .\cookbook\serializer.py:1084
+#: .\cookbook\serializer.py:1183
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
 "Als je een list_recipe ID en portiegrootte van 0 opgeeft wordt dat "
 "boodschappenlijstje verwijderd."
 
-#: .\cookbook\serializer.py:1093
+#: .\cookbook\serializer.py:1192
 msgid "Amount of food to add to the shopping list"
 msgstr "Hoeveelheid eten om aan het boodschappenlijstje toe te voegen"
 
-#: .\cookbook\serializer.py:1095
+#: .\cookbook\serializer.py:1194
 msgid "ID of unit to use for the shopping list"
 msgstr "ID of eenheid om te gebruik voor het boodschappenlijstje"
 
-#: .\cookbook\serializer.py:1097
+#: .\cookbook\serializer.py:1196
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
 "Wanneer ingesteld op waar, wordt al het voedsel van actieve "
 "boodschappenlijstjes verwijderd."
 
-#: .\cookbook\tables.py:35 .\cookbook\templates\generic\edit_template.html:6
+#: .\cookbook\tables.py:36 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 #: .\cookbook\templates\recipes_table.html:82
-#: .\cookbook\templates\space.html:107
 msgid "Edit"
 msgstr "Bewerken"
 
-#: .\cookbook\tables.py:115 .\cookbook\tables.py:130
+#: .\cookbook\tables.py:116 .\cookbook\tables.py:131
 #: .\cookbook\templates\generic\delete_template.html:7
 #: .\cookbook\templates\generic\delete_template.html:15
 #: .\cookbook\templates\generic\edit_template.html:28
@@ -848,7 +885,7 @@ msgid "Re-send Verification"
 msgstr "Verificatie opnieuw verzenden"
 
 #: .\cookbook\templates\account\email.html:50
-#: .\cookbook\templates\generic\delete_template.html:56
+#: .\cookbook\templates\generic\delete_template.html:57
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
 msgstr "Verwijder"
@@ -896,7 +933,7 @@ msgstr ""
 " ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
-#: .\cookbook\templates\generic\delete_template.html:71
+#: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
 msgstr "Bevestigen"
 
@@ -911,7 +948,7 @@ msgstr ""
 "<a href=\"%(email_url)s\">Vraag een nieuwe bevestigingslink aan</a>."
 
 #: .\cookbook\templates\account\login.html:8
-#: .\cookbook\templates\base.html:325 .\cookbook\templates\openid\login.html:8
+#: .\cookbook\templates\base.html:339 .\cookbook\templates\openid\login.html:8
 msgid "Login"
 msgstr "Inloggen"
 
@@ -1083,13 +1120,13 @@ msgstr "Registratie gesloten"
 msgid "We are sorry, but the sign up is currently closed."
 msgstr "Excuses, registratie is op dit moment gesloten."
 
-#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:315
+#: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:329
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
 msgstr "API documentatie"
 
 #: .\cookbook\templates\base.html:103 .\cookbook\templates\index.html:87
-#: .\cookbook\templates\space.html:37 .\cookbook\templates\stats.html:22
+#: .\cookbook\templates\stats.html:22
 msgid "Recipes"
 msgstr "Recepten"
 
@@ -1103,8 +1140,7 @@ msgstr "Ingrediënten"
 
 #: .\cookbook\templates\base.html:162
 #: .\cookbook\templates\forms\ingredients.html:24
-#: .\cookbook\templates\space.html:46 .\cookbook\templates\stats.html:26
-#: .\cookbook\views\lists.py:122
+#: .\cookbook\templates\stats.html:26 .\cookbook\views\lists.py:122
 msgid "Units"
 msgstr "Eenheden"
 
@@ -1137,7 +1173,7 @@ msgstr "Geschiedenis"
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
 msgid "Ingredient Editor"
-msgstr "Ingrediënteneditor"
+msgstr "Ingrediënten editor"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
@@ -1155,12 +1191,12 @@ msgstr "Aanmaken"
 
 #: .\cookbook\templates\base.html:295
 #: .\cookbook\templates\generic\list_template.html:14
-#: .\cookbook\templates\space.html:68 .\cookbook\templates\stats.html:43
+#: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
 msgstr "Externe recepten"
 
-#: .\cookbook\templates\base.html:298 .\cookbook\templates\space.html:8
-#: .\cookbook\templates\space.html:20 .\cookbook\templates\space.html:148
+#: .\cookbook\templates\base.html:298
+#: .\cookbook\templates\space_manage.html:15
 msgid "Space Settings"
 msgstr "Ruimte Instellingen"
 
@@ -1173,30 +1209,42 @@ msgid "Admin"
 msgstr "Beheer"
 
 #: .\cookbook\templates\base.html:309
+#: .\cookbook\templates\space_overview.html:25
+#, fuzzy
+#| msgid "No Space"
+msgid "Your Spaces"
+msgstr "Geen ruimte"
+
+#: .\cookbook\templates\base.html:319
+#: .\cookbook\templates\space_overview.html:6
+msgid "Overview"
+msgstr ""
+
+#: .\cookbook\templates\base.html:323
 msgid "Markdown Guide"
 msgstr "Markdown gids"
 
-#: .\cookbook\templates\base.html:311
+#: .\cookbook\templates\base.html:325
 msgid "GitHub"
 msgstr "GitHub"
 
-#: .\cookbook\templates\base.html:313
+#: .\cookbook\templates\base.html:327
 msgid "Translate Tandoor"
 msgstr "Vertaal Tandoor"
 
-#: .\cookbook\templates\base.html:317
+#: .\cookbook\templates\base.html:331
 msgid "API Browser"
 msgstr "API Browser"
 
-#: .\cookbook\templates\base.html:320
+#: .\cookbook\templates\base.html:334
 msgid "Log out"
 msgstr "Uitloggen"
 
-#: .\cookbook\templates\base.html:342
+#: .\cookbook\templates\base.html:356
 msgid "You are using the free version of Tandor"
 msgstr "Je gebruikt de gratis versie van Tandoor"
 
-#: .\cookbook\templates\base.html:342
+#: .\cookbook\templates\base.html:357
 msgid "Upgrade Now"
 msgstr "Upgrade nu"
 
@@ -1242,7 +1290,7 @@ msgstr "Het pad dient het volgende format te hebben"
 #: .\cookbook\templates\settings.html:112
 #: .\cookbook\templates\settings.html:130
 #: .\cookbook\templates\settings.html:202
-#: .\cookbook\templates\settings.html:213 .\cookbook\templates\space.html:153
+#: .\cookbook\templates\settings.html:213
 msgid "Save"
 msgstr "Opslaan"
 
@@ -1332,15 +1380,19 @@ msgstr "Weet je zeker dat je deze ingrediënten wil samenvoegen?"
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Weet je zeker dat je %(title)s: <b>%(object)s</b> wil verwijderen "
 
-#: .\cookbook\templates\generic\delete_template.html:26
+#: .\cookbook\templates\generic\delete_template.html:22
+msgid "This cannot be undone!"
+msgstr ""
+
+#: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
 msgstr "Beschermd"
 
-#: .\cookbook\templates\generic\delete_template.html:41
+#: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
 msgstr "Cascade"
 
-#: .\cookbook\templates\generic\delete_template.html:72
+#: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
 msgstr "Annuleer"
 
@@ -1657,56 +1709,6 @@ msgid ""
 msgstr ""
 "Je beschikt niet over de juiste rechten om deze pagina te bekijken of deze "
 "actie uit te voeren."
-
-#: .\cookbook\templates\no_space_info.html:6
-#: .\cookbook\templates\no_space_info.html:13
-msgid "No Space"
-msgstr "Geen ruimte"
-
-#: .\cookbook\templates\no_space_info.html:17
-msgid ""
-"Recipes, foods, shopping lists and more are organized in spaces of one or "
-"more people."
-msgstr ""
-"Recepten, ingrediënten, boodschappenlijsten en meer zijn georganiseerd in "
-"ruimtes van één of meer personen."
-
-#: .\cookbook\templates\no_space_info.html:18
-msgid ""
-"You can either be invited into an existing space or create your own one."
-msgstr ""
-"Je kan uitgenodigd worden in een bestaande ruimte of je eigen ruimte "
-"aanmaken."
-
-#: .\cookbook\templates\no_space_info.html:31
-#: .\cookbook\templates\no_space_info.html:40
-msgid "Join Space"
-msgstr "Sluit aan bij ruimte"
-
-#: .\cookbook\templates\no_space_info.html:34
-msgid "Join an existing space."
-msgstr "Sluit aan bij bestaande ruimte."
-
-#: .\cookbook\templates\no_space_info.html:35
-msgid ""
-"To join an existing space either enter your invite token or click on the "
-"invite link the space owner send you."
-msgstr ""
-"Om je aan te sluiten bij een bestaande ruimte moet je jouw uitnodigingstoken "
-"invoeren of op de uitnodingslink klikken die je ontvangen hebt."
-
-#: .\cookbook\templates\no_space_info.html:48
-#: .\cookbook\templates\no_space_info.html:56
-msgid "Create Space"
-msgstr "Maak ruimte aan"
-
-#: .\cookbook\templates\no_space_info.html:51
-msgid "Create your own recipe space."
-msgstr "Maak je eigen recepten ruimte."
-
-#: .\cookbook\templates\no_space_info.html:52
-msgid "Start your own recipe space and invite other users to it."
-msgstr "Start je eigen recepten ruimte en nodig andere gebruikers uit."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
@@ -2209,9 +2211,34 @@ msgstr ""
 msgid "Add a 3rd Party Account"
 msgstr "Voeg account van een 3e partij toe"
 
+#: .\cookbook\templates\socialaccount\login.html:5
 #: .\cookbook\templates\socialaccount\signup.html:5
 msgid "Signup"
 msgstr "Registratie"
+
+#: .\cookbook\templates\socialaccount\login.html:9
+#, python-format
+msgid "Connect %(provider)s"
+msgstr ""
+
+#: .\cookbook\templates\socialaccount\login.html:11
+#, python-format
+msgid "You are about to connect a new third party account from %(provider)s."
+msgstr ""
+
+#: .\cookbook\templates\socialaccount\login.html:13
+#, python-format
+msgid "Sign In Via %(provider)s"
+msgstr ""
+
+#: .\cookbook\templates\socialaccount\login.html:15
+#, python-format
+msgid "You are about to sign in using a third party account from %(provider)s."
+msgstr ""
+
+#: .\cookbook\templates\socialaccount\login.html:20
+msgid "Continue"
+msgstr ""
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2241,82 +2268,74 @@ msgstr ""
 msgid "Sign in using"
 msgstr "Log in met"
 
-#: .\cookbook\templates\space.html:25
+#: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
 msgstr "Ruimte:"
 
-#: .\cookbook\templates\space.html:26
+#: .\cookbook\templates\space_manage.html:27
 msgid "Manage Subscription"
 msgstr "Beheer abonnementen"
 
-#: .\cookbook\templates\space.html:34 .\cookbook\templates\stats.html:19
-msgid "Number of objects"
-msgstr "Aantal objecten"
+#: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
+#, fuzzy
+#| msgid "Space:"
+msgid "Space"
+msgstr "Ruimte:"
 
-#: .\cookbook\templates\space.html:53 .\cookbook\templates\stats.html:30
-msgid "Recipe Imports"
-msgstr "Geïmporteerde recepten"
+#: .\cookbook\templates\space_overview.html:17
+msgid ""
+"Recipes, foods, shopping lists and more are organized in spaces of one or "
+"more people."
+msgstr ""
+"Recepten, ingrediënten, boodschappenlijsten en meer zijn georganiseerd in "
+"ruimtes van één of meer personen."
 
-#: .\cookbook\templates\space.html:61 .\cookbook\templates\stats.html:38
-msgid "Objects stats"
-msgstr "Object statistieken"
+#: .\cookbook\templates\space_overview.html:18
+msgid ""
+"You can either be invited into an existing space or create your own one."
+msgstr ""
+"Je kan uitgenodigd worden in een bestaande ruimte of je eigen ruimte "
+"aanmaken."
 
-#: .\cookbook\templates\space.html:64 .\cookbook\templates\stats.html:41
-msgid "Recipes without Keywords"
-msgstr "Recepten zonder etiketten"
+#: .\cookbook\templates\space_overview.html:45
+msgid "Owner"
+msgstr ""
 
-#: .\cookbook\templates\space.html:72 .\cookbook\templates\stats.html:45
-msgid "Internal Recipes"
-msgstr "Interne recepten"
+#: .\cookbook\templates\space_overview.html:49
+#, fuzzy
+#| msgid "Create Space"
+msgid "Leave Space"
+msgstr "Maak ruimte aan"
 
-#: .\cookbook\templates\space.html:88
-msgid "Members"
-msgstr "Leden"
+#: .\cookbook\templates\space_overview.html:70
+#: .\cookbook\templates\space_overview.html:80
+msgid "Join Space"
+msgstr "Sluit aan bij ruimte"
 
-#: .\cookbook\templates\space.html:93
-msgid "Invite User"
-msgstr "Nodig gebruiker uit"
+#: .\cookbook\templates\space_overview.html:73
+msgid "Join an existing space."
+msgstr "Sluit aan bij bestaande ruimte."
 
-#: .\cookbook\templates\space.html:105
-msgid "User"
-msgstr "Gebruiker"
+#: .\cookbook\templates\space_overview.html:75
+msgid ""
+"To join an existing space either enter your invite token or click on the "
+"invite link the space owner send you."
+msgstr ""
+"Om je aan te sluiten bij een bestaande ruimte moet je jouw uitnodigingstoken "
+"invoeren of op de uitnodingslink klikken die je ontvangen hebt."
 
-#: .\cookbook\templates\space.html:106
-msgid "Groups"
-msgstr "Groepen"
+#: .\cookbook\templates\space_overview.html:88
+#: .\cookbook\templates\space_overview.html:97
+msgid "Create Space"
+msgstr "Maak ruimte aan"
 
-#: .\cookbook\templates\space.html:117
-msgid "admin"
-msgstr "Beheerder"
+#: .\cookbook\templates\space_overview.html:91
+msgid "Create your own recipe space."
+msgstr "Maak je eigen recepten ruimte."
 
-#: .\cookbook\templates\space.html:118
-msgid "user"
-msgstr "gebruiker"
-
-#: .\cookbook\templates\space.html:119
-msgid "guest"
-msgstr "gast"
-
-#: .\cookbook\templates\space.html:120
-msgid "remove"
-msgstr "verwijder"
-
-#: .\cookbook\templates\space.html:124
-msgid "Update"
-msgstr "Update"
-
-#: .\cookbook\templates\space.html:128
-msgid "You cannot edit yourself."
-msgstr "Je kan jezelf niet bewerken."
-
-#: .\cookbook\templates\space.html:134
-msgid "There are no members in your space yet!"
-msgstr "Er zitten nog geen leden in jouw ruimte!"
-
-#: .\cookbook\templates\space.html:141 .\cookbook\templates\system.html:21
-#: .\cookbook\views\lists.py:76
-msgid "Invite Links"
-msgstr "Uitnodigingslink"
+#: .\cookbook\templates\space_overview.html:93
+msgid "Start your own recipe space and invite other users to it."
+msgstr "Start je eigen recepten ruimte en nodig andere gebruikers uit."
 
 #: .\cookbook\templates\stats.html:4
 msgid "Stats"
@@ -2325,6 +2344,30 @@ msgstr "Statistieken"
 #: .\cookbook\templates\stats.html:10
 msgid "Statistics"
 msgstr "Statistieken"
+
+#: .\cookbook\templates\stats.html:19
+msgid "Number of objects"
+msgstr "Aantal objecten"
+
+#: .\cookbook\templates\stats.html:30
+msgid "Recipe Imports"
+msgstr "Geïmporteerde recepten"
+
+#: .\cookbook\templates\stats.html:38
+msgid "Objects stats"
+msgstr "Object statistieken"
+
+#: .\cookbook\templates\stats.html:41
+msgid "Recipes without Keywords"
+msgstr "Recepten zonder etiketten"
+
+#: .\cookbook\templates\stats.html:45
+msgid "Internal Recipes"
+msgstr "Interne recepten"
+
+#: .\cookbook\templates\system.html:21 .\cookbook\views\lists.py:76
+msgid "Invite Links"
+msgstr "Uitnodigingslink"
 
 #: .\cookbook\templates\system.html:22
 msgid "Show Links"
@@ -2458,76 +2501,76 @@ msgstr ""
 msgid "URL Import"
 msgstr "Importeer URL"
 
-#: .\cookbook\views\api.py:92 .\cookbook\views\api.py:184
+#: .\cookbook\views\api.py:97 .\cookbook\views\api.py:189
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Parameter updatet_at is onjuist geformateerd"
 
-#: .\cookbook\views\api.py:204 .\cookbook\views\api.py:307
+#: .\cookbook\views\api.py:209 .\cookbook\views\api.py:312
 msgid "No {self.basename} with id {pk} exists"
 msgstr "Er bestaat geen {self.basename} met id {pk}"
 
-#: .\cookbook\views\api.py:208
+#: .\cookbook\views\api.py:213
 msgid "Cannot merge with the same object!"
 msgstr "Kan niet met hetzelfde object samenvoegen!"
 
-#: .\cookbook\views\api.py:215
+#: .\cookbook\views\api.py:220
 msgid "No {self.basename} with id {target} exists"
 msgstr "Er bestaat geen {self.basename} met id {target}"
 
-#: .\cookbook\views\api.py:220
+#: .\cookbook\views\api.py:225
 msgid "Cannot merge with child object!"
 msgstr "Kan niet met kindobject samenvoegen!"
 
-#: .\cookbook\views\api.py:253
+#: .\cookbook\views\api.py:258
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr "{source.name} is succesvol samengevoegd met {target.name}"
 
-#: .\cookbook\views\api.py:258
+#: .\cookbook\views\api.py:263
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
 "Er is een error opgetreden bij het samenvoegen van {source.name} met {target."
 "name}"
 
-#: .\cookbook\views\api.py:316
+#: .\cookbook\views\api.py:321
 msgid "{child.name} was moved successfully to the root."
 msgstr "{child.name} is succesvol verplaatst naar het hoogste niveau."
 
-#: .\cookbook\views\api.py:319 .\cookbook\views\api.py:337
+#: .\cookbook\views\api.py:324 .\cookbook\views\api.py:342
 msgid "An error occurred attempting to move "
 msgstr "Er is een error opgetreden bij het verplaatsen "
 
-#: .\cookbook\views\api.py:322
+#: .\cookbook\views\api.py:327
 msgid "Cannot move an object to itself!"
 msgstr "Kan object niet verplaatsen naar zichzelf!"
 
-#: .\cookbook\views\api.py:328
+#: .\cookbook\views\api.py:333
 msgid "No {self.basename} with id {parent} exists"
 msgstr "Er bestaat geen {self.basename} met id {parent}"
 
-#: .\cookbook\views\api.py:334
+#: .\cookbook\views\api.py:339
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr "{child.name} is succesvol verplaatst naar {parent.name}"
 
-#: .\cookbook\views\api.py:491
+#: .\cookbook\views\api.py:534
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} is verwijderd van het boodschappenlijstje."
 
-#: .\cookbook\views\api.py:496 .\cookbook\views\api.py:822
-#: .\cookbook\views\api.py:835
+#: .\cookbook\views\api.py:539 .\cookbook\views\api.py:871
+#: .\cookbook\views\api.py:884
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} is toegevoegd aan het boodschappenlijstje."
 
-#: .\cookbook\views\api.py:623
+#: .\cookbook\views\api.py:666
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 "ID van het recept waar de stap onderdeel van is. Herhaal parameter voor "
 "meerdere."
 
-#: .\cookbook\views\api.py:625
+#: .\cookbook\views\api.py:668
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Zoekterm komt overeen (fuzzy) met object naam."
 
-#: .\cookbook\views\api.py:669
+#: .\cookbook\views\api.py:712
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
@@ -2535,7 +2578,7 @@ msgstr ""
 "Zoekterm komt overeen (fuzzy) met recept naam. In de toekomst wordt zoeken "
 "op volledige tekst ondersteund."
 
-#: .\cookbook\views\api.py:671
+#: .\cookbook\views\api.py:714
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -2543,109 +2586,109 @@ msgstr ""
 "ID van etiket dat een recept moet hebben. Herhaal parameter voor meerdere. "
 "Gelijkwaardig aan keywords_or"
 
-#: .\cookbook\views\api.py:674
+#: .\cookbook\views\api.py:717
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Geeft recepten met elk geselecteerd etiket "
 "weer"
 
-#: .\cookbook\views\api.py:677
+#: .\cookbook\views\api.py:720
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Geeft recepten met alle geselecteerde "
 "etiketten weer."
 
-#: .\cookbook\views\api.py:680
+#: .\cookbook\views\api.py:723
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Sluit recepten met één van de etiketten "
 "uit."
 
-#: .\cookbook\views\api.py:683
+#: .\cookbook\views\api.py:726
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Sluit recepten met alle etiketten uit."
 
-#: .\cookbook\views\api.py:685
+#: .\cookbook\views\api.py:728
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 "ID van ingrediënt dat een recept moet hebben. Herhaal parameter voor "
 "meerdere."
 
-#: .\cookbook\views\api.py:688
+#: .\cookbook\views\api.py:731
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Geeft recepten met elk ingrediënt weer"
 
-#: .\cookbook\views\api.py:690
+#: .\cookbook\views\api.py:733
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Geef recepten met alle ingrediënten "
 "weer."
 
-#: .\cookbook\views\api.py:692
+#: .\cookbook\views\api.py:735
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. sluit recepten met één van de "
 "ingrediënten uit."
 
-#: .\cookbook\views\api.py:694
+#: .\cookbook\views\api.py:737
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Sluit recepten met alle ingrediënten "
 "uit."
 
-#: .\cookbook\views\api.py:695
+#: .\cookbook\views\api.py:738
 msgid "ID of unit a recipe should have."
 msgstr "ID van eenheid dat een recept moet hebben."
 
-#: .\cookbook\views\api.py:697
+#: .\cookbook\views\api.py:740
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr "Een waardering van een recept gaat van 0 tot 5."
 
-#: .\cookbook\views\api.py:698
+#: .\cookbook\views\api.py:741
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
 "ID van boek dat een recept moet hebben. Herhaal parameter voor meerdere."
 
-#: .\cookbook\views\api.py:700
+#: .\cookbook\views\api.py:743
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr "Boek ID, herhaal voor meerdere. Geeft recepten uit alle boeken weer"
 
-#: .\cookbook\views\api.py:702
+#: .\cookbook\views\api.py:745
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr "Boek IDs, herhaal voor meerdere. Geeft recepten weer uit alle boeken."
 
-#: .\cookbook\views\api.py:704
+#: .\cookbook\views\api.py:747
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Boek IDs, herhaal voor meerdere. Sluit recepten uit elk van de boeken uit."
 
-#: .\cookbook\views\api.py:706
+#: .\cookbook\views\api.py:749
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr "Boek IDs, herhaal voor meerdere. Sluit recepten uit alle boeken uit."
 
-#: .\cookbook\views\api.py:708
+#: .\cookbook\views\api.py:751
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
 "Wanneer alleen interne recepten gevonden moeten worden. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:710
+#: .\cookbook\views\api.py:753
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr ""
 "Geeft de resultaten in willekeurige volgorde weer. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:712
+#: .\cookbook\views\api.py:755
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr "Geeft nieuwe resultaten eerst weer. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:714
+#: .\cookbook\views\api.py:757
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
@@ -2653,7 +2696,7 @@ msgstr ""
 "Filter recepten X maal of meer bereid.  Negatieve waarden geven minder dan X "
 "keer bereide recepten weer"
 
-#: .\cookbook\views\api.py:716
+#: .\cookbook\views\api.py:759
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
@@ -2661,7 +2704,7 @@ msgstr ""
 "Filter recepten op laatst bereid op of na JJJJ-MM-DD. Voorafgaand - filters "
 "op of voor datum."
 
-#: .\cookbook\views\api.py:718
+#: .\cookbook\views\api.py:761
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
@@ -2669,7 +2712,7 @@ msgstr ""
 "Filter recepten aangemaakt op of na JJJJ-MM-DD. Voorafgaand - filters op of "
 "voor datum."
 
-#: .\cookbook\views\api.py:720
+#: .\cookbook\views\api.py:763
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
@@ -2677,7 +2720,7 @@ msgstr ""
 "Filter recepten op geüpdatet op of na JJJJ-MM-DD. Voorafgaand - filters op "
 "of voor datum."
 
-#: .\cookbook\views\api.py:722
+#: .\cookbook\views\api.py:765
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
@@ -2685,13 +2728,13 @@ msgstr ""
 "Filter recepten op laatst bekeken op of na JJJJ-MM-DD. Voorafgaand - filters "
 "op of voor datum."
 
-#: .\cookbook\views\api.py:724
+#: .\cookbook\views\api.py:767
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Filter recepten die bereid kunnen worden met ingrediënten die op voorraad "
 "zijn. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:880
+#: .\cookbook\views\api.py:929
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
@@ -2699,7 +2742,7 @@ msgstr ""
 "Geeft het boodschappenlijstje item met een primaire sleutel van id.  "
 "Meerdere waarden toegestaan."
 
-#: .\cookbook\views\api.py:885
+#: .\cookbook\views\api.py:934
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</b>]"
 "<br>  - recent includes unchecked items and recently completed items."
@@ -2707,39 +2750,43 @@ msgstr ""
 "Filter boodschappenlijstjes op aangevinkt.  [waar,onwaar,beide,<b>recent</b>]"
 "<br>  - recent bevat niet aangevinkte en recent voltooide items."
 
-#: .\cookbook\views\api.py:888
+#: .\cookbook\views\api.py:937
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
 "Geeft items op boodschappenlijstjes gesorteerd per supermarktcategorie weer."
 
-#: .\cookbook\views\api.py:1066 .\cookbook\views\data.py:28
-#: .\cookbook\views\edit.py:120 .\cookbook\views\new.py:93
-msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "Deze optie is nog niet beschikbaar in de gehoste versie van Tandoor!"
-
-#: .\cookbook\views\api.py:1088
-msgid "Sync successful!"
-msgstr "Synchronisatie succesvol!"
-
-#: .\cookbook\views\api.py:1093
-msgid "Error synchronizing with Storage"
-msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag"
-
-#: .\cookbook\views\api.py:1185
+#: .\cookbook\views\api.py:1134
 msgid "Nothing to do."
 msgstr "Niks te doen."
 
-#: .\cookbook\views\api.py:1195
+#: .\cookbook\views\api.py:1153
+msgid "Invalid Url"
+msgstr ""
+
+#: .\cookbook\views\api.py:1158
 msgid "Connection Refused."
 msgstr "Verbinding geweigerd."
 
-#: .\cookbook\views\api.py:1200
+#: .\cookbook\views\api.py:1163
 msgid "Bad URL Schema."
 msgstr "Verkeerd URL schema."
 
-#: .\cookbook\views\api.py:1206
+#: .\cookbook\views\api.py:1170
 msgid "No usable data could be found."
 msgstr "Er is geen bruikbare data gevonden."
+
+#: .\cookbook\views\api.py:1260 .\cookbook\views\data.py:28
+#: .\cookbook\views\edit.py:120 .\cookbook\views\new.py:90
+msgid "This feature is not yet available in the hosted version of tandoor!"
+msgstr "Deze optie is nog niet beschikbaar in de gehoste versie van Tandoor!"
+
+#: .\cookbook\views\api.py:1282
+msgid "Sync successful!"
+msgstr "Synchronisatie succesvol!"
+
+#: .\cookbook\views\api.py:1287
+msgid "Error synchronizing with Storage"
+msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag"
 
 #: .\cookbook\views\data.py:97
 #, python-format
@@ -2753,7 +2800,7 @@ msgid "Monitor"
 msgstr "Bewaker"
 
 #: .\cookbook\views\delete.py:122 .\cookbook\views\lists.py:62
-#: .\cookbook\views\new.py:99
+#: .\cookbook\views\new.py:96
 msgid "Storage Backend"
 msgstr "Opslag backend"
 
@@ -2772,9 +2819,15 @@ msgstr "Kookboek"
 msgid "Bookmarks"
 msgstr "Bladwijzers"
 
-#: .\cookbook\views\delete.py:189 .\cookbook\views\new.py:236
+#: .\cookbook\views\delete.py:189
 msgid "Invite Link"
 msgstr "Uitnodigingslink"
+
+#: .\cookbook\views\delete.py:200
+#, fuzzy
+#| msgid "Members"
+msgid "Space Membership"
+msgstr "Leden"
 
 #: .\cookbook\views\edit.py:116
 msgid "You cannot edit this storage!"
@@ -2836,69 +2889,15 @@ msgstr "Aangepaste filters"
 msgid "Steps"
 msgstr "Stappen"
 
-#: .\cookbook\views\new.py:124
+#: .\cookbook\views\new.py:121
 msgid "Imported new recipe!"
 msgstr "Nieuw recept geïmporteerd!"
 
-#: .\cookbook\views\new.py:127
+#: .\cookbook\views\new.py:124
 msgid "There was an error importing this recipe!"
 msgstr "Er is een fout opgetreden bij het importeren van dit recept!"
 
-#: .\cookbook\views\new.py:210
-msgid "Hello"
-msgstr "Hallo"
-
-#: .\cookbook\views\new.py:210
-msgid "You have been invited by "
-msgstr "Je bent uitgenodigd door "
-
-#: .\cookbook\views\new.py:211
-msgid " to join their Tandoor Recipes space "
-msgstr " om zijn/haar Tandoor Recepten ruimte "
-
-#: .\cookbook\views\new.py:212
-msgid "Click the following link to activate your account: "
-msgstr "Klik om de volgende link om je account te activeren: "
-
-#: .\cookbook\views\new.py:213
-msgid ""
-"If the link does not work use the following code to manually join the space: "
-msgstr ""
-"Als de linkt niet werkt, gebruik dan de volgende code om handmatig tot de "
-"ruimte toe te treden: "
-
-#: .\cookbook\views\new.py:214
-msgid "The invitation is valid until "
-msgstr "De uitnodiging is geldig tot "
-
-#: .\cookbook\views\new.py:215
-msgid ""
-"Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
-msgstr ""
-"Tandoor Recepten is een Open Source recepten manager. Bekijk het op GitHub "
-
-#: .\cookbook\views\new.py:218
-msgid "Tandoor Recipes Invite"
-msgstr "Tandoor Recepten uitnodiging"
-
-#: .\cookbook\views\new.py:225
-msgid "Invite link successfully send to user."
-msgstr "Uitnodigingslink succesvol verstuurd naar gebruiker."
-
-#: .\cookbook\views\new.py:228
-msgid ""
-"You have send to many emails, please share the link manually or wait a few "
-"hours."
-msgstr ""
-"Je hebt te veel e-mails verstuurd, deel de link handmatig of wacht enkele "
-"uren."
-
-#: .\cookbook\views\new.py:230
-msgid "Email could not be sent to user. Please share the link manually."
-msgstr ""
-"E-mail aan gebruiker kon niet verzonden worden, deel de link handmatig."
-
-#: .\cookbook\views\views.py:128
+#: .\cookbook\views\views.py:124
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
@@ -2906,23 +2905,23 @@ msgstr ""
 "Je hebt je eigen recepten ruimte succesvol aangemaakt. Start met het "
 "toevoegen van recepten of nodig anderen uit om je te vergezellen."
 
-#: .\cookbook\views\views.py:176
+#: .\cookbook\views\views.py:178
 msgid "You do not have the required permissions to perform this action!"
 msgstr "Je beschikt niet over de juiste rechten om deze actie uit te voeren!"
 
-#: .\cookbook\views\views.py:187
+#: .\cookbook\views\views.py:189
 msgid "Comment saved!"
 msgstr "Opmerking opgeslagen!"
 
-#: .\cookbook\views\views.py:262
+#: .\cookbook\views\views.py:264
 msgid "This feature is not available in the demo version!"
 msgstr "Deze optie is niet beschikbaar in de demo versie!"
 
-#: .\cookbook\views\views.py:322
+#: .\cookbook\views\views.py:324
 msgid "You must select at least one field to search!"
 msgstr "Je moet tenminste één veld om te doorzoeken selecteren!"
 
-#: .\cookbook\views\views.py:327
+#: .\cookbook\views\views.py:329
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
@@ -2930,11 +2929,11 @@ msgstr ""
 "Om deze zoekmethode te gebruiken moet je tenminste één volledig tekstveld "
 "selecteren!"
 
-#: .\cookbook\views\views.py:331
+#: .\cookbook\views\views.py:333
 msgid "Fuzzy search is not compatible with this search method!"
 msgstr "'Fuzzy' zoeken is niet te gebruiken met deze zoekmethode!"
 
-#: .\cookbook\views\views.py:461
+#: .\cookbook\views\views.py:463
 msgid ""
 "The setup page can only be used to create the first user! If you have "
 "forgotten your superuser credentials please consult the django documentation "
@@ -2945,31 +2944,27 @@ msgstr ""
 "documentatie raad moeten plegen voor een methode om je wachtwoord te "
 "resetten."
 
-#: .\cookbook\views\views.py:468
+#: .\cookbook\views\views.py:470
 msgid "Passwords dont match!"
 msgstr "Wachtwoorden komen niet overeen!"
 
-#: .\cookbook\views\views.py:484
+#: .\cookbook\views\views.py:478
 msgid "User has been created, please login!"
 msgstr "Gebruiker is gecreëerd, Log in alstublieft!"
 
-#: .\cookbook\views\views.py:500
+#: .\cookbook\views\views.py:494
 msgid "Malformed Invite Link supplied!"
 msgstr "Onjuiste uitnodigingslink opgegeven!"
 
-#: .\cookbook\views\views.py:507
-msgid "You are already member of a space and therefore cannot join this one."
-msgstr "Je bent al lid van een ruimte en kan daardoor niet toetreden tot deze."
-
-#: .\cookbook\views\views.py:518
+#: .\cookbook\views\views.py:510
 msgid "Successfully joined space."
 msgstr "Succesvol toegetreden tot ruimte."
 
-#: .\cookbook\views\views.py:524
+#: .\cookbook\views\views.py:516
 msgid "Invite Link not valid or already used!"
 msgstr "De uitnodigingslink is niet valide of al gebruikt!"
 
-#: .\cookbook\views\views.py:605
+#: .\cookbook\views\views.py:530
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
@@ -2977,13 +2972,65 @@ msgstr ""
 "Het rapporteren van gedeelde links is niet geactiveerd voor deze instantie. "
 "Rapporteer problemen bij de beheerder van de pagina."
 
-#: .\cookbook\views\views.py:611
+#: .\cookbook\views\views.py:536
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
 "Links voor het delen van recepten zijn gedeactiveerd. Neem contact op met de "
 "paginabeheerder voor aanvullende informatie."
+
+#~ msgid "A user is required"
+#~ msgstr "Een gebruiker is verplicht"
+
+#~ msgid "Invite User"
+#~ msgstr "Nodig gebruiker uit"
+
+#~ msgid "User"
+#~ msgstr "Gebruiker"
+
+#~ msgid "Groups"
+#~ msgstr "Groepen"
+
+#~ msgid "admin"
+#~ msgstr "Beheerder"
+
+#~ msgid "user"
+#~ msgstr "gebruiker"
+
+#~ msgid "guest"
+#~ msgstr "gast"
+
+#~ msgid "remove"
+#~ msgstr "verwijder"
+
+#~ msgid "Update"
+#~ msgstr "Update"
+
+#~ msgid "You cannot edit yourself."
+#~ msgstr "Je kan jezelf niet bewerken."
+
+#~ msgid "There are no members in your space yet!"
+#~ msgstr "Er zitten nog geen leden in jouw ruimte!"
+
+#~ msgid "Invite link successfully send to user."
+#~ msgstr "Uitnodigingslink succesvol verstuurd naar gebruiker."
+
+#~ msgid ""
+#~ "You have send to many emails, please share the link manually or wait a "
+#~ "few hours."
+#~ msgstr ""
+#~ "Je hebt te veel e-mails verstuurd, deel de link handmatig of wacht enkele "
+#~ "uren."
+
+#~ msgid "Email could not be sent to user. Please share the link manually."
+#~ msgstr ""
+#~ "E-mail aan gebruiker kon niet verzonden worden, deel de link handmatig."
+
+#~ msgid ""
+#~ "You are already member of a space and therefore cannot join this one."
+#~ msgstr ""
+#~ "Je bent al lid van een ruimte en kan daardoor niet toetreden tot deze."
 
 #~ msgid "Try the new shopping list"
 #~ msgstr "Probeer de nieuwe boodschappenlijst"
