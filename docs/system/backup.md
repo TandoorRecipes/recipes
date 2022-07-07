@@ -35,12 +35,13 @@ You can back up from docker even when the tandoor container is failing, so long 
 
 To back up:
 ```
-Sudo docker exec -t db_recipes -c -U djangouser
+sudo docker exec -t docer_db_recipes_1 pg_dumpall -U djangouser > pgdump.sql
+
 ```
 
 To restore:
 ```
-Cat dump.sql | docker exec -i psql postgres -U djangouser
+cat pgdump.sql | docker exec -i psql postgres -U djangouser
 ```
 This connects to the postgres table instead of the actual dgangodb table, as the import function needs to delete the table, which can't be dropped off you're connected to it.
 
