@@ -461,8 +461,8 @@ export default {
             recent_urls: [],
             source_data: '',
             recipe_json: undefined,
-            recipe_html: undefined,
-            recipe_tree: undefined,
+            // recipe_html: undefined,
+            // recipe_tree: undefined,
             recipe_images: [],
             imported_recipes: [],
             failed_imports: [],
@@ -593,9 +593,9 @@ export default {
             }
 
             // reset all variables
-            this.recipe_html = undefined
+            // this.recipe_html = undefined
             this.recipe_json = undefined
-            this.recipe_tree = undefined
+            // this.recipe_tree = undefined
             this.recipe_images = []
 
             // load recipe
@@ -621,8 +621,8 @@ export default {
                     return x
                 })
 
-                this.recipe_tree = response.data['recipe_tree'];
-                this.recipe_html = response.data['recipe_html'];
+                // this.recipe_tree = response.data['recipe_tree'];
+                // this.recipe_html = response.data['recipe_html'];
                 this.recipe_images = response.data['recipe_images'] !== undefined ? response.data['recipe_images'] : [];
 
                 if (!silent) {

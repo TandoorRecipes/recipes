@@ -5,6 +5,8 @@ import re
 import traceback
 import uuid
 from collections import OrderedDict
+from json import JSONDecodeError
+from urllib.parse import unquote
 from zipfile import ZipFile
 
 import requests
@@ -26,6 +28,8 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from PIL import UnidentifiedImageError
+from recipe_scrapers import scrape_html, scrape_me
+from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.models import Token
@@ -40,6 +44,7 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
+from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -47,9 +52,9 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
                                                is_space_owner, switch_user_active_space)
-from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
-from cookbook.helper.recipe_url_import import get_from_youtube_scraper
+from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
+from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, ImportLog, Ingredient, InviteLink, Keyword, MealPlan,
@@ -1116,69 +1121,79 @@ def recipe_from_source(request):
             - url: url to use for importing recipe
             - data: if no url is given recipe is imported from provided source data
             - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
-    :return: JsonResponse containing the parsed json, original html,json and images
+    :return: JsonResponse containing the parsed json and images
     """
+    scrape = None
     serializer = RecipeFromSourceSerializer(data=request.data)
     if serializer.is_valid():
-        # headers to use for request to external sites - DEPRECATE
-        external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
 
         if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
             serializer.validated_data['url'] = bookmarklet.url
             serializer.validated_data['data'] = bookmarklet.html
             bookmarklet.delete()
 
-        elif not 'url' in serializer.validated_data and not 'data' in serializer.validated_data:
+        url = serializer.validated_data.get('url', None)
+        data = unquote(serializer.validated_data.get('data', None))
+        if not url and not data:
             return Response({
                 'error': True,
                 'msg': _('Nothing to do.')
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # in manual mode request complete page to return it later
-        elif 'url' in serializer.validated_data and serializer.validated_data['url'] != '':
-            if re.match('^(https?://)?(www\.youtube\.com|youtu\.be)/.+$', serializer.validated_data['url']):
-                if validators.url(serializer.validated_data['url'], public=True):
+        elif url and not data:
+            if re.match('^(https?://)?(www\.youtube\.com|youtu\.be)/.+$', url):
+                if validators.url(url, public=True):
                     return Response({
-                        'recipe_json': get_from_youtube_scraper(serializer.validated_data['url'], request),
-                        'recipe_tree': '',
-                        'recipe_html': '',
+                        'recipe_json': get_from_youtube_scraper(url, request),
+                        # 'recipe_tree': '',
+                        # 'recipe_html': '',
                         'recipe_images': [],
                     }, status=status.HTTP_200_OK)
-            #######
-            # this section is redundant to scrape_me.  REFACTOR to catch errors from scrape_me
-            try:
-                if validators.url(serializer.validated_data['url'], public=True):
-                    requests.get(serializer.validated_data['url'], headers=external_request_headers).content
-                else:
+            else:
+                try:
+                    if validators.url(url, public=True):
+                        scrape = scrape_me(url_path=url, wild_mode=True)
+
+                    else:
+                        return Response({
+                            'error': True,
+                            'msg': _('Invalid Url')
+                        }, status=status.HTTP_400_BAD_REQUEST)
+                except NoSchemaFoundInWildMode:
+                    pass
+                except requests.exceptions.ConnectionError:
                     return Response({
                         'error': True,
-                        'msg': _('Invalid Url')
+                        'msg': _('Connection Refused.')
                     }, status=status.HTTP_400_BAD_REQUEST)
-            except requests.exceptions.ConnectionError:
-                return Response({
-                    'error': True,
-                    'msg': _('Connection Refused.')
-                }, status=status.HTTP_400_BAD_REQUEST)
-            except requests.exceptions.MissingSchema:
-                return Response({
-                    'error': True,
-                    'msg': _('Bad URL Schema.')
-                }, status=status.HTTP_400_BAD_REQUEST)
-            #######
+                except requests.exceptions.MissingSchema:
+                    return Response({
+                        'error': True,
+                        'msg': _('Bad URL Schema.')
+                    }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            try:
+                json.loads(data)
+                data = "<script type='application/ld+json'>" + data + "</script>"
+            except JSONDecodeError:
+                pass
+            scrape = text_scraper(text=data, url=url)
+            if not url and (found_url := scrape.schema.data.get('url', None)):
+                scrape = text_scraper(text=data, url=found_url)
 
-        recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(serializer.validated_data['data'], serializer.validated_data['url'], request)
-        if len(recipe_tree) == 0 and len(recipe_json) == 0:
+        if scrape:
+            return Response({
+                'recipe_json': helper.get_from_scraper(scrape, request),
+                # 'recipe_tree': recipe_tree,
+                # 'recipe_html': recipe_html,
+                'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
+            }, status=status.HTTP_200_OK)
+
+        else:
             return Response({
                 'error': True,
                 'msg': _('No usable data could be found.')
             }, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({
-                'recipe_json': recipe_json,
-                'recipe_tree': recipe_tree,
-                'recipe_html': recipe_html,
-                'recipe_images': list(dict.fromkeys(recipe_images)),
-            }, status=status.HTTP_200_OK)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

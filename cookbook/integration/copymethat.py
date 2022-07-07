@@ -3,10 +3,9 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from bs4 import BeautifulSoup
-
 from django.utils.translation import gettext as _
+
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes, parse_servings
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
