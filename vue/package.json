@@ -56,7 +56,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.28.0",
     "eslint-plugin-vue": "^8.7.1",
-    "typescript": "~4.7.2",
+    "typescript": "~4.7.4",
     "vue-cli-plugin-i18n": "^2.3.1",
     "webpack-bundle-tracker": "1.5.0",
     "workbox-expiration": "^6.3.0",
