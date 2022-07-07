@@ -27,17 +27,17 @@ def text_scraper(text, url=None):
     class TextScraper(scraper_class):
         def __init__(
             self,
-            page_data,
-            url=None
+            html=None,
+            url=None,
         ):
             self.wild_mode = False
             self.meta_http_equiv = False
-            self.soup = BeautifulSoup(page_data, "html.parser")
+            self.soup = BeautifulSoup(html, "html.parser")
             self.url = url
             self.recipe = None
             try:
-                self.schema = SchemaOrg(page_data)
+                self.schema = SchemaOrg(html)
             except (JSONDecodeError, AttributeError):
                 pass
 
-    return TextScraper(text, url)
+    return TextScraper(url=url, html=text)
