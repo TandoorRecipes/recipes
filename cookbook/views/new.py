@@ -13,9 +13,9 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, InviteLinkForm, MealPlanForm, Storage, StorageForm
-from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
+from cookbook.helper.permission_helper import GroupRequiredMixin, group_required, above_space_limit
 from cookbook.models import (InviteLink, MealPlan, MealType, Recipe, RecipeBook, RecipeImport,
-                             ShareLink, Step, UserPreference)
+                             ShareLink, Step, UserPreference, UserSpace)
 from cookbook.views.edit import SpaceFormMixing
 from recipes import settings
 
@@ -27,12 +27,9 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     fields = ('name',)
 
     def form_valid(self, form):
-        if self.request.space.max_recipes != 0 and Recipe.objects.filter(space=self.request.space).count() >= self.request.space.max_recipes:  # TODO move to central helper function
-            messages.add_message(self.request, messages.WARNING, _('You have reached the maximum number of recipes for your space.'))
-            return HttpResponseRedirect(reverse('index'))
-
-        if self.request.space.max_users != 0 and UserPreference.objects.filter(space=self.request.space).count() > self.request.space.max_users:
-            messages.add_message(self.request, messages.WARNING, _('You have more users than allowed in your space.'))
+        limit, msg = above_space_limit(self.request.space)
+        if limit:
+            messages.add_message(self.request, messages.WARNING, msg)
             return HttpResponseRedirect(reverse('index'))
 
         obj = form.save(commit=False)
@@ -190,59 +187,3 @@ class MealPlanCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
         return context
 
 
-class InviteLinkCreate(GroupRequiredMixin, CreateView):
-    groups_required = ['admin']
-    template_name = "generic/new_template.html"
-    model = InviteLink
-    form_class = InviteLinkForm
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.created_by = self.request.user
-
-        # verify given space is actually owned by the user creating the link
-        if obj.space.created_by != self.request.user:
-            obj.space = self.request.space
-        obj.save()
-        if obj.email:
-            try:
-                if InviteLink.objects.filter(space=self.request.space, created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
-                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(self.request.user.username)
-                    message += _(' to join their Tandoor Recipes space ') + escape(self.request.space.name) + '.\n\n'
-                    message += _('Click the following link to activate your account: ') + self.request.build_absolute_uri(reverse('view_invite', args=[str(obj.uuid)])) + '\n\n'
-                    message += _('If the link does not work use the following code to manually join the space: ') + str(obj.uuid) + '\n\n'
-                    message += _('The invitation is valid until ') + str(obj.valid_until) + '\n\n'
-                    message += _('Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub ') + 'https://github.com/vabene1111/recipes/'
-
-                    send_mail(
-                        _('Tandoor Recipes Invite'),
-                        message,
-                        None,
-                        [obj.email],
-                        fail_silently=False,
-                    )
-                    messages.add_message(self.request, messages.SUCCESS,
-                                         _('Invite link successfully send to user.'))
-                else:
-                    messages.add_message(self.request, messages.ERROR,
-                                         _('You have send to many emails, please share the link manually or wait a few hours.'))
-            except (SMTPException, BadHeaderError, TimeoutError):
-                messages.add_message(self.request, messages.ERROR, _('Email could not be sent to user. Please share the link manually.'))
-
-        return HttpResponseRedirect(reverse('view_space'))
-
-    def get_context_data(self, **kwargs):
-        context = super(InviteLinkCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Invite Link")
-        return context
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs.update({'user': self.request.user})
-        return kwargs
-
-    def get_initial(self):
-        return dict(
-            space=self.request.space,
-            group=Group.objects.get(name='user')
-        )

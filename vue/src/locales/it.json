@@ -239,5 +239,6 @@
     "err_move_self": "Non è possibile muovere un elemento in sé stesso",
     "nothing": "Nulla da fare",
     "show_sql": "Mostra SQL",
-    "Search Settings": "Impostazioni di ricerca"
+    "Search Settings": "Impostazioni di ricerca",
+    "err_deleting_protected_resource": "L'elemento che stai cercando di eliminare è ancora in uso e non può essere eliminato."
 }

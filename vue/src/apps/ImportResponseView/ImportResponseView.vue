@@ -69,7 +69,7 @@
                                            v-if="recipe.imported !== undefined && recipe.imported"
                                            target="_blank">{{
                                                 recipe.recipe_name
-                                            }}</a> <span v-else>{{ recipe.recipe_name }}</span>
+                                            }}</a> <a target="_blank"  :href="`${resolveDjangoUrl('view_search') }?query=${recipe.recipe_name}`" v-else>{{ recipe.recipe_name }}</a>
                                         <b-badge class="float-right text-white">{{ index + 1 }}</b-badge>
                                     </h5>
                                     <p class="mb-0">

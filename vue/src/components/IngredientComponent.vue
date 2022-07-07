@@ -7,12 +7,12 @@
         </template>
 
         <template v-else>
-            <td class="d-print-non" v-if="detailed && !show_shopping" @click="done">
+            <td class="d-print-none" v-if="detailed && !show_shopping" @click="done">
                 <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
                 <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
             </td>
             <td class="text-nowrap" @click="done">
-                <span v-if="ingredient.amount !== 0" v-html="calculateAmount(ingredient.amount)"></span>
+                <span v-if="ingredient.amount !== 0 && !ingredient.no_amount" v-html="calculateAmount(ingredient.amount)"></span>
             </td>
             <td @click="done">
                 <span v-if="ingredient.unit !== null && !ingredient.no_amount">{{ ingredient.unit.name }}</span>
