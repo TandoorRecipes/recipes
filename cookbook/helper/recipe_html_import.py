@@ -73,6 +73,7 @@ def get_recipe_from_source(text, url, request):
             scrape = scrape_me(url_path=url, wild_mode=True)
         except(NoSchemaFoundInWildMode):
             pass
+
     if not scrape:
         try:
             parse_list.append(remove_graph(json.loads(text)))
@@ -101,6 +102,7 @@ def get_recipe_from_source(text, url, request):
 
     recipe_json = helper.get_from_scraper(scrape, request)
 
+    # TODO: DEPRECATE recipe_tree & html_data.  first validate it isn't used anywhere
     for el in parse_list:
         temp_tree = []
         if isinstance(el, Tag):

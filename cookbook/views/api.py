@@ -1120,7 +1120,7 @@ def recipe_from_source(request):
     """
     serializer = RecipeFromSourceSerializer(data=request.data)
     if serializer.is_valid():
-        # headers to use for request to external sites
+        # headers to use for request to external sites - DEPRECATE
         external_request_headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7"}
 
         if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
@@ -1144,9 +1144,11 @@ def recipe_from_source(request):
                         'recipe_html': '',
                         'recipe_images': [],
                     }, status=status.HTTP_200_OK)
+            #######
+            # this section is redundant to scrape_me.  REFACTOR to catch errors from scrape_me
             try:
                 if validators.url(serializer.validated_data['url'], public=True):
-                    serializer.validated_data['data'] = requests.get(serializer.validated_data['url'], headers=external_request_headers).content
+                    requests.get(serializer.validated_data['url'], headers=external_request_headers).content
                 else:
                     return Response({
                         'error': True,
@@ -1162,6 +1164,7 @@ def recipe_from_source(request):
                     'error': True,
                     'msg': _('Bad URL Schema.')
                 }, status=status.HTTP_400_BAD_REQUEST)
+            #######
 
         recipe_json, recipe_tree, recipe_html, recipe_images = get_recipe_from_source(serializer.validated_data['data'], serializer.validated_data['url'], request)
         if len(recipe_tree) == 0 and len(recipe_json) == 0:
