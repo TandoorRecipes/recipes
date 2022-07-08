@@ -190,6 +190,9 @@ import {ApiApiFactory} from "@/utils/openapi/api.ts"
 import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 import axios from "axios";
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 
 Vue.use(BootstrapVue)
 
@@ -229,7 +232,7 @@ export default {
             if (link) {
                 content = localStorage.BASE_PATH + this.resolveDjangoUrl('view_invite', inviteLink.uuid)
             }
-            navigator.clipboard.writeText(content)
+             this.$copyText(content)
         },
         loadInviteLinks: function () {
             let apiFactory = new ApiApiFactory()
