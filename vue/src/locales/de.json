@@ -413,5 +413,7 @@
     "facet_count_info": "Die Anzahl an Rezepten im Suchfilter anzeigen.",
     "Copy Token": "Token kopieren",
     "Invites": "Einladungen",
-    "Message": "Nachricht"
+    "Message": "Nachricht",
+    "Bookmarklet": "Lesezeichen",
+    "substitute_siblings_help": "Alle Lebensmittel, die sich ein übergeordnetes Lebensmittels teilen, gelten als Alternativen."
 }
