@@ -69,7 +69,9 @@
                                            v-if="recipe.imported !== undefined && recipe.imported"
                                            target="_blank">{{
                                                 recipe.recipe_name
-                                            }}</a> <a target="_blank"  :href="`${resolveDjangoUrl('view_search') }?query=${recipe.recipe_name}`" v-else>{{ recipe.recipe_name }}</a>
+                                            }}</a> <a target="_blank"
+                                                      :href="`${resolveDjangoUrl('view_search') }?query=${recipe.recipe_name}`"
+                                                      v-else>{{ recipe.recipe_name }}</a>
                                         <b-badge class="float-right text-white">{{ index + 1 }}</b-badge>
                                     </h5>
                                     <p class="mb-0">
@@ -212,16 +214,19 @@ export default {
                 }
                 if (out.info !== '') {
                     let items = out.info.split(/:(.*)/s)[1]
-                    items = items.split(",")
-                    out.duplicates_total = items.length
-                    out.recipes.forEach((recipe) => {
-                        recipe.imported = true
-                        items.forEach((item) => {
-                            if (recipe.recipe_name === item.trim()) {
-                                recipe.imported = false
-                            }
+                    if (items !== undefined) {
+                        items = items.split(",")
+                        out.duplicates_total = items.length
+                        out.recipes.forEach((recipe) => {
+                            recipe.imported = true
+                            items.forEach((item) => {
+                                if (recipe.recipe_name === item.trim()) {
+                                    recipe.imported = false
+                                }
+                            })
                         })
-                    })
+                    }
+
                 } else {
                     if (out.imported_total > 0) {
                         out.recipes.forEach((recipe) => {

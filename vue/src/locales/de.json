@@ -406,5 +406,14 @@
     "Import_Error": "Es ist ein Fehler beim Importieren aufgetreten. Bitte sieh dir die ausgeklappten Details unten auf der Seite an.",
     "Warning_Delete_Supermarket_Category": "Die Löschung einer Supermarktkategorie werden auch alle Beziehungen zu Lebensmitteln gelöscht. Bist du dir sicher?",
     "New_Supermarket": "Erstelle einen neuen Supermarkt",
-    "New_Supermarket_Category": "Erstelle eine neue Supermarktkategorie"
+    "New_Supermarket_Category": "Erstelle eine neue Supermarktkategorie",
+    "warning_space_delete": "Sie können ihren Space mit allen Rezepten, Einkaufslisten, Essensplänen und allem andren löschen. Dieser Vorgang kann nicht Rückgängig gemacht werden! Sind Sie sicher?",
+    "Copy Link": "Link kopieren",
+    "Users": "Benutzer",
+    "facet_count_info": "Die Anzahl an Rezepten im Suchfilter anzeigen.",
+    "Copy Token": "Token kopieren",
+    "Invites": "Einladungen",
+    "Message": "Nachricht",
+    "Bookmarklet": "Lesezeichen",
+    "substitute_siblings_help": "Alle Lebensmittel, die sich ein übergeordnetes Lebensmittels teilen, gelten als Alternativen."
 }
