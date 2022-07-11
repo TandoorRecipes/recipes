@@ -1,20 +1,18 @@
 import random
 import re
 from html import unescape
-
-from pytube import YouTube
 from unicodedata import decomposition
 
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-from recipe_scrapers._utils import get_minutes
+from pytube import YouTube
+from recipe_scrapers._utils import get_host_name, get_minutes
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Keyword
-
 
 # from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
 
@@ -369,3 +367,32 @@ def iso_duration_to_minutes(string):
         string
     ).groupdict()
     return int(match['days'] or 0) * 24 * 60 + int(match['hours'] or 0) * 60 + int(match['minutes'] or 0)
+
+
+def get_images_from_soup(soup, url):
+    sources = ['src', 'srcset', 'data-src']
+    images = []
+    img_tags = soup.find_all('img')
+    if url:
+        site = get_host_name(url)
+        prot = url.split(':')[0]
+
+    urls = []
+    for img in img_tags:
+        for src in sources:
+            try:
+                urls.append(img[src])
+            except KeyError:
+                pass
+
+    for u in urls:
+        u = u.split('?')[0]
+        filename = re.search(r'/([\w_-]+[.](jpg|jpeg|gif|png))$', u)
+        if filename:
+            if (('http' not in u) and (url)):
+                # sometimes an image source can be relative
+                # if it is provide the base url
+                u = '{}://{}{}'.format(prot, site, u)
+            if 'http' in u:
+                images.append(u)
+    return images
