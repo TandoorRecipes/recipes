@@ -23,12 +23,12 @@ postgres=# grant all privileges on database tandoor to tandoor;
 
 4. Now its time to change some enviourment variables in TandoorRecipes template:
 ```env
-DB_ENGINE=django.db.backends.postgresql // Database Engine, previous value: `django.db.backends.sqlite3`
-POSTGRES_HOST=<Your unraid host ip> // PostgreSQL Host
-POSTGRES_PORT=5432 // PostgreSQL Host
-POSTGRES_USER=tandoor //PostgreSQL User
-POSTGRES_PASSWORD=yoursupersecretpassworddyoudidntcopy // PostgreSQL Password
-POSTGRES_DB=tandoor // Database, previous value: `/data/recipes.db`
+DB_ENGINE=django.db.backends.postgresql  # Database Engine, previous value: `django.db.backends.sqlite3`
+POSTGRES_HOST=<Your unraid host ip>  # PostgreSQL Host
+POSTGRES_PORT=5432  # PostgreSQL Host
+POSTGRES_USER=tandoor  # PostgreSQL User
+POSTGRES_PASSWORD=yoursupersecretpassworddyoudidntcopy  # PostgreSQL Password
+POSTGRES_DB=tandoor  # Database, previous value: `/data/recipes.db`
 ```
 
 5. Save it, and start the container once.
