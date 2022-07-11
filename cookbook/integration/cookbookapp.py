@@ -10,8 +10,8 @@ import validators
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_url_import import iso_duration_to_minutes
+from cookbook.helper.recipe_url_import import get_images_from_soup, iso_duration_to_minutes
+from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -24,7 +24,10 @@ class CookBookApp(Integration):
     def get_recipe_from_file(self, file):
         recipe_html = file.getvalue().decode("utf-8")
 
-        recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
+        # recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
+        scrape = text_scraper(text=data)
+        recipe_json = helper.get_from_scraper(scrape, request)
+        images = list(dict.fromkeys(get_images_from_soup(scrape.soup, url)))
 
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(),
