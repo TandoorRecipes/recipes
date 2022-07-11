@@ -10,7 +10,7 @@ import validators
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import get_images_from_soup, iso_duration_to_minutes
+from cookbook.helper.recipe_url_import import get_images_from_soup, iso_duration_to_minutes, get_from_scraper
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
@@ -25,9 +25,9 @@ class CookBookApp(Integration):
         recipe_html = file.getvalue().decode("utf-8")
 
         # recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
-        scrape = text_scraper(text=data)
-        recipe_json = helper.get_from_scraper(scrape, request)
-        images = list(dict.fromkeys(get_images_from_soup(scrape.soup, url)))
+        scrape = text_scraper(text=recipe_html)
+        recipe_json = get_from_scraper(scrape, self.request)
+        images = list(dict.fromkeys(get_images_from_soup(scrape.soup, None)))
 
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(),
@@ -44,6 +44,7 @@ class CookBookApp(Integration):
             recipe.waiting_time = iso_duration_to_minutes(recipe_json['cookTime'])
         except Exception:
             pass
+
 
         step = Step.objects.create(instruction=recipe_json['recipeInstructions'], space=self.request.space, )
 
