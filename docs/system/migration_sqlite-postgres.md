@@ -4,7 +4,7 @@ While some commands are unraid specific, it should in general work for any setup
 
 1. Make a backup of your `/mnt/user/appdata/recipes` dir.
 
-2. Without changing any settings, get a shell into the docker through the WEB-UI or by running `docker exec -it TandoorRecipes /bin/sh`
+2. Without changing any settings, get a shell into the TandoorRecipes docker through the Web-UI or by running `docker exec -it TandoorRecipes /bin/sh`
 ```cmd
 cd /opt/recipes
 ./venv/bin/python manage.py export -a > /data/dump.json
