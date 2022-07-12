@@ -63,7 +63,6 @@ urlpatterns = [
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
-    path('search/v2/', views.search_v2, name='view_search_v2'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
     path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),

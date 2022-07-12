@@ -11,28 +11,22 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q
-from django.db.models.functions import Lower
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
-from django_tables2 import RequestConfig
 from rest_framework.authtoken.models import Token
 
-from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
-                            SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
+                            SpaceCreateForm, SpaceJoinForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
-                             MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             Space, Unit, ViewLog, UserSpace)
-from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable)
-from cookbook.views.data import Object
+from cookbook.models import (Comment, CookLog, InviteLink, MealPlan, SearchFields, SearchPreference, ShareLink,
+                             Space, ViewLog, UserSpace)
+from cookbook.tables import (CookLogTable, ViewLogTable)
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -58,45 +52,12 @@ def index(request):
 # TODO need to deprecate
 def search(request):
     if has_group_permission(request.user, ('guest',)):
-        if request.user.userpreference.search_style == UserPreference.NEW:
-            return search_v2(request)
-        f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.space).all().order_by(
-                             Lower('name').asc()),
-                         space=request.space)
-        if request.user.userpreference.search_style == UserPreference.LARGE:
-            table = RecipeTable(f.qs)
-        else:
-            table = RecipeTableSmall(f.qs)
-        RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-        if request.GET == {} and request.user.userpreference.show_recent:
-            qs = Recipe.objects.filter(viewlog__created_by=request.user).filter(
-                space=request.space).order_by('-viewlog__created_at').all()
-
-            recent_list = []
-            for r in qs:
-                if r not in recent_list:
-                    recent_list.append(r)
-                if len(recent_list) >= 5:
-                    break
-
-            last_viewed = RecipeTable(recent_list)
-        else:
-            last_viewed = None
-
-        return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
+        return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
-
-
-@group_required('guest')
-def search_v2(request):
-    return render(request, 'search.html', {})
-
 
 def no_groups(request):
     return render(request, 'no_groups_info.html')
@@ -270,8 +231,6 @@ def user_settings(request):
                 up.nav_color = form.cleaned_data['nav_color']
                 up.default_unit = form.cleaned_data['default_unit']
                 up.default_page = form.cleaned_data['default_page']
-                up.show_recent = form.cleaned_data['show_recent']
-                up.search_style = form.cleaned_data['search_style']
                 up.plan_share.set(form.cleaned_data['plan_share'])
                 up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
                 up.comments = form.cleaned_data['comments']
