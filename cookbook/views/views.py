@@ -127,7 +127,7 @@ def space_overview(request):
         if join_form.is_valid():
             return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
-        if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set) == 0:
+        if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
             user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=False)
             user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
             return HttpResponseRedirect(reverse('index'))
