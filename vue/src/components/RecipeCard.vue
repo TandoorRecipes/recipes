@@ -1,6 +1,6 @@
 <template>
     <b-card no-body v-hover v-if="recipe">
-        <a :href="clickUrl()">
+        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
             <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image" v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
             <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1" v-if="show_context_menu">
                 <a>
@@ -15,7 +15,7 @@
 
         <b-card-body class="p-4">
             <h6>
-                <a :href="clickUrl()">
+                <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
                     <template v-if="recipe !== null">{{ recipe.name }}</template>
                     <template v-else>{{ meal_plan.title }}</template>
                 </a>
@@ -101,14 +101,7 @@ export default {
         },
     },
     methods: {
-        // TODO: convert this to genericAPI
-        clickUrl: function () {
-            if (this.recipe !== null) {
-                return resolveDjangoUrl("view_recipe", this.recipe.id)
-            } else {
-                return resolveDjangoUrl("view_plan_entry", this.meal_plan.id)
-            }
-        },
+
     },
     directives: {
         hover: {
