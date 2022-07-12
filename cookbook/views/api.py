@@ -2,6 +2,7 @@ import io
 import json
 import mimetypes
 import re
+import threading
 import traceback
 import uuid
 from collections import OrderedDict
@@ -44,6 +45,7 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
+from cookbook.forms import ImportForm
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
@@ -51,7 +53,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space)
+                                               is_space_owner, switch_user_active_space, above_space_limit)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -85,6 +87,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer)
+from cookbook.views.import_export import get_integration
 from recipes import settings
 
 
@@ -720,7 +723,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
         QueryParam(name='keywords', description=_(
             'ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'),
-            qtype='int'),
+                   qtype='int'),
         QueryParam(name='keywords_or',
                    description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'),
                    qtype='int'),
@@ -1256,6 +1259,35 @@ def download_file(request, file_id):
     except Exception as e:
         traceback.print_exc()
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser])
+def import_files(request):
+    """
+    function to handle files passed by application importer
+    """
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)
+
+    form = ImportForm(request.POST, request.FILES)
+    if form.is_valid() and request.FILES != {}:
+        try:
+            integration = get_integration(request, form.cleaned_data['type'])
+
+            il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
+            files = []
+            for f in request.FILES.getlist('files'):
+                files.append({'file': io.BytesIO(f.read()), 'name': f.name})
+            t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+            t.setDaemon(True)
+            t.start()
+
+            return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
+        except NotImplementedError:
+            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):
