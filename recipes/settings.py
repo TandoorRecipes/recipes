@@ -99,7 +99,6 @@ INSTALLED_APPS = [
     'django_prometheus',
     'django_tables2',
     'corsheaders',
-    'django_filters',
     'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
