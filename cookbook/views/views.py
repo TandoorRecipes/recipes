@@ -59,6 +59,7 @@ def search(request):
         else:
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
+
 def no_groups(request):
     return render(request, 'no_groups_info.html')
 
@@ -158,7 +159,7 @@ def recipe_view(request, pk, share=None):
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
         return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share,})
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, })
 
 
 @group_required('user')
@@ -175,9 +176,10 @@ def meal_plan(request):
 def supermarket(request):
     return render(request, 'supermarket.html', {})
 
+
 @group_required('user')
 def view_profile(request, user_id):
-    return render(request, 'supermarket.html', {})
+    return render(request, 'profile.html', {})
 
 
 @group_required('user')
