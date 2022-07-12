@@ -64,7 +64,6 @@
 
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
         window.RECIPE_ID = {{recipe.pk}};
-        window.USER_SERVINGS = {{ user_servings }};
         window.SHARE_UID = '{{ share }}';
         window.USER_PREF = {
             'use_fractions': {% if request.user.userpreference.use_fractions %} true {% else %} false {% endif %},

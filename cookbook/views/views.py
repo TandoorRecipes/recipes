@@ -190,18 +190,6 @@ def recipe_view(request, pk, share=None):
 
         comment_form = CommentForm()
 
-        user_servings = None
-        if request.user.is_authenticated:
-            user_servings = CookLog.objects.filter(
-                recipe=recipe,
-                created_by=request.user,
-                servings__gt=0,
-                space=request.space,
-            ).all().aggregate(Avg('servings'))['servings__avg']
-
-        if not user_servings:
-            user_servings = 0
-
         if request.user.is_authenticated:
             if not ViewLog.objects.filter(recipe=recipe, created_by=request.user,
                                           created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
@@ -209,8 +197,7 @@ def recipe_view(request, pk, share=None):
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
         return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share,
-                       'user_servings': user_servings})
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share,})
 
 
 @group_required('user')
