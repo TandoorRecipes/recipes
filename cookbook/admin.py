@@ -15,7 +15,7 @@ from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation)
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -44,6 +44,14 @@ class SpaceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Space, SpaceAdmin)
+
+
+class UserSpaceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'space',)
+    search_fields = ('user', 'space',)
+
+
+admin.site.register(UserSpace, UserSpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
