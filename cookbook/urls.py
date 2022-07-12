@@ -73,7 +73,7 @@ urlpatterns = [
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
-    path('import/', import_export.import_recipe, name='view_import'),
+    path('api/import/', api.import_files, name='view_import'),
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
     path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),

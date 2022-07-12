@@ -83,42 +83,6 @@ def get_integration(request, export_type):
 
 
 @group_required('user')
-def import_recipe(request):
-    limit, msg = above_space_limit(request.space)
-    if limit:
-        messages.add_message(request, messages.WARNING, msg)
-        return HttpResponseRedirect(reverse('index'))
-
-    if request.method == "POST":
-        form = ImportForm(request.POST, request.FILES)
-        if form.is_valid() and request.FILES != {}:
-            try:
-                integration = get_integration(request, form.cleaned_data['type'])
-
-                il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
-                files = []
-                for f in request.FILES.getlist('files'):
-                    files.append({'file': BytesIO(f.read()), 'name': f.name})
-                t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
-                t.setDaemon(True)
-                t.start()
-
-                return JsonResponse({'import_id': il.pk})
-            except NotImplementedError:
-                return JsonResponse(
-                    {
-                        'error': True,
-                        'msg': _('Importing is not implemented for this provider')
-                    },
-                    status=400
-                )
-    else:
-        form = ImportForm()
-
-    return render(request, 'import.html', {'form': form})
-
-
-@group_required('user')
 def export_recipe(request):
     if request.method == "POST":
         form = ExportForm(request.POST, space=request.space)
