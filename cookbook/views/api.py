@@ -52,7 +52,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, Cus
                                                CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
                                                is_space_owner, switch_user_active_space)
-from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
+from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -797,7 +797,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.GET.get('debug', False):
             return JsonResponse({
                 'new': str(self.get_queryset().query),
-                'old': str(old_search(request).query)
             })
         return super().list(request, *args, **kwargs)
 

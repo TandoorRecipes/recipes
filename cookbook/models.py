@@ -355,13 +355,6 @@ class UserPreference(models.Model, PermissionModelMixin):
         (BOOKS, _('Books')),
     )
 
-    # Search Style
-    SMALL = 'SMALL'
-    LARGE = 'LARGE'
-    NEW = 'NEW'
-
-    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')), (NEW, _('New')))
-
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(
@@ -373,10 +366,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     default_page = models.CharField(
         choices=PAGES, max_length=64, default=SEARCH
     )
-    search_style = models.CharField(
-        choices=SEARCH_STYLE, max_length=64, default=NEW
-    )
-    show_recent = models.BooleanField(default=True)
     plan_share = models.ManyToManyField(
         User, blank=True, related_name='plan_share_default'
     )
