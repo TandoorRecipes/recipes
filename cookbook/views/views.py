@@ -175,6 +175,10 @@ def meal_plan(request):
 def supermarket(request):
     return render(request, 'supermarket.html', {})
 
+@group_required('user')
+def view_profile(request, user_id):
+    return render(request, 'supermarket.html', {})
+
 
 @group_required('user')
 def ingredient_editor(request):
@@ -187,23 +191,6 @@ def ingredient_editor(request):
     if unit_id and re.match(r'^(\d)+$', unit_id):
         template_vars['unit_id'] = unit_id
     return render(request, 'ingredient_editor.html', template_vars)
-
-
-@group_required('user')
-def meal_plan_entry(request, pk):
-    plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
-
-    if plan.created_by != request.user and plan.shared != request.user:
-        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-        return HttpResponseRedirect(reverse_lazy('index'))
-
-    same_day_plan = MealPlan.objects \
-        .filter(date=plan.date, space=request.space) \
-        .exclude(pk=plan.pk) \
-        .filter(Q(created_by=request.user) | Q(shared=request.user)) \
-        .order_by('meal_type').all()
-
-    return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
 
 
 @group_required('guest')
