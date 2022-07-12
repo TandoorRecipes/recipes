@@ -10,8 +10,9 @@ import validators
 import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_html_import import get_recipe_from_source
-from cookbook.helper.recipe_url_import import iso_duration_to_minutes
+from cookbook.helper.recipe_url_import import (get_from_scraper, get_images_from_soup,
+                                               iso_duration_to_minutes)
+from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -24,7 +25,10 @@ class CookBookApp(Integration):
     def get_recipe_from_file(self, file):
         recipe_html = file.getvalue().decode("utf-8")
 
-        recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
+        # recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
+        scrape = text_scraper(text=recipe_html)
+        recipe_json = get_from_scraper(scrape, self.request)
+        images = list(dict.fromkeys(get_images_from_soup(scrape.soup, None)))
 
         recipe = Recipe.objects.create(
             name=recipe_json['name'].strip(),
@@ -42,7 +46,8 @@ class CookBookApp(Integration):
         except Exception:
             pass
 
-        step = Step.objects.create(instruction=recipe_json['recipeInstructions'], space=self.request.space, )
+        # assuming import files only contain single step
+        step = Step.objects.create(instruction=recipe_json['steps'][0]['instruction'], space=self.request.space, )
 
         if 'nutrition' in recipe_json:
             step.instruction = step.instruction + '\n\n' + recipe_json['nutrition']
@@ -51,11 +56,13 @@ class CookBookApp(Integration):
         recipe.steps.add(step)
 
         ingredient_parser = IngredientParser(self.request, True)
-        for ingredient in recipe_json['recipeIngredient']:
-            f = ingredient_parser.get_food(ingredient['ingredient']['text'])
-            u = ingredient_parser.get_unit(ingredient['unit']['text'])
+        for ingredient in recipe_json['steps'][0]['ingredients']:
+            f = ingredient_parser.get_food(ingredient['food']['name'])
+            u = None
+            if unit := ingredient.get('unit', None):
+                u = ingredient_parser.get_unit(unit.get('name', None))
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=ingredient['amount'], note=ingredient['note'],  space=self.request.space,
+                food=f, unit=u, amount=ingredient.get('amount', None), note=ingredient.get('note', None),  original_text=ingredient.get('original_text', None), space=self.request.space,
             ))
 
         if len(images) > 0:
