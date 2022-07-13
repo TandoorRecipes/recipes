@@ -454,6 +454,9 @@ def invite_link(request, token):
 
 @group_required('admin')
 def space_manage(request, space_id):
+    if request.space.demo:
+        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
+        return redirect('index')
     space = get_object_or_404(Space, id=space_id)
     switch_user_active_space(request.user, space)
     return render(request, 'space_manage.html', {})
