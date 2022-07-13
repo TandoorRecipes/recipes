@@ -188,10 +188,31 @@
                         </b-form-checkbox>
 
                         <br/>
-                        <label for="id_name"> {{ $t("Imported_From") }}</label>
+                        <label> {{ $t("Imported_From") }}</label>
                         <b-form-input v-model="recipe.source_url">
 
                         </b-form-input>
+
+                        <br/>
+                        <label> {{ $t("Private_Recipe") }}</label>
+                        <b-form-checkbox v-model="recipe.private">
+                            {{ $t('Private_Recipe_Help') }}
+                        </b-form-checkbox>
+
+                        <br/>
+                        <label> {{ $t("Share") }}</label>
+                        <generic-multiselect
+                            @change="recipe.shared = $event.val"
+                            parent_variable="recipe.shared"
+                            :initial_selection="recipe.shared"
+                            :label="'username'"
+                            :model="Models.USER_NAME"
+                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                            v-bind:placeholder="$t('Share')"
+                            :limit="25"
+                        ></generic-multiselect>
+
+
                     </b-collapse>
                 </div>
             </div>
@@ -723,6 +744,7 @@ import GenericModalForm from "@/components/Modals/GenericModalForm"
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import _debounce from "lodash/debounce";
+import GenericMultiselect from "@/components/GenericMultiselect";
 // use
 Vue.use(mavonEditor)
 
@@ -731,7 +753,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "RecipeEditView",
     mixins: [ResolveUrlMixin, ApiMixin],
-    components: {Multiselect, LoadingSpinner, draggable, GenericModalForm},
+    components: {Multiselect, LoadingSpinner, draggable, GenericModalForm, GenericMultiselect},
     data() {
         return {
             recipe_id: window.RECIPE_ID,

@@ -299,6 +299,27 @@ class CustomIsShare(permissions.BasePermission):
         return False
 
 
+class CustomRecipePermission(permissions.BasePermission):
+    """
+    Custom permission class for recipe api endpoint
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):  # user is either at least a guest or a share link is given and the request is safe
+        share = request.query_params.get('share', None)
+        return has_group_permission(request.user, ['guest']) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
+
+    def has_object_permission(self, request, view, obj):
+        share = request.query_params.get('share', None)
+        if share:
+            return share_link_valid(obj, share)
+        else:
+            if obj.private:
+                return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
+            else:
+                return has_group_permission(request.user, ['guest']) and obj.space == request.space
+
+
 def above_space_limit(space):  # TODO add file storage limit
     """
     Test if the space has reached any limit (e.g. max recipes, users, ..)

@@ -8,7 +8,7 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 export function apiLoadRecipe(recipe_id) {
     let url = resolveDjangoUrl('api:recipe-detail', recipe_id)
-    if (window.SHARE_UID !== undefined) {
+    if (window.SHARE_UID !== undefined && window.SHARE_UID !== 'None') {
         url += '?share=' + window.SHARE_UID
     }
 
