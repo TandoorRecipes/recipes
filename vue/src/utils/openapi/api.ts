@@ -2025,22 +2025,28 @@ export interface RecipeBookFilter {
 export interface RecipeFile {
     /**
      * 
+     * @type {number}
+     * @memberof RecipeFile
+     */
+    id?: number;
+    /**
+     * 
      * @type {string}
      * @memberof RecipeFile
      */
     name: string;
     /**
      * 
-     * @type {any}
+     * @type {string}
      * @memberof RecipeFile
      */
-    file?: any;
+    file_download?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof RecipeFile
      */
-    id?: number;
+    preview?: string;
 }
 /**
  * 
@@ -3542,18 +3548,6 @@ export interface UserPreference {
     use_kj?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof UserPreference
-     */
-    search_style?: UserPreferenceSearchStyleEnum;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof UserPreference
-     */
-    show_recent?: boolean;
-    /**
-     * 
      * @type {Array<CustomFilterShared>}
      * @memberof UserPreference
      */
@@ -3689,15 +3683,6 @@ export enum UserPreferenceDefaultPageEnum {
     Search = 'SEARCH',
     Plan = 'PLAN',
     Books = 'BOOKS'
-}
-/**
-    * @export
-    * @enum {string}
-    */
-export enum UserPreferenceSearchStyleEnum {
-    Small = 'SMALL',
-    Large = 'LARGE',
-    New = 'NEW'
 }
 
 /**
@@ -4713,7 +4698,40 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * function to handle files passed by application importer
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createimportFiles: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/import/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
          * @param {any} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11014,7 +11032,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * function to handle files passed by application importer
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createimportFiles(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createimportFiles(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
          * @param {any} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13042,7 +13070,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.createViewLog(viewLog, options).then((request) => request(axios, basePath));
         },
         /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+         * function to handle files passed by application importer
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createimportFiles(body?: any, options?: any): AxiosPromise<any> {
+            return localVarFp.createimportFiles(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
          * @param {any} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14958,7 +14995,18 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json, original html,json and images
+     * function to handle files passed by application importer
+     * @param {any} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createimportFiles(body?: any, options?: any) {
+        return ApiApiFp(this.configuration).createimportFiles(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
      * @param {any} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

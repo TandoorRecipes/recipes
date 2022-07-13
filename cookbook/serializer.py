@@ -5,7 +5,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, User, AnonymousUser
 from django.core.mail import send_mail
 from django.db.models import Avg, Q, QuerySet, Sum
 from django.http import BadHeaderError
@@ -124,7 +124,10 @@ class SpaceFilterSerializer(serializers.ListSerializer):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
-            data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+            if type(self.context['request'].user) == AnonymousUser:
+                data = []
+            else:
+                data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
         else:
             data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
@@ -732,6 +735,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True)
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
+    shared = UserNameSerializer(many=True)
 
     class Meta:
         model = Recipe
@@ -739,6 +743,7 @@ class RecipeSerializer(RecipeBaseSerializer):
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
             'internal', 'show_ingredient_overview', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
+            'private', 'shared',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
 

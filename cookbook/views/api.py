@@ -53,7 +53,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit)
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -715,7 +715,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
-    permission_classes = [CustomIsShare | CustomIsGuest]
+    permission_classes = [CustomRecipePermission]
     pagination_class = RecipePagination
 
     query_params = [
@@ -782,13 +782,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         share = self.request.query_params.get('share', None)
 
-        if self.detail:
-            if not share:
+        if self.detail:  # if detail request and not list, private condition is verified by permission class
+            if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
 
-        if not (share and self.detail):
-            self.queryset = self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space).filter(
+            Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))
+        )
 
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
                   in list(self.request.GET)}
@@ -802,8 +803,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 'new': str(self.get_queryset().query),
             })
         return super().list(request, *args, **kwargs)
-
-    # TODO write extensive tests for permissions
 
     def get_serializer_class(self):
         if self.action == 'list':

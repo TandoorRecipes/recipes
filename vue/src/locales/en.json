@@ -68,6 +68,10 @@
     "Enable_Amount": "Enable Amount",
     "Disable_Amount": "Disable Amount",
     "Ingredient Editor": "Ingredient Editor",
+
+    "Private_Recipe": "Private Recipe",
+    "Private_Recipe_Help": "Recipe is only shown to you and people its shared with.",
+
     "Add_Step": "Add Step",
     "Keywords": "Keywords",
     "Books": "Books",

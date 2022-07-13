@@ -738,6 +738,8 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     internal = models.BooleanField(default=False)
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     show_ingredient_overview = models.BooleanField(default=True)
+    private = models.BooleanField(default=False)
+    shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')
 
     source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
