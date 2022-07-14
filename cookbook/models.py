@@ -4,6 +4,7 @@ import re
 import uuid
 from datetime import date, timedelta
 
+from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
@@ -244,6 +245,7 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='space_image')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
@@ -1176,6 +1178,13 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def is_image(self):
+        try:
+            img = Image.open(self.file.file.file)
+            return True
+        except Exception:
+            return False
 
     def save(self, *args, **kwargs):
         if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):

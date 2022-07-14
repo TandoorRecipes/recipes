@@ -173,104 +173,6 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerialize
         read_only_fields = ['id']
 
 
-class SpaceSerializer(WritableNestedModelSerializer):
-    user_count = serializers.SerializerMethodField('get_user_count')
-    recipe_count = serializers.SerializerMethodField('get_recipe_count')
-    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
-    food_inherit = FoodInheritFieldSerializer(many=True)
-
-    def get_user_count(self, obj):
-        return UserSpace.objects.filter(space=obj).count()
-
-    def get_recipe_count(self, obj):
-        return Recipe.objects.filter(space=obj).count()
-
-    def get_file_size_mb(self, obj):
-        try:
-            return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
-        except TypeError:
-            return 0
-
-    def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
-
-    class Meta:
-        model = Space
-        fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',)
-        read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
-
-
-class UserSpaceSerializer(WritableNestedModelSerializer):
-    user = UserNameSerializer(read_only=True)
-    groups = GroupSerializer(many=True)
-
-    def validate(self, data):
-        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
-            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
-        return super().validate(data)
-
-    def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
-
-    class Meta:
-        model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'created_at', 'updated_at', 'space')
-
-
-class SpacedModelSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-
-class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-
-    def create(self, validated_data):
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
-
-    class Meta:
-        list_serializer_class = SpaceFilterSerializer
-        model = MealType
-        fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
-        read_only_fields = ('created_by',)
-
-
-class UserPreferenceSerializer(WritableNestedModelSerializer):
-    food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
-    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
-    shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
-    food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
-
-    def get_food_inherit_defaults(self, obj):
-        return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
-
-    def get_food_children_exist(self, obj):
-        space = getattr(self.context.get('request', None), 'space', None)
-        return Food.objects.filter(depth__gt=0, space=space).exists()
-
-    def update(self, instance, validated_data):
-        with scopes_disabled():
-            return super().update(instance, validated_data)
-
-    def create(self, validated_data):
-        raise ValidationError('Cannot create using this endpoint')
-
-    class Meta:
-        model = UserPreference
-        fields = (
-            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
-            'plan_share',
-            'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
-            'food_inherit_default', 'default_delay',
-            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'food_children_exist'
-        )
-
-
 class UserFileSerializer(serializers.ModelSerializer):
     file = serializers.FileField(write_only=True)
     file_download = serializers.SerializerMethodField('get_download_link')
@@ -345,6 +247,105 @@ class UserFileViewSerializer(serializers.ModelSerializer):
         model = UserFile
         fields = ('id', 'name', 'file_download', 'preview')
         read_only_fields = ('id', 'file')
+
+
+class SpaceSerializer(WritableNestedModelSerializer):
+    user_count = serializers.SerializerMethodField('get_user_count')
+    recipe_count = serializers.SerializerMethodField('get_recipe_count')
+    file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
+    food_inherit = FoodInheritFieldSerializer(many=True)
+    image = UserFileViewSerializer(required=False, many=False)
+
+    def get_user_count(self, obj):
+        return UserSpace.objects.filter(space=obj).count()
+
+    def get_recipe_count(self, obj):
+        return Recipe.objects.filter(space=obj).count()
+
+    def get_file_size_mb(self, obj):
+        try:
+            return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
+        except TypeError:
+            return 0
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = Space
+        fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
+                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb', 'image',)
+        read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
+
+
+class UserSpaceSerializer(WritableNestedModelSerializer):
+    user = UserNameSerializer(read_only=True)
+    groups = GroupSerializer(many=True)
+
+    def validate(self, data):
+        if self.instance.user == self.context['request'].space.created_by:  # can't change space owner permission
+            raise serializers.ValidationError(_('Cannot modify Space owner permission.'))
+        return super().validate(data)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = UserSpace
+        fields = ('id', 'user', 'space', 'groups', 'active', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'created_at', 'updated_at', 'space')
+
+
+class SpacedModelSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+
+class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        list_serializer_class = SpaceFilterSerializer
+        model = MealType
+        fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
+        read_only_fields = ('created_by',)
+
+
+class UserPreferenceSerializer(WritableNestedModelSerializer):
+    food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
+    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
+    shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
+    food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
+
+    def get_food_inherit_defaults(self, obj):
+        return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
+
+    def get_food_children_exist(self, obj):
+        space = getattr(self.context.get('request', None), 'space', None)
+        return Food.objects.filter(depth__gt=0, space=space).exists()
+
+    def update(self, instance, validated_data):
+        with scopes_disabled():
+            return super().update(instance, validated_data)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    class Meta:
+        model = UserPreference
+        fields = (
+            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
+            'plan_share',
+            'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
+            'food_inherit_default', 'default_delay',
+            'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
+            'csv_delim', 'csv_prefix',
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'food_children_exist'
+        )
 
 
 class StorageSerializer(SpacedModelSerializer):

@@ -141,6 +141,13 @@
                 <label>{{ $t('Message') }}</label>
                 <b-form-textarea v-model="space.message"></b-form-textarea>
 
+                <label>{{ $t('Image') }}</label>
+                <generic-multiselect :initial_single_selection="space.image"
+                                     :model="Models.USERFILE"
+                                     :multiple="false"
+                                     @change="space.image = $event.val;"></generic-multiselect>
+                <br/>
+
                 <b-form-checkbox v-model="space.show_facet_count"> Facet Count</b-form-checkbox>
                 <span class="text-muted small">{{ $t('facet_count_info') }}</span><br/>
 
