@@ -1,13 +1,19 @@
-{% extends "base.html" %} {% load render_bundle from webpack_loader %} {% load static %} {% load i18n %} {% block title %} {{ title }} {% endblock %} {% block content_fluid %}
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% block title %} {{ title }} {% endblock %}
 
-<div id="app">
-    <shopping-list-view></shopping-list-view>
-</div>
+{% block content_fluid %}
+
+    <div id="app">
+        <shopping-list-view></shopping-list-view>
+    </div>
 
 {% endblock %} {% block script %} {% if debug %}
-<script src="{% url 'js_reverse' %}"></script>
+    <script src="{% url 'js_reverse' %}"></script>
 {% else %}
-<script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
 {% endif %}
 
 <script type="application/javascript">
