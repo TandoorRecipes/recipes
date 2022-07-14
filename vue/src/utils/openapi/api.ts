@@ -3110,6 +3110,43 @@ export interface Space {
      * @memberof Space
      */
     file_size_mb?: string;
+    /**
+     * 
+     * @type {SpaceImage}
+     * @memberof Space
+     */
+    image?: SpaceImage;
+}
+/**
+ * 
+ * @export
+ * @interface SpaceImage
+ */
+export interface SpaceImage {
+    /**
+     * 
+     * @type {number}
+     * @memberof SpaceImage
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpaceImage
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpaceImage
+     */
+    file_download?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SpaceImage
+     */
+    preview?: string;
 }
 /**
  * 
@@ -3530,6 +3567,12 @@ export interface UserPreference {
     user: number;
     /**
      * 
+     * @type {RecipeFile}
+     * @memberof UserPreference
+     */
+    image?: RecipeFile | null;
+    /**
+     * 
      * @type {string}
      * @memberof UserPreference
      */
@@ -3570,6 +3613,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     plan_share?: Array<CustomFilterShared> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    sticky_navbar?: boolean;
     /**
      * 
      * @type {number}

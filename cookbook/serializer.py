@@ -320,6 +320,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
+    image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
     def get_food_inherit_defaults(self, obj):
         return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
@@ -338,8 +339,8 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
-            'plan_share',
+            'user', 'image', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
+            'plan_share', 'sticky_navbar',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',

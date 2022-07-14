@@ -64,6 +64,10 @@ const pages = {
     profile_view: {
         entry: "./src/apps/ProfileView/main.js",
         chunks: ["chunk-vendors"],
+    },
+    settings_view: {
+        entry: "./src/apps/SettingsView/main.js",
+        chunks: ["chunk-vendors"],
     }
 }
 

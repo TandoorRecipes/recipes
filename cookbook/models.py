@@ -358,22 +358,15 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
-    nav_color = models.CharField(
-        choices=COLORS, max_length=128, default=PRIMARY
-    )
+    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
-    default_page = models.CharField(
-        choices=PAGES, max_length=64, default=SEARCH
-    )
-    plan_share = models.ManyToManyField(
-        User, blank=True, related_name='plan_share_default'
-    )
-    shopping_share = models.ManyToManyField(
-        User, blank=True, related_name='shopping_share'
-    )
+    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
+    shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
