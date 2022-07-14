@@ -71,7 +71,7 @@
 
     "Private_Recipe": "Private Recipe",
     "Private_Recipe_Help": "Recipe is only shown to you and people its shared with.",
-
+    "reusable_help_text": "Should the invite link be usable for more than one user.",
     "Add_Step": "Add Step",
     "Keywords": "Keywords",
     "Books": "Books",

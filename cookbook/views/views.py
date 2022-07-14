@@ -431,8 +431,9 @@ def invite_link(request, token):
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
             if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
-                link.used_by = request.user
-                link.save()
+                if not link.reusable:
+                    link.used_by = request.user
+                    link.save()
 
                 user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
 

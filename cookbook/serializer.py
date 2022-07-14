@@ -821,7 +821,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         book = validated_data['book']
         recipe = validated_data['recipe']
         if not book.get_owner() == self.context['request'].user and not self.context[
-                'request'].user in book.get_shared():
+                                                                            'request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
@@ -877,11 +877,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
-        ) + f' ({value:.2g})'
+                       obj.name
+                       or getattr(obj.mealplan, 'title', None)
+                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                       or obj.recipe.name
+               ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -1105,7 +1105,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     class Meta:
         model = InviteLink
         fields = (
-            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'created_by', 'created_at',)
+            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'created_by', 'created_at',)
         read_only_fields = ('id', 'uuid', 'created_by', 'created_at',)
 
 

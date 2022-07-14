@@ -601,7 +601,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         # remove all inherited fields from food
         trough = Food.inherit_fields.through
         trough.objects.all().delete()
-        
+
         # food is going to inherit attributes
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
@@ -1008,9 +1008,8 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     valid_until = models.DateField(default=default_valid_until)
-    used_by = models.ForeignKey(
-        User, null=True, on_delete=models.CASCADE, related_name='used_by'
-    )
+    used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
+    reusable = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
