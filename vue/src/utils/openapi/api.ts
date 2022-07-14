@@ -1359,6 +1359,12 @@ export interface InviteLink {
     used_by?: number | null;
     /**
      * 
+     * @type {boolean}
+     * @memberof InviteLink
+     */
+    reusable?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof InviteLink
      */
@@ -1893,6 +1899,18 @@ export interface Recipe {
      * @memberof Recipe
      */
     last_cooked?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Recipe
+     */
+    _private?: boolean;
+    /**
+     * 
+     * @type {Array<CustomFilterShared>}
+     * @memberof Recipe
+     */
+    shared?: Array<CustomFilterShared>;
 }
 /**
  * 

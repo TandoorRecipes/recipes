@@ -669,7 +669,7 @@ export class Models {
         apiName: "InviteLink",
         paginated: false,
         create: {
-            params: [["email", "group", "valid_until"]],
+            params: [["email", "group", "valid_until", "reusable"]],
             form: {
                 email: {
                     form_field: true,
@@ -692,6 +692,14 @@ export class Models {
                     type: "date",
                     field: "valid_until",
                     label: "Valid Until",
+                    placeholder: "",
+                },
+                reusable: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "reusable",
+                    label: "Reusable",
+                    help_text: "reusable_help_text",
                     placeholder: "",
                 },
             },
