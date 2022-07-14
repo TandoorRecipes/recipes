@@ -735,7 +735,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True)
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
-    shared = UserNameSerializer(many=True)
+    shared = UserNameSerializer(many=True, required=False)
 
     class Meta:
         model = Recipe
