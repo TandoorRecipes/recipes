@@ -101,7 +101,6 @@ urlpatterns = [
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
     path('data/batch/import', data.batch_import, name='data_batch_import'),
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
-    path('data/statistics', data.statistics, name='data_stats'),
     path('data/import/url', data.import_url, name='data_import_url'),
 
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),

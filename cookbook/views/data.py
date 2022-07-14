@@ -124,25 +124,3 @@ def import_url(request):
             bookmarklet_import_id = bookmarklet_import.pk
 
     return render(request, 'url_import.html', {'api_token': api_token, 'bookmarklet_import_id': bookmarklet_import_id})
-
-
-class Object(object):
-    pass
-
-
-@group_required('user')
-def statistics(request):
-    counts = Object()
-    counts.recipes = Recipe.objects.filter(space=request.space).count()
-    counts.keywords = Keyword.objects.filter(space=request.space).count()
-    counts.recipe_import = RecipeImport.objects.filter(space=request.space).count()
-    counts.units = Unit.objects.filter(space=request.space).count()
-    counts.ingredients = Food.objects.filter(space=request.space).count()
-    counts.comments = Comment.objects.filter(recipe__space=request.space).count()
-
-    counts.recipes_internal = Recipe.objects.filter(internal=True, space=request.space).count()
-    counts.recipes_external = counts.recipes - counts.recipes_internal
-
-    counts.recipes_no_keyword = Recipe.objects.filter(keywords=None, space=request.space).count()
-
-    return render(request, 'stats.html', {'counts': counts})
