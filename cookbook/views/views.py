@@ -182,6 +182,11 @@ def view_profile(request, user_id):
     return render(request, 'profile.html', {})
 
 
+@group_required('guest')
+def user_settings_new(request):
+    return render(request, 'user_settings.html', {})
+
+
 @group_required('user')
 def ingredient_editor(request):
     template_vars = {'food_id': -1, 'unit_id': -1}
