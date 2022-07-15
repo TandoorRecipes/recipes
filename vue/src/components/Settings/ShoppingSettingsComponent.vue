@@ -1,21 +1,50 @@
 <template>
     <div v-if="user_preferences !== undefined">
 
+        <generic-multiselect
+            @change="updateSettings(false)"
+            :model="Models.USER"
+            :initial_selection="user_preferences.shopping_share"
+            label="display_name"
+            :multiple="true"
+            :placeholder="$t('User')"
+        ></generic-multiselect>
+        autosync
 
+        <!--TODO load min autosync time from env -->
+          <b-form-input type="range" min="0" max="60" step="1" v-model="user_preferences.shopping_auto_sync"
+                      @change="updateSettings(false)"></b-form-input>
+
+         <b-form-checkbox v-model="user_preferences.mealplan_autoadd_shopping" @change="updateSettings(false)"></b-form-checkbox>
+         <b-form-checkbox v-model="user_preferences.mealplan_autoexclude_onhand" @change="updateSettings(false)"></b-form-checkbox>
+         <b-form-checkbox v-model="user_preferences.mealplan_autoinclude_related" @change="updateSettings(false)"></b-form-checkbox>
+         <b-form-checkbox v-model="user_preferences.shopping_add_onhand" @change="updateSettings(false)"></b-form-checkbox>
+
+        <b-form-input type="number" v-model="user_preferences.default_delay" @change="updateSettings(false)"></b-form-input>
+        <b-form-checkbox v-model="user_preferences.filter_to_supermarket" @change="updateSettings(false)"></b-form-checkbox>
+        <b-form-input type="range" min="0" max="14" step="1" v-model="user_preferences.shopping_recent_days"
+                      @change="updateSettings(false)"></b-form-input>
+
+        
+        <b-form-input v-model="user_preferences.csv_delim" @change="updateSettings(false)"></b-form-input>
+        <b-form-input v-model="user_preferences.csv_prefix" @change="updateSettings(false)"></b-form-input>
     </div>
 </template>
 
 <script>
 import {ApiApiFactory} from "@/utils/openapi/api";
-import {StandardToasts} from "@/utils/utils";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
 
 import axios from "axios";
+import GenericMultiselect from "@/components/GenericMultiselect";
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 export default {
     name: "ShoppingSettingsComponent",
+    mixins: [ApiMixin],
+    components: {GenericMultiselect},
     props: {
         user_id: Number,
     },
