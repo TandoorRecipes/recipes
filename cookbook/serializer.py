@@ -133,16 +133,17 @@ class SpaceFilterSerializer(serializers.ListSerializer):
         return super().to_representation(data)
 
 
-class UserNameSerializer(WritableNestedModelSerializer):
-    username = serializers.SerializerMethodField('get_user_label')
+class UserSerializer(WritableNestedModelSerializer):
+    display_name = serializers.SerializerMethodField('get_user_label')
 
     def get_user_label(self, obj):
-        return obj.get_user_name()
+        return obj.get_user_display_name()
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'first_name', 'last_name', 'display_name')
+        read_only_fields = ('username', )
 
 
 class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -279,7 +280,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
 
 class UserSpaceSerializer(WritableNestedModelSerializer):
-    user = UserNameSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     groups = GroupSerializer(many=True)
 
     def validate(self, data):
@@ -317,8 +318,8 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
-    plan_share = UserNameSerializer(many=True, allow_null=True, required=False)
-    shopping_share = UserNameSerializer(many=True, allow_null=True, required=False)
+    plan_share = UserSerializer(many=True, allow_null=True, required=False)
+    shopping_share = UserSerializer(many=True, allow_null=True, required=False)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
@@ -737,7 +738,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True)
     rating = serializers.SerializerMethodField('get_recipe_rating')
     last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
-    shared = UserNameSerializer(many=True, required=False)
+    shared = UserSerializer(many=True, required=False)
 
     class Meta:
         model = Recipe
@@ -783,7 +784,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-    shared = UserNameSerializer(many=True, required=False)
+    shared = UserSerializer(many=True, required=False)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -796,7 +797,7 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 
 
 class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
-    shared = UserNameSerializer(many=True)
+    shared = UserSerializer(many=True)
     filter = CustomFilterSerializer(allow_null=True, required=False)
 
     def create(self, validated_data):
@@ -840,7 +841,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     meal_type_name = serializers.ReadOnlyField(source='meal_type.name')  # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
-    shared = UserNameSerializer(many=True, required=False, allow_null=True)
+    shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
 
     def get_note_markdown(self, obj):
@@ -904,7 +905,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
     ingredient_note = serializers.ReadOnlyField(source='ingredient.note')
     recipe_mealplan = ShoppingListRecipeSerializer(source='list_recipe', read_only=True)
     amount = CustomDecimalField()
-    created_by = UserNameSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
     completed_at = serializers.DateTimeField(allow_null=True, required=False)
 
     def get_fields(self, *args, **kwargs):
@@ -972,7 +973,7 @@ class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
 class ShoppingListSerializer(WritableNestedModelSerializer):
     recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
     entries = ShoppingListEntrySerializer(many=True, allow_null=True)
-    shared = UserNameSerializer(many=True)
+    shared = UserSerializer(many=True)
     supermarket = SupermarketSerializer(allow_null=True)
 
     def create(self, validated_data):
@@ -1085,7 +1086,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         if obj.email:
             try:
                 if InviteLink.objects.filter(space=self.context['request'].space, created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
-                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(self.context['request'].user.username)
+                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(self.context['request'].user.get_user_display_name())
                     message += _(' to join their Tandoor Recipes space ') + escape(self.context['request'].space.name) + '.\n\n'
                     message += _('Click the following link to activate your account: ') + self.context['request'].build_absolute_uri(reverse('view_invite', args=[str(obj.uuid)])) + '\n\n'
                     message += _('If the link does not work use the following code to manually join the space: ') + str(obj.uuid) + '\n\n'

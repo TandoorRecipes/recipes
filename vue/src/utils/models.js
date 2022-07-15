@@ -591,7 +591,7 @@ export class Models {
                     type: "lookup",
                     field: "shared",
                     list: "USER",
-                    list_label: "username",
+                    list_label: "display_name",
                     label: "shared_with",
                     multiple: true,
                 },

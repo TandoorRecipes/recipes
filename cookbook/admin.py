@@ -62,7 +62,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return obj.user.get_user_name()
+        return obj.user.get_user_display_name()
 
 
 admin.site.register(UserPreference, UserPreferenceAdmin)
@@ -75,7 +75,7 @@ class SearchPreferenceAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return obj.user.get_user_name()
+        return obj.user.get_user_display_name()
 
 
 admin.site.register(SearchPreference, SearchPreferenceAdmin)
@@ -177,7 +177,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @staticmethod
     def created_by(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         actions = [rebuild_index]
@@ -216,7 +216,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(Comment, CommentAdmin)
@@ -235,7 +235,7 @@ class RecipeBookAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user_name(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(RecipeBook, RecipeBookAdmin)
@@ -253,7 +253,7 @@ class MealPlanAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(MealPlan, MealPlanAdmin)

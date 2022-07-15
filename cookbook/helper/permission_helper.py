@@ -320,6 +320,24 @@ class CustomRecipePermission(permissions.BasePermission):
                 return has_group_permission(request.user, ['guest']) and obj.space == request.space
 
 
+class CustomUserPermission(permissions.BasePermission):
+    """
+    Custom permission class for user api endpoint
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):  # a space filtered user list is visible for everyone
+        return has_group_permission(request.user, ['guest'])
+
+    def has_object_permission(self, request, view, obj):  # object write permissions are only available for user
+        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request.user, ['guest']) and request.space in obj.userspace_set.all():
+            return True
+        elif request.user == obj:
+            return True
+        else:
+            return False
+
+
 def above_space_limit(space):  # TODO add file storage limit
     """
     Test if the space has reached any limit (e.g. max recipes, users, ..)

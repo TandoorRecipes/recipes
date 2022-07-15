@@ -53,7 +53,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission)
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -85,7 +85,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategoryRelationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
-                                 UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
+                                 UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
@@ -354,7 +354,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
@@ -362,9 +362,9 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     - **filter_list**: array of user id's to get names for
     """
     queryset = User.objects
-    serializer_class = UserNameSerializer
-    permission_classes = [CustomIsGuest]
-    http_method_names = ['get']
+    serializer_class = UserSerializer
+    permission_classes = [CustomUserPermission]
+    http_method_names = ['get', 'patch']
 
     def get_queryset(self):
         queryset = self.queryset.filter(userspace__space=self.request.space)

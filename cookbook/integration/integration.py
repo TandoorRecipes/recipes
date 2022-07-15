@@ -43,7 +43,7 @@ class Integration:
         self.export_type = export_type
         self.ignored_recipes = []
 
-        description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
+        description = f'Imported by {request.user.get_user_display_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
 
         try:
