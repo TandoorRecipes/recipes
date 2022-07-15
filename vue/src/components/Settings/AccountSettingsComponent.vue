@@ -1,15 +1,22 @@
 <template>
-    <div v-if="user !== undefined">
+    <div>
+        <div v-if="user !== undefined">
 
-        <b-form-input v-model="user.username" @change="updateUser(false)" disabled></b-form-input>
-        <b-form-input v-model="user.first_name" @change="updateUser(false)"></b-form-input>
-        <b-form-input v-model="user.last_name" @change="updateUser(false)"></b-form-input>
+            <b-form-input v-model="user.username" @change="updateUser(false)" disabled></b-form-input>
+            <b-form-input v-model="user.first_name" @change="updateUser(false)"></b-form-input>
+            <b-form-input v-model="user.last_name" @change="updateUser(false)"></b-form-input>
+        </div>
+
+        <a :href="resolveDjangoUrl('account_email')" class="btn btn-primary">Emails</a>
+        <a :href="resolveDjangoUrl('account_change_password')" class="btn btn-primary">Password</a>
+        <a :href="resolveDjangoUrl('socialaccount_connections')" class="btn btn-primary">Social</a>
+
     </div>
 </template>
 
 <script>
 import {ApiApiFactory} from "@/utils/openapi/api";
-import {StandardToasts} from "@/utils/utils";
+import {ResolveUrlMixin, StandardToasts} from "@/utils/utils";
 
 import axios from "axios";
 
@@ -18,6 +25,7 @@ axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
 export default {
     name: "AccountSettingsComponent",
+    mixins: [ResolveUrlMixin],
     props: {
         user_id: Number,
     },
