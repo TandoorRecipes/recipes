@@ -26,7 +26,7 @@ from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PR
                               SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT)
 
 
-def get_user_name(self):
+def get_user_display_name(self):
     if not (name := f"{self.first_name} {self.last_name}") == " ":
         return name
     else:
@@ -58,7 +58,7 @@ def get_shopping_share(self):
     ]))
 
 
-auth.models.User.add_to_class('get_user_name', get_user_name)
+auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
 

@@ -514,7 +514,7 @@
                                         "
                                         :model="Models.USER"
                                         :initial_selection="settings.shopping_share"
-                                        label="username"
+                                        label="display_name"
                                         :multiple="true"
                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                         :placeholder="$t('User')"
@@ -868,7 +868,7 @@ export default {
                     case "category":
                         return item?.food?.supermarket_category?.name ?? x
                     case "created_by":
-                        return item?.created_by?.username ?? x
+                        return item?.created_by?.display_name ?? x
                     case "recipe":
                         return item?.recipe_mealplan?.recipe_name ?? x
                 }

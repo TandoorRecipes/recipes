@@ -96,7 +96,7 @@ def space_overview(request):
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
-        create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
+        create_form = SpaceCreateForm(initial={'name': f'{request.user.get_user_display_name()}\'s Space'})
         join_form = SpaceJoinForm()
 
     return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
