@@ -375,5 +375,11 @@
     "Documentation": "Documentation",
     "New_Supermarket": "Créer un nouveau supermarché",
     "New_Supermarket_Category": "Créer une nouvelle catégorie de supermarché",
-    "and_down": "& Dessous"
+    "and_down": "& Dessous",
+    "recipe_filter": "Filtrer les recettes",
+    "no_more_images_found": "Pas d'images supplémentaires trouvées sur le site.",
+    "sql_debug": "Débogage de la base SQL",
+    "last_cooked": "Dernière recette utilisée",
+    "times_cooked": "Temps de cuisson",
+    "show_sortby": "Trier par"
 }
