@@ -33,7 +33,7 @@
                 <template #title>
                     <b-spinner v-if="loading" type="border" small class="d-inline-block"></b-spinner>
                     <i v-if="!loading" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') }}</span>
+                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.length})`}}</span>
                 </template>
                 <div class="container p-0 p-md-3" id="shoppinglist">
                     <div class="row">
@@ -177,7 +177,7 @@
             <b-tab :title="$t('Recipes')">
                 <template #title>
                     <i class="fas fa-book fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Recipes') }}</span>
+                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Recipes.length})`}}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
@@ -258,7 +258,7 @@
             <b-tab>
                 <template #title>
                     <i class="fas fa-store-alt fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Supermarkets') }}</span>
+                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${supermarkets.length})`}}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
