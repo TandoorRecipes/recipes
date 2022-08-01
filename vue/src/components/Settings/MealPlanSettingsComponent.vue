@@ -1,21 +1,34 @@
 <template>
     <div v-if="user_preferences !== undefined">
 
+        <generic-multiselect
+            @change="updateSettings(false)"
+            :model="Models.USER"
+            :initial_selection="user_preferences.plan_share"
+            label="display_name"
+            :multiple="true"
+            :placeholder="$t('User')"
+        ></generic-multiselect>
 
     </div>
 </template>
 
 <script>
 import {ApiApiFactory} from "@/utils/openapi/api";
-import {StandardToasts} from "@/utils/utils";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
 
 import axios from "axios";
+import GenericMultiselect from "@/components/GenericMultiselect";
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
+let SETTINGS_COOKIE_NAME = "mealplan_settings"
+
 export default {
     name: "MealPlanSettingsComponent",
+    mixins: [ApiMixin],
+    components: {GenericMultiselect},
     props: {
         user_id: Number,
     },

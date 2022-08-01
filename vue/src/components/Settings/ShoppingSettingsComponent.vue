@@ -9,7 +9,6 @@
             :multiple="true"
             :placeholder="$t('User')"
         ></generic-multiselect>
-        autosync
 
         <!--TODO load min autosync time from env -->
           <b-form-input type="range" min="0" max="60" step="1" v-model="user_preferences.shopping_auto_sync"
