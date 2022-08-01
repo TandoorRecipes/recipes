@@ -598,9 +598,9 @@
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
-                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id"
+                                                  style="z-index: auto" :id="'id_instruction_' + step.id"
                                                   :language="'en'"
-                                                  :toolbars="md_editor_toolbars"/>
+                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -793,9 +793,9 @@ export default {
                 imagelink: false,
                 code: true,
                 table: false,
-                fullscreen: true,
-                readmodel: true,
-                htmlcode: true,
+                fullscreen: false,
+                readmodel: false,
+                htmlcode: false,
                 help: true,
                 undo: true,
                 redo: true,
