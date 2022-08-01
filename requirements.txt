@@ -38,7 +38,7 @@ django-storages==1.12.3
 boto3==1.24.21
 django-prometheus==2.2.0
 django-hCaptcha==0.2.0
-python-ldap==3.4.0
+python-ldap==3.4.2
 django-auth-ldap==4.1.0
 pytest-factoryboy==2.5.0
 pyppeteer==1.0.2
