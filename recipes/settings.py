@@ -411,6 +411,8 @@ if os.getenv('S3_ACCESS_KEY', ''):
 
     if os.getenv('S3_ENDPOINT_URL', ''):
         AWS_S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL', '')
+    if os.getenv('S3_CUSTOM_DOMAIN', ''):
+        AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
