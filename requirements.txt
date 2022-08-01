@@ -6,7 +6,7 @@ django-cleanup==6.0.0
 django-crispy-forms==1.14.0
 django-tables2==2.4.1
 djangorestframework==3.13.1
-drf-writable-nested==0.6.3
+drf-writable-nested==0.6.4
 bleach==5.0.1
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
@@ -19,7 +19,7 @@ requests==2.28.1
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.2.0
-icalendar==4.0.9
+icalendar==4.1.0
 pyyaml==6.0
 uritemplate==4.1.1
 beautifulsoup4==4.11.1
