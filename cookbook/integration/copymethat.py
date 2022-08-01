@@ -24,7 +24,7 @@ class CopyMeThat(Integration):
         try:
             source = file.find("a", {"id": "original_link"}).text
         except AttributeError:
-            source = ''
+            source = None
 
         recipe = Recipe.objects.create(name=file.find("div", {"id": "name"}).text.strip()[:128], source_url=source, created_by=self.request.user, internal=True, space=self.request.space, )
 
@@ -58,10 +58,10 @@ class CopyMeThat(Integration):
         ingredients = file.find("ul", {"id": "recipeIngredients"})
         if isinstance(ingredients, Tag):
             for ingredient in ingredients.children:
-                if not isinstance(ingredient, Tag) or ingredient.text == "":
+                if not isinstance(ingredient, Tag) or not ingredient.text.strip() or "recipeIngredient_spacer" in ingredient['class']:
                     continue
                 if any(x in ingredient['class'] for x in ["recipeIngredient_subheader", "recipeIngredient_note"]):
-                    step.ingredients.add(Ingredient.objects.create(is_header=True, note=ingredient.text.strip(), original_text=ingredient.text.strip(), space=self.request.space, ))
+                    step.ingredients.add(Ingredient.objects.create(is_header=True, note=ingredient.text.strip()[:256], original_text=ingredient.text.strip(), space=self.request.space, ))
                 else:
                     amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
                     f = ingredient_parser.get_food(food)
