@@ -527,9 +527,10 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
                                                            checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
-        return self.queryset.annotate(shopping_status=Exists(shopping_status)).prefetch_related('onhand_users',
-                                                                                                'inherit_fields').select_related(
-            'recipe', 'supermarket_category')
+        return self.queryset\
+                .annotate(shopping_status=Exists(shopping_status))\
+                .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute')\
+                .select_related('recipe', 'supermarket_category')
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
