@@ -6,10 +6,12 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
+from oauth2_provider.contrib.rest_framework import TokenHasScope, TokenHasReadWriteScope
+from oauth2_provider.models import AccessToken
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 
-from cookbook.models import ShareLink, Recipe, UserPreference, UserSpace
+from cookbook.models import ShareLink, Recipe, UserSpace
 
 
 def get_allowed_groups(groups_required):
@@ -336,6 +338,34 @@ class CustomUserPermission(permissions.BasePermission):
             return True
         else:
             return False
+
+
+class CustomTokenHasScope(TokenHasScope):
+    """
+    Custom implementation of Django OAuth Toolkit TokenHasScope class
+    Only difference: if any other authentication method except OAuth2Authentication is used the scope check is ignored
+    IMPORTANT: do not use this class without any other permission class as it will not check anything besides token scopes
+    """
+
+    def has_permission(self, request, view):
+        if type(request.auth) == AccessToken:
+            return super().has_permission(request, view)
+        else:
+            return request.user.is_authenticated
+
+
+class CustomTokenHasReadWriteScope(TokenHasReadWriteScope):
+    """
+    Custom implementation of Django OAuth Toolkit TokenHasReadWriteScope class
+    Only difference: if any other authentication method except OAuth2Authentication is used the scope check is ignored
+    IMPORTANT: do not use this class without any other permission class as it will not check anything besides token scopes
+    """
+
+    def has_permission(self, request, view):
+        if type(request.auth) == AccessToken:
+            return super().has_permission(request, view)
+        else:
+            return request.user.is_authenticated
 
 
 def above_space_limit(space):  # TODO add file storage limit
