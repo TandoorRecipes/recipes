@@ -253,7 +253,7 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='space_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
