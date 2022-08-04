@@ -339,7 +339,7 @@ def user_settings(request):
         search_form = SearchPreferenceForm()
 
     if (api_token := AccessToken.objects.filter(user=request.user).first()) is None:
-        api_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-","_")}', expires=(timezone.now() + timezone.timedelta(days=365*5)), scope='read write').token
+        api_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-","_")}', expires=(timezone.now() + timezone.timedelta(days=365*10)), scope='read write').token
 
     # these fields require postgresql - just disable them if postgresql isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',

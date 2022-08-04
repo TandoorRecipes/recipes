@@ -695,7 +695,7 @@ export default {
                 `localStorage.setItem("importURL", "${localStorage.getItem('BASE_PATH')}${this.resolveDjangoUrl('api:bookmarkletimport-list')}");` +
                 `localStorage.setItem("redirectURL", "${localStorage.getItem('BASE_PATH')}${this.resolveDjangoUrl('data_import_url')}");` +
                 `localStorage.setItem("token", "${window.API_TOKEN}");` +
-                `document.body.appendChild(document.createElement("script")).src="${localStorage.getItem('BASE_PATH')}${resolveDjangoStatic('/js/bookmarklet.js')}?r="+Math.floor(Math.random()*999999999)}` +
+                `document.body.appendChild(document.createElement("script")).src="${localStorage.getItem('BASE_PATH')}${resolveDjangoStatic('/js/bookmarklet_v3.js')}?r="+Math.floor(Math.random()*999999999)}` +
                 `})()`
         },
     },

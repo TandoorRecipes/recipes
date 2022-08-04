@@ -54,7 +54,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope)
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -1035,7 +1035,8 @@ class ExportLogViewSet(viewsets.ModelViewSet):
 class BookmarkletImportViewSet(viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsUser & CustomTokenHasScope]
+    required_scopes = ['bookmarklet']
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -1117,7 +1118,7 @@ class CustomAuthToken(ObtainAuthToken):
         if token := AccessToken.objects.filter(scope__contains='read').filter(scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-","_")}', expires=(timezone.now() + timezone.timedelta(days=365*5)), scope='read write app')
+            access_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
         return Response({
             'id': access_token.id,
             'token': access_token.token,
