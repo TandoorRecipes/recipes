@@ -257,7 +257,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     food_inherit = FoodInheritFieldSerializer(many=True)
-    image = UserFileViewSerializer(required=False, many=False)
+    image = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
