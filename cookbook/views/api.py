@@ -29,6 +29,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from PIL import UnidentifiedImageError
+from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html, scrape_me
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
@@ -86,7 +87,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -1088,6 +1089,15 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
         return super().get_queryset()
+
+
+class AccessTokenViewSet(viewsets.ModelViewSet):
+    queryset = AccessToken.objects
+    serializer_class = AccessTokenSerializer
+    permission_classes = [CustomIsOwner]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
 
 # -------------- DRF custom views --------------------

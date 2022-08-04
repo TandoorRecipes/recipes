@@ -24,6 +24,49 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 /**
  * 
  * @export
+ * @interface AccessToken
+ */
+export interface AccessToken {
+    /**
+     * 
+     * @type {number}
+     * @memberof AccessToken
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessToken
+     */
+    token?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessToken
+     */
+    expires: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessToken
+     */
+    scope?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessToken
+     */
+    created?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessToken
+     */
+    updated?: string;
+}
+/**
+ * 
+ * @export
  * @interface AuthToken
  */
 export interface AuthToken {
@@ -3895,6 +3938,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
     return {
         /**
          * 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAccessToken: async (accessToken?: AccessToken, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/access-token/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -4720,39 +4796,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUser: async (user?: User, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} name 
          * @param {any} file 
          * @param {number} [id] 
@@ -4911,6 +4954,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyAccessToken: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyAccessToken', 'id', id)
+            const localVarPath = `/api/access-token/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5744,39 +5820,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyUser: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('destroyUser', 'id', id)
-            const localVarPath = `/api/user/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5915,6 +5958,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAccessTokens: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/access-token/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7463,6 +7535,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateAccessToken: async (id: string, accessToken?: AccessToken, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateAccessToken', 'id', id)
+            const localVarPath = `/api/access-token/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -8652,6 +8761,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // verify required parameter 'id' is not null or undefined
             assertParamExists('relatedRecipe', 'id', id)
             const localVarPath = `/api/recipe/{id}/related/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveAccessToken: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveAccessToken', 'id', id)
+            const localVarPath = `/api/access-token/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9939,6 +10081,43 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAccessToken: async (id: string, accessToken?: AccessToken, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateAccessToken', 'id', id)
+            const localVarPath = `/api/access-token/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -10864,43 +11043,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser: async (id: string, user?: User, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('updateUser', 'id', id)
-            const localVarPath = `/api/user/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(user, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
          * @param {any} file 
@@ -11017,6 +11159,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 export const ApiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ApiApiAxiosParamCreator(configuration)
     return {
+        /**
+         * 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createAccessToken(accessToken?: AccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createAccessToken(accessToken, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
         /**
          * 
          * @param {Automation} [automation] 
@@ -11269,16 +11421,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createUser(user?: User, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(user, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} name 
          * @param {any} file 
          * @param {number} [id] 
@@ -11320,6 +11462,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async createrecipeFromSource(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createrecipeFromSource(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyAccessToken(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyAccessToken(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11574,16 +11726,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async destroyUser(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyUser(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -11622,6 +11764,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async imageRecipe(id: string, image?: any, imageUrl?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.imageRecipe(id, image, imageUrl, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listAccessTokens(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AccessToken>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAccessTokens(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12065,6 +12216,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateAccessToken(id: string, accessToken?: AccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateAccessToken(id, accessToken, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -12417,6 +12579,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async relatedRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeSimple>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.relatedRecipe(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveAccessToken(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveAccessToken(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12803,6 +12975,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateAccessToken(id: string, accessToken?: AccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateAccessToken(id, accessToken, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -13078,17 +13261,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateUser(id: string, user?: User, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(id, user, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
          * @param {any} file 
@@ -13124,6 +13296,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
 export const ApiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ApiApiFp(configuration)
     return {
+        /**
+         * 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAccessToken(accessToken?: AccessToken, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.createAccessToken(accessToken, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {Automation} [automation] 
@@ -13351,15 +13532,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createUser(user?: User, options?: any): AxiosPromise<User> {
-            return localVarFp.createUser(user, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} name 
          * @param {any} file 
          * @param {number} [id] 
@@ -13398,6 +13570,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         createrecipeFromSource(body?: any, options?: any): AxiosPromise<any> {
             return localVarFp.createrecipeFromSource(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyAccessToken(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyAccessToken(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -13626,15 +13807,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyUser(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.destroyUser(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13670,6 +13842,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         imageRecipe(id: string, image?: any, imageUrl?: string, options?: any): AxiosPromise<RecipeImage> {
             return localVarFp.imageRecipe(id, image, imageUrl, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAccessTokens(options?: any): AxiosPromise<Array<AccessToken>> {
+            return localVarFp.listAccessTokens(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14072,6 +14252,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateAccessToken(id: string, accessToken?: AccessToken, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.partialUpdateAccessToken(id, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -14393,6 +14583,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         relatedRecipe(id: string, options?: any): AxiosPromise<RecipeSimple> {
             return localVarFp.relatedRecipe(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveAccessToken(id: string, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.retrieveAccessToken(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14740,6 +14939,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this access token.
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateAccessToken(id: string, accessToken?: AccessToken, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.updateAccessToken(id, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this automation.
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
@@ -14990,16 +15199,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this user.
-         * @param {User} [user] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateUser(id: string, user?: User, options?: any): AxiosPromise<User> {
-            return localVarFp.updateUser(id, user, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this user file.
          * @param {string} name 
          * @param {any} file 
@@ -15033,6 +15232,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
  * @extends {BaseAPI}
  */
 export class ApiApi extends BaseAPI {
+    /**
+     * 
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createAccessToken(accessToken?: AccessToken, options?: any) {
+        return ApiApiFp(this.configuration).createAccessToken(accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {Automation} [automation] 
@@ -15310,17 +15520,6 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {User} [user] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public createUser(user?: User, options?: any) {
-        return ApiApiFp(this.configuration).createUser(user, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {string} name 
      * @param {any} file 
      * @param {number} [id] 
@@ -15366,6 +15565,17 @@ export class ApiApi extends BaseAPI {
      */
     public createrecipeFromSource(body?: any, options?: any) {
         return ApiApiFp(this.configuration).createrecipeFromSource(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this access token.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyAccessToken(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyAccessToken(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -15645,17 +15855,6 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id A unique integer value identifying this user.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public destroyUser(id: string, options?: any) {
-        return ApiApiFp(this.configuration).destroyUser(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {string} id A unique integer value identifying this user file.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -15698,6 +15897,16 @@ export class ApiApi extends BaseAPI {
      */
     public imageRecipe(id: string, image?: any, imageUrl?: string, options?: any) {
         return ApiApiFp(this.configuration).imageRecipe(id, image, imageUrl, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listAccessTokens(options?: any) {
+        return ApiApiFp(this.configuration).listAccessTokens(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16181,6 +16390,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this access token.
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateAccessToken(id: string, accessToken?: AccessToken, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateAccessToken(id, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this automation.
      * @param {Automation} [automation] 
      * @param {*} [options] Override http request option.
@@ -16565,6 +16786,17 @@ export class ApiApi extends BaseAPI {
      */
     public relatedRecipe(id: string, options?: any) {
         return ApiApiFp(this.configuration).relatedRecipe(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this access token.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveAccessToken(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveAccessToken(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16989,6 +17221,18 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} id A unique integer value identifying this access token.
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateAccessToken(id: string, accessToken?: AccessToken, options?: any) {
+        return ApiApiFp(this.configuration).updateAccessToken(id, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {string} id A unique integer value identifying this automation.
      * @param {Automation} [automation] 
      * @param {*} [options] Override http request option.
@@ -17285,18 +17529,6 @@ export class ApiApi extends BaseAPI {
      */
     public updateUnit(id: string, unit?: Unit, options?: any) {
         return ApiApiFp(this.configuration).updateUnit(id, unit, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this user.
-     * @param {User} [user] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public updateUser(id: string, user?: User, options?: any) {
-        return ApiApiFp(this.configuration).updateUser(id, user, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
