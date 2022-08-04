@@ -239,6 +239,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'bookmarklet': 'only access to bookmarklet'}
 }
+READ_SCOPE = 'read'
+WRITE_SCOPE = 'write'
 
 
 REST_FRAMEWORK = {

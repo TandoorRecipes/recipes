@@ -12,7 +12,6 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -20,13 +19,12 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from oauth2_provider.models import AccessToken
-from rest_framework.authtoken.models import Token
 
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
                             SpaceCreateForm, SpaceJoinForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import (Comment, CookLog, InviteLink, MealPlan, SearchFields, SearchPreference, ShareLink,
+from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
 from recipes.version import BUILD_REF, VERSION_NUMBER
