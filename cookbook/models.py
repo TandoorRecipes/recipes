@@ -4,6 +4,7 @@ import re
 import uuid
 from datetime import date, timedelta
 
+import oauth2_provider.models
 from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
@@ -61,6 +62,13 @@ def get_shopping_share(self):
 auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
+
+
+def oauth_token_get_owner(self):
+    return self.user
+
+
+oauth2_provider.models.AccessToken.add_to_class('get_owner', oauth_token_get_owner)
 
 
 def get_model_name(model):

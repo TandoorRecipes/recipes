@@ -51,6 +51,7 @@ router.register(r'user', api.UserViewSet)
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
+router.register(r'access-token', api.AccessTokenViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),

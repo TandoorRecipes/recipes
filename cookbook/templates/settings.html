@@ -159,9 +159,9 @@
                     <br/>
                     {% trans 'Use the token as an Authorization header prefixed by the word token as shown in the following examples:' %}
                     <br/>
-                    <code>Authorization: Token {{ api_token }}</code> {% trans 'or' %}<br/>
+                    <code>Authorization: Bearer {{ api_token }}</code> {% trans 'or' %}<br/>
                     <code>curl -X GET http://your.domain.com/api/recipes/ -H 'Authorization:
-                        Token {{ api_token }}'</code>
+                        Bearer {{ api_token }}'</code>
                 </div>
             </div>
 

@@ -1,5 +1,6 @@
 import os
 import re
+import uuid
 from datetime import datetime
 from uuid import UUID
 
@@ -18,6 +19,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
+from oauth2_provider.models import AccessToken
 from rest_framework.authtoken.models import Token
 
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
@@ -338,8 +340,8 @@ def user_settings(request):
     elif not search_error:
         search_form = SearchPreferenceForm()
 
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
+    if (api_token := AccessToken.objects.filter(user=request.user).first()) is None:
+        api_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-","_")}', expires=(timezone.now() + timezone.timedelta(days=365*5)), scope='read write').token
 
     # these fields require postgresql - just disable them if postgresql isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',

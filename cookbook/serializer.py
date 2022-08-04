@@ -1,4 +1,5 @@
 import traceback
+import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
 from gettext import gettext as _
@@ -14,6 +15,7 @@ from django.utils import timezone
 from django_scopes import scopes_disabled
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from PIL import Image
+from oauth2_provider.models import AccessToken
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
@@ -143,7 +145,7 @@ class UserSerializer(WritableNestedModelSerializer):
         list_serializer_class = SpaceFilterSerializer
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'display_name')
-        read_only_fields = ('username', )
+        read_only_fields = ('username',)
 
 
 class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -1132,6 +1134,27 @@ class BookmarkletImportSerializer(BookmarkletImportListSerializer):
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
         read_only_fields = ('created_by', 'space')
+
+
+# OAuth / Auth Token related Serializers
+
+class AccessTokenSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField('get_token')
+
+    def create(self, validated_data):
+        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-","_")}'
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+    def get_token(self, obj):
+        if (timezone.now() - obj.created).seconds < 15:
+            return obj.token
+        return f'tda_************_******_***********{obj.token[len(obj.token)-4:]}'
+
+    class Meta:
+        model = AccessToken
+        fields = ('id', 'token', 'expires', 'scope', 'created', 'updated')
+        read_only_fields = ('id', 'token',)
 
 
 # Export/Import Serializers
