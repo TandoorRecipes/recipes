@@ -269,10 +269,6 @@ export default {
         },
         loadRecipe: function (recipe_id) {
             apiLoadRecipe(recipe_id).then((recipe) => {
-                if (window.USER_SERVINGS !== 0) {
-                    recipe.servings = window.USER_SERVINGS
-                }
-
                 let total_time = 0
                 for (let step of recipe.steps) {
                     for (let ingredient of step.ingredients) {

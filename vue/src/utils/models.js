@@ -591,7 +591,7 @@ export class Models {
                     type: "lookup",
                     field: "shared",
                     list: "USER",
-                    list_label: "username",
+                    list_label: "display_name",
                     label: "shared_with",
                     multiple: true,
                 },
@@ -669,7 +669,7 @@ export class Models {
         apiName: "InviteLink",
         paginated: false,
         create: {
-            params: [["email", "group", "valid_until"]],
+            params: [["email", "group", "valid_until", "reusable"]],
             form: {
                 email: {
                     form_field: true,
@@ -692,6 +692,39 @@ export class Models {
                     type: "date",
                     field: "valid_until",
                     label: "Valid Until",
+                    placeholder: "",
+                },
+                reusable: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "reusable",
+                    label: "Reusable",
+                    help_text: "reusable_help_text",
+                    placeholder: "",
+                },
+            },
+        },
+    }
+
+    static ACCESS_TOKEN = {
+        name: "AccessToken",
+        apiName: "AccessToken",
+        paginated: false,
+        create: {
+            params: [["scope", "expires"]],
+            form: {
+                scope: {
+                    form_field: true,
+                    type: "text",
+                    field: "scope",
+                    label: "Scope",
+                    placeholder: "",
+                },
+                expires: {
+                    form_field: true,
+                    type: "date",
+                    field: "expires",
+                    label: "expires",
                     placeholder: "",
                 },
             },

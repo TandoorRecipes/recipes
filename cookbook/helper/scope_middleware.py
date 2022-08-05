@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
+from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
@@ -55,7 +56,7 @@ class ScopeMiddleware:
         else:
             if request.path.startswith(prefix + '/api/'):
                 try:
-                    if auth := TokenAuthentication().authenticate(request):
+                    if auth := OAuth2Authentication().authenticate(request):
                         user_space = auth[0].userspace_set.filter(active=True).first()
                         if user_space:
                             request.space = user_space.space

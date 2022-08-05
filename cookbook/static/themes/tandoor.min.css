@@ -6113,9 +6113,11 @@ a.close.disabled {
 .align-text-top {
     vertical-align: text-top !important
 }
-
+/*!
+ * technically the wrong color but not used anywhere besides nav and this way changing nav color is supported
+ */
 .bg-primary {
-    background-color: #b98766 !important
+     background-color: rgb(221, 191, 134) !important;
 }
 
 a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-primary:hover {
