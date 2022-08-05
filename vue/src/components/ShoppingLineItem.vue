@@ -385,7 +385,7 @@ export default {
             return [item?.recipe_mealplan?.mealplan_note, item?.ingredient_note].filter(String)
         },
         formatOneCreatedBy: function (item) {
-            return [this.$t("Added_by"), item?.created_by.username, "@", this.formatDate(item.created_at)].join(" ")
+            return [this.$t("Added_by"), item?.created_by.display_name, "@", this.formatDate(item.created_at)].join(" ")
         },
         openRecipeCard: function (e, item) {
             this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, {id: item.recipe_mealplan.recipe}).then((result) => {

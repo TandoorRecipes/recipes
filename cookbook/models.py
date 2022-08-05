@@ -4,6 +4,8 @@ import re
 import uuid
 from datetime import date, timedelta
 
+import oauth2_provider.models
+from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
@@ -25,7 +27,7 @@ from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PR
                               SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT)
 
 
-def get_user_name(self):
+def get_user_display_name(self):
     if not (name := f"{self.first_name} {self.last_name}") == " ":
         return name
     else:
@@ -57,9 +59,16 @@ def get_shopping_share(self):
     ]))
 
 
-auth.models.User.add_to_class('get_user_name', get_user_name)
+auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
+
+
+def oauth_token_get_owner(self):
+    return self.user
+
+
+oauth2_provider.models.AccessToken.add_to_class('get_owner', oauth_token_get_owner)
 
 
 def get_model_name(model):
@@ -244,6 +253,7 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
@@ -355,34 +365,16 @@ class UserPreference(models.Model, PermissionModelMixin):
         (BOOKS, _('Books')),
     )
 
-    # Search Style
-    SMALL = 'SMALL'
-    LARGE = 'LARGE'
-    NEW = 'NEW'
-
-    SEARCH_STYLE = ((SMALL, _('Small')), (LARGE, _('Large')), (NEW, _('New')))
-
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
-    nav_color = models.CharField(
-        choices=COLORS, max_length=128, default=PRIMARY
-    )
+    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
-    default_page = models.CharField(
-        choices=PAGES, max_length=64, default=SEARCH
-    )
-    search_style = models.CharField(
-        choices=SEARCH_STYLE, max_length=64, default=NEW
-    )
-    show_recent = models.BooleanField(default=True)
-    plan_share = models.ManyToManyField(
-        User, blank=True, related_name='plan_share_default'
-    )
-    shopping_share = models.ManyToManyField(
-        User, blank=True, related_name='shopping_share'
-    )
+    default_page = models.CharField(choices=PAGES, max_length=64, default=SEARCH)
+    plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
+    shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
@@ -612,7 +604,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         # remove all inherited fields from food
         trough = Food.inherit_fields.through
         trough.objects.all().delete()
-        
+
         # food is going to inherit attributes
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
@@ -749,6 +741,8 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     internal = models.BooleanField(default=False)
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     show_ingredient_overview = models.BooleanField(default=True)
+    private = models.BooleanField(default=False)
+    shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')
 
     source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -1017,9 +1011,8 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     email = models.EmailField(blank=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     valid_until = models.DateField(default=default_valid_until)
-    used_by = models.ForeignKey(
-        User, null=True, on_delete=models.CASCADE, related_name='used_by'
-    )
+    used_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='used_by')
+    reusable = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -1186,6 +1179,13 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
 
     objects = ScopedManager(space='space')
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+
+    def is_image(self):
+        try:
+            img = Image.open(self.file.file.file)
+            return True
+        except Exception:
+            return False
 
     def save(self, *args, **kwargs):
         if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):

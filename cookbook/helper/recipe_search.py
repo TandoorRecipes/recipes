@@ -4,17 +4,14 @@ from datetime import date, timedelta
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 from django.core.cache import caches
-from django.db.models import (Avg, Case, Count, Exists, F, Func, Max, OuterRef, Q, Subquery, Sum,
-                              Value, When)
+from django.db.models import (Avg, Case, Count, Exists, F, Func, Max, OuterRef, Q, Subquery, Value, When)
 from django.db.models.functions import Coalesce, Lower, Substr
 from django.utils import timezone, translation
 from django.utils.translation import gettext as _
 
-from cookbook.filters import RecipeFilter
 from cookbook.helper.HelperFunctions import Round, str2bool
-from cookbook.helper.permission_helper import has_group_permission
 from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, RecipeBook, SearchFields,
+from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields,
                              SearchPreference, ViewLog)
 from recipes import settings
 
@@ -759,12 +756,3 @@ class RecipeFacet():
         else:
             return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by(Lower('name').asc())
 
-
-def old_search(request):
-    if has_group_permission(request.user, ('guest',)):
-        params = dict(request.GET)
-        params['internal'] = None
-        f = RecipeFilter(params,
-                         queryset=Recipe.objects.filter(space=request.space).all().order_by(Lower('name').asc()),
-                         space=request.space)
-        return f.qs

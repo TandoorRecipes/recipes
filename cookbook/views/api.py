@@ -2,6 +2,7 @@ import io
 import json
 import mimetypes
 import re
+import threading
 import traceback
 import uuid
 from collections import OrderedDict
@@ -11,6 +12,7 @@ from zipfile import ZipFile
 
 import requests
 import validators
+from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
@@ -24,15 +26,15 @@ from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
-from PIL import UnidentifiedImageError
-from recipe_scrapers import scrape_html, scrape_me
+from oauth2_provider.models import AccessToken
+from recipe_scrapers import scrape_me
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
-from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -44,15 +46,16 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
+from cookbook.forms import ImportForm
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsGuest, CustomIsOwner,
-                                               CustomIsOwnerReadOnly, CustomIsShare, CustomIsShared,
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
+                                               CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space)
-from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch, old_search
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope)
+from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
@@ -83,8 +86,9 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategoryRelationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
-                                 UserFileSerializer, UserNameSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer)
+                                 UserFileSerializer, UserSerializer, UserPreferenceSerializer,
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer)
+from cookbook.views.import_export import get_integration
 from recipes import settings
 
 
@@ -351,7 +355,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     """
     list:
     optional parameters
@@ -359,9 +363,9 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
     - **filter_list**: array of user id's to get names for
     """
     queryset = User.objects
-    serializer_class = UserNameSerializer
-    permission_classes = [CustomIsGuest]
-    http_method_names = ['get']
+    serializer_class = UserSerializer
+    permission_classes = [CustomUserPermission & CustomTokenHasReadWriteScope]
+    http_method_names = ['get', 'patch']
 
     def get_queryset(self):
         queryset = self.queryset.filter(userspace__space=self.request.space)
@@ -378,14 +382,14 @@ class UserNameViewSet(viewsets.ReadOnlyModelViewSet):
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [CustomIsAdmin]
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', ]
 
 
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [CustomIsOwner & CustomIsAdmin]
+    permission_classes = [CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
@@ -395,7 +399,7 @@ class SpaceViewSet(viewsets.ModelViewSet):
 class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
-    permission_classes = [CustomIsSpaceOwner | CustomIsOwnerReadOnly]
+    permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch', 'delete']
 
     def destroy(self, request, *args, **kwargs):
@@ -413,7 +417,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
 class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
-    permission_classes = [CustomIsOwner, ]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
@@ -425,7 +429,7 @@ class StorageViewSet(viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
-    permission_classes = [CustomIsAdmin, ]
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -434,7 +438,7 @@ class StorageViewSet(viewsets.ModelViewSet):
 class SyncViewSet(viewsets.ModelViewSet):
     queryset = Sync.objects
     serializer_class = SyncSerializer
-    permission_classes = [CustomIsAdmin, ]
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -443,7 +447,7 @@ class SyncViewSet(viewsets.ModelViewSet):
 class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SyncLog.objects
     serializer_class = SyncLogSerializer
-    permission_classes = [CustomIsAdmin, ]
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -453,7 +457,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
@@ -464,7 +468,7 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
@@ -474,7 +478,7 @@ class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
 class SupermarketCategoryRelationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = SupermarketCategoryRelation.objects
     serializer_class = SupermarketCategoryRelationSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -486,7 +490,7 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
 
@@ -494,14 +498,14 @@ class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
 
 class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = FoodInheritField.objects
     serializer_class = FoodInheritFieldSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         # exclude fields not yet implemented
@@ -513,7 +517,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -524,9 +528,10 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
                                                            checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
-        return self.queryset.annotate(shopping_status=Exists(shopping_status)).prefetch_related('onhand_users',
-                                                                                                'inherit_fields').select_related(
-            'recipe', 'supermarket_category')
+        return self.queryset\
+                .annotate(shopping_status=Exists(shopping_status))\
+                .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute')\
+                .select_related('recipe', 'supermarket_category')
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
@@ -561,7 +566,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
@@ -580,7 +585,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
     """
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -608,7 +613,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -633,7 +638,7 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = MealType.objects
     serializer_class = MealTypeSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(
@@ -644,7 +649,7 @@ class MealTypeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_serializer_class(self):
@@ -668,7 +673,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
 class StepViewSet(viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     query_params = [
         QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'),
@@ -712,7 +717,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
-    permission_classes = [CustomIsShare | CustomIsGuest]
+    permission_classes = [CustomRecipePermission & CustomTokenHasReadWriteScope]
     pagination_class = RecipePagination
 
     query_params = [
@@ -720,7 +725,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
         QueryParam(name='keywords', description=_(
             'ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'),
-            qtype='int'),
+                   qtype='int'),
         QueryParam(name='keywords_or',
                    description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'),
                    qtype='int'),
@@ -779,13 +784,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         share = self.request.query_params.get('share', None)
 
-        if self.detail:
-            if not share:
+        if self.detail:  # if detail request and not list, private condition is verified by permission class
+            if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
 
-        if not (share and self.detail):
-            self.queryset = self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space).filter(
+            Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))
+        )
 
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
                   in list(self.request.GET)}
@@ -797,11 +803,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.GET.get('debug', False):
             return JsonResponse({
                 'new': str(self.get_queryset().query),
-                'old': str(old_search(request).query)
             })
         return super().list(request, *args, **kwargs)
-
-    # TODO write extensive tests for permissions
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -915,7 +918,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(
@@ -931,7 +934,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     query_params = [
         QueryParam(name='id',
                    description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'),
@@ -970,7 +973,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
 class ShoppingListViewSet(viewsets.ModelViewSet):
     queryset = ShoppingList.objects
     serializer_class = ShoppingListSerializer
-    permission_classes = [CustomIsOwner | CustomIsShared]
+    permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         return self.queryset.filter(
@@ -992,7 +995,7 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
 class ViewLogViewSet(viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1003,7 +1006,7 @@ class ViewLogViewSet(viewsets.ModelViewSet):
 class CookLogViewSet(viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1013,7 +1016,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
 class ImportLogViewSet(viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1023,7 +1026,7 @@ class ImportLogViewSet(viewsets.ModelViewSet):
 class ExportLogViewSet(viewsets.ModelViewSet):
     queryset = ExportLog.objects
     serializer_class = ExportLogSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -1033,7 +1036,8 @@ class ExportLogViewSet(viewsets.ModelViewSet):
 class BookmarkletImportViewSet(viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasScope]
+    required_scopes = ['bookmarklet']
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -1047,7 +1051,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
 class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     parser_classes = [MultiPartParser]
 
     def get_queryset(self):
@@ -1058,7 +1062,7 @@ class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
-    permission_classes = [CustomIsUser]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
@@ -1068,7 +1072,7 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = InviteLink.objects
     serializer_class = InviteLinkSerializer
-    permission_classes = [CustomIsSpaceOwner & CustomIsAdmin]
+    permission_classes = [CustomIsSpaceOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         if is_space_owner(self.request.user, self.request.space):
@@ -1081,12 +1085,21 @@ class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
-    permission_classes = [CustomIsOwner]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
             space=self.request.space).distinct()
         return super().get_queryset()
+
+
+class AccessTokenViewSet(viewsets.ModelViewSet):
+    queryset = AccessToken.objects
+    serializer_class = AccessTokenSerializer
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
 
 # -------------- DRF custom views --------------------
@@ -1103,16 +1116,22 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
+        if token := AccessToken.objects.filter(scope__contains='read').filter(scope__contains='write').first():
+            access_token = token
+        else:
+            access_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
         return Response({
-            'token': token.key,
+            'id': access_token.id,
+            'token': access_token.token,
+            'scope': access_token.scope,
+            'expires': access_token.expires,
             'user_id': user.pk,
         })
 
 
 @api_view(['POST'])
 # @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsUser])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
 def recipe_from_source(request):
     """
@@ -1200,7 +1219,7 @@ def recipe_from_source(request):
 
 @api_view(['GET'])
 # @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsAdmin])
+@permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
 def reset_food_inheritance(request):
     """
@@ -1216,7 +1235,7 @@ def reset_food_inheritance(request):
 
 @api_view(['GET'])
 # @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsAdmin])
+@permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
 def switch_active_space(request, space_id):
     """
@@ -1236,7 +1255,7 @@ def switch_active_space(request, space_id):
 
 @api_view(['GET'])
 # @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsUser])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def download_file(request, file_id):
     """
     function to download a user file securely (wrapping as zip to prevent any context based XSS problems)
@@ -1257,6 +1276,35 @@ def download_file(request, file_id):
     except Exception as e:
         traceback.print_exc()
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+def import_files(request):
+    """
+    function to handle files passed by application importer
+    """
+    limit, msg = above_space_limit(request.space)
+    if limit:
+        return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)
+
+    form = ImportForm(request.POST, request.FILES)
+    if form.is_valid() and request.FILES != {}:
+        try:
+            integration = get_integration(request, form.cleaned_data['type'])
+
+            il = ImportLog.objects.create(type=form.cleaned_data['type'], created_by=request.user, space=request.space)
+            files = []
+            for f in request.FILES.getlist('files'):
+                files.append({'file': io.BytesIO(f.read()), 'name': f.name})
+            t = threading.Thread(target=integration.do_import, args=[files, il, form.cleaned_data['duplicates']])
+            t.setDaemon(True)
+            t.start()
+
+            return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
+        except NotImplementedError:
+            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):

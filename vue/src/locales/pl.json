@@ -425,5 +425,7 @@
     "Message": "Wiadomość",
     "reset_food_inheritance": "Zresetuj dziedziczenie",
     "reset_food_inheritance_info": "Zresetuj wszystkie produkty spożywcze do domyślnych dziedziczonych pól i ich wartości nadrzędnych.",
-    "Valid Until": "Ważne do"
+    "Valid Until": "Ważne do",
+    "show_ingredient_overview": "Wyświetl listę wszystkich składników na początku przepisu.",
+    "Ingredient Overview": "Przegląd składników"
 }

@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
@@ -30,6 +31,7 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 1
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 0
 
+    # test for space filter
     with scopes_disabled():
         recipe_1_s1.space = space_2
         recipe_1_s1.save()
@@ -37,8 +39,23 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
+    # test for private recipe filter
+    with scopes_disabled():
+        recipe_1_s1.created_by = auth.get_user(u1_s1)
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
 
-def test_share_permission(recipe_1_s1, u1_s1, u1_s2, a_u):
+    assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)['results']) == 0
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 0
+
+    with scopes_disabled():
+        recipe_1_s1.created_by = auth.get_user(u1_s2)
+        recipe_1_s1.save()
+
+    assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
+
+
+def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
     assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 404
 
@@ -51,6 +68,15 @@ def test_share_permission(recipe_1_s1, u1_s1, u1_s2, a_u):
         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
         assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404  # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
+
+        recipe_1_s1.created_by = auth.get_user(u1_s1)
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+        assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+        assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+        assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
+        assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 403
 
 
 @pytest.mark.parametrize("arg", [
@@ -80,6 +106,38 @@ def test_update(arg, request, recipe_1_s1):
             validate_recipe(j, json.loads(r.content))
 
 
+def test_update_share(u1_s1, u2_s1, u1_s2, recipe_1_s1):
+    with scopes_disabled():
+        r = u1_s1.patch(
+            reverse(
+                DETAIL_URL,
+                args={recipe_1_s1.id}
+            ),
+            {'shared': [{'id': auth.get_user(u1_s2).pk, 'username': auth.get_user(u1_s2).username}, {'id': auth.get_user(u2_s1).pk, 'username': auth.get_user(u2_s1).username}]},
+            content_type='application/json'
+        )
+        response = json.loads(r.content)
+        assert r.status_code == 200
+        assert len(response['shared']) == 1
+        assert response['shared'][0]['id'] == auth.get_user(u2_s1).pk
+
+
+def test_update_private_recipe(u1_s1, u2_s1, recipe_1_s1):
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'name': 'test1'}, content_type='application/json')
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.created_by = auth.get_user(u1_s1)
+        recipe_1_s1.save()
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'name': 'test2'}, content_type='application/json')
+    assert r.status_code == 200
+
+    r = u2_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'name': 'test3'}, content_type='application/json')
+    assert r.status_code == 403
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 201],
@@ -107,22 +165,22 @@ def test_add(arg, request, u1_s2):
         x += 1
 
 
-def test_delete(u1_s1, u1_s2, recipe_1_s1):
+def test_delete(u1_s1, u1_s2, u2_s1, recipe_1_s1, recipe_2_s1):
     with scopes_disabled():
-        r = u1_s2.delete(
-            reverse(
-                DETAIL_URL,
-                args={recipe_1_s1.id}
-            )
-        )
+        r = u1_s2.delete(reverse(DETAIL_URL, args={recipe_1_s1.id}))
         assert r.status_code == 404
 
-        r = u1_s1.delete(
-            reverse(
-                DETAIL_URL,
-                args={recipe_1_s1.id}
-            )
-        )
+        r = u1_s1.delete(reverse(DETAIL_URL, args={recipe_1_s1.id}))
 
         assert r.status_code == 204
         assert not Recipe.objects.filter(pk=recipe_1_s1.id).exists()
+
+        recipe_2_s1.created_by = auth.get_user(u1_s1)
+        recipe_2_s1.private = True
+        recipe_2_s1.save()
+
+        r = u2_s1.delete(reverse(DETAIL_URL, args={recipe_2_s1.id}))
+        assert r.status_code == 403
+
+        r = u1_s1.delete(reverse(DETAIL_URL, args={recipe_2_s1.id}))
+        assert r.status_code == 204
