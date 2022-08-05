@@ -365,7 +365,7 @@ class CustomTokenHasReadWriteScope(TokenHasReadWriteScope):
         if type(request.auth) == AccessToken:
             return super().has_permission(request, view)
         else:
-            return request.user.is_authenticated
+            return True
 
 
 def above_space_limit(space):  # TODO add file storage limit
