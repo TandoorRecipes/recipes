@@ -65,4 +65,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :$TANDOOR_PORT --workers $GUNICORN_WORKERS --threads GUNICORN_THREADS --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
+exec gunicorn -b :$TANDOOR_PORT --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
