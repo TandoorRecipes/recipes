@@ -2,6 +2,8 @@
 source venv/bin/activate
 
 TANDOOR_PORT="${TANDOOR_PORT:-8080}"
+GUNICORN_WORKERS="${GUNICORN_WORKERS:1}"
+GUNICORN_THREADS="${GUNICORN_THREADS:1}"
 NGINX_CONF_FILE=/opt/recipes/nginx/conf.d/Recipes.conf
 
 display_warning() {
@@ -63,4 +65,4 @@ echo "Done"
 
 chmod -R 755 /opt/recipes/mediafiles
 
-exec gunicorn -b :$TANDOOR_PORT --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
+exec gunicorn -b :$TANDOOR_PORT -workers :$GUNICORN_WORKERS --threads :GUNICORN_THREADS --access-logfile - --error-logfile - --log-level INFO recipes.wsgi
