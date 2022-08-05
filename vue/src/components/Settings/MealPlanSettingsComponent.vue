@@ -1,15 +1,16 @@
 <template>
     <div v-if="user_preferences !== undefined">
 
-        <generic-multiselect
-            @change="updateSettings(false)"
-            :model="Models.USER"
-            :initial_selection="user_preferences.plan_share"
-            label="display_name"
-            :multiple="true"
-            :placeholder="$t('User')"
-        ></generic-multiselect>
-
+        <b-form-group :label="$t('Share')" :description="$t('plan_share_desc')">
+            <generic-multiselect
+                @change="updateSettings(false)"
+                :model="Models.USER"
+                :initial_selection="user_preferences.plan_share"
+                label="display_name"
+                :multiple="true"
+                :placeholder="$t('User')"
+            ></generic-multiselect>
+        </b-form-group>
     </div>
 </template>
 

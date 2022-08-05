@@ -29,6 +29,7 @@
     <script type="application/javascript">
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
         window.USER_ID = {{ request.user.pk }}
+        window.SHOPPING_MIN_AUTOSYNC_INTERVAL = {{ SHOPPING_MIN_AUTOSYNC_INTERVAL }}
 
         <!--TODO build custom API endpoint for this -->
         {% get_available_languages as LANGUAGES %}
