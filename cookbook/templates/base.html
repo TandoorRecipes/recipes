@@ -69,7 +69,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %} bg-header"
+<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}"
      id="id_main_nav"
      style="{% sticky_nav request %}">
 
@@ -408,6 +408,7 @@
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
     localStorage.setItem('DEBUG', "{% is_debug %}")
+    localStorage.setItem('USER_ID', "{{request.user.pk}}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {

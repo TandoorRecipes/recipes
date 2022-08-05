@@ -33,7 +33,8 @@
                 <template #title>
                     <b-spinner v-if="loading" type="border" small class="d-inline-block"></b-spinner>
                     <i v-if="!loading" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})`}}</span>
+                    <span
+                        class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})` }}</span>
                 </template>
                 <div class="container p-0 p-md-3" id="shoppinglist">
                     <div class="row">
@@ -177,7 +178,7 @@
             <b-tab :title="$t('Recipes')">
                 <template #title>
                     <i class="fas fa-book fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Recipes.length})`}}</span>
+                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Recipes.length})` }}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
@@ -234,7 +235,9 @@
                                         </thead>
                                         <tr v-for="r in Recipes" :key="r.list_recipe">
                                             <td>{{ r.recipe_mealplan.name }}</td>
-                                            <td><a :href="resolveDjangoUrl('view_recipe', r.recipe_mealplan.recipe)">{{ r.recipe_mealplan.recipe_name }}</a></td>
+                                            <td><a :href="resolveDjangoUrl('view_recipe', r.recipe_mealplan.recipe)">{{
+                                                    r.recipe_mealplan.recipe_name
+                                                }}</a></td>
                                             <td class="block-inline">
                                                 <b-form-input min="1" type="number" :debounce="300"
                                                               :value="r.recipe_mealplan.servings"
@@ -258,7 +261,7 @@
             <b-tab>
                 <template #title>
                     <i class="fas fa-store-alt fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${supermarkets.length})`}}</span>
+                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${supermarkets.length})` }}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
@@ -460,183 +463,7 @@
                 </template>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
-                        <b-card class="no-body">
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("mealplan_autoadd_shopping") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control settings-checkbox"
-                                           v-model="settings.mealplan_autoadd_shopping" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">{{ $t("mealplan_autoadd_shopping_desc") }}</em>
-                                </div>
-                            </div>
-                            <div v-if="settings.mealplan_autoadd_shopping">
-                                <div class="row">
-                                    <div class="col col-md-6">{{ $t("mealplan_autoexclude_onhand") }}</div>
-                                    <div class="col col-md-6 text-right">
-                                        <input type="checkbox" class="form-control settings-checkbox"
-                                               v-model="settings.mealplan_autoexclude_onhand" @change="saveSettings"/>
-                                    </div>
-                                </div>
-                                <div class="row sm mb-3">
-                                    <div class="col">
-                                        <em class="small text-muted">{{ $t("mealplan_autoexclude_onhand_desc") }}</em>
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-if="settings.mealplan_autoadd_shopping">
-                                <div class="row">
-                                    <div class="col col-md-6">{{ $t("mealplan_autoinclude_related") }}</div>
-                                    <div class="col col-md-6 text-right">
-                                        <input type="checkbox" class="form-control settings-checkbox"
-                                               v-model="settings.mealplan_autoinclude_related" @change="saveSettings"/>
-                                    </div>
-                                </div>
-                                <div class="row sm mb-3">
-                                    <div class="col">
-                                        <em class="small text-muted">
-                                            {{ $t("mealplan_autoinclude_related_desc") }}
-                                        </em>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("shopping_share") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <generic-multiselect
-                                        size="sm"
-                                        @change="
-                                            settings.shopping_share = $event.val
-                                            saveSettings()
-                                        "
-                                        :model="Models.USER"
-                                        :initial_selection="settings.shopping_share"
-                                        label="display_name"
-                                        :multiple="true"
-                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                        :placeholder="$t('User')"
-                                    />
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">{{ $t("shopping_share_desc") }}</em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("shopping_auto_sync") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control" v-model="settings.shopping_auto_sync"
-                                           @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("shopping_auto_sync_desc") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("shopping_add_onhand") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control settings-checkbox"
-                                           v-model="settings.shopping_add_onhand" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("shopping_add_onhand_desc") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("shopping_recent_days") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control" v-model="settings.shopping_recent_days"
-                                           @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("shopping_recent_days_desc") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("filter_to_supermarket") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="checkbox" class="form-control settings-checkbox"
-                                           v-model="settings.filter_to_supermarket" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("filter_to_supermarket_desc") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("default_delay") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input type="number" class="form-control" min="1" v-model="settings.default_delay"
-                                           @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("default_delay_desc") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("csv_delim_label") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input class="form-control" v-model="settings.csv_delim" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("csv_delim_help") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("csv_prefix_label") }}</div>
-                                <div class="col col-md-6 text-right">
-                                    <input class="form-control" v-model="settings.csv_prefix" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("csv_prefix_help") }}
-                                    </em>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-md-6">{{ $t("left_handed") }}</div>
-                                <div class="col col-md-6">
-                                    <input type="checkbox" class="form-control settings-checkbox"
-                                           v-model="settings.left_handed" @change="saveSettings"/>
-                                </div>
-                            </div>
-                            <div class="row sm mb-3">
-                                <div class="col">
-                                    <em class="small text-muted">
-                                        {{ $t("left_handed_help") }}
-                                    </em>
-                                </div>
-                            </div>
-                        </b-card>
+                        <shopping-settings-component @updated="settings = $event" :user_id="user_id"></shopping-settings-component>
                     </div>
                 </div>
             </b-tab>
@@ -783,6 +610,7 @@ import ShoppingModal from "@/components/Modals/ShoppingModal"
 
 import {ApiMixin, getUserPreference, StandardToasts, makeToast, ResolveUrlMixin} from "@/utils/utils"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import ShoppingSettingsComponent from "@/components/Settings/ShoppingSettingsComponent";
 
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
@@ -790,7 +618,7 @@ let SETTINGS_COOKIE_NAME = "shopping_settings"
 
 export default {
     name: "ShoppingListView",
-    mixins: [ApiMixin,ResolveUrlMixin],
+    mixins: [ApiMixin, ResolveUrlMixin],
     components: {
         ContextMenu,
         ContextMenuItem,
@@ -801,7 +629,8 @@ export default {
         DownloadCSV,
         CopyToClipboard,
         ShoppingModal,
-        draggable
+        draggable,
+        ShoppingSettingsComponent
     },
 
     data() {
@@ -837,6 +666,7 @@ export default {
                 shopping_add_onhand: true,
                 left_handed: false,
             },
+            user_id: parseInt(localStorage.getItem('USER_ID')),
             editing_supermarket_categories: [],
             editing_supermarket: null,
             new_supermarket: {entrymode: false, value: undefined, editmode: undefined},
@@ -1314,16 +1144,6 @@ export default {
             }
 
             this.$refs.menu.open(e, value)
-        },
-        saveSettings: function () {
-            let api = ApiApiFactory()
-            api.partialUpdateUserPreference(this.settings.user, this.settings)
-                .then((result) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                })
         },
         saveThis: function (thisItem, toast = true) {
             let api = new ApiApiFactory()

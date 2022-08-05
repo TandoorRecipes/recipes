@@ -10,4 +10,5 @@ def context_settings(request):
         'TERMS_URL': settings.TERMS_URL,
         'PRIVACY_URL': settings.PRIVACY_URL,
         'IMPRINT_URL': settings.IMPRINT_URL,
+        'SHOPPING_MIN_AUTOSYNC_INTERVAL': settings.SHOPPING_MIN_AUTOSYNC_INTERVAL,
     }
