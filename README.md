@@ -2,7 +2,7 @@
   <br>
   <a href="https://tandoor.dev"><img src="https://github.com/vabene1111/recipes/raw/develop/docs/logo_color.svg" height="256px" width="256px"></a>
   <br>
-  Tandoor Recipes
+  Tandoor Recipes with
   <br>
 </h1>
 
