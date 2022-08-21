@@ -459,5 +459,6 @@
     "Last_name": "Nachname",
     "Comments_setting": "Kommentare anzeigen",
     "reset_food_inheritance": "Vererbung zurücksetzen",
-    "food_inherit_info": "Datenfelder des Lebensmittels, die standardmäßig vererbt werden sollen."
+    "food_inherit_info": "Datenfelder des Lebensmittels, die standardmäßig vererbt werden sollen.",
+    "Are_You_Sure": "Bist du dir sicher?"
 }
