@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-05-28 16:32+0000\n"
-"Last-Translator: Tobias Reinmann <reinmanns@bluewin.ch>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2022-08-23 13:32+0000\n"
+"Last-Translator: Kirstin Seidel-Gebert <kirstin@trebeg.de>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -370,8 +370,6 @@ msgid "Partial Match"
 msgstr "Teilweise Übereinstimmung"
 
 #: .\cookbook\forms.py:467
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "Beginnt mit"
 
@@ -463,8 +461,6 @@ msgid "Default Delay Hours"
 msgstr "Standardmäßige Verzögerung in Stunden"
 
 #: .\cookbook\forms.py:517
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
 msgstr "Supermarkt filtern"
 
@@ -630,11 +626,9 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr "Generiert den Index für die Rezept-Volltextsuche neu"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Nur PostgreSQL Datenbanken verwenden Volltextsuche, kein Index muss neu "
+"Nur PostgreSQL Datenbanken verwenden Volltextsuche, es muss kein Index neu "
 "generiert werden"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
@@ -737,8 +731,6 @@ msgid "Recipe"
 msgstr "Rezept"
 
 #: .\cookbook\models.py:1228
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
 msgstr "Lebensmittel"
 
@@ -748,7 +740,7 @@ msgstr "Schlagwort"
 
 #: .\cookbook\serializer.py:207
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Die Eigentumsberechtigung am Space kann nicht geändert werden."
 
 #: .\cookbook\serializer.py:290
 msgid "File uploads are not enabled for this Space."
@@ -826,11 +818,10 @@ msgid "ID of unit to use for the shopping list"
 msgstr "ID der Einheit, die für die Einkaufsliste verwendet werden soll"
 
 #: .\cookbook\serializer.py:1226
-#, fuzzy
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
-"Wenn diese Option auf wahr gesetzt ist, werden alle Lebensmittel aus den "
-"aktiven Einkaufslisten gelöscht."
+"Wenn diese Option aktiviert ist, werden alle Lebensmittel aus den aktiven "
+"Einkaufslisten gelöscht."
 
 #: .\cookbook\tables.py:36 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -1193,10 +1184,8 @@ msgstr "Verlauf"
 #: .\cookbook\templates\base.html:252
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Zutaten"
+msgstr "Zutateneditor"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
@@ -1233,15 +1222,13 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:309
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Kein Space"
+msgstr "Deine Spaces"
 
 #: .\cookbook\templates\base.html:320
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #: .\cookbook\templates\base.html:324
 msgid "Markdown Guide"
@@ -1408,7 +1395,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Dies kann nicht rückgängig gemacht werden!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1574,10 +1561,8 @@ msgstr "Zeilenumbrüche entstehen durch zwei Leerzeichen am ende einer Zeile"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "oder durch eine leere Zeile dazwischen."
+msgstr "oder durch eine Leerzeile dazwischen."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1599,16 +1584,12 @@ msgid "Lists"
 msgstr "Listen"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
-"Liste können sortiert oder unsortiert sein. Es ist <b>wichtig das eine leere "
-"Zeile vor der Liste frei gelassen wird!</b>"
+"Listen können sortiert oder unsortiert sein. Es ist wichtig, dass <b>vor der "
+"Liste eine Zeile frei gelassen wird!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
@@ -1851,15 +1832,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:29
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Simple searches ignore punctuation and common words such as "
-#| "'the', 'a', 'and'. And will treat seperate words as required.\n"
-#| "            Searching for 'apple or flour' will return any recipe that "
-#| "includes both 'apple' and 'flour' anywhere in the fields that have been "
-#| "selected for a full text search.\n"
-#| "            "
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
@@ -1870,11 +1842,10 @@ msgid ""
 "            "
 msgstr ""
 " \n"
-"            Einfache Suchen ignorieren Satzzeichen und Stoppwörter wie \"und"
-"\", \"der\", \"doch\". Getrennte Wörter werden als erforderlich gewertet.\n"
+"            Einfache Suchen ignorieren Satzzeichen und Füllwörter wie \"und\""
+", \"der\", \"ein\". Alle anderen Wörter werden als erforderlich gewertet.\n"
 "            Eine Suche nach \"Der Apfel und Mehl\" wird alle Rezepte liefern "
-"die \"Apfel\" oder \"Mehl\" in einem der ausgewählten Suchfeldern "
-"enthalten.\n"
+"die \"Apfel\" und \"Mehl\" in einem der ausgewählten Suchfeldern enthalten.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:34
@@ -1895,23 +1866,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:39
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Web searches simulate functionality found on many web search "
-#| "sites supporting special syntax.\n"
-#| "            Placing quotes around several words will convert those words "
-#| "into a phrase.\n"
-#| "            'or' is recongized as searching for the word (or phrase) "
-#| "immediately before 'or' OR the word (or phrase) directly after.\n"
-#| "            '-' is recognized as searching for recipes that do not "
-#| "include the word (or phrase) that comes immediately after. \n"
-#| "            For example searching for 'apple pie' or cherry -butter will "
-#| "return any recipe that includes the phrase 'apple pie' or the word "
-#| "'cherry' \n"
-#| "            in any field included in the full text search but exclude any "
-#| "recipe that has the word 'butter' in any field included.\n"
-#| "            "
 msgid ""
 " \n"
 "            Web searches simulate functionality found on many web search "
@@ -1931,18 +1885,19 @@ msgid ""
 msgstr ""
 " \n"
 "            Der Suchtyp \"Web\" simuliert die Funktion vieler "
-"Internetsuchmaschinen mit speziellem Syntax.\n"
-"            Anführungszeichen um mehrere Wörter verwandeln diese in eine "
-"Phrase.\n"
-"            \"or\" versteht sich als \"oder\", sprich es muss das Wort (oder "
-"die Phrase) vor dem \"or\" oder nach dem \"or\" enthalten sein.\n"
-"            '-' ist als Ausschluss nutzbar, so werden nur Rezepte gefunden "
-"die nicht das folgende Wort (oder die Phrase) enthalten. \n"
+"Internetsuchmaschinen und unterstützt eine ähnliche Syntax.\n"
+"            Einfache Anführungszeichen (') um mehrere Wörter verwandeln "
+"diese in einen zusammenhängenden Suchbegriff.\n"
+"            \"or\"  (oder) verknüpft zwei Suchbegriffe. Mindestens einer der "
+"beiden Begriffe (oder beide) muss enthalten sein.\n"
+"            \"-\" kann verwendet werden, um Begriffe auszuschließen. Es "
+"werden nur Rezepte gefunden die nicht den darauf folgenden Begriff enthalten."
+"\n"
 "            Beispiel: Eine Suche nach \"'Apfelkuchen mit Sahne' or Torte -"
-"Butter\" liefert alle Suchergebnisse die entweder \"Apfelkuchen mit Sahne"
-"\" \n"
-"            oder Torte enthalten, schließt aber Ergebnisse welche Butter "
-"enthalten aus.\n"
+"Butter\" liefert alle Suchergebnisse die entweder \"Apfelkuchen mit Sahne\" "
+"\n"
+"            oder Torte (oder beides) enthalten, schließt aber Ergebnisse "
+"welche Butter enthalten aus.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:48
@@ -1958,19 +1913,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:59
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Another approach to searching that also requires Postgresql "
-#| "is fuzzy search or trigram similarity. A trigram is a group of three "
-#| "consecutive characters.\n"
-#| "            For example searching for 'apple' will create x trigrams "
-#| "'app', 'ppl', 'ple' and will create a score of how closely words match "
-#| "the generated trigrams.\n"
-#| "            One benefit of searching trigams is that a search for "
-#| "'sandwich' will find mispelled words such as 'sandwhich' that would be "
-#| "missed by other methods.\n"
-#| "            "
 msgid ""
 " \n"
 "            Another approach to searching that also requires Postgresql is "
@@ -1986,12 +1928,12 @@ msgid ""
 msgstr ""
 " \n"
 "            Eine weitere Suchmethode (welche ebenfalls PostgreSQL erfordert) "
-"ist die Unscharfe Suche oder Trigramm Suche. Ein Trigramm sind 3 "
+"ist die unscharfe Suche oder Trigramm-Suche. Ein Trigramm sind 3 "
 "aufeinanderfolgende Zeichen.\n"
-"            Beispiel: Die Suche nach \"Apfel\" erzeugt die Trigramme \"Apf"
-"\", \"pfl\" und \"fel\". Die Suchergebnisse erhalten dann eine Wertung "
+"            Beispiel: Die Suche nach \"Apfel\" erzeugt die Trigramme \"Apf\""
+", \"pfl\" und \"fel\". Die Suchergebnisse erhalten dann eine Wertung "
 "abhängig davon wie gut sie mit den Trigrammen übereinstimmen.\n"
-"            Ein Vorteil der Trigramm Suche ist das korrekte Suchwörter wie "
+"            Ein Vorteil der Trigramm-Suche ist das korrekte Suchwörter wie "
 "\"Apfel\", Tippfehler in Suchfeldern (wie z.B. \"Afpel\") finden.\n"
 "            "
 
@@ -2241,17 +2183,14 @@ msgstr "Administrator-Account Erstellen"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Social Login"
+msgstr "Fehler beim Anmelden via sozialem Netzwerk"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "Fehler aufgetreten beim verschieben von "
+msgstr ""
+"Es ist ein Fehler aufgetreten bei der Anmeldung über dein soziales Netzwerk."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2284,26 +2223,26 @@ msgstr "Registrierung"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Verbinde zu %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "Die Anmeldung über %(provider)s wird eingerichtet."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Über %(provider)s anmelden"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
-msgstr ""
+msgstr "Die Anmeldung erfolgt über %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Weiter"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2342,10 +2281,8 @@ msgid "Manage Subscription"
 msgstr "Tarif verwalten"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
-msgstr "Instanz:"
+msgstr "Space"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2364,13 +2301,11 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:45
 msgid "Owner"
-msgstr ""
+msgstr "Eigentümer"
 
 #: .\cookbook\templates\space_overview.html:49
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "Space erstellen"
+msgstr "Space verlassen"
 
 #: .\cookbook\templates\space_overview.html:70
 #: .\cookbook\templates\space_overview.html:80
@@ -2621,62 +2556,85 @@ msgstr "{obj.name} wurde der Einkaufsliste hinzugefügt."
 #: .\cookbook\views\api.py:674
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"ID des Rezeptes zu dem ein Schritt gehört. Kann mehrfach angegeben werden."
 
 #: .\cookbook\views\api.py:676
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Abfragezeichenfolge, die mit dem Objektnamen übereinstimmt (ungenau)."
 
 #: .\cookbook\views\api.py:720
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"Suchbegriff wird mit dem Rezeptnamen abgeglichen. In Zukunft auch "
+"Volltextsuche."
 
 #: .\cookbook\views\api.py:722
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
+"ID des Stichwortes, das ein Rezept haben muss. Kann mehrfach angegeben "
+"werden. Äquivalent zu keywords_or"
 
 #: .\cookbook\views\api.py:725
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"Stichwort IDs. Kann mehrfach angegeben werden. Listet Rezepte zu jedem der "
+"angegebenen Stichwörter"
 
 #: .\cookbook\views\api.py:728
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"Stichwort IDs. Kann mehrfach angegeben werden. Listet Rezepte mit allen "
+"angegebenen Stichwörtern."
 
 #: .\cookbook\views\api.py:731
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"Stichwort ID. Kann mehrfach angegeben werden. Schließt Rezepte einem der "
+"angegebenen Stichwörtern aus."
 
 #: .\cookbook\views\api.py:734
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"Stichwort IDs. Kann mehrfach angegeben werden. Schließt Rezepte mit allen "
+"angegebenen Stichwörtern aus."
 
 #: .\cookbook\views\api.py:736
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID einer Zutat, zu der Rezepte gelistet werden sollen. Kann mehrfach "
+"angegeben werden."
 
 #: .\cookbook\views\api.py:739
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"Zutat ID. Kann mehrfach angegeben werden. Listet Rezepte mindestens einer "
+"der Zutaten"
 
 #: .\cookbook\views\api.py:741
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"Zutat ID. Kann mehrfach angegeben werden. Listet Rezepte mit allen "
+"angegebenen Zutaten."
 
 #: .\cookbook\views\api.py:743
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"Zutat ID. Kann mehrfach angegeben werden. Schließt Rezepte aus, die eine der "
+"angegebenen Zutaten enthalten."
 
 #: .\cookbook\views\api.py:745
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"Zutat ID. Kann mehrfach angegeben werden. Schließt Rezepte aus, die alle "
+"angegebenen Zutaten enthalten."
 
 #: .\cookbook\views\api.py:746
 msgid "ID of unit a recipe should have."
@@ -2687,88 +2645,119 @@ msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
+"Mindestbewertung eines Rezeptes (0-5). Negative Werte filtern nach "
+"Maximalbewertung."
 
 #: .\cookbook\views\api.py:749
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
-msgstr ""
+msgstr "Buch ID, in dem das Rezept ist. Kann mehrfach angegeben werden."
 
 #: .\cookbook\views\api.py:751
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
+"Buch ID. Kann mehrfach angegeben werden.  Listet alle Rezepte aus den "
+"angegebenen Büchern"
 
 #: .\cookbook\views\api.py:753
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
+"Buch ID. Kann mehrfach angegeben werden. Listet die Rezepte, die in allen "
+"Büchern enthalten sind."
 
 #: .\cookbook\views\api.py:755
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"Buch IDs. Kann mehrfach angegeben werden. Schließt Rezepte aus den "
+"angegebenen Büchern aus."
 
 #: .\cookbook\views\api.py:757
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
+"Buch IDs. Kann mehrfach angegeben werden. Schließt Rezepte aus, die in allen "
+"angegebenen Büchern enthalten sind."
 
 #: .\cookbook\views\api.py:759
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
-msgstr ""
+msgstr "Nur interne Rezepte sollen gelistet werden. [ja/<b>nein</b>]"
 
 #: .\cookbook\views\api.py:761
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr ""
+"Die Suchergebnisse sollen in zufälliger Reihenfolge gelistet werden. [ja/"
+"<b>nein</b>]"
 
 #: .\cookbook\views\api.py:763
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
+"Die neuesten Suchergebnisse sollen zuerst angezeigt werden. [ja/<b>nein</b>]"
 
 #: .\cookbook\views\api.py:765
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Rezepte listen, die mindestens x-mal gekocht wurden. Eine negative Zahl "
+"listet Rezepte, die weniger als x-mal gekocht wurden"
 
 #: .\cookbook\views\api.py:767
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Rezepte listen, die zuletzt am angegebenen Datum oder später gekocht wurden. "
+"Wenn - vorangestellt wird, wird am oder vor dem Datum gelistet."
 
 #: .\cookbook\views\api.py:769
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Rezepte listen, die am angegebenen Datum oder später erstellt wurden. Wenn - "
+"vorangestellt wird, wird am oder vor dem Datum gelistet."
 
 #: .\cookbook\views\api.py:771
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Rezepte listen, die am angegebenen Datum oder später aktualisiert wurden. "
+"Wenn - vorangestellt wird, wird am oder vor dem Datum gelistet."
 
 #: .\cookbook\views\api.py:773
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Rezepte listen, die am angegebenen Datum oder später zuletzt angesehen "
+"wurden. Wenn - vorangestellt wird, wird am oder vor dem Datum gelistet."
 
 #: .\cookbook\views\api.py:775
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
+"Rezepte listen, die mit vorhandenen Zutaten gekocht werden können. [ja/"
+"<b>nein</b>]"
 
 #: .\cookbook\views\api.py:937
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
+"Zeigt denjenigen Eintrag auf der Einkaufliste mit der angegebenen ID. Kann "
+"mehrfach angegeben werden."
 
 #: .\cookbook\views\api.py:942
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</b>]"
 "<br>  - recent includes unchecked items and recently completed items."
 msgstr ""
+"Einkaufslisteneinträge nach Häkchen filtern.  [ja, nein, beides, "
+"<b>kürzlich</b>]<br>  - kürzlich enthält nicht abgehakte Einträge und "
+"kürzlich abgeschlossene Einträge."
 
 #: .\cookbook\views\api.py:945
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Listet die Einträge der Einkaufsliste sortiert nach Supermarktkategorie."
 
 #: .\cookbook\views\api.py:1140
 msgid "Nothing to do."
@@ -2776,7 +2765,7 @@ msgstr "Nichts zu tun."
 
 #: .\cookbook\views\api.py:1160
 msgid "Invalid Url"
-msgstr ""
+msgstr "Ungültige URL"
 
 #: .\cookbook\views\api.py:1167
 msgid "Connection Refused."
@@ -2784,7 +2773,7 @@ msgstr "Verbindung fehlgeschlagen."
 
 #: .\cookbook\views\api.py:1172
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Ungültiges URL Schema."
 
 #: .\cookbook\views\api.py:1195
 #, fuzzy
@@ -2842,10 +2831,8 @@ msgid "Invite Link"
 msgstr "Einladungslink"
 
 #: .\cookbook\views\delete.py:200
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
-msgstr "Mitglieder"
+msgstr "Space-Mitgliedschaft"
 
 #: .\cookbook\views\edit.py:116
 msgid "You cannot edit this storage!"
@@ -2904,10 +2891,8 @@ msgid "Shopping Categories"
 msgstr "Einkaufskategorien"
 
 #: .\cookbook\views\lists.py:187
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filter"
+msgstr "Benutzerdefinierte Filter"
 
 #: .\cookbook\views\lists.py:224
 msgid "Steps"
