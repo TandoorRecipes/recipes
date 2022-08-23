@@ -15,7 +15,7 @@
                         <table class="table table-sm mb-0">
                             <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                             <template v-for="s in steps">
-                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && steps.length > 1">
+                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && steps.length > 1 && s.ingredients.length > 0">
                                     <td colspan="5">
                                         <b>{{ s.name }}</b>
                                     </td>
