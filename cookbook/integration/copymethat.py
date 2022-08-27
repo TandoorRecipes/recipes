@@ -2,11 +2,10 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-from bs4 import BeautifulSoup
-
+from bs4 import BeautifulSoup, Tag
 from django.utils.translation import gettext as _
+
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_html_import import get_recipe_from_source
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes, parse_servings
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
@@ -22,18 +21,21 @@ class CopyMeThat(Integration):
 
     def get_recipe_from_file(self, file):
         # 'file' comes is as a beautifulsoup object
-        recipe = Recipe.objects.create(name=file.find("div", {"id": "name"}).text.strip(), created_by=self.request.user, internal=True, space=self.request.space, )
+        try:
+            source = file.find("a", {"id": "original_link"}).text
+        except AttributeError:
+            source = None
+
+        recipe = Recipe.objects.create(name=file.find("div", {"id": "name"}).text.strip()[:128], source_url=source, created_by=self.request.user, internal=True, space=self.request.space, )
 
         for category in file.find_all("span", {"class": "recipeCategory"}):
             keyword, created = Keyword.objects.get_or_create(name=category.text, space=self.request.space)
             recipe.keywords.add(keyword)
-
+        
         try:
             recipe.servings = parse_servings(file.find("a", {"id": "recipeYield"}).text.strip())
             recipe.working_time = iso_duration_to_minutes(file.find("span", {"meta": "prepTime"}).text.strip())
             recipe.waiting_time = iso_duration_to_minutes(file.find("span", {"meta": "cookTime"}).text.strip())
-            recipe.description = (file.find("div ", {"id": "description"}).text.strip())[:512]
-
         except AttributeError:
             pass
 
@@ -43,36 +45,65 @@ class CopyMeThat(Integration):
         except AttributeError:
             pass
 
-        step = Step.objects.create(instruction='', space=self.request.space, )
-
-        ingredient_parser = IngredientParser(self.request, True)
-        for ingredient in file.find_all("li", {"class": "recipeIngredient"}):
-            if ingredient.text == "":
-                continue
-            amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
-            f = ingredient_parser.get_food(food)
-            u = ingredient_parser.get_unit(unit)
-            step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space,
-            ))
-
-        for s in file.find_all("li", {"class": "instruction"}):
-            if s.text == "":
-                continue
-            step.instruction += s.text.strip() + ' \n\n'
-
-        for s in file.find_all("li", {"class": "recipeNote"}):
-            if s.text == "":
-                continue
-            step.instruction += s.text.strip() + ' \n\n'
-
         try:
-            if file.find("a", {"id": "original_link"}).text != '':
-                step.instruction += "\n\n" + _("Imported from") + ": " + file.find("a", {"id": "original_link"}).text
-                step.save()
+            if len(file.find("span", {"id": "made_this"}).text.strip()) > 0:
+                recipe.keywords.add(Keyword.objects.get_or_create(space=self.request.space, name=_('I made this'))[0])
         except AttributeError:
             pass
 
+        step = Step.objects.create(instruction='', space=self.request.space, )
+
+        ingredient_parser = IngredientParser(self.request, True)
+
+        ingredients = file.find("ul", {"id": "recipeIngredients"})
+        if isinstance(ingredients, Tag):
+            for ingredient in ingredients.children:
+                if not isinstance(ingredient, Tag) or not ingredient.text.strip() or "recipeIngredient_spacer" in ingredient['class']:
+                    continue
+                if any(x in ingredient['class'] for x in ["recipeIngredient_subheader", "recipeIngredient_note"]):
+                    step.ingredients.add(Ingredient.objects.create(is_header=True, note=ingredient.text.strip()[:256], original_text=ingredient.text.strip(), space=self.request.space, ))
+                else:
+                    amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
+                    f = ingredient_parser.get_food(food)
+                    u = ingredient_parser.get_unit(unit)
+                    step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space, ))
+
+        instructions = file.find("ol", {"id": "recipeInstructions"})
+        if isinstance(instructions, Tag):
+            for instruction in instructions.children:
+                if not isinstance(instruction, Tag) or instruction.text == "":
+                    continue
+                if "instruction_subheader" in instruction['class']:
+                    if step.instruction:
+                        step.save()
+                        recipe.steps.add(step)
+                        step = Step.objects.create(instruction='', space=self.request.space, )
+                    
+                    step.name = instruction.text.strip()[:128]
+                else:
+                    step.instruction += instruction.text.strip() + ' \n\n'
+
+        notes = file.find_all("li", {"class": "recipeNote"})
+        if notes:
+            step.instruction += '*Notes:* \n\n'
+
+            for n in notes:
+                if n.text == "":
+                    continue
+                step.instruction += '*' + n.text.strip() + '* \n\n'
+
+        description = ''
+        try:
+            description = file.find("div", {"id": "description"}).text.strip()
+        except AttributeError:
+            pass
+        if len(description) <= 512:
+            recipe.description = description
+        else:
+            recipe.description = description[:480] + ' ... (full description below)'
+            step.instruction += '*Description:* \n\n*' + description + '* \n\n'
+
+        step.save()
         recipe.steps.add(step)
 
         # import the Primary recipe image that is stored in the Zip

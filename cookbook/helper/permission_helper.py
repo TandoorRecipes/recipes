@@ -6,10 +6,12 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
+from oauth2_provider.contrib.rest_framework import TokenHasScope, TokenHasReadWriteScope
+from oauth2_provider.models import AccessToken
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 
-from cookbook.models import ShareLink, Recipe, UserPreference, UserSpace
+from cookbook.models import ShareLink, Recipe, UserSpace
 
 
 def get_allowed_groups(groups_required):
@@ -297,6 +299,73 @@ class CustomIsShare(permissions.BasePermission):
         if share:
             return share_link_valid(obj, share)
         return False
+
+
+class CustomRecipePermission(permissions.BasePermission):
+    """
+    Custom permission class for recipe api endpoint
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):  # user is either at least a guest or a share link is given and the request is safe
+        share = request.query_params.get('share', None)
+        return has_group_permission(request.user, ['guest']) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
+
+    def has_object_permission(self, request, view, obj):
+        share = request.query_params.get('share', None)
+        if share:
+            return share_link_valid(obj, share)
+        else:
+            if obj.private:
+                return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
+            else:
+                return has_group_permission(request.user, ['guest']) and obj.space == request.space
+
+
+class CustomUserPermission(permissions.BasePermission):
+    """
+    Custom permission class for user api endpoint
+    """
+    message = _('You do not have the required permissions to view this page!')
+
+    def has_permission(self, request, view):  # a space filtered user list is visible for everyone
+        return has_group_permission(request.user, ['guest'])
+
+    def has_object_permission(self, request, view, obj):  # object write permissions are only available for user
+        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request.user, ['guest']) and request.space in obj.userspace_set.all():
+            return True
+        elif request.user == obj:
+            return True
+        else:
+            return False
+
+
+class CustomTokenHasScope(TokenHasScope):
+    """
+    Custom implementation of Django OAuth Toolkit TokenHasScope class
+    Only difference: if any other authentication method except OAuth2Authentication is used the scope check is ignored
+    IMPORTANT: do not use this class without any other permission class as it will not check anything besides token scopes
+    """
+
+    def has_permission(self, request, view):
+        if type(request.auth) == AccessToken:
+            return super().has_permission(request, view)
+        else:
+            return request.user.is_authenticated
+
+
+class CustomTokenHasReadWriteScope(TokenHasReadWriteScope):
+    """
+    Custom implementation of Django OAuth Toolkit TokenHasReadWriteScope class
+    Only difference: if any other authentication method except OAuth2Authentication is used the scope check is ignored
+    IMPORTANT: do not use this class without any other permission class as it will not check anything besides token scopes
+    """
+
+    def has_permission(self, request, view):
+        if type(request.auth) == AccessToken:
+            return super().has_permission(request, view)
+        else:
+            return True
 
 
 def above_space_limit(space):  # TODO add file storage limit

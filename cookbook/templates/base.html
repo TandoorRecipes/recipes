@@ -69,7 +69,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %} bg-header"
+<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}"
      id="id_main_nav"
      style="{% sticky_nav request %}">
 
@@ -285,7 +285,7 @@
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
-                            class="fas fa-fw fa-user-alt"></i> {{ user.get_user_name }}
+                            class="fas fa-fw fa-user-alt"></i> {{ user.get_user_display_name }}
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
@@ -408,6 +408,7 @@
     localStorage.setItem('BASE_PATH', "{% base_path request 'base' %}")
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
     localStorage.setItem('DEBUG', "{% is_debug %}")
+    localStorage.setItem('USER_ID', "{{request.user.pk}}")
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {

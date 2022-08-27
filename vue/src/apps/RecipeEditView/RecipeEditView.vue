@@ -188,10 +188,31 @@
                         </b-form-checkbox>
 
                         <br/>
-                        <label for="id_name"> {{ $t("Imported_From") }}</label>
+                        <label> {{ $t("Imported_From") }}</label>
                         <b-form-input v-model="recipe.source_url">
 
                         </b-form-input>
+
+                        <br/>
+                        <label> {{ $t("Private_Recipe") }}</label>
+                        <b-form-checkbox v-model="recipe.private">
+                            {{ $t('Private_Recipe_Help') }}
+                        </b-form-checkbox>
+
+                        <br/>
+                        <label> {{ $t("Share") }}</label>
+                        <generic-multiselect
+                            @change="recipe.shared = $event.val"
+                            parent_variable="recipe.shared"
+                            :initial_selection="recipe.shared"
+                            :label="'display_name'"
+                            :model="Models.USER_NAME"
+                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                            v-bind:placeholder="$t('Share')"
+                            :limit="25"
+                        ></generic-multiselect>
+
+
                     </b-collapse>
                 </div>
             </div>
@@ -577,9 +598,9 @@
                                 <div class="col-md-12">
                                     <label :for="'id_instruction_' + step.id">{{ $t("Instructions") }}</label>
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
-                                                  style="height: 40vh; z-index: auto" :id="'id_instruction_' + step.id"
+                                                  style="z-index: auto" :id="'id_instruction_' + step.id"
                                                   :language="'en'"
-                                                  :toolbars="md_editor_toolbars"/>
+                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'"/>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -723,6 +744,7 @@ import GenericModalForm from "@/components/Modals/GenericModalForm"
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import _debounce from "lodash/debounce";
+import GenericMultiselect from "@/components/GenericMultiselect";
 // use
 Vue.use(mavonEditor)
 
@@ -731,7 +753,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "RecipeEditView",
     mixins: [ResolveUrlMixin, ApiMixin],
-    components: {Multiselect, LoadingSpinner, draggable, GenericModalForm},
+    components: {Multiselect, LoadingSpinner, draggable, GenericModalForm, GenericMultiselect},
     data() {
         return {
             recipe_id: window.RECIPE_ID,
@@ -771,9 +793,9 @@ export default {
                 imagelink: false,
                 code: true,
                 table: false,
-                fullscreen: true,
-                readmodel: true,
-                htmlcode: true,
+                fullscreen: false,
+                readmodel: false,
+                htmlcode: false,
                 help: true,
                 undo: true,
                 redo: true,

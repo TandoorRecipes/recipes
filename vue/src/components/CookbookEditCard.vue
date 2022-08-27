@@ -5,7 +5,7 @@
                 {{ book_copy.icon }}&nbsp;{{ book_copy.name }}
                 <span class="float-right text-primary" @click="editOrSave"><i class="fa" v-bind:class="{ 'fa-pen': !editing, 'fa-save': editing }" aria-hidden="true"></i></span>
             </h5>
-            <b-badge class="font-weight-normal mr-1" v-for="u in book_copy.shared" v-bind:key="u.id" variant="primary" pill>{{ u.username }}</b-badge>
+            <b-badge class="font-weight-normal mr-1" v-for="u in book_copy.shared" v-bind:key="u.id" variant="primary" pill>{{ u.display_name }}</b-badge>
         </b-card-header>
         <b-card-body class="p-4">
             <div class="form-group" v-if="editing">
@@ -25,7 +25,7 @@
                     @change="book_copy.shared = $event.val"
                     parent_variable="book.shared"
                     :initial_selection="book.shared"
-                    :label="'username'"
+                    :label="'display_name'"
                     :model="Models.USER_NAME"
                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                     v-bind:placeholder="$t('Share')"

@@ -15,7 +15,7 @@ from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation)
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -46,15 +46,23 @@ class SpaceAdmin(admin.ModelAdmin):
 admin.site.register(Space, SpaceAdmin)
 
 
+class UserSpaceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'space',)
+    search_fields = ('user', 'space',)
+
+
+admin.site.register(UserSpace, UserSpaceAdmin)
+
+
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color', 'default_page', 'search_style',)  # TODO add new fields
+    list_display = ('name', 'theme', 'nav_color', 'default_page',)
     search_fields = ('user__username',)
-    list_filter = ('theme', 'nav_color', 'default_page', 'search_style')
+    list_filter = ('theme', 'nav_color', 'default_page',)
     date_hierarchy = 'created_at'
 
     @staticmethod
     def name(obj):
-        return obj.user.get_user_name()
+        return obj.user.get_user_display_name()
 
 
 admin.site.register(UserPreference, UserPreferenceAdmin)
@@ -67,7 +75,7 @@ class SearchPreferenceAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return obj.user.get_user_name()
+        return obj.user.get_user_display_name()
 
 
 admin.site.register(SearchPreference, SearchPreferenceAdmin)
@@ -169,7 +177,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     @staticmethod
     def created_by(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
     if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
         actions = [rebuild_index]
@@ -208,7 +216,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     @staticmethod
     def name(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(Comment, CommentAdmin)
@@ -227,7 +235,7 @@ class RecipeBookAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user_name(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(RecipeBook, RecipeBookAdmin)
@@ -245,7 +253,7 @@ class MealPlanAdmin(admin.ModelAdmin):
 
     @staticmethod
     def user(obj):
-        return obj.created_by.get_user_name()
+        return obj.created_by.get_user_display_name()
 
 
 admin.site.register(MealPlan, MealPlanAdmin)

@@ -14,7 +14,7 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
 
     def is_open_for_signup(self, request):
         """
-        Whether to allow sign ups.
+        Whether to allow sign-ups.
         """
         signup_token = False
         if 'signup_token' in request.session and InviteLink.objects.filter(valid_until__gte=datetime.datetime.today(), used_by=None, uuid=request.session['signup_token']).exists():
@@ -31,7 +31,10 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
             default = datetime.datetime.now()
             c = caches['default'].get_or_set(email, default, timeout=360)
             if c == default:
-                super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
+                try:
+                    super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
+                except Exception: # dont fail signup just because confirmation mail could not be send
+                    pass
             else:
                 messages.add_message(self.request, messages.ERROR, _('In order to prevent spam, the requested email was not send. Please wait a few minutes and try again.'))
         else:

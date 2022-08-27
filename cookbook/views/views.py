@@ -1,5 +1,6 @@
 import os
 import re
+import uuid
 from datetime import datetime
 from uuid import UUID
 
@@ -11,28 +12,21 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.db.models import Avg, Q
-from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
-from django_tables2 import RequestConfig
-from rest_framework.authtoken.models import Token
+from oauth2_provider.models import AccessToken
 
-from cookbook.filters import RecipeFilter
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
-                            SpaceCreateForm, SpaceJoinForm, SpacePreferenceForm, User,
+                            SpaceCreateForm, SpaceJoinForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import (Comment, CookLog, Food, InviteLink, Keyword,
-                             MealPlan, RecipeImport, SearchFields, SearchPreference, ShareLink,
-                             Space, Unit, ViewLog, UserSpace)
-from cookbook.tables import (CookLogTable, InviteLinkTable, RecipeTable, RecipeTableSmall,
-                             ViewLogTable)
-from cookbook.views.data import Object
+from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
+                             Space, ViewLog, UserSpace)
+from cookbook.tables import (CookLogTable, ViewLogTable)
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -58,44 +52,12 @@ def index(request):
 # TODO need to deprecate
 def search(request):
     if has_group_permission(request.user, ('guest',)):
-        if request.user.userpreference.search_style == UserPreference.NEW:
-            return search_v2(request)
-        f = RecipeFilter(request.GET,
-                         queryset=Recipe.objects.filter(space=request.space).all().order_by(
-                             Lower('name').asc()),
-                         space=request.space)
-        if request.user.userpreference.search_style == UserPreference.LARGE:
-            table = RecipeTable(f.qs)
-        else:
-            table = RecipeTableSmall(f.qs)
-        RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-        if request.GET == {} and request.user.userpreference.show_recent:
-            qs = Recipe.objects.filter(viewlog__created_by=request.user).filter(
-                space=request.space).order_by('-viewlog__created_at').all()
-
-            recent_list = []
-            for r in qs:
-                if r not in recent_list:
-                    recent_list.append(r)
-                if len(recent_list) >= 5:
-                    break
-
-            last_viewed = RecipeTable(recent_list)
-        else:
-            last_viewed = None
-
-        return render(request, 'index.html', {'recipes': table, 'filter': f, 'last_viewed': last_viewed})
+        return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
-
-
-@group_required('guest')
-def search_v2(request):
-    return render(request, 'search.html', {})
 
 
 def no_groups(request):
@@ -127,14 +89,14 @@ def space_overview(request):
         if join_form.is_valid():
             return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
-        if settings.SOCIAL_DEFAULT_ACCESS:
-            user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=True)
+        if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
+            user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=False)
             user_space.groups.add(Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).get())
             return HttpResponseRedirect(reverse('index'))
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 
-        create_form = SpaceCreateForm(initial={'name': f'{request.user.username}\'s Space'})
+        create_form = SpaceCreateForm(initial={'name': f'{request.user.get_user_display_name()}\'s Space'})
         join_form = SpaceJoinForm()
 
     return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
@@ -190,18 +152,6 @@ def recipe_view(request, pk, share=None):
 
         comment_form = CommentForm()
 
-        user_servings = None
-        if request.user.is_authenticated:
-            user_servings = CookLog.objects.filter(
-                recipe=recipe,
-                created_by=request.user,
-                servings__gt=0,
-                space=request.space,
-            ).all().aggregate(Avg('servings'))['servings__avg']
-
-        if not user_servings:
-            user_servings = 0
-
         if request.user.is_authenticated:
             if not ViewLog.objects.filter(recipe=recipe, created_by=request.user,
                                           created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
@@ -209,8 +159,7 @@ def recipe_view(request, pk, share=None):
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
         return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share,
-                       'user_servings': user_servings})
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, })
 
 
 @group_required('user')
@@ -229,6 +178,20 @@ def supermarket(request):
 
 
 @group_required('user')
+def view_profile(request, user_id):
+    return render(request, 'profile.html', {})
+
+
+@group_required('guest')
+def user_settings(request):
+    if request.space.demo:
+        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
+        return redirect('index')
+
+    return render(request, 'user_settings.html', {})
+
+
+@group_required('user')
 def ingredient_editor(request):
     template_vars = {'food_id': -1, 'unit_id': -1}
     food_id = request.GET.get('food_id', None)
@@ -241,74 +204,17 @@ def ingredient_editor(request):
     return render(request, 'ingredient_editor.html', template_vars)
 
 
-@group_required('user')
-def meal_plan_entry(request, pk):
-    plan = MealPlan.objects.filter(space=request.space).get(pk=pk)
-
-    if plan.created_by != request.user and plan.shared != request.user:
-        messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
-        return HttpResponseRedirect(reverse_lazy('index'))
-
-    same_day_plan = MealPlan.objects \
-        .filter(date=plan.date, space=request.space) \
-        .exclude(pk=plan.pk) \
-        .filter(Q(created_by=request.user) | Q(shared=request.user)) \
-        .order_by('meal_type').all()
-
-    return render(request, 'meal_plan_entry.html', {'plan': plan, 'same_day_plan': same_day_plan})
-
-
 @group_required('guest')
-def user_settings(request):
+def shopping_settings(request):
     if request.space.demo:
         messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
         return redirect('index')
 
-    up = request.user.userpreference
     sp = request.user.searchpreference
     search_error = False
-    active_tab = 'account'
-
-    user_name_form = UserNameForm(instance=request.user)
 
     if request.method == "POST":
-        if 'preference_form' in request.POST:
-            active_tab = 'preferences'
-            form = UserPreferenceForm(request.POST, prefix='preference', space=request.space)
-            if form.is_valid():
-                if not up:
-                    up = UserPreference(user=request.user)
-
-                up.theme = form.cleaned_data['theme']
-                up.nav_color = form.cleaned_data['nav_color']
-                up.default_unit = form.cleaned_data['default_unit']
-                up.default_page = form.cleaned_data['default_page']
-                up.show_recent = form.cleaned_data['show_recent']
-                up.search_style = form.cleaned_data['search_style']
-                up.plan_share.set(form.cleaned_data['plan_share'])
-                up.ingredient_decimals = form.cleaned_data['ingredient_decimals']  # noqa: E501
-                up.comments = form.cleaned_data['comments']
-                up.use_fractions = form.cleaned_data['use_fractions']
-                up.use_kj = form.cleaned_data['use_kj']
-                up.sticky_navbar = form.cleaned_data['sticky_navbar']
-                up.left_handed = form.cleaned_data['left_handed']
-
-                up.save()
-
-        elif 'user_name_form' in request.POST:
-            user_name_form = UserNameForm(request.POST, prefix='name')
-            if user_name_form.is_valid():
-                request.user.first_name = user_name_form.cleaned_data['first_name']
-                request.user.last_name = user_name_form.cleaned_data['last_name']
-                request.user.save()
-
-        elif 'password_form' in request.POST:
-            password_form = PasswordChangeForm(request.user, request.POST)
-            if password_form.is_valid():
-                user = password_form.save()
-                update_session_auth_hash(request, user)
-
-        elif 'search_form' in request.POST:
+        if 'search_form' in request.POST:
             active_tab = 'search'
             search_form = SearchPreferenceForm(request.POST, prefix='search')
             if search_form.is_valid():
@@ -357,39 +263,13 @@ def user_settings(request):
                         sp.lookup = True
                         sp.unaccent.set(SearchFields.objects.all())
                         # full text on food is very slow, add search_vector field and index it (including Admin functions and postsave signal to rebuild index)
-                        sp.icontains.set([SearchFields.objects.get(name__in=['Name', 'Ingredients'])])
+                        sp.icontains.set([SearchFields.objects.get(name='Name')])
                         sp.istartswith.set([SearchFields.objects.get(name='Name')])
                         sp.trigram.clear()
                         sp.fulltext.set(SearchFields.objects.filter(name__in=['Ingredients']))
                         sp.trigram_threshold = 0.2
 
                     sp.save()
-        elif 'shopping_form' in request.POST:
-            shopping_form = ShoppingPreferenceForm(request.POST, prefix='shopping')
-            if shopping_form.is_valid():
-                if not up:
-                    up = UserPreference(user=request.user)
-
-                up.shopping_share.set(shopping_form.cleaned_data['shopping_share'])
-                up.mealplan_autoadd_shopping = shopping_form.cleaned_data['mealplan_autoadd_shopping']
-                up.mealplan_autoexclude_onhand = shopping_form.cleaned_data['mealplan_autoexclude_onhand']
-                up.mealplan_autoinclude_related = shopping_form.cleaned_data['mealplan_autoinclude_related']
-                up.shopping_auto_sync = shopping_form.cleaned_data['shopping_auto_sync']
-                up.filter_to_supermarket = shopping_form.cleaned_data['filter_to_supermarket']
-                up.default_delay = shopping_form.cleaned_data['default_delay']
-                up.shopping_recent_days = shopping_form.cleaned_data['shopping_recent_days']
-                up.shopping_add_onhand = shopping_form.cleaned_data['shopping_add_onhand']
-                up.csv_delim = shopping_form.cleaned_data['csv_delim']
-                up.csv_prefix = shopping_form.cleaned_data['csv_prefix']
-                if up.shopping_auto_sync < settings.SHOPPING_MIN_AUTOSYNC_INTERVAL:
-                    up.shopping_auto_sync = settings.SHOPPING_MIN_AUTOSYNC_INTERVAL
-                up.save()
-    if up:
-        preference_form = UserPreferenceForm(instance=up, space=request.space)
-        shopping_form = ShoppingPreferenceForm(instance=up)
-    else:
-        preference_form = UserPreferenceForm(space=request.space)
-        shopping_form = ShoppingPreferenceForm(space=request.space)
 
     fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
         sp.fulltext.all())
@@ -397,9 +277,6 @@ def user_settings(request):
         search_form = SearchPreferenceForm(instance=sp)
     elif not search_error:
         search_form = SearchPreferenceForm()
-
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
 
     # these fields require postgresql - just disable them if postgresql isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
@@ -410,12 +287,7 @@ def user_settings(request):
         search_form.fields['fulltext'].disabled = True
 
     return render(request, 'settings.html', {
-        'preference_form': preference_form,
-        'user_name_form': user_name_form,
-        'api_token': api_token,
         'search_form': search_form,
-        'shopping_form': shopping_form,
-        'active_tab': active_tab
     })
 
 
@@ -496,8 +368,9 @@ def invite_link(request, token):
 
         if link := InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, uuid=token).first():
             if request.user.is_authenticated and not request.user.userspace_set.filter(space=link.space).exists():
-                link.used_by = request.user
-                link.save()
+                if not link.reusable:
+                    link.used_by = request.user
+                    link.save()
 
                 user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
 
@@ -519,6 +392,9 @@ def invite_link(request, token):
 
 @group_required('admin')
 def space_manage(request, space_id):
+    if request.space.demo:
+        messages.add_message(request, messages.ERROR, _('This feature is not available in the demo version!'))
+        return redirect('index')
     space = get_object_or_404(Space, id=space_id)
     switch_user_active_space(request.user, space)
     return render(request, 'space_manage.html', {})

@@ -45,8 +45,7 @@ class UserPreferenceForm(forms.ModelForm):
         model = UserPreference
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
-            'sticky_navbar', 'default_page', 'show_recent', 'search_style',
-            'plan_share', 'ingredient_decimals', 'comments', 'left_handed',
+            'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed',
         )
 
         labels = {
@@ -57,8 +56,6 @@ class UserPreferenceForm(forms.ModelForm):
             'nav_color': _('Navbar color'),
             'sticky_navbar': _('Sticky navbar'),
             'default_page': _('Default page'),
-            'show_recent': _('Show recent recipes'),
-            'search_style': _('Search style'),
             'plan_share': _('Plan sharing'),
             'ingredient_decimals': _('Ingredient decimal places'),
             'shopping_auto_sync': _('Shopping list auto sync period'),
@@ -68,23 +65,21 @@ class UserPreferenceForm(forms.ModelForm):
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
-            # noqa: E501
-            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),  # noqa: E501
+            
+            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),  
             'use_fractions': _(
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
-            # noqa: E501
-            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  # noqa: E501
+            
+            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  
             'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
             'shopping_share': _('Users with whom to share shopping lists.'),
-            # noqa: E501
-            'show_recent': _('Show recently viewed recipes on search page.'),  # noqa: E501
-            'ingredient_decimals': _('Number of decimals to round ingredients.'),  # noqa: E501
-            'comments': _('If you want to be able to create and see comments underneath recipes.'),  # noqa: E501
+            'ingredient_decimals': _('Number of decimals to round ingredients.'),  
+            'comments': _('If you want to be able to create and see comments underneath recipes.'),  
             'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
-                'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  
+                'of mobile data. If lower than instance limit it is reset when saving.'  
             ),
-            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  # noqa: E501
+            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
             'left_handed': _('Will optimize the UI for use with your left hand.')
@@ -336,9 +331,9 @@ class MealPlanForm(forms.ModelForm):
         )
 
         help_texts = {
-            'shared': _('You can list default users to share recipes with in the settings.'),  # noqa: E501
+            'shared': _('You can list default users to share recipes with in the settings.'),  
             'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
-            # noqa: E501
+            
         }
 
         widgets = {
@@ -493,8 +488,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
         help_texts = {
             'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
             'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  # noqa: E501
-                'of mobile data. If lower than instance limit it is reset when saving.'  # noqa: E501
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  
+                'of mobile data. If lower than instance limit it is reset when saving.'  
             ),
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
