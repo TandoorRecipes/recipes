@@ -18,7 +18,7 @@ Lastly you will need to sync with the external path and import recipes you desir
     There are better ways to do this but they are currently not implemented
 
 A `Storage Backend` is a remote storage location where files are **read** from.
-To add a new backend click on 'username' > `External Recipes` > `Manage External Storage` > the `+` next to Storage Backend List. 
+To add a new backend click on `username >> External Recipes >> Manage External Storage >> the + next to Storage Backend List`. 
 There click the plus button.
 
 The basic configuration is the same for all providers. 
@@ -51,8 +51,8 @@ add
 ```
       - ./externalfiles:/opt/recipes/externalfiles
 ```
-to your docker-compose.yml file under the web_recipes > volumes section. This will create a folder in your docker directory named `externalfiles` under which you can store external pdfs (you could of course store them anywhere, just change `./externalfiles` to your preferred location).
-save and restart your docker container.
+to your docker-compose.yml file under the `web_recipes >> volumes` section. This will create a folder in your docker directory named `externalfiles` under which you could choose to store external pdfs (you could of course store them anywhere, just change `./externalfiles` to your preferred location).
+save the docker-compose.yml and restart your docker container.
 
 ### Dropbox
 
