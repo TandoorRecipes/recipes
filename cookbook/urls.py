@@ -47,10 +47,11 @@ router.register(r'sync', api.SyncViewSet)
 router.register(r'sync-log', api.SyncLogViewSet)
 router.register(r'unit', api.UnitViewSet)
 router.register(r'user-file', api.UserFileViewSet)
-router.register(r'user-name', api.UserNameViewSet, basename='username')
+router.register(r'user', api.UserViewSet)
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
+router.register(r'access-token', api.AccessTokenViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -59,23 +60,22 @@ urlpatterns = [
     path('space-overview', views.space_overview, name='view_space_overview'),
     path('space-manage/<int:space_id>', views.space_manage, name='view_space_manage'),
     path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
+    path('profile/<int:user_id>', views.view_profile, name='view_profile'),
     path('no-perm', views.no_perm, name='view_no_perm'),
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('system/', views.system, name='view_system'),
     path('search/', views.search, name='view_search'),
-    path('search/v2/', views.search_v2, name='view_search_v2'),
     path('books/', views.books, name='view_books'),
     path('plan/', views.meal_plan, name='view_plan'),
-    path('plan/entry/<int:pk>', views.meal_plan_entry, name='view_plan_entry'),
-    path('shopping/latest/', lists.shopping_list, name='view_shopping_latest'),
     path('shopping/', lists.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
+    path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
-    path('import/', import_export.import_recipe, name='view_import'),
+    path('api/import/', api.import_files, name='view_import'),
     path('import-response/<int:pk>/', import_export.import_response, name='view_import_response'),
     path('export/', import_export.export_recipe, name='view_export'),
     path('export-response/<int:pk>/', import_export.export_response, name='view_export_response'),
@@ -103,7 +103,6 @@ urlpatterns = [
     path('data/batch/edit', data.batch_edit, name='data_batch_edit'),
     path('data/batch/import', data.batch_import, name='data_batch_import'),
     path('data/sync/wait', data.sync_wait, name='data_sync_wait'),
-    path('data/statistics', data.statistics, name='data_stats'),
     path('data/import/url', data.import_url, name='data_import_url'),
 
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),

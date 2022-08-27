@@ -64,7 +64,7 @@
                                         required
                                         @change="entryEditing.shared = $event.val"
                                         parent_variable="entryEditing.shared"
-                                        :label="'username'"
+                                        :label="'display_name'"
                                         :model="Models.USER_NAME"
                                         style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                         v-bind:placeholder="$t('Share')"

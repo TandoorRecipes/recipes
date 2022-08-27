@@ -43,7 +43,7 @@ class Integration:
         self.export_type = export_type
         self.ignored_recipes = []
 
-        description = f'Imported by {request.user.get_user_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
+        description = f'Imported by {request.user.get_user_display_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
         icon = '📥'
 
         try:
@@ -169,7 +169,7 @@ class Integration:
 
                         for z in file_list:
                             try:
-                                if not hasattr(z, 'filename'):
+                                if not hasattr(z, 'filename') or type(z) == Tag:
                                     recipe = self.get_recipe_from_file(z)
                                 else:
                                     recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))

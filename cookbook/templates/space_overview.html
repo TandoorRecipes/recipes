@@ -32,15 +32,23 @@
                         {% for us in request.user.userspace_set.all %}
 
                             <div class="card">
+                                {% if us.space.image and us.space.image.is_image %}
+                                    <img style="height: 15vh; object-fit: cover" src="{{ us.space.image.file.url }}"
+                                         class="card-img-top" alt="Image">
+                                {% else %}
+
+                                    <img style="height: 15vh; object-fit: cover" src="{% static 'assets/recipe_no_image.svg' %}"
+                                         class="card-img-top" alt="Image">
+                                {% endif %}
                                 <div class="card-body">
                                     <h5 class="card-title"><a
                                             href="{% url 'view_switch_space' us.space.id %}">{{ us.space.name }}</a>
                                     </h5>
-{#                                    {% if us.active %}#}
-{#                                        <i class="far fa-dot-circle fa-fw"></i>#}
-{#                                    {% else %}#}
-{#                                        <i class="far fa-circle fa-fw"></i>#}
-{#                                    {% endif %}#}
+                                    {#                                    {% if us.active %}#}
+                                    {#                                        <i class="far fa-dot-circle fa-fw"></i>#}
+                                    {#                                    {% else %}#}
+                                    {#                                        <i class="far fa-circle fa-fw"></i>#}
+                                    {#                                    {% endif %}#}
                                     <p class="card-text"><small
                                             class="text-muted">{% trans 'Owner' %}: {{ us.space.created_by }}</small>
                                         {% if us.space.created_by != us.user %}
