@@ -211,7 +211,7 @@ git pull
 # load envirtonment variables
 export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)
 #install project requirements
-/var/www/recipes/bin/pip3 install -r requirements.txt
+bin/pip3 install -r requirements.txt
 # migrate database 
 bin/python3 manage.py migrate
 # collect static files
