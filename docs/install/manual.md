@@ -210,9 +210,12 @@ cd /var/www/recipes
 git pull
 # load envirtonment variables
 export $(cat /var/www/recipes/.env |grep "^[^#]" | xargs)
+#install project requirements
+/var/www/recipes/bin/pip3 install -r requirements.txt
 # migrate database 
 bin/python3 manage.py migrate
 # collect static files
+# To prevent later errors, it is advisable to perform these steps more frequently until the output "0 static files copied" appears.
 bin/python3 manage.py collectstatic --no-input
 bin/python3 manage.py collectstatic_js_reverse
 # change to frontend directory
