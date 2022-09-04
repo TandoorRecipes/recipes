@@ -208,6 +208,13 @@
             @delete-entry="deleteEntry"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
+      <auto-meal-plan-modal
+        :entry="entryEditing"
+        :modal_title="'Auto create meal plan'"
+        :auto_plan_show="auto_plan_show"
+        @create-plan="autoPlan"
+
+      ></auto-meal-plan-modal>
 
         <transition name="slide-fade">
             <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)"
@@ -224,8 +231,7 @@
                     </a>
                 </div>
                 <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
-                            :title="$t('Coming_Soon')">
+                    <button class="btn btn-block btn-primary shadow-none" @click="createAutoPlan(new Date())">
                         {{ $t("Auto_Planner") }}
                     </button>
                 </div>
@@ -272,6 +278,8 @@ import VueCookies from "vue-cookies"
 import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import axios from "axios";
+import AutoMealPlanModal from "@/components/AutoMealPlanModal";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -284,6 +292,7 @@ let SETTINGS_COOKIE_NAME = "mealplan_settings"
 export default {
     name: "MealPlanView",
     components: {
+      AutoMealPlanModal,
         MealPlanEditModal,
         MealPlanCard,
         CalendarView,
@@ -546,7 +555,7 @@ export default {
         },
         deleteEntry(data) {
             this.plan_entries.forEach((entry, index, list) => {
-                if (entry.id === data.id) {
+                //if (entry.id === data.id) {//todo:remove block!
                     let apiClient = new ApiApiFactory()
 
                     apiClient
@@ -557,7 +566,7 @@ export default {
                         .catch((err) => {
                             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                         })
-                }
+                //}
             })
         },
         entryClick(data) {
@@ -634,6 +643,49 @@ export default {
                 entry: plan_entry,
             }
         },
+        createAutoPlan(date) {
+            this.$bvModal.show(`autoplan-modal`)
+        },
+      async autoPlanThread(date,dateOffset,i,servings){
+
+          let apiClient = new ApiApiFactory()
+          let currentEntry = Object.assign({}, this.options.entryEditing)
+                currentEntry.date = moment(date).add(dateOffset,"d").format("YYYY-MM-DD")
+                currentEntry.servings = servings
+        await Promise.all([
+            currentEntry.recipe = await this.randomRecipe(i+3).then((result)=>{return result}),
+            currentEntry.shared = await apiClient.listUserPreferences().then((result) => {return result.data[0].plan_share}),
+            currentEntry.meal_type = await this.getMealType(i+2).then((result)=>{return result})
+        ])
+                currentEntry.title = currentEntry.recipe.name
+                this.createEntry(currentEntry)
+      },
+       autoPlan(data, servings){
+            // ["breakfast","lunch","dinner"]
+          //   meal types: 4,3,2
+          //meal keywords: 5,4,3
+        for (let i = 0; i < 3; i++) {
+              for (let dateOffset = 0; dateOffset < 7; dateOffset++) {
+                 this.autoPlanThread(data,dateOffset,i,servings)
+              }
+            }
+        },
+        randomRecipe(keyword) {
+          let url = `/api/recipe/?query=&keywords_or=${keyword}`
+          return axios.get(url).then((response) => {
+            let result = response.data
+            let count = result.count
+            return result.results[Math.floor(Math.random() * count)]
+          }).catch((err) => {
+
+          })
+        },
+        getMealType(id) {
+          let url = `/api/meal-type/${id}`
+          return axios.get(url).then((response) => {
+            return response.data
+          })
+        }
     },
     directives: {
         hover: {
