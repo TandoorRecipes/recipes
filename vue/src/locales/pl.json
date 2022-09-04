@@ -457,5 +457,8 @@
     "Manage_Emails": "Zarządzaj e-mailami",
     "Change_Password": "Zmień hasło",
     "Username": "Nazwa użytkownika",
-    "First_name": "Imię"
+    "First_name": "Imię",
+    "Last_name": "Nazwisko",
+    "Disabled": "Wyłączone",
+    "Disable": "Wyłączyć"
 }
