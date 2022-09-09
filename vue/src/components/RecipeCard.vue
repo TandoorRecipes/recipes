@@ -8,8 +8,8 @@
                 </a>
             </div>
             <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2" v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
-                <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i> {{ recipe.working_time }} {{ $t("min") }} </b-badge>
-                <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i> {{ recipe.waiting_time }} {{ $t("min") }} </b-badge>
+                <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0"><i class="fa fa-clock"></i> {{ working_time }} </b-badge>
+                <b-badge pill variant="secondary" class="mt-1 font-weight-normal" v-if="recipe.waiting_time !== 0"><i class="fa fa-pause"></i> {{ waiting_time }} </b-badge>
             </div>
         </a>
 
@@ -59,7 +59,7 @@
 <script>
 import RecipeContextMenu from "@/components/RecipeContextMenu"
 import KeywordsComponent from "@/components/KeywordsComponent"
-import { resolveDjangoUrl, ResolveUrlMixin } from "@/utils/utils"
+import { resolveDjangoUrl, ResolveUrlMixin, calculateHourMinuteSplit } from "@/utils/utils"
 import RecipeRating from "@/components/RecipeRating"
 import moment from "moment/moment"
 import Vue from "vue"
@@ -99,6 +99,10 @@ export default {
                 return this.recipe.image
             }
         },
+        working_time: function() {
+            return calculateHourMinuteSplit(this.recipe.working_time)},
+        waiting_time: function() {
+            return calculateHourMinuteSplit(this.recipe.waiting_time)},
     },
     methods: {
 
