@@ -4349,15 +4349,10 @@ core-js@^2.4.0, core-js@^2.5.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
-core-js@^3.20.3, core-js@^3.6.0, core-js@^3.8.3:
-  version "3.22.7"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.22.7.tgz#8d6c37f630f6139b8732d10f2c114c3f1d00024f"
-  integrity sha512-Jt8SReuDKVNZnZEzyEQT5eK6T2RRCXkfTq7Lo09kpm+fHjgGewSbNjV+Wt4yZMhPDdzz2x1ulI5z/w4nxpBseg==
-
-core-js@^3.7.0:
-  version "3.23.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.0.tgz#9e33448c8fd3b02ad023d85bd6e85da6335b5cc4"
-  integrity sha512-v2/hZoRcRrvQiBoGsHwmRdr+S4oICKcjA6xb2qjVurin6TpcDC1X2CIDa8rdu/d5n8RT/Sdoos2IlnpQ1rXs5A==
+core-js@^3.25.0, core-js@^3.6.0, core-js@^3.7.0, core-js@^3.8.3:
+  version "3.25.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.25.0.tgz#be71d9e0dd648ffd70c44a7ec2319d039357eceb"
+  integrity sha512-CVU1xvJEfJGhyCpBrzzzU1kjCfgsGUxhEvwUV2e/cOedYWHdmluamx+knDnmhqALddMG16fZvIqvs9aijsHHaA==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -10822,10 +10817,10 @@ typescript@~4.5.5:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
   integrity sha512-TCTIul70LyWe6IJWT8QSYeA54WQe8EjQFU4wY52Fasj5UKx88LNYKCgBEHcOMOrFF1rKGbD8v/xcNWVUq9SymA==
 
-typescript@~4.7.2:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.2.tgz#1f9aa2ceb9af87cca227813b4310fff0b51593c4"
-  integrity sha512-Mamb1iX2FDUpcTRzltPxgWMKy3fhg0TN378ylbktPGPK/99KbDtMQ4W1hwgsbPAsG3a0xKa1vmw4VKZQbkvz5A==
+typescript@~4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
+  integrity sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"
@@ -11678,6 +11673,11 @@ workbox-core@6.5.3:
   resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-6.5.3.tgz#bca038a9ef0d7a634a6db2a60f45313ed22ac249"
   integrity sha512-Bb9ey5n/M9x+l3fBTlLpHt9ASTzgSGj6vxni7pY72ilB/Pb3XtN+cZ9yueboVhD5+9cNQrC9n/E1fSrqWsUz7Q==
 
+workbox-core@6.5.4:
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-6.5.4.tgz#df48bf44cd58bb1d1726c49b883fb1dffa24c9ba"
+  integrity sha512-OXYb+m9wZm8GrORlV2vBbE5EC1FKu71GGp0H4rjmxmF4/HLbMCoTFws87M3dFwgpmg0v00K++PImpNQ6J5NQ6Q==
+
 workbox-core@^5.1.4:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/workbox-core/-/workbox-core-5.1.4.tgz#8bbfb2362ecdff30e25d123c82c79ac65d9264f4"
@@ -11774,7 +11774,7 @@ workbox-recipes@6.5.3:
     workbox-routing "6.5.3"
     workbox-strategies "6.5.3"
 
-workbox-routing@6.5.3, workbox-routing@^6.5.0:
+workbox-routing@6.5.3:
   version "6.5.3"
   resolved "https://registry.yarnpkg.com/workbox-routing/-/workbox-routing-6.5.3.tgz#a0a699d8cc90b5692bd3df24679acbbda3913777"
   integrity sha512-DFjxcuRAJjjt4T34RbMm3MCn+xnd36UT/2RfPRfa8VWJGItGJIn7tG+GwVTdHmvE54i/QmVTJepyAGWtoLPTmg==
@@ -11787,6 +11787,13 @@ workbox-routing@^5.1.4:
   integrity sha512-8ljknRfqE1vEQtnMtzfksL+UXO822jJlHTIR7+BtJuxQ17+WPZfsHqvk1ynR/v0EHik4x2+826Hkwpgh4GKDCw==
   dependencies:
     workbox-core "^5.1.4"
+
+workbox-routing@^6.5.4:
+  version "6.5.4"
+  resolved "https://registry.yarnpkg.com/workbox-routing/-/workbox-routing-6.5.4.tgz#6a7fbbd23f4ac801038d9a0298bc907ee26fe3da"
+  integrity sha512-apQswLsbrrOsBUWtr9Lf80F+P1sHnQdYodRo32SjiByYi36IDyL2r7BH1lJtFX8fwNHDa1QOVY74WKLLS6o5Pg==
+  dependencies:
+    workbox-core "6.5.4"
 
 workbox-strategies@6.5.3, workbox-strategies@^6.2.4:
   version "6.5.3"
