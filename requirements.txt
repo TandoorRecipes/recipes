@@ -6,7 +6,7 @@ django-cleanup==6.0.0
 django-crispy-forms==1.14.0
 django-tables2==2.4.1
 djangorestframework==3.13.1
-drf-writable-nested==0.6.4
+drf-writable-nested==0.7.0
 django-oauth-toolkit==2.1.0
 bleach==5.0.1
 bleach-allowlist==1.0.3
