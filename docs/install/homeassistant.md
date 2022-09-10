@@ -20,6 +20,7 @@ This is performed by clicking on the button below, and simply filling your HA ur
 1. Start the add-on.
 1. Check the logs of the add-on to see if everything went well.
 1. Open the webUI (either through Ingress, or direct webUI) and adapt the software options
+1. Star my repository to encourage me : https://github.com/alexbelgium/hassio-addon
 
 Add data is stored in `/config/addons_config/tandoor_recipes`, so be sure to backup this folder in addition to the addon itself when updating. Updates are an automatic process, so please always backup when updating.
 
