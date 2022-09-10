@@ -44,7 +44,9 @@ Optional :
 ### Support
 
 Issues related to the addon itself should be reported on the [maintainer repo][repository].
+
 Issues related to HA should be reported on the [HA Community Forum][forum].
+
 Issues related to Tandoor recipes should be reported on this github repo.
 
 [aarch64-badge]: https://img.shields.io/badge/aarch64-yes-green.svg?logo=arm
