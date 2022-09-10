@@ -11,18 +11,13 @@ In addition to its large depth of native functions, modular addons can be added 
 
 ### Installation
 
-Once you have a running Home Assistant system, the next step is to add the addon's maintainer custom repository to your system.
-This is performed by clicking on the button below, and simply filling your HA url.
-
-1. [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Falexbelgium%2Fhassio-addons)
-1. [![Install the addon](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store)
+1. Once you have a running Home Assistant system, the next step is to add the addon's maintainer custom repository to your system. This is performed by clicking on the button below, and simply filling your HA url. [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Falexbelgium%2Fhassio-addons)
+1. Install the addon [![Install the addon](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store)
 1. Set the add-on options to your preferences (see below)
-1. Start the add-on.
+1. Start the add-on
 1. Check the logs of the add-on to see if everything went well.
-1. Open the webUI (either through Ingress, or direct webUI) and adapt the software options
+1. Open the webUI (either through Ingress, or direct webUI with http://homeassistant.local:9928) and adapt the software options
 1. Star my repository to encourage me : https://github.com/alexbelgium/hassio-addon
-
-Add data is stored in `/config/addons_config/tandoor_recipes`, so be sure to backup this folder in addition to the addon itself when updating. Updates are an automatic process, so please always backup when updating.
 
 ### Configuration
 
@@ -33,7 +28,7 @@ Required :
     "ALLOWED_HOSTS": "your system url", # You need to input your homeassistant urls (comma separated, without space) to allow ingress to work
     "DB_TYPE": "list(sqlite|postgresql_external|mariadb_addon)" # Type of database to use. Mariadb_addon allows to be automatically configured if the maria_db addon is already installed on your system. Sqlite is an internal database. For postgresql_external, you'll need to fill the below settings
     "SECRET_KEY": "str", # Your secret key
-    "PORT": 9928 # By default, the webui is available on http://HAurl:9928. If you ever need to change the port, you should never do it within the app, but only through this option
+    "PORT": 9928 # By default, the webui is available on http://homeassistant.local:9928. If you ever need to change the port, you should never do it within the app, but only through this option
 Optional :
     "POSTGRES_HOST": "str?", # Needed for postgresql_external
     "POSTGRES_PORT": "str?", # Needed for postgresql_external
@@ -41,6 +36,12 @@ Optional :
     "POSTGRES_PASSWORD": "str?", # Needed for postgresql_external
     "POSTGRES_DB": "str?" # Needed for postgresql_external
 ```
+
+### Updates and backups
+
+The alexbelgium's repo incorporates a script that aligns every 3 days the addon to the containers released. Just wait a few hours for HA to refreshes its repo list and the uodate will be proposed automatically in your HA system.
+
+It is recommended to frequently backup. All data is stored outside of the addon, the main location `/config/addons_config/tandoor_recipes`, so be sure to backup this folder in addition to the addon itself when updating. If you have selected mariadb as database option, don't forget to also backup it.
 
 ### Support
 
