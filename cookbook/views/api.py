@@ -54,7 +54,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope)
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -528,10 +528,10 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
                                                            checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
-        return self.queryset\
-                .annotate(shopping_status=Exists(shopping_status))\
-                .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute')\
-                .select_related('recipe', 'supermarket_category')
+        return self.queryset \
+            .annotate(shopping_status=Exists(shopping_status)) \
+            .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
+            .select_related('recipe', 'supermarket_category')
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
@@ -1380,9 +1380,8 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
-@group_required('user')
 def share_link(request, pk):
-    if request.space.allow_sharing:
+    if request.space.allow_sharing and has_group_permission(request.user, 'user'):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
