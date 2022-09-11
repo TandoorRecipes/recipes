@@ -465,5 +465,6 @@
     "Use_Plural_Unit_Always": "Use plural form for unit always",
     "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
     "Use_Plural_Food_Always": "Use plural form for food always",
-    "Use_Plural_Food_Simple": "Use plural form for food dynamically"
+    "Use_Plural_Food_Simple": "Use plural form for food dynamically",
+    "plural_usage_info": "Use the plural form for units and food inside this space."
 }

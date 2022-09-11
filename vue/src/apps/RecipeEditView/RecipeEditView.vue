@@ -572,33 +572,36 @@
                                                                         {{ $t("Enable_Amount") }}
                                                                     </button>
 
-                                                                    <button type="button" class="dropdown-item"
-                                                                            v-if="!ingredient.always_use_plural_unit"
-                                                                            @click="ingredient.always_use_plural_unit = true">
-                                                                        <i class="fas fa-filter fa-fw"></i>
-                                                                        {{ $t("Use_Plural_Unit_Always") }}
-                                                                    </button>
+                                                                        <template v-if="use_plural">
+                                                                            <button type="button" class="dropdown-item"
+                                                                                    v-if="!ingredient.always_use_plural_unit"
+                                                                                    @click="ingredient.always_use_plural_unit = true">
+                                                                                <i class="fas fa-filter fa-fw"></i>
+                                                                                {{ $t("Use_Plural_Unit_Always") }}
+                                                                            </button>
 
-                                                                    <button type="button" class="dropdown-item"
-                                                                            v-if="ingredient.always_use_plural_unit"
-                                                                            @click="ingredient.always_use_plural_unit = false">
-                                                                        <i class="fas fa-filter fa-fw"></i>
-                                                                        {{ $t("Use_Plural_Unit_Simple") }}
-                                                                    </button>
+                                                                            <button type="button" class="dropdown-item"
+                                                                                    v-if="ingredient.always_use_plural_unit"
+                                                                                    @click="ingredient.always_use_plural_unit = false">
+                                                                                <i class="fas fa-filter fa-fw"></i>
+                                                                                {{ $t("Use_Plural_Unit_Simple") }}
+                                                                            </button>
 
-                                                                    <button type="button" class="dropdown-item"
-                                                                            v-if="!ingredient.always_use_plural_food"
-                                                                            @click="ingredient.always_use_plural_food = true">
-                                                                        <i class="fas fa-filter fa-fw"></i>
-                                                                        {{ $t("Use_Plural_Food_Always") }}
-                                                                    </button>
+                                                                            <button type="button" class="dropdown-item"
+                                                                                    v-if="!ingredient.always_use_plural_food"
+                                                                                    @click="ingredient.always_use_plural_food = true">
+                                                                                <i class="fas fa-filter fa-fw"></i>
+                                                                                {{ $t("Use_Plural_Food_Always") }}
+                                                                            </button>
 
-                                                                    <button type="button" class="dropdown-item"
-                                                                            v-if="ingredient.always_use_plural_food"
-                                                                            @click="ingredient.always_use_plural_food = false">
-                                                                        <i class="fas fa-filter fa-fw"></i>
-                                                                        {{ $t("Use_Plural_Food_Simple") }}
-                                                                    </button>
+                                                                            <button type="button" class="dropdown-item"
+                                                                                    v-if="ingredient.always_use_plural_food"
+                                                                                    @click="ingredient.always_use_plural_food = false">
+                                                                                <i class="fas fa-filter fa-fw"></i>
+                                                                                {{ $t("Use_Plural_Food_Simple") }}
+                                                                            </button>
+                                                                    </template>
+                                                                    
                                                                     <button type="button" class="dropdown-item"
                                                                             @click="copyTemplateReference(index, ingredient)">
                                                                         <i class="fas fa-code"></i>
@@ -821,6 +824,7 @@ export default {
             paste_step: undefined,
             show_file_create: false,
             step_for_file_create: undefined,
+            use_plural: false,
             additional_visible: false,
             create_food: undefined,
             md_editor_toolbars: {
@@ -868,6 +872,10 @@ export default {
         this.searchRecipes("")
 
         this.$i18n.locale = window.CUSTOM_LOCALE
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
+        })
     },
     created() {
         window.addEventListener("keydown", this.keyboardListener)

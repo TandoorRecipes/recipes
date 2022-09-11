@@ -466,5 +466,6 @@
     "Use_Plural_Unit_Always": "Pluralform der Maßeinheit immer verwenden",
     "Use_Plural_Unit_Simple": "Pluralform der Maßeinheit dynamisch anpassen",
     "Use_Plural_Food_Always": "Pluralform des Essens immer verwenden",
-    "Use_Plural_Food_Simple": "Pluralform des Essens dynamisch anpassen"
+    "Use_Plural_Food_Simple": "Pluralform des Essens dynamisch anpassen",
+    "plural_usage_info": "Pluralform für Einheiten und Essen in diesem Space verwenden."
 }
