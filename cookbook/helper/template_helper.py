@@ -31,13 +31,16 @@ class IngredientObject(object):
                     self.unit = bleach.clean(str(ingredient.unit))
         else:
             self.unit = ""
-        if ingredient.food.plural_name in (None, ""):
-            self.food = bleach.clean(str(ingredient.food))
-        else:
-            if ingredient.always_use_plural_food or ingredient.amount > 1 and not ingredient.no_amount:
-                self.food = bleach.clean(str(ingredient.food.plural_name))
-            else:
+        if ingredient.food:
+            if ingredient.food.plural_name in (None, ""):
                 self.food = bleach.clean(str(ingredient.food))
+            else:
+                if ingredient.always_use_plural_food or ingredient.amount > 1 and not ingredient.no_amount:
+                    self.food = bleach.clean(str(ingredient.food.plural_name))
+                else:
+                    self.food = bleach.clean(str(ingredient.food))
+        else:
+            self.food = ""
         self.note = bleach.clean(str(ingredient.note))
 
     def __str__(self):

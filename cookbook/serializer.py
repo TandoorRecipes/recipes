@@ -277,7 +277,8 @@ class SpaceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Space
         fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb', 'image',)
+                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
+                  'image', 'use_plural',)
         read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
 
 

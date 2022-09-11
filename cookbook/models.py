@@ -260,6 +260,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
+    use_plural = models.BooleanField(default=False)
     allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
