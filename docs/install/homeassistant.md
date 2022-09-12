@@ -1,4 +1,7 @@
-## **Home Assistant**
+!!! info "Community Contributed"
+    This guide was contributed by the community and is neither officially supported, nor updated or tested. 
+    Many thanks to [alexbelgium](https://github.com/alexbelgium) for making implementing everything required to have 
+    Tandoor run in HA.
 
 ![Addon version](https://img.shields.io/badge/dynamic/json?label=Version&query=%24.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Ftandoor_recipes%2Fconfig.json) ![Last update](https://img.shields.io/badge/dynamic/json?label=Updated&query=%24.last_update&url=https%3A%2F%2Fraw.githubusercontent.com%2Falexbelgium%2Fhassio-addons%2Fmaster%2Ftandoor_recipes%2Fupdater.json) ![aarch64][aarch64-badge] ![amd64][amd64-badge] ![armv7][armv7-badge]
 
@@ -11,13 +14,12 @@ In addition to its large depth of native functions, modular addons can be added 
 
 ### Installation
 
-1. Once you have a running Home Assistant system, the next step is to add the addon's maintainer custom repository to your system. This is performed by clicking on the button below, and simply filling your HA url. [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Falexbelgium%2Fhassio-addons)
-1. Install the addon [![Install the addon](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store)
-1. Set the add-on options to your preferences (see below)
-1. Start the add-on
-1. Check the logs of the add-on to see if everything went well.
-1. Open the webUI (either through Ingress, or direct webUI with http://homeassistant.local:9928) and adapt the software options
-1. Star my repository to encourage me : https://github.com/alexbelgium/hassio-addon
+1. Once you have a running Home Assistant system, the next step is to add the [alexbelgium](https://github.com/alexbelgium)'s custom repository to your system. This is performed by clicking on the button below, and simply filling your HA url. [![Open your Home Assistant instance and show the add add-on repository dialog with a specific repository URL pre-filled.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Falexbelgium%2Fhassio-addons)
+2. Install the addon [![Install the addon](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store)
+3. Set the add-on options to your preferences (see below)
+4. Start the add-on
+5. Check the logs of the add-on to see if everything went well.
+6. Open the webUI (either through Ingress, or direct webUI with http://homeassistant.local:9928) and adapt the software options
 
 ### Configuration
 
