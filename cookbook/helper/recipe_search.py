@@ -277,6 +277,8 @@ class RecipeSearch():
         )
 
     def _recently_viewed(self, num_recent=None):
+        # self._queryset = self._queryset.annotate(recent=Value(0))
+        # return
         if not num_recent:
             if self._sort_includes('lastviewed'):
                 self._queryset = self._queryset.annotate(lastviewed=Coalesce(
