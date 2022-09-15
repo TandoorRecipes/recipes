@@ -1115,6 +1115,9 @@ export default {
         },
     },
     mounted() {
+
+        this.recipes = Array(this.ui.page_size).fill({loading:true})
+
         this.$nextTick(function () {
             if (this.$cookies.isKey(UI_COOKIE_NAME)) {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(UI_COOKIE_NAME))
