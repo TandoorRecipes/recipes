@@ -11,7 +11,6 @@ For all setups using Docker the updating process look something like this
 2. Pull the latest image using `docker-compose pull`
 3. Start the container again using `docker-compose up -d`
 
-
 ## Manual
 
 For all setups using a manual installation updates usually involve downloading the latest source code from GitHub.

@@ -1,4 +1,4 @@
-Django==4.0.6
+Django==4.1.0
 cryptography==37.0.2
 django-annoying==0.10.6
 django-autocomplete-light==3.9.4
@@ -6,16 +6,17 @@ django-cleanup==6.0.0
 django-crispy-forms==1.14.0
 django-tables2==2.4.1
 djangorestframework==3.13.1
-drf-writable-nested==0.6.4
+drf-writable-nested==0.7.0
 django-oauth-toolkit==2.1.0
+django-debug-toolbar==3.6.0
 bleach==5.0.1
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
 lxml==4.9.1
 Markdown==3.3.7
-Pillow==9.1.1
+Pillow==9.2.0
 psycopg2-binary==2.9.3
-python-dotenv==0.20.0
+python-dotenv==0.21.0
 requests==2.28.1
 six==1.16.0
 webdavclient3==3.14.6
@@ -29,7 +30,7 @@ Jinja2==3.1.2
 django-webpack-loader==1.5.0
 git+https://github.com/ierror/django-js-reverse@7cab78c4531780ab4b32033d5104ccd5be1a246a
 django-allauth==0.51.0
-recipe-scrapers==14.11.0
+recipe-scrapers==14.14.0
 django-scopes==1.2.0.post1
 pytest==7.1.2
 pytest-django==4.5.2

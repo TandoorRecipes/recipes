@@ -546,7 +546,7 @@
 
                                                                     <button type="button" class="dropdown-item"
                                                                             v-if="!ingredient.is_header"
-                                                                            @click="ingredient.is_header = true">
+                                                                            @click="ingredient.is_header = true; ingredient.food=null; ingredient.amount=0; ingredient.unit=null">
                                                                         <i class="fas fa-heading fa-fw"></i>
                                                                         {{ $t("Make_Header") }}
                                                                     </button>
