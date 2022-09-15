@@ -366,7 +366,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')

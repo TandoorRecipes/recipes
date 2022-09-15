@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-06-25 17:32+0000\n"
-"Last-Translator: César Blanco Guillamon <cesarblancg97@gmail.com>\n"
+"PO-Revision-Date: 2022-08-12 21:32+0000\n"
+"Last-Translator: Thorin <thorin8@hotmail.com>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -68,7 +68,7 @@ msgstr "Estilo de búsqueda"
 
 #: .\cookbook\forms.py:62
 msgid "Plan sharing"
-msgstr ""
+msgstr "Compartir régimen"
 
 #: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
