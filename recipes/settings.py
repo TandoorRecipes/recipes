@@ -115,7 +115,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'cookbook.apps.CookbookConfig',
     'treebeard',
-    'debug_toolbar'
 ]
 
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
@@ -157,8 +156,11 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += ('debug_toolbar',)
 
 SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
@@ -244,7 +246,6 @@ OAUTH2_PROVIDER = {
 READ_SCOPE = 'read'
 WRITE_SCOPE = 'write'
 
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -327,7 +328,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': 5432,
         'USER': 'postgres',
-        'PASSWORD': 'postgres', # set to local pw
+        'PASSWORD': 'postgres',  # set to local pw
         'NAME': 'tandoor_app',
         'CONN_MAX_AGE': 600,
     }
