@@ -785,7 +785,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         share = self.request.query_params.get('share', None)
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
-            self.queryset = self.queryset.prefetch_related('keywords').annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
             if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
