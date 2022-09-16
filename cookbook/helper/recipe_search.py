@@ -566,7 +566,7 @@ class RecipeFacet():
 
         self._request = request
         self._queryset = queryset
-        self.hash_key = hash_key or str(hash(frozenset(self._queryset.values_list('pk'))))
+        self.hash_key = hash_key or str(hash(self._queryset.query))
         self._SEARCH_CACHE_KEY = f"recipes_filter_{self.hash_key}"
         self._cache_timeout = cache_timeout
         self._cache = caches['default'].get(self._SEARCH_CACHE_KEY, {})
