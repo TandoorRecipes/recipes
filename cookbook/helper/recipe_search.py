@@ -3,6 +3,7 @@ from collections import Counter
 from datetime import date, timedelta
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
+from django.core.cache import cache
 from django.core.cache import caches
 from django.db.models import (Avg, Case, Count, Exists, F, Func, Max, OuterRef, Q, Subquery, Value, When, FilteredRelation)
 from django.db.models.functions import Coalesce, Lower, Substr
@@ -35,7 +36,13 @@ class RecipeSearch():
         else:
             self._params = {**(params or {})}
         if self._request.user.is_authenticated:
-            self._search_prefs = request.user.searchpreference
+            CACHE_KEY = f'search_pref_{request.user.id}'
+            cached_result = cache.get(CACHE_KEY, default=None)
+            if cached_result is not None:
+                self._search_prefs = cached_result
+            else:
+                self._search_prefs = request.user.searchpreference
+            cache.set(CACHE_KEY, self._search_prefs, timeout=10)
         else:
             self._search_prefs = SearchPreference()
         self._string = self._params.get('query').strip() if self._params.get('query', None) else None
