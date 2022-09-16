@@ -20,7 +20,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -785,6 +785,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         share = self.request.query_params.get('share', None)
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
+            self.queryset = self.queryset.prefetch_related('keywords').annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
             if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space)
             return super().get_queryset()
