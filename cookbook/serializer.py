@@ -684,25 +684,6 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
-    def get_recipe_rating(self, obj):
-        try:
-            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(
-                Avg('rating'))
-            if rating['rating__avg']:
-                return rating['rating__avg']
-        except TypeError:
-            pass
-        return 0
-
-    def get_recipe_last_cooked(self, obj):
-        try:
-            last = obj.cooklog_set.filter(created_by=self.context['request'].user).order_by('created_at').last()
-            if last:
-                return last.created_at
-        except TypeError:
-            pass
-        return None
-
     # TODO make days of new recipe a setting
     def is_recipe_new(self, obj):
         if getattr(obj, 'new_recipe', None) or obj.created_at > (timezone.now() - timedelta(days=7)):
@@ -712,11 +693,12 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
-    keywords = KeywordLabelSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
+   # keywords = KeywordLabelSerializer(many=True)
     new = serializers.SerializerMethodField('is_recipe_new')
     recent = serializers.ReadOnlyField()
+
+    rating = CustomDecimalField()
+    last_cooked = serializers.DateTimeField()
 
     def create(self, validated_data):
         pass
@@ -727,7 +709,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'name', 'description', 'image', 'keywords', 'working_time',
+            'id', 'name', 'description', 'image', 'keywords',  'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
@@ -737,10 +719,10 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
 class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
-    keywords = KeywordSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
+    #keywords = KeywordSerializer(many=True)
     shared = UserSerializer(many=True, required=False)
+    rating = CustomDecimalField()
+    last_cooked = serializers.DateTimeField()
 
     class Meta:
         model = Recipe
