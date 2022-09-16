@@ -123,8 +123,6 @@ class RecipeSearch():
     def get_queryset(self, queryset):
         self._queryset = queryset
         self._queryset = self._queryset.prefetch_related('keywords')
-        self._queryset = self._queryset.annotate(rating=Avg('cooklog__rating'))
-        self._queryset = self._queryset.annotate(last_cooked=Max('cooklog__created_at'))
 
         self._build_sort_order()
         self._recently_viewed(num_recent=self._num_recent)
