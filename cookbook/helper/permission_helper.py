@@ -1,7 +1,9 @@
+import inspect
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.core.cache import caches
+from django.core.cache import cache
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -41,13 +43,23 @@ def has_group_permission(user, groups):
     if not user.is_authenticated:
         return False
     groups_allowed = get_allowed_groups(groups)
+
+    CACHE_KEY = hash((inspect.stack()[0][3], user, groups_allowed))
+    cached_result = cache.get(CACHE_KEY, default=None)
+    if cached_result is not None:
+        return cached_result
+
+    result = False
+    print('running check', user, groups_allowed)
     if user.is_authenticated:
         if user_space := user.userspace_set.filter(active=True):
             if len(user_space) != 1:
-                return False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
+                result = False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
             if bool(user_space.first().groups.filter(name__in=groups_allowed)):
-                return True
-    return False
+                result = True
+
+    cache.set(CACHE_KEY, result, timeout=10)
+    return result
 
 
 def is_object_owner(user, obj):
@@ -106,7 +118,7 @@ def share_link_valid(recipe, share):
     """
     try:
         CACHE_KEY = f'recipe_share_{recipe.pk}_{share}'
-        if c := caches['default'].get(CACHE_KEY, False):
+        if c := cache.get(CACHE_KEY, False):
             return c
 
         if link := ShareLink.objects.filter(recipe=recipe, uuid=share, abuse_blocked=False).first():
@@ -114,7 +126,7 @@ def share_link_valid(recipe, share):
                 return False
             link.request_count += 1
             link.save()
-            caches['default'].set(CACHE_KEY, True, timeout=3)
+            cache.set(CACHE_KEY, True, timeout=3)
             return True
         return False
     except ValidationError:
