@@ -693,12 +693,12 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
-   # keywords = KeywordLabelSerializer(many=True)
+    keywords = KeywordLabelSerializer(many=True)
     new = serializers.SerializerMethodField('is_recipe_new')
     recent = serializers.ReadOnlyField()
 
-    rating = CustomDecimalField()
-    last_cooked = serializers.DateTimeField()
+    rating = CustomDecimalField(required=False, allow_null=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
 
     def create(self, validated_data):
         pass
@@ -719,10 +719,10 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
 class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
-    #keywords = KeywordSerializer(many=True)
+    keywords = KeywordSerializer(many=True)
     shared = UserSerializer(many=True, required=False)
-    rating = CustomDecimalField()
-    last_cooked = serializers.DateTimeField()
+    rating = CustomDecimalField(required=False, allow_null=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
 
     class Meta:
         model = Recipe
