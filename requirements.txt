@@ -13,7 +13,7 @@ bleach==5.0.1
 bleach-allowlist==1.0.3
 gunicorn==20.1.0
 lxml==4.9.1
-Markdown==3.3.7
+Markdown==3.4.1
 Pillow==9.2.0
 psycopg2-binary==2.9.3
 python-dotenv==0.21.0
