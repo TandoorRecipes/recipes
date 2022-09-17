@@ -48,7 +48,7 @@ admin.site.register(Space, SpaceAdmin)
 
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
-    search_fields = ('user', 'space',)
+    search_fields = ('user__username', 'space__name',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)
