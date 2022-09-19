@@ -795,10 +795,10 @@
 
                 <div class="row mt-2">
                     <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
-                        <div style="overflow-x:auto; overflow-y: hidden; white-space: nowrap; ">
+                        <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
 
-                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm"
-                                        class="shadow-none" toggle-class="text-decoration-none">
+                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm" style="overflow-y: visible; overflow-x: visible; position: static"
+                                        class="shadow-none" toggle-class="text-decoration-none" >
                                 <div v-for="o in sortOptions" :key="o.id">
                                     <b-dropdown-item
                                         v-on:click="
