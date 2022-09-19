@@ -1219,6 +1219,7 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: _debounce(function (random) {
             this.recipes_loading = true
+            this.recipes = Array(this.ui.page_size).fill({loading: true})
             let params = this.buildParams(random)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
