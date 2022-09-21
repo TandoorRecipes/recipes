@@ -28,7 +28,7 @@
             const xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', 'Token ' + token);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
             // listen for `onload` event
             xhr.onload = () => {

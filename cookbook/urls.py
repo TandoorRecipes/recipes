@@ -51,6 +51,7 @@ router.register(r'user', api.UserViewSet)
 router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
+router.register(r'access-token', api.AccessTokenViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -68,7 +69,7 @@ urlpatterns = [
     path('plan/', views.meal_plan, name='view_plan'),
     path('shopping/', lists.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
-    path('user-settings/', views.user_settings_new, name='view_user_settings'),
+    path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),

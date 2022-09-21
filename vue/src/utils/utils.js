@@ -305,6 +305,22 @@ export function roundDecimals(num) {
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`)
 }
 
+export function calculateHourMinuteSplit(amount) {
+    if (amount >= 60) {
+        let hours = Math.floor(amount / 60)
+        let minutes = amount - hours * 60
+        let output_text = hours + " h"
+
+        if (minutes > 0){
+            output_text += " " + minutes + " min"
+        }
+
+        return output_text
+    } else {
+        return amount + " min"
+    }
+}
+
 const KILOJOULES_PER_CALORIE = 4.18
 
 export function calculateEnergy(amount, factor) {

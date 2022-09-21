@@ -706,6 +706,31 @@ export class Models {
         },
     }
 
+    static ACCESS_TOKEN = {
+        name: "AccessToken",
+        apiName: "AccessToken",
+        paginated: false,
+        create: {
+            params: [["scope", "expires"]],
+            form: {
+                scope: {
+                    form_field: true,
+                    type: "text",
+                    field: "scope",
+                    label: "Scope",
+                    placeholder: "",
+                },
+                expires: {
+                    form_field: true,
+                    type: "date",
+                    field: "expires",
+                    label: "expires",
+                    placeholder: "",
+                },
+            },
+        },
+    }
+
     static USER = {
         name: "User",
         apiName: "User",

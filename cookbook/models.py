@@ -4,6 +4,7 @@ import re
 import uuid
 from datetime import date, timedelta
 
+import oauth2_provider.models
 from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
@@ -13,7 +14,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q
+from django.db.models import Index, ProtectedError, Q, Avg, Max
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -61,6 +62,13 @@ def get_shopping_share(self):
 auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
 auth.models.User.add_to_class('get_shopping_share', get_shopping_share)
 auth.models.User.add_to_class('get_active_space', get_active_space)
+
+
+def oauth_token_get_owner(self):
+    return self.user
+
+
+oauth2_provider.models.AccessToken.add_to_class('get_owner', oauth_token_get_owner)
 
 
 def get_model_name(model):
@@ -245,7 +253,7 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='space_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
@@ -358,7 +366,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
@@ -714,6 +722,10 @@ class NutritionInformation(models.Model, PermissionModelMixin):
 #     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 #     objects = ScopedManager(space='space')
 
+class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
+    def get_queryset(self):
+        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
@@ -745,7 +757,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space', _manager_class=RecipeManager)
 
     def __str__(self):
         return self.name

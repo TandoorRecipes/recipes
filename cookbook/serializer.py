@@ -1,4 +1,5 @@
 import traceback
+import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
 from gettext import gettext as _
@@ -14,6 +15,7 @@ from django.utils import timezone
 from django_scopes import scopes_disabled
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
 from PIL import Image
+from oauth2_provider.models import AccessToken
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
@@ -143,7 +145,7 @@ class UserSerializer(WritableNestedModelSerializer):
         list_serializer_class = SpaceFilterSerializer
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'display_name')
-        read_only_fields = ('username', )
+        read_only_fields = ('username',)
 
 
 class GroupSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -255,7 +257,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     food_inherit = FoodInheritFieldSerializer(many=True)
-    image = UserFileViewSerializer(required=False, many=False)
+    image = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
@@ -682,25 +684,6 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
-    def get_recipe_rating(self, obj):
-        try:
-            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(
-                Avg('rating'))
-            if rating['rating__avg']:
-                return rating['rating__avg']
-        except TypeError:
-            pass
-        return 0
-
-    def get_recipe_last_cooked(self, obj):
-        try:
-            last = obj.cooklog_set.filter(created_by=self.context['request'].user).order_by('created_at').last()
-            if last:
-                return last.created_at
-        except TypeError:
-            pass
-        return None
-
     # TODO make days of new recipe a setting
     def is_recipe_new(self, obj):
         if getattr(obj, 'new_recipe', None) or obj.created_at > (timezone.now() - timedelta(days=7)):
@@ -711,10 +694,11 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
     new = serializers.SerializerMethodField('is_recipe_new')
     recent = serializers.ReadOnlyField()
+
+    rating = CustomDecimalField(required=False, allow_null=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
 
     def create(self, validated_data):
         pass
@@ -725,7 +709,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'name', 'description', 'image', 'keywords', 'working_time',
+            'id', 'name', 'description', 'image', 'keywords',  'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
@@ -736,9 +720,9 @@ class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
     shared = UserSerializer(many=True, required=False)
+    rating = CustomDecimalField(required=False, allow_null=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
 
     class Meta:
         model = Recipe
@@ -1132,6 +1116,27 @@ class BookmarkletImportSerializer(BookmarkletImportListSerializer):
         model = BookmarkletImport
         fields = ('id', 'url', 'html', 'created_by', 'created_at')
         read_only_fields = ('created_by', 'space')
+
+
+# OAuth / Auth Token related Serializers
+
+class AccessTokenSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField('get_token')
+
+    def create(self, validated_data):
+        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-","_")}'
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
+
+    def get_token(self, obj):
+        if (timezone.now() - obj.created).seconds < 15:
+            return obj.token
+        return f'tda_************_******_***********{obj.token[len(obj.token)-4:]}'
+
+    class Meta:
+        model = AccessToken
+        fields = ('id', 'token', 'expires', 'scope', 'created', 'updated')
+        read_only_fields = ('id', 'token',)
 
 
 # Export/Import Serializers

@@ -1,15 +1,32 @@
 <template>
     <div>
-        <div v-if="user !== undefined">
 
-            <b-form-input v-model="user.username" @change="updateUser(false)" disabled></b-form-input>
-            <b-form-input v-model="user.first_name" @change="updateUser(false)"></b-form-input>
-            <b-form-input v-model="user.last_name" @change="updateUser(false)"></b-form-input>
+        <div v-if="user !== undefined">
+            <b-form-group :label="$t('Username')">
+                <b-form-input v-model="user.username" @change="updateUser(false)" disabled></b-form-input>
+            </b-form-group>
+
+            <b-form-group :label="$t('First_name')">
+                <b-form-input v-model="user.first_name" @change="updateUser(false)" :placeholder="$t('First_name')"></b-form-input>
+            </b-form-group>
+
+            <b-form-group :label="$t('Last_name')">
+                <b-form-input v-model="user.last_name" @change="updateUser(false)" :placeholder="$t('Last_name')"></b-form-input>
+            </b-form-group>
+
         </div>
 
-        <a :href="resolveDjangoUrl('account_email')" class="btn btn-primary">Emails</a>
-        <a :href="resolveDjangoUrl('account_change_password')" class="btn btn-primary">Password</a>
-        <a :href="resolveDjangoUrl('socialaccount_connections')" class="btn btn-primary">Social</a>
+        <b-button-toolbar>
+            <b-button-group class="mx-1">
+                <a :href="resolveDjangoUrl('account_email')" class="btn btn-primary">{{ $t('Manage_Emails') }}</a>
+            </b-button-group>
+            <b-button-group class="mx-1">
+                <a :href="resolveDjangoUrl('account_change_password')" class="btn btn-primary">{{ $t('Change_Password') }}</a>
+            </b-button-group>
+            <b-button-group class="mx-1">
+                <a :href="resolveDjangoUrl('socialaccount_connections')" class="btn btn-primary">{{ $t('Social_Authentication') }}</a>
+            </b-button-group>
+        </b-button-toolbar>
 
     </div>
 </template>

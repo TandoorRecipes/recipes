@@ -44,8 +44,8 @@ def test_makenow_onhand(recipes, makenow_recipe, user1, space_1):
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
         search = search.get_queryset(Recipe.objects.all())
-    assert search.count() == 1
-    assert search.first().id == makenow_recipe.id
+        assert search.count() == 1
+        assert search.first().id == makenow_recipe.id
 
 
 @pytest.mark.parametrize("makenow_recipe", [
@@ -63,8 +63,8 @@ def test_makenow_ignoreshopping(recipes, makenow_recipe, user1, space_1):
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, ignore_shopping=True).count() == 1
         search = search.get_queryset(Recipe.objects.all())
-    assert search.count() == 1
-    assert search.first().id == makenow_recipe.id
+        assert search.count() == 1
+        assert search.first().id == makenow_recipe.id
 
 
 @pytest.mark.parametrize("makenow_recipe", [
@@ -83,8 +83,8 @@ def test_makenow_substitute(recipes, makenow_recipe, user1, space_1):
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, substitute__isnull=False).count() == 1
 
         search = search.get_queryset(Recipe.objects.all())
-    assert search.count() == 1
-    assert search.first().id == makenow_recipe.id
+        assert search.count() == 1
+        assert search.first().id == makenow_recipe.id
 
 
 @pytest.mark.parametrize("makenow_recipe", [
@@ -105,8 +105,8 @@ def test_makenow_child_substitute(recipes, makenow_recipe, user1, space_1):
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, numchild__gt=0).count() == 1
         search = search.get_queryset(Recipe.objects.all())
-    assert search.count() == 1
-    assert search.first().id == makenow_recipe.id
+        assert search.count() == 1
+        assert search.first().id == makenow_recipe.id
 
 
 @pytest.mark.parametrize("makenow_recipe", [
@@ -129,5 +129,5 @@ def test_makenow_sibling_substitute(recipes, makenow_recipe, user1, space_1):
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
         assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, depth=2).count() == 1
         search = search.get_queryset(Recipe.objects.all())
-    assert search.count() == 1
-    assert search.first().id == makenow_recipe.id
+        assert search.count() == 1
+        assert search.first().id == makenow_recipe.id

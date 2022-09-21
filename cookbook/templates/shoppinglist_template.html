@@ -19,6 +19,7 @@
 <script type="application/javascript">
     window.IMAGE_PLACEHOLDER = "{% static 'assets/recipe_no_image.svg' %}"
     window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+    window.SHOPPING_MIN_AUTOSYNC_INTERVAL = {{ SHOPPING_MIN_AUTOSYNC_INTERVAL }}
 </script>
 
 {% render_bundle 'shopping_list_view' %} {% endblock %}

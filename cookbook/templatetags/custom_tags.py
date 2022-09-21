@@ -151,7 +151,7 @@ def bookmarklet(request):
             localStorage.setItem('redirectURL', '" + server + reverse('data_import_url') + "'); \
             localStorage.setItem('token', '" + api_token.__str__() + "'); \
             document.body.appendChild(document.createElement(\'script\')).src=\'" \
-               + server + prefix + static('js/bookmarklet.js') + "? \
+               + server + prefix + static('js/bookmarklet_v3.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();'>Test</a>"
     return re.sub(r"[\n\t]*", "", bookmark)
 
