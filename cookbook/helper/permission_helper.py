@@ -44,7 +44,7 @@ def has_group_permission(user, groups):
         return False
     groups_allowed = get_allowed_groups(groups)
 
-    CACHE_KEY = hash((inspect.stack()[0][3], user, groups_allowed))
+    CACHE_KEY = hash((inspect.stack()[0][3], (user.pk, user.username, user.email), groups_allowed))
     cached_result = cache.get(CACHE_KEY, default=None)
     if cached_result is not None:
         return cached_result
