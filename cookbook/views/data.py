@@ -1,12 +1,15 @@
+import uuid
 from datetime import datetime
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from django_tables2 import RequestConfig
+from oauth2_provider.models import AccessToken
 from rest_framework.authtoken.models import Token
 
 from cookbook.forms import BatchEditForm, SyncForm
@@ -115,8 +118,8 @@ def import_url(request):
         messages.add_message(request, messages.WARNING, msg)
         return HttpResponseRedirect(reverse('index'))
 
-    if (api_token := Token.objects.filter(user=request.user).first()) is None:
-        api_token = Token.objects.create(user=request.user)
+    if (api_token := AccessToken.objects.filter(user=request.user, scope='bookmarklet').first()) is None:
+        api_token = AccessToken.objects.create(user=request.user, scope='bookmarklet', expires=(timezone.now() + timezone.timedelta(days=365*10)), token=f'tda_{str(uuid.uuid4()).replace("-","_")}')
 
     bookmarklet_import_id = -1
     if 'id' in request.GET:

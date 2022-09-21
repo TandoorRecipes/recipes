@@ -38,7 +38,7 @@
                         </div>
                         <div class="my-auto mr-1">
                             <span class="text-primary"><b>{{ $t("Preparation") }}</b></span><br/>
-                            {{ recipe.working_time }} {{ $t("min") }}
+                            {{ working_time }}
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="my-auto mr-1">
                             <span class="text-primary"><b>{{ $t("Waiting") }}</b></span><br/>
-                            {{ recipe.waiting_time }} {{ $t("min") }}
+                            {{ waiting_time }}
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import {apiLoadRecipe} from "@/utils/api"
 
 import RecipeContextMenu from "@/components/RecipeContextMenu"
-import {ResolveUrlMixin, ToastMixin} from "@/utils/utils"
+import {ResolveUrlMixin, ToastMixin, calculateHourMinuteSplit} from "@/utils/utils"
 
 import PdfViewer from "@/components/PdfViewer"
 import ImageViewer from "@/components/ImageViewer"
@@ -206,6 +206,10 @@ export default {
         ingredient_count() {
             return this.recipe?.steps.map((x) => x.ingredients).flat().length
         },
+        working_time: function() {
+            return calculateHourMinuteSplit(this.recipe.working_time)},
+        waiting_time: function() {
+            return calculateHourMinuteSplit(this.recipe.waiting_time)},
     },
     data() {
         return {

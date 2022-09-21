@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'oauth2_provider',
     'django_prometheus',
     'django_tables2',
     'corsheaders',
@@ -156,6 +157,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += ('debug_toolbar',)
 
 SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
@@ -235,10 +240,16 @@ AUTH_PASSWORD_VALIDATORS = [
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+OAUTH2_PROVIDER = {
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'bookmarklet': 'only access to bookmarklet'}
+}
+READ_SCOPE = 'read'
+WRITE_SCOPE = 'write'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
@@ -317,8 +328,8 @@ else:
 #         'HOST': 'localhost',
 #         'PORT': 5432,
 #         'USER': 'postgres',
-#         'PASSWORD': 'postgres', # set to local pw
-#         'NAME': 'postgres',
+#         'PASSWORD': 'postgres',  # set to local pw
+#         'NAME': 'tandoor_app',
 #         'CONN_MAX_AGE': 600,
 #     }
 # }
