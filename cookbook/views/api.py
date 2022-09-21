@@ -20,7 +20,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse

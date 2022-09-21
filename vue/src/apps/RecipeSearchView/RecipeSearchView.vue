@@ -2,11 +2,11 @@
     <div id="app" style="margin-bottom: 4vh">
         <RecipeSwitcher ref="ref_recipe_switcher"/>
         <div class="row">
-            <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
+            <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
                 <div class="row">
                     <div class="col col-md-12">
                         <div class="row justify-content-center">
-                            <div class="col-12 col-lg-10 col-xl-8 mt-3 mb-3">
+                            <div class="col-12 col-lg-10 col-xl-10 mt-2">
                                 <b-input-group>
                                     <b-input
                                         class="form-control form-control-lg form-control-borderless form-control-search"
@@ -16,16 +16,10 @@
                                                   v-if="debug && ui.sql_debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button variant="light" v-b-tooltip.hover :title="$t('Random Recipes')"
-                                                  @click="openRandom()">
-                                            <i class="fas fa-dice-five" style="font-size: 1.5em"></i>
-                                        </b-button>
                                         <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover
                                                   :title="$t('advanced_search_settings')"
                                                   v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
-                                            <!-- TODO consider changing this icon to a filter -->
-                                            <i class="fas fa-caret-down" v-if="!search.advanced_search_visible"></i>
-                                            <i class="fas fa-caret-up" v-if="search.advanced_search_visible"></i>
+                                            <i class="fas fa-sliders-h"></i>
                                         </b-button>
                                     </b-input-group-append>
                                 </b-input-group>
@@ -799,37 +793,46 @@
                     </div>
                 </div>
 
-                <div class="row align-content-center">
-                    <div class="col col-md-6" style="margin-top: 2vh">
-                        <b-dropdown id="sortby" :text="sortByLabel" variant="link" toggle-class="text-decoration-none "
-                                    class="m-0 p-0">
-                            <div v-for="o in sortOptions" :key="o.id">
-                                <b-dropdown-item
-                                    v-on:click="
+                <div class="row mt-2">
+                    <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
+                        <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
+
+                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm" style="overflow-y: visible; overflow-x: visible; position: static"
+                                        class="shadow-none" toggle-class="text-decoration-none" >
+                                <div v-for="o in sortOptions" :key="o.id">
+                                    <b-dropdown-item
+                                        v-on:click="
                                             search.sort_order = [o]
                                             refreshData(false)
                                         "
-                                >
-                                    <span>{{ o.text }}</span>
-                                </b-dropdown-item>
-                            </div>
-                        </b-dropdown>
-                    </div>
-                    <div class="col col-md-6 text-right" style="margin-top: 2vh">
-                            <span class="text-muted">
-                                {{ $t("Page") }} {{
+                                    >
+                                        <span>{{ o.text }}</span>
+                                    </b-dropdown-item>
+                                </div>
+                            </b-dropdown>
+
+                            <b-button variant="outline-primary" size="sm" class="shadow-none  ml-1"
+                                      @click="resetSearch()"><i class="fas fa-file-alt"></i> {{
                                     search.pagination_page
-                                }}/{{ Math.ceil(pagination_count / ui.page_size) }}
-                                <a href="#" @click="resetSearch()"><i class="fas fa-times-circle"></i> {{ $t("Reset") }}</a>
-                            </span>
+                                }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }} <i
+                                    class="fas fa-times-circle"></i>
+                            </b-button>
+
+                            <b-button variant="outline-primary" size="sm" class="shadow-none  ml-1"
+                                      @click="openRandom()"><i class="fas fa-dice-five"></i> {{ $t("Random") }}
+                            </b-button>
+
+                        </div>
+
+
                     </div>
                 </div>
 
-                <div v-if="recipes.length > 0">
+                <div v-if="recipes.length > 0" class="mt-4">
                     <div class="row">
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 0.8rem">
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 0.4rem">
                                 <template v-if="!searchFiltered()">
                                     <recipe-card
                                         v-bind:key="`mp_${m.id}`"
@@ -1115,6 +1118,9 @@ export default {
         },
     },
     mounted() {
+
+        this.recipes = Array(this.ui.page_size).fill({loading: true})
+
         this.$nextTick(function () {
             if (this.$cookies.isKey(UI_COOKIE_NAME)) {
                 this.ui = Object.assign({}, this.ui, this.$cookies.get(UI_COOKIE_NAME))
@@ -1213,6 +1219,7 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: _debounce(function (random) {
             this.recipes_loading = true
+            this.recipes = Array(this.ui.page_size).fill({loading: true})
             let params = this.buildParams(random)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
                 .then((result) => {
@@ -1500,10 +1507,10 @@ export default {
             this.genericAPI(this.Models.CUSTOM_FILTER, this.Actions.CREATE, params)
                 .then((result) => {
                     this.search.search_filter = result.data
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
                 })
         },
         addField: function (field, count) {
@@ -1563,4 +1570,5 @@ export default {
 .vue-treeselect__control-arrow-container {
     width: 30px;
 }
+
 </style>

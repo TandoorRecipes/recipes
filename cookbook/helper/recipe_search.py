@@ -3,6 +3,7 @@ from collections import Counter
 from datetime import date, timedelta
 
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
+from django.core.cache import cache
 from django.core.cache import caches
 from django.db.models import (Avg, Case, Count, Exists, F, Func, Max, OuterRef, Q, Subquery, Value, When, FilteredRelation)
 from django.db.models.functions import Coalesce, Lower, Substr
@@ -35,7 +36,13 @@ class RecipeSearch():
         else:
             self._params = {**(params or {})}
         if self._request.user.is_authenticated:
-            self._search_prefs = request.user.searchpreference
+            CACHE_KEY = f'search_pref_{request.user.id}'
+            cached_result = cache.get(CACHE_KEY, default=None)
+            if cached_result is not None:
+                self._search_prefs = cached_result
+            else:
+                self._search_prefs = request.user.searchpreference
+            cache.set(CACHE_KEY, self._search_prefs, timeout=10)
         else:
             self._search_prefs = SearchPreference()
         self._string = self._params.get('query').strip() if self._params.get('query', None) else None
@@ -115,6 +122,8 @@ class RecipeSearch():
 
     def get_queryset(self, queryset):
         self._queryset = queryset
+        self._queryset = self._queryset.prefetch_related('keywords')
+
         self._build_sort_order()
         self._recently_viewed(num_recent=self._num_recent)
         self._cooked_on_filter(cooked_date=self._cookedon)
@@ -562,7 +571,7 @@ class RecipeFacet():
 
         self._request = request
         self._queryset = queryset
-        self.hash_key = hash_key or str(hash(frozenset(self._queryset.values_list('pk'))))
+        self.hash_key = hash_key or str(hash(self._queryset.query))
         self._SEARCH_CACHE_KEY = f"recipes_filter_{self.hash_key}"
         self._cache_timeout = cache_timeout
         self._cache = caches['default'].get(self._SEARCH_CACHE_KEY, {})

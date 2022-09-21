@@ -648,17 +648,17 @@
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="d-block d-md-none btn btn-block btn-danger shadow-none"><i class="fa fa-trash fa-lg"></i></a>
+                       class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i class="fa fa-trash fa-lg"></i></a>
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="d-none d-md-block btn btn-block btn-danger shadow-none">{{ $t("Delete") }}</a>
+                       class="d-none d-md-block btn btn-block btn-danger shadow-none btn-sm">{{ $t("Delete") }}</a>
                 </div>
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
-                       class="d-block d-md-none btn btn-block btn-primary shadow-none">
+                       class="d-block d-md-none btn btn-block btn-primary shadow-none btn-sm">
                         <i class="fa fa-eye fa-lg"></i>
                     </a>
                     <a :href="resolveDjangoUrl('view_recipe', recipe.id)"
-                       class="d-none d-md-block btn btn-block btn-primary shadow-none">
+                       class="d-none d-md-block btn btn-block btn-primary shadow-none btn-sm">
                         {{ $t("View") }}
                     </a>
                 </div>

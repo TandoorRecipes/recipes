@@ -14,7 +14,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q
+from django.db.models import Index, ProtectedError, Q, Avg, Max
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
@@ -722,6 +722,10 @@ class NutritionInformation(models.Model, PermissionModelMixin):
 #     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 #     objects = ScopedManager(space='space')
 
+class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
+    def get_queryset(self):
+        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
@@ -753,7 +757,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
-    objects = ScopedManager(space='space')
+    objects = ScopedManager(space='space', _manager_class=RecipeManager)
 
     def __str__(self):
         return self.name
