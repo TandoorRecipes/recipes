@@ -3,15 +3,15 @@
         <template v-if="recipe && recipe.loading">
             <b-card no-body v-hover>
                 <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="placeholder_image"
-                                     v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
+                                 v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
 
-                 <b-card-body class="p-4">
+                <b-card-body class="p-4">
                     <h6>
                         <b-skeleton width="95%"></b-skeleton>
                     </h6>
 
                     <b-card-text>
-                       <b-skeleton height="12px" :width="(45 + Math.random() * 45).toString() + '%'"></b-skeleton>
+                        <b-skeleton height="12px" :width="(45 + Math.random() * 45).toString() + '%'"></b-skeleton>
                         <b-skeleton height="12px" :width="(20 + Math.random() * 25).toString() + '%'"></b-skeleton>
                         <b-skeleton height="12px" :width="(30 + Math.random() * 35).toString() + '%'"></b-skeleton>
                     </b-card-text>
@@ -28,7 +28,7 @@
                         class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1"
                         v-if="show_context_menu">
                         <a>
-                            <recipe-context-menu :recipe="recipe" class="float-right"
+                            <recipe-context-menu :recipe="recipe" class="float-right" :disabled_options="context_disabled_options"
                                                  v-if="recipe !== null"></recipe-context-menu>
                         </a>
                     </div>
@@ -124,7 +124,8 @@ export default {
         footer_text: String,
         footer_icon: String,
         detailed: {type: Boolean, default: true},
-        show_context_menu: {type: Boolean, default: true}
+        show_context_menu: {type: Boolean, default: true},
+        context_disabled_options: Object,
     },
     data() {
         return {
