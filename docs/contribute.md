@@ -11,8 +11,13 @@ over at [GitHub issues](https://github.com/vabene1111/recipes/issues).
 Without feedback improvement can't happen, so don't hesitate to say what you want to say.
 
 ## Contributing Code
-Code contributions are always welcome. There are no special rules for what you need to do, 
-just do your best and we will work together to get your idea and code merged into the project.
+If you want to contribute bug fixes or small tweaks then your pull requests are always welcome!
+
+!!! danger "Discuss First!"
+    If you want to contribute larger features that introduce more complexity to the project please
+    make sure to **first submit a technical description** outlining what and how you want to do it. 
+    This allows me and the community to give feedback and manage the complexity of the overall 
+    application. If you don't do this please don't be mad if I reject your PR
 
 !!! info
     The dev setup is a little messy as this application combines the best (at least in my opinion) of both Django and Vue.js.
