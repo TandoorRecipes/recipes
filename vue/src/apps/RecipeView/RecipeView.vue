@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col col-md-2 col-2 mt-2 mt-md-0 text-right">
-                    <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
+                    <recipe-context-menu v-bind:recipe="recipe" :servings="servings" :disabled_options="{print:false}"></recipe-context-menu>
                 </div>
             </div>
             <hr/>
