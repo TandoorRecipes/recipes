@@ -170,7 +170,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                                                                       'field', flat=True)])
 
         if query is not None and query not in ["''", '']:
-            if fuzzy:
+            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']):
                 if any([self.model.__name__.lower() in x for x in
                         self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
