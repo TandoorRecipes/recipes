@@ -53,7 +53,7 @@ If removed, the nginx webserver needs to be replaced by something else that serv
 Please refer to [here](install/docker.md#setup-issues-on-raspberry-pi).
 
 ## How can I create users?
-To create a new user click on your name (top right corner) and select system. There click on invite links and create a new invite link.
+To create a new user click on your name (top right corner) and select 'space settings'. There under invites click create.
 
 It is not possible to create users through the admin because users must be assigned a default group and space.
 
