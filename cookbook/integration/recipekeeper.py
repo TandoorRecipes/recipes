@@ -41,7 +41,7 @@ class RecipeKeeper(Integration):
         except AttributeError:
             pass
 
-        step = Step.objects.create(instruction='', space=self.request.space,)
+        step = Step.objects.create(instruction='', space=self.request.space, )
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):
@@ -51,7 +51,7 @@ class RecipeKeeper(Integration):
             f = ingredient_parser.get_food(food)
             u = ingredient_parser.get_unit(unit)
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                food=f, unit=u, amount=amount, note=note, original_text=str(ingredient).replace('<p>', '').replace('</p>', ''), space=self.request.space,
             ))
 
         for s in file.find("div", {"itemprop": "recipeDirections"}).find_all("p"):
