@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@babel/eslint-parser": "^7.16.0",
+    "@babel/eslint-parser": "^7.19.1",
     "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
     "@popperjs/core": "^2.11.2",
     "@riophae/vue-treeselect": "^0.4.0",
@@ -62,7 +62,7 @@
     "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.0",
+    "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.2.4"
   },
   "eslintConfig": {
