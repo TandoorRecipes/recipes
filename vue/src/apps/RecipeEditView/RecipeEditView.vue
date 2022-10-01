@@ -577,7 +577,7 @@
                                                                         {{ $t("Copy_template_reference") }}
                                                                     </button>
                                                                     <button type="button" class="dropdown-item"
-                                                                            @click="duplicateIngredient(step, ingredient)">
+                                                                            @click="duplicateIngredient(step, ingredient, index + 1)">
                                                                         <i class="fas fa-copy"></i>
                                                                         {{ $t("Copy") }}
                                                                     </button>
@@ -1234,9 +1234,9 @@ export default {
                 }
             })
         },
-        duplicateIngredient: function (step, ingredient) {
+        duplicateIngredient: function (step, ingredient, new_index) {
             delete ingredient.id
-            step.ingredients.push(ingredient)
+            step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
         }
     },
 }
