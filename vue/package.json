@@ -36,7 +36,7 @@
     "vue-property-decorator": "^9.1.2",
     "vue-sanitize": "^0.2.2",
     "vue-simple-calendar": "^5.0.0",
-    "vue-template-compiler": "^2.6.14",
+    "vue-template-compiler": "^2.7.10",
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
     "vuex": "^3.6.0",
@@ -62,7 +62,7 @@
     "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.0",
+    "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.2.4"
   },
   "eslintConfig": {
