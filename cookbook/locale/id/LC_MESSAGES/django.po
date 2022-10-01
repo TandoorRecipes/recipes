@@ -8,116 +8,125 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2022-10-01 16:38+0000\n"
+"Last-Translator: wella <wella.design@gmail.com>\n"
+"Language-Team: Indonesian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
 msgid "Ingredients"
-msgstr ""
+msgstr "bahan-bahan"
 
 #: .\cookbook\forms.py:53
 msgid "Default unit"
-msgstr ""
+msgstr "Unit bawaan"
 
 #: .\cookbook\forms.py:54
 msgid "Use fractions"
-msgstr ""
+msgstr "Gunakan pecahan"
 
 #: .\cookbook\forms.py:55
 msgid "Use KJ"
-msgstr ""
+msgstr "Gunakan KJ"
 
 #: .\cookbook\forms.py:56
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:57
 msgid "Navbar color"
-msgstr ""
+msgstr "Warna Navigasi"
 
 #: .\cookbook\forms.py:58
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Sticky navbar"
 
 #: .\cookbook\forms.py:59
 msgid "Default page"
-msgstr ""
+msgstr "Halaman default"
 
 #: .\cookbook\forms.py:60
 msgid "Show recent recipes"
-msgstr ""
+msgstr "Tampilkan resep terbaru"
 
 #: .\cookbook\forms.py:61
 msgid "Search style"
-msgstr ""
+msgstr "Cari style"
 
 #: .\cookbook\forms.py:62
 msgid "Plan sharing"
-msgstr ""
+msgstr "Berbagi rencana"
 
 #: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
-msgstr ""
+msgstr "Tempat desimal bahan"
 
 #: .\cookbook\forms.py:64
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Periode sinkronisasi otomatis daftar belanja"
 
 #: .\cookbook\forms.py:65 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\stats.html:47
 msgid "Comments"
-msgstr ""
+msgstr "Komen"
 
 #: .\cookbook\forms.py:66
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Mode tangan kiri"
 
 #: .\cookbook\forms.py:70
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Warna bilah navigasi atas. Tidak semua warna bekerja dengan semua tema, coba "
+"saja!"
 
 #: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
+"Default Unit yang akan digunakan saat memasukkan bahan baru ke dalam resep."
 
 #: .\cookbook\forms.py:74
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Mengaktifkan dukungan untuk pecahan dalam jumlah bahan (misalnya, mengubah "
+"desimal menjadi pecahan secara otomatis)"
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Tampilkan jumlah energi nutrisi dalam joule, bukan kalori"
 
 #: .\cookbook\forms.py:77
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
+"Pengguna dengan siapa rencana makan yang baru dibuat harus dibagikan secara "
+"default."
 
 #: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "Pengguna yang ingin berbagi daftar belanja."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Tampilkan resep yang baru dilihat di halaman pencarian."
 
 #: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Jumlah desimal untuk bahan."
 
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "Jika Anda ingin dapat membuat dan melihat komentar di bawah resep."
 
 #: .\cookbook\forms.py:84 .\cookbook\forms.py:496
 msgid ""
@@ -126,18 +135,23 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"Menyetel ke 0 akan menonaktifkan sinkronisasi otomatis. Saat melihat daftar "
+"belanja, daftar diperbarui setiap detik untuk menyinkronkan perubahan yang "
+"mungkin dibuat orang lain. Berguna saat berbelanja dengan banyak orang "
+"tetapi mungkin menggunakan sedikit data seluler. Jika lebih rendah dari "
+"batas instance, reset saat menyimpan."
 
 #: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Membuat navbar menempel di bagian atas halaman."
 
 #: .\cookbook\forms.py:88 .\cookbook\forms.py:499
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
+msgstr "Secara otomatis menambahkan bahan rencana makan ke daftar belanja."
 
 #: .\cookbook\forms.py:89
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Kecualikan bahan-bahan yang ada."
 
 #: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
