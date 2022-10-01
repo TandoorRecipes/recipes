@@ -7,7 +7,7 @@ from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step
+from cookbook.models import Ingredient, Keyword, Recipe, Step, NutritionInformation
 
 
 class NextcloudCookbook(Integration):
@@ -70,12 +70,21 @@ class NextcloudCookbook(Integration):
             recipe.steps.add(step)
 
         if 'nutrition' in recipe_json:
+            nutrition = {}
             try:
-                recipe.nutrition.calories = recipe_json['nutrition']['calories'].replace(' kcal', '').replace(' ', '')
-                recipe.nutrition.proteins = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-                recipe.nutrition.fats = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-                recipe.nutrition.carbohydrates = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-            except Exception:
+                if 'calories' in recipe_json['nutrition']:
+                    nutrition['calories'] = int(re.search(r'\d+', recipe_json['nutrition']['calories']).group())
+                if 'proteinContent' in recipe_json['nutrition']:
+                    nutrition['proteins'] = int(re.search(r'\d+', recipe_json['nutrition']['proteinContent']).group())
+                if 'fatContent' in recipe_json['nutrition']:
+                    nutrition['fats'] = int(re.search(r'\d+', recipe_json['nutrition']['fatContent']).group())
+                if 'carbohydrateContent' in recipe_json['nutrition']:
+                    nutrition['carbohydrates'] = int(re.search(r'\d+', recipe_json['nutrition']['carbohydrateContent']).group())
+
+                if nutrition != {}:
+                    recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
+                    recipe.save()
+            except Exception as e:
                 pass
 
         for f in self.files:
