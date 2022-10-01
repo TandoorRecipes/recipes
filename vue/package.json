@@ -18,7 +18,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.5",
     "bootstrap-vue": "^2.21.2",
-    "core-js": "^3.25.0",
+    "core-js": "^3.25.3",
     "html2pdf.js": "^0.10.1",
     "lodash": "^4.17.21",
     "mavon-editor": "^2.10.4",
@@ -62,7 +62,7 @@
     "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.0",
+    "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.2.4"
   },
   "eslintConfig": {
