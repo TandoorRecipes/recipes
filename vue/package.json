@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@kevinfaguiar/vue-twemoji-picker": "^5.7.4",
-    "@popperjs/core": "^2.11.2",
+    "@popperjs/core": "^2.11.6",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
     "axios": "^0.27.2",
