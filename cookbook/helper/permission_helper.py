@@ -52,7 +52,6 @@ def has_group_permission(user, groups, no_cache=False):
             return cached_result
 
     result = False
-    print('running check', user, groups_allowed)
     if user.is_authenticated:
         if user_space := user.userspace_set.filter(active=True):
             if len(user_space) != 1:
