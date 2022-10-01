@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-10-01 16:38+0000\n"
+"PO-Revision-Date: 2022-10-02 17:33+0000\n"
 "Last-Translator: wella <wella.design@gmail.com>\n"
 "Language-Team: Indonesian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/id/>\n"
@@ -155,74 +155,82 @@ msgstr "Kecualikan bahan-bahan yang ada."
 
 #: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Akan mengoptimalkan UI untuk digunakan dengan tangan kiri Anda."
 
 #: .\cookbook\forms.py:107
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Kedua bidang ini opsional. Jika tidak ada yang diberikan nama pengguna akan "
+"ditampilkan sebagai gantinya"
 
 #: .\cookbook\forms.py:128 .\cookbook\forms.py:301
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: .\cookbook\forms.py:129 .\cookbook\forms.py:302
 #: .\cookbook\templates\stats.html:24 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr ""
+msgstr "Kata Kunci"
 
 #: .\cookbook\forms.py:130
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Waktu persiapan dalam hitungan menit"
 
 #: .\cookbook\forms.py:131
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Waktu tunggu (memasak/memanggang) dalam hitungan menit"
 
 #: .\cookbook\forms.py:132 .\cookbook\forms.py:270 .\cookbook\forms.py:303
 msgid "Path"
-msgstr ""
+msgstr "Jalur"
 
 #: .\cookbook\forms.py:133
 msgid "Storage UID"
-msgstr ""
+msgstr "UID penyimpanan"
 
 #: .\cookbook\forms.py:165
 msgid "Default"
-msgstr ""
+msgstr "Bawaan"
 
 #: .\cookbook\forms.py:177
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Untuk mencegah duplikat resep dengan nama yang sama dengan yang sudah ada "
+"diabaikan. Centang kotak ini untuk mengimpor semuanya."
 
 #: .\cookbook\forms.py:200
 msgid "Add your comment: "
-msgstr ""
+msgstr "Tambahkan komentar Anda: "
 
 #: .\cookbook\forms.py:215
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
+"Biarkan kosong untuk dropbox dan masukkan kata sandi aplikasi untuk "
+"nextcloud."
 
 #: .\cookbook\forms.py:222
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Biarkan kosong untuk nextcloud dan masukkan token api untuk dropbox."
 
 #: .\cookbook\forms.py:231
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Biarkan kosong untuk dropbox dan masukkan hanya url dasar untuk cloud "
+"berikutnya (<code>/remote.php/webdav/</code> ditambahkan secara otomatis)"
 
 #: .\cookbook\forms.py:269 .\cookbook\views\edit.py:157
 msgid "Storage"
-msgstr ""
+msgstr "Penyimpanan"
 
 #: .\cookbook\forms.py:271
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #: .\cookbook\forms.py:277
 msgid "Search String"
