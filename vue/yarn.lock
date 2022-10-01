@@ -11308,10 +11308,10 @@ webpack-bundle-analyzer@^4.4.0:
     sirv "^1.0.7"
     ws "^7.3.1"
 
-webpack-bundle-tracker@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/webpack-bundle-tracker/-/webpack-bundle-tracker-1.5.0.tgz#61f04ecd3c746fe6e5775d12341ef13a35de3959"
-  integrity sha512-p7Oil+O5XzzwaoWi/FKfgn6HXGRpLnKuppWRficzTSHx9LdgmooVll+uYvU6DZPvKQkwJl0AyFpsBB/WTbEMMQ==
+webpack-bundle-tracker@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/webpack-bundle-tracker/-/webpack-bundle-tracker-1.6.0.tgz#738e450f13ab2ab5de0c81a2cd671f78537cf861"
+  integrity sha512-aDb5WpHyo/U23UsAFHadUJavOAcpcEDrdSOb2ExlSrsoYBnJlECC37wekDRQ9UwRKvNjVdjZWJ/NI8/dVaVp8w==
   dependencies:
     lodash.assign "^4.2.0"
     lodash.defaults "^4.2.0"
