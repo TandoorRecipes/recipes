@@ -32,7 +32,7 @@ git+https://github.com/ierror/django-js-reverse@7cab78c4531780ab4b32033d5104ccd5
 django-allauth==0.51.0
 recipe-scrapers==14.14.0
 django-scopes==1.2.0.post1
-pytest==7.1.2
+pytest==7.1.3
 pytest-django==4.5.2
 django-treebeard==4.5.1
 django-cors-headers==3.13.0
