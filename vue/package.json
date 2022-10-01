@@ -30,7 +30,7 @@
     "vue-clickaway": "^2.2.2",
     "vue-clipboard2": "^0.3.3",
     "vue-cookies": "^1.8.1",
-    "vue-i18n": "^8.26.8",
+    "vue-i18n": "^8.27.2",
     "vue-infinite-loading": "^2.4.5",
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
@@ -62,7 +62,7 @@
     "workbox-expiration": "^6.3.0",
     "workbox-navigation-preload": "^6.0.2",
     "workbox-precaching": "^6.5.3",
-    "workbox-routing": "^6.5.0",
+    "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.2.4"
   },
   "eslintConfig": {
