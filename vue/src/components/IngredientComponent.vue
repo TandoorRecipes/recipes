@@ -28,8 +28,11 @@
             </td>
             <td v-if="detailed">
                 <div v-if="ingredient.note">
-                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable p-0 pl-md-2 pr-md-2">
-                        <i class="far fa-comment"></i>
+                    <span v-b-popover.hover="ingredient.note" v-if="ingredient.note.length > 15"
+                    class="d-print-none touchable p-0 pl-md-2 pr-md-2"> <i class="far fa-comment"></i>
+                    </span>
+                    <span v-else>
+                        {{ ingredient.note }}
                     </span>
 
                     <div class="d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{
