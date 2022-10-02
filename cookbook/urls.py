@@ -120,6 +120,8 @@ urlpatterns = [
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
 
 
+    path('cooking-machine/auth/homeconnect/', views.test2, name='cookingmachine_auth_homeconnect'),
+
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?

@@ -20,12 +20,13 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from oauth2_provider.models import AccessToken
 
+from cookbook.cooking_machines.homeconnect_cookit import HomeConnectCookit
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
                             SpaceCreateForm, SpaceJoinForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
-                             Space, ViewLog, UserSpace)
+                             Space, ViewLog, UserSpace, CookingMachine)
 from cookbook.tables import (CookLogTable, ViewLogTable)
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
@@ -434,17 +435,22 @@ def test(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
 
-    from cookbook.helper.ingredient_parser import IngredientParser
-    parser = IngredientParser(request, False)
+    machine = CookingMachine.objects.get_or_create(type=CookingMachine.HOMECONNECT_COOKIT, name='Test', space=request.space)[0]
+    test = HomeConnectCookit(machine)
 
-    data = {
-        'original': '1 Porreestange(n) , ca. 200 g'
-    }
-    data['parsed'] = parser.parse(data['original'])
-
-    return render(request, 'test.html', {'data': data})
+    return render(request, 'test.html', {'login_url': test.get_auth_link()})
 
 
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+
+    machine = CookingMachine.objects.get_or_create(type=CookingMachine.HOMECONNECT_COOKIT, name='Test', space=request.space)[0]
+    test = HomeConnectCookit(machine)
+    if 'code' in request.GET:
+        test.get_access_token(request.GET['code'])
+
+    if 'sync' in request.GET:
+        result = test.push_recipe(Recipe.objects.get(pk=request.GET['sync'], space=request.space))
+
+    return render(request, 'test.html', {'data': request})

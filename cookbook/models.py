@@ -366,7 +366,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
@@ -1008,6 +1008,27 @@ class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, Permissi
 
 def default_valid_until():
     return date.today() + timedelta(days=14)
+
+
+class CookingMachine(models.Model, PermissionModelMixin):
+    # Tandoor is not affiliated in any way or form with the holders of Trademark or other right associated with the mentioned names. All mentioned protected names are purely used to identify to the user a certain device or integration.
+    HOMECONNECT_COOKIT = 'HOMECONNECT_COOKIT'
+    MACHINE_TYPES = (
+        (HOMECONNECT_COOKIT, _('HomeConnect CookIt')),
+    )
+
+    type = models.CharField(choices=MACHINE_TYPES, max_length=128)
+    name = models.CharField(max_length=128)
+    serial = models.CharField(max_length=512, null=True, blank=True)
+    description = models.TextField(default='', blank=True)
+
+    access_token = models.CharField(max_length=4096, null=True, blank=True)
+    access_token_expiry = models.DateTimeField(null=True, blank=True)
+    refresh_token = models.CharField(max_length=4096, null=True, blank=True)
+    refresh_token_expiry = models.DateTimeField(null=True, blank=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
 
 class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, PermissionModelMixin):
