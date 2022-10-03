@@ -280,7 +280,7 @@ export function getUserPreference(pref = undefined) {
 export function calculateAmount(amount, factor) {
     if (getUserPreference("use_fractions")) {
         let return_string = ""
-        let fraction = frac(amount * factor, 10, true)
+        let fraction = frac(amount * factor, 16, true)
 
         if (fraction[0] === 0 && fraction[1] === 0 && fraction[2] === 1) {
             return roundDecimals(amount * factor)
