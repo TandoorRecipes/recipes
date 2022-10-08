@@ -1,7 +1,7 @@
 This application features a very versatile import and export feature in order 
 to offer the best experience possible and allow you to freely choose where your data goes.
 
-!!! warning "WIP"
+!!! WARNING "WIP"
     The Module is relatively new. There is a known issue with [Timeouts](https://github.com/vabene1111/recipes/issues/417) on large exports.
     A fix is being developed and will likely be released with the next version.
 
@@ -13,7 +13,7 @@ if your favorite one is missing.
 
 !!! info "Export"
     I strongly believe in everyone's right to use their data as they please and therefore want to give you 
-    the most possible flexibility with your recipes.
+    the best possible flexibility with your recipes.
     That said for most of the people getting this application running with their recipes is the biggest priority.
     Because of this importing as many formats as possible is prioritized over exporting.
     Exporter for the different formats will follow over time.
@@ -75,7 +75,7 @@ Follow these steps to import your recipes
 
 You will get a `Recipes.zip` file. Simply upload the file and choose the Nextcloud Cookbook type.
 
-!!! warning "Folder Structure"
+!!! WARNING "Folder Structure"
     Importing only works if the folder structure is correct. If you do not use the standard path or create the 
     zip file in any other way make sure the structure is as follows
     ```
@@ -94,9 +94,9 @@ Mealie provides structured data similar to nextcloud.
 
 To migrate your recipes 
 
-1. Go to your Mealie settings and create a new Backup
-2. Download the backup by clicking on it and pressing download (this wasn't working for me, so I had to manually pull it from the server)
-3. Upload the entire `.zip` file to the importer page and import everything
+1. Go to your Mealie settings and create a new Backup.
+2. Download the backup by clicking on it and pressing download (this wasn't working for me, so I had to manually pull it from the server).
+3. Upload the entire `.zip` file to the importer page and import everything.
 
 ## Chowdown
 Chowdown stores all your recipes in plain text markdown files in a directory called `_recipes`. 
@@ -158,7 +158,7 @@ As ChefTap cannot import these files anyway there won't be an exporter implement
 Meal master can be imported by uploading one or more meal master files. 
 The files should either be `.txt`, `.MMF` or `.MM` files. 
 
-The MealMaster spec allow for many variations. Currently, only the one column format for ingredients is supported.
+The MealMaster spec allows for many variations. Currently, only the one column format for ingredients is supported.
 Second line notes to ingredients are currently also not imported as a note but simply put into the instructions.
 If you have MealMaster recipes that cannot be imported feel free to raise an issue.
 
