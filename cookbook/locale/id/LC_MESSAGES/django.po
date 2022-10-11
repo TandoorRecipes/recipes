@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-10-02 17:33+0000\n"
+"PO-Revision-Date: 2022-10-12 08:33+0000\n"
 "Last-Translator: wella <wella.design@gmail.com>\n"
 "Language-Team: Indonesian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/id/>\n"
@@ -234,83 +234,101 @@ msgstr "Aktif"
 
 #: .\cookbook\forms.py:277
 msgid "Search String"
-msgstr ""
+msgstr "Cari String"
 
 #: .\cookbook\forms.py:304
 msgid "File ID"
-msgstr ""
+msgstr "ID Berkas"
 
 #: .\cookbook\forms.py:326
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Anda harus memberikan setidaknya resep atau judul."
 
 #: .\cookbook\forms.py:339
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
+"Anda dapat membuat daftar pengguna default untuk berbagi resep di pengaturan."
 
 #: .\cookbook\forms.py:340
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
 msgstr ""
+"Anda dapat menggunakan penurunan harga untuk memformat bidang ini. Lihat <a "
+"href=\"/docs/markdown/\">dokumen di sini</a>"
 
 #: .\cookbook\forms.py:366
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Jumlah maksimum pengguna untuk ruang ini tercapai."
 
 #: .\cookbook\forms.py:372
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Alamat email sudah terpakai!"
 
 #: .\cookbook\forms.py:380
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Alamat email tidak diperlukan tetapi jika ada, tautan undangan akan dikirim "
+"ke pengguna."
 
 #: .\cookbook\forms.py:395
 msgid "Name already taken."
-msgstr ""
+msgstr "Nama sudah terpakai."
 
 #: .\cookbook\forms.py:406
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Terima Persyaratan dan Privasi"
 
 #: .\cookbook\forms.py:438
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Menentukan seberapa kabur pencarian jika menggunakan pencocokan kesamaan "
+"trigram (misalnya nilai rendah berarti lebih banyak kesalahan ketik yang "
+"diabaikan)."
 
 #: .\cookbook\forms.py:448
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Pilih jenis metode pencarian. Klik <a href=\"/docs/search/\">di sini</a> "
+"untuk deskripsi lengkap pilihan."
 
 #: .\cookbook\forms.py:449
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Gunakan fuzzy pencocokan pada unit, kata kunci, dan bahan saat mengedit dan "
+"mengimpor resep."
 
 #: .\cookbook\forms.py:451
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Bidang untuk mencari mengabaikan aksen. Memilih opsi ini dapat meningkatkan "
+"atau menurunkan kualitas pencarian tergantung pada bahasa"
 
 #: .\cookbook\forms.py:453
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Bidang untuk mencari kecocokan sebagian. (mis. mencari 'Pie' akan "
+"mengembalikan 'pie' dan 'piece' dan 'soapie')"
 
 #: .\cookbook\forms.py:455
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Bidang untuk mencari awal kata yang cocok. (misalnya mencari 'sa' akan "
+"mengembalikan 'salad' dan 'sandwich')"
 
 #: .\cookbook\forms.py:457
 msgid ""
