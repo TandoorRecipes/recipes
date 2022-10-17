@@ -3220,6 +3220,11 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     left: auto
 }
 
+#id_main_nav {
+    height: 400px;
+    overflow: auto;
+}
+
 @media (min-width: 576px) {
     .dropdown-menu-sm-left {
         right: auto;
