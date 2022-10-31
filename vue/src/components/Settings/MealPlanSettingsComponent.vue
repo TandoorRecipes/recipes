@@ -3,7 +3,7 @@
 
         <b-form-group :label="$t('Share')" :description="$t('plan_share_desc')">
             <generic-multiselect
-                @change="updateSettings(false)"
+                @change="user_preferences.plan_share = $event.val;updateSettings(false)"
                 :model="Models.USER"
                 :initial_selection="user_preferences.plan_share"
                 label="display_name"
@@ -57,7 +57,7 @@ export default {
             let apiFactory = new ApiApiFactory()
             apiFactory.partialUpdateUserPreference(this.user_id.toString(), this.user_preferences).then(result => {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                if (reload !== undefined) {
+                if (reload) {
                     location.reload()
                 }
             }).catch(err => {
