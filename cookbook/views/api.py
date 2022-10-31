@@ -1382,7 +1382,7 @@ def sync_all(request):
 
 
 def share_link(request, pk):
-    if request.space.allow_sharing and has_group_permission(request.user, 'user'):
+    if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,
