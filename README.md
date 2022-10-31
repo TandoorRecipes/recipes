@@ -6,6 +6,11 @@
   <br>
 </h1>
 
+#### _Read in other languages_
+
+<kbd>[<img title="Brazilian Portuguese" alt="Brazilian Portuguese" src="https://flagcdn.com/w20/br.png" width="22">](./translations/README.pt-br.md)</kbd>
+<kbd>[<img title="English" alt="English" src="https://flagcdn.com/w20/us.png" width="22">](./README.md)</kbd>
+
 <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
 <p align="center">
