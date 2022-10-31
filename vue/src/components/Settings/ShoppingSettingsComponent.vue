@@ -2,7 +2,7 @@
     <div v-if="user_preferences !== undefined">
         <b-form-group :label="$t('shopping_share')" :description="$t('shopping_share_desc')">
             <generic-multiselect
-                @change="updateSettings(false)"
+                @change="user_preferences.shopping_share = $event.val; updateSettings(false)"
                 :model="Models.USER"
                 :initial_selection="user_preferences.shopping_share"
                 label="display_name"
