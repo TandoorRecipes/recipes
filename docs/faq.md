@@ -55,6 +55,8 @@ Tandoor has always rendered the recipe instructions markdown on the server. This
 To make editing easier a markdown editor was added to the frontend with integrated preview as a temporary solution. Since the markdown editor uses a different 
 specification than the server the preview is different to the final result. It is planned to improve this in the future. 
 
+The markdown renderer follows this markdown specification https://daringfireball.net/projects/markdown/
+
 ## Why is Tandoor not working on my Raspberry Pi?
 
 Please refer to [here](install/docker.md#setup-issues-on-raspberry-pi).
