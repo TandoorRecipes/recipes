@@ -207,7 +207,7 @@ Vue.use(VueClipboard)
 Vue.use(BootstrapVue)
 
 export default {
-    name: "SupermarketView",
+    name: "SpaceManageView",
     mixins: [ResolveUrlMixin, ToastMixin, ApiMixin],
     components: {GenericMultiselect, GenericModalForm},
     data() {
