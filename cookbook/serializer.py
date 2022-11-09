@@ -709,7 +709,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'name', 'description', 'image', 'keywords',  'working_time',
+            'id', 'name', 'description', 'image', 'keywords', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
@@ -721,8 +721,8 @@ class RecipeSerializer(RecipeBaseSerializer):
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
     shared = UserSerializer(many=True, required=False)
-    rating = CustomDecimalField(required=False, allow_null=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
+    rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
 
     class Meta:
         model = Recipe
@@ -1124,14 +1124,14 @@ class AccessTokenSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField('get_token')
 
     def create(self, validated_data):
-        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-","_")}'
+        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-", "_")}'
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
     def get_token(self, obj):
         if (timezone.now() - obj.created).seconds < 15:
             return obj.token
-        return f'tda_************_******_***********{obj.token[len(obj.token)-4:]}'
+        return f'tda_************_******_***********{obj.token[len(obj.token) - 4:]}'
 
     class Meta:
         model = AccessToken

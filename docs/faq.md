@@ -48,12 +48,21 @@ The other common issue is that the recommended nginx container is removed from t
 If removed, the nginx webserver needs to be replaced by something else that servers the /mediafiles/ directory or 
 `GUNICORN_MEDIA` needs to be enabled to allow media serving by the application container itself.
 
+
+## Why does the Text/Markdown preview look different than the final recipe ?
+
+Tandoor has always rendered the recipe instructions markdown on the server. This also allows tandoor to implement things like ingredient templating and scaling in text.
+To make editing easier a markdown editor was added to the frontend with integrated preview as a temporary solution. Since the markdown editor uses a different 
+specification than the server the preview is different to the final result. It is planned to improve this in the future. 
+
+The markdown renderer follows this markdown specification https://daringfireball.net/projects/markdown/
+
 ## Why is Tandoor not working on my Raspberry Pi?
 
 Please refer to [here](install/docker.md#setup-issues-on-raspberry-pi).
 
 ## How can I create users?
-To create a new user click on your name (top right corner) and select system. There click on invite links and create a new invite link.
+To create a new user click on your name (top right corner) and select 'space settings'. There under invites click create.
 
 It is not possible to create users through the admin because users must be assigned a default group and space.
 

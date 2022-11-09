@@ -170,7 +170,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                                                                       'field', flat=True)])
 
         if query is not None and query not in ["''", '']:
-            if fuzzy:
+            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']):
                 if any([self.model.__name__.lower() in x for x in
                         self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
@@ -1116,16 +1116,17 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if token := AccessToken.objects.filter(scope__contains='read').filter(scope__contains='write').first():
+        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
+            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
         return Response({
             'id': access_token.id,
             'token': access_token.token,
             'scope': access_token.scope,
             'expires': access_token.expires,
-            'user_id': user.pk,
+            'user_id': access_token.user.pk,
+            'test': user.pk
         })
 
 
@@ -1381,13 +1382,16 @@ def sync_all(request):
 
 
 def share_link(request, pk):
-    if request.space.allow_sharing and has_group_permission(request.user, 'user'):
-        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
-        link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-        return JsonResponse({'pk': pk, 'share': link.uuid,
-                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
-    else:
-        return JsonResponse({'error': 'sharing_disabled'}, status=403)
+    if request.user.is_authenticated:
+        if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
+            recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+            link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+            return JsonResponse({'pk': pk, 'share': link.uuid,
+                                 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+        else:
+            return JsonResponse({'error': 'sharing_disabled'}, status=403)
+
+    return JsonResponse({'error': 'not_authenticated'}, status=403)
 
 
 @group_required('user')

@@ -394,5 +394,13 @@
     "Copy Link": "Copier le lien",
     "Default_Unit": "Unité par défaut",
     "Hour": "Heure",
-    "Day": "Jour"
+    "Day": "Jour",
+    "food_inherit_info": "Champs sur les ingrédients qui doivent être hérité par défaut.",
+    "Invites": "Invitations",
+    "paste_json": "Collez une source json ou html pour charger la recette.",
+    "warning_space_delete": "Vous pouvez supprimer votre groupe ainsi que toutes les recettes, listes de courses, menus et autres choses que vous avez créés. Vous ne pourrez pas revenir sur cette suppression ! Êtes-vous sûr de vouloir le faire ?",
+    "Comments_setting": "Montrer les commentaires",
+    "import_duplicates": "Pour éviter les doublons, les recettes de même nom seront ignorées. Cocher la case pour tout importer.",
+    "Account": "Compte",
+    "Change_Password": "Modifier le mot de passe"
 }
