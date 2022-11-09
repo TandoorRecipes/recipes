@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-09-25 12:33+0000\n"
+"PO-Revision-Date: 2022-10-10 17:33+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -350,6 +350,9 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Campi in cui usare la ricerca 'vaga'. (ad esempio cercando per 'riceta' "
+"verrà mostrato 'ricetta'). Nota: questa opzione non è compatibile con la "
+"ricerca 'web' o 'raw'."
 
 #: .\cookbook\forms.py:459
 msgid ""
@@ -1750,7 +1753,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2151,26 +2154,27 @@ msgstr "Iscriviti"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Collega %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "Stai per collegare un nuovo account di terze parti da %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Accedi tramite %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"Stai per fare l'accesso usando un account di terze parti da %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2227,7 +2231,7 @@ msgstr "Puoi essere invitato in una istanza già esistente o crearne una nuova."
 
 #: .\cookbook\templates\space_overview.html:45
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 #: .\cookbook\templates\space_overview.html:49
 #, fuzzy
@@ -2475,20 +2479,22 @@ msgstr "{child.name} è stato spostato con successo al primario {parent.name}"
 
 #: .\cookbook\views\api.py:542
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} è stato rimosso dalla lista della spesa."
 
 #: .\cookbook\views\api.py:547 .\cookbook\views\api.py:879
 #: .\cookbook\views\api.py:892
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "{obj.name} è stato aggiunto alla lista della spesa."
 
 #: .\cookbook\views\api.py:674
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"ID di una ricetta di cui uno step ne fa parte. Usato per parametri di "
+"ripetizione multipla."
 
 #: .\cookbook\views\api.py:676
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Stringa di ricerca abbinata (vaga) al nome dell'oggetto."
 
 #: .\cookbook\views\api.py:720
 msgid ""

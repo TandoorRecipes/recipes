@@ -235,6 +235,10 @@ class IngredientParser:
         # leading spaces before commas result in extra tokens, clean them out
         ingredient = ingredient.replace(' ,', ',')
 
+        # if amount and unit are connected add space in between
+        if re.match('([0-9])+([A-z])+\s', ingredient):
+            ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
+
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
             # there only is one argument, that must be the food
