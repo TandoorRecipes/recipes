@@ -58,6 +58,13 @@ class RecipeKeeper(Integration):
             if s.text == "":
                 continue
             step.instruction += s.text + ' \n'
+            step.save()
+
+        for s in file.find("div", {"itemprop": "recipeNotes"}).find_all("p"):
+            if s.text == "":
+                continue
+            step.instruction += s.text + ' \n'
+            step.save()
 
         if file.find("span", {"itemprop": "recipeSource"}).text != '':
             step.instruction += "\n\n" + _("Imported from") + ": " + file.find("span", {"itemprop": "recipeSource"}).text
