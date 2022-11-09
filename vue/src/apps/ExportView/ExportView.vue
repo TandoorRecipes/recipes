@@ -8,6 +8,7 @@
                 <select class="form-control" v-model="recipe_app">
                     <option value="DEFAULT">Default</option>
                     <option value="SAFFRON">Saffron</option>
+                    <option value="NEXTCLOUD">Nextcloud Cookbook</option>
                     <option value="RECIPESAGE">Recipe Sage</option>
                     <option value="PDF">PDF (experimental)</option>
                 </select>

@@ -308,7 +308,7 @@
                                         size="sm"
                                         class="ml-1 mb-1 mb-md-0"
                                         @click="
-                                            paste_step = step.id
+                                            paste_step = step
                                             $bvModal.show('id_modal_paste_ingredients')
                                         "
                                     >
@@ -576,6 +576,23 @@
                                                                         <i class="fas fa-code"></i>
                                                                         {{ $t("Copy_template_reference") }}
                                                                     </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            @click="duplicateIngredient(step, ingredient, index + 1)">
+                                                                        <i class="fas fa-copy"></i>
+                                                                        {{ $t("Copy") }}
+                                                                    </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="index > 0"
+                                                                            @click="moveIngredient(step, ingredient, index-1)">
+                                                                        <i class="fas fa-arrow-up"></i>
+                                                                        {{ $t("Up") }}
+                                                                    </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="index !== step.ingredients.length - 1"
+                                                                            @click="moveIngredient(step, ingredient, index+1)">
+                                                                        <i class="fas fa-arrow-down"></i>
+                                                                        {{ $t("Down") }}
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -648,7 +665,8 @@
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i class="fa fa-trash fa-lg"></i></a>
+                       class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i
+                        class="fa fa-trash fa-lg"></i></a>
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-none d-md-block btn btn-block btn-danger shadow-none btn-sm">{{ $t("Delete") }}</a>
                 </div>
@@ -705,7 +723,7 @@
             <b-modal
                 id="id_modal_paste_ingredients"
                 v-bind:title="$t('ingredient_list')"
-                @ok="appendIngredients"
+                @ok="appendIngredients(paste_step)"
                 @cancel="paste_ingredients = paste_step = undefined"
                 @close="paste_ingredients = paste_step = undefined"
             >
@@ -1039,6 +1057,12 @@ export default {
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
         },
+        moveIngredient: function (step, ingredient, new_index) {
+            step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
+            step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
+            this.sortIngredients(step)
+        },
+
         addFoodType: function (tag, index) {
             let [tmp, step, id] = index.split("_")
 
@@ -1188,30 +1212,38 @@ export default {
         energy: function () {
             return energyHeading()
         },
-        appendIngredients: function () {
+        appendIngredients: function (step) {
             let ing_list = this.paste_ingredients.split(/\r?\n/)
-            let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
-            let order = Math.max(...this.recipe.steps[step].ingredients.map((x) => x.order), -1) + 1
-            this.recipe.steps[step].ingredients_visible = true
+            step.ingredients_visible = true
+            let parsed_ing_list = []
+            let promises = []
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
-                    this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
+                    promises.push(this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
                         let unit = null
                         if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
-                        this.recipe.steps[step].ingredients.splice(order, 0, {
+                        parsed_ing_list.push({
                             amount: result.data.amount,
                             unit: unit,
                             food: {name: result.data.food},
                             note: result.data.note,
                             original_text: ing,
                         })
-                    })
-                    order++
+                    }))
                 }
             })
+            Promise.allSettled(promises).then(() => {
+                ing_list.forEach(ing => {
+                    step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                })
+            })
         },
+        duplicateIngredient: function (step, ingredient, new_index) {
+            delete ingredient.id
+            step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
+        }
     },
 }
 </script>

@@ -438,7 +438,7 @@ def test(request):
     parser = IngredientParser(request, False)
 
     data = {
-        'original': '1 Porreestange(n) , ca. 200 g'
+        'original': '90g golden syrup'
     }
     data['parsed'] = parser.parse(data['original'])
 
