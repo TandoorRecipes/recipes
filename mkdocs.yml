@@ -23,6 +23,7 @@ markdown_extensions:
 
 plugins:
   - include-markdown
+  - search
 
 nav:
   - Home: 'index.md'
