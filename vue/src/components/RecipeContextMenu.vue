@@ -7,54 +7,54 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" :href="resolveDjangoUrl('edit_recipe', recipe.id)"><i
+                <a class="dropdown-item" :href="resolveDjangoUrl('edit_recipe', recipe.id)" v-if="!disabled_options.edit"><i
                     class="fas fa-pencil-alt fa-fw"></i> {{ $t("Edit") }}</a>
 
                 <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)"
-                   v-if="!recipe.internal"><i class="fas fa-exchange-alt fa-fw"></i> {{ $t("convert_internal") }}</a>
+                   v-if="!recipe.internal && !disabled_options.convert"><i class="fas fa-exchange-alt fa-fw"></i> {{ $t("convert_internal") }}</a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)"><i
+                    <button class="dropdown-item" @click="$bvModal.show(`id_modal_add_book_${modal_id}`)" v-if="!disabled_options.books"><i
                         class="fas fa-bookmark fa-fw"></i> {{ $t("Manage_Books") }}
                     </button>
                 </a>
 
-                <a class="dropdown-item" v-if="recipe.internal" @click="addToShopping" href="#"> <i
+                <a class="dropdown-item" v-if="recipe.internal && !disabled_options.shopping" @click="addToShopping" href="#" > <i
                     class="fas fa-shopping-cart fa-fw"></i> {{ $t("Add_to_Shopping") }} </a>
 
-                <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);"><i
+                <a class="dropdown-item" @click="createMealPlan" href="javascript:void(0);" v-if="!disabled_options.plan"><i
                     class="fas fa-calendar fa-fw"></i> {{ $t("Add_to_Plan") }} </a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" @click="$bvModal.show(`id_modal_cook_log_${modal_id}`)"><i
+                    <button class="dropdown-item" @click="$bvModal.show(`id_modal_cook_log_${modal_id}`)" v-if="!disabled_options.log"><i
                         class="fas fa-clipboard-list fa-fw"></i> {{ $t("Log_Cooking") }}
                     </button>
                 </a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" onclick="window.print()">
+                    <button class="dropdown-item" onclick="window.print()" v-if="!disabled_options.print">
                         <i class="fas fa-print fa-fw"></i>
                         {{ $t("Print") }}
                     </button>
                 </a>
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" @click="copyToNew"><i class="fas fa-copy fa-fw"></i>
+                    <button class="dropdown-item" @click="copyToNew" v-if="!disabled_options.copy"><i class="fas fa-copy fa-fw"></i>
                         {{ $t("copy_to_new") }}
                     </button>
                 </a>
 
                 <a class="dropdown-item" :href="resolveDjangoUrl('view_export') + '?r=' + recipe.id" target="_blank"
-                   rel="noopener noreferrer"><i class="fas fa-file-export fa-fw"></i> {{ $t("Export") }}</a>
+                   rel="noopener noreferrer" v-if="!disabled_options.export"><i class="fas fa-file-export fa-fw"></i> {{ $t("Export") }}</a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" @click="pinRecipe()">
+                    <button class="dropdown-item" @click="pinRecipe()" v-if="!disabled_options.pin">
                         <i class="fas fa-thumbtack fa-fw"></i>
                         {{ $t("Pin") }}
                     </button>
                 </a>
 
                 <a href="javascript:void(0);">
-                    <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal"><i
+                    <button class="dropdown-item" @click="createShareLink()" v-if="recipe.internal && !disabled_options.share" ><i
                         class="fas fa-share-alt fa-fw"></i> {{ $t("Share") }}
                     </button>
                 </a>
@@ -146,6 +146,10 @@ export default {
         servings: {
             type: Number,
             default: -1,
+        },
+        disabled_options: {
+            type: Object,
+            default: () => ({print:true}),
         },
     },
     mounted() {

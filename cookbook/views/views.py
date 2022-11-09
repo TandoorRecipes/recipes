@@ -215,7 +215,6 @@ def shopping_settings(request):
 
     if request.method == "POST":
         if 'search_form' in request.POST:
-            active_tab = 'search'
             search_form = SearchPreferenceForm(request.POST, prefix='search')
             if search_form.is_valid():
                 if not sp:
@@ -226,7 +225,28 @@ def shopping_settings(request):
                         + len(search_form.cleaned_data['trigram'])
                         + len(search_form.cleaned_data['fulltext'])
                 )
-                if fields_searched == 0:
+                if search_form.cleaned_data['preset'] == 'fuzzy':
+                    sp.search = SearchPreference.SIMPLE
+                    sp.lookup = True
+                    sp.unaccent.set([SearchFields.objects.get(name='Name')])
+                    sp.icontains.set([SearchFields.objects.get(name='Name')])
+                    sp.istartswith.clear()
+                    sp.trigram.set([SearchFields.objects.get(name='Name')])
+                    sp.fulltext.clear()
+                    sp.trigram_threshold = 0.2
+                    sp.save()
+                elif search_form.cleaned_data['preset'] == 'precise':
+                    sp.search = SearchPreference.WEB
+                    sp.lookup = True
+                    sp.unaccent.set(SearchFields.objects.all())
+                    # full text on food is very slow, add search_vector field and index it (including Admin functions and postsave signal to rebuild index)
+                    sp.icontains.set([SearchFields.objects.get(name='Name')])
+                    sp.istartswith.set([SearchFields.objects.get(name='Name')])
+                    sp.trigram.clear()
+                    sp.fulltext.set(SearchFields.objects.filter(name__in=['Ingredients']))
+                    sp.trigram_threshold = 0.2
+                    sp.save()
+                elif fields_searched == 0:
                     search_form.add_error(None, _('You must select at least one field to search!'))
                     search_error = True
                 elif search_form.cleaned_data['search'] in ['websearch', 'raw'] and len(
@@ -247,29 +267,9 @@ def shopping_settings(request):
                     sp.trigram.set(search_form.cleaned_data['trigram'])
                     sp.fulltext.set(search_form.cleaned_data['fulltext'])
                     sp.trigram_threshold = search_form.cleaned_data['trigram_threshold']
-
-                    if search_form.cleaned_data['preset'] == 'fuzzy':
-                        sp.search = SearchPreference.SIMPLE
-                        sp.lookup = True
-                        sp.unaccent.set([SearchFields.objects.get(name='Name')])
-                        sp.icontains.set([SearchFields.objects.get(name='Name')])
-                        sp.istartswith.clear()
-                        sp.trigram.set([SearchFields.objects.get(name='Name')])
-                        sp.fulltext.clear()
-                        sp.trigram_threshold = 0.2
-
-                    if search_form.cleaned_data['preset'] == 'precise':
-                        sp.search = SearchPreference.WEB
-                        sp.lookup = True
-                        sp.unaccent.set(SearchFields.objects.all())
-                        # full text on food is very slow, add search_vector field and index it (including Admin functions and postsave signal to rebuild index)
-                        sp.icontains.set([SearchFields.objects.get(name='Name')])
-                        sp.istartswith.set([SearchFields.objects.get(name='Name')])
-                        sp.trigram.clear()
-                        sp.fulltext.set(SearchFields.objects.filter(name__in=['Ingredients']))
-                        sp.trigram_threshold = 0.2
-
                     sp.save()
+            else:
+                search_error = True
 
     fields_searched = len(sp.icontains.all()) + len(sp.istartswith.all()) + len(sp.trigram.all()) + len(
         sp.fulltext.all())
@@ -281,10 +281,10 @@ def shopping_settings(request):
     # these fields require postgresql - just disable them if postgresql isn't available
     if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                        'django.db.backends.postgresql']:
-        search_form.fields['search'].disabled = True
-        search_form.fields['lookup'].disabled = True
-        search_form.fields['trigram'].disabled = True
-        search_form.fields['fulltext'].disabled = True
+        sp.search = SearchPreference.SIMPLE
+        sp.trigram.clear()
+        sp.fulltext.clear()
+        sp.save()
 
     return render(request, 'settings.html', {
         'search_form': search_form,

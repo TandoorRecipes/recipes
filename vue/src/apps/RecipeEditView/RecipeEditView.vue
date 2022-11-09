@@ -576,6 +576,21 @@
                                                                         <i class="fas fa-code"></i>
                                                                         {{ $t("Copy_template_reference") }}
                                                                     </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            @click="duplicateIngredient(step, ingredient, index + 1)">
+                                                                        <i class="fas fa-copy"></i>
+                                                                        {{ $t("Copy") }}
+                                                                    </button>
+                                                                    <button type="button" class="dropdown-item" v-if="index > 0"
+                                                                            @click="moveIngredient(step, ingredient, index-1)">
+                                                                        <i class="fas fa-arrow-up"></i>
+                                                                        {{ $t("Up") }}
+                                                                    </button>
+                                                                    <button type="button" class="dropdown-item" v-if="index !== step.ingredients.length - 1"
+                                                                            @click="moveIngredient(step, ingredient, index+1)">
+                                                                        <i class="fas fa-arrow-down"></i>
+                                                                        {{ $t("Down") }}
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -648,7 +663,8 @@
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
-                       class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i class="fa fa-trash fa-lg"></i></a>
+                       class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i
+                        class="fa fa-trash fa-lg"></i></a>
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-none d-md-block btn btn-block btn-danger shadow-none btn-sm">{{ $t("Delete") }}</a>
                 </div>
@@ -1039,6 +1055,12 @@ export default {
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
         },
+        moveIngredient: function (step, ingredient, new_index) {
+            step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
+            step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
+            this.sortIngredients(step)
+        },
+
         addFoodType: function (tag, index) {
             let [tmp, step, id] = index.split("_")
 
@@ -1212,6 +1234,10 @@ export default {
                 }
             })
         },
+        duplicateIngredient: function (step, ingredient, new_index) {
+            delete ingredient.id
+            step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
+        }
     },
 }
 </script>

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-08-04 11:32+0000\n"
+"PO-Revision-Date: 2022-10-10 17:33+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -122,10 +122,8 @@ msgstr ""
 "devono essere condivise per impostazione predefinita."
 
 #: .\cookbook\forms.py:78
-#, fuzzy
-#| msgid "Try the new shopping list"
 msgid "Users with whom to share shopping lists."
-msgstr "Prova la nuova lista della spesa"
+msgstr "Utenti con i quali condividere le liste della spesa."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
@@ -352,6 +350,9 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Campi in cui usare la ricerca 'vaga'. (ad esempio cercando per 'riceta' "
+"verrà mostrato 'ricetta'). Nota: questa opzione non è compatibile con la "
+"ricerca 'web' o 'raw'."
 
 #: .\cookbook\forms.py:459
 msgid ""
@@ -502,10 +503,8 @@ msgid "Fields on food that should be inherited by default."
 msgstr "Alimento che dovrebbe essere rimpiazzato."
 
 #: .\cookbook\forms.py:545
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Mostra le ricette visualizzate di recente nella pagina di ricerca."
+msgstr "Mostra il conteggio delle ricette nei filtri di ricerca"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -552,10 +551,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:152
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
-msgstr "Devi fornire almeno una ricetta o un titolo."
+msgstr "Devi fornire le dimensione delle porzioni"
 
 #: .\cookbook\helper\template_helper.py:64
 #: .\cookbook\helper\template_helper.py:66
@@ -744,10 +741,8 @@ msgid "Recipe"
 msgstr "Ricetta"
 
 #: .\cookbook\models.py:1228
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Alimenti"
+msgstr "Alimento"
 
 #: .\cookbook\models.py:1229 .\cookbook\templates\base.html:138
 msgid "Keyword"
@@ -910,7 +905,7 @@ msgstr "Rimuovi"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr "Avviso:"
+msgstr "Attenzione:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -1169,7 +1164,7 @@ msgstr "Supermercato"
 
 #: .\cookbook\templates\base.html:188
 msgid "Supermarket Category"
-msgstr "Categoria Supermercato"
+msgstr "Categoria supermercato"
 
 #: .\cookbook\templates\base.html:200 .\cookbook\views\lists.py:171
 msgid "Automations"
@@ -1191,10 +1186,8 @@ msgstr "Cronologia"
 #: .\cookbook\templates\base.html:252
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingredienti"
+msgstr "Editor Ingredienti"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
@@ -1377,10 +1370,11 @@ msgid ""
 msgstr ""
 "\n"
 "        Questo modulo può essere utilizzato se, accidentalmente,  sono stati "
-"creati due (o più) unità di misura o ingredienti che dovrebbero essere lo "
-"stesso. \n"
-"Unisce due unità di misura o ingredienti e aggiorna tutte le ricette che li "
-"utilizzano."
+"creati due (o più) unità di misura o ingredienti che\n"
+"        dovrebbero essere lo stesso.\n"
+"        Unisce due unità di misura o ingredienti e aggiorna tutte le ricette "
+"che li utilizzano.\n"
+"    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
@@ -1398,7 +1392,7 @@ msgstr "Sei sicuro di volere unire questi due ingredienti?"
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr "Sei sicuro di volere eliminare %(title)s: <b>%(object)s</b>"
+msgstr "Sei sicuro di volere eliminare %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
@@ -1490,11 +1484,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"I campi <b>Password e Token</b> sono salvati <b>in chiaro</b> nel database.\n"
-"È necessario perché servono per fare richieste API, ma questo aumenta il "
-"rischio che\n"
-"qualcuno possa impossessarsene.<br/>\n"
-"Per liminare il danno puoi usare account con accesso limitato o i token."
+"        I campi <b>Password e Token</b> sono salvati <b>in chiaro</b> nel "
+"database.\n"
+"        È necessario perché sono usati per fare richieste API, ma ciò "
+"aumenta il rischio che\n"
+"        qualcuno possa impossessarsene.<br/>\n"
+"        Per liminare i possibili danni puoi usare account con accesso "
+"limitato o i token.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
@@ -1541,16 +1538,17 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"      Markdown è un linguaggio di markup molto leggero che può essere "
+"        Markdown è un linguaggio di markup molto leggero che può essere "
 "utilizzato per formattare facilmente del testo.\n"
-"      Questo sito utilizza la libreria <a href=\"https://python-markdown."
+"        Questo sito utilizza la libreria <a href=\"https://python-markdown."
 "github.io/\" target=\"_blank\">Python Markdown</a> per\n"
-"      convertire il tuo testo in HTML formattato. È possibile trovare la "
+"        convertire il tuo testo in HTML formattato. È possibile trovare la "
 "documentazione completa del markdown\n"
-"      <a href=\"https://daringfireball.net/projects/markdown/syntax\" target="
-"\"_blank\">qui</a>.\n"
-"      Di seguito è possibile trovare una documentazione incompleta ma molto "
-"probabilmente sufficiente."
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">qui</a>.\n"
+"        Di seguito è possibile trovare una documentazione incompleta ma "
+"probabilmente sufficiente.\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
@@ -1697,7 +1695,7 @@ msgstr "Condiviso con"
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipes_table.html:64
 msgid "Last cooked"
-msgstr "Cucinato ultimamente"
+msgstr "Cucinato di recente"
 
 #: .\cookbook\templates\meal_plan_entry.html:50
 msgid "Never cooked before."
@@ -1755,7 +1753,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Indietro"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2136,7 +2134,8 @@ msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
 msgstr ""
-"Puoi accedere al tuo account usando uno dei seguenti account di terze parti:"
+"Puoi accedere al tuo account usando uno di questi \n"
+"            account di terze parti:"
 
 #: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
@@ -2155,26 +2154,27 @@ msgstr "Iscriviti"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Collega %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "Stai per collegare un nuovo account di terze parti da %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Accedi tramite %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"Stai per fare l'accesso usando un account di terze parti da %(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2213,10 +2213,8 @@ msgid "Manage Subscription"
 msgstr "Gestisci iscrizione"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
-msgstr "Istanza:"
+msgstr "Istanza"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2233,7 +2231,7 @@ msgstr "Puoi essere invitato in una istanza già esistente o crearne una nuova."
 
 #: .\cookbook\templates\space_overview.html:45
 msgid "Owner"
-msgstr ""
+msgstr "Proprietario"
 
 #: .\cookbook\templates\space_overview.html:49
 #, fuzzy
@@ -2315,10 +2313,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Django Recipes è una applicazione gratuita e open source. È disponibile su "
-"<a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
-"Le ultime novità sono disponibili <a href=\"https://github.com/vabene1111/"
-"recipes/releases\">qui</a>."
+"        Django Recipes è una applicazione gratuita e open source. È "
+"disponibile su\n"
+"        <a href=\"https://github.com/vabene1111/recipes\">GitHub</a>.\n"
+"        Puoi consultare le ultime novità <a href=\"https://github.com/"
+"vabene1111/recipes/releases\">qui</a>.\n"
+"    "
 
 #: .\cookbook\templates\system.html:36
 msgid "Media Serving"
@@ -2327,7 +2327,7 @@ msgstr "File multimediali"
 #: .\cookbook\templates\system.html:37 .\cookbook\templates\system.html:52
 #: .\cookbook\templates\system.html:68
 msgid "Warning"
-msgstr "Avviso"
+msgstr "Attenzione"
 
 #: .\cookbook\templates\system.html:37 .\cookbook\templates\system.html:52
 #: .\cookbook\templates\system.html:68 .\cookbook\templates\system.html:83
@@ -2343,11 +2343,12 @@ msgid ""
 "            your installation.\n"
 "        "
 msgstr ""
-"Erogare i file multimediali usando gunicorn/python <b>non è raccomandato</"
-"b>!\n"
-"Segui i passi descritti\n"
-"<a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8.1\">qui</a> "
-"per aggiornare la tua installazione."
+"<b>Non è raccomandato</b> erogare i file multimediali con gunicorn/pyton!\n"
+"            Segui i passi descritti\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8."
+"1\">qui</a> per aggiornare\n"
+"            la tua installazione.\n"
+"        "
 
 #: .\cookbook\templates\system.html:45 .\cookbook\templates\system.html:61
 #: .\cookbook\templates\system.html:76 .\cookbook\templates\system.html:90
@@ -2371,10 +2372,13 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Non hai inserito una <code>SECRET_KEY</code> nel file <code>.env</code>. "
-"Django ha dovuto usare la chiave standard\n"
-"dell'installazione che è pubblica e insicura! Sei pregato di aggiungere una\n"
-"<code>SECRET_KEY</code> nel file di configurazione <code>.env</code>."
+"            Non hai inserito una <code>SECRET_KEY</code> nel file <code>."
+"env</code>. Django ha dovuto usare la\n"
+"            chiave standard\n"
+"            dell'installazione che è pubblica e insicura! Sei pregato di "
+"aggiungere una\n"
+"\t\t\t<code>SECRET_KEY</code> nel file di configurazione <code>.env</code>.\n"
+"        "
 
 #: .\cookbook\templates\system.html:66
 msgid "Debug Mode"
@@ -2391,10 +2395,12 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Questa applicazione è in esecuzione in modalità di debug. Probabilmente non "
-"è necessario, spegni la modalità di debug \n"
-"configurando\n"
-"<code>DEBUG=0</code> nel file di configurazione<code>.env</code>."
+"            Questa applicazione è in esecuzione in modalità di debug. "
+"Probabilmente non è necessario, spegni la modalità di debug\n"
+"            configurando\n"
+"            <code>DEBUG=0</code> nel file di configurazione<code>.env</code>."
+"\n"
+"        "
 
 #: .\cookbook\templates\system.html:81
 msgid "Database"
@@ -2413,9 +2419,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Questa applicazione non sta girando su un database Postgres. Non è "
-"raccomandato perché alcune\n"
-"funzionalità sono disponibili solo con un database Posgres."
+"            Questa applicazione non sta girando su un database Postgres. Non "
+"è raccomandato perché alcune\n"
+"            funzionalità sono disponibili solo con un database Posgres.\n"
+"        "
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2472,20 +2479,22 @@ msgstr "{child.name} è stato spostato con successo al primario {parent.name}"
 
 #: .\cookbook\views\api.py:542
 msgid "{obj.name} was removed from the shopping list."
-msgstr ""
+msgstr "{obj.name} è stato rimosso dalla lista della spesa."
 
 #: .\cookbook\views\api.py:547 .\cookbook\views\api.py:879
 #: .\cookbook\views\api.py:892
 msgid "{obj.name} was added to the shopping list."
-msgstr ""
+msgstr "{obj.name} è stato aggiunto alla lista della spesa."
 
 #: .\cookbook\views\api.py:674
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"ID di una ricetta di cui uno step ne fa parte. Usato per parametri di "
+"ripetizione multipla."
 
 #: .\cookbook\views\api.py:676
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Stringa di ricerca abbinata (vaga) al nome dell'oggetto."
 
 #: .\cookbook\views\api.py:720
 msgid ""

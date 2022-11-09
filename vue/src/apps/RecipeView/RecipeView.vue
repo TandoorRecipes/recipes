@@ -75,7 +75,8 @@
                 </div>
 
                 <div class="col col-md-2 col-2 mt-2 mt-md-0 text-right">
-                    <recipe-context-menu v-bind:recipe="recipe" :servings="servings"></recipe-context-menu>
+                    <recipe-context-menu v-bind:recipe="recipe" :servings="servings"
+                                         :disabled_options="{print:false}"></recipe-context-menu>
                 </div>
             </div>
             <hr/>
@@ -101,13 +102,6 @@
                             <img class="img img-fluid rounded" :src="recipe.image" :alt="$t('Recipe_Image')"
                                  v-if="recipe.image !== null" @load="onImgLoad"
                                  :style="{ 'max-height': ingredient_height }"/>
-                        </div>
-                    </div>
-
-                    <div class="row" style="margin-top: 2vh; margin-bottom: 2vh">
-                        <div class="col-12">
-                            <Nutrition-component :recipe="recipe" id="nutrition_container"
-                                                 :ingredient_factor="ingredient_factor"></Nutrition-component>
                         </div>
                     </div>
                 </div>
@@ -137,9 +131,18 @@
 
             <div v-if="recipe.source_url !== null">
                 <h6 class="d-print-none"><i class="fas fa-file-import"></i> {{ $t("Imported_From") }}</h6>
-                <span class="text-muted mt-1"><a style="overflow-wrap: break-word;" :href="recipe.source_url">{{ recipe.source_url }}</a></span>
+                <span class="text-muted mt-1"><a style="overflow-wrap: break-word;"
+                                                 :href="recipe.source_url">{{ recipe.source_url }}</a></span>
+            </div>
+
+            <div class="row" style="margin-top: 2vh; ">
+                <div class="col-lg-6 offset-lg-3 col-12">
+                    <Nutrition-component :recipe="recipe" id="nutrition_container"
+                                         :ingredient_factor="ingredient_factor"></Nutrition-component>
+                </div>
             </div>
         </div>
+
 
         <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
 
@@ -206,10 +209,12 @@ export default {
         ingredient_count() {
             return this.recipe?.steps.map((x) => x.ingredients).flat().length
         },
-        working_time: function() {
-            return calculateHourMinuteSplit(this.recipe.working_time)},
-        waiting_time: function() {
-            return calculateHourMinuteSplit(this.recipe.waiting_time)},
+        working_time: function () {
+            return calculateHourMinuteSplit(this.recipe.working_time)
+        },
+        waiting_time: function () {
+            return calculateHourMinuteSplit(this.recipe.waiting_time)
+        },
     },
     data() {
         return {

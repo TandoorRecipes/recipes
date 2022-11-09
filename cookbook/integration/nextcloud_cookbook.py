@@ -1,13 +1,14 @@
 import json
 import re
-from io import BytesIO
+from io import BytesIO, StringIO
 from zipfile import ZipFile
+from PIL import Image
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step
+from cookbook.models import Ingredient, Keyword, Recipe, Step, NutritionInformation
 
 
 class NextcloudCookbook(Integration):
@@ -70,12 +71,21 @@ class NextcloudCookbook(Integration):
             recipe.steps.add(step)
 
         if 'nutrition' in recipe_json:
+            nutrition = {}
             try:
-                recipe.nutrition.calories = recipe_json['nutrition']['calories'].replace(' kcal', '').replace(' ', '')
-                recipe.nutrition.proteins = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-                recipe.nutrition.fats = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-                recipe.nutrition.carbohydrates = recipe_json['nutrition']['calories'].replace(' g', '').replace(',', '.').replace(' ', '')
-            except Exception:
+                if 'calories' in recipe_json['nutrition']:
+                    nutrition['calories'] = int(re.search(r'\d+', recipe_json['nutrition']['calories']).group())
+                if 'proteinContent' in recipe_json['nutrition']:
+                    nutrition['proteins'] = int(re.search(r'\d+', recipe_json['nutrition']['proteinContent']).group())
+                if 'fatContent' in recipe_json['nutrition']:
+                    nutrition['fats'] = int(re.search(r'\d+', recipe_json['nutrition']['fatContent']).group())
+                if 'carbohydrateContent' in recipe_json['nutrition']:
+                    nutrition['carbohydrates'] = int(re.search(r'\d+', recipe_json['nutrition']['carbohydrateContent']).group())
+
+                if nutrition != {}:
+                    recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
+                    recipe.save()
+            except Exception as e:
                 pass
 
         for f in self.files:
@@ -87,5 +97,92 @@ class NextcloudCookbook(Integration):
 
         return recipe
 
+    def formatTime(self, min):
+        h = min//60
+        m = min % 60
+        return f'PT{h}H{m}M0S'
+
+
     def get_file_from_recipe(self, recipe):
-        raise NotImplementedError('Method not implemented in storage integration')
+
+        export = {}
+        export['name'] = recipe.name
+        export['description'] = recipe.description
+        export['url'] = recipe.source_url
+        export['prepTime'] = self.formatTime(recipe.working_time)
+        export['cookTime'] = self.formatTime(recipe.waiting_time)
+        export['totalTime'] = self.formatTime(recipe.working_time+recipe.waiting_time)
+        export['recipeYield'] = recipe.servings
+        export['image'] = f'/Recipes/{recipe.name}/full.jpg'
+        export['imageUrl'] = f'/Recipes/{recipe.name}/full.jpg'
+
+        recipeKeyword = []
+        for k in recipe.keywords.all():
+            recipeKeyword.append(k.name)
+
+        export['keywords'] = recipeKeyword
+
+        recipeInstructions = []
+        recipeIngredient = []
+        for s in recipe.steps.all():
+            recipeInstructions.append(s.instruction)
+
+            for i in s.ingredients.all():
+                recipeIngredient.append(f'{float(i.amount)} {i.unit} {i.food}')
+
+        export['recipeIngredient'] = recipeIngredient
+        export['recipeInstructions'] = recipeInstructions
+
+
+        return "recipe.json", json.dumps(export)
+
+    def get_files_from_recipes(self, recipes, el, cookie):
+        export_zip_stream = BytesIO()
+        export_zip_obj = ZipFile(export_zip_stream, 'w')
+
+        for recipe in recipes:
+            if recipe.internal and recipe.space == self.request.space:
+
+                recipe_stream = StringIO()
+                filename, data = self.get_file_from_recipe(recipe)
+                recipe_stream.write(data)
+                export_zip_obj.writestr(f'{recipe.name}/{filename}', recipe_stream.getvalue())
+                recipe_stream.close()
+
+                try:
+                    imageByte = recipe.image.file.read()
+                    export_zip_obj.writestr(f'{recipe.name}/full.jpg', self.getJPEG(imageByte))
+                    export_zip_obj.writestr(f'{recipe.name}/thumb.jpg', self.getThumb(171, imageByte))
+                    export_zip_obj.writestr(f'{recipe.name}/thumb16.jpg', self.getThumb(16, imageByte))
+                except ValueError:
+                    pass
+
+            el.exported_recipes += 1
+            el.msg += self.get_recipe_processed_msg(recipe)
+            el.save()
+
+        export_zip_obj.close()
+
+        return [[ self.get_export_file_name(), export_zip_stream.getvalue() ]]
+
+    def getJPEG(self, imageByte):
+        image = Image.open(BytesIO(imageByte))
+        image = image.convert('RGB')
+
+        bytes = BytesIO()
+        image.save(bytes, "JPEG")
+        return bytes.getvalue()
+    
+    def getThumb(self, size, imageByte):
+        image = Image.open(BytesIO(imageByte))
+
+        w, h = image.size
+        m = min(w, h) 
+
+        image = image.crop(((w-m)//2, (h-m)//2, (w+m)//2, (h+m)//2))
+        image = image.resize([size, size], Image.Resampling.LANCZOS)
+        image = image.convert('RGB')
+
+        bytes = BytesIO()
+        image.save(bytes, "JPEG")
+        return bytes.getvalue()

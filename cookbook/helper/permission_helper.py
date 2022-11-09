@@ -31,11 +31,12 @@ def get_allowed_groups(groups_required):
     return groups_allowed
 
 
-def has_group_permission(user, groups):
+def has_group_permission(user, groups, no_cache=False):
     """
     Tests if a given user is member of a certain group (or any higher group)
     Superusers always bypass permission checks.
     Unauthenticated users can't be member of any group thus always return false.
+    :param no_cache: (optional) do not return cached results, always check agains DB
     :param user: django auth user object
     :param groups: list or tuple of groups the user should be checked for
     :return: True if user is in allowed groups, false otherwise
@@ -45,17 +46,17 @@ def has_group_permission(user, groups):
     groups_allowed = get_allowed_groups(groups)
 
     CACHE_KEY = hash((inspect.stack()[0][3], (user.pk, user.username, user.email), groups_allowed))
-    cached_result = cache.get(CACHE_KEY, default=None)
-    if cached_result is not None:
-        return cached_result
+    if not no_cache:
+        cached_result = cache.get(CACHE_KEY, default=None)
+        if cached_result is not None:
+            return cached_result
 
     result = False
-    print('running check', user, groups_allowed)
     if user.is_authenticated:
         if user_space := user.userspace_set.filter(active=True):
             if len(user_space) != 1:
                 result = False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
-            if bool(user_space.first().groups.filter(name__in=groups_allowed)):
+            elif bool(user_space.first().groups.filter(name__in=groups_allowed)):
                 result = True
 
     cache.set(CACHE_KEY, result, timeout=10)
