@@ -308,7 +308,7 @@
                                         size="sm"
                                         class="ml-1 mb-1 mb-md-0"
                                         @click="
-                                            paste_step = step.id
+                                            paste_step = step
                                             $bvModal.show('id_modal_paste_ingredients')
                                         "
                                     >
@@ -581,12 +581,14 @@
                                                                         <i class="fas fa-copy"></i>
                                                                         {{ $t("Copy") }}
                                                                     </button>
-                                                                    <button type="button" class="dropdown-item" v-if="index > 0"
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="index > 0"
                                                                             @click="moveIngredient(step, ingredient, index-1)">
                                                                         <i class="fas fa-arrow-up"></i>
                                                                         {{ $t("Up") }}
                                                                     </button>
-                                                                    <button type="button" class="dropdown-item" v-if="index !== step.ingredients.length - 1"
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="index !== step.ingredients.length - 1"
                                                                             @click="moveIngredient(step, ingredient, index+1)">
                                                                         <i class="fas fa-arrow-down"></i>
                                                                         {{ $t("Down") }}
@@ -721,7 +723,7 @@
             <b-modal
                 id="id_modal_paste_ingredients"
                 v-bind:title="$t('ingredient_list')"
-                @ok="appendIngredients"
+                @ok="appendIngredients(paste_step)"
                 @cancel="paste_ingredients = paste_step = undefined"
                 @close="paste_ingredients = paste_step = undefined"
             >
@@ -1210,28 +1212,32 @@ export default {
         energy: function () {
             return energyHeading()
         },
-        appendIngredients: function () {
+        appendIngredients: function (step) {
             let ing_list = this.paste_ingredients.split(/\r?\n/)
-            let step = this.recipe.steps.findIndex((x) => x.id == this.paste_step)
-            let order = Math.max(...this.recipe.steps[step].ingredients.map((x) => x.order), -1) + 1
-            this.recipe.steps[step].ingredients_visible = true
+            step.ingredients_visible = true
+            let parsed_ing_list = []
+            let promises = []
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
-                    this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
+                    promises.push(this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
                         let unit = null
                         if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
-                        this.recipe.steps[step].ingredients.splice(order, 0, {
+                        parsed_ing_list.push({
                             amount: result.data.amount,
                             unit: unit,
                             food: {name: result.data.food},
                             note: result.data.note,
                             original_text: ing,
                         })
-                    })
-                    order++
+                    }))
                 }
+            })
+            Promise.allSettled(promises).then(() => {
+                ing_list.forEach(ing => {
+                    step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                })
             })
         },
         duplicateIngredient: function (step, ingredient, new_index) {
