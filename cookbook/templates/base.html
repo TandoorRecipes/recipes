@@ -1,3 +1,5 @@
+
+
 {% load static %}
 {% load i18n %}
 {% load theming_tags %}
@@ -5,11 +7,11 @@
 
 <html>
 <head>
+
     <title>{% block title %}
     {% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
     <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
@@ -30,6 +32,7 @@
 
 
     <!-- Bootstrap 4 -->
+    <!-- JUST FOR FUNSIES PART THREEE-->
     <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
     <link href="{% static 'css/app.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
@@ -345,6 +348,7 @@
     </div>
 </nav>
 
+
 {% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
     <div class="bg-success" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
@@ -423,19 +427,57 @@
 </script>
 
 <style>
-    @media screen and (max-width: 1000px) {
-        .navbar-collapse {
-            max-height: 60vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
+    @media screen and (max-width: 1000px) { 
+        .navbar-collapse { 
+            max-height: 60vh; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+        }  
 
-        .collapsing {
-            overflow-y: hidden;
-            overflow-x: hidden;
-        }
+        .collapsing { 
+            overflow-y: hidden; 
+            overflow-x: hidden; 
+        } 
+    } 
+</style> 
+
+<!-- SCROLL TO TOP --> 
+<div>
+    
+    <button style="display: none; /* Hidden by default */
+position: fixed; /* Fixed/sticky position */
+bottom: 20px; /* Place the button at the bottom of the page */
+right: 30px; /* Place the button 30px from the right */
+z-index: 99; /* Make sure it does not overlap */
+border: none; /* Remove borders */
+outline: none; /* Remove outline */
+background-color: rgb(221, 191, 134); /* Set a background color */
+color: white; /* Text color */
+cursor: pointer; /* Add a mouse pointer on hover */
+padding: 15px; /* Some padding */
+border-radius: 10px; /* Rounded corners */
+font-size: 18px; /* Increase font size */scroll-behavior: smooth;" onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-up"></i> Top</button>
+</div>
+
+<script>
+    // Get the button:
+    let mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
     }
-</style>
+    }
 
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  </script>
 </body>
 </html>

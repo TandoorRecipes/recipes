@@ -16,6 +16,7 @@
                                                   v-if="debug && ui.sql_debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
                                         </b-button>
+                                        <!-- TESTING IF THIS WILL WORK-->
                                         <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover
                                                   :title="$t('advanced_search_settings')"
                                                   v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
@@ -886,6 +887,8 @@
                                     <b-button variant="primary" :href="resolveDjangoUrl('new_recipe')"><i
                                         class="fas fa-plus"></i> {{ $t("Create") }}
                                     </b-button>
+
+                                    
                                 </b-card>
                             </b-card-group>
                         </div>

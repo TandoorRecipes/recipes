@@ -1,0 +1,60 @@
+{
+	"name": "boxen",
+	"version": "7.0.0",
+	"description": "Create boxes in the terminal",
+	"license": "MIT",
+	"repository": "sindresorhus/boxen",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "https://sindresorhus.com"
+	},
+	"type": "module",
+	"exports": "./index.js",
+	"engines": {
+		"node": ">=14.16"
+	},
+	"scripts": {
+		"test": "xo && nyc ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"cli",
+		"box",
+		"boxes",
+		"terminal",
+		"term",
+		"console",
+		"ascii",
+		"unicode",
+		"border",
+		"text"
+	],
+	"dependencies": {
+		"ansi-align": "^3.0.1",
+		"camelcase": "^7.0.0",
+		"chalk": "^5.0.1",
+		"cli-boxes": "^3.0.0",
+		"string-width": "^5.1.2",
+		"type-fest": "^2.13.0",
+		"widest-line": "^4.0.1",
+		"wrap-ansi": "^8.0.1"
+	},
+	"devDependencies": {
+		"ava": "^4.3.0",
+		"nyc": "^15.1.0",
+		"tsd": "^0.21.0",
+		"xo": "^0.50.0"
+	},
+	"ava": {
+		"snapshotDir": "tests/snapshots",
+		"environmentVariables": {
+			"COLUMNS": "60",
+			"FORCE_COLOR": "0"
+		}
+	}
+}
