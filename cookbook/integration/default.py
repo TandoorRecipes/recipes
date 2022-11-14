@@ -29,6 +29,9 @@ class Default(Integration):
             recipe = serialized_recipe.save()
             return recipe
 
+        print(json.dumps(data, indent=2))
+        print(json.dumps(serialized_recipe.errors, indent=2))
+
         return None
 
     def get_file_from_recipe(self, recipe):
