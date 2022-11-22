@@ -464,5 +464,12 @@
     "Are_You_Sure": "Are you sure?",
     "Valid Until": "Valid Until",
     "Split_All_Steps": "Split all rows into seperate steps.",
-    "Combine_All_Steps": "Combine all steps into a single field."
+    "Combine_All_Steps": "Combine all steps into a single field.",
+    "Plural": "Plural",
+    "plural_short": "plural",
+    "Use_Plural_Unit_Always": "Use plural form for unit always",
+    "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
+    "Use_Plural_Food_Always": "Use plural form for food always",
+    "Use_Plural_Food_Simple": "Use plural form for food dynamically",
+    "plural_usage_info": "Use the plural form for units and food inside this space."
 }

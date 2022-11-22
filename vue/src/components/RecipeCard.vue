@@ -75,11 +75,15 @@
                                         <h6 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}
                                         </h6>
 
-                                        <ingredients-card :steps="recipe.steps" :header="false" :detailed="false"
-                                                          :servings="recipe.servings"/>
-                                    </div>
-                                </div>
-                            </transition>
+                                <ingredients-card 
+                                    :steps="recipe.steps"
+                                    :header="false"
+                                    :detailed="false"
+                                    :servings="recipe.servings"
+                                    :use_plural="use_plural" />
+                            </div>
+                        </div>
+                    </transition>
 
                             <b-badge pill variant="info" v-if="!recipe.internal">{{ $t("External") }}</b-badge>
                         </template>
@@ -121,6 +125,7 @@ export default {
     props: {
         recipe: Object,
         meal_plan: Object,
+        use_plural: { type: Boolean, default: false},
         footer_text: String,
         footer_icon: String,
         detailed: {type: Boolean, default: true},

@@ -466,5 +466,12 @@
     "food_inherit_info": "Voedselvelden die standaard geërfd worden.",
     "facet_count_info": "Geef receptenaantal bij zoekfilters weer.",
     "Split_All_Steps": "Splits alle rijen in apparte stappen.",
-    "Combine_All_Steps": "Voeg alle stappen samen tot een veld."
+    "Combine_All_Steps": "Voeg alle stappen samen tot een veld.",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }
