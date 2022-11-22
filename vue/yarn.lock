@@ -3223,7 +3223,7 @@ babel-helpers@^6.24.1:
     babel-runtime "^6.22.0"
     babel-template "^6.24.1"
 
-babel-loader@^8.2.2, babel-loader@^8.2.5:
+babel-loader@^8.2.2:
   version "8.2.5"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.2.5.tgz#d45f585e654d5a5d90f5350a779d7647c5ed512e"
   integrity sha512-OSiFfH89LrEMiWd4pLNqGz4CwJDtbs2ZVc+iGu2HrkRfPxId9F2anQj38IxWpmRfsUY0aBZYi1EFcd3mhtRMLQ==
@@ -3232,6 +3232,14 @@ babel-loader@^8.2.2, babel-loader@^8.2.5:
     loader-utils "^2.0.0"
     make-dir "^3.1.0"
     schema-utils "^2.6.5"
+
+babel-loader@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-9.0.1.tgz#d473f30a6ffc2f2abca610c01775c40fc5c2a970"
+  integrity sha512-szYjslOXFlj/po5KfrVmiuBAcI6GVHFuAgC96Qd6mMPHdwl4lmAJkYtvjQ1RxxPjgdkKjd3LQgXDE4jxEutNuw==
+  dependencies:
+    find-cache-dir "^3.3.2"
+    schema-utils "^4.0.0"
 
 babel-messages@^6.23.0:
   version "6.23.0"
@@ -5682,7 +5690,7 @@ find-cache-dir@^2.0.0, find-cache-dir@^2.1.0:
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
 
-find-cache-dir@^3.3.1:
+find-cache-dir@^3.3.1, find-cache-dir@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/find-cache-dir/-/find-cache-dir-3.3.2.tgz#b30c5b6eff0730731aea9bbd9dbecbd80256d64b"
   integrity sha512-wXZV5emFEjrridIgED11OoUKLxiYjAcqot/NJdAkOhlJ+vGzwhOAfcG5OX1jP+S0PcjEn8bdMJv+g2jwQ3Onig==
