@@ -42,6 +42,7 @@
                             <!-- model isn't paginated and loads in one API call -->
                             <div v-if="!paginated">
                                 <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i"
+                                                         :use_plural="use_plural"
                                                          :model="this_model" @item-action="startAction($event, 'left')"
                                                          @finish-action="finishAction"/>
                             </div>
@@ -51,6 +52,7 @@
                                 <template v-slot:cards>
                                     <generic-horizontal-card v-for="i in items_left" v-bind:key="i.id" :item="i"
                                                              :model="this_model"
+                                                             :use_plural="use_plural"
                                                              @item-action="startAction($event, 'left')"
                                                              @finish-action="finishAction"/>
                                 </template>
@@ -62,6 +64,7 @@
                                 <template v-slot:cards>
                                     <generic-horizontal-card v-for="i in items_right" v-bind:key="i.id" :item="i"
                                                              :model="this_model"
+                                                             :use_plural="use_plural"
                                                              @item-action="startAction($event, 'right')"
                                                              @finish-action="finishAction"/>
                                 </template>
@@ -120,6 +123,7 @@ export default {
             show_split: false,
             paginated: false,
             header_component_name: undefined,
+            use_plural: false,
         }
     },
     computed: {
@@ -145,6 +149,17 @@ export default {
             }
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
+            if (!this.use_plural && this.this_model !== null && this.this_model.create.params[0] !== null && this.this_model.create.params[0].includes('plural_name')) {
+                let index = this.this_model.create.params[0].indexOf('plural_name')
+                if (index > -1){
+                    this.this_model.create.params[0].splice(index, 1)
+                }
+                delete this.this_model.create.form.plural_name
+            }
+        })
     },
     methods: {
         // this.genericAPI inherited from ApiMixin

@@ -839,13 +839,16 @@
                                         v-for="m in meal_plans"
                                         :recipe="m.recipe"
                                         :meal_plan="m"
+                                        :use_plural="use_plural"
                                         :footer_text="m.meal_type_name"
                                         footer_icon="far fa-calendar-alt"
                                     ></recipe-card>
                                 </template>
                                 <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
                                              :footer_text="isRecentOrNew(r)[0]"
-                                             :footer_icon="isRecentOrNew(r)[1]"></recipe-card>
+                                             :footer_icon="isRecentOrNew(r)[1]"
+                                             :use_plural="use_plural">
+                                             </recipe-card>
                             </div>
                         </div>
                     </div>
@@ -913,6 +916,7 @@ import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprec
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
+import { ApiApiFactory } from "@/utils/openapi/api"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -933,7 +937,7 @@ export default {
             meal_plans: [],
             last_viewed_recipes: [],
             sortMenu: false,
-
+            use_plural: false,
             search: {
                 advanced_search_visible: false,
                 explain_visible: false,
@@ -1159,6 +1163,10 @@ export default {
 
             this.loadMealPlan()
             this.refreshData(false)
+        })
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.debug = localStorage.getItem("DEBUG") == "True" || false
