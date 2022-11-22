@@ -464,5 +464,7 @@
     "Valid Until": "Geldig tot",
     "warning_space_delete": "Je kunt jouw space verwijderen inclusief alle recepten, boodschappenlijstjes, maaltijdplannen en alles wat je verder aangemaakt hebt. Dit kan niet ongedaan worden gemaakt! Weet je het zeker?",
     "food_inherit_info": "Voedselvelden die standaard geërfd worden.",
-    "facet_count_info": "Geef receptenaantal bij zoekfilters weer."
+    "facet_count_info": "Geef receptenaantal bij zoekfilters weer.",
+    "Split_All_Steps": "Splits alle rijen in apparte stappen.",
+    "Combine_All_Steps": "Voeg alle stappen samen tot een veld."
 }
