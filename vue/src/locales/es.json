@@ -436,5 +436,12 @@
     "Default_Unit": "Unidad Predeterminada",
     "Language": "Lenguaje",
     "Hour": "Hora",
-    "Username": "Nombre de Usuario"
+    "Username": "Nombre de Usuario",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

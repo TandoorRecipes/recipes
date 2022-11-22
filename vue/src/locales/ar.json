@@ -425,5 +425,12 @@
     "New_Supermarket": "",
     "New_Supermarket_Category": "",
     "Are_You_Sure": "",
-    "Valid Until": ""
+    "Valid Until": "",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

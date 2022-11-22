@@ -48,6 +48,9 @@
 
     <script type="text/javascript">
         $.fn.select2.defaults.set("theme", "bootstrap");
+        {% if request.user.is_authenticated %}
+        window.ACTIVE_SPACE_ID = '{{request.space.id}}';
+        {% endif %}
     </script>
 
     <!-- Fontawesome icons -->
@@ -409,6 +412,7 @@
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
     localStorage.setItem('DEBUG', "{% is_debug %}")
     localStorage.setItem('USER_ID', "{{request.user.pk}}")
+    
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {

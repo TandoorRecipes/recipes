@@ -151,6 +151,9 @@
                 <b-form-checkbox v-model="space.show_facet_count"> Facet Count</b-form-checkbox>
                 <span class="text-muted small">{{ $t('facet_count_info') }}</span><br/>
 
+                <b-form-checkbox v-model="space.use_plural">Use Plural form</b-form-checkbox>
+                <span class="text-muted small">{{ $t('plural_usage_info') }}</span><br/>
+
                 <label>{{ $t('FoodInherit') }}</label>
                 <generic-multiselect :initial_selection="space.food_inherit"
                                      :model="Models.FOOD_INHERIT_FIELDS"
@@ -204,7 +207,7 @@ Vue.use(VueClipboard)
 Vue.use(BootstrapVue)
 
 export default {
-    name: "SupermarketView",
+    name: "SpaceManageView",
     mixins: [ResolveUrlMixin, ToastMixin, ApiMixin],
     components: {GenericMultiselect, GenericModalForm},
     data() {
@@ -225,7 +228,7 @@ export default {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         let apiFactory = new ApiApiFactory()
-        apiFactory.retrieveSpace(this.ACTIVE_SPACE_ID).then(r => {
+        apiFactory.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.space = r.data
         })
         apiFactory.listUserSpaces().then(r => {
@@ -249,7 +252,7 @@ export default {
         },
         updateSpace: function () {
             let apiFactory = new ApiApiFactory()
-            apiFactory.partialUpdateSpace(this.ACTIVE_SPACE_ID, this.space).then(r => {
+            apiFactory.partialUpdateSpace(window.ACTIVE_SPACE_ID, this.space).then(r => {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)

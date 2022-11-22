@@ -460,5 +460,12 @@
     "First_name": "Imię",
     "Last_name": "Nazwisko",
     "Disabled": "Wyłączone",
-    "Disable": "Wyłączyć"
+    "Disable": "Wyłączyć",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }
