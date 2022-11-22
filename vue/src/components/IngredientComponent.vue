@@ -18,11 +18,11 @@
             <td @click="done">
                 <template v-if="ingredient.unit !== null && !ingredient.no_amount">
                     <template v-if="!use_plural">
-                        <span>{{ ingredient.unit.name }}
+                        <span>{{ ingredient.unit.name }}</span>
                     </template>
                     <template v-else>
                         <template v-if="ingredient.unit.plural_name === '' || ingredient.unit.plural_name === null">
-                            <span>{{ ingredient.unit.name }}
+                            <span>{{ ingredient.unit.name }}</span>
                         </template>
                         <template v-else>
                             <span v-if="ingredient.always_use_plural_unit">{{ ingredient.unit.plural_name}}</span>
