@@ -206,5 +206,12 @@
     "Auto_Planner": "",
     "New_Cookbook": "",
     "Hide_Keyword": "",
-    "Clear": ""
+    "Clear": "",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

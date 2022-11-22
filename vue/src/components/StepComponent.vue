@@ -35,7 +35,7 @@
                 <div class="col col-md-4"
                      v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
-                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
+                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor" :use_plural="use_plural"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
                     </table>
                 </div>
@@ -90,6 +90,7 @@
                                         :index="index"
                                         :start_time="start_time"
                                         :force_ingredients="true"
+                                        :use_plural="use_plural"
                                     ></step-component>
                                 </div>
                             </div>
@@ -146,6 +147,10 @@ export default {
         recipe: Object,
         start_time: String,
         force_ingredients: {
+            type: Boolean,
+            default: false,
+        },
+        use_plural: {
             type: Boolean,
             default: false,
         },

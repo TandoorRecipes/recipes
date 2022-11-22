@@ -24,6 +24,7 @@
                                     <ingredient-component
                                         :ingredient="i"
                                         :ingredient_factor="ingredient_factor"
+                                        :use_plural="use_plural"
                                         :key="i.id"
                                         :detailed="detailed"
                                         @checked-state-changed="$emit('checked-state-changed', $event)"
@@ -63,6 +64,7 @@ export default {
         recipe: {type: Number},
         ingredient_factor: {type: Number, default: 1},
         servings: {type: Number, default: 1},
+        use_plural: {type: Boolean, default: false},
         detailed: {type: Boolean, default: true},
         header: {type: Boolean, default: false},
         recipe_list: {type: Number, default: undefined},

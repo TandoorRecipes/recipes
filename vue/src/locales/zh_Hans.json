@@ -459,5 +459,12 @@
     "reset_children_help": "用继承字段中的值覆盖所有子项。   继承的子字段将设置为继承，除非它们已设置为继承。",
     "substitute_siblings": "代替品",
     "book_filter_help": "除手动选择的食谱外，还包括筛选中的食谱。",
-    "Internal": "内部"
+    "Internal": "内部",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }
