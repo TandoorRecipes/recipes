@@ -23,8 +23,7 @@
                                 <span v-if="apiName !== 'Step' && apiName !== 'CustomFilter'">
                                     <b-button variant="link" @click="startAction({ action: 'new' })">
                                         <i class="fas fa-plus-circle fa-2x"></i>
-                                    </b-button> </span
-                                >
+                                    </b-button> </span >
                                 <!-- TODO add proper field to model config to determine if create should be available or not -->
                             </h3>
                         </div>
