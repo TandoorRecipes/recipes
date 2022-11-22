@@ -462,5 +462,7 @@
     "New_Supermarket": "Create new supermarket",
     "New_Supermarket_Category": "Create new supermarket category",
     "Are_You_Sure": "Are you sure?",
-    "Valid Until": "Valid Until"
+    "Valid Until": "Valid Until",
+    "Split_All_Steps": "Split all rows into seperate steps.",
+    "Combine_All_Steps": "Combine all steps into a single field."
 }
