@@ -35,6 +35,7 @@ Negative examples:
 u'<p>del.icio.us</p>'
 
 """
+from xml.etree.ElementTree import Element
 
 import markdown
 
@@ -64,7 +65,7 @@ class UrlizePattern(markdown.inlinepatterns.Pattern):
             else:
                 url = 'http://' + url
 
-        el = markdown.util.etree.Element("a")
+        el = Element("a")
         el.set('href', url)
         el.text = markdown.util.AtomicString(text)
         return el
