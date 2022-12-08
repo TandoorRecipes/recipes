@@ -7982,7 +7982,9 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 }
 
 .pl-1, .px-1 {
-    padding-left: .25rem !important
+    padding-bottom: 2rem !important;
+    padding-left: 0.25rem !important;
+    padding-top: 2rem !important;
 }
 
 .p-2 {
