@@ -46,6 +46,12 @@
 
     <link rel="stylesheet" href="{% static 'themes/select2-bootstrap-theme.css' %}"/>
 
+    <!-- Bootstrap 5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" ></script>
+
     <script type="text/javascript">
         $.fn.select2.defaults.set("theme", "bootstrap");
         {% if request.user.is_authenticated %}
@@ -67,6 +73,52 @@
                 }
             }
         {% endif %}
+
+        /* Back To Top Style */
+        #back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            z-index: 99;
+            font-size: 20px;
+            border-style: solid;
+            border-color: #b98766;
+            background-color: transparent;
+            color: #b98766;
+            cursor: pointer;
+            padding: 15px;
+        }
+
+        /* Back To Top Style on hover */
+        #back-to-top:hover {
+            transition-duration:.5s;
+            transition-timing-function: ease-in-out;
+            transition-delay: 0s;
+            background-color: #b98766;
+            color: white;
+        }
+        
+        /* Back To Top Button Circles */
+        .btn-circle {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 12px;
+            line-height: 1.428571429;
+            border-radius: 15px;
+        }
+
+        .btn-circle-lg {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 18px;
+            line-height: 1.33;
+            border-radius: 25px;
+        }
     </style>
 
 </head>
@@ -401,10 +453,35 @@
     {% user_prefs request as prefs %}
     {{ prefs|json_script:'user_preference' }}
 
+    <!-- Back to top button -->
+    <button onclick="topFunction()" id="back-to-top" type="button" class="btn btn-circle btn-circle-lg"><i class="fas fa-arrow-up"></i></button>
+
 </div>
 
 {% block script %}
 {% endblock script %}
+
+<script>
+    // When the user scrolls down 20px from the top of the document, show the button
+    let mybutton = document.getElementById("back-to-top");
+
+    window.onscroll = function() {scrollFunction()};
+
+    // When the user clicks on the button, scroll to the top of the document
+    function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+    }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0; 
+        document.documentElement.scrollTop = 0;
+    }
+</script>
 
 <script type="application/javascript">
     localStorage.setItem('SCRIPT_NAME', "{% base_path request 'script' %}")
