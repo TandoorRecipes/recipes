@@ -95,7 +95,19 @@
                         @checked-state-changed="updateIngredientCheckedState"
                         @change-servings="servings = $event"
                     />
+
+                    <div v-for="(s) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
+                            <div v-for="(sub_step) in s.step_recipe_data.steps"
+                                    v-bind:key="`substep_${sub_step.id}`">
+                                   <table class="table table-sm">
+                                        <ingredients-card :steps="[sub_step]" :ingredient_factor="ingredient_factor" :use_plural="use_plural"
+                                          @checked-state-changed="$emit('checked-state-changed', $event)"/>
+                                    </table>
+                                </div>
+                    </div>
                 </div>
+
+               
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
