@@ -96,13 +96,24 @@
                         @change-servings="servings = $event"
                     />
 
-                    <div v-for="(s) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
-                            <div v-for="(sub_step) in s.step_recipe_data.steps"
+                    <div v-for="(step) in recipe.steps" v-bind:key="step.id" style="margin-top: 1vh">
+                            <div v-for="(sub_step) in step.step_recipe_data.steps"
                                     v-bind:key="`substep_${sub_step.id}`">
-                                   <table class="table table-sm">
-                                        <ingredients-card :steps="[sub_step]" :ingredient_factor="ingredient_factor" :use_plural="use_plural"
-                                          @checked-state-changed="$emit('checked-state-changed', $event)"/>
-                                    </table>
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-12"> 
+                                                <h5 class="card-title">
+                                                <a :href="resolveDjangoUrl('view_recipe', step.step_recipe_data.id)">{{
+                                                        step.step_recipe_data.name + $t(" Ingredients")}}</a></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <ingredients-card 
+                                            :steps="[sub_step]" 
+                                            :ingredient_factor="ingredient_factor" 
+                                            :use_plural="use_plural"
+                                            @checked-state-changed="$emit('checked-state-changed', $event)"/>
+                                    
                                 </div>
                     </div>
                 </div>
