@@ -106,36 +106,10 @@
                         <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
                                :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
                     </b-col>
-                    <b-col cols="2" md="1" class="align-items-center d-flex">
-                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
-                             @click.stop="$emit('open-context-menu', $event, e)">
-                            <button
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                type="button"
-                                :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret"
-                            >
-                                <i class="fas fa-ellipsis-v fa-lg"></i>
-                            </button>
-                        </div>
-                    </b-col>
-                    <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control"
-                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                    </b-col>
-                    <b-col cols="7" md="9">
+                    <b-col>
                         <b-row class="d-flex align-items-center h-100">
-                            <b-col cols="5" md="3" class="d-flex align-items-center">
-                                <strong class="mr-1">{{ formatOneAmount(e) }}</strong> {{ formatOneUnit(e) }}
-                            </b-col>
-                            <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-                                {{ formatOneFood(e) }}
-                            </b-col>
-                            <b-col cols="12" class="d-flex d-md-none">
-                                <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)"
-                                     :key="i">{{ n }}
-                                </div>
+                            <b-col class="d-flex align-items-center">
+                                <strong class="ml-2">Note:&nbsp;&nbsp; </strong>{{ e.ingredient_note }}
                             </b-col>
                         </b-row>
                     </b-col>
