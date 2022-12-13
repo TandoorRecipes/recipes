@@ -108,8 +108,11 @@
                     </b-col>
                     <b-col>
                         <b-row class="d-flex align-items-center h-100">
-                            <b-col class="d-flex align-items-center">
+                            <b-col class="d-flex align-items-center" v-if="e.ingredient_note">
                                 <strong class="ml-2">Note:&nbsp;&nbsp; </strong>{{ e.ingredient_note }}
+                            </b-col>
+                            <b-col class="d-flex align-items-center" v-else>
+                                <strong class="ml-2">Note:&nbsp;&nbsp; </strong>There are currently no notes for this item.
                             </b-col>
                         </b-row>
                     </b-col>
