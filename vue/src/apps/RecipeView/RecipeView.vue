@@ -99,21 +99,19 @@
                     <div v-for="(step) in recipe.steps" v-bind:key="step.id" style="margin-top: 1vh">
                             <div v-for="(sub_step) in step.step_recipe_data.steps"
                                     v-bind:key="`substep_${sub_step.id}`">
-                                    <div class="card-header">
-                                        <div class="row">
-                                            <div class="col-12"> 
-                                                <h5 class="card-title">
-                                                <a :href="resolveDjangoUrl('view_recipe', step.step_recipe_data.id)">{{
-                                                        step.step_recipe_data.name + $t(" Ingredients")}}</a></h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                        <ingredients-card 
+                                    <div>
+                                        <b-button v-b-toggle.collapse-1 variant="outline-primary">
+                                            <h5 class="card-title">
+                                                    {{step.step_recipe_data.name + $t(" Ingredients")}}</h5>
+                                        </b-button>
+                                        <b-collapse id="collapse-1" class="mt-2">
+                                            <ingredients-card 
                                             :steps="[sub_step]" 
                                             :ingredient_factor="ingredient_factor" 
                                             :use_plural="use_plural"
                                             @checked-state-changed="$emit('checked-state-changed', $event)"/>
-                                    
+                                        </b-collapse>
+                                    </div>
                                 </div>
                     </div>
                 </div>
