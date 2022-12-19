@@ -14,13 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.10
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
     # Build Vue frontend
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
-        node-version: '14'
+        node-version: '16'
     - name: Install Vue dependencies
       working-directory: ./vue
       run: yarn install
@@ -30,7 +30,7 @@ jobs:
     - name: Install Django dependencies
       run: |
         sudo apt-get -y update
-        sudo apt-get install -y libsasl2-dev python-dev libldap2-dev libssl-dev
+        sudo apt-get install -y libsasl2-dev python3-dev libldap2-dev libssl-dev
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         python3 manage.py collectstatic --noinput
