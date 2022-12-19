@@ -7380,6 +7380,11 @@ lodash.foreach@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
   integrity sha512-aEXTF4d+m05rVOAUG3z4vZZ4xVexLKZGF0lIxuHZ1Hplpk/3B6Z1+/ICICYRLm7c41Z2xiejbkCkJoTlypoXhQ==
 
+lodash.frompairs@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.frompairs/-/lodash.frompairs-4.0.1.tgz#bc4e5207fa2757c136e573614e9664506b2b1bd2"
+  integrity sha512-dvqe2I+cO5MzXCMhUnfYFa9MD+/760yx2aTAN1lqEcEkf896TxgrX373igVdqSJj6tQd0jnSLE1UMuKufqqxFw==
+
 lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
@@ -7429,6 +7434,11 @@ lodash.templatesettings@^4.0.0:
   integrity sha512-stgLz+i3Aa9mZgnjr/O+v9ruKZsPsndy7qPZOchbqk2cnTU1ZaldKK+v7m54WoKIyxiuMZTKT2H81F8BeAc3ZQ==
   dependencies:
     lodash._reinterpolate "^3.0.0"
+
+lodash.topairs@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.topairs/-/lodash.topairs-4.3.0.tgz#3b6deaa37d60fb116713c46c5f17ea190ec48d64"
+  integrity sha512-qrRMbykBSEGdOgQLJJqVSdPWMD7Q+GJJ5jMRfQYb+LTLsw3tYVIabnCzRqTJb2WTo17PG5gNzXuFaZgYH/9SAQ==
 
 lodash.truncate@^4.4.2:
   version "4.4.2"
@@ -11186,15 +11196,17 @@ webpack-bundle-analyzer@^4.4.0:
     sirv "^1.0.7"
     ws "^7.3.1"
 
-webpack-bundle-tracker@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/webpack-bundle-tracker/-/webpack-bundle-tracker-1.6.0.tgz#738e450f13ab2ab5de0c81a2cd671f78537cf861"
-  integrity sha512-aDb5WpHyo/U23UsAFHadUJavOAcpcEDrdSOb2ExlSrsoYBnJlECC37wekDRQ9UwRKvNjVdjZWJ/NI8/dVaVp8w==
+webpack-bundle-tracker@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/webpack-bundle-tracker/-/webpack-bundle-tracker-1.7.0.tgz#800141b9e383b78c2507a08bd0c5a7b3f5378439"
+  integrity sha512-CwdFpeLcc4uBurgmtszCHW6ISJ5RN70jvGWnvUG/7LQS1gmv2g6IdYw9A8DvT4rydHzWnRFwqVsx1hN1IebkQA==
   dependencies:
     lodash.assign "^4.2.0"
     lodash.defaults "^4.2.0"
     lodash.foreach "^4.5.0"
+    lodash.frompairs "^4.0.1"
     lodash.get "^4.4.2"
+    lodash.topairs "^4.3.0"
     strip-ansi "^6.0.0"
 
 webpack-chain@^6.5.1:
