@@ -100,11 +100,11 @@
                             <div v-for="(sub_step) in step.step_recipe_data.steps"
                                     v-bind:key="`substep_${sub_step.id}`">
                                     <div>
-                                        <b-button v-b-toggle.collapse-1 variant="outline-primary">
+                                        <b-button v-b-toggle.collapse-sub-ingredients variant="outline-primary">
                                             <h5 class="card-title">
                                                     {{step.step_recipe_data.name + $t(" Ingredients")}}</h5>
                                         </b-button>
-                                        <b-collapse id="collapse-1" class="mt-2">
+                                        <b-collapse id="collapse-sub-ingredients" class="mt-2">
                                             <ingredients-card 
                                             :steps="[sub_step]" 
                                             :ingredient_factor="ingredient_factor" 
@@ -112,11 +112,9 @@
                                             @checked-state-changed="$emit('checked-state-changed', $event)"/>
                                         </b-collapse>
                                     </div>
-                                </div>
+                            </div>
                     </div>
                 </div>
-
-               
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
                     <div class="row">
