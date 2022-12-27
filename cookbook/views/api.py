@@ -34,7 +34,7 @@ from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_me
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
-from rest_framework import decorators, status, viewsets
+from rest_framework import decorators, status, viewsets, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
@@ -389,11 +389,20 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch']
 
+    def get_permissions(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            permission_classes = [(CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope) | CustomIsUser]
+        else:
+            permission_classes = [CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
-        return self.queryset.filter(id=self.request.space.id, created_by=self.request.user)
+        if self.request.method in permissions.SAFE_METHODS:
+            return self.queryset.filter(id=self.request.space.id)
+        else:
+            return self.queryset.filter(id=self.request.space.id, created_by=self.request.user)
 
 
 class UserSpaceViewSet(viewsets.ModelViewSet):
