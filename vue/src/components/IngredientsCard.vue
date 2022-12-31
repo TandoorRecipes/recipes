@@ -46,7 +46,7 @@ import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import IngredientComponent from "@/components/IngredientComponent"
-import {ApiMixin, StandardToasts} from "@/utils/utils"
+import {ApiMixin} from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
@@ -71,27 +71,11 @@ export default {
     },
     data() {
         return {
-            show_shopping: false,
-            shopping_list: [],
-            update_shopping: [],
-            selected_shoppingrecipe: undefined,
+
         }
     },
     computed: {
-        ShoppingRecipes() {
-            // returns open shopping lists associated with this recipe
-            let recipe_in_list = this.shopping_list
-                .map((x) => {
-                    return {
-                        value: x?.list_recipe,
-                        text: x?.recipe_mealplan?.name,
-                        recipe: x?.recipe_mealplan?.recipe ?? 0,
-                        servings: x?.recipe_mealplan?.servings,
-                    }
-                })
-                .filter((x) => x?.recipe == this.recipe)
-            return [...new Map(recipe_in_list.map((x) => [x["value"], x])).values()] //  filter to unique lists
-        },
+
     },
     watch: {
 
