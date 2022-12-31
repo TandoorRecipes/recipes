@@ -343,11 +343,5 @@
     "DelayFor": "Отложить на {hours} часов",
     "New_Entry": "Новая запись",
     "GroupBy": "Сгруппировать по",
-    "Plural": "",
-    "plural_short": "",
-    "Use_Plural_Unit_Always": "",
-    "Use_Plural_Unit_Simple": "",
-    "Use_Plural_Food_Always": "",
-    "Use_Plural_Food_Simple": "",
-    "plural_usage_info": ""
+    "facet_count_info": "Показывать количество рецептов в фильтрах поиска."
 }
