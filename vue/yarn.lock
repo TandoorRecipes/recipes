@@ -8044,7 +8044,7 @@ __metadata:
 
 "fsevents@patch:fsevents@^1.2.7#~builtin<compat/fsevents>":
   version: 1.2.13
-  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=d11327"
+  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=18f3a7"
   dependencies:
     bindings: ^1.5.0
     nan: ^2.12.1
@@ -8054,7 +8054,7 @@ __metadata:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -12916,7 +12916,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
   version: 1.22.0
-  resolution: "resolve@patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=07638b"
   dependencies:
     is-core-module: ^2.8.1
     path-parse: ^1.0.7
@@ -14888,7 +14888,7 @@ __metadata:
 
 "typescript@patch:typescript@~4.5.5#~builtin<compat/typescript>":
   version: 4.5.5
-  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bcec9a"
+  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -14898,11 +14898,11 @@ __metadata:
 
 "typescript@patch:typescript@~4.9.3#~builtin<compat/typescript>":
   version: 4.9.3
-  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
+  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 67ca21a387c0572f1c04936e638dde7782c5aa520c3754aadc7cc9b7c915da9ebc3e27c601bfff4ccb7d7264e82dce6d277ada82ec09dc75024349e0ef64926d
+  checksum: ef65c22622d864497d0a0c5db693523329b3284c15fe632e93ad9aa059e8dc38ef3bd767d6f26b1e5ecf9446f49bd0f6c4e5714a2eeaf352805dc002479843d1
   languageName: node
   linkType: hard
 
@@ -15504,7 +15504,7 @@ __metadata:
     vue2-touch-events: ^3.2.2
     vuedraggable: ^2.24.3
     vuex: ^3.6.0
-    webpack-bundle-tracker: 1.7.0
+    webpack-bundle-tracker: 1.8.0
     workbox-expiration: ^6.5.4
     workbox-navigation-preload: ^6.5.4
     workbox-precaching: ^6.5.4
@@ -15626,9 +15626,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-bundle-tracker@npm:1.7.0":
-  version: 1.7.0
-  resolution: "webpack-bundle-tracker@npm:1.7.0"
+"webpack-bundle-tracker@npm:1.8.0":
+  version: 1.8.0
+  resolution: "webpack-bundle-tracker@npm:1.8.0"
   dependencies:
     lodash.assign: ^4.2.0
     lodash.defaults: ^4.2.0
@@ -15637,7 +15637,7 @@ __metadata:
     lodash.get: ^4.4.2
     lodash.topairs: ^4.3.0
     strip-ansi: ^6.0.0
-  checksum: c7f1319a04fe90015818d5b8d6d33992ebc2fac0a3d55a0df1d2366ae23cf6c90140480bf54c720a649472306f6d3c353d3c011c8e69c28e230d218b2537428c
+  checksum: de640c333febfad389ae5c207caa96ada10f51f79c50ed65371dbf750fa88de9dc16c1478573aadde888e691a9731aa1321c1f59558cd4b0698e4964015881d8
   languageName: node
   linkType: hard
 
