@@ -8044,7 +8044,7 @@ __metadata:
 
 "fsevents@patch:fsevents@^1.2.7#~builtin<compat/fsevents>":
   version: 1.2.13
-  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=d11327"
+  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#~builtin<compat/fsevents>::version=1.2.13&hash=18f3a7"
   dependencies:
     bindings: ^1.5.0
     nan: ^2.12.1
@@ -8054,7 +8054,7 @@ __metadata:
 
 "fsevents@patch:fsevents@~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=18f3a7"
   dependencies:
     node-gyp: latest
   conditions: os=darwin
@@ -12916,7 +12916,7 @@ __metadata:
 
 "resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>":
   version: 1.22.0
-  resolution: "resolve@patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.0#~builtin<compat/resolve>::version=1.22.0&hash=07638b"
   dependencies:
     is-core-module: ^2.8.1
     path-parse: ^1.0.7
@@ -14888,7 +14888,7 @@ __metadata:
 
 "typescript@patch:typescript@~4.5.5#~builtin<compat/typescript>":
   version: 4.5.5
-  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bcec9a"
+  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -14898,11 +14898,11 @@ __metadata:
 
 "typescript@patch:typescript@~4.9.3#~builtin<compat/typescript>":
   version: 4.9.3
-  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=d73830"
+  resolution: "typescript@patch:typescript@npm%3A4.9.3#~builtin<compat/typescript>::version=4.9.3&hash=a1c5e5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 67ca21a387c0572f1c04936e638dde7782c5aa520c3754aadc7cc9b7c915da9ebc3e27c601bfff4ccb7d7264e82dce6d277ada82ec09dc75024349e0ef64926d
+  checksum: ef65c22622d864497d0a0c5db693523329b3284c15fe632e93ad9aa059e8dc38ef3bd767d6f26b1e5ecf9446f49bd0f6c4e5714a2eeaf352805dc002479843d1
   languageName: node
   linkType: hard
 
@@ -15291,10 +15291,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-cookies@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "vue-cookies@npm:1.8.1"
-  checksum: 4a7d01971c18936aeae4e8c6bd42d11fd4bd54b2ca1cdbd7b9de23d785e3e602f9997b6903053b9f236a7305e73d0987dfcea26103ee3dd323e0a490f8aeaf15
+"vue-cookies@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "vue-cookies@npm:1.8.2"
+  checksum: 467d4007829715b7de1930bb75f10bbf67393b84aa7e7cab51824623455448a3bbbb3d2b37a15d4d350dd526aa1fc72a04e35a5a9b435ae9cc8aef75e54d6770
   languageName: node
   linkType: hard
 
@@ -15493,7 +15493,7 @@ __metadata:
     vue-click-outside: ^1.1.0
     vue-clickaway: ^2.2.2
     vue-clipboard2: ^0.3.3
-    vue-cookies: ^1.8.1
+    vue-cookies: ^1.8.2
     vue-i18n: ^8.28.2
     vue-infinite-loading: ^2.4.5
     vue-multiselect: ^2.1.6
