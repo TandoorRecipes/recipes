@@ -353,5 +353,6 @@
     "Use_Plural_Unit_Simple": "",
     "Use_Plural_Food_Always": "",
     "Use_Plural_Food_Simple": "",
-    "plural_usage_info": ""
+    "plural_usage_info": "",
+    "reusable_help_text": "Il link di invito dovrebbe essere usabile per più di un utente."
 }
