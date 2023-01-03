@@ -72,3 +72,13 @@ def test_recipe_import(arg, u1_s1):
                 content_type='application/json')
         recipe = json.loads(response.content)['recipe_json']
         validate_recipe(arg, recipe)
+
+
+# def test_description_replace_automation():
+#     if 'cookbook' in os.getcwd():
+#         test_file = os.path.join(os.getcwd(), 'other', 'test_data', 'chefkoch2.html')
+#     else:
+#         test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', 'chefkoch2.html')
+#
+#     with open(test_file, 'r', encoding='UTF-8') as d:
+#         pass

@@ -367,7 +367,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
@@ -1223,15 +1223,20 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     FOOD_ALIAS = 'FOOD_ALIAS'
     UNIT_ALIAS = 'UNIT_ALIAS'
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+    DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
+    INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
 
     type = models.CharField(max_length=128,
-                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),))
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
+                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
     param_1 = models.CharField(max_length=128, blank=True, null=True)
     param_2 = models.CharField(max_length=128, blank=True, null=True)
     param_3 = models.CharField(max_length=128, blank=True, null=True)
+
+    order = models.IntegerField(default=1000)
 
     disabled = models.BooleanField(default=False)
 

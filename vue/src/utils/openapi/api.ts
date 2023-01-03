@@ -139,6 +139,12 @@ export interface Automation {
     param_3?: string | null;
     /**
      * 
+     * @type {number}
+     * @memberof Automation
+     */
+    order?: number;
+    /**
+     * 
      * @type {boolean}
      * @memberof Automation
      */
@@ -158,7 +164,9 @@ export interface Automation {
 export enum AutomationTypeEnum {
     FoodAlias = 'FOOD_ALIAS',
     UnitAlias = 'UNIT_ALIAS',
-    KeywordAlias = 'KEYWORD_ALIAS'
+    KeywordAlias = 'KEYWORD_ALIAS',
+    DescriptionReplace = 'DESCRIPTION_REPLACE',
+    InstructionReplace = 'INSTRUCTION_REPLACE'
 }
 
 /**
@@ -436,6 +444,12 @@ export interface Food {
      * @type {string}
      * @memberof Food
      */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Food
+     */
     description?: string;
     /**
      * 
@@ -655,6 +669,12 @@ export interface FoodSubstitute {
      * @memberof FoodSubstitute
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodSubstitute
+     */
+    plural_name?: string | null;
 }
 /**
  * 
@@ -848,10 +868,10 @@ export interface Ingredient {
     food: IngredientFood | null;
     /**
      * 
-     * @type {FoodSupermarketCategory}
+     * @type {IngredientUnit}
      * @memberof Ingredient
      */
-    unit: FoodSupermarketCategory | null;
+    unit: IngredientUnit | null;
     /**
      * 
      * @type {string}
@@ -894,6 +914,18 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     used_in_recipes?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Ingredient
+     */
+    always_use_plural_unit?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Ingredient
+     */
+    always_use_plural_food?: boolean;
 }
 /**
  * 
@@ -913,6 +945,12 @@ export interface IngredientFood {
      * @memberof IngredientFood
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientFood
+     */
+    plural_name?: string | null;
     /**
      * 
      * @type {string}
@@ -1003,6 +1041,37 @@ export interface IngredientFood {
      * @memberof IngredientFood
      */
     child_inherit_fields?: Array<FoodInheritFields> | null;
+}
+/**
+ * 
+ * @export
+ * @interface IngredientUnit
+ */
+export interface IngredientUnit {
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientUnit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientUnit
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientUnit
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientUnit
+     */
+    description?: string | null;
 }
 /**
  * 
@@ -1746,13 +1815,13 @@ export interface MealPlanRecipe {
      * @type {string}
      * @memberof MealPlanRecipe
      */
-    rating?: string;
+    rating?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MealPlanRecipe
      */
-    last_cooked?: string;
+    last_cooked?: string | null;
     /**
      * 
      * @type {string}
@@ -1953,13 +2022,13 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    rating?: string;
+    rating?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Recipe
      */
-    last_cooked?: string;
+    last_cooked?: string | null;
     /**
      * 
      * @type {boolean}
@@ -2166,10 +2235,10 @@ export interface RecipeIngredients {
     food: IngredientFood | null;
     /**
      * 
-     * @type {FoodSupermarketCategory}
+     * @type {IngredientUnit}
      * @memberof RecipeIngredients
      */
-    unit: FoodSupermarketCategory | null;
+    unit: IngredientUnit | null;
     /**
      * 
      * @type {string}
@@ -2212,6 +2281,18 @@ export interface RecipeIngredients {
      * @memberof RecipeIngredients
      */
     used_in_recipes?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    always_use_plural_unit?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeIngredients
+     */
+    always_use_plural_food?: boolean;
 }
 /**
  * 
@@ -2412,13 +2493,13 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    rating?: string;
+    rating?: string | null;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
-    last_cooked?: string;
+    last_cooked?: string | null;
     /**
      * 
      * @type {string}
@@ -2703,10 +2784,10 @@ export interface ShoppingListEntries {
     food: IngredientFood | null;
     /**
      * 
-     * @type {FoodSupermarketCategory}
+     * @type {IngredientUnit}
      * @memberof ShoppingListEntries
      */
-    unit?: FoodSupermarketCategory | null;
+    unit?: IngredientUnit | null;
     /**
      * 
      * @type {number}
@@ -2794,10 +2875,10 @@ export interface ShoppingListEntry {
     food: IngredientFood | null;
     /**
      * 
-     * @type {FoodSupermarketCategory}
+     * @type {IngredientUnit}
      * @memberof ShoppingListEntry
      */
-    unit?: FoodSupermarketCategory | null;
+    unit?: IngredientUnit | null;
     /**
      * 
      * @type {number}
@@ -3191,41 +3272,16 @@ export interface Space {
     file_size_mb?: string;
     /**
      * 
-     * @type {SpaceImage}
+     * @type {RecipeFile}
      * @memberof Space
      */
-    image?: SpaceImage;
-}
-/**
- * 
- * @export
- * @interface SpaceImage
- */
-export interface SpaceImage {
+    image?: RecipeFile | null;
     /**
      * 
-     * @type {number}
-     * @memberof SpaceImage
+     * @type {boolean}
+     * @memberof Space
      */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpaceImage
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpaceImage
-     */
-    file_download?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SpaceImage
-     */
-    preview?: string;
+    use_plural?: boolean;
 }
 /**
  * 
@@ -3563,6 +3619,12 @@ export interface Unit {
      * @memberof Unit
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    plural_name?: string | null;
     /**
      * 
      * @type {string}
