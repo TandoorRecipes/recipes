@@ -876,11 +876,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+                obj.name
+                or getattr(obj.mealplan, 'title', None)
+                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -1067,7 +1067,7 @@ class AutomationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Automation
         fields = (
-            'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'disabled', 'created_by',)
+            'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'order', 'disabled', 'created_by',)
         read_only_fields = ('created_by',)
 
 
