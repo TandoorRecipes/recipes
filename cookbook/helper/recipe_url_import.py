@@ -185,10 +185,11 @@ def get_from_scraper(scrape, request):
         pass
 
     if recipe_json['source_url']:
-        automations = Automation.objects.filter(type=Automation.DESCRIPTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
+        automations = Automation.objects.filter(type=Automation.INSTRUCTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
         for a in automations:
             if re.match(a.param_1, (recipe_json['source_url'])[:512]):
-                recipe_json['description'] = re.sub(a.param_2, a.param_3, recipe_json['description'], count=1)
+                for s in recipe_json['steps']:
+                    s['instruction'] = re.sub(a.param_2, a.param_3, s['instruction'])
 
     return recipe_json
 

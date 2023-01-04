@@ -68,6 +68,8 @@
     "Enable_Amount": "Enable Amount",
     "Disable_Amount": "Disable Amount",
     "Ingredient Editor": "Ingredient Editor",
+    "Description_Replace": "Description Replace",
+    "Instruction_Replace": "Instruction Replace",
     "Auto_Sort": "Auto Sort",
     "Auto_Sort_Help": "Move all ingredients to the best fitting step.",
     "Private_Recipe": "Private Recipe",
