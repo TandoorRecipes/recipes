@@ -36,7 +36,7 @@ def delete_space_action(modeladmin, request, queryset):
 
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
+    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing', 'use_plural')
     search_fields = ('name', 'created_by__username')
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
@@ -48,7 +48,7 @@ admin.site.register(Space, SpaceAdmin)
 
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
-    search_fields = ('user', 'space',)
+    search_fields = ('user__username', 'space__name',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)

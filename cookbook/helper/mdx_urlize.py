@@ -35,6 +35,7 @@ Negative examples:
 u'<p>del.icio.us</p>'
 
 """
+from xml.etree.ElementTree import Element
 
 import markdown
 
@@ -64,7 +65,7 @@ class UrlizePattern(markdown.inlinepatterns.Pattern):
             else:
                 url = 'http://' + url
 
-        el = markdown.util.etree.Element("a")
+        el = Element("a")
         el.set('href', url)
         el.text = markdown.util.AtomicString(text)
         return el
@@ -73,9 +74,9 @@ class UrlizePattern(markdown.inlinepatterns.Pattern):
 class UrlizeExtension(markdown.Extension):
     """ Urlize Extension for Python-Markdown. """
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md):
         """ Replace autolink with UrlizePattern """
-        md.inlinePatterns['autolink'] = UrlizePattern(URLIZE_RE, md)
+        md.inlinePatterns.register(UrlizePattern(URLIZE_RE, md), 'autolink', 120)
 
 
 def makeExtension(*args, **kwargs):

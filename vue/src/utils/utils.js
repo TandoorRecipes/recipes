@@ -280,7 +280,7 @@ export function getUserPreference(pref = undefined) {
 export function calculateAmount(amount, factor) {
     if (getUserPreference("use_fractions")) {
         let return_string = ""
-        let fraction = frac(amount * factor, 10, true)
+        let fraction = frac(amount * factor, 16, true)
 
         if (fraction[0] === 0 && fraction[1] === 0 && fraction[2] === 1) {
             return roundDecimals(amount * factor)
@@ -303,6 +303,22 @@ export function calculateAmount(amount, factor) {
 export function roundDecimals(num) {
     let decimals = getUserPreference("user_fractions") ? getUserPreference("user_fractions") : 2
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`)
+}
+
+export function calculateHourMinuteSplit(amount) {
+    if (amount >= 60) {
+        let hours = Math.floor(amount / 60)
+        let minutes = amount - hours * 60
+        let output_text = hours + " h"
+
+        if (minutes > 0){
+            output_text += " " + minutes + " min"
+        }
+
+        return output_text
+    } else {
+        return amount + " min"
+    }
 }
 
 const KILOJOULES_PER_CALORIE = 4.18

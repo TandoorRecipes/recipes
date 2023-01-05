@@ -54,7 +54,7 @@ def test_ingredient_parser():
         "3,5 l Wasser": (3.5, "l", "Wasser", ""),
         "3.5 l Wasser": (3.5, "l", "Wasser", ""),
         "400 g Karotte(n)": (400, "g", "Karotte(n)", ""),
-        "400g unsalted butter": (400, "g", "butter", "unsalted"),
+        "400g unsalted butter": (400, "g", "unsalted butter", ""),
         "2L Wasser": (2, "L", "Wasser", ""),
         "1 (16 ounce) package dry lentils, rinsed": (1, "package", "dry lentils, rinsed", "16 ounce"),
         "2-3 c Water": (2, "c", "Water", "2-3"),
@@ -66,7 +66,9 @@ def test_ingredient_parser():
             1.0, 'Lorem', 'ipsum', 'dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l Lorem ipsum dolor sit amet consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt ut l'),
         "1 LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl": (
             1.0, None, 'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingeli',
-            'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl')
+            'LoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutlLoremipsumdolorsitametconsetetursadipscingelitrseddiamnonumyeirmodtemporinviduntutl'),
+        "砂糖 50g": (50, "g", "砂糖", ""),
+        "卵 4個": (4, "個", "卵", "")
 
     }
     # for German you could say that if an ingredient does not have

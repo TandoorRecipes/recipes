@@ -33,6 +33,9 @@ urlpatterns = [
     ),
 ]
 
+if settings.DEBUG:
+    urlpatterns += path('__debug__/', include('debug_toolbar.urls')),
+
 if settings.ENABLE_METRICS:
     urlpatterns += re_path('', include('django_prometheus.urls')),
 

@@ -61,7 +61,7 @@ class RecetteTek(Integration):
             ingredient_parser = IngredientParser(self.request, True)
             for ingredient in file['ingredients'].split('\n'):
                 if len(ingredient.strip()) > 0:
-                    amount, unit, food, note = ingredient_parser.parse(food)
+                    amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
                     f = ingredient_parser.get_food(ingredient)
                     u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(

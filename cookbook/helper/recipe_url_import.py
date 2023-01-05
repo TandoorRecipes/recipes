@@ -21,7 +21,7 @@ def get_from_scraper(scrape, request):
     # converting the scrape_me object to the existing json format based on ld+json
     recipe_json = {}
     try:
-        recipe_json['name'] = parse_name(scrape.title() or None)
+        recipe_json['name'] = parse_name(scrape.title()[:128] or None)
     except Exception:
         recipe_json['name'] = None
     if not recipe_json['name']:

@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2022-04-07 19:32+0000\n"
-"Last-Translator: Artem Aksenov <artemmillerr@gmail.com>\n"
+"PO-Revision-Date: 2022-11-30 19:09+0000\n"
+"Last-Translator: Alex <kovsharoff@gmail.com>\n"
 "Language-Team: Russian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ru/>\n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -396,8 +396,9 @@ msgstr ""
 #: .\cookbook\templates\include\log_cooking.html:16
 #: .\cookbook\templates\url_import.html:224
 #: .\cookbook\templates\url_import.html:455
+#, fuzzy
 msgid "Servings"
-msgstr ""
+msgstr "Порции"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
@@ -468,7 +469,7 @@ msgstr ""
 
 #: .\cookbook\models.py:198 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr ""
+msgstr "Книги"
 
 #: .\cookbook\models.py:206
 msgid "Small"

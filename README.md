@@ -71,8 +71,7 @@ Because of that there are several ways you can support us
 - **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).  
 
 ## Contributing
-
-You can help out with the ongoing development by looking for potential bugs in our code base, or by contributing new features. We are always welcoming new pull requests containing bug fixes, refactors and new features. We have a list of tasks and bugs on our issue tracker on Github. Please comment on issues if you want to contribute with, to avoid duplicating effort.
+Contributions are welcome but please read [this](https://docs.tandoor.dev/contribute/#contributing-code) **BEFORE** contributing anything!
 
 ## Your Feedback
 
