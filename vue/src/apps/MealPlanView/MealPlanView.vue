@@ -209,11 +209,9 @@
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
       <auto-meal-plan-modal
-        :entry="entryEditing"
         :modal_title="'Auto create meal plan'"
-        :auto_plan_show="auto_plan_show"
-        @create-plan="autoPlan"
-
+        :current_period="current_period"
+        @create-plan="doAutoPlan"
       ></auto-meal-plan-modal>
 
         <transition name="slide-fade">
@@ -305,6 +303,14 @@ export default {
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {
         return {
+          AutoPlan: {
+            meal_types: [],
+            keywords: [[]],
+            servings: 1,
+            date: Date.now(),
+            startDay: null,
+            endDay: null
+          },
             showDate: new Date(),
             plan_entries: [],
             recipe_viewed: {},
@@ -555,7 +561,7 @@ export default {
         },
         deleteEntry(data) {
             this.plan_entries.forEach((entry, index, list) => {
-                //if (entry.id === data.id) {//todo:remove block!
+                if (entry.id === data.id) {
                     let apiClient = new ApiApiFactory()
 
                     apiClient
@@ -566,7 +572,7 @@ export default {
                         .catch((err) => {
                             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                         })
-                //}
+                }
             })
         },
         entryClick(data) {
@@ -643,35 +649,44 @@ export default {
                 entry: plan_entry,
             }
         },
-        createAutoPlan(date) {
+        createAutoPlan() {
             this.$bvModal.show(`autoplan-modal`)
         },
-      async autoPlanThread(date,dateOffset,i,servings){
+      async autoPlanThread(date,dateOffset,meal_type,keywords,servings,mealTypesKey){
 
           let apiClient = new ApiApiFactory()
           let currentEntry = Object.assign({}, this.options.entryEditing)
                 currentEntry.date = moment(date).add(dateOffset,"d").format("YYYY-MM-DD")
                 currentEntry.servings = servings
         await Promise.all([
-            currentEntry.recipe = await this.randomRecipe(i+3).then((result)=>{return result}),
+            currentEntry.recipe = await this.randomRecipe(keywords[mealTypesKey]).then((result)=>{return result}),
             currentEntry.shared = await apiClient.listUserPreferences().then((result) => {return result.data[0].plan_share}),
-            currentEntry.meal_type = await this.getMealType(i+2).then((result)=>{return result})
+            currentEntry.meal_type = await this.getMealType(meal_type[mealTypesKey].id).then((result)=>{return result})
         ])
                 currentEntry.title = currentEntry.recipe.name
                 this.createEntry(currentEntry)
       },
-       autoPlan(data, servings){
-            // ["breakfast","lunch","dinner"]
-          //   meal types: 4,3,2
-          //meal keywords: 5,4,3
-        for (let i = 0; i < 3; i++) {
-              for (let dateOffset = 0; dateOffset < 7; dateOffset++) {
-                 this.autoPlanThread(data,dateOffset,i,servings)
-              }
-            }
+       doAutoPlan(autoPlan){
+         console.log(autoPlan)
+          let dayInMilliseconds = (86400000)
+         console.log(autoPlan.startDay)
+         console.log(autoPlan.endDay)
+         console.log(autoPlan.endDay - autoPlan.startDay)
+         console.log(((autoPlan.endDay - autoPlan.startDay)/dayInMilliseconds) + 1)
+         let numberOfDays = ((autoPlan.endDay - autoPlan.startDay)/dayInMilliseconds) + 1
+
+         for (const mealTypesKey in autoPlan.meal_types) {
+           for (let dateOffset = 0; dateOffset < numberOfDays; dateOffset++) {
+             this.autoPlanThread(autoPlan.date, dateOffset, autoPlan.meal_types, autoPlan.keywords, autoPlan.servings, mealTypesKey)
+           }
+         }
         },
-        randomRecipe(keyword) {
-          let url = `/api/recipe/?query=&keywords_or=${keyword}`
+        randomRecipe(keywords) {
+          let url = "/api/recipe/?query="
+          for (const keywordsKey in keywords) {
+            let keyword = keywords[keywordsKey]
+            url += `&keywords_and=${keyword.id}`
+          }
           return axios.get(url).then((response) => {
             let result = response.data
             let count = result.count
