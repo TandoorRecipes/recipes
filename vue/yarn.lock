@@ -6026,7 +6026,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.26.1, core-js@npm:^3.6.0, core-js@npm:^3.7.0, core-js@npm:^3.8.3":
+"core-js@npm:^3.27.1":
+  version: 3.27.1
+  resolution: "core-js@npm:3.27.1"
+  checksum: d50b5f88aea4302512ad9446c18e90f4d35dea1e6d8d3f87337690677061565ff11a670f1e0c87de57aa6074375fbb25ed5784076c040d3c4de8b4bce7d2ebeb
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.6.0, core-js@npm:^3.7.0, core-js@npm:^3.8.3":
   version: 3.26.1
   resolution: "core-js@npm:3.26.1"
   checksum: 0a01149f51ff1e9f41d1ea49cc4c9222047949ea597189ede7c4cf8cde3b097766b9c7615acc77c86fe65b4002f20b638a133dfba7b41dba830d707aeeed45ad
@@ -15551,7 +15558,7 @@ __metadata:
     babel-eslint: ^10.1.0
     babel-loader: ^9.1.0
     bootstrap-vue: ^2.23.1
-    core-js: ^3.26.1
+    core-js: ^3.27.1
     eslint: ^7.28.0
     eslint-plugin-vue: ^8.7.1
     html2pdf.js: ^0.10.1
