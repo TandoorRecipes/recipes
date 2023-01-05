@@ -221,8 +221,8 @@ class IngredientParser:
 
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
-        if len(ingredient) < 1000 and re.search(r'^([A-z])+(.)*[1-9](\d)*\s([A-z])+', ingredient):
-            match = re.search(r'[1-9](\d)*\s([A-z])+', ingredient)
+        if len(ingredient) < 1000 and re.search(r'^([^\W\d_])+(.)*[1-9](\d)*\s*([^\W\d_])+', ingredient):
+            match = re.search(r'[1-9](\d)*\s*([^\W\d_])+', ingredient)
             print(f'reording from {ingredient} to {ingredient[match.start():match.end()] + " " + ingredient.replace(ingredient[match.start():match.end()], "")}')
             ingredient = ingredient[match.start():match.end()] + ' ' + ingredient.replace(ingredient[match.start():match.end()], '')
 
@@ -234,6 +234,10 @@ class IngredientParser:
 
         # leading spaces before commas result in extra tokens, clean them out
         ingredient = ingredient.replace(' ,', ',')
+
+        # if amount and unit are connected add space in between
+        if re.match('([0-9])+([A-z])+\s', ingredient):
+            ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:

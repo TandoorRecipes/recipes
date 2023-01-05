@@ -8,7 +8,7 @@
                     <template v-if="step.name">{{ step.name }}</template>
                     <template v-else>{{ $t("Step") }} {{ index + 1 }}</template>
                     <small style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i
-                        class="fas fa-user-clock"></i> {{ step.time }} {{ $t("min") }} </small>
+                        class="fas fa-user-clock"></i> {{ step_time }}</small>
                     <small v-if="start_time !== ''" class="d-print-none">
                         <b-link :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#">
                             {{ moment(start_time).add(step.time_offset, "minutes").format("HH:mm") }}
@@ -35,7 +35,7 @@
                 <div class="col col-md-4"
                      v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
-                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
+                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor" :use_plural="use_plural"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
                     </table>
                 </div>
@@ -90,6 +90,7 @@
                                         :index="index"
                                         :start_time="start_time"
                                         :force_ingredients="true"
+                                        :use_plural="use_plural"
                                     ></step-component>
                                 </div>
                             </div>
@@ -131,7 +132,7 @@ import CompileComponent from "@/components/CompileComponent"
 import IngredientsCard from "@/components/IngredientsCard"
 import Vue from "vue"
 import moment from "moment"
-import {ResolveUrlMixin} from "@/utils/utils"
+import {ResolveUrlMixin, calculateHourMinuteSplit} from "@/utils/utils"
 
 Vue.prototype.moment = moment
 
@@ -149,6 +150,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        use_plural: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    computed: {
+        step_time: function() {
+            return calculateHourMinuteSplit(this.step.time)},
     },
     data() {
         return {

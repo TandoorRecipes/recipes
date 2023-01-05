@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2021-11-12 20:06+0000\n"
-"Last-Translator: Henrique Silva <hds@mailbox.org>\n"
+"PO-Revision-Date: 2022-10-14 17:19+0000\n"
+"Last-Translator: Shaxine <shaxine@protonmail.com>\n"
 "Language-Team: Portuguese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pt/>\n"
 "Language: pt\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
@@ -83,7 +83,7 @@ msgstr "Comentários"
 
 #: .\cookbook\forms.py:66
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Modo canhoto"
 
 #: .\cookbook\forms.py:70
 msgid ""
@@ -109,18 +109,14 @@ msgstr ""
 "Mostrar quantidades de energia nutricional em joules em vez de calorias"
 
 #: .\cookbook\forms.py:77
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Utilizadores com os quais novos planos de refeições/listas de compras devem "
-"ser partilhados por defeito."
+"Utilizadores com os quais novos planos de refeições devem ser partilhados "
+"por defeito."
 
 #: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "Utilizadores com os quais novas listas de compras serão partilhadas."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."

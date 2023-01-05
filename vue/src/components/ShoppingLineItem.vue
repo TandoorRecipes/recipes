@@ -31,12 +31,12 @@
             </b-col>
             <b-col cols="8">
                 <b-row class="d-flex h-100">
-                    <b-col cols="6" md="3" class="d-flex align-items-center"
+                    <b-col cols="6" md="3" class="d-flex align-items-center" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
                            v-if="Object.entries(formatAmount).length == 1">
                         <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong>
                         {{ Object.entries(formatAmount)[0][0] }}
                     </b-col>
-                    <b-col cols="6" md="3" class="d-flex flex-column"
+                    <b-col cols="6" md="3" class="d-flex flex-column" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
                            v-if="Object.entries(formatAmount).length != 1">
                         <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">
                             {{ x[1] }} &ensp;
@@ -44,11 +44,10 @@
                         </div>
                     </b-col>
 
-                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2"
-                           v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler">
+                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
                         {{ formatFood }}
                     </b-col>
-                    <b-col cols="3" data-html2canvas-ignore="true"
+                    <b-col cols="3" data-html2canvas-ignore="true" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
                            class="align-items-center d-none d-md-flex justify-content-end">
                         <b-button size="sm" @click="showDetails = !showDetails"
                                   class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
@@ -62,7 +61,7 @@
                     </b-col>
                 </b-row>
             </b-col>
-            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0"
+            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
                    v-if="!settings.left_handed">
                 <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
                           variant="link">

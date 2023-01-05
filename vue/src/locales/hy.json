@@ -122,5 +122,12 @@
     "Save_and_View": "Պահպանել և Դիտել",
     "Select_File": "Ընտրել Ֆայլ",
     "Edit_Keyword": "Խմբագրել բանալի բառը",
-    "Hide_Recipes": "Թաքցնել բաղադրատոմսերը"
+    "Hide_Recipes": "Թաքցնել բաղադրատոմսերը",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

@@ -20,7 +20,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.http import FileResponse, HttpResponse, JsonResponse
@@ -54,7 +54,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope)
+                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -170,7 +170,7 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                                                                       'field', flat=True)])
 
         if query is not None and query not in ["''", '']:
-            if fuzzy:
+            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']):
                 if any([self.model.__name__.lower() in x for x in
                         self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
@@ -528,10 +528,10 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
                                                            checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
-        return self.queryset\
-                .annotate(shopping_status=Exists(shopping_status))\
-                .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute')\
-                .select_related('recipe', 'supermarket_category')
+        return self.queryset \
+            .annotate(shopping_status=Exists(shopping_status)) \
+            .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
+            .select_related('recipe', 'supermarket_category')
 
     @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
@@ -1116,16 +1116,17 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if token := AccessToken.objects.filter(scope__contains='read').filter(scope__contains='write').first():
+        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(user=request.user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
+            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
         return Response({
             'id': access_token.id,
             'token': access_token.token,
             'scope': access_token.scope,
             'expires': access_token.expires,
-            'user_id': user.pk,
+            'user_id': access_token.user.pk,
+            'test': user.pk
         })
 
 
@@ -1380,15 +1381,17 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
-@group_required('user')
 def share_link(request, pk):
-    if request.space.allow_sharing:
-        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
-        link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-        return JsonResponse({'pk': pk, 'share': link.uuid,
-                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
-    else:
-        return JsonResponse({'error': 'sharing_disabled'}, status=403)
+    if request.user.is_authenticated:
+        if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
+            recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+            link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+            return JsonResponse({'pk': pk, 'share': link.uuid,
+                                 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+        else:
+            return JsonResponse({'error': 'sharing_disabled'}, status=403)
+
+    return JsonResponse({'error': 'not_authenticated'}, status=403)
 
 
 @group_required('user')

@@ -204,7 +204,7 @@
                                                    v-if="!import_multiple">
 
                                                 <recipe-card :recipe="recipe_json" :detailed="false"
-                                                             :show_context_menu="false"
+                                                             :show_context_menu="false" :use_plural="use_plural"
                                                 ></recipe-card>
                                             </b-col>
                                             <b-col>
@@ -461,6 +461,7 @@ export default {
             recent_urls: [],
             source_data: '',
             recipe_json: undefined,
+            use_plural: false,
             // recipe_html: undefined,
             // recipe_tree: undefined,
             recipe_images: [],
@@ -489,6 +490,10 @@ export default {
         }
         this.INTEGRATIONS.forEach((int) => {
             int.icon = this.getRandomFoodIcon()
+        })
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
         })
     },
     methods: {

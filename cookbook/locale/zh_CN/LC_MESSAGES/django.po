@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-01-22 03:30+0000\n"
-"Last-Translator: 糖多 <1365143958@qq.com>\n"
+"PO-Revision-Date: 2022-08-23 13:32+0000\n"
+"Last-Translator: 吕楪 <thy@irithys.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
 msgid "Ingredients"
-msgstr "材料"
+msgstr "食材"
 
 #: .\cookbook\forms.py:53
 msgid "Default unit"
@@ -66,7 +66,7 @@ msgstr "计划分享"
 
 #: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
-msgstr "材料小数位"
+msgstr "食材小数位"
 
 #: .\cookbook\forms.py:64
 msgid "Shopping list auto sync period"
@@ -79,7 +79,7 @@ msgstr "评论"
 
 #: .\cookbook\forms.py:66
 msgid "Left-handed mode"
-msgstr ""
+msgstr "左手模式"
 
 #: .\cookbook\forms.py:70
 msgid ""
@@ -90,13 +90,13 @@ msgstr ""
 
 #: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr "在配方中插入新原料时使用的默认单位。"
+msgstr "在菜谱中插入新食材时使用的默认单位。"
 
 #: .\cookbook\forms.py:74
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
-msgstr "启用对原料数量的分数支持（例如自动将小数转换为分数）"
+msgstr "启用对食材数量的分数支持（例如自动将小数转换为分数）"
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
@@ -104,7 +104,7 @@ msgstr "用焦耳来显示营养能量而不是卡路里"
 
 #: .\cookbook\forms.py:77
 msgid "Users with whom newly created meal plans should be shared by default."
-msgstr "默认情况下，新创建的膳食计划应与之共享的用户。"
+msgstr "默认情况下，将自动与用户共享新创建的膳食计划。"
 
 #: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
@@ -116,7 +116,7 @@ msgstr "在搜索页面上显示最近查看的菜谱。"
 
 #: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
-msgstr "四舍五入成分的小数点数目。"
+msgstr "四舍五入食材的小数点数量。"
 
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
@@ -139,15 +139,15 @@ msgstr "使导航栏悬浮在页面的顶部。"
 
 #: .\cookbook\forms.py:88 .\cookbook\forms.py:499
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr "自动将膳食计划原料添加到购物清单中。"
+msgstr "自动将膳食计划食材添加到购物清单中。"
 
 #: .\cookbook\forms.py:89
 msgid "Exclude ingredients that are on hand."
-msgstr "排除现有材料。"
+msgstr "排除现有食材。"
 
 #: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "将使用左手模式优化界面显示。"
 
 #: .\cookbook\forms.py:107
 msgid ""
@@ -274,18 +274,16 @@ msgstr ""
 "错误）。"
 
 #: .\cookbook\forms.py:448
-#, fuzzy
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
-msgstr ""
-"选择搜索类型方法。<a href=\"/docs/search/\">点击此处</a> 查看选项的完整说明。"
+msgstr "选择搜索类型方法。   <a href=\"/docs/search/\">点击此处</a> 查看选项的完整说明。"
 
 #: .\cookbook\forms.py:449
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
-msgstr "编辑和导入菜谱时，对单位、关键词和材料使用模糊匹配。"
+msgstr "编辑和导入菜谱时，对单位、关键词和食材使用模糊匹配。"
 
 #: .\cookbook\forms.py:451
 msgid ""
@@ -336,8 +334,6 @@ msgid "Partial Match"
 msgstr "部分匹配"
 
 #: .\cookbook\forms.py:467
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "起始于"
 
@@ -361,13 +357,13 @@ msgstr ""
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
-msgstr "将膳食计划（手动或自动）添加到购物清单时，包括所有相关菜谱。"
+msgstr "将膳食计划（手动或自动）添加到购物清单时，包括所有相关食谱。"
 
 #: .\cookbook\forms.py:501
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
-msgstr "将膳食计划（手动或自动）添加到购物清单时，排除现有材料。"
+msgstr "将膳食计划（手动或自动）添加到购物清单时，排除现有食材。"
 
 #: .\cookbook\forms.py:502
 msgid "Default number of hours to delay a shopping list entry."
@@ -375,12 +371,11 @@ msgstr "延迟购物清单条目的默认小时数。"
 
 #: .\cookbook\forms.py:503
 msgid "Filter shopping list to only include supermarket categories."
-msgstr "筛选购物清单仅包括超市类型。"
+msgstr "筛选购物清单仅包含超市分类。"
 
 #: .\cookbook\forms.py:504
-#, fuzzy
 msgid "Days of recent shopping list entries to display."
-msgstr "显示最近几天的购物清单条目。"
+msgstr "显示最近几天的购物清单列表。"
 
 #: .\cookbook\forms.py:505
 msgid "Mark food 'On Hand' when checked off shopping list."
@@ -419,10 +414,8 @@ msgid "Default Delay Hours"
 msgstr "默认延迟时间"
 
 #: .\cookbook\forms.py:517
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Filter to Supermarket"
-msgstr "筛选到超市"
+msgstr "按超市筛选"
 
 #: .\cookbook\forms.py:518
 msgid "Recent Days"
@@ -454,7 +447,7 @@ msgstr "默认情况下应继承的食物上的字段。"
 
 #: .\cookbook\forms.py:545
 msgid "Show recipe counts on search filters"
-msgstr "显示搜索筛选器上的菜谱计数"
+msgstr "显示搜索筛选器上的食谱计数"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -499,10 +492,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "必须提供 queryset 或 hash_key 之一"
 
 #: .\cookbook\helper\shopping_helper.py:152
-#, fuzzy
-#| msgid "You must supply a created_by"
 msgid "You must supply a servings size"
-msgstr "你必须提供创建者"
+msgstr "你必须提供一些份量"
 
 #: .\cookbook\helper\template_helper.py:64
 #: .\cookbook\helper\template_helper.py:66
@@ -512,15 +503,13 @@ msgstr "无法解析模板代码。"
 #: .\cookbook\integration\copymethat.py:41
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "喜欢"
 
 #: .\cookbook\integration\copymethat.py:70
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:63
-#, fuzzy
-#| msgid "Import Log"
 msgid "Imported from"
-msgstr "导入日志"
+msgstr "导入"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -582,10 +571,8 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr "在菜谱上重建全文搜索索引"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
-msgstr "仅 Postgress 数据库使用全文搜索，没有重建索引"
+msgstr "仅 PostgreSQL 数据库使用全文搜索，没有重建索引"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
@@ -685,8 +672,6 @@ msgid "Recipe"
 msgstr "菜谱"
 
 #: .\cookbook\models.py:1228
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
 msgstr "食物"
 
@@ -696,7 +681,7 @@ msgstr "关键词"
 
 #: .\cookbook\serializer.py:207
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "无法修改空间所有者权限。"
 
 #: .\cookbook\serializer.py:290
 msgid "File uploads are not enabled for this Space."
@@ -712,20 +697,20 @@ msgstr "你好"
 
 #: .\cookbook\serializer.py:1081
 msgid "You have been invited by "
-msgstr ""
+msgstr "您已被邀请至 "
 
 #: .\cookbook\serializer.py:1082
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " 加入他们的泥炉食谱空间 "
 
 #: .\cookbook\serializer.py:1083
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "点击以下链接激活您的帐户： "
 
 #: .\cookbook\serializer.py:1084
 msgid ""
 "If the link does not work use the following code to manually join the space: "
-msgstr ""
+msgstr "如果链接不起作用，请使用下面的代码手动加入空间： "
 
 #: .\cookbook\serializer.py:1085
 msgid "The invitation is valid until "
@@ -734,11 +719,11 @@ msgstr "邀请有效期至 "
 #: .\cookbook\serializer.py:1086
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
-msgstr ""
+msgstr "泥炉食谱是一个开源食谱管理器。 在 GitHub 上查看 "
 
 #: .\cookbook\serializer.py:1089
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "泥炉食谱邀请"
 
 #: .\cookbook\serializer.py:1209
 msgid "Existing shopping list to update"
@@ -748,7 +733,7 @@ msgstr "要更新现有的购物清单"
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
-msgstr "要添加的菜谱中材料识别符列表，不提供则添加所有材料。"
+msgstr "要添加的食谱中食材识别符列表，不提供则添加所有食材。"
 
 #: .\cookbook\serializer.py:1213
 msgid ""
@@ -828,14 +813,12 @@ msgid "Unverified"
 msgstr "未验证"
 
 #: .\cookbook\templates\account\email.html:40
-#, fuzzy
 msgid "Primary"
-msgstr "初选"
+msgstr "主要"
 
 #: .\cookbook\templates\account\email.html:47
-#, fuzzy
 msgid "Make Primary"
-msgstr "做出初选"
+msgstr "当做主要"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
@@ -999,7 +982,6 @@ msgid ""
 msgstr "我们已经向你发送了一封电子邮件。如果你在几分钟内没有收到，请联系我们。"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
-#, fuzzy
 msgid "Bad Token"
 msgstr "坏令牌"
 
@@ -1127,10 +1109,8 @@ msgstr "历史"
 #: .\cookbook\templates\base.html:252
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "材料"
+msgstr "食材编辑器"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
@@ -1167,15 +1147,13 @@ msgstr "管理员"
 
 #: .\cookbook\templates\base.html:309
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "没有空间"
+msgstr "你的空间"
 
 #: .\cookbook\templates\base.html:320
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "概述"
 
 #: .\cookbook\templates\base.html:324
 msgid "Markdown Guide"
@@ -1187,7 +1165,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:328
 msgid "Translate Tandoor"
-msgstr "翻译筒状泥炉<_<"
+msgstr "翻译泥炉"
 
 #: .\cookbook\templates\base.html:332
 msgid "API Browser"
@@ -1199,11 +1177,11 @@ msgstr "退出"
 
 #: .\cookbook\templates\base.html:357
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "你正在使用免费版的泥炉"
 
 #: .\cookbook\templates\base.html:358
 msgid "Upgrade Now"
-msgstr ""
+msgstr "现在升级"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1293,7 +1271,7 @@ msgstr "编辑菜谱"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr "编辑材料"
+msgstr "编辑食材"
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -1306,8 +1284,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        如果两个（或更多）单位或材料应该是相同的，则可使用以下形式。\n"
-"        它合并了两个单位或材料，并使用它们更新所有菜谱。\n"
+"        如果意外创建两个（或更多）单位的相同食材，则可以使用下面的\n"
+"        表格。\n"
+"        可以合并两个单位的食材并使用它们更新所有菜谱。\n"
 "    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
@@ -1321,7 +1300,7 @@ msgstr "合并"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr "你确定要合并这两种材料吗？"
+msgstr "你确定要合并这两种食材吗？"
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
@@ -1330,7 +1309,7 @@ msgstr "你确定要删除 %(title)s：<b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "这个不能撤销！"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1492,8 +1471,6 @@ msgstr "通过在行尾后添加两个空格插入换行符"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr "或者在中间留一个空行。"
 
@@ -1517,10 +1494,6 @@ msgid "Lists"
 msgstr "列表"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1671,7 +1644,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "返回"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -1760,15 +1733,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:29
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Simple searches ignore punctuation and common words such as "
-#| "'the', 'a', 'and'. And will treat seperate words as required.\n"
-#| "            Searching for 'apple or flour' will return any recipe that "
-#| "includes both 'apple' and 'flour' anywhere in the fields that have been "
-#| "selected for a full text search.\n"
-#| "            "
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
@@ -1779,10 +1743,8 @@ msgid ""
 "            "
 msgstr ""
 " \n"
-"            简单搜索会忽略标点符号和常用词，如“the”、“a”、“and”。并将根据需要"
-"处理单独的单词。\n"
-"            搜索“apple or flour”将会在全文搜索中返回任意包"
-"含“apple”和“flour”的菜谱。\n"
+"            简单搜索会忽略标点符号和常用词，如“the”、“a”、“and”。并将根据需要处理单独的单词。\n"
+"            搜索“apple or flour”将会在全文搜索中返回任意包含“apple”和“flour”的菜谱。\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:34
@@ -1795,6 +1757,10 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            短语搜索会忽略标点符号，但会按照搜索顺序查询所有单词。\n"
+"            搜索“苹果或面粉”将只返回一个食谱，这个食谱包含进行全文搜索时准确的字段短语“苹果或面粉”。\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""
@@ -1814,6 +1780,14 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
+" \n"
+"            网页搜索模拟许多支持特殊语法的网页搜索站点上的功能。\n"
+"            在几个单词周围加上引号会将这些单词转换为一个短语。\n"
+"            'or' 被识别为搜索紧接在 'or' 之前的单词（或短语）或紧随其后的单词（或短语）。\n"
+"            '-' 被识别为搜索不包含紧随其后的单词（或短语）的食谱。 \n"
+"            例如，搜索 “苹果派” 或“樱桃 -黄油” 将返回任何包含短语“苹果派”或“樱桃”的食谱 \n"
+"            与在全文搜索中包含的任何 “樱桃” 字段中，但排除包含单词“黄油”的任何食谱。\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1822,6 +1796,9 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
+" \n"
+"            原始搜索与网页类似，不同的是会采用标点运算符，例如 '|'， '&' 和 '()'\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1837,6 +1814,12 @@ msgid ""
 "methods.\n"
 "            "
 msgstr ""
+" \n"
+"            另一种也需要 PostgreSQL 的搜索方法是模糊搜索或三元组。 三元组是一组三个连续的字符。\n"
+"            例如，搜索“apple”将创建 x 个三元组“app”、“ppl”、“ple”，并将创建单词与生成的三元组匹配程度的分数。\n"
+"            使用模糊搜索或三元组一个好处是搜索“sandwich”会找到拼写错误的单词，例如“sandwhich”，而其他方法会漏掉这些单词。"
+"\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
@@ -1876,6 +1859,23 @@ msgid ""
 "full text results, it does match the trigram results.\n"
 "            "
 msgstr ""
+" \n"
+"            不重音 是一种特殊情况，因为它可以为每个尝试忽略重音值的搜索进行搜索“不重音”字段。 \n"
+"            例如，当您为“名字”启用不重音时，任何搜索（开头、包含、三元组）都将尝试搜索忽略重音字符。\n"
+"            \n"
+"            对于其他选项，您可以在任一或所有字段上启用搜索，它们将与假定的“or”组合在一起。\n"
+"            例如，为 起始于 启用“名字”，为 部分匹配 启用“名字”和“描述”，为 全文搜索 启用“食材”和“关键字”\n"
+"            并搜索“苹果”将生成一个搜索，该搜索将返回具有以下内容的食谱：\n"
+"            - 以“苹果”开头的食谱名称\n"
+"            - 或包含“苹果”的食谱名称\n"
+"            - 或包含“苹果”的食谱描述\n"
+"            - 或在食材中具有全文搜索匹配（“苹果”或“很多苹果”）的食谱\n"
+"            - 或将在关键字中进行全文搜索匹配的食谱\n"
+"\n"
+"            在多种类型搜索中组合大量字段可能会对性能产生负面影响、创建重复结果或返回意外结果。\n"
+"            例如，启用模糊搜索或部分匹配会干扰网络搜索算法。  \n"
+"            使用模糊搜索或全文搜索进行搜索“苹果 -派”将返回食谱 苹果派。虽然它不包含在全文结果中，但它确实与三元组结果匹配。\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:95
 msgid "Search Index"
@@ -1893,10 +1893,15 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
+" \n"
+"            三元搜索和全文搜索都依赖于数据库索引执行。  \n"
+"            你可以在“食谱”的“管理”页面中的所有字段上重建索引并选择任一食谱运行“为所选食谱重建索引”\n"
+"            你还可以通过执行管理命令“python manage.py rebuildindex”在命令行重建索引\n"
+"            "
 
 #: .\cookbook\templates\settings.html:28
 msgid "Account"
-msgstr "帐号"
+msgstr "账户"
 
 #: .\cookbook\templates\settings.html:35
 msgid "Preferences"
@@ -1955,7 +1960,7 @@ msgstr ""
 msgid ""
 "Use the token as an Authorization header prefixed by the word token as shown "
 "in the following examples:"
-msgstr ""
+msgstr "使用令牌作为授权标头，前缀为单词令牌，如以下示例所示："
 
 #: .\cookbook\templates\settings.html:162
 msgid "or"
@@ -2042,17 +2047,13 @@ msgstr "创建超级用户帐号"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "关联登录"
+msgstr "社交网络登录失败"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "尝试移动时出错 "
+msgstr "尝试通过您的社交网络帐户登录时出错。"
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2063,7 +2064,9 @@ msgstr "帐号连接"
 msgid ""
 "You can sign in to your account using any of the following third party\n"
 "            accounts:"
-msgstr "你可以使用以下任何第三方帐号登录你的帐号："
+msgstr ""
+"你可以使用以下任何第三方登录您的帐户\n"
+"            账户："
 
 #: .\cookbook\templates\socialaccount\connections.html:52
 msgid ""
@@ -2082,26 +2085,26 @@ msgstr "注册"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "连接 %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
-msgstr ""
+msgstr "你即将从 %(provider)s 连接一个新的第三方帐户。"
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "通过 %(provider)s 登录"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
-msgstr ""
+msgstr "你即将使用 %(provider)s 的第三方帐户登录。"
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2110,6 +2113,9 @@ msgid ""
 "        %(provider_name)s account to login to\n"
 "        %(site_name)s. As a final step, please complete the following form:"
 msgstr ""
+"你即将使用你的\n"
+"        %(provider_name)s 账户登录\n"
+"        %(site_name)s。 最后一步， 请填写以下表单："
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -2126,7 +2132,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:119
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:127
 msgid "Sign in using"
-msgstr ""
+msgstr "登录使用"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -2137,10 +2143,8 @@ msgid "Manage Subscription"
 msgstr "管理订阅"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
-msgstr "空间："
+msgstr "空间"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2155,13 +2159,11 @@ msgstr "你可以被邀请进入现有空间，也可以创建自己的空间。
 
 #: .\cookbook\templates\space_overview.html:45
 msgid "Owner"
-msgstr ""
+msgstr "所有者"
 
 #: .\cookbook\templates\space_overview.html:49
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "创建空间"
+msgstr "留出空间"
 
 #: .\cookbook\templates\space_overview.html:70
 #: .\cookbook\templates\space_overview.html:80
@@ -2203,19 +2205,19 @@ msgstr "统计数据"
 
 #: .\cookbook\templates\stats.html:19
 msgid "Number of objects"
-msgstr ""
+msgstr "对象数"
 
 #: .\cookbook\templates\stats.html:30
 msgid "Recipe Imports"
-msgstr ""
+msgstr "食谱导入"
 
 #: .\cookbook\templates\stats.html:38
 msgid "Objects stats"
-msgstr ""
+msgstr "对象统计"
 
 #: .\cookbook\templates\stats.html:41
 msgid "Recipes without Keywords"
-msgstr ""
+msgstr "菜谱没有关键字"
 
 #: .\cookbook\templates\stats.html:45
 msgid "Internal Recipes"
@@ -2292,6 +2294,13 @@ msgid ""
 "file.\n"
 "        "
 msgstr ""
+"\n"
+"            您没有在 <code>.env</code> 文件中配置 <code>SECRET_KEY</code>。 Django "
+"默认为\n"
+"            标准键\n"
+"            提供公开但并不安全的安装！ 请设置\n"
+"            <code>SECRET_KEY</code> 在 <code>.env</code> 文件中配置。\n"
+"        "
 
 #: .\cookbook\templates\system.html:66
 msgid "Debug Mode"
@@ -2307,6 +2316,11 @@ msgid ""
 "file.\n"
 "        "
 msgstr ""
+"\n"
+"            此应用程序仍在调试模式下运行。 这是不必要的。 调试模式由\n"
+"            设置\n"
+"            <code>DEBUG=0</code> 在 <code>.env</code> 文件中配置\n"
+"        "
 
 #: .\cookbook\templates\system.html:81
 msgid "Database"
@@ -2324,6 +2338,10 @@ msgid ""
 "            features only work with postgres databases.\n"
 "        "
 msgstr ""
+"\n"
+"            此应用程序未使用 PostgreSQL 数据库在后端运行。 这并没有关系，但这是不推荐的，\n"
+"            因为有些功能仅适用于 PostgreSQL 数据库。\n"
+"        "
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2335,7 +2353,7 @@ msgstr "参数 updated_at 格式不正确"
 
 #: .\cookbook\views\api.py:217 .\cookbook\views\api.py:320
 msgid "No {self.basename} with id {pk} exists"
-msgstr ""
+msgstr "不存在ID是 {pk} 的 {self.basename}"
 
 #: .\cookbook\views\api.py:221
 msgid "Cannot merge with the same object!"
@@ -2343,7 +2361,7 @@ msgstr "无法与同一对象合并！"
 
 #: .\cookbook\views\api.py:228
 msgid "No {self.basename} with id {target} exists"
-msgstr ""
+msgstr "不存在 ID 为 {pk} 的 {self.basename}"
 
 #: .\cookbook\views\api.py:233
 msgid "Cannot merge with child object!"
@@ -2371,7 +2389,7 @@ msgstr "无法将对象移动到自身！"
 
 #: .\cookbook\views\api.py:341
 msgid "No {self.basename} with id {parent} exists"
-msgstr ""
+msgstr "不存在 ID 为 {parent} 的 {self.basename}"
 
 #: .\cookbook\views\api.py:347
 msgid "{child.name} was moved successfully to parent {parent.name}"
@@ -2388,155 +2406,155 @@ msgstr "{obj.name} 已添加到购物清单中。"
 
 #: .\cookbook\views\api.py:674
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
-msgstr ""
+msgstr "食谱中的步骤ID。 对于多个重复参数。"
 
 #: .\cookbook\views\api.py:676
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "请求参数与对象名称匹配（模糊）。"
 
 #: .\cookbook\views\api.py:720
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
-msgstr ""
+msgstr "请求参数与食谱名称匹配（模糊）。 未来会添加全文搜索。"
 
 #: .\cookbook\views\api.py:722
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
-msgstr ""
+msgstr "菜谱应包含的关键字 ID。 对于多个重复参数。 相当于keywords_or"
 
 #: .\cookbook\views\api.py:725
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
-msgstr ""
+msgstr "允许多个关键字 ID。 返回带有任一关键字的食谱"
 
 #: .\cookbook\views\api.py:728
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
-msgstr ""
+msgstr "允许多个关键字 ID。 返回带有所有关键字的食谱。"
 
 #: .\cookbook\views\api.py:731
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
-msgstr ""
+msgstr "允许多个关键字 ID。 排除带有任一关键字的食谱。"
 
 #: .\cookbook\views\api.py:734
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
-msgstr ""
+msgstr "允许多个关键字 ID。 排除带有所有关键字的食谱。"
 
 #: .\cookbook\views\api.py:736
 msgid "ID of food a recipe should have. For multiple repeat parameter."
-msgstr ""
+msgstr "食谱中食物带有ID。并可添加多个食物。"
 
 #: .\cookbook\views\api.py:739
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
-msgstr ""
+msgstr "食谱中食物带有ID。并可添加多个食物"
 
 #: .\cookbook\views\api.py:741
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
-msgstr ""
+msgstr "食谱中食物带有ID。返回包含任何食物的食谱。"
 
 #: .\cookbook\views\api.py:743
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
-msgstr ""
+msgstr "食谱中食物带有ID。排除包含任一食物的食谱。"
 
 #: .\cookbook\views\api.py:745
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
-msgstr ""
+msgstr "食谱中食物带有ID。排除包含所有食物的食谱。"
 
 #: .\cookbook\views\api.py:746
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "食谱应具有单一ID。"
 
 #: .\cookbook\views\api.py:748
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
-msgstr ""
+msgstr "配方的评分范围从 0 到 5。"
 
 #: .\cookbook\views\api.py:749
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
-msgstr ""
+msgstr "烹饪书应该在食谱中具有ID。并且可以添加多本。"
 
 #: .\cookbook\views\api.py:751
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
-msgstr ""
+msgstr "书的ID允许多个。返回包含任一书籍的食谱"
 
 #: .\cookbook\views\api.py:753
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
-msgstr ""
+msgstr "书的ID允许多个。返回包含所有书籍的食谱。"
 
 #: .\cookbook\views\api.py:755
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
-msgstr ""
+msgstr "书的ID允许多个。排除包含任一书籍的食谱。"
 
 #: .\cookbook\views\api.py:757
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
-msgstr ""
+msgstr "书的ID允许多个。排除包含所有书籍的食谱。"
 
 #: .\cookbook\views\api.py:759
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
-msgstr ""
+msgstr "只返回内部食谱。 [true/<b>false</b>]"
 
 #: .\cookbook\views\api.py:761
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "按随机排序返回结果。 [true/<b> false </b>]"
 
 #: .\cookbook\views\api.py:763
 msgid "Returns new results first in search results. [true/<b>false</b>]"
-msgstr ""
+msgstr "在搜索结果中首先返回新结果。 [是/<b>否</b>]"
 
 #: .\cookbook\views\api.py:765
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
-msgstr ""
+msgstr "筛选烹饪 X 次或更多次的食谱。  负值返回烹饪少于 X 次"
 
 #: .\cookbook\views\api.py:767
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
-msgstr ""
+msgstr "筛选最后烹饪在 YYYY-MM-DD 当天或之后的食谱。 前置 - 在日期或日期之前筛选。"
 
 #: .\cookbook\views\api.py:769
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
-msgstr ""
+msgstr "筛选在 YYYY-MM-DD 或之后创建的食谱。 前置 - 在日期或日期之前过滤。"
 
 #: .\cookbook\views\api.py:771
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
-msgstr ""
+msgstr "筛选在 YYYY-MM-DD 或之后更新的食谱。 前置 - 在日期或日期之前筛选。"
 
 #: .\cookbook\views\api.py:773
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
-msgstr ""
+msgstr "筛选最后查看时间是在 YYYY-MM-DD 或之后的食谱。 前置 - 在日期或日期之前筛选。"
 
 #: .\cookbook\views\api.py:775
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
-msgstr ""
+msgstr "筛选可以直接用手制作的食谱。 [真/<b>假</b>]"
 
 #: .\cookbook\views\api.py:937
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
-msgstr ""
+msgstr "返回主键为 id 的购物清单条目。 允许多个值。"
 
 #: .\cookbook\views\api.py:942
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</b>]"
 "<br>  - recent includes unchecked items and recently completed items."
-msgstr ""
+msgstr "在选中时筛选购物清单列表。  [真, 假, 两者都有, <b>最近</b>]<br>  - 最近包括未选中的项目和最近完成的项目。"
 
 #: .\cookbook\views\api.py:945
 msgid "Returns the shopping list entries sorted by supermarket category order."
-msgstr ""
+msgstr "返回按超市分类排序的购物清单列表。"
 
 #: .\cookbook\views\api.py:1140
 msgid "Nothing to do."
@@ -2544,7 +2562,7 @@ msgstr "无事可做。"
 
 #: .\cookbook\views\api.py:1160
 msgid "Invalid Url"
-msgstr ""
+msgstr "无效网址"
 
 #: .\cookbook\views\api.py:1167
 msgid "Connection Refused."
@@ -2552,18 +2570,16 @@ msgstr "连接被拒绝。"
 
 #: .\cookbook\views\api.py:1172
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "错误的 URL Schema。"
 
 #: .\cookbook\views\api.py:1195
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "找不到可用的数据。"
 
 #: .\cookbook\views\api.py:1303 .\cookbook\views\data.py:28
 #: .\cookbook\views\edit.py:120 .\cookbook\views\new.py:90
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr ""
+msgstr "此功能在泥炉的托管版本中尚不可用！"
 
 #: .\cookbook\views\api.py:1325
 msgid "Sync successful!"
@@ -2591,7 +2607,7 @@ msgstr "存储后端"
 #: .\cookbook\views\delete.py:132
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
-msgstr ""
+msgstr "无法删除此存储后端，因为它至少在一台显示器中使用。"
 
 #: .\cookbook\views\delete.py:155
 msgid "Recipe Book"
@@ -2606,8 +2622,6 @@ msgid "Invite Link"
 msgstr "邀请链接"
 
 #: .\cookbook\views\delete.py:200
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
 msgstr "成员"
 
@@ -2616,9 +2630,8 @@ msgid "You cannot edit this storage!"
 msgstr "你不能编辑此存储空间！"
 
 #: .\cookbook\views\edit.py:140
-#, fuzzy
 msgid "Storage saved!"
-msgstr "存储已存储！"
+msgstr "存储已保存！"
 
 #: .\cookbook\views\edit.py:146
 msgid "There was an error updating this storage backend!"
@@ -2667,10 +2680,8 @@ msgid "Shopping Categories"
 msgstr "购物类别"
 
 #: .\cookbook\views\lists.py:187
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "筛选"
+msgstr "自定义筛选"
 
 #: .\cookbook\views\lists.py:224
 msgid "Steps"
@@ -2688,11 +2699,11 @@ msgstr "导入此菜谱时出错！"
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
-msgstr ""
+msgstr "你已成功创建自己的菜谱空间。 首先添加一些菜谱或邀请其他人加入。"
 
 #: .\cookbook\views\views.py:178
 msgid "You do not have the required permissions to perform this action!"
-msgstr ""
+msgstr "您没有执行此操作所需的权限！"
 
 #: .\cookbook\views\views.py:189
 msgid "Comment saved!"

@@ -277,7 +277,8 @@ class SpaceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Space
         fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb', 'image',)
+                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
+                  'image', 'use_plural',)
         read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
 
 
@@ -431,17 +432,22 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
+        plural_name = validated_data.pop('plural_name', None)
+        if plural_name:
+            plural_name = plural_name.strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Unit.objects.get_or_create(name=name, space=space, defaults=validated_data)
+        obj, created = Unit.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
         validated_data['name'] = validated_data['name'].strip()
+        if plural_name := validated_data.get('plural_name', None):
+            validated_data['plural_name'] = plural_name.strip()
         return super(UnitSerializer, self).update(instance, validated_data)
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'description', 'numrecipe', 'image')
+        fields = ('id', 'name', 'plural_name', 'description', 'numrecipe', 'image')
         read_only_fields = ('id', 'numrecipe', 'image')
 
 
@@ -499,7 +505,7 @@ class RecipeSimpleSerializer(WritableNestedModelSerializer):
 class FoodSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'plural_name')
 
 
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
@@ -538,6 +544,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
+        plural_name = validated_data.pop('plural_name', None)
+        if plural_name:
+            plural_name = plural_name.strip()
         space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
@@ -562,12 +571,14 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             else:
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
-        obj, created = Food.objects.get_or_create(name=name, space=space, defaults=validated_data)
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
         if name := validated_data.get('name', None):
             validated_data['name'] = name.strip()
+        if plural_name := validated_data.get('plural_name', None):
+            validated_data['plural_name'] = plural_name.strip()
         # assuming if on hand for user also onhand for shopping_share users
         onhand = validated_data.get('food_onhand', None)
         reset_inherit = self.initial_data.get('reset_inherit', False)
@@ -587,7 +598,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     class Meta:
         model = Food
         fields = (
-            'id', 'name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
+            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
             'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields'
         )
@@ -616,6 +627,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
+            'always_use_plural_unit', 'always_use_plural_food',
         )
 
 
@@ -684,25 +696,6 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
-    def get_recipe_rating(self, obj):
-        try:
-            rating = obj.cooklog_set.filter(created_by=self.context['request'].user, rating__gt=0).aggregate(
-                Avg('rating'))
-            if rating['rating__avg']:
-                return rating['rating__avg']
-        except TypeError:
-            pass
-        return 0
-
-    def get_recipe_last_cooked(self, obj):
-        try:
-            last = obj.cooklog_set.filter(created_by=self.context['request'].user).order_by('created_at').last()
-            if last:
-                return last.created_at
-        except TypeError:
-            pass
-        return None
-
     # TODO make days of new recipe a setting
     def is_recipe_new(self, obj):
         if getattr(obj, 'new_recipe', None) or obj.created_at > (timezone.now() - timedelta(days=7)):
@@ -713,10 +706,11 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
     new = serializers.SerializerMethodField('is_recipe_new')
     recent = serializers.ReadOnlyField()
+
+    rating = CustomDecimalField(required=False, allow_null=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
 
     def create(self, validated_data):
         pass
@@ -738,9 +732,9 @@ class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
-    rating = serializers.SerializerMethodField('get_recipe_rating')
-    last_cooked = serializers.SerializerMethodField('get_recipe_last_cooked')
     shared = UserSerializer(many=True, required=False)
+    rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
 
     class Meta:
         model = Recipe
@@ -1142,14 +1136,14 @@ class AccessTokenSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField('get_token')
 
     def create(self, validated_data):
-        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-","_")}'
+        validated_data['token'] = f'tda_{str(uuid.uuid4()).replace("-", "_")}'
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
     def get_token(self, obj):
         if (timezone.now() - obj.created).seconds < 15:
             return obj.token
-        return f'tda_************_******_***********{obj.token[len(obj.token)-4:]}'
+        return f'tda_************_******_***********{obj.token[len(obj.token) - 4:]}'
 
     class Meta:
         model = AccessToken
@@ -1180,7 +1174,7 @@ class SupermarketCategoryExportSerializer(SupermarketCategorySerializer):
 class UnitExportSerializer(UnitSerializer):
     class Meta:
         model = Unit
-        fields = ('name', 'description')
+        fields = ('name', 'plural_name', 'description')
 
 
 class FoodExportSerializer(FoodSerializer):
@@ -1188,7 +1182,7 @@ class FoodExportSerializer(FoodSerializer):
 
     class Meta:
         model = Food
-        fields = ('name', 'ignore_shopping', 'supermarket_category',)
+        fields = ('name', 'plural_name', 'ignore_shopping', 'supermarket_category',)
 
 
 class IngredientExportSerializer(WritableNestedModelSerializer):
@@ -1202,7 +1196,7 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount')
+        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount', 'always_use_plural_unit', 'always_use_plural_food')
 
 
 class StepExportSerializer(WritableNestedModelSerializer):
