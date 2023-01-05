@@ -15585,7 +15585,7 @@ __metadata:
     vue2-touch-events: ^3.2.2
     vuedraggable: ^2.24.3
     vuex: ^3.6.0
-    webpack-bundle-tracker: 1.7.0
+    webpack-bundle-tracker: 1.8.0
     workbox-expiration: ^6.5.4
     workbox-navigation-preload: ^6.5.4
     workbox-precaching: ^6.5.4
@@ -15707,9 +15707,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-bundle-tracker@npm:1.7.0":
-  version: 1.7.0
-  resolution: "webpack-bundle-tracker@npm:1.7.0"
+"webpack-bundle-tracker@npm:1.8.0":
+  version: 1.8.0
+  resolution: "webpack-bundle-tracker@npm:1.8.0"
   dependencies:
     lodash.assign: ^4.2.0
     lodash.defaults: ^4.2.0
@@ -15718,7 +15718,7 @@ __metadata:
     lodash.get: ^4.4.2
     lodash.topairs: ^4.3.0
     strip-ansi: ^6.0.0
-  checksum: c7f1319a04fe90015818d5b8d6d33992ebc2fac0a3d55a0df1d2366ae23cf6c90140480bf54c720a649472306f6d3c353d3c011c8e69c28e230d218b2537428c
+  checksum: de640c333febfad389ae5c207caa96ada10f51f79c50ed65371dbf750fa88de9dc16c1478573aadde888e691a9731aa1321c1f59558cd4b0698e4964015881d8
   languageName: node
   linkType: hard
 
