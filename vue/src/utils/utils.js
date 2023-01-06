@@ -717,4 +717,10 @@ export const formFunctions = {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
         return form
     },
+    AutomationOrderDefault: function (form) {
+        if (form.fields.filter((x) => x.field === "order")[0].value === undefined) {
+            form.fields.filter((x) => x.field === "order")[0].value = 1000
+        }
+        return form
+    },
 }
