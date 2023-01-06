@@ -28,7 +28,7 @@ beautifulsoup4==4.11.1
 microdata==0.8.0
 Jinja2==3.1.2
 django-webpack-loader==1.8.0
-git+https://github.com/ierror/django-js-reverse@7cab78c4531780ab4b32033d5104ccd5be1a246a
+git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.52.0
 recipe-scrapers==14.24.0
 django-scopes==1.2.0.post1
