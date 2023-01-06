@@ -125,6 +125,11 @@ def get_from_scraper(scrape, request):
             recipe_json['source_url'] = ''
 
     try:
+        keywords.append(scrape.author())
+    except:
+        pass
+
+    try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
     except AttributeError:
         recipe_json['keywords'] = keywords
