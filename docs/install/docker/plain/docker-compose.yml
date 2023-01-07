@@ -13,8 +13,6 @@ services:
     image: vabene1111/recipes
     env_file:
       - ./.env
-    ports:
-      - 80:8080
     volumes:
       - staticfiles:/opt/recipes/staticfiles
       - nginx_config:/opt/recipes/nginx/conf.d
@@ -26,6 +24,7 @@ services:
     image: nginx:mainline-alpine
     restart: always
     ports:
+      - 80:80
     env_file:
       - ./.env
     depends_on:

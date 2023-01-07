@@ -23,6 +23,9 @@
                     <b-card-body class="m-0 py-0">
                         <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                             <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
+                            <template v-if="use_plural">
+                                <div v-if="item[plural] !== '' && item[plural] !== null" class="m-0 text-truncate">({{ $t("plural_short") }}: {{ item[plural] }})</div>
+                            </template>
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
                             <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
@@ -71,7 +74,11 @@
         <!-- recursively add child cards -->
         <div class="row" v-if="item.show_children">
             <div class="col-md-10 offset-md-2">
-                <generic-horizontal-card v-for="child in item[children]" v-bind:key="child.id" :item="child" :model="model" @item-action="$emit('item-action', $event)"> </generic-horizontal-card>
+                <generic-horizontal-card v-for="child in item[children]"
+                                         v-bind:key="child.id" 
+                                         :item="child" :model="model" 
+                                         :use_plural="use_plural" 
+                                         @item-action="$emit('item-action', $event)"></generic-horizontal-card>
             </div>
         </div>
         <!-- conditionally view recipes -->
@@ -146,12 +153,14 @@ export default {
         item: { type: Object },
         model: { type: Object },
         title: { type: String, default: "name" }, // this and the following props need to be moved to model.js and made computed values
+        plural: { type: String, default: "plural_name" },
         subtitle: { type: String, default: "description" },
         child_count: { type: String, default: "numchild" },
         children: { type: String, default: "children" },
         recipe_count: { type: String, default: "numrecipe" },
         recipes: { type: String, default: "recipes" },
         show_context_menu: { type: Boolean, default: true },
+        use_plural: { type: Boolean, default: false},
     },
     data() {
         return {

@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-09-10 19:32+0000\n"
-"Last-Translator: David Schenk <david@schenk-neubrunn.de>\n"
+"PO-Revision-Date: 2022-11-21 19:09+0000\n"
+"Last-Translator: Alex <mail@alexpts.dev>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
@@ -736,7 +736,7 @@ msgstr "Lebensmittel"
 
 #: .\cookbook\models.py:1229 .\cookbook\templates\base.html:138
 msgid "Keyword"
-msgstr "Schlagwort"
+msgstr "Schlüsselwort"
 
 #: .\cookbook\serializer.py:207
 msgid "Cannot modify Space owner permission."
@@ -801,11 +801,10 @@ msgstr ""
 "Zutaten hinzugefügt."
 
 #: .\cookbook\serializer.py:1213
-#, fuzzy
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
-"Wenn Sie eine \"list_recipe\"-ID, sowie 0 Portionen angeben, wird diese "
+"Wenn Sie eine list_recipe ID und Portion mit dem Wert 0 angeben, wird diese "
 "Einkaufsliste gelöscht."
 
 #: .\cookbook\serializer.py:1222
@@ -2777,8 +2776,6 @@ msgid "Bad URL Schema."
 msgstr "Ungültiges URL Schema."
 
 #: .\cookbook\views\api.py:1195
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "Es konnten keine nutzbaren Daten gefunden werden."
 

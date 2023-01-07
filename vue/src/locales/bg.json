@@ -410,5 +410,12 @@
     "Warning_Delete_Supermarket_Category": "Изтриването на категория супермаркет ще изтрие и всички връзки с храни. Сигурен ли си?",
     "New_Supermarket": "Създайте нов супермаркет",
     "New_Supermarket_Category": "Създаване на нова категория супермаркет",
-    "Are_You_Sure": "Сигурен ли си?"
+    "Are_You_Sure": "Сигурен ли си?",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

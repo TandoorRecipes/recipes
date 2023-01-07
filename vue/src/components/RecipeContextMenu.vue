@@ -49,7 +49,7 @@
                 <a href="javascript:void(0);">
                     <button class="dropdown-item" @click="pinRecipe()" v-if="!disabled_options.pin">
                         <i class="fas fa-thumbtack fa-fw"></i>
-                        {{ $t("Pin") }}
+                        {{ isPinned ? $t("Unpin") : $t("Pin")}}
                     </button>
                 </a>
 
@@ -121,6 +121,7 @@ export default {
     data() {
         return {
             servings_value: 0,
+            isPinned: false,
             recipe_share_link: undefined,
             modal_id: Math.round(Math.random() * 100000),
             options: {
@@ -138,7 +139,7 @@ export default {
                 },
             },
             entryEditing: {},
-            mealplan: undefined,
+            mealplan: undefined
         }
     },
     props: {
@@ -154,6 +155,9 @@ export default {
     },
     mounted() {
         this.servings_value = this.servings === -1 ? this.recipe.servings : this.servings
+
+        let pinnedRecipes = JSON.parse(localStorage.getItem("pinned_recipes")) || []
+        this.isPinned = pinnedRecipes.some((r) => r.id == this.recipe.id);
     },
     watch: {
         recipe: {
@@ -166,9 +170,16 @@ export default {
         },
     },
     methods: {
-        pinRecipe: function () {
+        pinRecipe () {
             let pinnedRecipes = JSON.parse(localStorage.getItem("pinned_recipes")) || []
-            pinnedRecipes.push({id: this.recipe.id, name: this.recipe.name})
+            if(this.isPinned) {
+                pinnedRecipes = pinnedRecipes.filter((r) => r.id !== this.recipe.id)
+                makeToast(this.$t("Unpin"), this.$t("UnpinnedConfirmation", {recipe: this.recipe.name}), "info")
+            } else {
+                pinnedRecipes.push({id: this.recipe.id, name: this.recipe.name})
+                makeToast(this.$t("Pin"), this.$t("PinnedConfirmation", {recipe: this.recipe.name}), "info")
+            }
+            this.isPinned = !this.isPinned
             localStorage.setItem("pinned_recipes", JSON.stringify(pinnedRecipes))
         },
         saveMealPlan: function (entry) {
