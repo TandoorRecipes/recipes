@@ -68,7 +68,10 @@
     "Enable_Amount": "Enable Amount",
     "Disable_Amount": "Disable Amount",
     "Ingredient Editor": "Ingredient Editor",
-
+    "Description_Replace": "Description Replace",
+    "Instruction_Replace": "Instruction Replace",
+    "Auto_Sort": "Auto Sort",
+    "Auto_Sort_Help": "Move all ingredients to the best fitting step.",
     "Private_Recipe": "Private Recipe",
     "Private_Recipe_Help": "Recipe is only shown to you and people its shared with.",
     "reusable_help_text": "Should the invite link be usable for more than one user.",
@@ -308,6 +311,9 @@
     "in_shopping": "In Shopping List",
     "DelayUntil": "Delay Until",
     "Pin": "Pin",
+    "Unpin": "Unpin",
+    "PinnedConfirmation": "{recipe} has been pinned.",
+    "UnpinnedConfirmation": "{recipe} has been unpinned.",
     "mark_complete": "Mark Complete",
     "QuickEntry": "Quick Entry",
     "shopping_add_onhand_desc": "Mark food 'On Hand' when checked off shopping list.",
@@ -459,5 +465,14 @@
     "New_Supermarket": "Create new supermarket",
     "New_Supermarket_Category": "Create new supermarket category",
     "Are_You_Sure": "Are you sure?",
-    "Valid Until": "Valid Until"
+    "Valid Until": "Valid Until",
+    "Split_All_Steps": "Split all rows into seperate steps.",
+    "Combine_All_Steps": "Combine all steps into a single field.",
+    "Plural": "Plural",
+    "plural_short": "plural",
+    "Use_Plural_Unit_Always": "Use plural form for unit always",
+    "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
+    "Use_Plural_Food_Always": "Use plural form for food always",
+    "Use_Plural_Food_Simple": "Use plural form for food dynamically",
+    "plural_usage_info": "Use the plural form for units and food inside this space."
 }

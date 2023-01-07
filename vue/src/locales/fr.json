@@ -402,5 +402,12 @@
     "Comments_setting": "Montrer les commentaires",
     "import_duplicates": "Pour éviter les doublons, les recettes de même nom seront ignorées. Cocher la case pour tout importer.",
     "Account": "Compte",
-    "Change_Password": "Modifier le mot de passe"
+    "Change_Password": "Modifier le mot de passe",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

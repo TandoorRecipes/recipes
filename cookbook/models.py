@@ -260,6 +260,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
+    use_plural = models.BooleanField(default=False)
     allow_sharing = models.BooleanField(default=True)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
@@ -366,7 +367,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
@@ -530,6 +531,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
 
 class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     description = models.TextField(blank=True, null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -554,6 +556,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     if SORT_TREE_BY_NAME:
         node_order_by = ['name']
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
     ignore_shopping = models.BooleanField(default=False)  # inherited field
@@ -654,6 +657,8 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
+    always_use_plural_unit = models.BooleanField(default=False)
+    always_use_plural_food = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
@@ -663,7 +668,23 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        return str(self.amount) + ' ' + str(self.unit) + ' ' + str(self.food)
+        food = ""
+        unit = ""
+        if self.always_use_plural_food and self.food.plural_name not in (None, "") and not self.no_amount:
+            food = self.food.plural_name
+        else:
+            if self.amount > 1 and self.food.plural_name not in (None, "") and not self.no_amount:
+                food = self.food.plural_name
+            else:
+                food = str(self.food)
+        if self.always_use_plural_unit and self.unit.plural_name not in (None, "") and not self.no_amount:
+            unit = self.unit.plural_name
+        else:
+            if self.amount > 1 and self.unit.plural_name not in (None, "") and not self.no_amount:
+                unit = self.unit.plural_name
+            else:
+                unit = str(self.unit)
+        return str(self.amount) + ' ' + str(unit) + ' ' + str(food)
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1202,15 +1223,20 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     FOOD_ALIAS = 'FOOD_ALIAS'
     UNIT_ALIAS = 'UNIT_ALIAS'
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+    DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
+    INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
 
     type = models.CharField(max_length=128,
-                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),))
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
+                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
     param_1 = models.CharField(max_length=128, blank=True, null=True)
     param_2 = models.CharField(max_length=128, blank=True, null=True)
     param_3 = models.CharField(max_length=128, blank=True, null=True)
+
+    order = models.IntegerField(default=1000)
 
     disabled = models.BooleanField(default=False)
 
