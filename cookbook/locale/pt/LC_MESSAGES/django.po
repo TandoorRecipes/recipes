@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-10-14 17:19+0000\n"
-"Last-Translator: Shaxine <shaxine@protonmail.com>\n"
+"PO-Revision-Date: 2023-01-08 17:55+0000\n"
+"Last-Translator: Joachim Weber <joachim.weber@gmx.de>\n"
 "Language-Team: Portuguese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pt/>\n"
 "Language: pt\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
@@ -89,7 +89,9 @@ msgstr "Modo canhoto"
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
-msgstr "Cor da barra de navegação."
+msgstr ""
+"Cor da barra de navegação superior. Nem todas as cores funcionam com todos "
+"os temas, apenas experimente!"
 
 #: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
@@ -206,7 +208,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:200
 msgid "Add your comment: "
-msgstr "Adicionar comentário:"
+msgstr "Adicionar comentário: "
 
 #: .\cookbook\forms.py:215
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -482,10 +484,8 @@ msgid "Fields on food that should be inherited by default."
 msgstr "Prato a ser alterado."
 
 #: .\cookbook\forms.py:545
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Mostrar receitas recentes na página de pesquisa."
+msgstr "Mostrar receitas recentes na página de pesquisa"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:36
 msgid ""
@@ -530,10 +530,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:152
-#, fuzzy
-#| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
-msgstr "É necessário inserir uma receita ou um título."
+msgstr "É necessário inserir uma receita ou um título"
 
 #: .\cookbook\helper\template_helper.py:64
 #: .\cookbook\helper\template_helper.py:66
@@ -570,10 +568,9 @@ msgid "The following recipes were ignored because they already existed:"
 msgstr ""
 
 #: .\cookbook\integration\integration.py:235
-#, fuzzy, python-format
-#| msgid "Import Recipes"
+#, python-format
 msgid "Imported %s recipes."
-msgstr "Importar Receitas"
+msgstr "%s receitas importadas."
 
 #: .\cookbook\integration\paprika.py:46
 #, fuzzy
@@ -1461,13 +1458,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Os </b>campos da Password e Token</b> são guardados dentro da base de dados "
-"como <b>texto simples.</b>\n"
+"        Os </b>campos da senha e Token</b> são guardados dentro da base de "
+"dados como <b>texto simples.</b>\n"
 "Isto é necessário porque eles são usados para fazer pedidos á API, mas "
 "também aumenta o risco de\n"
 "de alguém os roubar. <br/>\n"
 "Para limitar os possíveis danos, tokens e contas com acesso limitado podem "
-"ser usadas."
+"ser usadas.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
@@ -1669,10 +1667,8 @@ msgid "No Permissions"
 msgstr ""
 
 #: .\cookbook\templates\no_groups_info.html:17
-#, fuzzy
-#| msgid "You are not logged in and therefore cannot view this page!"
 msgid "You do not have any groups and therefor cannot use this application."
-msgstr "Autenticação necessária para aceder a esta página!"
+msgstr "Você não tem nenhum grupo e, portanto, não pode usar este aplicativo."
 
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
@@ -1685,12 +1681,12 @@ msgid "No Permission"
 msgstr ""
 
 #: .\cookbook\templates\no_perm_info.html:15
-#, fuzzy
-#| msgid "You do not have the required permissions to view this page!"
 msgid ""
 "You do not have the required permissions to view this page or perform this "
 "action."
-msgstr "Sem permissões para aceder a esta página!"
+msgstr ""
+"Você não tem as permissões necessárias para visualizar esta página ou "
+"executar esta ação."
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
