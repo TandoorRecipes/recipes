@@ -667,12 +667,7 @@ export default {
                 this.createEntry(currentEntry)
       },
        doAutoPlan(autoPlan){
-         console.log(autoPlan)
           let dayInMilliseconds = (86400000)
-         console.log(autoPlan.startDay)
-         console.log(autoPlan.endDay)
-         console.log(autoPlan.endDay - autoPlan.startDay)
-         console.log(((autoPlan.endDay - autoPlan.startDay)/dayInMilliseconds) + 1)
          let numberOfDays = ((autoPlan.endDay - autoPlan.startDay)/dayInMilliseconds) + 1
 
          for (const mealTypesKey in autoPlan.meal_types) {
