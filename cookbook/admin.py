@@ -15,7 +15,7 @@ from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace, UnitConversion)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -199,6 +199,14 @@ class FoodAdmin(TreeAdmin):
 
 
 admin.site.register(Food, FoodAdmin)
+
+
+class UnitConversionAdmin(admin.ModelAdmin):
+    list_display = ('base_amount', 'base_unit', 'food', 'converted_amount', 'converted_unit')
+    search_fields = ('food__name', 'unit__name')
+
+
+admin.site.register(UnitConversion, UnitConversionAdmin)
 
 
 class IngredientAdmin(admin.ModelAdmin):

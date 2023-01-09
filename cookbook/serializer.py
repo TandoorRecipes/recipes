@@ -29,7 +29,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -610,9 +610,27 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     unit = UnitSerializer(allow_null=True)
     used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
+    conversions = serializers.SerializerMethodField('get_conversions')
 
     def get_used_in_recipes(self, obj):
         return list(Recipe.objects.filter(steps__ingredients=obj.id).values('id', 'name'))
+
+    def get_conversions(self, obj):
+        conversions = []
+
+        for c in UnitConversion.objects.filter(space=self.context['request'].space).filter(Q(food__isnull=True) | Q(food=obj.food)).filter(Q(base_unit=obj.unit) | Q(converted_unit=obj.unit)):
+            if obj.unit == c.base_unit:
+                conversions.append({
+                    'amount': obj.amount * (c.converted_amount/c.base_amount),
+                    'unit': UnitSerializer(c.converted_unit, context={'request': self.context['request']}).data,
+                })
+            else:
+                conversions.append({
+                    'amount': obj.amount * (c.base_amount / c.converted_amount),
+                    'unit': UnitSerializer(c.base_unit, context={'request': self.context['request']}).data,
+                })
+
+        return conversions
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -625,7 +643,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Ingredient
         fields = (
-            'id', 'food', 'unit', 'amount', 'note', 'order',
+            'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
             'always_use_plural_unit', 'always_use_plural_food',
         )

@@ -649,6 +649,25 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         )
 
 
+class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model, PermissionModelMixin):
+    base_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    base_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='base_unit')
+    converted_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='converted_unit')
+
+    food = models.ForeignKey('Food', on_delete=models.CASCADE, null=True, blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.base_amount} {self.base_unit} -> {self.converted_amount} {self.converted_unit} {self.food}'
+
+
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
     # delete method on Food and Unit checks if they are part of a Recipe, if it is raises a ProtectedError instead of cascading the delete
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True, blank=True)
