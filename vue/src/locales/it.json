@@ -454,5 +454,11 @@
     "Sticky_Nav_Help": "Mostra sempre il menu di navigazione in alto.",
     "paste_ingredients_placeholder": "Incolla qui la lista degli ingredienti...",
     "Importer_Help": "Per altre informazioni e aiuto su questo importer:",
-    "search_create_help_text": "Crea una nuova ricetta direttamente in Tandoor."
+    "search_create_help_text": "Crea una nuova ricetta direttamente in Tandoor.",
+    "Description_Replace": "Sostituisci descrizione",
+    "Instruction_Replace": "Sostituisci istruzioni",
+    "book_filter_help": "Includi ricette dal filtro ricette oltre a quelle assegnate manualmente.",
+    "import_duplicates": "Per evitare duplicati, le ricette con lo stesso nome di quelle esistenti vengono ignorate. Selezionare questa casella per importare tutto.",
+    "shopping_category_help": "I supermercati possono essere ordinati e filtrati per categoria di spesa seguendo la disposizione degli scaffali.",
+    "food_recipe_help": "Collegando qui una ricetta, includerà la stessa in ogni altra ricetta che usa questo alimento"
 }
