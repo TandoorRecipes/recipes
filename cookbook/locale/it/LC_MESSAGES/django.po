@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-01-05 12:55+0000\n"
+"PO-Revision-Date: 2023-01-10 11:55+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -304,15 +304,11 @@ msgstr ""
 "errori di battitura)."
 
 #: .\cookbook\forms.py:448
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
-"Seleziona il metodo di ricerca.  Clicca <a href=\"/docs/search/\">qui</a> "
+"Seleziona il metodo di ricerca.   Clicca <a href=\"/docs/search/\">qui</a> "
 "per avere maggiori informazioni."
 
 #: .\cookbook\forms.py:449
@@ -377,8 +373,6 @@ msgid "Partial Match"
 msgstr "Corrispondenza parziale"
 
 #: .\cookbook\forms.py:467
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "Inizia con"
 
@@ -424,7 +418,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:504
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Giorni di visualizzazione di voci recenti della lista della spesa."
 
 #: .\cookbook\forms.py:505
 msgid "Mark food 'On Hand' when checked off shopping list."
@@ -448,11 +442,11 @@ msgstr "Nuova lista della spesa"
 
 #: .\cookbook\forms.py:512
 msgid "Autosync"
-msgstr ""
+msgstr "Sincronizzazione automatica"
 
 #: .\cookbook\forms.py:513
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Aggiungi automaticamente al piano alimentare"
 
 #: .\cookbook\forms.py:514
 msgid "Exclude On Hand"
@@ -460,7 +454,7 @@ msgstr "Escludi Disponibile"
 
 #: .\cookbook\forms.py:515
 msgid "Include Related"
-msgstr ""
+msgstr "Includi correlati"
 
 #: .\cookbook\forms.py:516
 msgid "Default Delay Hours"
@@ -474,11 +468,11 @@ msgstr "Seleziona supermercato"
 
 #: .\cookbook\forms.py:518
 msgid "Recent Days"
-msgstr ""
+msgstr "Giorni recenti"
 
 #: .\cookbook\forms.py:519
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "Delimitatore CSV"
 
 #: .\cookbook\forms.py:520
 msgid "List Prefix"
@@ -562,7 +556,7 @@ msgstr "Impossibile elaborare il codice del template."
 #: .\cookbook\integration\copymethat.py:41
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Preferito"
 
 #: .\cookbook\integration\copymethat.py:70
 #: .\cookbook\integration\recettetek.py:54
@@ -815,7 +809,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1222
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Quantità di alimenti da aggiungere alla lista della spesa"
 
 #: .\cookbook\serializer.py:1224
 msgid "ID of unit to use for the shopping list"
@@ -1224,15 +1218,13 @@ msgstr "Amministratore"
 
 #: .\cookbook\templates\base.html:309
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Nessuna istanza"
+msgstr "Le tue istanze"
 
 #: .\cookbook\templates\base.html:320
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Panoramica"
 
 #: .\cookbook\templates\base.html:324
 msgid "Markdown Guide"
@@ -1256,11 +1248,11 @@ msgstr "Esci"
 
 #: .\cookbook\templates\base.html:357
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Stai usando la versione gratuita di Tandoor"
 
 #: .\cookbook\templates\base.html:358
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Aggiorna ora"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1396,7 +1388,7 @@ msgstr "Sei sicuro di volere eliminare %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Questa azione non può essere annullata!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1971,10 +1963,8 @@ msgid "Search-Settings"
 msgstr "Cerca-Impostazioni"
 
 #: .\cookbook\templates\settings.html:56
-#, fuzzy
-#| msgid "Search-Settings"
 msgid "Shopping-Settings"
-msgstr "Cerca-Impostazioni"
+msgstr "Spesa-Impostazioni"
 
 #: .\cookbook\templates\settings.html:65
 msgid "Name Settings"
@@ -2648,19 +2638,17 @@ msgstr "Nulla da fare."
 
 #: .\cookbook\views\api.py:1160
 msgid "Invalid Url"
-msgstr ""
+msgstr "URL non valido"
 
 #: .\cookbook\views\api.py:1167
 msgid "Connection Refused."
-msgstr ""
+msgstr "Connessione rifiutata."
 
 #: .\cookbook\views\api.py:1172
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Schema URL invalido."
 
 #: .\cookbook\views\api.py:1195
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "Nessuna informazione utilizzabile è stata trovata."
 
@@ -2715,10 +2703,8 @@ msgid "Invite Link"
 msgstr "Link di invito"
 
 #: .\cookbook\views\delete.py:200
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
-msgstr "Membri"
+msgstr "Spazio Membership"
 
 #: .\cookbook\views\edit.py:116
 msgid "You cannot edit this storage!"
@@ -2751,6 +2737,8 @@ msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"L'esportatore PDF non è abilitato in questa istanza, perché è ancora in "
+"stato sperimentale."
 
 #: .\cookbook\views\lists.py:24
 msgid "Import Log"
@@ -2777,10 +2765,8 @@ msgid "Shopping Categories"
 msgstr "Categorie della spesa"
 
 #: .\cookbook\views\lists.py:187
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filtro"
+msgstr "Filtri personalizzati"
 
 #: .\cookbook\views\lists.py:224
 msgid "Steps"
