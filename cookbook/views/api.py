@@ -852,7 +852,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
             if image is not None:
                 img = handle_image(request, image, filetype)
-                obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
+                obj.image.save(f'{uuid.uuid4()}_{obj.pk}{filetype}', img)
                 obj.save()
                 return Response(serializer.data)
             else:
