@@ -45,16 +45,16 @@ class Cookidoo(AbstractScraper):
             instructions_gist.append(step_format.format(step_number, schema_item))
             step_number = step_number + 1
         elif schema_item.get("@type") == "HowToStep":
+            # steps make up simple recipes or a section of a more complex recipe
             if schema_item.get("name", False):
-                # some sites have duplicated name and text properties (1:1)
-                # others have name same as text but truncated to X chars.
-                # ignore name in these cases and add the name value only if it's different from the text
+                # name may be the text in full or truncated
                 if not schema_item.get("text").startswith(
                         schema_item.get("name").rstrip(".")
                 ):
                     instructions_gist.append(step_format.format(step_number, schema_item.get("name")))
             instructions_gist.append(step_format.format(step_number, schema_item.get("text")))
         elif schema_item.get("@type") == "HowToSection":
+            # complex recipes are made up of named sections that are made up of steps
             section_name = schema_item.get("name") or schema_item.get("Name") or _("Instructions")
             instructions_gist.append(section_format.format(section_name))
             step_number = 1
