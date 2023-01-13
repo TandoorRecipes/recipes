@@ -25,25 +25,22 @@ class Cookidoo(AbstractScraper):
 
         if isinstance(instructions, list):
             instructions_gist = []
-            step_number = 1
             for schema_instruction_item in instructions:
-                instructions_gist += self.extract_instructions_text(schema_instruction_item, "#", step_number)
-                step_number = step_number + 1
+                # combine lists of instructions per section into a flat list
+                instructions_gist += self.extract_instructions_text(schema_instruction_item, "",)
 
-            # join all steps into a recipe
-            return "".join(self.normalize_instruction(instruction)
-                           for instruction in instructions_gist)
+            steps = []
+            for instruction in instructions_gist:
+                steps.append(self.normalize_instruction(instruction))
+
+            return steps
 
         return instructions
 
-    def extract_instructions_text(self, schema_item, prefix, start_step_number):
-        step_number = start_step_number
-        step_format = "\n\n" + prefix + _("Step {}") + "\n\n{}"
-        section_format = "\n\n{}\n\n"
+    def extract_instructions_text(self, schema_item, prefix):
         instructions_gist = []
         if type(schema_item) is str:
-            instructions_gist.append(step_format.format(step_number, schema_item))
-            step_number = step_number + 1
+            instructions_gist.append(prefix + schema_item)
         elif schema_item.get("@type") == "HowToStep":
             # steps make up simple recipes or a section of a more complex recipe
             if schema_item.get("name", False):
@@ -51,16 +48,14 @@ class Cookidoo(AbstractScraper):
                 if not schema_item.get("text").startswith(
                         schema_item.get("name").rstrip(".")
                 ):
-                    instructions_gist.append(step_format.format(step_number, schema_item.get("name")))
-            instructions_gist.append(step_format.format(step_number, schema_item.get("text")))
+                    instructions_gist.append(schema_item.get("name"))
+            instructions_gist.append(schema_item.get("text"))
         elif schema_item.get("@type") == "HowToSection":
             # complex recipes are made up of named sections that are made up of steps
             section_name = schema_item.get("name") or schema_item.get("Name") or _("Instructions")
-            instructions_gist.append(section_format.format(section_name))
-            step_number = 1
+            instructions_gist.append("**" + section_name + "**")
             for item in schema_item.get("itemListElement"):
-                instructions_gist += self.extract_instructions_text(item, "#" + prefix, step_number)
-                step_number = step_number + 1
+                instructions_gist += self.extract_instructions_text(item, "#" + prefix)
         return instructions_gist
 
     def ingredients(self):
