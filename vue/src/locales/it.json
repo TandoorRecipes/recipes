@@ -460,5 +460,7 @@
     "book_filter_help": "Includi ricette dal filtro ricette oltre a quelle assegnate manualmente.",
     "import_duplicates": "Per evitare duplicati, le ricette con lo stesso nome di quelle esistenti vengono ignorate. Selezionare questa casella per importare tutto.",
     "shopping_category_help": "I supermercati possono essere ordinati e filtrati per categoria di spesa seguendo la disposizione degli scaffali.",
-    "food_recipe_help": "Collegando qui una ricetta, includerà la stessa in ogni altra ricetta che usa questo alimento"
+    "food_recipe_help": "Collegando qui una ricetta, includerà la stessa in ogni altra ricetta che usa questo alimento",
+    "warning_duplicate_filter": "Avviso: a causa di limitazioni tecniche, usare più filtri di ricerca della stessa combinazione (and/or/not) potrebbe portare a risultati inaspettati.",
+    "Warning_Delete_Supermarket_Category": "L'eliminazione di una categoria di supermercato comporta anche l'eliminazione di tutte le relazioni con gli alimenti. Sei sicuro?"
 }
