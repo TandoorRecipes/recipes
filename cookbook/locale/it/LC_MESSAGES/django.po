@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-01-10 11:55+0000\n"
+"PO-Revision-Date: 2023-01-15 16:55+0000\n"
 "Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -112,14 +112,10 @@ msgid "Display nutritional energy amounts in joules instead of calories"
 msgstr "Mostra le informazioni nutrizionali in Joule invece che in calorie"
 
 #: .\cookbook\forms.py:77
-#, fuzzy
-#| msgid ""
-#| "Users with whom newly created meal plan/shopping list entries should be "
-#| "shared by default."
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Gli utenti con i quali le nuove voci del piano alimentare/lista della spesa "
-"devono essere condivise per impostazione predefinita."
+"Gli utenti con i quali le nuove voci del piano alimentare devono essere "
+"condivise per impostazione predefinita."
 
 #: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
@@ -340,6 +336,8 @@ msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Campi da cercare all'inizio di parole corrispondenti (es. cercando per 'ins' "
+"mostrerà 'insalata' e 'insaccati')"
 
 #: .\cookbook\forms.py:457
 msgid ""
@@ -411,10 +409,13 @@ msgstr ""
 #: .\cookbook\forms.py:502
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Il numero predefinito di ore per ritardare l'inserimento di una lista della "
+"spesa."
 
 #: .\cookbook\forms.py:503
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Filtra la lista della spesa per includere solo categorie dei supermercati."
 
 #: .\cookbook\forms.py:504
 msgid "Days of recent shopping list entries to display."
@@ -428,17 +429,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:506
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Delimitatore usato per le esportazioni CSV."
 
 #: .\cookbook\forms.py:507
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "Prefisso da aggiungere quando si copia una lista negli appunti."
 
 #: .\cookbook\forms.py:511
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "Share Shopping List"
-msgstr "Nuova lista della spesa"
+msgstr "Condividi lista della spesa"
 
 #: .\cookbook\forms.py:512
 msgid "Autosync"
@@ -458,13 +457,11 @@ msgstr "Includi correlati"
 
 #: .\cookbook\forms.py:516
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Ore di ritardo predefinite"
 
 #: .\cookbook\forms.py:517
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Seleziona supermercato"
+msgstr "Filtra per supermercato"
 
 #: .\cookbook\forms.py:518
 msgid "Recent Days"
@@ -491,10 +488,9 @@ msgid "Reset all food to inherit the fields configured."
 msgstr ""
 
 #: .\cookbook\forms.py:544
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Alimento che dovrebbe essere rimpiazzato."
+msgstr ""
+"Campi su alimenti che devono essere ereditati per impostazione predefinita."
 
 #: .\cookbook\forms.py:545
 msgid "Show recipe counts on search filters"
@@ -542,7 +538,7 @@ msgstr "Hai più utenti di quanti permessi nella tua istanza."
 
 #: .\cookbook\helper\recipe_search.py:565
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "Uno tra queryset o has_key deve essere fornito"
 
 #: .\cookbook\helper\shopping_helper.py:152
 msgid "You must supply a servings size"
@@ -628,11 +624,9 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr "Ricostruisce l'indice di ricerca full text per la ricetta"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Solo i database Postgres usano l'indice di ricerca full text, non ci sono "
+"Solo i database Postgresql usano l'indice di ricerca full text, non ci sono "
 "indici da ricostruire"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
@@ -744,7 +738,7 @@ msgstr "Parola chiave"
 
 #: .\cookbook\serializer.py:207
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Impossibile modificare i permessi del proprietario dell'istanza."
 
 #: .\cookbook\serializer.py:290
 msgid "File uploads are not enabled for this Space."
@@ -794,13 +788,15 @@ msgstr "Invito per Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1209
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Lista della spesa esistente da aggiornare"
 
 #: .\cookbook\serializer.py:1211
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Lista degli ID degli ingredienti dalla ricetta da aggiungere, se non è "
+"fornita saranno aggiunti tutti gli ingredienti."
 
 #: .\cookbook\serializer.py:1213
 msgid ""
@@ -813,11 +809,13 @@ msgstr "Quantità di alimenti da aggiungere alla lista della spesa"
 
 #: .\cookbook\serializer.py:1224
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID dell'unità da usare per la lista della spesa"
 
 #: .\cookbook\serializer.py:1226
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Quando impostato su vero, eliminerà tutti gli alimenti dalle liste della "
+"spesa attive."
 
 #: .\cookbook\tables.py:36 .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -2631,6 +2629,8 @@ msgstr ""
 #: .\cookbook\views\api.py:945
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Restituisce le voci della lista della spesa ordinate per categoria di "
+"supermercato."
 
 #: .\cookbook\views\api.py:1140
 msgid "Nothing to do."
