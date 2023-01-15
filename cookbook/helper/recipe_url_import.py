@@ -138,7 +138,7 @@ def get_from_scraper(scrape, request):
 
     recipe_json['steps'] = []
     try:
-        for i in parse_instructions(scrape.instructions()):
+        for i in parse_instructions(scrape.instructions_list()):
             recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
     except Exception:
         pass
@@ -248,6 +248,22 @@ def clean_instruction_string(instruction):
     normalized_string = normalize_string(instruction)
     normalized_string = normalized_string.replace('\n', '  \n')
     normalized_string = normalized_string.replace('  \n  \n', '\n\n')
+
+    # handle unsupported, special UTF8 character in Thermomix-specific instructions,
+    # that happen in nearly every receipe on Cookidoo, Zaubertopf Club, Rezeptwelt
+    # and in thermomix-spefici recipes on many other sites
+    return normalized_string \
+        .replace("<nobr>", "**") \
+        .replace("</nobr>", "**") \
+        .replace("", _('Linkslauf')) \
+        .replace("", _('Kochlöffel')) \
+        .replace("", _('Kneten')) \
+        .replace("Andicken ", _('Andicken')) \
+        .replace("Erwärmen ", _('Erwärmen')) \
+        .replace("Fermentieren ", _('Fermentieren')) \
+        .replace("Rühraufsatz einsetzen", "**Rühraufsatz einsetzen**") \
+        .replace("Rühraufsatz entfernen", "**Rühraufsatz entfernen**")
+
     return normalized_string
 
 
