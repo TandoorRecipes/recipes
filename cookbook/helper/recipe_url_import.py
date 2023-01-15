@@ -250,7 +250,7 @@ def clean_instruction_string(instruction):
     normalized_string = normalized_string.replace('  \n  \n', '\n\n')
 
     # handle unsupported, special UTF8 character in Thermomix-specific instructions,
-    # that happen in nearly every receipe on Cookidoo, Zaubertopf Club, Rezeptwelt
+    # that happen in nearly every recipe on Cookidoo, Zaubertopf Club, Rezeptwelt
     # and in Thermomix-specific recipes on many other sites
     return normalized_string \
         .replace("<nobr>", "**") \
