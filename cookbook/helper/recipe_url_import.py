@@ -251,7 +251,7 @@ def clean_instruction_string(instruction):
 
     # handle unsupported, special UTF8 character in Thermomix-specific instructions,
     # that happen in nearly every receipe on Cookidoo, Zaubertopf Club, Rezeptwelt
-    # and in thermomix-spefici recipes on many other sites
+    # and in Thermomix-specific recipes on many other sites
     return normalized_string \
         .replace("<nobr>", "**") \
         .replace("</nobr>", "**") \
@@ -263,8 +263,6 @@ def clean_instruction_string(instruction):
         .replace("Fermentieren ", _('Fermentieren')) \
         .replace("Rühraufsatz einsetzen", "**Rühraufsatz einsetzen**") \
         .replace("Rühraufsatz entfernen", "**Rühraufsatz entfernen**")
-
-    return normalized_string
 
 
 def parse_instructions(instructions):
