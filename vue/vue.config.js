@@ -136,14 +136,13 @@ module.exports = {
         config.devServer
             .host("localhost")
             .port(8080)
-            //.set('hot', 'only')
+            .set('hot', 'only')
             .set('static', {watch: true})
             // old webpack dev server v3 settings
             //  .hotOnly(true)
             //   .watchOptions({ poll: 500 })
             //  .public("http://localhost:8080")
             .https(false)
-            .hot(true)
             .headers({"Access-Control-Allow-Origin": ["*"]})
     },
 }
