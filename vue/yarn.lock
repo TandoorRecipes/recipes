@@ -1538,6 +1538,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.18.6":
+  version: 7.20.7
+  resolution: "@babel/runtime@npm:7.20.7"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 4629ce5c46f06cca9cfb9b7fc00d48003335a809888e2b91ec2069a2dcfbfef738480cff32ba81e0b7c290f8918e5c22ddcf2b710001464ee84ba62c7e32a3a3
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.0.0, @babel/template@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/template@npm:7.16.7"
@@ -1585,6 +1594,13 @@ __metadata:
     "@babel/helper-validator-identifier": ^7.19.1
     to-fast-properties: ^2.0.0
   checksum: b39af241f0b72bba67fd6d0d23914f6faec8c0eba8015c181cbd5ea92e59fc91a52a1ab490d3520c7dbd19ddb9ebb76c476308f6388764f16d8201e37fae6811
+  languageName: node
+  linkType: hard
+
+"@emoji-mart/data@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@emoji-mart/data@npm:1.1.1"
+  checksum: 705d8021c62f8d22f8ed3fa2a106b11eea58610cb8899a401a104be59e83e4ba18e57b06e34d0b3a967fa8e5fbee5f6646162c2ee540db06cb757a5e4370e92e
   languageName: node
   linkType: hard
 
@@ -6026,7 +6042,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.27.1":
+"core-js@npm:^3.23.5, core-js@npm:^3.27.1":
   version: 3.27.1
   resolution: "core-js@npm:3.27.1"
   checksum: d50b5f88aea4302512ad9446c18e90f4d35dea1e6d8d3f87337690677061565ff11a670f1e0c87de57aa6074375fbb25ed5784076c040d3c4de8b4bce7d2ebeb
@@ -6911,6 +6927,25 @@ __metadata:
     minimalistic-assert: ^1.0.1
     minimalistic-crypto-utils: ^1.0.1
   checksum: d56d21fd04e97869f7ffcc92e18903b9f67f2d4637a23c860492fbbff5a3155fd9ca0184ce0c865dd6eb2487d234ce9551335c021c376cd2d3b7cb749c7d10f4
+  languageName: node
+  linkType: hard
+
+"emoji-mart-vue-fast@npm:^12.0.1":
+  version: 12.0.1
+  resolution: "emoji-mart-vue-fast@npm:12.0.1"
+  dependencies:
+    "@babel/runtime": ^7.18.6
+    core-js: ^3.23.5
+  peerDependencies:
+    vue: ">2.0.0"
+  checksum: 4632ab2ced581f78e9e6793932ccf42f084cbe85ef974ad2476b1c662ff85e6a84217a9cb1519e6ce0abd18a561e3038a51987102cbfe90f86cd51241c832606
+  languageName: node
+  linkType: hard
+
+"emoji-mart@npm:^5.4.0":
+  version: 5.4.0
+  resolution: "emoji-mart@npm:5.4.0"
+  checksum: fe51dcd5afd29f01e923f64d85cdb78d43729e65daa9beae764783fef92d6133976120c9d78a816be45b10aa756f5df9df6bd2bc72e3efc67b5757349784db08
   languageName: node
   linkType: hard
 
@@ -12814,6 +12849,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"regenerator-runtime@npm:^0.13.11":
+  version: 0.13.11
+  resolution: "regenerator-runtime@npm:0.13.11"
+  checksum: 27481628d22a1c4e3ff551096a683b424242a216fee44685467307f14d58020af1e19660bf2e26064de946bad7eff28950eae9f8209d55723e2d9351e632bbb4
+  languageName: node
+  linkType: hard
+
 "regenerator-runtime@npm:^0.13.4, regenerator-runtime@npm:^0.13.7":
   version: 0.13.9
   resolution: "regenerator-runtime@npm:0.13.9"
@@ -15538,6 +15580,7 @@ __metadata:
   resolution: "vue@workspace:."
   dependencies:
     "@babel/eslint-parser": ^7.19.1
+    "@emoji-mart/data": ^1.1.1
     "@kazupon/vue-i18n-loader": ^0.5.0
     "@kevinfaguiar/vue-twemoji-picker": ^5.7.4
     "@popperjs/core": ^2.11.6
@@ -15559,6 +15602,8 @@ __metadata:
     babel-loader: ^9.1.0
     bootstrap-vue: ^2.23.1
     core-js: ^3.27.1
+    emoji-mart: ^5.4.0
+    emoji-mart-vue-fast: ^12.0.1
     eslint: ^7.28.0
     eslint-plugin-vue: ^8.7.1
     html2pdf.js: ^0.10.1
