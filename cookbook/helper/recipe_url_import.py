@@ -125,7 +125,8 @@ def get_from_scraper(scrape, request):
             recipe_json['source_url'] = ''
 
     try:
-        keywords.append(scrape.author())
+        if scrape.author():
+            keywords.append(scrape.author())
     except:
         pass
 
@@ -160,32 +161,33 @@ def get_from_scraper(scrape, request):
 
     try:
         for x in scrape.ingredients():
-            try:
-                amount, unit, ingredient, note = ingredient_parser.parse(x)
-                ingredient = {
-                    'amount': amount,
-                    'food': {
-                        'name': ingredient,
-                    },
-                    'unit': None,
-                    'note': note,
-                    'original_text': x
-                }
-                if unit:
-                    ingredient['unit'] = {'name': unit, }
-                recipe_json['steps'][0]['ingredients'].append(ingredient)
-            except Exception:
-                recipe_json['steps'][0]['ingredients'].append(
-                    {
-                        'amount': 0,
-                        'unit': None,
+            if x.strip() != '':
+                try:
+                    amount, unit, ingredient, note = ingredient_parser.parse(x)
+                    ingredient = {
+                        'amount': amount,
                         'food': {
-                            'name': x,
+                            'name': ingredient,
                         },
-                        'note': '',
+                        'unit': None,
+                        'note': note,
                         'original_text': x
                     }
-                )
+                    if unit:
+                        ingredient['unit'] = {'name': unit, }
+                    recipe_json['steps'][0]['ingredients'].append(ingredient)
+                except Exception:
+                    recipe_json['steps'][0]['ingredients'].append(
+                        {
+                            'amount': 0,
+                            'unit': None,
+                            'food': {
+                                'name': x,
+                            },
+                            'note': '',
+                            'original_text': x
+                        }
+                    )
     except Exception:
         pass
 
