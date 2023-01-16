@@ -6,7 +6,7 @@
 
             <input class="form-control" v-model="new_value">
 
-            <Picker :data="emojiIndex" :ref="'_edit_' + id"
+            <Picker :data="emojiIndex" :ref="'_edit_' + id" :native="true"
                     @select="setIcon"/>
 
         </b-form-group>
