@@ -235,15 +235,6 @@ class IngredientParser:
         # leading spaces before commas result in extra tokens, clean them out
         ingredient = ingredient.replace(' ,', ',')
 
-        # Handle special cases of units that contain a space in their name
-        # "2 geh TL XYZ" => "2 geh.TL XYZ" => [amount=2, unit="geh.TL", food="XYZ"]
-        ingredient = ingredient.replace("geh. TL", "geh.TL") \
-            .replace("geh. TL", "geh.TL") \
-            .replace("geh. EL", "geh.EL") \
-            .replace("ges. TL", "ges.TL") \
-            .replace("ges. EL", "ges.EL")
-            # add others here until we find a better way to handle these
-
         # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
         # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
         ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
