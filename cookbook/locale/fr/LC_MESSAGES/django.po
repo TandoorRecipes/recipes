@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-01-12 21:55+0000\n"
-"Last-Translator: arnaud <arno.tm@proton.me>\n"
+"PO-Revision-Date: 2023-01-18 01:55+0000\n"
+"Last-Translator: Fall1ngStar <fall1ngstar.public@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -169,7 +169,7 @@ msgstr "Exclure les ingrédients disponibles."
 
 #: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Optimisation de l'interface pour l'utilisation avec la main gauche."
 
 #: .\cookbook\forms.py:107
 msgid ""
@@ -387,8 +387,6 @@ msgid "Partial Match"
 msgstr "correspondance partielle"
 
 #: .\cookbook\forms.py:467
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
 msgstr "Commence par"
 
@@ -477,10 +475,8 @@ msgid "Default Delay Hours"
 msgstr ""
 
 #: .\cookbook\forms.py:517
-#, fuzzy
-#| msgid "Select Supermarket"
 msgid "Filter to Supermarket"
-msgstr "Sélectionner un supermarché"
+msgstr "Filtrer par supermarché"
 
 #: .\cookbook\forms.py:518
 msgid "Recent Days"
@@ -580,7 +576,7 @@ msgstr "Impossible d’analyser le code du modèle."
 #: .\cookbook\integration\copymethat.py:41
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favori"
 
 #: .\cookbook\integration\copymethat.py:70
 #: .\cookbook\integration\recettetek.py:54
@@ -652,11 +648,9 @@ msgid "Rebuilds full text search index on Recipe"
 msgstr "Reconstruction de l’index de recherche en texte intégral de Tandoor"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
-#, fuzzy
-#| msgid "Only Postgress databases use full text search, no index to rebuild"
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
-"Seules les bases de données Postgres utilisent la recherche en texte "
+"Seules les bases de données Postgresql utilisent la recherche en texte "
 "intégral, sans index à reconstruire"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
@@ -759,10 +753,8 @@ msgid "Recipe"
 msgstr "Recette"
 
 #: .\cookbook\models.py:1228
-#, fuzzy
-#| msgid "Foods"
 msgid "Food"
-msgstr "Aliments"
+msgstr "Aliment"
 
 #: .\cookbook\models.py:1229 .\cookbook\templates\base.html:138
 msgid "Keyword"
