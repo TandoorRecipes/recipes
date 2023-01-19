@@ -97,7 +97,7 @@ class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
 @register
 class FoodFactory(factory.django.DjangoModelFactory):
     """Food factory."""
-    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3, variable_nb_words=False))
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10)[:128])
     plural_name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=3, variable_nb_words=False))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     supermarket_category = factory.Maybe(
@@ -160,7 +160,7 @@ class RecipeBookEntryFactory(factory.django.DjangoModelFactory):
 @register
 class UnitFactory(factory.django.DjangoModelFactory):
     """Unit factory."""
-    name = factory.LazyAttribute(lambda x: faker.word())
+    name = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10)[:128])
     plural_name = factory.LazyAttribute(lambda x: faker.word())
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
     space = factory.SubFactory(SpaceFactory)
