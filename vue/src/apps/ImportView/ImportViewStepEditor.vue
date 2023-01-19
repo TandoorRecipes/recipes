@@ -24,10 +24,10 @@
                     <b-list-group-item v-for="i in s.ingredients"
                                        v-bind:key="i.original_text"><i
                         class="fas fa-arrows-alt mr-2"></i>
-                        <b-badge variant="light">{{ i.amount }}</b-badge>
-                        <b-badge variant="secondary">{{ i.unit.name }}</b-badge>
-                        <b-badge variant="info">{{ i.food.name }}</b-badge>
-                        ({{ i.original_text }})
+                        <b-badge variant="light">{{ i.amount.toFixed(2) }}</b-badge>
+                        <b-badge variant="secondary" v-if="i.unit">{{ i.unit.name }}</b-badge>
+                        <b-badge variant="info" v-if="i.food">{{ i.food.name }}</b-badge>
+                        <i>{{ i.original_text }}</i>
                         <b-button @click="current_edit_ingredient = i" v-b-modal.ingredient_edit_modal class="float-right btn-sm"><i class="fas fa-pencil-alt"></i></b-button>
                     </b-list-group-item>
                 </draggable>
