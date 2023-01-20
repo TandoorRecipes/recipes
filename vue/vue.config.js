@@ -3,71 +3,75 @@ const BundleTracker = require("webpack-bundle-tracker")
 const pages = {
     recipe_search_view: {
         entry: "./src/apps/RecipeSearchView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     recipe_view: {
         entry: "./src/apps/RecipeView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     offline_view: {
         entry: "./src/apps/OfflineView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     import_view: {
         entry: "./src/apps/ImportView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     import_response_view: {
         entry: "./src/apps/ImportResponseView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     export_response_view: {
         entry: "./src/apps/ExportResponseView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     export_view: {
         entry: "./src/apps/ExportView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     supermarket_view: {
         entry: "./src/apps/SupermarketView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     model_list_view: {
         entry: "./src/apps/ModelListView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     edit_internal_recipe: {
         entry: "./src/apps/RecipeEditView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     cookbook_view: {
         entry: "./src/apps/CookbookView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     meal_plan_view: {
         entry: "./src/apps/MealPlanView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     ingredient_editor_view: {
         entry: "./src/apps/IngredientEditorView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     shopping_list_view: {
         entry: "./src/apps/ShoppingListView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     space_manage_view: {
         entry: "./src/apps/SpaceManageView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     profile_view: {
         entry: "./src/apps/ProfileView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     settings_view: {
         entry: "./src/apps/SettingsView/main.js",
-        chunks: ["chunk-vendors"],
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
+    },
+    test_view: {
+        entry: "./src/apps/TestView/main.js",
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     }
 }
 
@@ -109,6 +113,18 @@ module.exports = {
         config.optimization.splitChunks(
             {
                 cacheGroups: {
+                    locale: {
+                        test: /[\\/]src[\\/]locales[\\/]/,
+                        name: "locales-chunk",
+                        chunks: "all",
+                        priority: 3,
+                    },
+                    api: {
+                        test: /[\\/]src[\\/]utils[\\/]openapi[\\/]/,
+                        name: "api-chunk",
+                        chunks: "all",
+                        priority: 3,
+                    },
                     vendor: {
                         test: /[\\/]node_modules[\\/]/,
                         name: "chunk-vendors",
@@ -117,8 +133,9 @@ module.exports = {
                     },
                 },
             },
-            config.optimization.minimize(true)
         )
+
+        config.optimization.minimize(true)
 
         //TODO somehow remov them as they are also added to the manifest config of the service worker
         /*
