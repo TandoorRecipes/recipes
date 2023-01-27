@@ -1205,7 +1205,7 @@ export default {
             let api = new ApiApiFactory()
             if (field) {
                 // assume if field is changing it should no longer be inherited
-                food.inherit_fields = food.inherit_fields.filter((x) => x.field !== field)
+                food.inherit_fields = food.inherit_fields?.filter((x) => x.field !== field)
             }
 
             return api
