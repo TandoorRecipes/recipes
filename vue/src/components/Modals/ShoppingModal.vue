@@ -10,12 +10,11 @@
 					</b-card-header>
 					<b-collapse id="accordion-0" class="p-2" visible accordion="my-accordion" role="tabpanel">
 
-						<div v-for="i in steps.flatMap(s => s.ingredients)" v-bind:key="i.id">
+						<div>
 							<table class="table table-sm mb-0">
 
-								<ingredient-component
+								<ingredient-component  v-for="i in steps.flatMap(s => s.ingredients)" v-bind:key="i.id"
 									:use_plural="true"
-									:key="i.id"
 									:detailed="true"
 									:ingredient="i"
 									:ingredient_factor="ingredient_factor"
