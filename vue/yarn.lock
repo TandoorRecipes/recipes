@@ -11199,10 +11199,9 @@ vue-sanitize@^0.2.2:
   dependencies:
     sanitize-html "~2.7.0"
 
-vue-simple-calendar@^5.0.0:
+vue-simple-calendar@TandoorRecipes/vue-simple-calendar#lastvue2:
   version "5.0.1"
-  resolved "https://registry.yarnpkg.com/vue-simple-calendar/-/vue-simple-calendar-5.0.1.tgz#90aec15411379cc56bdddf768438e95dc6a8a357"
-  integrity sha512-JRsN3cSyS7q38OSa8IJMars5Uq1BYq8jfBrtmmyCQXw1wXcEPyfjRSnrScobwFNE2XhSSkbkbDKYJlUAJudvpQ==
+  resolved "https://codeload.github.com/TandoorRecipes/vue-simple-calendar/tar.gz/81876f06f42e029237ac0bd49c509cf742b62fce"
   dependencies:
     core-js "^3.7.0"
     vue "^2.6.12"
