@@ -1306,6 +1306,8 @@ def import_files(request):
             return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
         except NotImplementedError:
             return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):
