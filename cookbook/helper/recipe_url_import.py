@@ -138,7 +138,7 @@ def get_from_scraper(scrape, request):
 
     recipe_json['steps'] = []
     try:
-        for i in parse_instructions(scrape.instructions_list()):
+        for i in parse_instructions(scrape.instructions()):
             recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
     except Exception:
         pass
@@ -245,7 +245,13 @@ def parse_description(description):
 
 
 def clean_instruction_string(instruction):
-    normalized_string = normalize_string(instruction)
+    # handle HTML tags that can be converted to markup
+    normalized_string = instruction \
+        .replace("<nobr>", "**") \
+        .replace("</nobr>", "**") \
+        .replace("<strong>", "**") \
+        .replace("</strong>", "**")
+    normalized_string = normalize_string(normalized_string)
     normalized_string = normalized_string.replace('\n', '  \n')
     normalized_string = normalized_string.replace('  \n  \n', '\n\n')
 
@@ -253,16 +259,13 @@ def clean_instruction_string(instruction):
     # that happen in nearly every recipe on Cookidoo, Zaubertopf Club, Rezeptwelt
     # and in Thermomix-specific recipes on many other sites
     return normalized_string \
-        .replace("<nobr>", "**") \
-        .replace("</nobr>", "**") \
-        .replace("", _('Linkslauf')) \
-        .replace("", _('Kochlöffel')) \
-        .replace("", _('Kneten')) \
-        .replace("Andicken ", _('Andicken')) \
-        .replace("Erwärmen ", _('Erwärmen')) \
-        .replace("Fermentieren ", _('Fermentieren')) \
-        .replace("Rühraufsatz einsetzen", "**Rühraufsatz einsetzen**") \
-        .replace("Rühraufsatz entfernen", "**Rühraufsatz entfernen**")
+        .replace("", _('reverse rotation')) \
+        .replace("", _('careful rotation')) \
+        .replace("", _('knead')) \
+        .replace("Andicken ", _('thicken')) \
+        .replace("Erwärmen ", _('warm up')) \
+        .replace("Fermentieren ", _('ferment')) \
+        .replace("Sous-vide ", _("sous-vide"))
 
 
 def parse_instructions(instructions):
