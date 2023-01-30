@@ -31,9 +31,9 @@
 ## Core Features
 - 🥗 **Manage your recipes** - Manage your ever growing recipe collection
 - 📆 **Plan** - multiple meals for each day
-- 🛒 **Shopping lists** - via the meal plan or straight from recipes
+- 🛒 **Shopping lists** - Via the meal plan or straight from recipes
 - 📚 **Cookbooks** - collect recipes into books
-- 👪 **Share and collaborate** on recipes with friends and family
+- 👪 **Share and collaborate** - on recipes with friends and family
 
 ## Made by and for power users
 
@@ -44,9 +44,9 @@
 - ➗ Support for **fractions** or decimals
 - 🐳 Easy setup with **Docker** and included examples for **Kubernetes**, **Unraid** and **Synology**
 - 🎨 Customize your interface with **themes**
-- 📦 **Sync** files with Dropbox and Nextcloud
+- 📦 **Sync** your recipes across all devices with ease using Dropbox or Nextcloud
   
-## All the must haves
+## Essential Elements: Elevate Your Collection with These Must-Haves!
 
 - 📱Optimized for use on **mobile** devices
 - 🌍 localized in many languages thanks to the awesome community
