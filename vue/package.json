@@ -13,7 +13,7 @@
     "@popperjs/core": "^2.11.6",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
-    "axios": "^1.2.0",
+    "axios": "^1.3.0",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^9.1.0",
