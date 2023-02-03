@@ -49,7 +49,7 @@ If removed, the nginx webserver needs to be replaced by something else that serv
 `GUNICORN_MEDIA` needs to be enabled to allow media serving by the application container itself.
 
 
-## Why does the Text/Markdown preview look different than the final recipe ?
+## Why does the Text/Markdown preview look different than the final recipe?
 
 Tandoor has always rendered the recipe instructions markdown on the server. This also allows tandoor to implement things like ingredient templating and scaling in text.
 To make editing easier a markdown editor was added to the frontend with integrated preview as a temporary solution. Since the markdown editor uses a different 
@@ -66,7 +66,7 @@ To create a new user click on your name (top right corner) and select 'space set
 
 It is not possible to create users through the admin because users must be assigned a default group and space.
 
-To change a users space you need to go to the admin and select User Infos. 
+To change a user's space you need to go to the admin and select User Infos. 
 
 If you use an external auth provider or proxy authentication make sure to specify a default group and space in the 
 environment configuration.
@@ -78,7 +78,7 @@ In technical terms it is a multi tenant system.
 You can compare a space to something like google drive or dropbox. 
 There is only one installation of the Dropbox system, but it handles multiple users without them noticing each other.
 For Tandoor that means all people that work together on one recipe collection can be in one space. 
-If you want to host the collection of your friends family or your neighbor you can create a separate space for them (through the admin interface).
+If you want to host the collection of your friends, family, or neighbor you can create a separate space for them (through the admin interface).
 
 Sharing between spaces is currently not possible but is planned for future releases.
 

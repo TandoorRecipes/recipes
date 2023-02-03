@@ -101,6 +101,7 @@ def page_help(page_name):
         'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
         'view_import': 'https://docs.tandoor.dev/features/import_export/',
         'view_export': 'https://docs.tandoor.dev/features/import_export/',
+        'list_automation': 'https://docs.tandoor.dev/features/automation/',
     }
 
     link = help_pages.get(page_name, '')

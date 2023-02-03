@@ -3,10 +3,15 @@
         <h5>Steps</h5>
         <div class="row">
             <div class="col col-md-12 text-center">
-                <b-button @click="splitAllSteps('\n')" variant="secondary" v-b-tooltip.hover :title="$t('Split_All_Steps')"><i
+                <b-button @click="autoSortIngredients()" variant="secondary" v-b-tooltip.hover v-if="recipe_json.steps.length > 1"
+                          :title="$t('Auto_Sort_Help')"><i class="fas fa-random"></i> {{ $t('Auto_Sort') }}
+                </b-button>
+                <b-button @click="splitAllSteps('\n')" variant="secondary" class="ml-1" v-b-tooltip.hover
+                          :title="$t('Split_All_Steps')"><i
                     class="fas fa-expand-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
-                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1" v-b-tooltip.hover :title="$t('Combine_All_Steps')"><i
+                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1" v-b-tooltip.hover
+                          :title="$t('Combine_All_Steps')"><i
                     class="fas fa-compress-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
             </div>
@@ -18,7 +23,12 @@
                            :empty-insert-threshold="10">
                     <b-list-group-item v-for="i in s.ingredients"
                                        v-bind:key="i.original_text"><i
-                        class="fas fa-arrows-alt"></i> {{ i.original_text }}
+                        class="fas fa-arrows-alt mr-2"></i>
+                        <b-badge variant="light">{{ i.amount.toFixed(2) }}</b-badge>
+                        <b-badge variant="secondary" v-if="i.unit">{{ i.unit.name }}</b-badge>
+                        <b-badge variant="info" v-if="i.food">{{ i.food.name }}</b-badge>
+                        <i>{{ i.original_text }}</i>
+                        <b-button @click="current_edit_ingredient = i" v-b-modal.ingredient_edit_modal class="float-right btn-sm"><i class="fas fa-pencil-alt"></i></b-button>
                     </b-list-group-item>
                 </draggable>
             </div>
@@ -51,6 +61,27 @@
 
                 </div>
             </div>
+
+            <b-modal id="ingredient_edit_modal" :title="$t('Edit')" ok-only>
+                <div v-if="current_edit_ingredient !== null">
+                    <b-form-group v-bind:label="$t('Original_Text')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.original_text" type="text" disabled></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Amount')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.amount" type="number" ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Unit')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.unit.name" type="text" ></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Food')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.food.name" type="text" ></b-form-input>
+                    </b-form-group>
+
+                </div>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -59,6 +90,7 @@
 
 
 import draggable from "vuedraggable";
+import stringSimilarity from "string-similarity"
 
 export default {
     name: "ImportViewStepEditor",
@@ -70,7 +102,8 @@ export default {
     },
     data() {
         return {
-            recipe_json: undefined
+            recipe_json: undefined,
+            current_edit_ingredient: null,
         }
     },
     watch: {
@@ -142,6 +175,34 @@ export default {
                 'ingredients': removed_steps.flatMap(x => x.ingredients)
             })
         },
+        /**
+         * automatically assign ingredients to steps based on text matching
+         */
+        autoSortIngredients: function () {
+            let ingredients = this.recipe_json.steps.flatMap(s => s.ingredients)
+            this.recipe_json.steps.forEach(s => s.ingredients = [])
+
+            ingredients.forEach(i => {
+                let found = false
+                this.recipe_json.steps.forEach(s => {
+                    if (s.instruction.includes(i.food.name.trim()) && !found) {
+                        found = true
+                        s.ingredients.push(i)
+                    }
+                })
+                if (!found) {
+                    let best_match = {rating: 0, step: this.recipe_json.steps[0]}
+                    this.recipe_json.steps.forEach(s => {
+                        let match = stringSimilarity.findBestMatch(i.food.name.trim(), s.instruction.split(' '))
+                        if (match.bestMatch.rating > best_match.rating) {
+                            best_match = {rating: match.bestMatch.rating, step: s}
+                        }
+                    })
+                    best_match.step.ingredients.push(i)
+                    found = true
+                }
+            })
+        }
     }
 }
 </script>

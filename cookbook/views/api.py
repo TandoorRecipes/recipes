@@ -852,7 +852,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
             if image is not None:
                 img = handle_image(request, image, filetype)
-                obj.image = File(img, name=f'{uuid.uuid4()}_{obj.pk}{filetype}')
+                obj.image.save(f'{uuid.uuid4()}_{obj.pk}{filetype}', img)
                 obj.save()
                 return Response(serializer.data)
             else:
@@ -1306,6 +1306,8 @@ def import_files(request):
             return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
         except NotImplementedError:
             return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 def get_recipe_provider(recipe):

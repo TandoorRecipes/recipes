@@ -6,20 +6,22 @@
 # Translators:
 # Pavel Solař <pavelsolar86@gmail.com>, 2021
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-09 18:01+0100\n"
-"PO-Revision-Date: 2020-06-02 19:28+0000\n"
-"Last-Translator: Pavel Solař <pavelsolar86@gmail.com>, 2021\n"
-"Language-Team: Czech (https://www.transifex.com/django-recipes/teams/110507/cs/)\n"
+"PO-Revision-Date: 2023-01-08 17:55+0000\n"
+"Last-Translator: Joachim Weber <joachim.weber@gmx.de>\n"
+"Language-Team: Czech <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
+"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:22 .\cookbook\templates\base.html:87
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -173,7 +175,7 @@ msgstr "Potravina, která by měla být nahrazena."
 
 #: .\cookbook\forms.py:198
 msgid "Add your comment: "
-msgstr "Přidat  vlastní komentář:"
+msgstr "Přidat vlastní komentář: "
 
 #: .\cookbook\forms.py:229
 msgid "Leave empty for dropbox and enter app password for nextcloud."

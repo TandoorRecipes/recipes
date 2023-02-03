@@ -360,6 +360,9 @@
     "Page": "Pagina",
     "left_handed": "Linkshandige modus",
     "Pin": "Pin",
+    "Unpin": "Pin losmaken",
+    "PinnedConfirmation": "{recipe} is vast vastgepind.",
+    "UnpinnedConfirmation": "{recipe} is losgemaakt.",
     "shopping_category_help": "Supermarkten kunnen gesorteerd en gefilterd worden per boodschappencategorie conform the indeling van de gangpaden.",
     "Foods": "Ingrediënten",
     "OnHand_help": "Ingrediënt is op voorraad en wordt niet automatisch aan een boodschappenlijstje toegevoegd.  Voorraadstatus is gedeeld tussen gebruikers.",
@@ -461,5 +464,14 @@
     "Valid Until": "Geldig tot",
     "warning_space_delete": "Je kunt jouw space verwijderen inclusief alle recepten, boodschappenlijstjes, maaltijdplannen en alles wat je verder aangemaakt hebt. Dit kan niet ongedaan worden gemaakt! Weet je het zeker?",
     "food_inherit_info": "Voedselvelden die standaard geërfd worden.",
-    "facet_count_info": "Geef receptenaantal bij zoekfilters weer."
+    "facet_count_info": "Geef receptenaantal bij zoekfilters weer.",
+    "Split_All_Steps": "Splits alle rijen in apparte stappen.",
+    "Combine_All_Steps": "Voeg alle stappen samen tot een veld.",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }
