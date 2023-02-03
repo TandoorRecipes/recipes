@@ -154,6 +154,7 @@ class ImportExportBase(forms.Form):
     COOKBOOKAPP = 'COOKBOOKAPP'
     COPYMETHAT = 'COPYMETHAT'
     COOKMATE = 'COOKMATE'
+    REZEPTSUITEDE = 'REZEPTSUITEDE'
     PDF = 'PDF'
 
     type = forms.ChoiceField(choices=(
@@ -162,7 +163,7 @@ class ImportExportBase(forms.Form):
         (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
         (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
         (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
-        (COOKMATE, 'Cookmate')
+        (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de')
     ))
 
 
@@ -533,11 +534,13 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count')
+        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count', 'use_plural')
 
         help_texts = {
             'food_inherit': _('Fields on food that should be inherited by default.'),
-            'show_facet_count': _('Show recipe counts on search filters'), }
+            'show_facet_count': _('Show recipe counts on search filters'), 
+            'use_plural': _('Use the plural form for units and food inside this space.'),
+        }
 
         widgets = {
             'food_inherit': MultiSelectWidget

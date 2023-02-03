@@ -9,7 +9,7 @@
     "success_fetching_resource": "Recurso carregado com sucesso!",
     "success_creating_resource": "Recurso criado com sucesso!",
     "success_updating_resource": "Recurso atualizado com sucesso!",
-    "success_deleting_resource": "Recurso deletado com sucesso!",
+    "success_deleting_resource": "Recurso excluído com sucesso!",
     "success_moving_resource": "Recurso movido com sucesso!",
     "success_merging_resource": "Recurso mesclado com sucesso!",
     "file_upload_disabled": "Upload de arquivos não está habilitado para seu espaço.",
@@ -369,7 +369,7 @@
     "select_unit": "Selecionar Unidade",
     "select_food": "Selecionar Comida",
     "remove_selection": "Deselecionar",
-    "empty_list": "Lista está Vazia.",
+    "empty_list": "Lista está vazia.",
     "Select": "Selecionar",
     "Supermarkets": "Supermercados",
     "User": "Utilizador",
@@ -382,5 +382,12 @@
     "err_deleting_protected_resource": "O objeto que você está tentando deletar ainda está sendo utilizado, portanto não pode ser deletado.",
     "food_inherit_info": "Campos no alimento que devem ser herdados por padrão.",
     "warning_space_delete": "Você pode deletar seu espaço, inclusive todas as receitas, listas de mercado, planos de comida e tudo mais que você criou. Esta ação não poderá ser desfeita! Você tem certeza que quer fazer isto?",
-    "facet_count_info": "Mostrar quantidade de receitas nos filtros de busca."
+    "facet_count_info": "Mostrar quantidade de receitas nos filtros de busca.",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

@@ -12,7 +12,7 @@
                     <cookbook-edit-card :book="book" v-if="current_page === 1" v-on:editing="cookbook_editing = $event" v-on:refresh="$emit('refresh')" @reload="$emit('reload')"></cookbook-edit-card>
                 </transition>
                 <transition name="flip" mode="out-in">
-                    <recipe-card :recipe="display_recipes[0].recipe_content" v-if="current_page > 1" :key="display_recipes[0].recipe"></recipe-card>
+                    <recipe-card :recipe="display_recipes[0].recipe_content" v-if="current_page > 1" :key="display_recipes[0].recipe" :use_plural="use_plural"></recipe-card>
                 </transition>
             </div>
             <div class="col-md-5">
@@ -20,7 +20,7 @@
                     <cookbook-toc :recipes="recipes" v-if="current_page === 1" v-on:switchRecipe="switchRecipe($event)"></cookbook-toc>
                 </transition>
                 <transition name="flip" mode="out-in">
-                    <recipe-card :recipe="display_recipes[1].recipe_content" v-if="current_page > 1 && display_recipes.length === 2" :key="display_recipes[1].recipe"></recipe-card>
+                    <recipe-card :recipe="display_recipes[1].recipe_content" v-if="current_page > 1 && display_recipes.length === 2" :key="display_recipes[1].recipe" :use_plural="use_plural"></recipe-card>
                 </transition>
             </div>
             <div class="col-md-1" @click="swipeLeft" style="cursor: pointer"></div>
@@ -34,7 +34,7 @@ import CookbookEditCard from "./CookbookEditCard"
 import CookbookToc from "./CookbookToc"
 import Vue2TouchEvents from "vue2-touch-events"
 import Vue from "vue"
-import { ApiApiFactory } from "../utils/openapi/api"
+import { ApiApiFactory } from "@/utils/openapi/api"
 
 Vue.use(Vue2TouchEvents)
 
@@ -56,6 +56,12 @@ export default {
           return this.recipes.slice((this.current_page - 1 - 1) * 2, (this.current_page - 1) * 2)
         }
     },
+    mounted(){
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
+        })
+    },
     data() {
         return {
             current_page: 1,
@@ -63,6 +69,7 @@ export default {
             bounce_left: false,
             bounce_right: false,
             cookbook_editing: false,
+            use_plural: false,
         }
     },
     methods: {

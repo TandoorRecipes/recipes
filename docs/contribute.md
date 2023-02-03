@@ -41,7 +41,7 @@ Most new frontend pages are build using [Vue.js](https://vuejs.org/).
 
 In order to work on these pages, you will have to install a Javascript package manager of your choice. The following examples use yarn.
 
-Run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
+In the `vue` folder run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
 and proceed to test your changes. If you do not wish to work on those pages, but instead want the application to work properly during 
 development, run `yarn build` to build the frontend pages once. 
 

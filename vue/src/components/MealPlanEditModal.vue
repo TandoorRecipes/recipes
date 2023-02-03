@@ -84,7 +84,7 @@
                                 </b-input-group>
                             </div>
                             <div class="col-lg-6 d-none d-lg-block d-xl-block">
-                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
+                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false" :use_plural="use_plural"></recipe-card>
                             </div>
                         </div>
                         <div class="row mt-3 mb-3">
@@ -144,6 +144,7 @@ export default {
                 addshopping: false,
                 reviewshopping: false,
             },
+            use_plural: false,
         }
     },
     watch: {
@@ -171,7 +172,12 @@ export default {
             this.entryEditing.servings = newVal
         },
     },
-    mounted: function () {},
+    mounted: function () {
+        let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+            this.use_plural = r.data.use_plural
+        })
+    },
     computed: {
         autoMealPlan: function () {
             return getUserPreference("mealplan_autoadd_shopping")

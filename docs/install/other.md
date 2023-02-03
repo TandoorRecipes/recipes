@@ -61,4 +61,4 @@ I left out the TLS config in this example for simplicity.
 
 ## WSL
 
-If you want to install Tandoor on the Windows Subsystem for Linux you can find a detailed post herre https://github.com/TandoorRecipes/recipes/issues/1733
+If you want to install Tandoor on the Windows Subsystem for Linux you can find a detailed post here: <https://github.com/TandoorRecipes/recipes/issues/1733>.

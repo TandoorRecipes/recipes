@@ -300,7 +300,7 @@
     "search_no_recipes": "Aucune recette trouvée !",
     "substitute_siblings_help": "Tous les ingrédients qui partagent un parent avec cette ingrédient sont considérés comme des substituts.",
     "OnHand_help": "L'ingrédient est dans l'inventaire et ne sera pas automatiquement ajouté à la liste de courses. Le status actuel est partagé avec les utilisateurs de la liste.",
-    "ignore_shopping_help": "Ne jamais ajouter l'ingrédient à la liste de courses (ex: eau)",
+    "ignore_shopping_help": "Ne jamais ajouter l'ingrédient à la liste de courses (ex: eau)",
     "food_recipe_help": "Ajouter un lien vers la recette ici incluera cette recette dans n'importe qu'elle autre recette qui utilise cet ingrédient",
     "shopping_category_help": "Les supermarchés peuvent être triés et filtrés par catégorie d'ingrédients selon la disposition des rayons.",
     "Units": "Unités",
@@ -402,5 +402,12 @@
     "Comments_setting": "Montrer les commentaires",
     "import_duplicates": "Pour éviter les doublons, les recettes de même nom seront ignorées. Cocher la case pour tout importer.",
     "Account": "Compte",
-    "Change_Password": "Modifier le mot de passe"
+    "Change_Password": "Modifier le mot de passe",
+    "Plural": "",
+    "plural_short": "",
+    "Use_Plural_Unit_Always": "",
+    "Use_Plural_Unit_Simple": "",
+    "Use_Plural_Food_Always": "",
+    "Use_Plural_Food_Simple": "",
+    "plural_usage_info": ""
 }

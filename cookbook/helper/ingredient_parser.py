@@ -28,7 +28,7 @@ class IngredientParser:
                 self.food_aliases = c
                 caches['default'].touch(FOOD_CACHE_KEY, 30)
             else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').all():
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
                     self.food_aliases[a.param_1] = a.param_2
                 caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
@@ -37,7 +37,7 @@ class IngredientParser:
                 self.unit_aliases = c
                 caches['default'].touch(UNIT_CACHE_KEY, 30)
             else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').all():
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
                     self.unit_aliases[a.param_1] = a.param_2
                 caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
         else:
@@ -59,7 +59,7 @@ class IngredientParser:
                 except KeyError:
                     return food
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).order_by('order').first():
                     return automation.param_2
         return food
 
@@ -78,7 +78,7 @@ class IngredientParser:
                 except KeyError:
                     return unit
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).order_by('order').first():
                     return automation.param_2
         return unit
 
@@ -234,6 +234,10 @@ class IngredientParser:
 
         # leading spaces before commas result in extra tokens, clean them out
         ingredient = ingredient.replace(' ,', ',')
+
+        # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
+        # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
+        ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
 
         # if amount and unit are connected add space in between
         if re.match('([0-9])+([A-z])+\s', ingredient):

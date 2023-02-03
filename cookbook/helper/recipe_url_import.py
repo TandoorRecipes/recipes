@@ -12,7 +12,8 @@ from recipe_scrapers._utils import get_host_name, get_minutes
 
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.models import Keyword
+from cookbook.models import Keyword, Automation
+
 
 # from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
 
@@ -121,7 +122,13 @@ def get_from_scraper(scrape, request):
         try:
             keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
         except Exception:
-            pass
+            recipe_json['source_url'] = ''
+
+    try:
+        if scrape.author():
+            keywords.append(scrape.author())
+    except:
+        pass
 
     try:
         recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
@@ -139,41 +146,57 @@ def get_from_scraper(scrape, request):
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
-    if len(parse_description(description)) > 256:  # split at 256 as long descriptions dont look good on recipe cards
-        recipe_json['steps'][0]['instruction'] = f'*{parse_description(description)}*  \n\n' + recipe_json['steps'][0]['instruction']
+    parsed_description = parse_description(description)
+    # TODO notify user about limit if reached
+    # limits exist to limit the attack surface for dos style attacks
+    automations = Automation.objects.filter(type=Automation.DESCRIPTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').all().order_by('order')[:512]
+    for a in automations:
+        if re.match(a.param_1, (recipe_json['source_url'])[:512]):
+            parsed_description = re.sub(a.param_2, a.param_3, parsed_description, count=1)
+
+    if len(parsed_description) > 256:  # split at 256 as long descriptions don't look good on recipe cards
+        recipe_json['steps'][0]['instruction'] = f'*{parsed_description}*  \n\n' + recipe_json['steps'][0]['instruction']
     else:
-        recipe_json['description'] = parse_description(description)[:512]
+        recipe_json['description'] = parsed_description[:512]
 
     try:
         for x in scrape.ingredients():
-            try:
-                amount, unit, ingredient, note = ingredient_parser.parse(x)
-                ingredient = {
-                    'amount': amount,
-                    'food': {
-                        'name': ingredient,
-                    },
-                    'unit': None,
-                    'note': note,
-                    'original_text': x
-                }
-                if unit:
-                    ingredient['unit'] = {'name': unit, }
-                recipe_json['steps'][0]['ingredients'].append(ingredient)
-            except Exception:
-                recipe_json['steps'][0]['ingredients'].append(
-                    {
-                        'amount': 0,
-                        'unit': None,
+            if x.strip() != '':
+                try:
+                    amount, unit, ingredient, note = ingredient_parser.parse(x)
+                    ingredient = {
+                        'amount': amount,
                         'food': {
-                            'name': x,
+                            'name': ingredient,
                         },
-                        'note': '',
+                        'unit': None,
+                        'note': note,
                         'original_text': x
                     }
-                )
+                    if unit:
+                        ingredient['unit'] = {'name': unit, }
+                    recipe_json['steps'][0]['ingredients'].append(ingredient)
+                except Exception:
+                    recipe_json['steps'][0]['ingredients'].append(
+                        {
+                            'amount': 0,
+                            'unit': None,
+                            'food': {
+                                'name': x,
+                            },
+                            'note': '',
+                            'original_text': x
+                        }
+                    )
     except Exception:
         pass
+
+    if recipe_json['source_url']:
+        automations = Automation.objects.filter(type=Automation.INSTRUCTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
+        for a in automations:
+            if re.match(a.param_1, (recipe_json['source_url'])[:512]):
+                for s in recipe_json['steps']:
+                    s['instruction'] = re.sub(a.param_2, a.param_3, s['instruction'])
 
     return recipe_json
 
