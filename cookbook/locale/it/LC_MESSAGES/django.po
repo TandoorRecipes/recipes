@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2023-01-15 16:55+0000\n"
-"Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
+"PO-Revision-Date: 2023-02-05 03:55+0000\n"
+"Last-Translator: Adri <adrian.polimi@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
 "Language: it\n"
@@ -285,7 +285,7 @@ msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
-"Seleziona il metodo di ricerca.   Clicca <a href=\"/docs/search/\">qui</a> "
+"Seleziona il metodo di ricerca.  Clicca <a href=\"/docs/search/\">qui</a> "
 "per avere maggiori informazioni."
 
 #: .\cookbook\forms.py:444
@@ -334,6 +334,8 @@ msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Campi per la ricerca full-text.  Nota: i metodi di ricerca 'web', 'frase' e "
+"'raw' funzionano solo con i campi full-text."
 
 #: .\cookbook\forms.py:458
 msgid "Search Method"
@@ -462,11 +464,11 @@ msgstr "Disponibilità automatica"
 
 #: .\cookbook\forms.py:526
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Ripristina Eredità Alimenti"
 
 #: .\cookbook\forms.py:527
 msgid "Reset all food to inherit the fields configured."
-msgstr ""
+msgstr "Ripristina tutti gli alimenti per ereditare i campi configurati."
 
 #: .\cookbook\forms.py:539
 msgid "Fields on food that should be inherited by default."
@@ -480,6 +482,8 @@ msgstr "Mostra il conteggio delle ricette nei filtri di ricerca"
 #: .\cookbook\forms.py:541
 msgid "Use the plural form for units and food inside this space."
 msgstr ""
+"Usare la forma plurale per le unità e gli alimenti all'interno di questo "
+"spazio."
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:39
 msgid ""
@@ -542,7 +546,7 @@ msgstr "Preferito"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "L'ho preparato"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -697,16 +701,12 @@ msgid "Keyword Alias"
 msgstr "Alias Parola Chiave"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Descrizione"
+msgstr "Sostituisci Descrizione"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Istruzioni"
+msgstr "Sostituisci Istruzione"
 
 #: .\cookbook\models.py:1257 .\cookbook\views\delete.py:36
 #: .\cookbook\views\edit.py:251 .\cookbook\views\new.py:48
@@ -787,6 +787,8 @@ msgstr ""
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Fornendo un ID list_recipe e impostando le porzioni a 0, la lista della "
+"spesa verrà eliminata."
 
 #: .\cookbook\serializer.py:1247
 msgid "Amount of food to add to the shopping list"
@@ -1485,10 +1487,8 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
-msgstr "o lasciando una riga vuota in mezzo."
+msgstr "oppure lasciando una riga vuota tra di loro."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
@@ -1510,10 +1510,6 @@ msgid "Lists"
 msgstr "Liste"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
@@ -1650,7 +1646,7 @@ msgstr "Indietro"
 
 #: .\cookbook\templates\profile.html:7
 msgid "Profile"
-msgstr ""
+msgstr "Profilo"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -1709,6 +1705,18 @@ msgid ""
 "html#TEXTSEARCH-PARSING-QUERIES>Postgresql's website.</a>\n"
 "            "
 msgstr ""
+" \n"
+"            Le ricerche full-text cercano di normalizzare le parole fornite "
+"per abbinare varianti comuni.  Ad esempio, \"separato\", \"separando\", "
+"\"separa\" verranno tutti normalizzati in \"separare\".\n"
+"            Ci sono diversi metodi disponibili, descritti di seguito, che "
+"controlleranno il comportamento della ricerca in caso di ricerca con più "
+"parole.\n"
+"            I dettagli tecnici completi su come questi funzionano possono "
+"essere visualizzati sul <a href=https://www.postgresql.org/docs/current/"
+"textsearch-controls.html#TEXTSEARCH-PARSING-QUERIES>sito web di "
+"Postgresql.</a>\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:29
 msgid ""
