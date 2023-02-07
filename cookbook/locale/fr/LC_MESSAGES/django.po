@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2023-01-18 01:55+0000\n"
-"Last-Translator: Fall1ngStar <fall1ngstar.public@gmail.com>\n"
-"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/fr/>\n"
+"PO-Revision-Date: 2023-02-09 13:55+0000\n"
+"Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
+"Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,7 +167,7 @@ msgstr "Nom"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:297 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr "Mots-clés"
+msgstr "mots-clés"
 
 #: .\cookbook\forms.py:125
 msgid "Preparation time in minutes"
@@ -484,10 +484,8 @@ msgid "Reset all food to inherit the fields configured."
 msgstr "Réinitialiser tous les aliments pour hériter les champs configurés."
 
 #: .\cookbook\forms.py:539
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Aliment qui devrait être remplacé."
+msgstr "Champs sur les aliments à hériter par défaut."
 
 #: .\cookbook\forms.py:540
 msgid "Show recipe counts on search filters"
@@ -497,6 +495,7 @@ msgstr ""
 #: .\cookbook\forms.py:541
 msgid "Use the plural form for units and food inside this space."
 msgstr ""
+"Utiliser la forme plurielle pour les unités et les aliments dans ce groupe."
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:39
 msgid ""
@@ -549,10 +548,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:152
-#, fuzzy
-#| msgid "You must supply a created_by"
 msgid "You must supply a servings size"
-msgstr "Vous devez fournir une information créé_par"
+msgstr "Vous devez fournir une information de portion"
 
 #: .\cookbook\helper\template_helper.py:79
 #: .\cookbook\helper\template_helper.py:81
@@ -616,7 +613,7 @@ msgstr "Portions"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr "Temps d’attente"
+msgstr "temps d’attente"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
@@ -804,6 +801,8 @@ msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Liste d’identifiants d’ingrédient de la recette à ajouter, si non renseigné, "
+"tous les ingrédients seront ajoutés."
 
 #: .\cookbook\serializer.py:1238
 msgid ""
@@ -947,7 +946,7 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Ce lien de confirmation reçu par mail est expiré ou invalide. Veuillez\n"
+"Ce lien de confirmation reçu par mail est expiré ou non valide. Veuillez\n"
 "                <a href=\"%(email_url)s\">demander une nouvelle vérification "
 "par mail</a>."
 
@@ -1058,10 +1057,10 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
-"Le lien de changement du mot de passe est invalide, probablement parce qu’il "
-"a déjà été utilisé.\n"
-"                    Merci de demander un <a href=\"%(passwd_reset_url)s"
-"\">nouveau changement de mot de passe</a>."
+"Le lien de changement du mot de passe n’est pas valide, probablement parce "
+"qu’il a déjà été utilisé.\n"
+"                    Merci de demander un <a href=\"%(passwd_reset_url)s\""
+">nouveau changement de mot de passe</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
@@ -1172,10 +1171,8 @@ msgstr "Historique"
 #: .\cookbook\templates\base.html:255
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Ingrédients"
+msgstr "Éditeur d’ingrédients"
 
 #: .\cookbook\templates\base.html:267
 #: .\cookbook\templates\export_response.html:7
@@ -1210,15 +1207,13 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:312
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Aucun groupe"
+msgstr "Vos groupes"
 
 #: .\cookbook\templates\base.html:323
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Aperçu"
 
 #: .\cookbook\templates\base.html:327
 msgid "Markdown Guide"
@@ -1242,7 +1237,7 @@ msgstr "Déconnexion"
 
 #: .\cookbook\templates\base.html:360
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Vous utilisez la version gratuite de Tandoor"
 
 #: .\cookbook\templates\base.html:361
 msgid "Upgrade Now"
@@ -1358,7 +1353,7 @@ msgstr "Annuler"
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr "Modifier"
+msgstr "modifier"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1667,11 +1662,11 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Retour"
 
 #: .\cookbook\templates\profile.html:7
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2089,11 +2084,11 @@ msgid "Social Network Login Failure"
 msgstr "Connexion par réseau social"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
-#, fuzzy
-#| msgid "An error occurred attempting to move "
 msgid ""
 "An error occurred while attempting to login via your social network account."
-msgstr "Une erreur est survenue en essayant de déplacer "
+msgstr ""
+"Une erreur est survenue en essayant de vous connecter avec votre compte de "
+"réseau social."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -2131,7 +2126,7 @@ msgstr "S’inscrire"
 #: .\cookbook\templates\socialaccount\login.html:9
 #, python-format
 msgid "Connect %(provider)s"
-msgstr ""
+msgstr "Connecter %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:11
 #, python-format
@@ -2150,7 +2145,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Continuer"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -2190,8 +2185,6 @@ msgid "Manage Subscription"
 msgstr "Gérer l’abonnement"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
-#, fuzzy
-#| msgid "Space:"
 msgid "Space"
 msgstr "Groupe :"
 
@@ -2210,7 +2203,7 @@ msgstr "Vous pouvez être invité dans un groupe existant ou en créer un."
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Propriétaire"
 
 #: .\cookbook\templates\space_overview.html:57
 #, fuzzy
@@ -2606,7 +2599,7 @@ msgstr "Rien à faire."
 
 #: .\cookbook\views\api.py:1180
 msgid "Invalid Url"
-msgstr ""
+msgstr "Url non valide"
 
 #: .\cookbook\views\api.py:1187
 msgid "Connection Refused."
@@ -2614,7 +2607,7 @@ msgstr "Connexion refusée."
 
 #: .\cookbook\views\api.py:1192
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Mauvais schéma d’URL."
 
 #: .\cookbook\views\api.py:1215
 #, fuzzy
