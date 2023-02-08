@@ -380,7 +380,7 @@
     "no_more_images_found": "Pas d'images supplémentaires trouvées sur le site.",
     "sql_debug": "Débogage de la base SQL",
     "last_cooked": "Dernière recette utilisée",
-    "times_cooked": "Temps de cuisson",
+    "times_cooked": "Nombre de fois cuisiné",
     "show_sortby": "Trier par",
     "Hours": "Heures",
     "Days": "Jours",
@@ -409,5 +409,6 @@
     "Use_Plural_Unit_Simple": "",
     "Use_Plural_Food_Always": "",
     "Use_Plural_Food_Simple": "",
-    "plural_usage_info": ""
+    "plural_usage_info": "",
+    "Planned": "Planifié"
 }
