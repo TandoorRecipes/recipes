@@ -8,15 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-02-09 13:55+0000\n"
+"Last-Translator: vertilo <vertilo.dev@gmail.com>\n"
+"Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
@@ -2026,7 +2028,7 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:118
 msgid "user"
-msgstr ""
+msgstr "користувач"
 
 #: .\cookbook\templates\space.html:119
 msgid "guest"
