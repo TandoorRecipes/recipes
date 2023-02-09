@@ -250,7 +250,7 @@
     "mealplan_autoexclude_onhand": "",
     "mealplan_autoinclude_related": "Додати Пов'язані Рецепти",
     "default_delay": "",
-    "shopping_share_desc": "",
+    "shopping_share_desc": "Користувачі будуть бачати всі елементи, які ви додаєте до списку покупок.  Вони мають додати вас, щоб бачати елементи в їх списках.",
     "shopping_auto_sync_desc": "",
     "mealplan_autoadd_shopping_desc": "",
     "mealplan_autoexclude_onhand_desc": "",
