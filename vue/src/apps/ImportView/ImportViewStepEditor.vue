@@ -72,11 +72,11 @@
                         <b-form-input v-model="current_edit_ingredient.amount" type="number" ></b-form-input>
                     </b-form-group>
 
-                    <b-form-group v-bind:label="$t('Unit')" class="mb-3">
+                    <b-form-group v-bind:label="$t('Unit')" class="mb-3" v-if="current_edit_ingredient.unit != null">
                         <b-form-input v-model="current_edit_ingredient.unit.name" type="text" ></b-form-input>
                     </b-form-group>
 
-                    <b-form-group v-bind:label="$t('Food')" class="mb-3">
+                    <b-form-group v-bind:label="$t('Food')" class="mb-3" v-if="current_edit_ingredient.food != null">
                         <b-form-input v-model="current_edit_ingredient.food.name" type="text" ></b-form-input>
                     </b-form-group>
 
