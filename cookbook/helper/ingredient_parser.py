@@ -126,6 +126,8 @@ class IngredientParser:
         amount = 0
         unit = None
         note = ''
+        if x.strip() == '':
+            return amount, unit, note
 
         did_check_frac = False
         end = 0
