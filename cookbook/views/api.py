@@ -87,7 +87,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -533,6 +533,11 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
             .select_related('recipe', 'supermarket_category')
 
+    def get_serializer_class(self):
+        if self.request and self.request.query_params.get('simple', False):
+            return FoodSimpleSerializer
+        return self.serializer_class
+
     @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
     def shopping(self, request, pk):
@@ -655,7 +660,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request and self.request.query_params.get('simple', False):
             return IngredientSimpleSerializer
-        return IngredientSerializer
+        return self.serializer_class
 
     def get_queryset(self):
         queryset = self.queryset.filter(step__recipe__space=self.request.space)
