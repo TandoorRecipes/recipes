@@ -359,6 +359,7 @@ export const ApiMixin = {
         }
     },
     methods: {
+        // if passing parameters that are not part of the offical schema of the endpoint use parameter: options: {query: {simple: 1}}
         genericAPI: function (model, action, options) {
             let setup = getConfig(model, action)
             if (setup?.config?.function) {
