@@ -32,7 +32,7 @@ admin.site.unregister(Group)
 @admin.action(description='Delete all data from a space')
 def delete_space_action(modeladmin, request, queryset):
     for space in queryset:
-        space.save()
+        space.safe_delete()
 
 
 class SpaceAdmin(admin.ModelAdmin):
