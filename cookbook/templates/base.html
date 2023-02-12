@@ -350,8 +350,8 @@
 
 {% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
-    <div class="bg-success" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
-        {{ message_of_the_day }}
+    <div class="bg-info" style=" width: 100%; text-align: center!important; color: #ffffff; padding: 8px">
+        {{ message_of_the_day | markdown |safe }}
     </div>
 {% endif %}
 
