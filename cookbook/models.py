@@ -262,6 +262,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     max_users = models.IntegerField(default=0)
     use_plural = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
+    no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)

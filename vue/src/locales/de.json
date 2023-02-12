@@ -477,5 +477,6 @@
     "Auto_Sort_Help": "Verschiebe alle Zutaten zu dem Schritt, der am Besten passt.",
     "Combine_All_Steps": "Fasse alle Schritte in einem einzelnem Feld zusammen.",
     "reset_children_help": "Überschreibe alle Kinder mit den Werten der vererbten Felder.   Die vererbten Felder der Kinder werden als vererbte Felder gesetzt, es sei denn, das Kind-Vererben-Feld ist gesetzt.",
-    "Unpin": "Lösen"
+    "Unpin": "Lösen",
+    "Amount": "Menge"
 }

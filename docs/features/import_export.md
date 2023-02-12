@@ -31,6 +31,7 @@ Overview of the capabilities of the different integrations.
 | ChefTap            | ✔️      | ❌  |  ❌     |
 | Pepperplate        | ✔️      | ⌚  | ❌      |
 | RecipeSage         | ✔️      | ✔️  | ✔️      |
+| Rezeptsuite.de         | ✔️      | ❌ | ✔️      |
 | Domestica          | ✔️      | ⌚  | ✔️      |
 | MealMaster         | ✔️      | ❌  |  ❌     |
 | RezKonv            | ✔️      | ❌  |  ❌     |
@@ -232,6 +233,9 @@ Cookmate allows you to export a `.mcb` file which you can simply upload to tando
 
 ## RecetteTek
 RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to import all your recipes. 
+
+## Rezeptsuite.de
+Rezeptsuite.de exports are `.xml` files which can simply be uploaded to tandoor to import all your recipes.
 
 ## Melarecipes
 

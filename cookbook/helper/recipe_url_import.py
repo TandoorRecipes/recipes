@@ -322,6 +322,11 @@ def parse_servings_text(servings):
             servings = re.sub("\d+", '', servings).strip()
         except Exception:
             servings = ''
+    if type(servings) == list:
+        try:
+            servings = parse_servings_text(servings[1])
+        except Exception:
+            pass
     return str(servings)[:32]
 
 

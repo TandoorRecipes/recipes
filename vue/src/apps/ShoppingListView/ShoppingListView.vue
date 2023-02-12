@@ -1,6 +1,7 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
+        <b-button @click="replaySyncQueue">SYNC</b-button>
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
@@ -615,6 +616,7 @@ import ShoppingSettingsComponent from "@/components/Settings/ShoppingSettingsCom
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
 let SETTINGS_COOKIE_NAME = "shopping_settings"
+import {Workbox} from 'workbox-window';
 
 export default {
     name: "ShoppingListView",
@@ -903,9 +905,30 @@ export default {
             }
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
-        console.log(window.CUSTOM_LOCALE)
     },
     methods: {
+        /**
+         * failed requests to sync entry check events are automatically re-queued by the service worker for sync
+         * this command allows to manually force replaying those events before re-enabling automatic sync
+         */
+        replaySyncQueue: function () {
+            const wb = new Workbox('/service-worker.js');
+            wb.register();
+            wb.messageSW({type: 'BGSYNC_REPLAY_REQUESTS'}).then((r) => {
+                console.log('Background sync queue replayed!', r);
+            })
+        },
+        /**
+         * get the number of entries left in the sync queue for entry check events
+         * @returns {Promise<Number>} promise resolving to the number of entries left
+         */
+        getSyncQueueLength: function (){
+            const wb = new Workbox('/service-worker.js');
+            wb.register();
+            return wb.messageSW({type: 'BGSYNC_COUNT_QUEUE'}).then((r) => {
+                return r
+            })
+        },
         setFocus() {
             if (this.ui.entry_mode_simple) {
                 this.$refs['amount_input_simple'].focus()
@@ -1043,8 +1066,7 @@ export default {
             } else {
                 this.loading = true
             }
-            this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params)
-                .then((results) => {
+            this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params).then((results) => {
                     if (!autosync) {
                         if (results.data?.length) {
                             this.items = results.data
@@ -1054,7 +1076,14 @@ export default {
                         this.loading = false
                     } else {
                         if (!this.auto_sync_blocked) {
-                            this.mergeShoppingList(results.data)
+                            this.getSyncQueueLength().then((r) => {
+                                if (r === 0){
+                                    this.mergeShoppingList(results.data)
+                                } else {
+                                    this.auto_sync_running = false
+                                    this.replaySyncQueue()
+                                }
+                            })
                         }
                     }
                 })
