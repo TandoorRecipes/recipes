@@ -79,14 +79,17 @@
                     <b-form-group v-bind:label="$t('Food')" class="mb-3">
                         <b-form-input v-model="current_edit_ingredient.food.name" type="text"></b-form-input>
                     </b-form-group>
+                    <b-form-group v-bind:label="$t('Note')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.note" type="text"></b-form-input>
+                    </b-form-group>
                 </div>
 
                 <template v-slot:modal-footer>
                     <div class="row w-100">
 
                         <div class="col-auto justify-content-end">
-                            <b-button class="mx-1" @click="$bvModal.hide('ingredient_edit_modal'); current_edit_ingredient=null">{{ $t('Ok') }}</b-button>
-                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);$bvModal.hide('ingredient_edit_modal'); current_edit_ingredient=null" variant="danger">{{ $t('Delete') }}</b-button>
+                            <b-button class="mx-1" @click="destroyIngredientEditModal()">{{ $t('Ok') }}</b-button>
+                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);destroyIngredientEditModal()" variant="danger">{{ $t('Delete') }}</b-button>
                         </div>
                     </div>
                 </template>
@@ -232,8 +235,28 @@ export default {
             this.current_edit_ingredient = ingredient
             this.current_edit_step = step
         },
+        /**
+         * can be called to remove an ingredient from the given step
+         * @param step step to remove ingredient from
+         * @param ingredient ingredient to remove
+         */
         removeIngredient: function (step, ingredient) {
             step.ingredients = step.ingredients.filter((i) => i !== ingredient)
+        },
+        /**
+         * cleanup method called to close modal
+         * closes modal UI and cleanups variables
+         */
+        destroyIngredientEditModal: function () {
+            this.$bvModal.hide('ingredient_edit_modal')
+            if (this.current_edit_ingredient.unit.name === ''){
+                this.current_edit_ingredient.unit = null
+            }
+            if (this.current_edit_ingredient.food.name === ''){
+                this.current_edit_ingredient.food = null
+            }
+            this.current_edit_ingredient = null
+            this.current_edit_step = null
         }
 
     }
