@@ -16,7 +16,7 @@
                                 <small tabindex="-1" class="form-text text-muted" v-if="!missing_recipe">{{ $t("Title") }}</small>
                             </div>
                             <div class="col-6 col-lg-3">
-                                <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date" />
+                                <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date"/>
                                 <small tabindex="-1" class="form-text text-muted">{{ $t("Date") }}</small>
                             </div>
                         </div>
@@ -75,11 +75,11 @@
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
                                 </b-form-group>
                                 <b-input-group v-if="!autoMealPlan">
-                                    <b-form-checkbox id="AddToShopping" v-model="mealplan_settings.addshopping" />
+                                    <b-form-checkbox id="AddToShopping" v-model="mealplan_settings.addshopping"/>
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("AddToShopping") }}</small>
                                 </b-input-group>
                                 <b-input-group v-if="mealplan_settings.addshopping">
-                                    <b-form-checkbox id="reviewShopping" v-model="mealplan_settings.reviewshopping" />
+                                    <b-form-checkbox id="reviewShopping" v-model="mealplan_settings.reviewshopping"/>
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("review_shopping") }}</small>
                                 </b-input-group>
                             </div>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="row mt-3 mb-3">
                             <div class="col-12">
-                                <b-button variant="danger" @click="deleteEntry" v-if="allow_delete">{{ $t("Delete") }} </b-button>
+                                <b-button variant="danger" @click="deleteEntry" v-if="allow_delete">{{ $t("Delete") }}</b-button>
                                 <b-button class="float-right" variant="primary" @click="editEntry">{{ $t("Save") }}</b-button>
                             </div>
                         </div>
@@ -103,12 +103,14 @@
 <script>
 import Vue from "vue"
 import VueCookies from "vue-cookies"
-import { BootstrapVue } from "bootstrap-vue"
+import {BootstrapVue} from "bootstrap-vue"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import { ApiMixin, getUserPreference } from "@/utils/utils"
+import {ApiMixin, getUserPreference} from "@/utils/utils"
 
-const { ApiApiFactory } = require("@/utils/openapi/api")
-const { StandardToasts } = require("@/utils/utils")
+const {ApiApiFactory} = require("@/utils/openapi/api")
+const {StandardToasts} = require("@/utils/utils")
+
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
@@ -158,7 +160,8 @@ export default {
             deep: true,
         },
         entryEditing: {
-            handler(newVal) {},
+            handler(newVal) {
+            },
             deep: true,
         },
         mealplan_settings: {
@@ -172,11 +175,11 @@ export default {
         },
     },
     mounted: function () {
-       
+        useUserPreferenceStore().updateIfStaleOrEmpty()
     },
     computed: {
         autoMealPlan: function () {
-            return getUserPreference("mealplan_autoadd_shopping")
+            return useUserPreferenceStore().getStaleData()?.mealplan_autoadd_shopping
         },
     },
     methods: {
@@ -184,15 +187,13 @@ export default {
             if (this.$cookies.isKey(MEALPLAN_COOKIE_NAME)) {
                 this.mealplan_settings = Object.assign({}, this.mealplan_settings, this.$cookies.get(MEALPLAN_COOKIE_NAME))
             }
-            let apiClient = new ApiApiFactory()
 
-            apiClient.listUserPreferences().then((result) => {
+            useUserPreferenceStore().getData().then(userPreference => {
                 if (this.entry.id === -1) {
-                    this.entryEditing.shared = result.data[0].plan_share
+                    this.entryEditing.shared = userPreference.plan_share
                 }
             })
         },
-
         editEntry() {
             this.missing_meal_type = false
             this.missing_recipe = false
@@ -207,7 +208,7 @@ export default {
             }
             if (!cancel) {
                 this.$bvModal.hide(`edit-modal`)
-                this.$emit("save-entry", { ...this.mealplan_settings, ...this.entryEditing, ...{ addshopping: this.mealplan_settings.addshopping && !this.autoMealPlan } })
+                this.$emit("save-entry", {...this.mealplan_settings, ...this.entryEditing, ...{addshopping: this.mealplan_settings.addshopping && !this.autoMealPlan}})
             }
         },
         deleteEntry() {
