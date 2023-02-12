@@ -1,8 +1,9 @@
 // These JavaScript module imports need to be bundled:
 import {precacheAndRoute} from 'workbox-precaching';
 import {registerRoute, setCatchHandler} from 'workbox-routing';
-import {CacheFirst, NetworkFirst, StaleWhileRevalidate} from 'workbox-strategies';
+import {CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
 import {ExpirationPlugin} from 'workbox-expiration';
+import {BackgroundSyncPlugin, Queue} from "workbox-background-sync";
 
 
 const OFFLINE_CACHE_NAME = 'offline-html';
@@ -76,6 +77,39 @@ registerRoute(
         ],
     })
 )
+
+const queue = new Queue('shopping-sync-queue', {
+    maxRetentionTime: 7 * 24 * 60,
+});
+
+registerRoute(
+    new RegExp('api/shopping-list-entry/([0-9]+)'),
+    new NetworkOnly({
+        plugins: [
+            {
+                fetchDidFail: async ({request}) => {
+                    await queue.pushRequest({request});
+                },
+            }
+        ],
+    }),
+    'PATCH'
+)
+
+addEventListener('message', (event) => {
+    if (event.data.type === 'BGSYNC_REPLAY_REQUESTS') {
+        queue.replayRequests().then((r) => {
+            event.ports[0].postMessage('REPLAY_SUCCESS SW');
+        }).catch((err) => {
+            event.ports[0].postMessage('REPLAY_FAILURE');
+        });
+    }
+    if (event.data.type === 'BGSYNC_COUNT_QUEUE') {
+        queue.getAll().then((r) => {
+            event.ports[0].postMessage(r.length);
+        })
+    }
+});
 
 registerRoute(
     new RegExp('api/*'),
