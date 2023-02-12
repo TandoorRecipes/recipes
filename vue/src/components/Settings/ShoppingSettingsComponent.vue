@@ -24,7 +24,7 @@
                 <span v-if="user_preferences.shopping_auto_sync < 1">{{ $t('Disable') }}</span>
             </div>
             <br/>
-                <b-button class="btn btn-sm" @click="user_preferences.shopping_auto_sync = 0">{{ $t('Disabled') }}</b-button>
+                <b-button class="btn btn-sm" @click="user_preferences.shopping_auto_sync = 0; updateSettings(false)">{{ $t('Disabled') }}</b-button>
         </b-form-group>
 
         <b-form-group :description="$t('mealplan_autoadd_shopping_desc')">

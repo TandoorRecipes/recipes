@@ -57,6 +57,8 @@ def markdown(value):
         ]
     )
     markdown_attrs['*'] = markdown_attrs['*'] + ['class']
+    parsed_md = parsed_md[3:] # remove outer paragraph
+    parsed_md = parsed_md[:len(parsed_md)-4]
     return bleach.clean(parsed_md, tags, markdown_attrs)
 
 

@@ -1,3 +1,5 @@
+import base64
+from io import BytesIO
 from xml import etree
 
 from lxml import etree
@@ -5,53 +7,64 @@ from lxml import etree
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_time, parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step
+from cookbook.models import Ingredient, Recipe, Step, Keyword
 
 
 class Rezeptsuitede(Integration):
 
     def split_recipe_file(self, file):
-        xml_file = etree.parse(file).getroot().getchildren()
-        recipe_list = xml_file.find('recipe')
-        return recipe_list
+        return etree.parse(file).getroot().getchildren()
 
     def get_recipe_from_file(self, file):
         recipe_xml = file
 
         recipe = Recipe.objects.create(
-            name=recipe_xml.find('title').text.strip(),
+            name=recipe_xml.find('head').attrib['title'].strip(),
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        if recipe_xml.find('servingtype') is not None and recipe_xml.find('servingtype').text is not None:
-            recipe.servings = parse_servings(recipe_xml.find('servingtype').text.strip())
-            recipe.servings_text = parse_servings_text(recipe_xml.find('servingtype').text.strip())
+        if recipe_xml.find('head').attrib['servingtype']:
+            recipe.servings = parse_servings(recipe_xml.find('head').attrib['servingtype'].strip())
+            recipe.servings_text = parse_servings_text(recipe_xml.find('head').attrib['servingtype'].strip())
 
-        if recipe_xml.find('description') is not None:  # description is a list of <li>'s with text
-            if len(recipe_xml.find('description')) > 0:
-                recipe.description = recipe_xml.find('description')[0].text[:512]
+        if recipe_xml.find('remark') is not None:  # description is a list of <li>'s with text
+            if recipe_xml.find('remark').find('line') is not None:
+                recipe.description = recipe_xml.find('remark').find('line').text[:512]
 
-        for step in recipe_xml.find('step'):
-            if step.text:
-                step = Step.objects.create(
-                    instruction=step.text.strip(), space=self.request.space,
-                )
-                recipe.steps.add(step)
+        for prep in recipe_xml.findall('preparation'):
+            try:
+                if prep.find('step').text:
+                    step = Step.objects.create(
+                        instruction=prep.find('step').text.strip(), space=self.request.space,
+                    )
+                    recipe.steps.add(step)
+            except Exception:
+                pass
 
         ingredient_parser = IngredientParser(self.request, True)
 
-        if recipe_xml.find('ingredient'):
+        if recipe_xml.find('part').find('ingredient') is not None:
             ingredient_step = recipe.steps.first()
             if ingredient_step is None:
                 ingredient_step = Step.objects.create(space=self.request.space, instruction='')
 
-            for ingredient in recipe_xml.find('ingredient'):
+            for ingredient in recipe_xml.find('part').findall('ingredient'):
                 f = ingredient_parser.get_food(ingredient.attrib['item'])
                 u = ingredient_parser.get_unit(ingredient.attrib['unit'])
-                ingredient_step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=ingredient.attrib['qty'], original_text=ingredient.text.strip(), space=self.request.space,
-                ))
+                amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
+                ingredient_step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=amount, space=self.request.space, ))
+
+        try:
+            k, created = Keyword.objects.get_or_create(name=recipe_xml.find('head').find('cat').text.strip(), space=self.request.space)
+            recipe.keywords.add(k)
+        except Exception as e:
+            pass
 
         recipe.save()
+
+        try:
+            self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_xml.find('head').find('picbin').text)), filetype='.jpeg')
+        except:
+            pass
 
         return recipe
 

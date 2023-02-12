@@ -84,7 +84,7 @@
                                 </b-input-group>
                             </div>
                             <div class="col-lg-6 d-none d-lg-block d-xl-block">
-                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false" :use_plural="use_plural"></recipe-card>
+                                <recipe-card v-if="entryEditing.recipe" :recipe="entryEditing.recipe" :detailed="false"></recipe-card>
                             </div>
                         </div>
                         <div class="row mt-3 mb-3">
@@ -118,7 +118,7 @@ export default {
     name: "MealPlanEditModal",
     props: {
         entry: Object,
-        entryEditing_inital_servings: Number,
+        entryEditing_initial_servings: Number,
         modal_title: String,
         modal_id: {
             type: String,
@@ -144,7 +144,6 @@ export default {
                 addshopping: false,
                 reviewshopping: false,
             },
-            use_plural: false,
         }
     },
     watch: {
@@ -152,8 +151,8 @@ export default {
             handler() {
                 this.entryEditing = Object.assign({}, this.entry)
 
-                if (this.entryEditing_inital_servings) {
-                    this.entryEditing.servings = this.entryEditing_inital_servings
+                if (this.entryEditing_initial_servings) {
+                    this.entryEditing.servings = this.entryEditing_initial_servings
                 }
             },
             deep: true,
@@ -168,15 +167,12 @@ export default {
             },
             deep: true,
         },
-        entryEditing_inital_servings: function (newVal) {
+        entryEditing_initial_servings: function (newVal) {
             this.entryEditing.servings = newVal
         },
     },
     mounted: function () {
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
-            this.use_plural = r.data.use_plural
-        })
+       
     },
     computed: {
         autoMealPlan: function () {
