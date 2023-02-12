@@ -11,10 +11,14 @@
     <meta property="og:title" content="{{ recipe.name }}"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="{% base_path request 'base' %}{% url 'view_recipe' recipe.pk share %}"/>
-    <meta property="og:image" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
-    <meta property="og:image:url" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
-    <meta property="og:image:secure" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
-    <meta property="og:description" content="{{ recipe.description }}"/>
+    {% if recipe.image %}
+        <meta property="og:image" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+        <meta property="og:image:url" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+        <meta property="og:image:secure" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+    {% endif %}
+    {% if recipe.description %}
+        <meta property="og:description" content="{{ recipe.description }}"/>
+    {% endif %}
     <meta property="og:site_name" content="Tandoor Recipes"/>
 {% endblock %}
 
