@@ -7,6 +7,17 @@
 
 {% block title %}{{ recipe.name }}{% endblock %}
 
+{% block extra_head %}
+    <meta property="og:title" content="{{ recipe.name }}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="{% base_path request 'base' %}{% url 'view_recipe' recipe.pk share %}"/>
+    <meta property="og:image" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+    <meta property="og:image:url" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+    <meta property="og:image:secure" content="{% base_path request 'base' %}{{ recipe.image.url }}"/>
+    <meta property="og:description" content="{{ recipe.description }}"/>
+    <meta property="og:site_name" content="Tandoor Recipes"/>
+{% endblock %}
+
 {% block content %}
     {% recipe_rating recipe request.user as rating %}
 
