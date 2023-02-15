@@ -23,7 +23,7 @@ def terminal_width():
     """
     Function to compute the terminal width.
     """
-    width = 0
+    width = 2
     try:
         import fcntl
         import struct
@@ -33,12 +33,12 @@ def terminal_width():
         width = struct.unpack('HHHH', x)[1]
     except:
         pass
-    if width <= 0:
+    if width <= 2:
         try:
             width = int(getenv['COLUMNS'])
         except:
             pass
-    if width <= 0:
+    if width <= 2:
         width = 80
     return width
 
