@@ -832,7 +832,7 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); grid-gap: 0.4rem">
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); grid-gap: 0.6rem; grid-auto-rows: max-content;">
                                 <template v-if="!searchFiltered()">
                                     <recipe-card
                                         v-bind:key="`mp_${m.id}`"
