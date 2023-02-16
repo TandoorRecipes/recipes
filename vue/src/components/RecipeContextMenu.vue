@@ -106,6 +106,7 @@ import ShoppingModal from "@/components/Modals/ShoppingModal"
 import moment from "moment"
 import Vue from "vue"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 Vue.prototype.moment = moment
 
@@ -191,6 +192,7 @@ export default {
             apiClient
                 .createMealPlan(entry)
                 .then((result) => {
+                    useMealPlanStore().plans.push(result.data)
                     this.$bvModal.hide(`modal-meal-plan_${this.modal_id}`)
                     if (reviewshopping) {
                         this.mealplan = result.data.id

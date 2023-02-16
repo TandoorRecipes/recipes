@@ -90,7 +90,7 @@
                                                 <b-form-group v-if="ui.show_meal_plan"
                                                               v-bind:label="$t('Meal_Plan_Days')"
                                                               label-for="popover-input-5" label-cols="8" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.meal_plan_days"
+                                                    <b-form-input type="number" v-model.number="ui.meal_plan_days"
                                                                   id="popover-input-5" size="sm"
                                                                   class="mt-1"></b-form-input>
                                                 </b-form-group>
@@ -830,34 +830,37 @@
 
                 <template v-if="!searchFiltered() && ui.show_meal_plan">
                     <hr/>
-                    <div class="row" >
+                    <div class="row">
 
                         <div class="col col-md-12">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
-                                <b-list-group v-for="day in meal_plan_grid" v-bind:key="day.day">
-                                    <b-list-group-item>
-                                        <div class="d-flex flex-row align-items-center">
-                                            <div>
-                                                <h4>{{ day.date_label }}</h4>
+                                <div v-for="day in meal_plan_grid" v-bind:key="day.day">
+                                    <b-list-group v-if="day.plan_entries.length > 0 || !isMobile">
+                                        <b-list-group-item>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div>
+                                                    <h4>{{ day.date_label }}</h4>
+                                                </div>
+                                                <div class="flex-grow-1 text-right">
+                                                    <!--<b-button class=""><i class="fa fa-plus"></i></b-button>--> <!-- TODO need to rewrite meal plan edit modal to use store -->
+                                                </div>
                                             </div>
-                                            <div class="flex-grow-1 text-right">
-                                                <b-button class=""><i class="fa fa-plus"></i></b-button>
-                                            </div>
-                                        </div>
 
-                                    </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id">
-                                        <div class="d-flex flex-row align-items-center">
-                                            <div>
-                                                <b-img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" rounded="circle"></b-img>
+                                        </b-list-group-item>
+                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <div>
+                                                    <b-img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" rounded="circle"></b-img>
+                                                </div>
+                                                <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                    <span class="two-row-text"><a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{ plan.recipe.name }}</a></span>
+                                                </div>
                                             </div>
-                                            <div class="flex-grow-1 ml-2">
-                                                <span class="two-row-text">{{ plan.recipe.name }}</span>
-                                            </div>
-                                        </div>
-                                    </b-list-group-item>
+                                        </b-list-group-item>
 
-                                </b-list-group>
+                                    </b-list-group>
+                                </div>
+
 
                             </div>
                         </div>
@@ -872,17 +875,18 @@
                         <div class="col col-md-12">
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
 
-                                <template v-if="!searchFiltered()">
-                                    <recipe-card
-                                        v-bind:key="`mp_${m.id}`"
-                                        v-for="m in meal_plans"
-                                        :recipe="m.recipe"
-                                        :meal_plan="m"
-                                        :use_plural="use_plural"
-                                        :footer_text="m.meal_type_name"
-                                        footer_icon="far fa-calendar-alt"
-                                    ></recipe-card>
-                                </template>
+                                <!-- TODO remove once new meal plan view has proven to be good -->
+                                <!--                                <template v-if="!searchFiltered()">-->
+                                <!--                                    <recipe-card-->
+                                <!--                                        v-bind:key="`mp_${m.id}`"-->
+                                <!--                                        v-for="m in meal_plans"-->
+                                <!--                                        :recipe="m.recipe"-->
+                                <!--                                        :meal_plan="m"-->
+                                <!--                                        :use_plural="use_plural"-->
+                                <!--                                        :footer_text="m.meal_type_name"-->
+                                <!--                                        footer_icon="far fa-calendar-alt"-->
+                                <!--                                    ></recipe-card>-->
+                                <!--                                </template>-->
 
                                 <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
                                              :footer_text="isRecentOrNew(r)[0]"
@@ -957,6 +961,7 @@ import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -975,6 +980,7 @@ export default {
             recipes_loading: true,
             facets: {Books: [], Foods: [], Keywords: []},
             meal_plans: [],
+            meal_plan_store: null,
             last_viewed_recipes: [],
             sortMenu: false,
             use_plural: false,
@@ -1060,9 +1066,9 @@ export default {
     computed: {
         meal_plan_grid: function () {
             let grid = []
-            for (const x of Array(5).keys()) {
+            for (const x of Array(this.ui.meal_plan_days).keys()) {
                 let moment_date = moment().add(x, "d")
-                grid.push({date: moment_date, date_label: moment_date.format('DD.MM'), plan_entries: this.meal_plans.filter((m) => moment(m.date).isSame(moment_date, 'day'))})
+                grid.push({date: moment_date, date_label: moment_date.format('DD.MM'), plan_entries: this.meal_plan_store.plans.filter((m) => moment(m.date).isSame(moment_date, 'day'))})
             }
 
             return grid
@@ -1169,6 +1175,9 @@ export default {
             })
             return sort_order
         },
+        isMobile: function () { //TODO move to central helper
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        }
     },
     mounted() {
 
@@ -1306,21 +1315,26 @@ export default {
             return [...new Map(data.map((item) => [key(item), item])).values()]
         },
         loadMealPlan: function () {
-            if (this.ui.show_meal_plan) {
-                let params = {
-                    options: {
-                        query: {
-                            from_date: moment().format("YYYY-MM-DD"),
-                            to_date: moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"),
-                        },
-                    },
-                }
-                this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then((result) => {
-                    this.meal_plans = result.data
-                })
-            } else {
-                this.meal_plans = []
-            }
+            console.log('loadMealpLan')
+            this.meal_plan_store = useMealPlanStore()
+            this.meal_plan_store.refreshFromAPI(moment().format("YYYY-MM-DD"), moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"))
+
+
+            // if (this.ui.show_meal_plan) {
+            //     let params = {
+            //         options: {
+            //             query: {
+            //                 from_date: moment().format("YYYY-MM-DD"),
+            //                 to_date: moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"),
+            //             },
+            //         },
+            //     }
+            //     this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then((result) => {
+            //         this.meal_plans = result.data
+            //     })
+            // } else {
+            //     this.meal_plans = []
+            // }
         },
         genericSelectChanged: function (obj) {
             if (obj.var.includes("::")) {
