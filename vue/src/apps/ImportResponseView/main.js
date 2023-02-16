@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './ImportResponseView.vue'
 import i18n from '@/i18n'
+import {createPinia, PiniaVuePlugin} from "pinia";
 
 Vue.config.productionTip = false
 
@@ -11,8 +12,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 export default __webpack_public_path__ = publicPath // eslint-disable-line
 
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
 new Vue({
+    pinia,
     i18n,
     render: h => h(App),
 }).$mount('#app')
