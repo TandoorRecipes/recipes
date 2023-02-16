@@ -14,6 +14,20 @@
             </div>
         </div>
 
+        Meal Plan Card
+        <div class="row">
+            <div class="col-md-3">
+                <recipe-card
+                    v-if="recipe !== undefined && meal_plan !== undefined"
+                    :recipe="recipe"
+                    :detailed="recipe_detailed"
+                    :meal_plan="meal_plan"
+                    :footer_text="meal_plan.meal_type_name"
+                    footer_icon="far fa-calendar-alt"
+                ></recipe-card>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -36,6 +50,7 @@ export default {
         return {
             recipe: undefined,
             recipe_detailed: false,
+            meal_plan: undefined
         }
     },
     mounted() {
@@ -43,6 +58,9 @@ export default {
         let apiClient = new ApiApiFactory()
         apiClient.retrieveRecipe('119').then((r) => {
             this.recipe = r.data
+        })
+        apiClient.retrieveMealPlan('1').then((r) => {
+            this.meal_plan = r.data
         })
     },
     methods: {},
