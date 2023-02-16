@@ -22,27 +22,36 @@
             <b-card no-body v-hover v-if="recipe" style="height: 100%">
 
                 <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
-                    <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image"
-                                     v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
-                    <div
-                        class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1"
-                        v-if="show_context_menu">
-                        <a>
-                            <recipe-context-menu :recipe="recipe" class="float-right"
-                                                 :disabled_options="context_disabled_options"
-                                                 v-if="recipe !== null"></recipe-context-menu>
-                        </a>
-                    </div>
-                    <div class="card-img-overlay d-flex flex-column justify-content-left float-left text-left pt-2" style="width:40%"
-                         v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
-                        <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0">
-                            <i
-                                class="fa fa-clock"></i> {{ working_time }}
-                        </b-badge>
-                        <b-badge pill variant="secondary" class="mt-1 font-weight-normal"
-                                 v-if="recipe.waiting_time !== 0">
-                            <i class="fa fa-pause"></i> {{ waiting_time }}
-                        </b-badge>
+                    <div class="content">
+                        <div class="content-overlay" v-if="recipe.description !== null && recipe.description !== ''"></div>
+                        <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image"
+                                         v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
+
+                        <div class="content-details" >
+                            <p class="content-text">
+                               {{ recipe.description }}
+                            </p>
+                        </div>
+
+                        <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1"
+                             v-if="show_context_menu">
+                            <a>
+                                <recipe-context-menu :recipe="recipe" class="float-right"
+                                                     :disabled_options="context_disabled_options"
+                                                     v-if="recipe !== null"></recipe-context-menu>
+                            </a>
+                        </div>
+                        <div class="card-img-overlay d-flex flex-column justify-content-left float-left text-left pt-2" style="width:40%"
+                             v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
+                            <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0">
+                                <i
+                                    class="fa fa-clock"></i> {{ working_time }}
+                            </b-badge>
+                            <b-badge pill variant="secondary" class="mt-1 font-weight-normal"
+                                     v-if="recipe.waiting_time !== 0">
+                                <i class="fa fa-pause"></i> {{ waiting_time }}
+                            </b-badge>
+                        </div>
                     </div>
                 </a>
 
@@ -155,13 +164,6 @@ export default {
         show_detail: function () {
             return this.recipe?.steps !== undefined && this.detailed
         },
-        text_length: function () {
-            if (this.show_detail) {
-                return 200
-            } else {
-                return 120
-            }
-        },
         recipe_image: function () {
             if (this.recipe == null || this.recipe.image === null) {
                 return window.IMAGE_PLACEHOLDER
@@ -210,5 +212,71 @@ export default {
     -webkit-line-clamp: 2; /* number of lines to show */
     line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+.content {
+    position: relative;
+
+    margin: auto;
+    overflow: hidden;
+}
+
+.content .content-overlay {
+    background: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    height: 99%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    -webkit-transition: all 0.4s ease-in-out 0s;
+    -moz-transition: all 0.4s ease-in-out 0s;
+    transition: all 0.4s ease-in-out 0s;
+}
+
+.content:hover .content-overlay {
+    opacity: 1;
+}
+
+.content-details {
+    position: absolute;
+    text-align: center;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    -moz-transition: all 0.3s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+}
+
+.content:hover .content-details {
+    top: 50%;
+    left: 50%;
+    opacity: 1;
+}
+
+.content-details h3 {
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5em;
+    text-transform: uppercase;
+}
+
+.content-details p {
+    color: #fff;
+    font-size: 0.8em;
+}
+
+.fadeIn-bottom {
+    top: 80%;
 }
 </style>
