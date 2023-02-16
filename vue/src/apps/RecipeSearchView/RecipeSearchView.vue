@@ -798,7 +798,7 @@
                         <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
 
                             <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm" style="overflow-y: visible; overflow-x: visible; position: static"
-                                        class="shadow-none" toggle-class="text-decoration-none" >
+                                        class="shadow-none" toggle-class="text-decoration-none">
                                 <div v-for="o in sortOptions" :key="o.id">
                                     <b-dropdown-item
                                         v-on:click="
@@ -832,7 +832,7 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); grid-gap: 0.6rem; grid-auto-rows: max-content;">
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
                                 <template v-if="!searchFiltered()">
                                     <recipe-card
                                         v-bind:key="`mp_${m.id}`"
@@ -848,7 +848,7 @@
                                              :footer_text="isRecentOrNew(r)[0]"
                                              :footer_icon="isRecentOrNew(r)[1]"
                                              :use_plural="use_plural">
-                                             </recipe-card>
+                                </recipe-card>
                             </div>
                         </div>
                     </div>
@@ -916,7 +916,7 @@ import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprec
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
-import { ApiApiFactory } from "@/utils/openapi/api"
+import {ApiApiFactory} from "@/utils/openapi/api"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
