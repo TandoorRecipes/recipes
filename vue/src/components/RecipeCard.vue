@@ -28,7 +28,8 @@
                         class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1"
                         v-if="show_context_menu">
                         <a>
-                            <recipe-context-menu :recipe="recipe" class="float-right" :disabled_options="context_disabled_options"
+                            <recipe-context-menu :recipe="recipe" class="float-right"
+                                                 :disabled_options="context_disabled_options"
                                                  v-if="recipe !== null"></recipe-context-menu>
                         </a>
                     </div>
@@ -47,7 +48,7 @@
 
                 <b-card-body class="p-4">
                     <h6>
-                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
+                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold">
                             <template v-if="recipe !== null">{{ recipe.name }}</template>
                             <template v-else>{{ meal_plan.title }}</template>
                         </a>
@@ -55,15 +56,8 @@
 
                     <b-card-text style="text-overflow: ellipsis">
                         <template v-if="recipe !== null">
-                            <recipe-rating :recipe="recipe"></recipe-rating>
-                            <template v-if="recipe.description !== null && recipe.description !== undefined">
-                        <span v-if="recipe.description.length > text_length">
-                            {{ recipe.description.substr(0, text_length) + "\u2026" }}
-                        </span>
-                                <span v-if="recipe.description.length <= text_length">
-                            {{ recipe.description }}
-                        </span>
-                            </template>
+
+
                             <p class="mt-1">
                                 <last-cooked :recipe="recipe"></last-cooked>
                                 <keywords-component :recipe="recipe"
@@ -75,15 +69,15 @@
                                         <h6 class="card-title"><i class="fas fa-pepper-hot"></i> {{ $t("Ingredients") }}
                                         </h6>
 
-                                <ingredients-card 
-                                    :steps="recipe.steps"
-                                    :header="false"
-                                    :detailed="false"
-                                    :servings="recipe.servings"
-                                    :use_plural="use_plural" />
-                            </div>
-                        </div>
-                    </transition>
+                                        <ingredients-card
+                                            :steps="recipe.steps"
+                                            :header="false"
+                                            :detailed="false"
+                                            :servings="recipe.servings"
+                                            :use_plural="use_plural"/>
+                                    </div>
+                                </div>
+                            </transition>
 
                             <b-badge pill variant="info" v-if="!recipe.internal">{{ $t("External") }}</b-badge>
                         </template>
@@ -98,6 +92,20 @@
 
     </div>
 
+    <!--
+
+    <recipe-rating :recipe="recipe"></recipe-rating>
+
+      <template v-if="recipe.description !== null && recipe.description !== undefined">
+                        <span v-if="recipe.description.length > text_length">
+                            {{ recipe.description.substr(0, text_length) + "\u2026" }}
+                        </span>
+                                <span v-if="recipe.description.length <= text_length">
+                            {{ recipe.description }}
+                        </span>
+                            </template>
+
+    -->
 </template>
 
 <script>
@@ -117,7 +125,6 @@ export default {
     mixins: [ResolveUrlMixin],
     components: {
         LastCooked,
-        RecipeRating,
         KeywordsComponent,
         "recipe-context-menu": RecipeContextMenu,
         IngredientsCard
@@ -125,7 +132,7 @@ export default {
     props: {
         recipe: Object,
         meal_plan: Object,
-        use_plural: { type: Boolean, default: false},
+        use_plural: {type: Boolean, default: false},
         footer_text: String,
         footer_icon: String,
         detailed: {type: Boolean, default: true},
