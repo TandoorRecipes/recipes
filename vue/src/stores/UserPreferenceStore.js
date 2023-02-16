@@ -9,6 +9,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
     state: () => ({
         data: null,
         updated_at: null,
+        currently_updating: false,
     }),
     getters: {
 
@@ -68,11 +69,17 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
          */
         refreshFromAPI() {
             let apiClient = new ApiApiFactory()
-            return apiClient.retrieveUserPreference(localStorage.getItem('USER_ID')).then(r => {
-                this.data = r.data
-                this.updated_at = new Date()
-                return this.data
-            })
+            if(!this.currently_updating){
+                this.currently_updating = true
+                return apiClient.retrieveUserPreference(localStorage.getItem('USER_ID')).then(r => {
+                    this.data = r.data
+                    this.updated_at = new Date()
+                    this.currently_updating = false
+                    return this.data
+                }).catch(err => {
+                    this.currently_updating = false
+                })
+            }
         },
     },
 })
