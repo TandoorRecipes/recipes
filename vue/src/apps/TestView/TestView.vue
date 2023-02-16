@@ -1,82 +1,48 @@
 <template>
 
     <div id="app">
-
-        DIV
+        <hr/>
 
         <div class="row">
-            <div class="col-md-12">
-                <div style="height: 25vh; width: 15vw;">
-                    <b-img style="height: 15vh; width: 15vw; object-fit: cover"
-                           src="http://127.0.0.1:8000/media/recipes/6a2fd228-c589-4a14-b21f-365bca3fbd94_119.png"
-                           rounded></b-img>
-                    <div style="height: 10vh">
-                        <span style="font-size: 18px" class="two-row-text"><b>Zwiebelkuchen mit einem wirklich langen namen und einer ewigen Beschreibung</b></span>
-                        <span style="font-size: 14px" class="two-row-text text-muted">
-                            <a href="#">Import 1</a> -
-                            <a href="#">Hauptgang</a> -
-                            <a href="#">Backen</a> </span>
-
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
+            <div class="col col-md-12">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                    <b-list-group v-for="x in Array(5).keys()" v-bind:key="x">
+                        <b-list-group-item >
+                            <h4>Monday </h4>
+                        </b-list-group-item>
+                        <b-list-group-item v-for="y in Array(Math.round(Math.random()*4) ).keys()" v-bind:key="y">
+                            <div class="d-flex flex-row align-items-center">
+                                <div>
+                                    <b-img style="height: 50px; width: 50px; object-fit: cover" src="http://127.0.0.1:8000/media/recipes/6a2fd228-c589-4a14-b21f-365bca3fbd94_119.png" rounded="circle"></b-img>
+                                </div>
+                                <div class="flex-grow-1 ml-2">
+                                    <span class="two-row-text">{{ recipe.name }}</span>
+                                </div>
+                            </div>
+                        </b-list-group-item>
+                        <b-list-group-item class="justify-content-center text-center">
+                            <b-button><i class="fa fa-plus"></i></b-button>
+                        </b-list-group-item>
+                    </b-list-group>
 
                 </div>
-            </div>
-
-            <div class="col-md-3">
-
-                <div class="row">
-                    <div class="col-12">
-                        <b-img style="height: 15vh; width: 15vw; object-fit: cover"
-                               src="http://127.0.0.1:8000/media/recipes/6a2fd228-c589-4a14-b21f-365bca3fbd94_119.png"
-                               rounded></b-img>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-1">
-
-                    </div>
-                    <div class="col-10">
-                        <span style="font-size: 18px"><b>Zwiebelkuchen mit einem wirklich langen namen und einer ewigen Beschreibung</b></span> <br/>
-                        <span style="font-size: 14px" class="text-muted text-small">
-                            <a href="#">Import 1</a> -
-                            <a href="#">Hauptgang</a> -
-                            <a href="#">Backen</a> </span>
-                    </div>
-                    <div class="col-1 align-items-end">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <hr class="mt-3"/>
-
-        Recipe Card
-        <b-checkbox v-model="recipe_detailed"></b-checkbox>
-        <div class="row ">
-            <div class="col-md-3">
-                <recipe-card
-                    v-if="recipe !== undefined"
-                    :recipe="recipe"
-                    :detailed="recipe_detailed"
-                ></recipe-card>
             </div>
         </div>
 
-        Meal Plan Card
+        <hr/>
+
         <div class="row">
-            <div class="col-md-3">
-                <recipe-card
-                    v-if="recipe !== undefined && meal_plan !== undefined"
-                    :recipe="recipe"
-                    :detailed="recipe_detailed"
-                    :meal_plan="meal_plan"
-                    :footer_text="meal_plan.meal_type_name"
-                    footer_icon="far fa-calendar-alt"
-                ></recipe-card>
+            <div class="col col-md-12">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+
+                </div>
             </div>
         </div>
 
@@ -84,10 +50,6 @@
     </div>
 </template>
 
-<!--
-<span class="text-muted text-small">📥 Import 1 - 🍽 Hauptgang - 🔥 Backen</span>
-
--->
 
 <script>
 import Vue from "vue"
@@ -96,6 +58,7 @@ import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import RecipeCard from "@/components/RecipeCard.vue";
+
 
 Vue.use(BootstrapVue)
 

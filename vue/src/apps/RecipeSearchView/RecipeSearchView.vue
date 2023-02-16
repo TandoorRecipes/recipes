@@ -812,7 +812,7 @@
                             </b-dropdown>
 
                             <b-button variant="outline-primary" size="sm" class="shadow-none  ml-1"
-                                      @click="resetSearch()"><i class="fas fa-file-alt"></i> {{
+                                      @click="resetSearch()" v-if="searchFiltered()"><i class="fas fa-file-alt"></i> {{
                                     search.pagination_page
                                 }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }} <i
                                     class="fas fa-times-circle"></i>
@@ -828,11 +828,50 @@
                     </div>
                 </div>
 
+                <template v-if="!searchFiltered() && ui.show_meal_plan">
+                    <hr/>
+                    <div class="row" >
+
+                        <div class="col col-md-12">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                                <b-list-group v-for="day in meal_plan_grid" v-bind:key="day.day">
+                                    <b-list-group-item>
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <h4>{{ day.date_label }}</h4>
+                                            </div>
+                                            <div class="flex-grow-1 text-right">
+                                                <b-button class=""><i class="fa fa-plus"></i></b-button>
+                                            </div>
+                                        </div>
+
+                                    </b-list-group-item>
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" rounded="circle"></b-img>
+                                            </div>
+                                            <div class="flex-grow-1 ml-2">
+                                                <span class="two-row-text">{{ plan.recipe.name }}</span>
+                                            </div>
+                                        </div>
+                                    </b-list-group-item>
+
+                                </b-list-group>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr/>
+                </template>
+
+
                 <div v-if="recipes.length > 0" class="mt-4">
                     <div class="row">
                         <div class="col col-md-12">
-                            <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+
                                 <template v-if="!searchFiltered()">
                                     <recipe-card
                                         v-bind:key="`mp_${m.id}`"
@@ -844,6 +883,7 @@
                                         footer_icon="far fa-calendar-alt"
                                     ></recipe-card>
                                 </template>
+
                                 <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
                                              :footer_text="isRecentOrNew(r)[0]"
                                              :footer_icon="isRecentOrNew(r)[1]"
@@ -1018,6 +1058,15 @@ export default {
         }
     },
     computed: {
+        meal_plan_grid: function () {
+            let grid = []
+            for (const x of Array(5).keys()) {
+                let moment_date = moment().add(x, "d")
+                grid.push({date: moment_date, date_label: moment_date.format('DD.MM'), plan_entries: this.meal_plans.filter((m) => moment(m.date).isSame(moment_date, 'day'))})
+            }
+
+            return grid
+        },
         locale: function () {
             return window.CUSTOM_LOCALE
         },
@@ -1577,6 +1626,15 @@ export default {
 /* copied from vue-multiselect */
 .vue-treeselect__control-arrow-container {
     width: 30px;
+}
+
+.two-row-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 </style>
