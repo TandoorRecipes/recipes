@@ -855,7 +855,7 @@
 
                     <div class="row" style="margin-top: 2vh" v-if="!random_search">
                         <div class="col col-md-12">
-                            <b-pagination pills v-model="search.pagination_page" :total-rows="pagination_count"
+                            <b-pagination v-model="search.pagination_page" :total-rows="pagination_count" first-number last-number size="lg"
                                           :per-page="ui.page_size" @change="pageChange" align="center"></b-pagination>
                         </div>
                     </div>
