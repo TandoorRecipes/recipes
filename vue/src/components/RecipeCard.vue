@@ -46,21 +46,21 @@
                     </div>
                 </a>
 
-                <b-card-body class="p-4">
-                    <h6>
-                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold">
+                <b-card-body class="p-2 pl-3 pr-3">
+                    <span>
+                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body two-row-text">
                             <template v-if="recipe !== null">{{ recipe.name }}</template>
                             <template v-else>{{ meal_plan.title }}</template>
                         </a>
-                    </h6>
+                    </span>
 
                     <b-card-text style="text-overflow: ellipsis">
                         <template v-if="recipe !== null">
 
 
-                            <p class="mt-1">
+                            <p class="mt-1 mb-1">
                                 <last-cooked :recipe="recipe"></last-cooked>
-                                <keywords-component :recipe="recipe"
+                                <keywords-component :recipe="recipe" :limit="3"
                                                     style="margin-top: 4px; position: relative; z-index: 3;"></keywords-component>
                             </p>
                             <transition name="fade" mode="in-out">
@@ -81,12 +81,11 @@
 
                             <b-badge pill variant="info" v-if="!recipe.internal">{{ $t("External") }}</b-badge>
                         </template>
-                        <template v-else>{{ meal_plan.note }}</template>
+
                     </b-card-text>
                 </b-card-body>
 
-                <b-card-footer v-if="footer_text !== undefined"><i v-bind:class="footer_icon"></i> {{ footer_text }}
-                </b-card-footer>
+
             </b-card>
         </template>
 
@@ -104,6 +103,11 @@
                             {{ recipe.description }}
                         </span>
                             </template>
+
+    <b-card-footer v-if="footer_text !== undefined"><i v-bind:class="footer_icon"></i> {{ footer_text }}
+                </b-card-footer>
+
+    <template v-else>{{ meal_plan.note }}</template>
 
     -->
 </template>
@@ -197,5 +201,14 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
 {
     opacity: 0;
+}
+
+.two-row-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 </style>
