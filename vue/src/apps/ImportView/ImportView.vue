@@ -504,6 +504,13 @@ export default {
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
+
+        let urlParams = new URLSearchParams(window.location.search)
+
+        if (urlParams.has("url")) {
+            this.website_url = urlParams.get('url')
+            this.loadRecipe(this.website_url)
+        }
     },
     methods: {
         /**
