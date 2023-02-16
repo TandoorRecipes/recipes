@@ -629,6 +629,7 @@ export default {
             return axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
                 if (response.status === 201 && 'link' in response.data) {
                     window.location = response.data.link
+                    return
                 }
 
                 this.loading = false
