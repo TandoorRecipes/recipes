@@ -30,7 +30,7 @@ Jinja2==3.1.2
 django-webpack-loader==1.8.0
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.52.0
-recipe-scrapers==14.24.0
+recipe-scrapers==14.30.0
 django-scopes==1.2.0.post1
 pytest==7.2.0
 pytest-django==4.5.2
