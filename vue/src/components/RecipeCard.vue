@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="recipe && recipe.loading">
-            <b-card no-body v-hover>
+            <b-card no-body v-hover style="height: 100%">
                 <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="placeholder_image"
                                  v-bind:alt="$t('Recipe_Image')" top></b-card-img-lazy>
 
@@ -19,7 +19,7 @@
             </b-card>
         </template>
         <template v-else>
-            <b-card no-body v-hover v-if="recipe">
+            <b-card no-body v-hover v-if="recipe" style="height: 100%">
 
                 <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
                     <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image"
@@ -33,7 +33,7 @@
                                                  v-if="recipe !== null"></recipe-context-menu>
                         </a>
                     </div>
-                    <div class="card-img-overlay w-50 d-flex flex-column justify-content-left float-left text-left pt-2"
+                    <div class="card-img-overlay d-flex flex-column justify-content-left float-left text-left pt-2" style="width:40%"
                          v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
                         <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0">
                             <i
@@ -48,7 +48,7 @@
 
                 <b-card-body class="p-2 pl-3 pr-3">
                     <span>
-                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body two-row-text">
+                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold two-row-text">
                             <template v-if="recipe !== null">{{ recipe.name }}</template>
                             <template v-else>{{ meal_plan.title }}</template>
                         </a>
