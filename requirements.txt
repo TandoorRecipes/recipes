@@ -1,5 +1,5 @@
 Django==4.1.7
-cryptography==38.0.4
+cryptography==39.0.1
 django-annoying==0.10.6
 django-autocomplete-light==3.9.4
 django-cleanup==6.0.0
