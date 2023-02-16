@@ -1,7 +1,7 @@
 <template>
 
     <div>
-<!--        <b-button v-b-modal.id_import_tandoor_modal>{{ $t("Import into Tandoor") }}</b-button>-->
+        <b-button v-b-modal.id_import_tandoor_modal>{{ $t("Import into Tandoor") }}</b-button>
 
         <b-modal class="modal" id="id_import_tandoor_modal" :title="$t('Import')" hide-footer>
             <p>Tandoor ist eine OpenSource Rezeptverwaltungs Plattform</p>
@@ -21,17 +21,25 @@
                 </b-form-group>
             </div>
             <div v-if="import_mode === 'tandoor'">
-                <a href="https://app.tandoor.dev/accounts/signup/" target="_blank" ref="nofollow">Hier</a> einen Account anlegen<br/>
-                <b-button @click="importTandoor()">Import</b-button>
+                <ol>
+                    <li><a href="https://app.tandoor.dev/accounts/signup/" target="_blank" ref="nofollow">Hier</a> einen
+                        Account anlegen<br/></li>
+                    <li>
+                        <b-button @click="importTandoor()">Import</b-button>
+                    </li>
+                </ol>
+
 
             </div>
             <div v-if="import_mode === 'selfhosted'">
-                Deine Server URL
+                Deine Server URL (z.B. <code>https://tandoor.mydomain.com/</code>)
                 <b-input v-model="selfhosted_url"></b-input>
-                <b-button :disabled="selfhosted_url === ''" @click="importSelfHosted()">Import</b-button>
+                <b-button class="mt-2" :disabled="selfhosted_url === ''" @click="importSelfHosted()">Import</b-button>
             </div>
 
             <div class="row mt-3 text-left mb-3">
+                <p>Alternativ kannst du den Link zum Rezept in den Importer in deiner Tandoor Instanz kopieren.</p>
+
                 <a href="https://tandoor.dev" target="_blank" rel="nofollow">Jetzt mehr über Tandoor erfahren</a>
             </div>
         </b-modal>
@@ -62,16 +70,31 @@ export default {
             selfhosted_url: '',
         }
     },
+    watch: {
+        selfhosted_url: function (newVal) {
+            window.localStorage.setItem('MY_TANDOOR_URL', newVal)
+        },
+    },
     computed: {},
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
+        let selfhosted_url = window.localStorage.getItem('MY_TANDOOR_URL')
+        if (selfhosted_url !== undefined) {
+            this.selfhosted_url = selfhosted_url
+            this.import_mode = 'selfhosted'
+        }
     },
     methods: {
         importTandoor: function () {
-
+            location.href = 'https://app.tandoor.dev/data/import/url?url=' + location.href
         },
         importSelfHosted: function () {
-
+            this.selfhosted_url = this.selfhosted_url.replace('/search/', '')
+            let import_path = 'data/import/url?url='
+            if (!this.selfhosted_url.endsWith('/')) {
+                import_path = '/' + import_path
+            }
+            location.href = this.selfhosted_url + import_path + location.href
         },
     }
 }
