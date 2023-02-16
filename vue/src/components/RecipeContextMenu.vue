@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="dropdown d-print-none">
-            <a class="btn shadow-none" href="javascript:void(0);" role="button" id="dropdownMenuLink"
+            <a class="btn shadow-none pr-0 pl-0" href="javascript:void(0);" role="button" id="dropdownMenuLink"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-ellipsis-v fa-lg"></i>
             </a>
 
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink" >
                 <a class="dropdown-item" :href="resolveDjangoUrl('edit_recipe', recipe.id)" v-if="!disabled_options.edit"><i
                     class="fas fa-pencil-alt fa-fw"></i> {{ $t("Edit") }}</a>
 

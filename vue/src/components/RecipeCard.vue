@@ -33,14 +33,6 @@
                             </p>
                         </div>
 
-                        <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right pt-2 pr-1"
-                             v-if="show_context_menu">
-                            <a>
-                                <recipe-context-menu :recipe="recipe" class="float-right"
-                                                     :disabled_options="context_disabled_options"
-                                                     v-if="recipe !== null"></recipe-context-menu>
-                            </a>
-                        </div>
                         <div class="card-img-overlay d-flex flex-column justify-content-left float-left text-left pt-2" style="width:40%"
                              v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
                             <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0">
@@ -56,16 +48,26 @@
                 </a>
 
                 <b-card-body class="p-2 pl-3 pr-3">
-                    <span>
-                        <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold two-row-text">
+                    <div class="d-flex flex-row">
+                        <div class="flex-grow-1">
+                            <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold two-row-text">
                             <template v-if="recipe !== null">{{ recipe.name }}</template>
                             <template v-else>{{ meal_plan.title }}</template>
                         </a>
-                    </span>
+                        </div>
+                        <div class="justify-content-end">
+                            <recipe-context-menu :recipe="recipe" class="justify-content-end float-right align-items-end pr-0"
+                                                     :disabled_options="context_disabled_options"
+                                                     v-if="recipe !== null"></recipe-context-menu>
+                        </div>
+                    </div>
+
 
                     <b-card-text style="text-overflow: ellipsis">
                         <template v-if="recipe !== null">
-
+                            <div v-if="show_detail">
+                                {{ recipe.description }}
+                            </div>
 
                             <p class="mt-1 mb-1">
                                 <last-cooked :recipe="recipe"></last-cooked>
@@ -218,7 +220,7 @@ export default {
     position: relative;
 
     margin: auto;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .content .content-overlay {
