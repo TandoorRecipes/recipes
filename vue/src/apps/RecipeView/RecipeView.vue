@@ -155,6 +155,8 @@
                 <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" class="mt-3">{{ $t("Report Abuse") }}</a>
             </div>
         </div>
+
+        <bottom-navigation-bar></bottom-navigation-bar>
     </div>
 </template>
 
@@ -184,6 +186,7 @@ import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import ImportTandoor from "@/components/Modals/ImportTandoor.vue";
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.prototype.moment = moment
 
@@ -207,6 +210,7 @@ export default {
         AddRecipeToBook,
         RecipeSwitcher,
         CustomInputSpinButton,
+        BottomNavigationBar,
     },
     computed: {
         ingredient_factor: function () {
