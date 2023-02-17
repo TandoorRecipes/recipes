@@ -53,6 +53,8 @@
                     @reload="openBook(current_book, true)"
                 ></cookbook-slider>
             </transition>
+
+            <bottom-navigation-bar></bottom-navigation-bar>
         </div>
     </div>
 </template>
@@ -66,13 +68,14 @@ import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { StandardToasts, ApiMixin } from "@/utils/utils"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "CookbookView",
     mixins: [ApiMixin],
-    components: { LoadingSpinner, CookbookSlider },
+    components: { LoadingSpinner, CookbookSlider, BottomNavigationBar },
     data() {
         return {
             cookbooks: [],
