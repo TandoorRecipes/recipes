@@ -223,12 +223,12 @@
                         {{ $t("Export_To_ICal") }}
                     </a>
                 </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
-                            :title="$t('Coming_Soon')">
-                        {{ $t("Auto_Planner") }}
-                    </button>
-                </div>
+<!--                <div class="col-md-3 col-6 mb-1 mb-md-0">-->
+<!--                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top-->
+<!--                            :title="$t('Coming_Soon')">-->
+<!--                        {{ $t("Auto_Planner") }}-->
+<!--                    </button>-->
+<!--                </div>-->
                 <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
                     <b-button-toolbar key-nav aria-label="Toolbar with button groups">
                         <b-button-group class="mx-1">
@@ -250,6 +250,8 @@
                 </div>
             </div>
         </transition>
+
+         <bottom-navigation-bar></bottom-navigation-bar>
     </div>
 </template>
 
@@ -272,6 +274,7 @@ import VueCookies from "vue-cookies"
 import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -292,6 +295,7 @@ export default {
         MealPlanCalenderHeader,
         EmojiInput,
         draggable,
+        BottomNavigationBar,
     },
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {

@@ -1,7 +1,7 @@
 <template>
     <div id="app" style="margin-bottom: 4vh">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
-        <b-button @click="replaySyncQueue">SYNC</b-button>
+
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
@@ -589,6 +589,8 @@
         </ContextMenu>
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
                         :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
+
+        <bottom-navigation-bar></bottom-navigation-bar>
     </div>
 </template>
 
@@ -617,6 +619,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueCookies)
 let SETTINGS_COOKIE_NAME = "shopping_settings"
 import {Workbox} from 'workbox-window';
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 export default {
     name: "ShoppingListView",
@@ -632,7 +635,8 @@ export default {
         CopyToClipboard,
         ShoppingModal,
         draggable,
-        ShoppingSettingsComponent
+        ShoppingSettingsComponent,
+        BottomNavigationBar,
     },
 
     data() {

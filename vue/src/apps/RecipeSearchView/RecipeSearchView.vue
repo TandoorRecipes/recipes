@@ -938,6 +938,8 @@
                         </div>
                     </div>
                 </div>
+
+                <bottom-navigation-bar></bottom-navigation-bar>
             </div>
         </div>
     </div>
@@ -962,6 +964,7 @@ import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -972,7 +975,7 @@ let UI_COOKIE_NAME = "ui_search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
-    components: {GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect},
+    components: {GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect, BottomNavigationBar},
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -1177,6 +1180,9 @@ export default {
         },
         isMobile: function () { //TODO move to central helper
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        },
+        isTouch: function () {
+            return window.matchMedia("(pointer: coarse)").matches
         }
     },
     mounted() {
