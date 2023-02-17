@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 08:52+0100\n"
-"PO-Revision-Date: 2022-03-08 01:31+0000\n"
-"Last-Translator: Felipe Castro <felipefcastro@gmail.com>\n"
+"PO-Revision-Date: 2023-02-18 10:55+0000\n"
+"Last-Translator: Joachim Weber <joachim.weber@gmx.de>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:50 .\cookbook\templates\stats.html:28
@@ -158,7 +158,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:195
 #: .\cookbook\templates\url_import.html:585 .\cookbook\views\lists.py:97
 msgid "Keywords"
-msgstr ""
+msgstr "Palavras-chave"
 
 #: .\cookbook\forms.py:131
 msgid "Preparation time in minutes"
@@ -513,7 +513,7 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:231
 #: .\cookbook\templates\url_import.html:462
 msgid "Servings"
-msgstr ""
+msgstr "Porções"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
@@ -585,7 +585,7 @@ msgstr ""
 
 #: .\cookbook\models.py:302 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr ""
+msgstr "Livros"
 
 #: .\cookbook\models.py:310
 msgid "Small"
@@ -598,7 +598,7 @@ msgstr ""
 #: .\cookbook\models.py:310 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #: .\cookbook\models.py:513
 msgid " is part of a recipe step and cannot be deleted"
@@ -677,7 +677,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:37
 #: .\cookbook\templates\space.html:109
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: .\cookbook\tables.py:115 .\cookbook\tables.py:138
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -715,7 +715,7 @@ msgstr ""
 #: .\cookbook\templates\settings.html:17
 #: .\cookbook\templates\socialaccount\connections.html:10
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
@@ -937,7 +937,7 @@ msgstr ""
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "e"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
@@ -989,7 +989,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:208
 #: .\cookbook\templates\supermarket.html:7
 msgid "Supermarket"
-msgstr ""
+msgstr "Supermercado"
 
 #: .\cookbook\templates\base.html:163
 msgid "Supermarket Category"
@@ -1027,7 +1027,7 @@ msgstr ""
 #: .\cookbook\templates\shopping_list.html:165
 #: .\cookbook\templates\shopping_list.html:188
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #: .\cookbook\templates\base.html:259
 #: .\cookbook\templates\generic\list_template.html:14
@@ -1190,7 +1190,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:26
 msgid "Protected"
-msgstr ""
+msgstr "Protegido"
 
 #: .\cookbook\templates\generic\delete_template.html:41
 msgid "Cascade"
@@ -1268,7 +1268,7 @@ msgstr ""
 
 #: .\cookbook\templates\include\recipe_open_modal.html:18
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
@@ -1821,7 +1821,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:162
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #: .\cookbook\templates\settings.html:173
 msgid ""
@@ -2062,7 +2062,7 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:120
 msgid "user"
-msgstr ""
+msgstr "usuário"
 
 #: .\cookbook\templates\space.html:121
 msgid "guest"
@@ -2273,7 +2273,7 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:214
 msgid "Image"
-msgstr ""
+msgstr "Imagem"
 
 #: .\cookbook\templates\url_import.html:246
 msgid "Prep Time"
@@ -2359,7 +2359,7 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:640
 msgid "Information"
-msgstr ""
+msgstr "Informação"
 
 #: .\cookbook\templates\url_import.html:642
 msgid ""
