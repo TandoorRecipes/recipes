@@ -128,7 +128,7 @@ export default {
 					if (!this.recipe_servings) {
 						this.recipe_servings = result.data?.servings
 					}
-					this.steps.forEach(s => s.ingredients.filter(i => i.food.food_onhand === false).forEach(i => this.$set(i, 'checked', true)))
+					this.steps.forEach(s => s.ingredients.filter(i => i.food?.food_onhand === false).forEach(i => this.$set(i, 'checked', true)))
 					this.loading = false
 				})
 				.then(() => {
