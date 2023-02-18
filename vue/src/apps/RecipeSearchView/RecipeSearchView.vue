@@ -844,8 +844,8 @@
                                                     <h4>{{ day.date_label }}</h4>
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
-                                                    <!--<b-button class=""><i class="fa fa-plus"></i></b-button>-->
-                                                    <!-- TODO need to rewrite meal plan edit modal to use store -->
+                                                    <b-button class="" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                                        class="fa fa-plus"></i></b-button>
                                                 </div>
                                             </div>
 
@@ -949,6 +949,11 @@
                     </div>
                 </div>
 
+                <meal-plan-edit-modal
+                    :entry="mealplan_entry_edit"
+                    :create_date="mealplan_default_date"
+                ></meal-plan-edit-modal>
+
                 <bottom-navigation-bar></bottom-navigation-bar>
             </div>
         </div>
@@ -975,6 +980,7 @@ import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
+import MealPlanEditModal from "@/components/MealPlanEditModal.vue";
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -985,7 +991,7 @@ let UI_COOKIE_NAME = "ui_search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
-    components: {GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect, BottomNavigationBar},
+    components: {GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect, BottomNavigationBar, MealPlanEditModal},
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -1074,6 +1080,8 @@ export default {
             pagination_count: 0,
             random_search: false,
             debug: false,
+            mealplan_default_date: null,
+            mealplan_entry_edit: null,
         }
     },
     computed: {
@@ -1084,6 +1092,7 @@ export default {
                     let moment_date = moment().add(x, "d")
                     grid.push({
                         date: moment_date,
+                        create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
                         date_label: moment_date.format('DD.MM'),
                         plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
                     })
@@ -1628,6 +1637,18 @@ export default {
                 type.filter((x) => x.operator === false && x.not === false).length > 1
             )
         },
+        showMealPlanEditModal: function (entry, date) {
+            if (entry) {
+                this.mealplan_entry_edit = entry
+            }
+            if (date) {
+                this.mealplan_default_date = date
+            }
+            this.$nextTick(function () {
+                this.$bvModal.show(`id_meal_plan_edit_modal`)
+            })
+
+        }
     },
 }
 </script>

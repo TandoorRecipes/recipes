@@ -156,7 +156,7 @@ export default {
         modal_title: String,
         modal_id: {
             type: String,
-            default: "edit-modal",
+            default: "id_meal_plan_edit_modal",
         },
         allow_delete: {
             type: Boolean,
@@ -240,7 +240,7 @@ export default {
                 return
             }
             //TODO properly validate
-            this.$bvModal.hide(`edit-modal`)
+            this.$bvModal.hide(`id_meal_plan_edit_modal`)
 
             if ((this.mealplan_settings.addshopping || this.autoMealPlan) && !this.mealplan_settings.reviewshopping) {
                 this.$set(this.entryEditing, 'addshopping', true)
@@ -250,7 +250,6 @@ export default {
                 useMealPlanStore().createObject(this.entryEditing).then((r) => {
                     this.last_created_plan = r.data
                     if (r.data.recipe && (this.mealplan_settings.addshopping || this.autoMealPlan) && this.mealplan_settings.reviewshopping) {
-                        console.log('OPENING SHOPPING MODAL', this.$bvModal)
                         this.$nextTick(function () {
                             this.$bvModal.show(`shopping_999999`)
                         })
@@ -262,7 +261,7 @@ export default {
             }
         },
         deleteEntry() {
-            this.$bvModal.hide(`edit-modal`)
+            this.$bvModal.hide(`id_meal_plan_edit_modal`)
             useMealPlanStore().deleteObject(this.entryEditing)
         },
         selectMealType(event) {
