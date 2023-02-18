@@ -797,7 +797,8 @@
                     <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
                         <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
 
-                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm" style="overflow-y: visible; overflow-x: visible; position: static"
+                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm"
+                                        style="overflow-y: visible; overflow-x: visible; position: static"
                                         class="shadow-none" toggle-class="text-decoration-none">
                                 <div v-for="o in sortOptions" :key="o.id">
                                     <b-dropdown-item
@@ -833,7 +834,8 @@
                     <div class="row">
 
                         <div class="col col-md-12">
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
                                 <div v-for="day in meal_plan_grid" v-bind:key="day.day">
                                     <b-list-group v-if="day.plan_entries.length > 0 || !isMobile">
                                         <b-list-group-item>
@@ -842,7 +844,8 @@
                                                     <h4>{{ day.date_label }}</h4>
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
-                                                    <!--<b-button class=""><i class="fa fa-plus"></i></b-button>--> <!-- TODO need to rewrite meal plan edit modal to use store -->
+                                                    <!--<b-button class=""><i class="fa fa-plus"></i></b-button>-->
+                                                    <!-- TODO need to rewrite meal plan edit modal to use store -->
                                                 </div>
                                             </div>
 
@@ -850,10 +853,15 @@
                                         <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" rounded="circle"></b-img>
+                                                    <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                           :src="plan.recipe.image" rounded="circle"></b-img>
                                                 </div>
-                                                <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere;">
-                                                    <span class="two-row-text"><a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{ plan.recipe.name }}</a></span>
+                                                <div class="flex-grow-1 ml-2"
+                                                     style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                    <span class="two-row-text"><a
+                                                        :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{
+                                                            plan.recipe.name
+                                                        }}</a></span>
                                                 </div>
                                             </div>
                                         </b-list-group-item>
@@ -873,7 +881,8 @@
                 <div v-if="recipes.length > 0" class="mt-4">
                     <div class="row">
                         <div class="col col-md-12">
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
 
                                 <!-- TODO remove once new meal plan view has proven to be good -->
                                 <!--                                <template v-if="!searchFiltered()">-->
@@ -899,7 +908,8 @@
 
                     <div class="row" style="margin-top: 2vh" v-if="!random_search">
                         <div class="col col-md-12">
-                            <b-pagination v-model="search.pagination_page" :total-rows="pagination_count" first-number last-number size="lg"
+                            <b-pagination v-model="search.pagination_page" :total-rows="pagination_count" first-number
+                                          last-number size="lg"
                                           :per-page="ui.page_size" @change="pageChange" align="center"></b-pagination>
                         </div>
                     </div>
@@ -1069,11 +1079,16 @@ export default {
     computed: {
         meal_plan_grid: function () {
             let grid = []
-            for (const x of Array(this.ui.meal_plan_days).keys()) {
-                let moment_date = moment().add(x, "d")
-                grid.push({date: moment_date, date_label: moment_date.format('DD.MM'), plan_entries: this.meal_plan_store.plans.filter((m) => moment(m.date).isSame(moment_date, 'day'))})
+            if (this.meal_plan_store !== null && this.meal_plan_store.plan_list.length > 0) {
+                for (const x of Array(this.ui.meal_plan_days).keys()) {
+                    let moment_date = moment().add(x, "d")
+                    grid.push({
+                        date: moment_date,
+                        date_label: moment_date.format('DD.MM'),
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
+                    })
+                }
             }
-
             return grid
         },
         locale: function () {
