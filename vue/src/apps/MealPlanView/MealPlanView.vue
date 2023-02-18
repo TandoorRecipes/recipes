@@ -203,7 +203,6 @@
         <meal-plan-edit-modal
             :entry="entryEditing"
             :modal_title="modal_title"
-            :edit_modal_show="edit_modal_show"
             :create_date="edit_modal_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
@@ -327,7 +326,6 @@ export default {
             shopping_list: [],
             current_period: null,
             entryEditing: null,
-            edit_modal_show: false,
             edit_modal_default_date: null,
             ical_url: window.ICAL_URL,
         }
@@ -489,7 +487,7 @@ export default {
             this.edit_modal_default_date = moment(data).format("YYYY-MM-DD")
             this.entryEditing = null
             this.$nextTick(function () {
-                this.$bvModal.show(`edit-modal`)
+                this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
         },
         findEntry(id) {
@@ -538,7 +536,7 @@ export default {
             this.$refs.menu.open($event, value)
         },
         openEntryEdit(entry) {
-            this.$bvModal.show(`edit-modal`)
+            this.$bvModal.show(`id_meal_plan_edit_modal`)
             this.entryEditing = entry
             this.entryEditing.date = moment(entry.date).format("YYYY-MM-DD")
             if (this.entryEditing.recipe != null) {
