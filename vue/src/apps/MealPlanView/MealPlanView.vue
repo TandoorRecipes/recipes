@@ -204,8 +204,6 @@
             :entry="entryEditing"
             :modal_title="modal_title"
             :edit_modal_show="edit_modal_show"
-            @save-entry="editEntry"
-            @delete-entry="deleteEntry"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
 
@@ -275,6 +273,7 @@ import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -353,7 +352,7 @@ export default {
         },
         plan_items: function () {
             let items = []
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 items.push(this.buildItem(entry))
             })
             return items
@@ -493,18 +492,6 @@ export default {
                 }
             })
         },
-        editEntry(edit_entry) {
-            if (edit_entry.id !== -1) {
-                this.plan_entries.forEach((entry, index) => {
-                    if (entry.id === edit_entry.id) {
-                        this.$set(this.plan_entries, index, edit_entry)
-                        this.saveEntry(this.plan_entries[index])
-                    }
-                })
-            } else {
-                this.createEntry(edit_entry)
-            }
-        },
         setShowDate(d) {
             this.showDate = d
         },
@@ -514,12 +501,12 @@ export default {
             this.$bvModal.show(`edit-modal`)
         },
         findEntry(id) {
-            return this.plan_entries.filter((entry) => {
+            return useMealPlanStore().plan_list.filter((entry) => {
                 return entry.id === id
             })[0]
         },
         moveEntry(null_object, target_date, drag_event) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === this.dragged_item.id) {
                     if (drag_event.ctrlKey) {
                         let new_entry = Object.assign({}, entry)
@@ -533,7 +520,7 @@ export default {
             })
         },
         moveEntryLeft(data) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
                     entry.date = moment(entry.date).subtract(1, "d")
                     this.saveEntry(entry)
@@ -541,7 +528,7 @@ export default {
             })
         },
         moveEntryRight(data) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
                     entry.date = moment(entry.date).add(1, "d")
                     this.saveEntry(entry)
@@ -549,20 +536,7 @@ export default {
             })
         },
         deleteEntry(data) {
-            this.plan_entries.forEach((entry, index, list) => {
-                if (entry.id === data.id) {
-                    let apiClient = new ApiApiFactory()
-
-                    apiClient
-                        .destroyMealPlan(entry.id)
-                        .then((e) => {
-                            list.splice(index, 1)
-                        })
-                        .catch((err) => {
-                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                        })
-                }
-            })
+            useMealPlanStore().deleteObject(data)
         },
         entryClick(data) {
             let entry = this.findEntry(data.id)
@@ -581,18 +555,9 @@ export default {
         },
         periodChangedCallback(date) {
             this.current_period = date
-            let apiClient = new ApiApiFactory()
 
-            apiClient
-                .listMealPlans({
-                    query: {
-                        from_date: moment(date.periodStart).format("YYYY-MM-DD"),
-                        to_date: moment(date.periodEnd).format("YYYY-MM-DD"),
-                    },
-                })
-                .then((result) => {
-                    this.plan_entries = result.data
-                })
+            useMealPlanStore().refreshFromAPI(moment(date.periodStart).format("YYYY-MM-DD"), moment(date.periodEnd).format("YYYY-MM-DD"))
+
             this.refreshMealTypes()
         },
         refreshMealTypes() {
@@ -608,25 +573,11 @@ export default {
         saveEntry(entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
 
-            let apiClient = new ApiApiFactory()
-
-            apiClient.updateMealPlan(entry.id, entry).catch((err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
+            useMealPlanStore().updateObject(entry)
         },
         createEntry(entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
-
-            let apiClient = new ApiApiFactory()
-
-            apiClient
-                .createMealPlan(entry)
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                })
-                .then((entry_result) => {
-                    this.plan_entries.push(entry_result.data)
-                })
+            useMealPlanStore().createObject(entry)
         },
         buildItem(plan_entry) {
             //dirty hack to order items within a day
