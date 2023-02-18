@@ -204,6 +204,7 @@
             :entry="entryEditing"
             :modal_title="modal_title"
             :edit_modal_show="edit_modal_show"
+            :create_date="edit_modal_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
 
@@ -322,29 +323,18 @@ export default {
                     {text: this.$t("Year"), value: "year"},
                 ],
                 displayPeriodCount: [1, 2, 3],
-                entryEditing: {
-                    date: null,
-                    id: -1,
-                    meal_type: null,
-                    note: "",
-                    note_markdown: "",
-                    recipe: null,
-                    servings: 1,
-                    shared: [],
-                    title: "",
-                    title_placeholder: this.$t("Title"),
-                },
             },
             shopping_list: [],
             current_period: null,
-            entryEditing: {},
+            entryEditing: null,
             edit_modal_show: false,
+            edit_modal_default_date: null,
             ical_url: window.ICAL_URL,
         }
     },
     computed: {
         modal_title: function () {
-            if (this.entryEditing.id === -1) {
+            if (this.entryEditing === null || this.entryEditing?.id === -1) {
                 return this.$t("Create_Meal_Plan_Entry")
             } else {
                 return this.$t("Edit_Meal_Plan_Entry")
@@ -496,9 +486,11 @@ export default {
             this.showDate = d
         },
         createEntryClick(data) {
-            this.entryEditing = this.options.entryEditing
-            this.entryEditing.date = moment(data).format("YYYY-MM-DD")
-            this.$bvModal.show(`edit-modal`)
+            this.edit_modal_default_date = moment(data).format("YYYY-MM-DD")
+            this.entryEditing = null
+            this.$nextTick(function () {
+                this.$bvModal.show(`edit-modal`)
+            })
         },
         findEntry(id) {
             return useMealPlanStore().plan_list.filter((entry) => {

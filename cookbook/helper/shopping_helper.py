@@ -44,9 +44,11 @@ class RecipeShoppingEditor():
         self.space = space
         self._kwargs = {**kwargs}
 
-        self.mealplan = self._kwargs.get('mealplan', None)
-        if type(self.mealplan) in [int, float]:
-            self.mealplan = MealPlan.objects.filter(id=self.mealplan, space=self.space)
+        mealplan = self._kwargs.get('mealplan', None)
+        if type(mealplan) in [int, float]:
+            self.mealplan = MealPlan.objects.filter(id=self.mealplan, space=self.space).first()
+        if type(mealplan) == dict:
+            self.mealplan = MealPlan.objects.filter(id=mealplan['id'], space=self.space).first()
         self.id = self._kwargs.get('id', None)
 
         self._shopping_list_recipe = self.get_shopping_list_recipe(self.id, self.created_by, self.space)
@@ -71,7 +73,7 @@ class RecipeShoppingEditor():
 
     @property
     def _servings_factor(self):
-        return Decimal(self.servings)/Decimal(self._recipe_servings)
+        return Decimal(self.servings) / Decimal(self._recipe_servings)
 
     @property
     def _shared_users(self):
@@ -88,9 +90,9 @@ class RecipeShoppingEditor():
 
     def get_recipe_ingredients(self, id, exclude_onhand=False):
         if exclude_onhand:
-            return Ingredient.objects.filter(step__recipe__id=id,  food__ignore_shopping=False,  space=self.space).exclude(food__onhand_users__id__in=[x.id for x in self._shared_users])
+            return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space).exclude(food__onhand_users__id__in=[x.id for x in self._shared_users])
         else:
-            return Ingredient.objects.filter(step__recipe__id=id,  food__ignore_shopping=False,  space=self.space)
+            return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
 
     @property
     def _include_related(self):
@@ -106,9 +108,8 @@ class RecipeShoppingEditor():
         if servings := kwargs.get('servings', None):
             self.servings = float(servings)
 
-        if mealplan := kwargs.get('mealplan', None):
-            self.mealplan = mealplan
-            self.recipe = mealplan.recipe
+        if mealplan := kwargs.get('mealplan', None):  # it appears this code is never called just init is used, no time to validate
+            self.mealplan = MealPlan.objects.filter(id=mealplan['id'], space=self.space).fist()
         elif recipe := kwargs.get('recipe', None):
             self.recipe = recipe
 
@@ -194,7 +195,6 @@ class RecipeShoppingEditor():
         to_delete = self._shopping_list_recipe.entries.exclude(ingredient__in=ingredients)
         ShoppingListEntry.objects.filter(id__in=to_delete).delete()
         self._shopping_list_recipe = self.get_shopping_list_recipe(self.id, self.created_by, self.space)
-
 
 # # TODO refactor as class
 # def list_from_recipe(list_recipe=None, recipe=None, mealplan=None, servings=None, ingredients=None, created_by=None, space=None, append=False):

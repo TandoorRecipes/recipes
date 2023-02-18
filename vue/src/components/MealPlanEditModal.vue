@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-modal :id="modal_id" size="lg" :title="modal_title" hide-footer aria-label="" @show="showModal">
-            <div class="row">
+            <div class="row" v-if="entryEditing !== null">
                 <div class="col col-md-12">
                     <div class="row">
                         <div class="col col-md-12">
@@ -125,7 +125,7 @@
         </b-modal>
 
         <shopping-modal :recipe="last_created_plan.recipe" :servings="last_created_plan.servings" :modal_id="999999"
-                        :mealplan="undefined" v-if="last_created_plan !== null && last_created_plan.recipe !== null"/>
+                        :mealplan="last_created_plan" v-if="last_created_plan !== null && last_created_plan.recipe !== null"/>
     </div>
 
 </template>
@@ -152,7 +152,7 @@ export default {
     name: "MealPlanEditModal",
     props: {
         entry: Object,
-        entryEditing_initial_servings: Number,
+        create_date: String,
         modal_title: String,
         modal_id: {
             type: String,
@@ -171,7 +171,7 @@ export default {
     },
     data() {
         return {
-            entryEditing: {},
+            entryEditing: null,
             missing_recipe: false,
             missing_meal_type: false,
             default_plan_share: [],
@@ -186,10 +186,6 @@ export default {
         entry: {
             handler() {
                 this.entryEditing = Object.assign({}, this.entry)
-
-                if (this.entryEditing_initial_servings) {
-                    this.entryEditing.servings = this.entryEditing_initial_servings
-                }
             },
             deep: true,
         },
@@ -203,9 +199,6 @@ export default {
                 this.$cookies.set(MEALPLAN_COOKIE_NAME, this.mealplan_settings)
             },
             deep: true,
-        },
-        entryEditing_initial_servings: function (newVal) {
-            this.entryEditing.servings = newVal
         },
     },
     mounted: function () {
@@ -222,8 +215,18 @@ export default {
                 this.mealplan_settings = Object.assign({}, this.mealplan_settings, this.$cookies.get(MEALPLAN_COOKIE_NAME))
             }
 
+            if (this.entry === null) {
+                this.entryEditing = useMealPlanStore().empty_meal_plan
+            } else {
+                this.entryEditing = this.entry
+            }
+
+            if (this.create_date) {
+                this.entryEditing.date = this.create_date
+            }
+
             useUserPreferenceStore().getData().then(userPreference => {
-                if (this.entry.id === -1) {
+                if (this.entryEditing.id === -1) {
                     this.entryEditing.shared = userPreference.plan_share
                 }
             })
@@ -248,9 +251,10 @@ export default {
                     this.last_created_plan = r.data
                     if (r.data.recipe && (this.mealplan_settings.addshopping || this.autoMealPlan) && this.mealplan_settings.reviewshopping) {
                         console.log('OPENING SHOPPING MODAL', this.$bvModal)
-                        this.$bvModal.show(`shopping_999999`)
+                        this.$nextTick(function () {
+                            this.$bvModal.show(`shopping_999999`)
+                        })
                     }
-                    //TODO cleanout entry editing without breaking default function from meal plan
                 })
             } else {
                 console.log('CALLING UPDATE')
