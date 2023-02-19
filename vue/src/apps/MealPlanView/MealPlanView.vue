@@ -73,10 +73,9 @@
                             <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
                                 <b-list-group>
                                     <b-list-group-item>
-                                        <div class="d-flex flex-row align-items-center">
-                                            <div>
-                                                <h5>{{ day.date_label }}</h5>
-                                            </div>
+                                        <div class="d-flex flex-row align-middle">
+                                            <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
+
                                             <div class="flex-grow-1 text-right">
                                                 <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
                                                     class="fa fa-plus"></i></b-button>
