@@ -1,5 +1,5 @@
 <template>
-    <div id="app" style="margin-bottom: 4vh">
+    <div id="app" style="padding-bottom: 60px">
         <RecipeSwitcher ref="ref_recipe_switcher"/>
         <div class="row">
             <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
