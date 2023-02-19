@@ -2,20 +2,58 @@
     <!-- bottom button nav -->
     <div class="fixed-bottom p-1 pt-2 border-top text-center d-lg-none" style="background: white">
         <div class="d-flex flex-row justify-content-around">
-            <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_search')">
-                <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>Recipes</small></a>
+            <div class="flex-column" v-if="show_button_1">
+                <slot name="button_1">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_search')">
+                        <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>Recipes</small></a> <!-- TODO localize -->
+                </slot>
+
             </div>
-            <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_plan')">
-                <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>Plans</small></a>
+            <div class="flex-column" v-if="show_button_2">
+                <slot name="button_2">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_plan')">
+                        <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>Plans</small></a> <!-- TODO localize -->
+                </slot>
+
             </div>
-            <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('new_recipe')">
-                <i class="fas fa-plus-circle fa-2x"></i><br/></a>
+            <div class="flex-column" v-if="show_button_create">
+                <slot name="button_create">
+                    <div class="dropup">
+                        <a class="nav-link bottom-nav-link p-0" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle fa-2x bottom-nav-link"></i>
+                        </a>
+                        <div class="dropdown-menu center-dropup" aria-labelledby="navbarDropdownMenuLink">
+                            <slot name="custom_create_functions">
+
+                            </slot>
+
+                            <a class="dropdown-item" v-bind:href="cl.url" v-for="cl in create_links" v-bind:key="cl.label">
+                                <i :class="cl.icon"></i> {{ cl.label }}
+                            </a>
+                            <div class="dropdown-divider" v-if="create_links.length > 0"></div>
+
+                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('new_recipe')"><i
+                                class="fas fa-plus"></i> Create</a>  <!-- TODO localize -->
+                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('data_import_url')"><i
+                                class="fas fa-file-import"></i> Import</a>  <!-- TODO localize -->
+                        </div>
+                    </div>
+                </slot>
+
             </div>
-            <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_shopping')">
-                <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>Shopping</small></a>
+            <div class="flex-column" v-if="show_button_3">
+                <slot name="button_3">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_shopping')">
+                        <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>Shopping</small></a> <!-- TODO localize -->
+                </slot>
             </div>
-            <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_books')">
-                <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>Books</small></a>
+            <div class="flex-column">
+
+                <slot name="button_4" v-if="show_button_4">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_books')">
+                        <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>Books</small></a> <!-- TODO localize -->
+                </slot>
+
             </div>
         </div>
 
@@ -27,7 +65,19 @@ import {ResolveUrlMixin} from "@/utils/utils";
 
 export default {
     name: "BottomNavigationBar",
-    mixins: [ResolveUrlMixin]
+    mixins: [ResolveUrlMixin],
+    props: {
+        create_links: {
+            type: Array, default() {
+                return []
+            }
+        },
+        show_button_1: {type: Boolean, default: true},
+        show_button_2: {type: Boolean, default: true},
+        show_button_3: {type: Boolean, default: true},
+        show_button_4: {type: Boolean, default: true},
+        show_button_create: {type: Boolean, default: true},
+    }
 }
 </script>
 
@@ -35,5 +85,13 @@ export default {
 
 .bottom-nav-link {
     color: #666666
+}
+
+.center-dropup {
+    right: auto;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
 }
 </style>

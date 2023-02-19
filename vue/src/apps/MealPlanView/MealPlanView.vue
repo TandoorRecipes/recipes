@@ -208,7 +208,7 @@
         ></meal-plan-edit-modal>
 
         <transition name="slide-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)"
+            <div class="row fixed-bottom p-2 b-1 border-top text-center d-none d-lg-block" style="background: rgba(255, 255, 255, 0.6)"
                  v-if="current_tab === 0">
                 <div class="col-md-3 col-6 mb-1 mb-md-0">
                     <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
@@ -221,12 +221,12 @@
                         {{ $t("Export_To_ICal") }}
                     </a>
                 </div>
-<!--                <div class="col-md-3 col-6 mb-1 mb-md-0">-->
-<!--                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top-->
-<!--                            :title="$t('Coming_Soon')">-->
-<!--                        {{ $t("Auto_Planner") }}-->
-<!--                    </button>-->
-<!--                </div>-->
+                <!--                <div class="col-md-3 col-6 mb-1 mb-md-0">-->
+                <!--                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top-->
+                <!--                            :title="$t('Coming_Soon')">-->
+                <!--                        {{ $t("Auto_Planner") }}-->
+                <!--                    </button>-->
+                <!--                </div>-->
                 <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
                     <b-button-toolbar key-nav aria-label="Toolbar with button groups">
                         <b-button-group class="mx-1">
@@ -249,7 +249,12 @@
             </div>
         </transition>
 
-         <bottom-navigation-bar></bottom-navigation-bar>
+        <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
+            <template #custom_create_functions>
+                <a class="dropdown-item" @click="createEntryClick(new Date())"><i
+                                class="fas fa-calendar-plus"></i> {{$t("Create")}}</a>
+            </template>
+        </bottom-navigation-bar>
     </div>
 </template>
 
