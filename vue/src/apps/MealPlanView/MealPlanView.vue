@@ -100,7 +100,9 @@
                                                 <span v-if="plan.note">
                                                     <small>{{ plan.note }}</small> <br/>
                                                 </span>
-                                                <small class="text-muted">{{ plan.meal_type_name }}
+                                                <small class="text-muted">
+                                                    <span v-if="plan.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
+                                                    {{ plan.meal_type_name }}
                                                     <span v-if="plan.recipe">
                                                      - <i class="fa fa-clock"></i> {{ plan.recipe.working_time + plan.recipe.waiting_time }} {{ $t('min') }}
                                                 </span>
