@@ -74,13 +74,13 @@
                         <div class="col-12 mt-2">
                             <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
                                 <b-list-group>
-                                    <b-list-group-item >
+                                    <b-list-group-item>
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
-                                                <h4>{{ day.date_label }}</h4>
+                                                <h5>{{ day.date_label }}</h5>
                                             </div>
                                             <div class="flex-grow-1 text-right">
-                                                <b-button class=""><i
+                                                <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
                                                     class="fa fa-plus"></i></b-button>
                                             </div>
                                         </div>
@@ -94,13 +94,17 @@
                                             </div>
                                             <div class="flex-grow-1 ml-2"
                                                  style="text-overflow: ellipsis; overflow-wrap: anywhere;">
-                                                    <span class="two-row-text"><a
-                                                        :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{
-                                                            plan.recipe.name
-                                                        }}</a></span>
+                                                    <span class="two-row-text">
+                                                        <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{ plan.recipe.name }}</a>
+                                                    </span><br/>
+                                                <small class="text-muted">{{ plan.meal_type_name }} -
+                                                <span v-if="plan.recipe">
+                                                    <i class="fa fa-clock"></i> {{ plan.recipe.working_time + plan.recipe.waiting_time}} {{ $t('min')}}
+                                                </span>
+                                                </small>
                                             </div>
                                             <div class="hover-button">
-                                                <b-button><i class="fas fa-pencil-alt"></i></b-button>
+                                                <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(plan,null)"><i class="fas fa-pencil-alt"></i></b-button>
                                             </div>
                                         </div>
                                     </b-list-group-item>
@@ -267,18 +271,18 @@
         <meal-plan-edit-modal
             :entry="entryEditing"
             :modal_title="modal_title"
-            :create_date="edit_modal_default_date"
+            :create_date="mealplan_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
 
         <div class="row d-none d-lg-block">
             <div class="col-12 float-right">
                 <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
-                        class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                    </button>
-                    <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
-                        {{ $t("Export_To_ICal") }}
-                    </a>
+                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}
+                </button>
+                <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
+                    {{ $t("Export_To_ICal") }}
+                </a>
             </div>
         </div>
 
@@ -364,7 +368,7 @@ export default {
             shopping_list: [],
             current_period: null,
             entryEditing: null,
-            edit_modal_default_date: null,
+            mealplan_default_date: null,
             ical_url: window.ICAL_URL,
         }
     },
@@ -538,7 +542,7 @@ export default {
             this.showDate = d
         },
         createEntryClick(data) {
-            this.edit_modal_default_date = moment(data).format("YYYY-MM-DD")
+            this.mealplan_default_date = moment(data).format("YYYY-MM-DD")
             this.entryEditing = null
             this.$nextTick(function () {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
@@ -633,6 +637,15 @@ export default {
                 entry: plan_entry,
             }
         },
+        showMealPlanEditModal: function (entry, date) {
+            this.mealplan_default_date = date
+            this.entryEditing = entry
+
+            this.$nextTick(function () {
+                this.$bvModal.show(`id_meal_plan_edit_modal`)
+            })
+
+        }
     },
     directives: {
         hover: {
