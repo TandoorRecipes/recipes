@@ -837,7 +837,7 @@
                             <div
                                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
                                 <div v-for="day in meal_plan_grid" v-bind:key="day.day">
-                                    <b-list-group v-if="day.plan_entries.length > 0 || !isMobile">
+                                    <b-list-group :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
                                         <b-list-group-item class="hover-div">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>

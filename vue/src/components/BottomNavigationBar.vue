@@ -1,6 +1,6 @@
 <template>
     <!-- bottom button nav -->
-    <div class="fixed-bottom p-1 pt-2 border-top text-center d-md-none" style="background: white">
+    <div class="fixed-bottom p-1 pt-2 border-top text-center d-lg-none" style="background: white">
         <div class="d-flex flex-row justify-content-around">
             <div class="flex-column"><a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_search')">
                 <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>Recipes</small></a>
