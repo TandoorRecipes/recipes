@@ -835,10 +835,10 @@
 
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
-                                <div v-for="day in meal_plan_grid" v-bind:key="day.day">
-                                    <b-list-group :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
-                                        <b-list-group-item class="hover-div">
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 0.5rem; grid-auto-rows: max-content; ">
+                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
+                                    <b-list-group >
+                                        <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
                                                     <h4>{{ day.date_label }}</h4>
