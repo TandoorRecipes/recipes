@@ -93,7 +93,7 @@
                                                 $t("AddToShopping")
                                             }}</small>
                                     </b-input-group>
-                                    <b-input-group v-if="mealplan_settings.addshopping">
+                                    <b-input-group v-if="mealplan_settings.addshopping && !autoMealPlan">
                                         <b-form-checkbox id="reviewShopping"
                                                          v-model="mealplan_settings.reviewshopping"/>
                                         <small tabindex="-1" class="form-text text-muted">{{
@@ -242,14 +242,13 @@ export default {
             //TODO properly validate
             this.$bvModal.hide(this.modal_id)
 
-            if ((this.mealplan_settings.addshopping || this.autoMealPlan) && !this.mealplan_settings.reviewshopping) {
-                this.$set(this.entryEditing, 'addshopping', true)
-            }
+            // only set addshopping if review is not enabled
+            this.$set(this.entryEditing, 'addshopping', (this.mealplan_settings.addshopping && !this.mealplan_settings.reviewshopping))
 
             if (!('id' in this.entryEditing) || this.entryEditing.id === -1) {
                 useMealPlanStore().createObject(this.entryEditing).then((r) => {
                     this.last_created_plan = r.data
-                    if (r.data.recipe && (this.mealplan_settings.addshopping || this.autoMealPlan) && this.mealplan_settings.reviewshopping) {
+                    if (r.data.recipe && this.mealplan_settings.addshopping && !this.autoMealPlan && this.mealplan_settings.reviewshopping) {
                         this.$nextTick(function () {
                             this.$bvModal.show(`shopping_999999`)
                         })
