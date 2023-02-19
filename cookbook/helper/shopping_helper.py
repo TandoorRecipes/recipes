@@ -65,7 +65,13 @@ class RecipeShoppingEditor():
         try:
             self.servings = float(self._kwargs.get('servings', None))
         except (ValueError, TypeError):
-            self.servings = getattr(self._shopping_list_recipe, 'servings', None) or getattr(self.mealplan, 'servings', None) or getattr(self.recipe, 'servings', None)
+            self.servings = getattr(self.recipe, 'servings', None)
+
+            if hasattr(self,'mealplan') and getattr(self.mealplan, 'servings', None):
+                self.servings = getattr(self.mealplan, 'servings', None)
+            if hasattr(self, '_shopping_list_recipe') and getattr(self._shopping_list_recipe, 'servings', None):
+                self.servings = getattr(self._shopping_list_recipe, 'servings', None)
+
 
     @property
     def _recipe_servings(self):
@@ -108,6 +114,7 @@ class RecipeShoppingEditor():
         if servings := kwargs.get('servings', None):
             self.servings = float(servings)
 
+        self.mealplan = None
         if mealplan := kwargs.get('mealplan', None):  # it appears this code is never called just init is used, no time to validate
             self.mealplan = MealPlan.objects.filter(id=mealplan['id'], space=self.space).fist()
         elif recipe := kwargs.get('recipe', None):
