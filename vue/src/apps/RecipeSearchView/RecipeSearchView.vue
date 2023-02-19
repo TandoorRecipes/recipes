@@ -841,10 +841,10 @@
                                         <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <h4>{{ day.date_label }}</h4>
+                                                    <h6>{{ day.date_label }}</h6>
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
-                                                    <b-button class="hover-button" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                                    <b-button class="hover-button btn-outline-primary btn-sm" @click="showMealPlanEditModal(null, day.create_default_date)"><i
                                                         class="fa fa-plus"></i></b-button>
                                                 </div>
                                             </div>
@@ -854,17 +854,19 @@
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
                                                     <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                           :src="plan.recipe.image" rounded="circle"></b-img>
+                                                       :src="plan.recipe.image" rounded="circle" v-if="plan.recipe?.image"></b-img>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
                                                 </div>
                                                 <div class="flex-grow-1 ml-2"
                                                      style="text-overflow: ellipsis; overflow-wrap: anywhere;">
-                                                    <span class="two-row-text"><a
-                                                        :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{
-                                                            plan.recipe.name
-                                                        }}</a></span>
+                                                    <span class="two-row-text">
+                                                        <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)" v-if="plan.recipe">{{ plan.recipe.name }}</a>
+                                                        <span v-else>{{ plan.title }}</span>
+                                                    </span>
                                                 </div>
                                                 <div class="hover-button">
-                                                    <b-button @click="showMealPlanEditModal(plan,null)"><i class="fas fa-pencil-alt"></i></b-button>
+                                                    <b-button @click="showMealPlanEditModal(plan,null)" class="btn-outline-primary btn-sm"><i class="fas fa-pencil-alt"></i></b-button>
                                                 </div>
                                             </div>
                                         </b-list-group-item>
@@ -1087,6 +1089,7 @@ export default {
             debug: false,
             mealplan_default_date: null,
             mealplan_entry_edit: null,
+            image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
     computed: {
@@ -1098,7 +1101,7 @@ export default {
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format('DD.MM'),
+                        date_label: moment_date.format('ddd DD.MM'),
                         plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
                     })
                 }
@@ -1262,6 +1265,7 @@ export default {
             this.use_plural = r.data.use_plural
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
+        moment.locale(window.CUSTOM_LOCALE)
         this.debug = localStorage.getItem("DEBUG") == "True" || false
     },
     watch: {

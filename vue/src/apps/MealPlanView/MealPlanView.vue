@@ -56,15 +56,13 @@
                                     <b-button-group class="mx-1">
                                         <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
                                                   @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                                        <b-button v-html="'<'" @click="setStartingDay(-1)" class="p-2 pr-3 pl-3"></b-button>
                                     </b-button-group>
                                     <b-button-group class="mx-1">
                                         <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
                                             class="fas fa-home"></i></b-button>
-                                        <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker> <!-- TODO datepicker not working -->
+                                        <b-form-datepicker button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
                                     </b-button-group>
                                     <b-button-group class="mx-1">
-                                        <b-button v-html="'>'" @click="setStartingDay(1)" class="p-2 pr-3 pl-3"></b-button>
                                         <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
                                                   @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
                                     </b-button-group>
@@ -101,7 +99,7 @@
                                                         <span v-else>{{ plan.title }}</span>
                                                     </span><br/>
                                                 <span v-if="plan.note">
-                                                    <small>{{ plan.note}}</small> <br/>
+                                                    <small>{{ plan.note }}</small> <br/>
                                                 </span>
                                                 <small class="text-muted">{{ plan.meal_type_name }}
                                                     <span v-if="plan.recipe">
@@ -432,7 +430,7 @@ export default {
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format('DD.MM'),
+                        date_label: moment_date.format('ddd DD.MM'),
                         plan_entries: useMealPlanStore().plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
                     })
                 }
@@ -448,6 +446,7 @@ export default {
         })
         this.$root.$on("change", this.updateEmoji)
         this.$i18n.locale = window.CUSTOM_LOCALE
+        moment.locale(window.CUSTOM_LOCALE)
     },
     watch: {
         settings: {
@@ -544,6 +543,9 @@ export default {
                     meal_type.icon = value
                 }
             })
+        },
+        datePickerChanged(ctx) {
+            this.setShowDate(ctx.selectedDate)
         },
         setShowDate(d) {
             this.showDate = d
