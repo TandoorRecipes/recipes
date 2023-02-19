@@ -2,7 +2,7 @@
     <div>
         <b-tabs content-class="mt-3" v-model="current_tab">
             <b-tab :title="$t('Planner')" active>
-                <div class="row calender-row">
+                <div class="row calender-row d-none d-lg-block">
                     <div class="col-12 calender-parent">
                         <calendar-view
                             :show-date="showDate"
@@ -48,6 +48,70 @@
                         </calendar-view>
                     </div>
                 </div>
+                <div class="row d-block d-lg-none">
+                    <div>
+                        <div class="col-12">
+                            <div class="col-12 d-flex justify-content-center mt-2">
+                                <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+                                    <b-button-group class="mx-1">
+                                        <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
+                                                  @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                                        <b-button v-html="'<'" @click="setStartingDay(-1)" class="p-2 pr-3 pl-3"></b-button>
+                                    </b-button-group>
+                                    <b-button-group class="mx-1">
+                                        <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
+                                            class="fas fa-home"></i></b-button>
+                                        <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker> <!-- TODO datepicker not working -->
+                                    </b-button-group>
+                                    <b-button-group class="mx-1">
+                                        <b-button v-html="'>'" @click="setStartingDay(1)" class="p-2 pr-3 pl-3"></b-button>
+                                        <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
+                                                  @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                                    </b-button-group>
+                                </b-button-toolbar>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
+                                <b-list-group>
+                                    <b-list-group-item >
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <h4>{{ day.date_label }}</h4>
+                                            </div>
+                                            <div class="flex-grow-1 text-right">
+                                                <b-button class=""><i
+                                                    class="fa fa-plus"></i></b-button>
+                                            </div>
+                                        </div>
+
+                                    </b-list-group-item>
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                       :src="plan.recipe.image" rounded="circle"></b-img>
+                                            </div>
+                                            <div class="flex-grow-1 ml-2"
+                                                 style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                    <span class="two-row-text"><a
+                                                        :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{
+                                                            plan.recipe.name
+                                                        }}</a></span>
+                                            </div>
+                                            <div class="hover-button">
+                                                <b-button><i class="fas fa-pencil-alt"></i></b-button>
+                                            </div>
+                                        </div>
+                                    </b-list-group-item>
+
+                                </b-list-group>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
@@ -207,52 +271,21 @@
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
 
-        <transition name="slide-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center d-none d-lg-block" style="background: rgba(255, 255, 255, 0.6)"
-                 v-if="current_tab === 0">
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
+        <div class="row d-none d-lg-block">
+            <div class="col-12 float-right">
+                <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
                         class="fas fa-calendar-plus"></i> {{ $t("Create") }}
                     </button>
-                </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"
-                    ><i class="fas fa-download"></i>
+                    <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                         {{ $t("Export_To_ICal") }}
                     </a>
-                </div>
-                <!--                <div class="col-md-3 col-6 mb-1 mb-md-0">-->
-                <!--                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top-->
-                <!--                            :title="$t('Coming_Soon')">-->
-                <!--                        {{ $t("Auto_Planner") }}-->
-                <!--                    </button>-->
-                <!--                </div>-->
-                <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
-                    <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-                        <b-button-group class="mx-1">
-                            <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
-                                      @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                            <b-button v-html="'<'" @click="setStartingDay(-1)" class="p-2 pr-3 pl-3"></b-button>
-                        </b-button-group>
-                        <b-button-group class="mx-1">
-                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                class="fas fa-home"></i></b-button>
-                            <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker>
-                        </b-button-group>
-                        <b-button-group class="mx-1">
-                            <b-button v-html="'>'" @click="setStartingDay(1)" class="p-2 pr-3 pl-3"></b-button>
-                            <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
-                                      @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-                        </b-button-group>
-                    </b-button-toolbar>
-                </div>
             </div>
-        </transition>
+        </div>
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
-                                class="fas fa-calendar-plus"></i> {{$t("Create")}}</a>
+                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}</a>
             </template>
         </bottom-navigation-bar>
     </div>
@@ -379,6 +412,22 @@ export default {
                 return ""
             }
         },
+        mobileSimpleGrid() {
+            let grid = []
+
+            if (useMealPlanStore().plan_list.length > 0 && this.current_period !== null) {
+                for (const x of Array(7).keys()) {
+                    let moment_date = moment(this.current_period.periodStart).add(x, "d")
+                    grid.push({
+                        date: moment_date,
+                        create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
+                        date_label: moment_date.format('DD.MM'),
+                        plan_entries: useMealPlanStore().plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
+                    })
+                }
+            }
+            return grid
+        }
     },
     mounted() {
         this.$nextTick(function () {
@@ -601,6 +650,10 @@ export default {
 </script>
 
 <style>
+#id_base_container {
+    margin-top: 12px
+}
+
 .slide-fade-enter-active {
     transition: all 0.3s ease;
 }
