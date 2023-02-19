@@ -5,14 +5,14 @@
             <div class="flex-column" v-if="show_button_1">
                 <slot name="button_1">
                     <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_search')">
-                        <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>Recipes</small></a> <!-- TODO localize -->
+                        <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>{{ $t('Recipes') }}</small></a> <!-- TODO localize -->
                 </slot>
 
             </div>
             <div class="flex-column" v-if="show_button_2">
                 <slot name="button_2">
                     <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_plan')">
-                        <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>Plans</small></a> <!-- TODO localize -->
+                        <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>{{ $t('Meal_Plan') }}</small></a>
                 </slot>
 
             </div>
@@ -28,14 +28,14 @@
                             </slot>
 
                             <a class="dropdown-item" v-bind:href="cl.url" v-for="cl in create_links" v-bind:key="cl.label">
-                                <i :class="cl.icon"></i> {{ cl.label }}
+                                <i :class="cl.icon + ' fa-fw'"></i> {{ cl.label }}
                             </a>
                             <div class="dropdown-divider" v-if="create_links.length > 0"></div>
 
                             <a class="dropdown-item" v-bind:href="resolveDjangoUrl('new_recipe')"><i
-                                class="fas fa-plus"></i> Create</a>  <!-- TODO localize -->
+                                class="fas fa-fw fa-plus"></i> {{ $t('Create Recipe') }}</a>
                             <a class="dropdown-item" v-bind:href="resolveDjangoUrl('data_import_url')"><i
-                                class="fas fa-file-import"></i> Import</a>  <!-- TODO localize -->
+                                class="fas fa-fw fa-file-import"></i> {{ $t('Import Recipe') }}</a>
                         </div>
                     </div>
                 </slot>
@@ -44,14 +44,14 @@
             <div class="flex-column" v-if="show_button_3">
                 <slot name="button_3">
                     <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_shopping')">
-                        <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>Shopping</small></a> <!-- TODO localize -->
+                        <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>{{ $t('Shopping_list') }}</small></a>
                 </slot>
             </div>
             <div class="flex-column">
 
                 <slot name="button_4" v-if="show_button_4">
                     <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_books')">
-                        <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>Books</small></a> <!-- TODO localize -->
+                        <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>{{ $t('Books') }}</small></a> <!-- TODO localize -->
                 </slot>
 
             </div>
