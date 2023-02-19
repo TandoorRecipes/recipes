@@ -71,7 +71,7 @@
                                 </b-button-toolbar>
                             </div>
                         </div>
-                        <div class="col-12 mt-2">
+                        <div class="col-12 mt-2" style="padding-bottom: 60px">
                             <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
                                 <b-list-group>
                                     <b-list-group-item>
@@ -90,16 +90,22 @@
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="plan.recipe.image" rounded="circle"></b-img>
+                                                       :src="plan.recipe.image" rounded="circle" v-if="plan.recipe?.image"></b-img>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
                                             </div>
                                             <div class="flex-grow-1 ml-2"
                                                  style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
-                                                        <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{ plan.recipe.name }}</a>
+                                                        <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)" v-if="plan.recipe">{{ plan.recipe.name }}</a>
+                                                        <span v-else>{{ plan.title }}</span>
                                                     </span><br/>
-                                                <small class="text-muted">{{ plan.meal_type_name }} -
-                                                <span v-if="plan.recipe">
-                                                    <i class="fa fa-clock"></i> {{ plan.recipe.working_time + plan.recipe.waiting_time}} {{ $t('min')}}
+                                                <span v-if="plan.note">
+                                                    <small>{{ plan.note}}</small> <br/>
+                                                </span>
+                                                <small class="text-muted">{{ plan.meal_type_name }}
+                                                    <span v-if="plan.recipe">
+                                                     - <i class="fa fa-clock"></i> {{ plan.recipe.working_time + plan.recipe.waiting_time }} {{ $t('min') }}
                                                 </span>
                                                 </small>
                                             </div>
@@ -370,6 +376,7 @@ export default {
             entryEditing: null,
             mealplan_default_date: null,
             ical_url: window.ICAL_URL,
+            image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
     computed: {
