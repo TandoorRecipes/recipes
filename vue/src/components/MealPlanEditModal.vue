@@ -240,7 +240,7 @@ export default {
                 return
             }
             //TODO properly validate
-            this.$bvModal.hide(`id_meal_plan_edit_modal`)
+            this.$bvModal.hide(this.modal_id)
 
             if ((this.mealplan_settings.addshopping || this.autoMealPlan) && !this.mealplan_settings.reviewshopping) {
                 this.$set(this.entryEditing, 'addshopping', true)
@@ -260,7 +260,7 @@ export default {
             }
         },
         deleteEntry() {
-            this.$bvModal.hide(`id_meal_plan_edit_modal`)
+            this.$bvModal.hide(this.modal_id)
             useMealPlanStore().deleteObject(this.entryEditing)
         },
         selectMealType(event) {
