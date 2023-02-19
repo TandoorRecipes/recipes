@@ -829,7 +829,7 @@
                     </div>
                 </div>
 
-                <template v-if="!searchFiltered() && ui.show_meal_plan">
+                <template v-if="!searchFiltered() && ui.show_meal_plan && meal_plan_grid.length > 0">
                     <hr/>
                     <div class="row">
 
@@ -838,19 +838,19 @@
                                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
                                 <div v-for="day in meal_plan_grid" v-bind:key="day.day">
                                     <b-list-group v-if="day.plan_entries.length > 0 || !isMobile">
-                                        <b-list-group-item>
+                                        <b-list-group-item class="hover-div">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
                                                     <h4>{{ day.date_label }}</h4>
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
-                                                    <b-button class="" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                                    <b-button class="hover-button" @click="showMealPlanEditModal(null, day.create_default_date)"><i
                                                         class="fa fa-plus"></i></b-button>
                                                 </div>
                                             </div>
 
                                         </b-list-group-item>
-                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id">
+                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
                                                     <b-img style="height: 50px; width: 50px; object-fit: cover"
@@ -862,6 +862,9 @@
                                                         :href="resolveDjangoUrl('view_recipe', plan.recipe.id)">{{
                                                             plan.recipe.name
                                                         }}</a></span>
+                                                </div>
+                                                <div class="hover-button">
+                                                    <b-button @click="showMealPlanEditModal(plan,null)"><i class="fas fa-pencil-alt"></i></b-button>
                                                 </div>
                                             </div>
                                         </b-list-group-item>
@@ -1638,12 +1641,9 @@ export default {
             )
         },
         showMealPlanEditModal: function (entry, date) {
-            if (entry) {
-                this.mealplan_entry_edit = entry
-            }
-            if (date) {
-                this.mealplan_default_date = date
-            }
+            this.mealplan_default_date = date
+            this.mealplan_entry_edit = entry
+
             this.$nextTick(function () {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
@@ -1691,6 +1691,14 @@ export default {
     -webkit-line-clamp: 2; /* number of lines to show */
     line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+
+.hover-button {
+    display: none;
+}
+
+.hover-div:hover .hover-button {
+    display: inline-block;
 }
 
 </style>

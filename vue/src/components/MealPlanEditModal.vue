@@ -216,9 +216,9 @@ export default {
             }
 
             if (this.entry === null) {
-                this.entryEditing = useMealPlanStore().empty_meal_plan
+                this.entryEditing = Object.assign({}, useMealPlanStore().empty_meal_plan, null)
             } else {
-                this.entryEditing = this.entry
+                this.entryEditing = Object.assign({}, this.entry, null)
             }
 
             if (this.create_date) {
@@ -256,7 +256,6 @@ export default {
                     }
                 })
             } else {
-                console.log('CALLING UPDATE')
                 useMealPlanStore().updateObject(this.entryEditing)
             }
         },
