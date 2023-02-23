@@ -231,7 +231,7 @@
     "Planner": "Planificateur",
     "Planner_Settings": "Paramètres du planificateur",
     "AddFoodToShopping": "Ajouter l’aliment {food} à votre liste de courses",
-    "DeleteShoppingConfirm": "Êtes-vous sûr(e) de vouloir supprimer tous les aliments {food} de votre liste de courses ?",
+    "DeleteShoppingConfirm": "Êtes-vous sûr(e) de vouloir supprimer tous les aliments {food} de votre liste de courses ?",
     "IgnoredFood": "Ignorer les courses est paramétré pour l’aliment {food}.",
     "Inherit": "Hériter",
     "InheritFields": "Hériter les valeurs des champs",
