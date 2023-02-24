@@ -60,7 +60,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         createObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.createMealPlan(object).then(r => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+                //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                 Vue.set(this.plans, r.data.id, r.data)
                 return r
             }).catch(err => {
@@ -70,7 +70,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         updateObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.updateMealPlan(object.id, object).then(r => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                 Vue.set(this.plans, object.id, object)
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
@@ -79,7 +79,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         deleteObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.destroyMealPlan(object.id).then(r => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
+                //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 Vue.delete(this.plans, object.id)
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)

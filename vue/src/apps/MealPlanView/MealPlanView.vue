@@ -109,7 +109,7 @@
                                                 </small>
                                             </div>
                                             <div class="hover-button">
-                                                <b-button class="btn-sm btn-outline-primary" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-pencil-alt"></i></b-button>
+                                                <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
                                             </div>
                                         </div>
                                     </b-list-group-item>
@@ -239,7 +239,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        moveEntryLeft(contextData)
+                        moveEntryLeft(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i>
@@ -248,7 +248,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        moveEntryRight(contextData)
+                        moveEntryRight(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i>
@@ -265,7 +265,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        deleteEntry(contextData)
+                        deleteEntry(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i>
