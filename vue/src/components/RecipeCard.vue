@@ -84,8 +84,7 @@
                                             :steps="recipe.steps"
                                             :header="false"
                                             :detailed="false"
-                                            :servings="recipe.servings"
-                                            :use_plural="use_plural"/>
+                                            :servings="recipe.servings"/>
                                     </div>
                                 </div>
                             </transition>

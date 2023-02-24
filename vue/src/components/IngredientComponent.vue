@@ -17,10 +17,7 @@
             </td>
             <td @click="done">
                 <template v-if="ingredient.unit !== null && !ingredient.no_amount">
-                    <template v-if="!use_plural">
-                        <span>{{ ingredient.unit.name }}</span>
-                    </template>
-                    <template v-else>
+                    <template >
                         <template v-if="ingredient.unit.plural_name === '' || ingredient.unit.plural_name === null">
                             <span>{{ ingredient.unit.name }}</span>
                         </template>
@@ -38,10 +35,8 @@
                         v-if="ingredient.food.recipe !== null" target="_blank"
                         rel="noopener noreferrer">{{ ingredient.food.name }}</a>
                     <template v-if="ingredient.food.recipe === null">
-                        <template v-if="!use_plural">
-                            <span>{{ ingredient.food.name }}</span>
-                        </template>
-                        <template v-else>
+
+                        <template>
                             <template v-if="ingredient.food.plural_name === '' || ingredient.food.plural_name === null">
                                 <span>{{ ingredient.food.name }}</span>
                             </template>
@@ -84,7 +79,6 @@ export default {
     props: {
         ingredient: Object,
         ingredient_factor: {type: Number, default: 1},
-        use_plural:{type: Boolean, default: false},
         detailed: {type: Boolean, default: true},
     },
     mixins: [ResolveUrlMixin],

@@ -151,9 +151,6 @@
                 <b-form-checkbox v-model="space.show_facet_count"> Facet Count</b-form-checkbox>
                 <span class="text-muted small">{{ $t('facet_count_info') }}</span><br/>
 
-                <b-form-checkbox v-model="space.use_plural">Use Plural form</b-form-checkbox>
-                <span class="text-muted small">{{ $t('plural_usage_info') }}</span><br/>
-
                 <label>{{ $t('FoodInherit') }}</label>
                 <generic-multiselect :initial_selection="space.food_inherit"
                                      :model="Models.FOOD_INHERIT_FIELDS"
