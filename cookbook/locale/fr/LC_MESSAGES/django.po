@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2023-02-09 13:55+0000\n"
-"Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
+"PO-Revision-Date: 2023-02-24 02:55+0000\n"
+"Last-Translator: JFL <moijesuistoitues+d85m0tz6@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -718,10 +718,8 @@ msgid "Keyword Alias"
 msgstr "Mot-clé équivalent"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Description"
+msgstr "Remplacer la Description"
 
 #: .\cookbook\models.py:1231
 #, fuzzy
