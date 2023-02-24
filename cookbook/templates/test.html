@@ -10,11 +10,24 @@
 
 {% block content_fluid %}
 
-    {{ data }}
+    <div id="app">
+        <test-view></test-view>
+    </div>
 
 {% endblock %}
 
 
 {% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
 
+    <script type="application/javascript">
+
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+    </script>
+
+    {% render_bundle 'test_view' %}
 {% endblock %}

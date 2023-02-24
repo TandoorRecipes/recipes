@@ -474,5 +474,9 @@
     "UnpinnedConfirmation": "{recipe} została odpięta.",
     "Auto_Sort_Help": "Przenieś wszystkie składniki do najlepiej dopasowanego kroku.",
     "Split_All_Steps": "Traktuj każdy wiersz jako osobne kroki.",
-    "Combine_All_Steps": "Połącz wszystkie kroki w jedno pole."
+    "Combine_All_Steps": "Połącz wszystkie kroki w jedno pole.",
+    "Amount": "Ilość",
+    "Original_Text": "Tekst oryginalny",
+    "Description_Replace": "Zmień opis",
+    "Instruction_Replace": "Zmień instrukcję"
 }

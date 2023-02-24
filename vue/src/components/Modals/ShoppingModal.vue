@@ -10,12 +10,11 @@
 					</b-card-header>
 					<b-collapse id="accordion-0" class="p-2" visible accordion="my-accordion" role="tabpanel">
 
-						<div v-for="i in steps.flatMap(s => s.ingredients)" v-bind:key="i.id">
+						<div>
 							<table class="table table-sm mb-0">
 
-								<ingredient-component
+								<ingredient-component  v-for="i in steps.flatMap(s => s.ingredients)" v-bind:key="i.id"
 									:use_plural="true"
-									:key="i.id"
 									:detailed="true"
 									:ingredient="i"
 									:ingredient_factor="ingredient_factor"
@@ -79,6 +78,7 @@ const {ApiApiFactory} = require("@/utils/openapi/api")
 import {StandardToasts} from "@/utils/utils"
 import IngredientComponent from "@/components/IngredientComponent"
 import LoadingSpinner from "@/components/LoadingSpinner"
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 // import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 
 export default {
@@ -89,7 +89,7 @@ export default {
 		recipe: {required: true, type: Object},
 		servings: {type: Number, default: undefined},
 		modal_id: {required: true, type: Number},
-		mealplan: {type: Number, default: undefined},
+		mealplan: {type: Object, default: undefined},
 		list_recipe: {type: Number, default: undefined},
 	},
 	data() {
@@ -128,7 +128,7 @@ export default {
 					if (!this.recipe_servings) {
 						this.recipe_servings = result.data?.servings
 					}
-					this.steps.forEach(s => s.ingredients.filter(i => i.food.food_onhand === false).forEach(i => this.$set(i, 'checked', true)))
+					this.steps.forEach(s => s.ingredients.filter(i => i.food?.food_onhand === false).forEach(i => this.$set(i, 'checked', true)))
 					this.loading = false
 				})
 				.then(() => {
@@ -170,6 +170,9 @@ export default {
 				.then((result) => {
 					StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
 					this.$emit("finish")
+                    if (this.mealplan !== undefined && this.mealplan !== null){
+                        useMealPlanStore().plans[this.mealplan.id].shopping = true
+                    }
 				})
 				.catch((err) => {
 					StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)

@@ -126,6 +126,8 @@ class IngredientParser:
         amount = 0
         unit = None
         note = ''
+        if x.strip() == '':
+            return amount, unit, note
 
         did_check_frac = False
         end = 0
@@ -234,6 +236,10 @@ class IngredientParser:
 
         # leading spaces before commas result in extra tokens, clean them out
         ingredient = ingredient.replace(' ,', ',')
+
+        # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
+        # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
+        ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
 
         # if amount and unit are connected add space in between
         if re.match('([0-9])+([A-z])+\s', ingredient):
