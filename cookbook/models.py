@@ -751,6 +751,11 @@ class NutritionType(models.Model, PermissionModelMixin):
     def __str__(self):
         return f'{self.name}'
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='nutrition_type_unique_name_per_space')
+        ]
+
 
 class FoodNutrition(models.Model, PermissionModelMixin):
     food_amount = models.DecimalField(default=0, decimal_places=2, max_digits=32)
@@ -764,6 +769,11 @@ class FoodNutrition(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return f'{self.food_amount} {self.food_unit} {self.food}: {self.nutrition_amount} {self.nutrition_type.unit} {self.nutrition_type.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['food', 'nutrition_type', 'space'], name='food_nutrition_unique_per_space')
+        ]
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
