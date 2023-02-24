@@ -724,6 +724,33 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
         )
 
 
+class UnitConversionSerializer(WritableNestedModelSerializer):
+    base_unit = UnitSerializer()
+    converted_unit = UnitSerializer()
+    food = FoodSerializer(allow_null=True)
+    base_amount = CustomDecimalField()
+    converted_amount = CustomDecimalField()
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+    class Meta:
+        model = UnitConversion
+        fields = ('id', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food')
+
+
+class NutritionTypeSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = NutritionType
+        fields = ('id', 'name', 'icon', 'unit', 'description')
+
+
 class NutritionInformationSerializer(serializers.ModelSerializer):
     carbohydrates = CustomDecimalField()
     fats = CustomDecimalField()

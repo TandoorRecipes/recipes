@@ -65,7 +65,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, NutritionType)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -88,7 +88,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer, RecipeExportSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer, RecipeExportSerializer, UnitConversionSerializer, NutritionTypeSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -919,6 +919,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
         qs = obj.get_related_recipes(
             levels=levels)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
         return Response(self.serializer_class(qs, many=True).data)
+
+
+class UnitConversionViewSet(viewsets.ModelViewSet):
+    queryset = UnitConversion.objects
+    serializer_class = UnitConversionSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class NutritionTypeViewSet(viewsets.ModelViewSet):
+    queryset = NutritionType.objects
+    serializer_class = NutritionTypeSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
 
 
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
