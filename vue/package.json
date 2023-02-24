@@ -13,6 +13,7 @@
     "@popperjs/core": "^2.11.6",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
+    "@vue/composition-api": "1.7.1",
     "axios": "^1.2.0",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
@@ -25,6 +26,7 @@
     "lodash": "^4.17.21",
     "mavon-editor": "^2.10.4",
     "moment": "^2.29.4",
+    "pinia": "^2.0.30",
     "prismjs": "^1.29.0",
     "string-similarity": "^4.0.4",
     "vue": "^2.6.14",
@@ -42,7 +44,6 @@
     "vue-template-compiler": "2.6.14",
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",
-    "vuex": "^3.6.0",
     "workbox-webpack-plugin": "^6.5.4",
     "workbox-window": "^6.5.4"
   },

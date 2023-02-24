@@ -18,7 +18,8 @@
                 </div>
             </div>
         </div>
-        <div class="mb-3" v-for="book in filteredBooks" :key="book.id">
+        <div style="padding-bottom: 55px">
+            <div class="mb-3" v-for="book in filteredBooks" :key="book.id">
             <div class="row">
                 <div class="col-md-12">
                     <b-card class="d-flex flex-column" v-hover v-on:click="openBook(book.id)">
@@ -53,7 +54,18 @@
                     @reload="openBook(current_book, true)"
                 ></cookbook-slider>
             </transition>
+
         </div>
+        </div>
+
+
+        <bottom-navigation-bar>
+            <template #custom_create_functions>
+                <a class="dropdown-item" @click="createNew()"><i
+                                class="fa fa-book"></i> {{$t("Create")}}</a>
+                 <div class="dropdown-divider" ></div>
+            </template>
+        </bottom-navigation-bar>
     </div>
 </template>
 
@@ -66,13 +78,14 @@ import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { StandardToasts, ApiMixin } from "@/utils/utils"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "CookbookView",
     mixins: [ApiMixin],
-    components: { LoadingSpinner, CookbookSlider },
+    components: { LoadingSpinner, CookbookSlider, BottomNavigationBar },
     data() {
         return {
             cookbooks: [],

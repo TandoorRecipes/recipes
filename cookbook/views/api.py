@@ -1,6 +1,7 @@
 import io
 import json
 import mimetypes
+import pathlib
 import re
 import threading
 import traceback
@@ -56,7 +57,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
                                                is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
-from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup
+from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup, clean_dict
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
@@ -87,7 +88,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer, RecipeExportSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -1174,6 +1175,18 @@ def recipe_from_source(request):
                         # 'recipe_html': '',
                         'recipe_images': [],
                     }, status=status.HTTP_200_OK)
+            if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
+                recipe_json = requests.get(url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1], '') + '?share=' + re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
+                recipe_json = clean_dict(recipe_json, 'id')
+                serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
+                if serialized_recipe.is_valid():
+                    recipe = serialized_recipe.save()
+                    recipe.image = File(handle_image(request, File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'), filetype=pathlib.Path(recipe_json['image']).suffix),
+                                        name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
+                    recipe.save()
+                    return Response({
+                        'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
+                    }, status=status.HTTP_201_CREATED)
             else:
                 try:
                     if validators.url(url, public=True):

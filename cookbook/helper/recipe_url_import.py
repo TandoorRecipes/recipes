@@ -424,3 +424,18 @@ def get_images_from_soup(soup, url):
             if 'http' in u:
                 images.append(u)
     return images
+
+
+def clean_dict(input_dict, key):
+    if type(input_dict) == dict:
+        for x in list(input_dict):
+            if x == key:
+                del input_dict[x]
+            elif type(input_dict[x]) == dict:
+                input_dict[x] = clean_dict(input_dict[x], key)
+            elif type(input_dict[x]) == list:
+                temp_list = []
+                for e in input_dict[x]:
+                    temp_list.append(clean_dict(e, key))
+
+    return input_dict
