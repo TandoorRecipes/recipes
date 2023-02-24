@@ -1690,15 +1690,6 @@ export default {
     width: 30px;
 }
 
-.two-row-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
-
 .hover-button {
     display: none;
 }
