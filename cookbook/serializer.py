@@ -29,7 +29,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodNutrition, NutritionType)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -619,6 +619,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
     conversions = serializers.SerializerMethodField('get_conversions')
+    nutritions = serializers.SerializerMethodField('get_nutritions')
 
     def get_used_in_recipes(self, obj):
         return list(Recipe.objects.filter(steps__ingredients=obj.id).values('id', 'name'))
@@ -629,7 +630,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         for c in UnitConversion.objects.filter(space=self.context['request'].space).filter(Q(food__isnull=True) | Q(food=obj.food)).filter(Q(base_unit=obj.unit) | Q(converted_unit=obj.unit)):
             if obj.unit == c.base_unit:
                 conversions.append({
-                    'amount': obj.amount * (c.converted_amount/c.base_amount),
+                    'amount': obj.amount * (c.converted_amount / c.base_amount),
                     'unit': UnitSerializer(c.converted_unit, context={'request': self.context['request']}).data,
                 })
             else:
@@ -639,6 +640,23 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
                 })
 
         return conversions
+
+    def get_nutritions(self, ingredient):
+        nutritions = {}
+        for nt in NutritionType.objects.filter(space=self.context['request'].space).all():
+            nutritions[nt.id] = None
+
+        food_nutrition = ingredient.food.foodnutrition_set.all()
+        for fn in food_nutrition:
+            if fn.food_unit == ingredient.unit:
+                nutritions[fn.nutrition_type.id] = ingredient.amount / fn.food_amount * fn.nutrition_amount
+            else:
+                conversions = self.get_conversions(ingredient)
+                for c in conversions:
+                    if fn.food_unit.id == c['unit']['id']:
+                        nutritions[fn.nutrition_type.id] = c['amount'] / fn.food_amount * fn.nutrition_amount
+
+        return nutritions
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -651,7 +669,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Ingredient
         fields = (
-            'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
+            'id', 'food', 'unit', 'amount', 'nutritions', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
             'always_use_plural_unit', 'always_use_plural_food',
         )
