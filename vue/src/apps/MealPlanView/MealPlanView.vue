@@ -83,33 +83,33 @@
                                         </div>
 
                                     </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id" >
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="plan.recipe.image" rounded="circle" v-if="plan.recipe?.image"></b-img>
+                                                       :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
                                                        :src="image_placeholder" rounded="circle" v-else></b-img>
                                             </div>
                                             <div class="flex-grow-1 ml-2"
                                                  style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
-                                                        <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)" v-if="plan.recipe">{{ plan.recipe.name }}</a>
-                                                        <span v-else>{{ plan.title }}</span>
+                                                        <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                                                        <span v-else>{{ plan.entry.title }}</span>
                                                     </span><br/>
-                                                <span v-if="plan.note">
-                                                    <small>{{ plan.note }}</small> <br/>
+                                                <span v-if="plan.entry.note">
+                                                    <small>{{ plan.entry.note }}</small> <br/>
                                                 </span>
                                                 <small class="text-muted">
-                                                    <span v-if="plan.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
-                                                    {{ plan.meal_type_name }}
-                                                    <span v-if="plan.recipe">
-                                                     - <i class="fa fa-clock"></i> {{ plan.recipe.working_time + plan.recipe.waiting_time }} {{ $t('min') }}
+                                                    <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
+                                                    {{ plan.entry.meal_type_name }}
+                                                    <span v-if="plan.entry.recipe">
+                                                     - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t('min') }}
                                                 </span>
                                                 </small>
                                             </div>
                                             <div class="hover-button">
-                                                <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(plan,null)"><i class="fas fa-pencil-alt"></i></b-button>
+                                                <b-button class="btn-sm btn-outline-primary" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-pencil-alt"></i></b-button>
                                             </div>
                                         </div>
                                     </b-list-group-item>
@@ -432,7 +432,7 @@ export default {
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
                         date_label: moment_date.format('ddd DD.MM'),
-                        plan_entries: useMealPlanStore().plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
+                        plan_entries: this.plan_items.filter((m) => moment(m.startDate).isSame(moment_date, 'day'))
                     })
                 }
             }
