@@ -90,7 +90,6 @@
                         :ingredient_factor="ingredient_factor"
                         :servings="servings"
                         :header="true"
-                        :use_plural="use_plural"
                         id="ingredient_container"
                         @checked-state-changed="updateIngredientCheckedState"
                         @change-servings="servings = $event"
@@ -124,7 +123,6 @@
                     :step="s"
                     :ingredient_factor="ingredient_factor"
                     :index="index"
-                    :use_plural="use_plural"
                     :start_time="start_time"
                     @update-start-time="updateStartTime"
                     @checked-state-changed="updateIngredientCheckedState"
@@ -228,7 +226,6 @@ export default {
     },
     data() {
         return {
-            use_plural: false,
             loading: true,
             recipe: undefined,
             rootrecipe: undefined,
@@ -251,10 +248,6 @@ export default {
         this.requestWakeLock()
         window.addEventListener('resize', this.handleResize);
 
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
-            this.use_plural = r.data.use_plural
-        })
     },
     beforeUnmount() {
         this.destroyWakeLock()

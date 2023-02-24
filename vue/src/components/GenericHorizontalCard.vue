@@ -23,9 +23,9 @@
                     <b-card-body class="m-0 py-0">
                         <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
                             <h5 class="m-0 mt-1 text-truncate">{{ item[title] }}</h5>
-                            <template v-if="use_plural">
+
                                 <div v-if="item[plural]!== '' && item[plural] !== null && item[plural] !== undefined" class="m-0 text-truncate">({{ $t("plural_short") }}: {{ item[plural] }})</div>
-                            </template>
+
                             <div class="m-0 text-truncate">{{ item[subtitle] }}</div>
                             <div class="m-0 text-truncate small text-muted" v-if="getFullname">{{ getFullname }}</div>
 
