@@ -60,7 +60,7 @@
                                     <b-button-group class="mx-1">
                                         <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
                                             class="fas fa-home"></i></b-button>
-                                        <b-form-datepicker button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
+                                        <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
                                     </b-button-group>
                                     <b-button-group class="mx-1">
                                         <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
@@ -96,7 +96,7 @@
                                                     <span class="two-row-text">
                                                         <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span>
-                                                    </span><br/>
+                                                    </span>
                                                 <span v-if="plan.entry.note">
                                                     <small>{{ plan.entry.note }}</small> <br/>
                                                 </span>
