@@ -207,7 +207,7 @@
                                                    v-if="!import_multiple">
 
                                                 <recipe-card :recipe="recipe_json" :detailed="false"
-                                                             :show_context_menu="false" :use_plural="use_plural"
+                                                             :show_context_menu="false"
                                                 ></recipe-card>
                                             </b-col>
                                             <b-col>
