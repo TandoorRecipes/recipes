@@ -65,6 +65,7 @@
     "Step_Type": "Step Type",
     "Make_Header": "Make Header",
     "Make_Ingredient": "Make Ingredient",
+    "Amount": "Amount",
     "Enable_Amount": "Enable Amount",
     "Disable_Amount": "Disable Amount",
     "Ingredient Editor": "Ingredient Editor",
@@ -117,7 +118,7 @@
     "Image": "Image",
     "Delete": "Delete",
     "Open": "Open",
-    "Ok": "Open",
+    "Ok": "Ok",
     "Save": "Save",
     "Step": "Step",
     "Search": "Search",
@@ -160,6 +161,7 @@
     "merge_title": "Merge {type}",
     "move_title": "Move {type}",
     "Food": "Food",
+    "Original_Text": "Original Text",
     "Recipe_Book": "Recipe Book",
     "del_confirmation_tree": "Are you sure that you want to delete {source} and all of it's children?",
     "delete_title": "Delete {type}",
@@ -474,5 +476,7 @@
     "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
     "Use_Plural_Food_Always": "Use plural form for food always",
     "Use_Plural_Food_Simple": "Use plural form for food dynamically",
-    "plural_usage_info": "Use the plural form for units and food inside this space."
+    "plural_usage_info": "Use the plural form for units and food inside this space.",
+	"Create Recipe": "Create Recipe",
+    "Import Recipe": "Import Recipe"
 }

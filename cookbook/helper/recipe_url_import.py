@@ -125,7 +125,8 @@ def get_from_scraper(scrape, request):
             recipe_json['source_url'] = ''
 
     try:
-        keywords.append(scrape.author())
+        if scrape.author():
+            keywords.append(scrape.author())
     except:
         pass
 
@@ -160,32 +161,33 @@ def get_from_scraper(scrape, request):
 
     try:
         for x in scrape.ingredients():
-            try:
-                amount, unit, ingredient, note = ingredient_parser.parse(x)
-                ingredient = {
-                    'amount': amount,
-                    'food': {
-                        'name': ingredient,
-                    },
-                    'unit': None,
-                    'note': note,
-                    'original_text': x
-                }
-                if unit:
-                    ingredient['unit'] = {'name': unit, }
-                recipe_json['steps'][0]['ingredients'].append(ingredient)
-            except Exception:
-                recipe_json['steps'][0]['ingredients'].append(
-                    {
-                        'amount': 0,
-                        'unit': None,
+            if x.strip() != '':
+                try:
+                    amount, unit, ingredient, note = ingredient_parser.parse(x)
+                    ingredient = {
+                        'amount': amount,
                         'food': {
-                            'name': x,
+                            'name': ingredient,
                         },
-                        'note': '',
+                        'unit': None,
+                        'note': note,
                         'original_text': x
                     }
-                )
+                    if unit:
+                        ingredient['unit'] = {'name': unit, }
+                    recipe_json['steps'][0]['ingredients'].append(ingredient)
+                except Exception:
+                    recipe_json['steps'][0]['ingredients'].append(
+                        {
+                            'amount': 0,
+                            'unit': None,
+                            'food': {
+                                'name': x,
+                            },
+                            'note': '',
+                            'original_text': x
+                        }
+                    )
     except Exception:
         pass
 
@@ -320,6 +322,11 @@ def parse_servings_text(servings):
             servings = re.sub("\d+", '', servings).strip()
         except Exception:
             servings = ''
+    if type(servings) == list:
+        try:
+            servings = parse_servings_text(servings[1])
+        except Exception:
+            pass
     return str(servings)[:32]
 
 
@@ -417,3 +424,18 @@ def get_images_from_soup(soup, url):
             if 'http' in u:
                 images.append(u)
     return images
+
+
+def clean_dict(input_dict, key):
+    if type(input_dict) == dict:
+        for x in list(input_dict):
+            if x == key:
+                del input_dict[x]
+            elif type(input_dict[x]) == dict:
+                input_dict[x] = clean_dict(input_dict[x], key)
+            elif type(input_dict[x]) == list:
+                temp_list = []
+                for e in input_dict[x]:
+                    temp_list.append(clean_dict(e, key))
+
+    return input_dict
