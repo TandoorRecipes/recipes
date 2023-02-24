@@ -228,3 +228,33 @@ def step(request):
             }
         }
     )
+
+
+@group_required('user')
+def unit_conversion(request):
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Unit Conversions"),
+            "config": {
+                'model': "UNIT_CONVERSION",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def nutrition_type(request):
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Unit Conversions"),
+            "config": {
+                'model': "NUTRITION_TYPE",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
