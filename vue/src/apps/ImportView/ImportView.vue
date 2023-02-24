@@ -24,8 +24,11 @@
                                             <div class="row justify-content-center">
                                                 <div class="col-12 justify-content-cente">
                                                     <b-checkbox v-model="import_multiple" switch><span
-                                                        v-if="import_multiple"><i class="far fa-copy fa-fw"></i> {{ $t('Multiple') }}</span><span
-                                                        v-if="!import_multiple"><i class="far fa-file fa-fw"></i> {{ $t('Single') }}</span></b-checkbox>
+                                                        v-if="import_multiple"><i
+                                                        class="far fa-copy fa-fw"></i> {{ $t('Multiple') }}</span><span
+                                                        v-if="!import_multiple"><i
+                                                        class="far fa-file fa-fw"></i> {{ $t('Single') }}</span>
+                                                    </b-checkbox>
                                                 </div>
                                             </div>
                                             <b-input-group class="mt-2" :class="{ bounce: empty_input }"
@@ -242,13 +245,15 @@
                                             <b-spinner variant="primary"></b-spinner>
                                         </div>
                                         <b-button-group>
-                                            <b-button @click="importRecipe('view')" v-if="!import_multiple" :disabled="import_loading">Import &
+                                            <b-button @click="importRecipe('view')" v-if="!import_multiple"
+                                                      :disabled="import_loading">Import &
                                                 View
                                             </b-button> <!-- TODO localize -->
                                             <b-button @click="importRecipe('edit')" variant="success"
                                                       v-if="!import_multiple" :disabled="import_loading">Import & Edit
                                             </b-button>
-                                            <b-button @click="importRecipe('import')" v-if="!import_multiple" :disabled="import_loading">Import &
+                                            <b-button @click="importRecipe('import')" v-if="!import_multiple"
+                                                      :disabled="import_loading">Import &
                                                 Restart
                                             </b-button>
                                             <b-button @click="location.reload()" :disabled="import_loading">Restart
@@ -499,6 +504,13 @@ export default {
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
+
+        let urlParams = new URLSearchParams(window.location.search)
+
+        if (urlParams.has("url")) {
+            this.website_url = urlParams.get('url')
+            this.loadRecipe(this.website_url)
+        }
     },
     methods: {
         /**
@@ -622,6 +634,11 @@ export default {
             }
 
             return axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
+                if (response.status === 201 && 'link' in response.data) {
+                    window.location = response.data.link
+                    return
+                }
+
                 this.loading = false
                 this.recipe_json = response.data['recipe_json'];
 
