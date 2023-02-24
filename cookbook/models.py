@@ -739,6 +739,33 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         indexes = (GinIndex(fields=["search_vector"]),)
 
 
+class NutritionType(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=128)
+    unit = models.CharField(max_length=64, blank=True, null=True)
+    icon = models.CharField(max_length=16, blank=True, null=True)
+    description = models.CharField(max_length=512, blank=True, null=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class FoodNutrition(models.Model, PermissionModelMixin):
+    food_amount = models.DecimalField(default=0, decimal_places=2, max_digits=32)
+    food_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    nutrition_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
+    nutrition_type = models.ForeignKey(NutritionType, on_delete=models.PROTECT)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.food_amount} {self.food_unit} {self.food}: {self.nutrition_amount} {self.nutrition_type.unit} {self.nutrition_type.name}'
+
+
 class NutritionInformation(models.Model, PermissionModelMixin):
     fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     carbohydrates = models.DecimalField(
@@ -754,14 +781,6 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     def __str__(self):
         return f'Nutrition {self.pk}'
 
-
-# class NutritionType(models.Model, PermissionModelMixin):
-#     name = models.CharField(max_length=128)
-#     icon = models.CharField(max_length=16, blank=True, null=True)
-#     description = models.CharField(max_length=512, blank=True, null=True)
-#
-#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-#     objects = ScopedManager(space='space')
 
 class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
     def get_queryset(self):
