@@ -55,7 +55,9 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
+                                               is_space_owner, switch_user_active_space, above_space_limit,
+                                               CustomRecipePermission, CustomUserPermission,
+                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup, clean_dict
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -88,7 +90,8 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer, RecipeExportSerializer, UnitConversionSerializer, NutritionTypeSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
+                                 RecipeExportSerializer, UnitConversionSerializer, NutritionTypeSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -171,7 +174,8 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                                                                       'field', flat=True)])
 
         if query is not None and query not in ["''", '']:
-            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']):
+            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                                      'django.db.backends.postgresql']):
                 if any([self.model.__name__.lower() in x for x in
                         self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
@@ -792,7 +796,19 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
-                self.queryset = self.queryset.filter(space=self.request.space)
+                self.queryset = self.queryset.filter(space=self.request.space).prefetch_related('steps', 'keywords',
+                                                                                                'shared', 'steps__ingredients',
+                                                                                                'steps__ingredients__food',
+                                                                                                'steps__ingredients__food__inherit_fields',
+                                                                                                'steps__ingredients__food__supermarket_category',
+                                                                                                'steps__ingredients__food__onhand_users',
+                                                                                                'steps__ingredients__food__substitute',
+                                                                                                'steps__ingredients__food__child_inherit_fields',
+                                                                                                'steps__ingredients__food__foodnutrition_set',
+                                                                                                'steps__ingredients__unit',
+
+                                                                                                'cooklog_set').select_related(
+                    'nutrition')
             return super().get_queryset()
 
         self.queryset = self.queryset.filter(space=self.request.space).filter(
@@ -802,7 +818,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
                   in list(self.request.GET)}
         search = RecipeSearch(self.request, **params)
-        self.queryset = search.get_queryset(self.queryset).prefetch_related('cooklog_set')
+        self.queryset = search.get_queryset(self.queryset).prefetch_related('keywords', 'cooklog_set')
         return self.queryset
 
     def list(self, request, *args, **kwargs):
@@ -1140,10 +1156,13 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(scope__contains='write').first():
+        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(
+                scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
+            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}',
+                                                      expires=(timezone.now() + timezone.timedelta(days=365 * 5)),
+                                                      scope='read write app')
         return Response({
             'id': access_token.id,
             'token': access_token.token,
@@ -1171,7 +1190,8 @@ def recipe_from_source(request):
     serializer = RecipeFromSourceSerializer(data=request.data)
     if serializer.is_valid():
 
-        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
+                bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
             serializer.validated_data['url'] = bookmarklet.url
             serializer.validated_data['data'] = bookmarklet.html
             bookmarklet.delete()
@@ -1193,13 +1213,21 @@ def recipe_from_source(request):
                         # 'recipe_html': '',
                         'recipe_images': [],
                     }, status=status.HTTP_200_OK)
-            if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
-                recipe_json = requests.get(url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1], '') + '?share=' + re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
+            if re.match(
+                    '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+                    url):
+                recipe_json = requests.get(
+                    url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
+                                                                         '') + '?share=' +
+                    re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
                 recipe_json = clean_dict(recipe_json, 'id')
                 serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                 if serialized_recipe.is_valid():
                     recipe = serialized_recipe.save()
-                    recipe.image = File(handle_image(request, File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'), filetype=pathlib.Path(recipe_json['image']).suffix),
+                    recipe.image = File(handle_image(request,
+                                                     File(io.BytesIO(requests.get(recipe_json['image']).content),
+                                                          name='image'),
+                                                     filetype=pathlib.Path(recipe_json['image']).suffix),
                                         name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                     recipe.save()
                     return Response({
@@ -1341,7 +1369,8 @@ def import_files(request):
 
             return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
         except NotImplementedError:
-            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')},
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
