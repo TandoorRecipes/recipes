@@ -14,7 +14,6 @@
 							<table class="table table-sm mb-0">
 
 								<ingredient-component  v-for="i in steps.flatMap(s => s.ingredients)" v-bind:key="i.id"
-									:use_plural="true"
 									:detailed="true"
 									:ingredient="i"
 									:ingredient_factor="ingredient_factor"
