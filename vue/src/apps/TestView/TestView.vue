@@ -1,51 +1,102 @@
 <template>
 
     <div id="app">
-        <hr/>
-
-        <div class="row">
-            <div class="col col-md-12">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
-                    <b-list-group v-for="x in Array(5).keys()" v-bind:key="x">
-                        <b-list-group-item >
-                            <h4>Monday </h4>
-                        </b-list-group-item>
-                        <b-list-group-item v-for="y in Array(Math.round(Math.random()*4) ).keys()" v-bind:key="y">
-                            <div class="d-flex flex-row align-items-center">
-                                <div>
-                                    <b-img style="height: 50px; width: 50px; object-fit: cover" src="http://127.0.0.1:8000/media/recipes/6a2fd228-c589-4a14-b21f-365bca3fbd94_119.png" rounded="circle"></b-img>
-                                </div>
-                                <div class="flex-grow-1 ml-2">
-                                    <span class="two-row-text">{{ recipe.name }}</span>
-                                </div>
-                            </div>
-                        </b-list-group-item>
-                        <b-list-group-item class="justify-content-center text-center">
-                            <b-button><i class="fa fa-plus"></i></b-button>
-                        </b-list-group-item>
-                    </b-list-group>
-
-                </div>
+        <div class="row" v-if="food">
+            <div class="col-12">
+                <h2>{{ food.name }}</h2>
             </div>
         </div>
 
-        <hr/>
-
         <div class="row">
-            <div class="col col-md-12">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
-                    <recipe-card :recipe="recipe" :detailed="false"></recipe-card>
+            <div class="col-12">
+                <b-form v-if="food">
+                    <b-form-group :label="$t('Name')" description="">
+                        <b-form-input v-model="food.name"></b-form-input>
+                    </b-form-group>
+                    <b-form-group :label="$t('Plural')" description="">
+                        <b-form-input v-model="food.plural_name"></b-form-input>
+                    </b-form-group>
 
-                </div>
+
+                    <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
+                        <generic-multiselect
+                            @change="food.recipe = $event.val;"
+                            :model="Models.RECIPE"
+                            :initial_selection="food.recipe"
+                            label="name"
+                            :multiple="false"
+                            :placeholder="$t('Recipe')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('OnHand_help')">
+                        <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('ignore_shopping_help')">
+                        <b-form-checkbox v-model="food.ignore_shopping">{{ $t('Ignore_Shopping') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
+                        <generic-multiselect
+                            @change="food.supermarket_category = $event.val;"
+                            :model="Models.SHOPPING_CATEGORY"
+                            :initial_selection="food.supermarket_category"
+                            label="name"
+                            :multiple="false"
+                            :placeholder="$t('Shopping_Category')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <hr/>
+                    <!-- todo add conditions if false disable dont hide -->
+                    <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
+                        <generic-multiselect
+                            @change="food.substitute = $event.val;"
+                            :model="Models.FOOD"
+                            :initial_selection="food.substitute"
+                            label="name"
+                            :multiple="false"
+                            :placeholder="$t('Substitutes')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('substitute_siblings_help')">
+                        <b-form-checkbox v-model="food.substitute_siblings">{{ $t('substitute_siblings') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
+                        <generic-multiselect
+                            @change="food.inherit_fields = $event.val;"
+                            :model="Models.FOOD_INHERIT_FIELDS"
+                            :initial_selection="food.inherit_fields"
+                            label="name"
+                            :multiple="false"
+                            :placeholder="$t('InheritFields')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
+                        <generic-multiselect
+                            @change="food.child_inherit_fields = $event.val;"
+                            :model="Models.FOOD_INHERIT_FIELDS"
+                            :initial_selection="food.child_inherit_fields"
+                            label="name"
+                            :multiple="false"
+                            :placeholder="$t('ChildInheritFields')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <!-- TODO change to a button -->
+                    <b-form-group :description="$t('reset_children_help')">
+                        <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-button variant="primary" @click="updateFood">{{ $t('Save') }}</b-button>
+                </b-form>
+
             </div>
         </div>
-
 
     </div>
 </template>
@@ -58,6 +109,8 @@ import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import RecipeCard from "@/components/RecipeCard.vue";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
 
 
 Vue.use(BootstrapVue)
@@ -65,45 +118,38 @@ Vue.use(BootstrapVue)
 
 export default {
     name: "TestView",
-    mixins: [],
-    components: {RecipeCard},
+    mixins: [ApiMixin],
+    components: {
+        GenericMultiselect
+    },
     data() {
         return {
-            recipe: undefined,
-            recipe_detailed: false,
-            meal_plan: undefined
+            food: undefined,
+
         }
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
-        apiClient.retrieveRecipe('119').then((r) => {
-            this.recipe = r.data
+        apiClient.retrieveFood('1').then((r) => {
+            this.food = r.data
         })
-        apiClient.retrieveMealPlan('1').then((r) => {
-            this.meal_plan = r.data
-        })
+
     },
-    methods: {},
+    methods: {
+        updateFood: function () {
+            let apiClient = new ApiApiFactory()
+            apiClient.updateFood(this.food.id, this.food).then((r) => {
+                this.food = r.data
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        }
+    },
 }
 </script>
 
 <style>
-.dot {
-    height: 40px;
-    width: 40px;
-    background-color: #bbb;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.two-row-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
 
 </style>
