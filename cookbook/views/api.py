@@ -19,6 +19,7 @@ from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
@@ -526,8 +527,20 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.request._shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [
-            self.request.user.id]
+        shared_users = []
+        if c := caches['default'].get(
+                f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}', None):
+            shared_users = c
+        else:
+            try:
+                shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [
+                    self.request.user.id]
+                caches['default'].set(
+                    f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
+                    shared_users, timeout=5 * 60)
+                # TODO ugly hack that improves API performance significantly, should be done properly
+            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                pass
 
         self.queryset = super().get_queryset()
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),

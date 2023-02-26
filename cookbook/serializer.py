@@ -7,6 +7,7 @@ from html import escape
 from smtplib import SMTPException
 
 from django.contrib.auth.models import Group, User, AnonymousUser
+from django.core.cache import caches
 from django.core.mail import send_mail
 from django.db.models import Avg, Q, QuerySet, Sum
 from django.http import BadHeaderError
@@ -103,15 +104,17 @@ class CustomOnHandField(serializers.Field):
         return instance
 
     def to_representation(self, obj):
-        shared_users = None
-        if request := self.context.get('request', None):
-            shared_users = getattr(request, '_shared_users', None)
-        if shared_users is None:
+        shared_users = []
+        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+            shared_users = c
+        else:
             try:
                 shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
                     self.context['request'].user.id]
+                caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5*60)
+                # TODO ugly hack that improves API performance significantly, should be done properly
             except AttributeError:  # Anonymous users (using share links) don't have shared users
-                shared_users = []
+                pass
         return obj.onhand_users.filter(id__in=shared_users).exists()
 
     def to_internal_value(self, data):
@@ -278,11 +281,12 @@ class SpaceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Space
         fields = (
-        'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-        'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
-        'image', 'use_plural',)
+            'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
+            'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
+            'image', 'use_plural',)
         read_only_fields = (
-        'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
+            'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
+            'demo',)
 
 
 class UserSpaceSerializer(WritableNestedModelSerializer):
@@ -531,15 +535,20 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     images = ['recipe__image']
 
     def get_substitute_onhand(self, obj):
-        shared_users = None
-        if request := self.context.get('request', None):
-            shared_users = getattr(request, '_shared_users', None)
-        if shared_users is None:
+        shared_users = []
+        if c := caches['default'].get(
+                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+            shared_users = c
+        else:
             try:
                 shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
                     self.context['request'].user.id]
-            except AttributeError:
-                shared_users = []
+                caches['default'].set(
+                    f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
+                    shared_users, timeout=5 * 60)
+                # TODO ugly hack that improves API performance significantly, should be done properly
+            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                pass
         filter = Q(id__in=obj.substitute.all())
         if obj.substitute_siblings:
             filter |= Q(path__startswith=obj.path[:Food.steplen * (obj.depth - 1)], depth=obj.depth)
@@ -630,7 +639,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         used_in = []
         for s in obj.step_set.all():
             for r in s.recipe_set.all():
-                used_in.append({'id':r.id,'name':r.name})
+                used_in.append({'id': r.id, 'name': r.name})
         return used_in
 
     def get_conversions(self, obj):
