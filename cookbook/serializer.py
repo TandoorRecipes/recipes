@@ -627,7 +627,11 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     nutritions = serializers.SerializerMethodField('get_nutritions')
 
     def get_used_in_recipes(self, obj):
-        return list(Recipe.objects.filter(steps__ingredients=obj.id).values('id', 'name'))
+        used_in = []
+        for s in obj.step_set.all():
+            for r in s.recipe_set.all():
+                used_in.append({'id':r.id,'name':r.name})
+        return used_in
 
     def get_conversions(self, obj):
         conversions = []
