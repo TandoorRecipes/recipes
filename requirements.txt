@@ -46,3 +46,4 @@ pytest-factoryboy==2.5.0
 pyppeteer==1.0.2
 validators==0.20.0
 pytube==12.1.0
+pint==0.20.1
