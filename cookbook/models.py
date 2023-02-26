@@ -652,9 +652,9 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
 class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model, PermissionModelMixin):
     base_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    base_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='base_unit')
+    base_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_base_relation')
     converted_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='converted_unit')
+    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_converted_relation')
 
     food = models.ForeignKey('Food', on_delete=models.CASCADE, null=True, blank=True)
 

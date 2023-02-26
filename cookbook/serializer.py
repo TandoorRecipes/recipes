@@ -29,7 +29,8 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodNutrition, NutritionType)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodNutrition,
+                             NutritionType)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -276,10 +277,12 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Space
-        fields = ('id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-                  'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
-                  'image', 'use_plural',)
-        read_only_fields = ('id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
+        fields = (
+        'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
+        'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
+        'image', 'use_plural',)
+        read_only_fields = (
+        'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing', 'demo',)
 
 
 class UserSpaceSerializer(WritableNestedModelSerializer):
@@ -440,7 +443,8 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
             return unit
 
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Unit.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
+        obj, created = Unit.objects.get_or_create(name=name, plural_name=plural_name, space=space,
+                                                  defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -579,7 +583,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             else:
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
-        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space,
+                                                  defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -626,35 +631,35 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
 
     def get_conversions(self, obj):
         conversions = []
-
-        for c in UnitConversion.objects.filter(space=self.context['request'].space).filter(Q(food__isnull=True) | Q(food=obj.food)).filter(Q(base_unit=obj.unit) | Q(converted_unit=obj.unit)):
-            if obj.unit == c.base_unit:
-                conversions.append({
-                    'amount': obj.amount * (c.converted_amount / c.base_amount),
-                    'unit': UnitSerializer(c.converted_unit, context={'request': self.context['request']}).data,
-                })
-            else:
-                conversions.append({
-                    'amount': obj.amount * (c.base_amount / c.converted_amount),
-                    'unit': UnitSerializer(c.base_unit, context={'request': self.context['request']}).data,
-                })
+        # TODO add hardcoded base conversions for metric/imperial
+        if obj.unit:  # TODO move to function and also iterate obj.unit.unit_conversion_converted_relation.all()
+            for c in obj.unit.unit_conversion_base_relation.all():
+                if c.food is None or c.food == obj.food:
+                    if obj.unit == c.base_unit:
+                        conversions.append({
+                            'amount': obj.amount * (c.converted_amount / c.base_amount),
+                            'unit': UnitSerializer(c.converted_unit, context={'request': self.context['request']}).data,
+                        })
+                    else:
+                        conversions.append({
+                            'amount': obj.amount * (c.base_amount / c.converted_amount),
+                            'unit': UnitSerializer(c.base_unit, context={'request': self.context['request']}).data,
+                        })
 
         return conversions
 
     def get_nutritions(self, ingredient):
         nutritions = {}
-        for nt in NutritionType.objects.filter(space=self.context['request'].space).all():
-            nutritions[nt.id] = None
 
-        food_nutrition = ingredient.food.foodnutrition_set.all()
-        for fn in food_nutrition:
-            if fn.food_unit == ingredient.unit:
-                nutritions[fn.nutrition_type.id] = ingredient.amount / fn.food_amount * fn.nutrition_amount
-            else:
-                conversions = self.get_conversions(ingredient)
-                for c in conversions:
-                    if fn.food_unit.id == c['unit']['id']:
-                        nutritions[fn.nutrition_type.id] = c['amount'] / fn.food_amount * fn.nutrition_amount
+        if ingredient.food:
+            for fn in ingredient.food.foodnutrition_set.all():
+                if fn.food_unit == ingredient.unit:
+                    nutritions[fn.nutrition_type.id] = ingredient.amount / fn.food_amount * fn.nutrition_amount
+                else:
+                    conversions = self.get_conversions(ingredient)
+                    for c in conversions:
+                        if fn.food_unit.id == c['unit']['id']:
+                            nutritions[fn.nutrition_type.id] = c['amount'] / fn.food_amount * fn.nutrition_amount
 
         return nutritions
 
@@ -812,7 +817,8 @@ class RecipeSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating', 'last_cooked',
+            'internal', 'show_ingredient_overview', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating',
+            'last_cooked',
             'private', 'shared',
         )
         read_only_fields = ['image', 'created_by', 'created_at']
@@ -947,11 +953,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                obj.name
-                or getattr(obj.mealplan, 'title', None)
-                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                or obj.recipe.name
-        ) + f' ({value:.2g})'
+                       obj.name
+                       or getattr(obj.mealplan, 'title', None)
+                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                       or obj.recipe.name
+               ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -1152,13 +1158,19 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
 
         if obj.email:
             try:
-                if InviteLink.objects.filter(space=self.context['request'].space, created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
-                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(self.context['request'].user.get_user_display_name())
-                    message += _(' to join their Tandoor Recipes space ') + escape(self.context['request'].space.name) + '.\n\n'
-                    message += _('Click the following link to activate your account: ') + self.context['request'].build_absolute_uri(reverse('view_invite', args=[str(obj.uuid)])) + '\n\n'
-                    message += _('If the link does not work use the following code to manually join the space: ') + str(obj.uuid) + '\n\n'
+                if InviteLink.objects.filter(space=self.context['request'].space,
+                                             created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
+                    message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(
+                        self.context['request'].user.get_user_display_name())
+                    message += _(' to join their Tandoor Recipes space ') + escape(
+                        self.context['request'].space.name) + '.\n\n'
+                    message += _('Click the following link to activate your account: ') + self.context[
+                        'request'].build_absolute_uri(reverse('view_invite', args=[str(obj.uuid)])) + '\n\n'
+                    message += _('If the link does not work use the following code to manually join the space: ') + str(
+                        obj.uuid) + '\n\n'
                     message += _('The invitation is valid until ') + str(obj.valid_until) + '\n\n'
-                    message += _('Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub ') + 'https://github.com/vabene1111/recipes/'
+                    message += _(
+                        'Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub ') + 'https://github.com/vabene1111/recipes/'
 
                     send_mail(
                         _('Tandoor Recipes Invite'),
@@ -1267,7 +1279,8 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount', 'always_use_plural_unit', 'always_use_plural_food')
+        fields = ('food', 'unit', 'amount', 'note', 'order', 'is_header', 'no_amount', 'always_use_plural_unit',
+                  'always_use_plural_food')
 
 
 class StepExportSerializer(WritableNestedModelSerializer):
