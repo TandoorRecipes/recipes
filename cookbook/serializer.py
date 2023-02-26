@@ -24,6 +24,7 @@ from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
+from cookbook.helper.unit_conversion_helper import get_conversions
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Recipe, RecipeBook,
@@ -105,13 +106,16 @@ class CustomOnHandField(serializers.Field):
 
     def to_representation(self, obj):
         shared_users = []
-        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+        if c := caches['default'].get(
+                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
             shared_users = c
         else:
             try:
                 shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
                     self.context['request'].user.id]
-                caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5*60)
+                caches['default'].set(
+                    f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
+                    shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 pass
@@ -645,19 +649,8 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     def get_conversions(self, obj):
         conversions = []
         # TODO add hardcoded base conversions for metric/imperial
-        if obj.unit:  # TODO move to function and also iterate obj.unit.unit_conversion_converted_relation.all()
-            for c in obj.unit.unit_conversion_base_relation.all():
-                if c.food is None or c.food == obj.food:
-                    if obj.unit == c.base_unit:
-                        conversions.append({
-                            'amount': obj.amount * (c.converted_amount / c.base_amount),
-                            'unit': UnitSerializer(c.converted_unit, context={'request': self.context['request']}).data,
-                        })
-                    else:
-                        conversions.append({
-                            'amount': obj.amount * (c.base_amount / c.converted_amount),
-                            'unit': UnitSerializer(c.base_unit, context={'request': self.context['request']}).data,
-                        })
+        if obj.unit and obj.food:
+            conversions += get_conversions(obj.amount, obj.unit, obj.food)
 
         return conversions
 
