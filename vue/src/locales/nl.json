@@ -476,7 +476,7 @@
     "plural_usage_info": "Gebruik de meervoudsvorm voor eenheden en voedsels in deze ruimte.",
     "Amount": "Hoeveelheid",
     "Original_Text": "Originele tekst",
-    "reset_food_inheritance_info": "Zet alle voedingsmiddelen terug naar standaard overgeërfde velden en hun bovenliggende waarden.",
+    "reset_food_inheritance_info": "Herstel alle voedingsmiddelen naar de standaard overgenomen velden en hun bovenliggende waarden.",
     "Description_Replace": "Vervang beschrijving",
     "Instruction_Replace": "Vervang instructie",
     "Auto_Sort_Help": "Verplaats alle ingrediënten naar de best passende stap.",
