@@ -797,7 +797,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space).prefetch_related('steps', 'keywords',
-                                                                                                'shared', 'steps__ingredients',
+                                                                                                'shared',
+                                                                                                'steps__ingredients',
+                                                                                                'steps__ingredients__step_set',
+                                                                                                'steps__ingredients__step_set__recipe_set',
                                                                                                 'steps__ingredients__food',
                                                                                                 'steps__ingredients__food__inherit_fields',
                                                                                                 'steps__ingredients__food__supermarket_category',
