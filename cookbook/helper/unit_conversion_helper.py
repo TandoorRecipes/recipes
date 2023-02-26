@@ -1,14 +1,17 @@
-def base_conversions():
-    METRIC_MASS_CONVERSIONS = {
-        'g':  {'base_amount': 1000, 'base_unit': 'mg', 'converted_amount': 1, 'converted_unit': 'g'},
-        'mg':  {'base_amount': 1000, 'base_unit': 'g', 'converted_amount': 1, 'converted_unit': 'kg'},
-    }
+from pint import UnitRegistry, UndefinedUnitError
 
 
+def base_conversions(ingredient_list):
+    ingredient_list = [{'amount': 1, 'unit': 'g'}, {'amount': 1, 'unit': 'Gramm'}, {'amount': 1, 'unit': 'Stück'}]
+    ureg = UnitRegistry()
+    pint_converted_list = []
+    for i in ingredient_list:
+        try:
+            pint_converted_list.append(ureg.Quantity(f'{i["amount"]} {i["unit"]}'))
+        except UndefinedUnitError:
+            pass
 
-    METRIC_LIQUID_CONVERSIONS = [
-        {'base_amount': 1000, 'base_unit': 'ml', 'converted_amount': 1, 'converted_unit': 'l'},
-    ]
+    print(pint_converted_list)
 
 
 def get_conversions(amount, unit, food):
