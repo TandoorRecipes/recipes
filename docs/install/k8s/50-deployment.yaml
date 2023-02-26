@@ -49,7 +49,7 @@ spec:
               secretKeyRef:
                 name: recipes
                 key: postgresql-postgres-password
-        image: vabene1111/recipes:1.0.1
+        image: vabene1111/recipes:1.4.7
         imagePullPolicy: Always
         resources:
           requests:
@@ -110,7 +110,7 @@ spec:
             subPath: nginx-config
             readOnly: true
       - name: recipes
-        image: vabene1111/recipes:1.0.1
+        image: vabene1111/recipes:1.4.7
         imagePullPolicy: IfNotPresent
         command:
           - /opt/recipes/venv/bin/gunicorn
