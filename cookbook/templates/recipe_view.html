@@ -48,7 +48,7 @@
         {% endfor %}
 
         {% if request.user.is_authenticated %}
-            <div class="d-print-none">
+            <div class="d-print-none" style="padding-bottom: 60px">
 
                 <form method="POST" class="post-form">
                     {% csrf_token %}
