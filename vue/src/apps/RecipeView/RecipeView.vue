@@ -4,7 +4,7 @@
             <loading-spinner></loading-spinner>
         </template>
 
-        <div v-if="!loading">
+        <div v-if="!loading" style="padding-bottom: 60px">
             <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)"/>
             <div class="row">
                 <div class="col-12" style="text-align: center">
