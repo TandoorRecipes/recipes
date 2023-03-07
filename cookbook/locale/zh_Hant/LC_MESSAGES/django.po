@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-06-12 20:30+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-03-08 04:55+0000\n"
+"Last-Translator: Feng Zhong <fewoodse@gmail.com>\n"
+"Language-Team: Chinese (Traditional) <http://translate.tandoor.dev/projects/"
+"tandoor/recipes-backend/zh_Hant/>\n"
 "Language: zh_Hant\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:98
 #: .\cookbook\templates\forms\edit_internal_recipe.html:246
@@ -23,41 +25,41 @@ msgstr ""
 #: .\cookbook\templates\space.html:37 .\cookbook\templates\stats.html:28
 #: .\cookbook\templates\url_import.html:270 .\cookbook\views\lists.py:67
 msgid "Ingredients"
-msgstr ""
+msgstr "食材"
 
 #: .\cookbook\forms.py:49
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
-msgstr ""
+msgstr "頂部導航欄的顏色。並非所有的顏色都適用於所有的主題，只要試一試就可以了!"
 
 #: .\cookbook\forms.py:51
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "在菜譜中插入新食材時使用的默認單位。"
 
 #: .\cookbook\forms.py:53
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
-msgstr ""
+msgstr "啟用對食材數量的分數支持（例如自動將小數轉換為分數）"
 
 #: .\cookbook\forms.py:56
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
-msgstr ""
+msgstr "默認情況下，將自動與用戶共享新創建的膳食計劃。"
 
 #: .\cookbook\forms.py:58
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "在搜索頁面上查看最近看過的食譜。"
 
 #: .\cookbook\forms.py:59
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "四舍五入食材的小數點數量。"
 
 #: .\cookbook\forms.py:60
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "如果你希望能夠在菜譜下面創建並看到評論。"
 
 #: .\cookbook\forms.py:62
 msgid ""
@@ -66,22 +68,25 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"設置為0將禁用自動同步。當查看購物清單時，清單會每隔幾秒鐘更新一次，以同步其他"
+"人可能做出的改變。在與多人一起購物時很有用，但可能會消耗一點移動數據。如果低"
+"於實例限制，它將在保存時被重置。"
 
 #: .\cookbook\forms.py:65
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "使導航欄保持在頁面的頂部。"
 
 #: .\cookbook\forms.py:81
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
-msgstr ""
+msgstr "這兩個字段都是可選的。如果沒有輸入,將顯示用戶名"
 
 #: .\cookbook\forms.py:102 .\cookbook\forms.py:331
 #: .\cookbook\templates\forms\edit_internal_recipe.html:49
 #: .\cookbook\templates\url_import.html:154
 msgid "Name"
-msgstr ""
+msgstr "名字"
 
 #: .\cookbook\forms.py:103 .\cookbook\forms.py:332
 #: .\cookbook\templates\base.html:105
@@ -90,37 +95,37 @@ msgstr ""
 #: .\cookbook\templates\url_import.html:188
 #: .\cookbook\templates\url_import.html:573
 msgid "Keywords"
-msgstr ""
+msgstr "關鍵詞"
 
 #: .\cookbook\forms.py:104
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "準備時間（分鐘）"
 
 #: .\cookbook\forms.py:105
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "等候（烹飪、烘焙等）時間（分鐘）"
 
 #: .\cookbook\forms.py:106 .\cookbook\forms.py:333
 msgid "Path"
-msgstr ""
+msgstr "路徑"
 
 #: .\cookbook\forms.py:107
 msgid "Storage UID"
-msgstr ""
+msgstr "存儲ID"
 
 #: .\cookbook\forms.py:133
 msgid "Default"
-msgstr ""
+msgstr "默認"
 
 #: .\cookbook\forms.py:144 .\cookbook\templates\url_import.html:90
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
-msgstr ""
+msgstr "為防止重復，忽略與現有同名的菜譜。選中此框可導入所有內容（包括同名菜譜）。"
 
 #: .\cookbook\forms.py:164
 msgid "New Unit"
-msgstr ""
+msgstr "新單位"
 
 #: .\cookbook\forms.py:165
 msgid "New unit that other gets replaced by."
@@ -128,15 +133,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:170
 msgid "Old Unit"
-msgstr ""
+msgstr "舊單位"
 
 #: .\cookbook\forms.py:171
 msgid "Unit that should be replaced."
-msgstr ""
+msgstr "該被替換的單位。"
 
 #: .\cookbook\forms.py:187
 msgid "New Food"
-msgstr ""
+msgstr "新食物"
 
 #: .\cookbook\forms.py:188
 msgid "New food that other gets replaced by."
@@ -144,15 +149,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:193
 msgid "Old Food"
-msgstr ""
+msgstr "舊食物"
 
 #: .\cookbook\forms.py:194
 msgid "Food that should be replaced."
-msgstr ""
+msgstr "該被替換的食物。"
 
 #: .\cookbook\forms.py:212
 msgid "Add your comment: "
-msgstr ""
+msgstr "發表評論。 "
 
 #: .\cookbook\forms.py:253
 msgid "Leave empty for dropbox and enter app password for nextcloud."
@@ -1769,7 +1774,7 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:100
 msgid "user"
-msgstr ""
+msgstr "用戶"
 
 #: .\cookbook\templates\space.html:101
 msgid "guest"
