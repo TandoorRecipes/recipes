@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
 "PO-Revision-Date: 2023-03-13 06:55+0000\n"
-"Last-Translator: Amara Ude <apu24@drexel.edu>\n"
+"Last-Translator: Jin Zhang <JinLZhang278@hotmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -403,6 +403,8 @@ msgstr ""
 #: .\cookbook\forms.py:497
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Nombre d'heures par défaut pour retarder l'ajoût d'un article à la liste de "
+"courses."
 
 #: .\cookbook\forms.py:498
 msgid "Filter shopping list to only include supermarket categories."
@@ -412,7 +414,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:499
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Jours des entrées récentes de la liste de courses à afficher."
 
 #: .\cookbook\forms.py:500
 msgid "Mark food 'On Hand' when checked off shopping list."
@@ -1333,8 +1335,9 @@ msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Êtes-vous sûr(e) de vouloir supprimer %(title)s : <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
+#, fuzzy
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Cela ne peut pas être annulé !"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
