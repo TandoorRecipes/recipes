@@ -1,5 +1,5 @@
 {
-    "err_fetching_resource": "Erreur lors de la récupération d’une ressource !",
+    "err_fetching_resource": "Il y a eu une erreur lors de la récupération d'une ressource !",
     "err_creating_resource": "Erreur lors de la création d’une ressource !",
     "err_updating_resource": "Erreur lors de la mise à jour d’une ressource !",
     "err_deleting_resource": "Erreur lors de la suppression d’une ressource !",
@@ -119,7 +119,7 @@
     "merge_selection": "Remplacer toutes les occurrences de {source} par {type}.",
     "move_title": "Déplacer {type}",
     "del_confirmation_tree": "Êtes-vous sûr de vouloir supprimer {source} et tous ses enfants ?",
-    "warning_feature_beta": "Cette fonctionnalité est actuellement en phase BETA (test). Veuillez vous attendre à des bugs et éventuellement à des modifications conséquentes à l’avenir (perte éventuelle de données liées à la fonctionnalité) lorsque vous utilisez cette fonctionnalité.",
+    "warning_feature_beta": "Cette fonctionnalité est actuellement en état BETA (de test). Veuillez vous attendre à des bogues et éventuellement à des modifications majeures à l'avenir (pouvant entraîner une perte de données liées à la fonctionnalité) lors de l'utilisation de cette fonctionnalité.",
     "confirm_delete": "Voulez-vous vraiment supprimer {objet} ?",
     "Note": "Notes",
     "Add_Step": "Ajouter une étape",
@@ -457,5 +457,8 @@
     "Description_Replace": "Remplacer la Description",
     "Cosmetic": "Cosmétique",
     "explain": "Expliquer",
-    "Unpin": "Détacher"
+    "Unpin": "Détacher",
+    "Split_All_Steps": "Diviser toutes les lignes en étapes séparées.",
+    "Warning_Delete_Supermarket_Category": "Supprimer une catégorie de supermarché supprimera également toutes les relations avec les aliments. Êtes-vous sûr ?",
+    "Instruction_Replace": "Instruction Remplacer"
 }
