@@ -681,7 +681,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
         if self.always_use_plural_unit and self.unit.plural_name not in (None, "") and not self.no_amount:
             unit = self.unit.plural_name
         else:
-            if self.amount > 1 and self.unit.plural_name not in (None, "") and not self.no_amount:
+            if self.amount > 1 and self.unit is not None and self.unit.plural_name not in (None, "") and not self.no_amount:
                 unit = self.unit.plural_name
             else:
                 unit = str(self.unit)
