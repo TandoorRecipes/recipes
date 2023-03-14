@@ -5,6 +5,7 @@ from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step
 
@@ -23,40 +24,59 @@ class Mealie(Integration):
             name=recipe_json['name'].strip(), description=description,
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        # TODO parse times (given in PT2H3M )
-        # @vabene check recipe_url_import.iso_duration_to_minutes  I think it does what you are looking for
-
-        ingredients_added = False
         for s in recipe_json['recipe_instructions']:
-            step = Step.objects.create(
-                instruction=s['text'], space=self.request.space,
-            )
-            if not ingredients_added:
-                ingredients_added = True
-
-                if len(recipe_json['description'].strip()) > 500:
-                    step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
-
-                ingredient_parser = IngredientParser(self.request, True)
-                for ingredient in recipe_json['recipe_ingredient']:
-                    try:
-                        if ingredient['food']:
-                            f = ingredient_parser.get_food(ingredient['food'])
-                            u = ingredient_parser.get_unit(ingredient['unit'])
-                            amount = ingredient['quantity']
-                            note = ingredient['note']
-                            original_text = None
-                        else:
-                            amount, unit, food, note = ingredient_parser.parse(ingredient['note'])
-                            f = ingredient_parser.get_food(food)
-                            u = ingredient_parser.get_unit(unit)
-                            original_text = ingredient['note']
-                        step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note, original_text=original_text, space=self.request.space,
-                        ))
-                    except Exception:
-                        pass
+            step = Step.objects.create(instruction=s['text'], space=self.request.space, )
             recipe.steps.add(step)
+
+        step = recipe.steps.first()
+        if not step:  # if there is no step in the exported data
+            step = Step.objects.create(instruction='', space=self.request.space, )
+            recipe.steps.add(step)
+
+        if len(recipe_json['description'].strip()) > 500:
+            step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
+
+        ingredient_parser = IngredientParser(self.request, True)
+        for ingredient in recipe_json['recipe_ingredient']:
+            try:
+                if ingredient['food']:
+                    f = ingredient_parser.get_food(ingredient['food'])
+                    u = ingredient_parser.get_unit(ingredient['unit'])
+                    amount = ingredient['quantity']
+                    note = ingredient['note']
+                    original_text = None
+                else:
+                    amount, unit, food, note = ingredient_parser.parse(ingredient['note'])
+                    f = ingredient_parser.get_food(food)
+                    u = ingredient_parser.get_unit(unit)
+                    original_text = ingredient['note']
+                step.ingredients.add(Ingredient.objects.create(
+                    food=f, unit=u, amount=amount, note=note, original_text=original_text, space=self.request.space,
+                ))
+            except Exception:
+                pass
+
+        if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
+            notes_text = "#### Notes  \n\n"
+            for n in recipe_json['notes']:
+                notes_text += f'{n["text"]}  \n'
+
+            step = Step.objects.create(
+                instruction=notes_text, space=self.request.space,
+            )
+            recipe.steps.add(step)
+
+        if 'recipe_yield' in recipe_json:
+            recipe.servings = parse_servings(recipe_json['recipe_yield'])
+            recipe.servings_text = parse_servings_text(recipe_json['recipe_yield'])
+
+        if 'total_time' in recipe_json and recipe_json['total_time'] is not None:
+            recipe.working_time = parse_time(recipe_json['total_time'])
+
+        if 'org_url' in recipe_json:
+            recipe.source_url = recipe_json['org_url']
+
+        recipe.save()
 
         for f in self.files:
             if '.zip' in f['name']:

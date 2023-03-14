@@ -95,3 +95,14 @@ To create a superuser you need to
 1. execute into the container using `docker-compose exec web_recipes sh`
 2. activate the virtual environment `source venv/bin/activate`
 3. run `python manage.py createsuperuser` and follow the steps shown.
+
+
+## Why cant I get support for my manual setup?
+Even tough I would love to help everyone get tandoor up and running I have only so much time 
+that I can spend on this project besides work, family and other life things. 
+Due to the countless problems that can occur when manually installing I simply do not have 
+the time to help solving each one. 
+
+You can install Tandoor manually but please do not expect me or anyone to help you with that. 
+As a general advice: If you do it manually do NOT change anything at first and slowly work yourself 
+to your dream setup.
