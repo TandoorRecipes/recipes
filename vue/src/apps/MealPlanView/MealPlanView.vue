@@ -293,8 +293,9 @@
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
-                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}</a>
+                    class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
         </bottom-navigation-bar>
     </div>

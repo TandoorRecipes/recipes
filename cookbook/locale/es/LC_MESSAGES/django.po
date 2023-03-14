@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2022-08-12 21:32+0000\n"
-"Last-Translator: Thorin <thorin8@hotmail.com>\n"
+"PO-Revision-Date: 2023-03-13 06:55+0000\n"
+"Last-Translator: Amara Ude <apu24@drexel.edu>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -143,7 +143,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:84
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Excluir ingredientes que están disponibles."
 
 #: .\cookbook\forms.py:85
 msgid "Will optimize the UI for use with your left hand."
@@ -296,36 +296,49 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Utilizar comparación difusa en unidades, palabras clave e ingredientes al "
+"editar e importar recetas."
 
 #: .\cookbook\forms.py:446
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Campos de búsqueda ignorando acentos.  La selección de esta opción puede "
+"mejorar o degradar la calidad de la búsqueda dependiendo del idioma"
 
 #: .\cookbook\forms.py:448
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Campos de búsqueda para coincidencias parciales. (por ejemplo, buscar 'Pie' "
+"devolverá 'pie' y 'piece' y 'soapie')"
 
 #: .\cookbook\forms.py:450
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Campos de búsqueda para coincidencias al principio de la palabra. (por "
+"ejemplo, buscar 'sa' devolverá 'ensalada' y 'sándwich')"
 
 #: .\cookbook\forms.py:452
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Campos para búsqueda \"difusa\". (por ejemplo, buscar 'recpie' encontrará "
+"'receta'). Nota: esta opción entrará en conflicto con los métodos de "
+"búsqueda 'web' y 'raw'."
 
 #: .\cookbook\forms.py:454
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Campos para búsqueda de texto completo. Nota: los métodos de búsqueda 'web', "
+"'phrase' y 'raw' solo funcionan con campos de texto completo."
 
 #: .\cookbook\forms.py:458
 msgid "Search Method"
@@ -333,25 +346,23 @@ msgstr "Método de Búsqueda"
 
 #: .\cookbook\forms.py:459
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Búsquedas difusas"
 
 #: .\cookbook\forms.py:460
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorar Acento"
 
 #: .\cookbook\forms.py:461
 msgid "Partial Match"
-msgstr ""
+msgstr "Coincidencia Parcial"
 
 #: .\cookbook\forms.py:462
 msgid "Starts With"
-msgstr ""
+msgstr "Comienza Con"
 
 #: .\cookbook\forms.py:463
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Buscar"
+msgstr "Búsqueda Difusa"
 
 #: .\cookbook\forms.py:464
 msgid "Full Text"
@@ -362,42 +373,53 @@ msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Los usuarios verán todos los elementos que agregues a tu lista de compras. "
+"Deben agregarte para ver los elementos en su lista."
 
 #: .\cookbook\forms.py:495
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Al agregar un plan de comidas a la lista de compras (manualmente o "
+"automáticamente), incluir todas las recetas relacionadas."
 
 #: .\cookbook\forms.py:496
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Al agregar un plan de comidas a la lista de compras (manualmente o "
+"automáticamente), excluir los ingredientes que están disponibles."
 
 #: .\cookbook\forms.py:497
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Número predeterminado de horas para retrasar una entrada en la lista de "
+"compras."
 
 #: .\cookbook\forms.py:498
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Filtrar la lista de compras para incluir solo categorías de supermercados."
 
 #: .\cookbook\forms.py:499
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Días de entradas recientes en la lista de compras a mostrar."
 
 #: .\cookbook\forms.py:500
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Marcar los alimentos como 'Disponible' cuando se marca en la lista de "
+"compras."
 
 #: .\cookbook\forms.py:501
 msgid "Delimiter to use for CSV exports."
-msgstr ""
+msgstr "Delimitador a utilizar para exportaciones CSV."
 
 #: .\cookbook\forms.py:502
 msgid "Prefix to add when copying list to the clipboard."
-msgstr ""
+msgstr "Prefijo a agregar al copiar la lista al portapapeles."
 
 #: .\cookbook\forms.py:506
 msgid "Share Shopping List"
@@ -405,23 +427,23 @@ msgstr "Compartir Lista de la Compra"
 
 #: .\cookbook\forms.py:507
 msgid "Autosync"
-msgstr ""
+msgstr "Autosincronización"
 
 #: .\cookbook\forms.py:508
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Agregar Plan de Comidas automáticamente"
 
 #: .\cookbook\forms.py:509
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Excluir Disponible"
 
 #: .\cookbook\forms.py:510
 msgid "Include Related"
-msgstr ""
+msgstr "Incluir Relacionados"
 
 #: .\cookbook\forms.py:511
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Horas de Retraso Predeterminadas"
 
 #: .\cookbook\forms.py:512
 msgid "Filter to Supermarket"
@@ -429,11 +451,11 @@ msgstr "Filtrar según Supermercado"
 
 #: .\cookbook\forms.py:513
 msgid "Recent Days"
-msgstr ""
+msgstr "Días Recientes"
 
 #: .\cookbook\forms.py:514
 msgid "CSV Delimiter"
-msgstr ""
+msgstr "Delimitador CSV"
 
 #: .\cookbook\forms.py:515
 msgid "List Prefix"
@@ -441,21 +463,19 @@ msgstr "Prefijo de la lista"
 
 #: .\cookbook\forms.py:516
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Auto en existencia"
 
 #: .\cookbook\forms.py:526
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Restablecer la herencia de alimentos"
 
 #: .\cookbook\forms.py:527
 msgid "Reset all food to inherit the fields configured."
-msgstr ""
+msgstr "Reiniciar todos los alimentos para heredar los campos configurados."
 
 #: .\cookbook\forms.py:539
-#, fuzzy
-#| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
-msgstr "Alimento que se va a reemplazar."
+msgstr "Campos en los alimentos que deben ser heredados por defecto."
 
 #: .\cookbook\forms.py:540
 msgid "Show recipe counts on search filters"
@@ -464,12 +484,15 @@ msgstr "Mostrar cantidad de recetas en los filtros de búsquedas"
 #: .\cookbook\forms.py:541
 msgid "Use the plural form for units and food inside this space."
 msgstr ""
+"Utilice la forma plural para las unidades y alimentos dentro de este espacio."
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:39
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Para prevenir el spam, el correo electrónico solicitado no se envió. Por "
+"favor, espere unos minutos e inténtelo de nuevo."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:114
@@ -498,7 +521,7 @@ msgstr "¡No puede interactuar con este objeto ya que no es de tu propiedad!"
 
 #: .\cookbook\helper\permission_helper.py:403
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Ha alcanzado el número máximo de recetas para su espacio."
 
 #: .\cookbook\helper\permission_helper.py:415
 msgid "You have more users than allowed in your space."
