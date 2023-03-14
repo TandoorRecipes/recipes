@@ -61,9 +61,12 @@
 
         <bottom-navigation-bar>
             <template #custom_create_functions>
+                <div class="dropdown-divider" ></div>
+                <h6 class="dropdown-header">{{ $t('Books')}}</h6>
+
                 <a class="dropdown-item" @click="createNew()"><i
                                 class="fa fa-book"></i> {{$t("Create")}}</a>
-                 <div class="dropdown-divider" ></div>
+
             </template>
         </bottom-navigation-bar>
     </div>
