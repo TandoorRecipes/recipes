@@ -74,7 +74,7 @@
     "Edit": "Modifica",
     "Delete": "Elimina",
     "Open": "Apri",
-    "Ok": "Apri",
+    "Ok": "Ok",
     "Save": "Salva",
     "Step": "Step",
     "Search": "Cerca",
@@ -462,5 +462,9 @@
     "shopping_category_help": "I supermercati possono essere ordinati e filtrati per categoria di spesa seguendo la disposizione degli scaffali.",
     "food_recipe_help": "Collegando qui una ricetta, includerà la stessa in ogni altra ricetta che usa questo alimento",
     "warning_duplicate_filter": "Avviso: a causa di limitazioni tecniche, usare più filtri di ricerca della stessa combinazione (and/or/not) potrebbe portare a risultati inaspettati.",
-    "Warning_Delete_Supermarket_Category": "L'eliminazione di una categoria di supermercato comporta anche l'eliminazione di tutte le relazioni con gli alimenti. Sei sicuro?"
+    "Warning_Delete_Supermarket_Category": "L'eliminazione di una categoria di supermercato comporta anche l'eliminazione di tutte le relazioni con gli alimenti. Sei sicuro?",
+    "Original_Text": "Testo originale",
+    "search_rank": "Posizione di ricerca",
+    "make_now": "Fai ora",
+    "Amount": "Quantità"
 }

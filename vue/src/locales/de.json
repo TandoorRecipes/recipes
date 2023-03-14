@@ -367,7 +367,7 @@
     "desc": "Absteigend",
     "book_filter_help": "Schließt zusätzlich zu den manuell hinzugefügten Rezepten, alle Rezepte die dem Filter entsprechen ein.",
     "recipe_name": "Rezeptname",
-    "paste_ingredients_placeholder": "Zutatenliste hier einfügen",
+    "paste_ingredients_placeholder": "Zutatenliste hier einfügen...",
     "ingredient_list": "Zutatenliste",
     "filter": "Filter",
     "err_deleting_protected_resource": "Das zu löschende Objekt wird noch verwendet und kann nicht gelöscht werden.",
@@ -478,5 +478,6 @@
     "Combine_All_Steps": "Fasse alle Schritte in einem einzelnem Feld zusammen.",
     "reset_children_help": "Überschreibe alle Kinder mit den Werten der vererbten Felder.   Die vererbten Felder der Kinder werden als vererbte Felder gesetzt, es sei denn, das Kind-Vererben-Feld ist gesetzt.",
     "Unpin": "Lösen",
-    "Amount": "Menge"
+    "Amount": "Menge",
+    "Original_Text": "Originaltext"
 }

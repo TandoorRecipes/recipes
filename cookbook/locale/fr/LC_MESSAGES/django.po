@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2023-02-09 13:55+0000\n"
-"Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
+"PO-Revision-Date: 2023-03-13 06:55+0000\n"
+"Last-Translator: Jin Zhang <JinLZhang278@hotmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -167,7 +167,7 @@ msgstr "Nom"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:297 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr "mots-clés"
+msgstr "Mots-clés"
 
 #: .\cookbook\forms.py:125
 msgid "Preparation time in minutes"
@@ -288,16 +288,12 @@ msgstr ""
 "que davantage de fautes de frappe sont ignorées)."
 
 #: .\cookbook\forms.py:443
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
-"Sélectionner la méthode de recherche.  Cliquer <a href=\"/docs/search/"
-"\">ici</a> pour une description complète des choix."
+"Sélectionner la méthode de recherche.  Cliquer <a href=\"/docs/search/\""
+">ici</a> pour une description complète des choix."
 
 #: .\cookbook\forms.py:444
 msgid ""
@@ -407,6 +403,8 @@ msgstr ""
 #: .\cookbook\forms.py:497
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Nombre d'heures par défaut pour retarder l'ajoût d'un article à la liste de "
+"courses."
 
 #: .\cookbook\forms.py:498
 msgid "Filter shopping list to only include supermarket categories."
@@ -416,7 +414,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:499
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Jours des entrées récentes de la liste de courses à afficher."
 
 #: .\cookbook\forms.py:500
 msgid "Mark food 'On Hand' when checked off shopping list."
@@ -453,7 +451,7 @@ msgstr "Inclure recettes connexes"
 
 #: .\cookbook\forms.py:511
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Heures de retard par défaut"
 
 #: .\cookbook\forms.py:512
 msgid "Filter to Supermarket"
@@ -477,7 +475,7 @@ msgstr "Disponible automatique"
 
 #: .\cookbook\forms.py:526
 msgid "Reset Food Inheritance"
-msgstr ""
+msgstr "Réinitialiser l'héritage alimentaire"
 
 #: .\cookbook\forms.py:527
 msgid "Reset all food to inherit the fields configured."
@@ -545,7 +543,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_search.py:570
 msgid "One of queryset or hash_key must be provided"
-msgstr ""
+msgstr "Il est nécessaire de fournir soit le queryset, soit la clé de hachage"
 
 #: .\cookbook\helper\shopping_helper.py:152
 msgid "You must supply a servings size"
@@ -562,8 +560,9 @@ msgid "Favorite"
 msgstr "Favori"
 
 #: .\cookbook\integration\copymethat.py:50
+#, fuzzy
 msgid "I made this"
-msgstr ""
+msgstr "J'ai fait ça"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -718,16 +717,12 @@ msgid "Keyword Alias"
 msgstr "Mot-clé équivalent"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Description"
+msgstr "Remplacer la Description"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instructions"
+msgstr "Remplacer l'instruction"
 
 #: .\cookbook\models.py:1257 .\cookbook\views\delete.py:36
 #: .\cookbook\views\edit.py:251 .\cookbook\views\new.py:48
@@ -752,7 +747,7 @@ msgstr "Vous avez atteint votre limite de téléversement de fichiers."
 
 #: .\cookbook\serializer.py:291
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Impossible de modifier les permissions du propriétaire de groupe."
 
 #: .\cookbook\serializer.py:1085
 msgid "Hello"
@@ -808,6 +803,8 @@ msgstr ""
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
+"Fournir un identifiant de liste de courses et un nombre de portions de 0 "
+"supprimera cette liste de courses."
 
 #: .\cookbook\serializer.py:1247
 msgid "Amount of food to add to the shopping list"
@@ -818,8 +815,11 @@ msgid "ID of unit to use for the shopping list"
 msgstr "ID de l’unité à utiliser pour la liste de courses"
 
 #: .\cookbook\serializer.py:1251
+#, fuzzy
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Lorsqu'il est défini sur \"true\", tous les aliments des listes de courses "
+"actives seront supprimés."
 
 #: .\cookbook\tables.py:61 .\cookbook\tables.py:75
 #: .\cookbook\templates\generic\delete_template.html:7
@@ -1241,7 +1241,7 @@ msgstr "Vous utilisez la version gratuite de Tandoor"
 
 #: .\cookbook\templates\base.html:361
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Mettez à jour maintenant"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
@@ -1335,8 +1335,9 @@ msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Êtes-vous sûr(e) de vouloir supprimer %(title)s : <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
+#, fuzzy
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Cela ne peut pas être annulé !"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1353,7 +1354,7 @@ msgstr "Annuler"
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr "modifier"
+msgstr "Modifier"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1501,8 +1502,6 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
-#, fuzzy
-#| msgid "or by leaving a blank line inbetween."
 msgid "or by leaving a blank line in between."
 msgstr "ou en laissant une ligne vide entre deux."
 
@@ -1526,16 +1525,12 @@ msgid "Lists"
 msgstr "Listes"
 
 #: .\cookbook\templates\markdown_info.html:85
-#, fuzzy
-#| msgid ""
-#| "Lists can ordered or unorderd. It is <b>important to leave a blank line "
-#| "before the list!</b>"
 msgid ""
 "Lists can ordered or unordered. It is <b>important to leave a blank line "
 "before the list!</b>"
 msgstr ""
 "Les listes peuvent être ordonnées ou non. Il est <b>important de laisser une "
-"ligne vide avant la liste !</b>"
+"ligne vide avant la liste!</b>"
 
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
@@ -2078,10 +2073,8 @@ msgstr "Créer un compte superutilisateur"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Connexion par réseau social"
+msgstr "Échec de la connexion au réseau social"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
@@ -2132,16 +2125,20 @@ msgstr "Connecter %(provider)s"
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
 msgstr ""
+"Vous êtes sur le point de connecter un nouveau compte tiers depuis "
+"%(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
 msgid "Sign In Via %(provider)s"
-msgstr ""
+msgstr "Se connecter via %(provider)s"
 
 #: .\cookbook\templates\socialaccount\login.html:15
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"ous êtes sur le point de vous connecter en utilisant un compte tiers depuis "
+"%(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
@@ -2206,10 +2203,8 @@ msgid "Owner"
 msgstr "Propriétaire"
 
 #: .\cookbook\templates\space_overview.html:57
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "Créer un groupe"
+msgstr "Quitter le groupe"
 
 #: .\cookbook\templates\space_overview.html:78
 #: .\cookbook\templates\space_overview.html:88
@@ -2444,6 +2439,8 @@ msgstr "{obj.name} a été ajouté(e) à la liste de courses."
 #: .\cookbook\views\api.py:679
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
+"Identifiant de la recette dont fait partie une étape. Pour plusieurs "
+"paramètres de répétition."
 
 #: .\cookbook\views\api.py:681
 msgid "Query string matched (fuzzy) against object name."
@@ -2610,8 +2607,6 @@ msgid "Bad URL Schema."
 msgstr "Mauvais schéma d’URL."
 
 #: .\cookbook\views\api.py:1215
-#, fuzzy
-#| msgid "No useable data could be found."
 msgid "No usable data could be found."
 msgstr "Aucune information utilisable n'a été trouvée."
 
@@ -2727,10 +2722,8 @@ msgid "Shopping Categories"
 msgstr "Catégories de courses"
 
 #: .\cookbook\views\lists.py:187
-#, fuzzy
-#| msgid "Filter"
 msgid "Custom Filters"
-msgstr "Filtre"
+msgstr "Filtre personnalisé"
 
 #: .\cookbook\views\lists.py:224
 msgid "Steps"

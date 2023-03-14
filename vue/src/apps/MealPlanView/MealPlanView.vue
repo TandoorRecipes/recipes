@@ -2,7 +2,7 @@
     <div>
         <b-tabs content-class="mt-3" v-model="current_tab">
             <b-tab :title="$t('Planner')" active>
-                <div class="row calender-row">
+                <div class="row calender-row d-none d-lg-block">
                     <div class="col-12 calender-parent">
                         <calendar-view
                             :show-date="showDate"
@@ -48,6 +48,79 @@
                         </calendar-view>
                     </div>
                 </div>
+                <div class="row d-block d-lg-none">
+                    <div>
+                        <div class="col-12">
+                            <div class="col-12 d-flex justify-content-center mt-2">
+                                <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+                                    <b-button-group class="mx-1">
+                                        <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
+                                                  @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                                    </b-button-group>
+                                    <b-button-group class="mx-1">
+                                        <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
+                                            class="fas fa-home"></i></b-button>
+                                        <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
+                                    </b-button-group>
+                                    <b-button-group class="mx-1">
+                                        <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
+                                                  @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                                    </b-button-group>
+                                </b-button-toolbar>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2" style="padding-bottom: 60px">
+                            <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
+                                <b-list-group>
+                                    <b-list-group-item>
+                                        <div class="d-flex flex-row align-middle">
+                                            <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
+
+                                            <div class="flex-grow-1 text-right">
+                                                <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                                    class="fa fa-plus"></i></b-button>
+                                            </div>
+                                        </div>
+
+                                    </b-list-group-item>
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id" >
+                                        <div class="d-flex flex-row align-items-center">
+                                            <div>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                       :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
+                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
+                                            </div>
+                                            <div class="flex-grow-1 ml-2"
+                                                 style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                    <span class="two-row-text">
+                                                        <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                                                        <span v-else>{{ plan.entry.title }}</span> <br/>
+                                                    </span>
+                                                <span v-if="plan.entry.note" class="two-row-text">
+                                                    <small>{{ plan.entry.note }}</small> <br/>
+                                                </span>
+                                                <small class="text-muted">
+                                                    <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
+                                                    {{ plan.entry.meal_type_name }}
+                                                    <span v-if="plan.entry.recipe">
+                                                     - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t('min') }}
+                                                </span>
+                                                </small>
+                                            </div>
+                                            <div class="hover-button">
+                                                <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
+                                            </div>
+                                        </div>
+                                    </b-list-group-item>
+
+                                </b-list-group>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
@@ -166,7 +239,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        moveEntryLeft(contextData)
+                        moveEntryLeft(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-left"></i>
@@ -175,7 +248,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        moveEntryRight(contextData)
+                        moveEntryRight(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-arrow-right"></i>
@@ -192,7 +265,7 @@
                 <ContextMenuItem
                     @click="
                         $refs.menu.close()
-                        deleteEntry(contextData)
+                        deleteEntry(contextData.originalItem)
                     "
                 >
                     <a class="dropdown-item p-2 text-danger" href="javascript:void(0)"><i class="fas fa-trash"></i>
@@ -203,53 +276,28 @@
         <meal-plan-edit-modal
             :entry="entryEditing"
             :modal_title="modal_title"
-            :edit_modal_show="edit_modal_show"
-            @save-entry="editEntry"
-            @delete-entry="deleteEntry"
+            :create_date="mealplan_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
 
-        <transition name="slide-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center" style="background: rgba(255, 255, 255, 0.6)"
-                 v-if="current_tab === 0">
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-success shadow-none" @click="createEntryClick(new Date())"><i
-                        class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                    </button>
-                </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <a class="btn btn-block btn-primary shadow-none" :href="iCalUrl"
-                    ><i class="fas fa-download"></i>
-                        {{ $t("Export_To_ICal") }}
-                    </a>
-                </div>
-                <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-primary shadow-none disabled" v-b-tooltip.focus.top
-                            :title="$t('Coming_Soon')">
-                        {{ $t("Auto_Planner") }}
-                    </button>
-                </div>
-                <div class="col-12 d-flex justify-content-center mt-2 d-block d-md-none">
-                    <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-                        <b-button-group class="mx-1">
-                            <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
-                                      @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                            <b-button v-html="'<'" @click="setStartingDay(-1)" class="p-2 pr-3 pl-3"></b-button>
-                        </b-button-group>
-                        <b-button-group class="mx-1">
-                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                class="fas fa-home"></i></b-button>
-                            <b-form-datepicker button-only button-variant="secondary"></b-form-datepicker>
-                        </b-button-group>
-                        <b-button-group class="mx-1">
-                            <b-button v-html="'>'" @click="setStartingDay(1)" class="p-2 pr-3 pl-3"></b-button>
-                            <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
-                                      @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-                        </b-button-group>
-                    </b-button-toolbar>
-                </div>
+        <div class="row d-none d-lg-block">
+            <div class="col-12 float-right">
+                <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
+                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}
+                </button>
+                <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
+                    {{ $t("Export_To_ICal") }}
+                </a>
             </div>
-        </transition>
+        </div>
+
+        <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
+            <template #custom_create_functions>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
+                <a class="dropdown-item" @click="createEntryClick(new Date())"><i
+                    class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
+            </template>
+        </bottom-navigation-bar>
     </div>
 </template>
 
@@ -272,6 +320,8 @@ import VueCookies from "vue-cookies"
 import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
 import {ApiApiFactory} from "@/utils/openapi/api"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -292,6 +342,7 @@ export default {
         MealPlanCalenderHeader,
         EmojiInput,
         draggable,
+        BottomNavigationBar,
     },
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {
@@ -319,29 +370,18 @@ export default {
                     {text: this.$t("Year"), value: "year"},
                 ],
                 displayPeriodCount: [1, 2, 3],
-                entryEditing: {
-                    date: null,
-                    id: -1,
-                    meal_type: null,
-                    note: "",
-                    note_markdown: "",
-                    recipe: null,
-                    servings: 1,
-                    shared: [],
-                    title: "",
-                    title_placeholder: this.$t("Title"),
-                },
             },
             shopping_list: [],
             current_period: null,
-            entryEditing: {},
-            edit_modal_show: false,
+            entryEditing: null,
+            mealplan_default_date: null,
             ical_url: window.ICAL_URL,
+            image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
     computed: {
         modal_title: function () {
-            if (this.entryEditing.id === -1) {
+            if (this.entryEditing === null || this.entryEditing?.id === -1) {
                 return this.$t("Create_Meal_Plan_Entry")
             } else {
                 return this.$t("Edit_Meal_Plan_Entry")
@@ -349,7 +389,7 @@ export default {
         },
         plan_items: function () {
             let items = []
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 items.push(this.buildItem(entry))
             })
             return items
@@ -383,6 +423,22 @@ export default {
                 return ""
             }
         },
+        mobileSimpleGrid() {
+            let grid = []
+
+            if (this.current_period !== null) {
+                for (const x of Array(7).keys()) {
+                    let moment_date = moment(this.current_period.periodStart).add(x, "d")
+                    grid.push({
+                        date: moment_date,
+                        create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
+                        date_label: moment_date.format('ddd DD.MM'),
+                        plan_entries: this.plan_items.filter((m) => moment(m.startDate).isSame(moment_date, 'day'))
+                    })
+                }
+            }
+            return grid
+        }
     },
     mounted() {
         this.$nextTick(function () {
@@ -392,6 +448,7 @@ export default {
         })
         this.$root.$on("change", this.updateEmoji)
         this.$i18n.locale = window.CUSTOM_LOCALE
+        moment.locale(window.CUSTOM_LOCALE)
     },
     watch: {
         settings: {
@@ -489,33 +546,26 @@ export default {
                 }
             })
         },
-        editEntry(edit_entry) {
-            if (edit_entry.id !== -1) {
-                this.plan_entries.forEach((entry, index) => {
-                    if (entry.id === edit_entry.id) {
-                        this.$set(this.plan_entries, index, edit_entry)
-                        this.saveEntry(this.plan_entries[index])
-                    }
-                })
-            } else {
-                this.createEntry(edit_entry)
-            }
+        datePickerChanged(ctx) {
+            this.setShowDate(ctx.selectedDate)
         },
         setShowDate(d) {
             this.showDate = d
         },
         createEntryClick(data) {
-            this.entryEditing = this.options.entryEditing
-            this.entryEditing.date = moment(data).format("YYYY-MM-DD")
-            this.$bvModal.show(`edit-modal`)
+            this.mealplan_default_date = moment(data).format("YYYY-MM-DD")
+            this.entryEditing = null
+            this.$nextTick(function () {
+                this.$bvModal.show(`id_meal_plan_edit_modal`)
+            })
         },
         findEntry(id) {
-            return this.plan_entries.filter((entry) => {
+            return useMealPlanStore().plan_list.filter((entry) => {
                 return entry.id === id
             })[0]
         },
         moveEntry(null_object, target_date, drag_event) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === this.dragged_item.id) {
                     if (drag_event.ctrlKey) {
                         let new_entry = Object.assign({}, entry)
@@ -529,7 +579,7 @@ export default {
             })
         },
         moveEntryLeft(data) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
                     entry.date = moment(entry.date).subtract(1, "d")
                     this.saveEntry(entry)
@@ -537,7 +587,7 @@ export default {
             })
         },
         moveEntryRight(data) {
-            this.plan_entries.forEach((entry) => {
+            useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
                     entry.date = moment(entry.date).add(1, "d")
                     this.saveEntry(entry)
@@ -545,20 +595,7 @@ export default {
             })
         },
         deleteEntry(data) {
-            this.plan_entries.forEach((entry, index, list) => {
-                if (entry.id === data.id) {
-                    let apiClient = new ApiApiFactory()
-
-                    apiClient
-                        .destroyMealPlan(entry.id)
-                        .then((e) => {
-                            list.splice(index, 1)
-                        })
-                        .catch((err) => {
-                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                        })
-                }
-            })
+            useMealPlanStore().deleteObject(data)
         },
         entryClick(data) {
             let entry = this.findEntry(data.id)
@@ -568,7 +605,7 @@ export default {
             this.$refs.menu.open($event, value)
         },
         openEntryEdit(entry) {
-            this.$bvModal.show(`edit-modal`)
+            this.$bvModal.show(`id_meal_plan_edit_modal`)
             this.entryEditing = entry
             this.entryEditing.date = moment(entry.date).format("YYYY-MM-DD")
             if (this.entryEditing.recipe != null) {
@@ -577,18 +614,9 @@ export default {
         },
         periodChangedCallback(date) {
             this.current_period = date
-            let apiClient = new ApiApiFactory()
 
-            apiClient
-                .listMealPlans({
-                    query: {
-                        from_date: moment(date.periodStart).format("YYYY-MM-DD"),
-                        to_date: moment(date.periodEnd).format("YYYY-MM-DD"),
-                    },
-                })
-                .then((result) => {
-                    this.plan_entries = result.data
-                })
+            useMealPlanStore().refreshFromAPI(moment(date.periodStart).format("YYYY-MM-DD"), moment(date.periodEnd).format("YYYY-MM-DD"))
+
             this.refreshMealTypes()
         },
         refreshMealTypes() {
@@ -604,25 +632,11 @@ export default {
         saveEntry(entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
 
-            let apiClient = new ApiApiFactory()
-
-            apiClient.updateMealPlan(entry.id, entry).catch((err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
+            useMealPlanStore().updateObject(entry)
         },
         createEntry(entry) {
             entry.date = moment(entry.date).format("YYYY-MM-DD")
-
-            let apiClient = new ApiApiFactory()
-
-            apiClient
-                .createMealPlan(entry)
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                })
-                .then((entry_result) => {
-                    this.plan_entries.push(entry_result.data)
-                })
+            useMealPlanStore().createObject(entry)
         },
         buildItem(plan_entry) {
             //dirty hack to order items within a day
@@ -634,6 +648,15 @@ export default {
                 entry: plan_entry,
             }
         },
+        showMealPlanEditModal: function (entry, date) {
+            this.mealplan_default_date = date
+            this.entryEditing = entry
+
+            this.$nextTick(function () {
+                this.$bvModal.show(`id_meal_plan_edit_modal`)
+            })
+
+        }
     },
     directives: {
         hover: {
@@ -651,6 +674,10 @@ export default {
 </script>
 
 <style>
+#id_base_container {
+    margin-top: 12px
+}
+
 .slide-fade-enter-active {
     transition: all 0.3s ease;
 }
