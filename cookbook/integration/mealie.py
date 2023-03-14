@@ -24,37 +24,37 @@ class Mealie(Integration):
             name=recipe_json['name'].strip(), description=description,
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        ingredients_added = False
         for s in recipe_json['recipe_instructions']:
-            step = Step.objects.create(
-                instruction=s['text'], space=self.request.space,
-            )
-            if not ingredients_added:
-                ingredients_added = True
-
-                if len(recipe_json['description'].strip()) > 500:
-                    step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
-
-                ingredient_parser = IngredientParser(self.request, True)
-                for ingredient in recipe_json['recipe_ingredient']:
-                    try:
-                        if ingredient['food']:
-                            f = ingredient_parser.get_food(ingredient['food'])
-                            u = ingredient_parser.get_unit(ingredient['unit'])
-                            amount = ingredient['quantity']
-                            note = ingredient['note']
-                            original_text = None
-                        else:
-                            amount, unit, food, note = ingredient_parser.parse(ingredient['note'])
-                            f = ingredient_parser.get_food(food)
-                            u = ingredient_parser.get_unit(unit)
-                            original_text = ingredient['note']
-                        step.ingredients.add(Ingredient.objects.create(
-                            food=f, unit=u, amount=amount, note=note, original_text=original_text, space=self.request.space,
-                        ))
-                    except Exception:
-                        pass
+            step = Step.objects.create(instruction=s['text'], space=self.request.space, )
             recipe.steps.add(step)
+
+        step = recipe.steps.first()
+        if not step:  # if there is no step in the exported data
+            step = Step.objects.create(instruction='', space=self.request.space, )
+            recipe.steps.add(step)
+
+        if len(recipe_json['description'].strip()) > 500:
+            step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
+
+        ingredient_parser = IngredientParser(self.request, True)
+        for ingredient in recipe_json['recipe_ingredient']:
+            try:
+                if ingredient['food']:
+                    f = ingredient_parser.get_food(ingredient['food'])
+                    u = ingredient_parser.get_unit(ingredient['unit'])
+                    amount = ingredient['quantity']
+                    note = ingredient['note']
+                    original_text = None
+                else:
+                    amount, unit, food, note = ingredient_parser.parse(ingredient['note'])
+                    f = ingredient_parser.get_food(food)
+                    u = ingredient_parser.get_unit(unit)
+                    original_text = ingredient['note']
+                step.ingredients.add(Ingredient.objects.create(
+                    food=f, unit=u, amount=amount, note=note, original_text=original_text, space=self.request.space,
+                ))
+            except Exception:
+                pass
 
         if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
             notes_text = "#### Notes  \n\n"
