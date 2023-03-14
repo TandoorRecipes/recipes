@@ -478,5 +478,7 @@
     "Amount": "Ilość",
     "Original_Text": "Tekst oryginalny",
     "Description_Replace": "Zmień opis",
-    "Instruction_Replace": "Zmień instrukcję"
+    "Instruction_Replace": "Zmień instrukcję",
+    "Import Recipe": "Importuj przepis",
+    "Create Recipe": "Utwórz przepis"
 }

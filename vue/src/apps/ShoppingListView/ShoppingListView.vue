@@ -1,7 +1,7 @@
 <template>
-    <div id="app" style="margin-bottom: 4vh">
+    <div id="app">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
-        <b-button @click="replaySyncQueue">SYNC</b-button>
+
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
@@ -470,30 +470,6 @@
             </b-tab>
         </b-tabs>
 
-        <transition name="slided-fade">
-            <div class="row fixed-bottom p-2 b-1 border-top text-center d-flex d-md-none"
-                 style="background: rgba(255, 255, 255, 0.6);width: 105%;" v-if="current_tab === 0">
-                <div class="col-6">
-                    <a class="btn btn-block btn-success shadow-none" @click="entrymode = !entrymode; "
-                    ><i class="fas fa-cart-plus"></i>
-                        {{ $t("New_Entry") }}
-                    </a>
-                </div>
-                <div class="col-6">
-                    <b-dropdown id="dropdown-dropup" block dropup variant="primary" class="shadow-none">
-                        <template #button-content><i class="fas fa-download"></i> {{ $t("Export") }}</template>
-                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
-                                     icon="far fa-file-pdf"/>
-                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv"
-                                     :label="$t('download_csv')" icon="fas fa-file-csv"/>
-                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')"
-                                         icon="fas fa-clipboard-list"/>
-                        <CopyToClipboard :items="csvData" :settings="settings" format="table"
-                                         :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
-                    </b-dropdown>
-                </div>
-            </div>
-        </transition>
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
@@ -589,6 +565,29 @@
         </ContextMenu>
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
                         :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
+
+        <bottom-navigation-bar>
+            <template #custom_create_functions>
+
+                <div class="dropdown-divider"></div>
+                <h6 class="dropdown-header">{{ $t('Shopping_list')}}</h6>
+
+                <a class="dropdown-item" @click="entrymode = !entrymode; " ><i class="fas fa-cart-plus"></i>
+                    {{ $t("New_Entry") }}
+                </a>
+
+                <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
+                             icon="far fa-file-pdf fa-fw"/>
+                <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv"
+                             :label="$t('download_csv')" icon="fas fa-file-csv fa-fw"/>
+                <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')"
+                                 icon="fas fa-clipboard-list fa-fw"/>
+                <CopyToClipboard :items="csvData" :settings="settings" format="table"
+                                 :label="$t('copy_markdown_table')" icon="fab fa-markdown fa-fw"/>
+
+
+            </template>
+        </bottom-navigation-bar>
     </div>
 </template>
 
@@ -617,6 +616,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueCookies)
 let SETTINGS_COOKIE_NAME = "shopping_settings"
 import {Workbox} from 'workbox-window';
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 export default {
     name: "ShoppingListView",
@@ -632,7 +632,8 @@ export default {
         CopyToClipboard,
         ShoppingModal,
         draggable,
-        ShoppingSettingsComponent
+        ShoppingSettingsComponent,
+        BottomNavigationBar,
     },
 
     data() {
@@ -922,7 +923,7 @@ export default {
          * get the number of entries left in the sync queue for entry check events
          * @returns {Promise<Number>} promise resolving to the number of entries left
          */
-        getSyncQueueLength: function (){
+        getSyncQueueLength: function () {
             const wb = new Workbox('/service-worker.js');
             wb.register();
             return wb.messageSW({type: 'BGSYNC_COUNT_QUEUE'}).then((r) => {
@@ -1067,26 +1068,26 @@ export default {
                 this.loading = true
             }
             this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params).then((results) => {
-                    if (!autosync) {
-                        if (results.data?.length) {
-                            this.items = results.data
-                        } else {
-                            console.log("no data returned")
-                        }
-                        this.loading = false
+                if (!autosync) {
+                    if (results.data?.length) {
+                        this.items = results.data
                     } else {
-                        if (!this.auto_sync_blocked) {
-                            this.getSyncQueueLength().then((r) => {
-                                if (r === 0){
-                                    this.mergeShoppingList(results.data)
-                                } else {
-                                    this.auto_sync_running = false
-                                    this.replaySyncQueue()
-                                }
-                            })
-                        }
+                        console.log("no data returned")
                     }
-                })
+                    this.loading = false
+                } else {
+                    if (!this.auto_sync_blocked) {
+                        this.getSyncQueueLength().then((r) => {
+                            if (r === 0) {
+                                this.mergeShoppingList(results.data)
+                            } else {
+                                this.auto_sync_running = false
+                                this.replaySyncQueue()
+                            }
+                        })
+                    }
+                }
+            })
                 .catch((err) => {
                     if (!autosync) {
                         StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
