@@ -95,9 +95,9 @@
                                                  style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
                                                         <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
-                                                        <span v-else>{{ plan.entry.title }}</span>
+                                                        <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
-                                                <span v-if="plan.entry.note">
+                                                <span v-if="plan.entry.note" class="two-row-text">
                                                     <small>{{ plan.entry.note }}</small> <br/>
                                                 </span>
                                                 <small class="text-muted">
@@ -293,8 +293,9 @@
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
-                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}</a>
+                    class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
         </bottom-navigation-bar>
     </div>
@@ -425,7 +426,7 @@ export default {
         mobileSimpleGrid() {
             let grid = []
 
-            if (useMealPlanStore().plan_list.length > 0 && this.current_period !== null) {
+            if (this.current_period !== null) {
                 for (const x of Array(7).keys()) {
                     let moment_date = moment(this.current_period.periodStart).add(x, "d")
                     grid.push({

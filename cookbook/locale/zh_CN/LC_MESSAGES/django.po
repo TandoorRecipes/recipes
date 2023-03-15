@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2022-08-23 13:32+0000\n"
+"PO-Revision-Date: 2023-02-26 13:15+0000\n"
 "Last-Translator: 吕楪 <thy@irithys.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -434,7 +434,7 @@ msgstr "显示搜索筛选器上的食谱计数"
 
 #: .\cookbook\forms.py:541
 msgid "Use the plural form for units and food inside this space."
-msgstr ""
+msgstr "在此空间内使用复数形式表示单位和食物。"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:39
 msgid ""
@@ -495,7 +495,7 @@ msgstr "喜欢"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "我做的"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -642,16 +642,12 @@ msgid "Keyword Alias"
 msgstr "关键词别名"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
 msgstr "描述"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "说明"
+msgstr "指示"
 
 #: .\cookbook\models.py:1257 .\cookbook\views\delete.py:36
 #: .\cookbook\views\edit.py:251 .\cookbook\views\new.py:48
@@ -1555,7 +1551,7 @@ msgstr "返回"
 
 #: .\cookbook\templates\profile.html:7
 msgid "Profile"
-msgstr ""
+msgstr "简介"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2173,10 +2169,9 @@ msgid "Cannot merge with the same object!"
 msgstr "无法与同一对象合并！"
 
 #: .\cookbook\views\api.py:232
-#, fuzzy, python-brace-format
-#| msgid "No {self.basename} with id {target} exists"
+#, python-brace-format
 msgid "No {self.basename} with id {target} exists"
-msgstr "不存在 ID 为 {pk} 的 {self.basename}"
+msgstr "不存在 ID 为 {target} 的 {self.basename}"
 
 #: .\cookbook\views\api.py:237
 msgid "Cannot merge with child object!"

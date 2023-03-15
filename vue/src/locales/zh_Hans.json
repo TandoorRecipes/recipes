@@ -66,7 +66,7 @@
     "Cancel": "取消",
     "Delete": "删除",
     "Open": "打开",
-    "Ok": "打开",
+    "Ok": "确认",
     "Save": "保存",
     "Step": "步骤",
     "Search": "搜索",
@@ -477,5 +477,7 @@
     "UnpinnedConfirmation": "{recipe} 已取消固定。",
     "Unpin": "取消固定",
     "Auto_Sort": "自动分类",
-    "Auto_Sort_Help": "将所有食材移动到最恰当的步骤。"
+    "Auto_Sort_Help": "将所有食材移动到最恰当的步骤。",
+    "Create Recipe": "创建食谱",
+    "Import Recipe": "导入食谱"
 }
