@@ -23,6 +23,13 @@
                            aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle fa-2x bottom-nav-link"></i>
                         </a>
                         <div class="dropdown-menu center-dropup" aria-labelledby="navbarDropdownMenuLink">
+
+                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('new_recipe')"><i
+                                class="fas fa-fw fa-plus"></i> {{ $t('Create Recipe') }}</a>
+                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('data_import_url')"><i
+                                class="fas fa-fw fa-file-import"></i> {{ $t('Import Recipe') }}</a>
+                            <div class="dropdown-divider" v-if="create_links.length > 0"></div>
+
                             <slot name="custom_create_functions">
 
                             </slot>
@@ -30,13 +37,9 @@
                             <a class="dropdown-item" v-bind:href="cl.url" v-for="cl in create_links" v-bind:key="cl.label">
                                 <i :class="cl.icon + ' fa-fw'"></i> {{ cl.label }}
                             </a>
-                            <div class="dropdown-divider" v-if="create_links.length > 0"></div>
-
-                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('new_recipe')"><i
-                                class="fas fa-fw fa-plus"></i> {{ $t('Create Recipe') }}</a>
-                            <a class="dropdown-item" v-bind:href="resolveDjangoUrl('data_import_url')"><i
-                                class="fas fa-fw fa-file-import"></i> {{ $t('Import Recipe') }}</a>
                         </div>
+
+
                     </div>
                 </slot>
 

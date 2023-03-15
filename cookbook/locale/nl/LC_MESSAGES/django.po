@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2022-09-01 20:32+0000\n"
-"Last-Translator: 1k2 <tandoor@1k2.nl>\n"
-"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/nl/>\n"
+"PO-Revision-Date: 2023-02-27 13:55+0000\n"
+"Last-Translator: Jesse <jesse.kamps@pm.me>\n"
+"Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -473,7 +473,7 @@ msgstr "Toon recepten teller bij zoekfilters"
 
 #: .\cookbook\forms.py:541
 msgid "Use the plural form for units and food inside this space."
-msgstr ""
+msgstr "Gebruik de meervoudsvorm voor eenheden en voedsel in deze ruimte."
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:39
 msgid ""
@@ -537,7 +537,7 @@ msgstr "Favoriet"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Ik heb dit gemaakt"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
@@ -691,16 +691,12 @@ msgid "Keyword Alias"
 msgstr "Etiket alias"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Beschrijving"
+msgstr "Verrvang beschrijving"
 
 #: .\cookbook\models.py:1231
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instructies"
+msgstr "Vervang instructies"
 
 #: .\cookbook\models.py:1257 .\cookbook\views\delete.py:36
 #: .\cookbook\views\edit.py:251 .\cookbook\views\new.py:48
@@ -725,7 +721,7 @@ msgstr "U heeft de uploadlimiet bereikt."
 
 #: .\cookbook\serializer.py:291
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Kan de rechten van de ruimte-eigenaar niet wijzigen."
 
 #: .\cookbook\serializer.py:1085
 msgid "Hello"
@@ -1634,7 +1630,7 @@ msgstr "Terug"
 
 #: .\cookbook\templates\profile.html:7
 msgid "Profile"
-msgstr ""
+msgstr "Profiel"
 
 #: .\cookbook\templates\recipe_view.html:26
 msgid "by"
@@ -2039,6 +2035,8 @@ msgstr "Verbind %(provider)s"
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
 msgstr ""
+"Je staat op het punt een nieuw derde partij account van %(provider)s te "
+"verbinden."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
@@ -2049,6 +2047,8 @@ msgstr "Log in via %(provider)s"
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
+"Je staat op het punt met een derde partij account van %(provider)s in te "
+"loggen."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
@@ -2092,7 +2092,7 @@ msgstr "Beheer abonnementen"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
 msgid "Space"
-msgstr "Space"
+msgstr "Ruimte"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
