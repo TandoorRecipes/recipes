@@ -534,6 +534,7 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     description = models.TextField(blank=True, null=True)
+    base_unit = models.TextField(max_length=256, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
