@@ -19,10 +19,13 @@ def base_conversions(ingredient_list):
                 conversion_unit = i.unit.base_unit
             quantitiy = ureg.Quantity(f'{i.amount} {conversion_unit}')
             for u in CONVERT_TO_UNITS['metric'] + CONVERT_TO_UNITS['us'] + CONVERT_TO_UNITS['uk']:
-                converted = quantitiy.to(u)
-                ingredient = Ingredient(amount=converted.m, unit=Unit(name=str(converted.units)), food=ingredient_list[0].food, )
-                if not any(x.unit.name == ingredient.unit.name for x in pint_converted_list):
-                    pint_converted_list.append(ingredient)
+                try:
+                    converted = quantitiy.to(u)
+                    ingredient = Ingredient(amount=converted.m, unit=Unit(name=str(converted.units)), food=ingredient_list[0].food, )
+                    if not any((x.unit.name == ingredient.unit.name or x.unit.base_unit == ingredient.unit.name) for x in pint_converted_list):
+                        pint_converted_list.append(ingredient)
+                except PintError:
+                    pass
         except PintError:
             pass
 
@@ -34,14 +37,14 @@ def get_conversions(ingredient):
     if ingredient.unit:
         for c in ingredient.unit.unit_conversion_base_relation.all():
             r = _uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-            if r not in conversions:
+            if r and r not in conversions:
                 conversions.append(r)
         for c in ingredient.unit.unit_conversion_converted_relation.all():
             r = _uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
-            if r not in conversions:
+            if r and r not in conversions:
                 conversions.append(r)
 
-    conversions += base_conversions(conversions)
+    conversions = base_conversions(conversions)
 
     return conversions
 
