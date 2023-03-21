@@ -15,12 +15,14 @@ class IngredientObject(object):
     unit = ""
     food = ""
     note = ""
+    numeric_amount = 0
 
     def __init__(self, ingredient):
         if ingredient.no_amount:
             self.amount = ""
         else:
             self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(ingredient.amount))}' v-bind:factor='ingredient_factor'></scalable-number>"
+            self.numeric_amount = float(ingredient.amount)
         if ingredient.unit:
             if ingredient.unit.plural_name in (None, ""):
                 self.unit = bleach.clean(str(ingredient.unit))
@@ -72,9 +74,12 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     for i in step.ingredients.all():
         ingredients.append(IngredientObject(i))
 
+    def scale(number):
+        return f"<scalable-number v-bind:number='{bleach.clean(str(number))}' v-bind:factor='ingredient_factor'></scalable-number>"
+
     try:
         template = Template(instructions)
-        instructions = template.render(ingredients=ingredients)
+        instructions = template.render(ingredients=ingredients, scale=scale)
     except TemplateSyntaxError:
         return _('Could not parse template code.') + ' Error: Template Syntax broken'
     except UndefinedError:
