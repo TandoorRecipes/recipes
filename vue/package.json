@@ -19,7 +19,7 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^9.1.0",
     "bootstrap-vue": "^2.23.1",
-    "core-js": "^3.27.1",
+    "core-js": "^3.29.1",
     "emoji-mart": "^5.4.0",
     "emoji-mart-vue-fast": "^12.0.1",
     "html2pdf.js": "^0.10.1",
