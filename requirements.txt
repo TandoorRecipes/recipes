@@ -4,7 +4,7 @@ django-annoying==0.10.6
 django-autocomplete-light==3.9.4
 django-cleanup==6.0.0
 django-crispy-forms==1.14.0
-django-tables2==2.4.1
+django-tables2==2.5.3
 djangorestframework==3.14.0
 drf-writable-nested==0.7.0
 django-oauth-toolkit==2.2.0
