@@ -68,7 +68,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, NutritionType)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodPropertyType)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -820,10 +820,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__food__onhand_users',
                                                                                                 'steps__ingredients__food__substitute',
                                                                                                 'steps__ingredients__food__child_inherit_fields',
-                                                                                                'steps__ingredients__food__foodnutrition_set',
-                                                                                                'steps__ingredients__food__foodnutrition_set__food',
-                                                                                                'steps__ingredients__food__foodnutrition_set__food_unit',
-                                                                                                'steps__ingredients__food__foodnutrition_set__nutrition_type',
+                                                                                                # 'steps__ingredients__food__foodnutrition_set',
+                                                                                                # 'steps__ingredients__food__foodnutrition_set__food',
+                                                                                                # 'steps__ingredients__food__foodnutrition_set__food_unit',
+                                                                                                # 'steps__ingredients__food__foodnutrition_set__nutrition_type',
                                                                                                 'steps__ingredients__unit',
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation',
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
@@ -970,7 +970,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
 
 
 class NutritionTypeViewSet(viewsets.ModelViewSet):
-    queryset = NutritionType.objects
+    queryset = FoodPropertyType.objects
     serializer_class = NutritionTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 

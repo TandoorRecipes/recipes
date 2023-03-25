@@ -31,8 +31,8 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodNutrition,
-                             NutritionType)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodProperty,
+                             FoodPropertyType)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -660,12 +660,12 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         if ingredient.food:
             for fn in ingredient.food.foodnutrition_set.all():
                 if fn.food_unit == ingredient.unit:
-                    nutritions[fn.nutrition_type.id] = ingredient.amount / fn.food_amount * fn.nutrition_amount
+                    nutritions[fn.property_type.id] = ingredient.amount / fn.food_amount * fn.property_amount
                 else:
                     conversions = self.get_conversions(ingredient)
                     for c in conversions:
                         if fn.food_unit.id == c['unit']['id']:
-                            nutritions[fn.nutrition_type.id] = c['amount'] / fn.food_amount * fn.nutrition_amount
+                            nutritions[fn.property_type.id] = c['amount'] / fn.food_amount * fn.property_amount
 
         return nutritions
 
@@ -758,7 +758,7 @@ class NutritionTypeSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
     class Meta:
-        model = NutritionType
+        model = FoodPropertyType
         fields = ('id', 'name', 'icon', 'unit', 'description')
 
 

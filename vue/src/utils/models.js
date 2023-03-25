@@ -622,9 +622,9 @@ export class Models {
         },
     }
 
-    static NUTRITION_TYPE = {
-        name: "Nutrition Type",
-        apiName: "NutritionType",
+    static FOOD_PROPERTY_TYPE = {
+        name: "Food Property Type",
+        apiName: "FoodPropertyType",
         paginated: false,
         list: {
             header_component: {

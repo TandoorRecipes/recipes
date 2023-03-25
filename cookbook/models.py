@@ -683,8 +683,6 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
-    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
-
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
@@ -740,11 +738,19 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         indexes = (GinIndex(fields=["search_vector"]),)
 
 
-class NutritionType(models.Model, PermissionModelMixin):
+class FoodPropertyType(models.Model, PermissionModelMixin):
+    NUTRITION = 'NUTRITION'
+    ALLERGEN = 'ALLERGEN'
+    PRICE = 'PRICE'
+
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.CharField(max_length=512, blank=True, null=True)
+    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('PRICE'))), null=True, blank=True)
+
+    # TODO show if empty property?
+    # TODO formatting property?
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -754,26 +760,26 @@ class NutritionType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='nutrition_type_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='food_property_type_unique_name_per_space')
         ]
 
 
-class FoodNutrition(models.Model, PermissionModelMixin):
+class FoodProperty(models.Model, PermissionModelMixin):
     food_amount = models.DecimalField(default=0, decimal_places=2, max_digits=32)
     food_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-    nutrition_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
-    nutrition_type = models.ForeignKey(NutritionType, on_delete=models.PROTECT)
+    property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
+    property_type = models.ForeignKey(FoodPropertyType, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        return f'{self.food_amount} {self.food_unit} {self.food}: {self.nutrition_amount} {self.nutrition_type.unit} {self.nutrition_type.name}'
+        return f'{self.food_amount} {self.food_unit} {self.food}: {self.property_amount} {self.property_type.unit} {self.property_type.name}'
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['food', 'nutrition_type', 'space'], name='food_nutrition_unique_per_space')
+            models.UniqueConstraint(fields=['food', 'property_type', 'space'], name='food_property_unique_per_space')
         ]
 
 
