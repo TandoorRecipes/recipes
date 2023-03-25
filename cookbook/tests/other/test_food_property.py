@@ -31,12 +31,15 @@ def test_food_property(space_1, u1_s1):
         food_2_property_price = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=2.50, property_type=property_price, space=space_1)
 
         recipe_1 = Recipe.objects.create(name='recipe_1', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1))
+
         step_1 = Step.objects.create(instruction='instruction_step_1', space=space_1)
         step_1.ingredients.create(amount=500, unit=unit_gram, food=food_1, space=space_1)
         step_1.ingredients.create(amount=1000, unit=unit_gram, food=food_2, space=space_1)
         recipe_1.steps.add(step_1)
-        recipe_1.save()
+
+        step_2 = Step.objects.create(instruction='instruction_step_1', space=space_1)
+        step_2.ingredients.create(amount=50, unit=unit_gram, food=food_1, space=space_1)
+        recipe_1.steps.add(step_2)
 
         property_values = calculate_recipe_properties(recipe_1)
-        for p in property_values:
-            print(p)
+        print(property_values)
