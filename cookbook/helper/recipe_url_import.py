@@ -247,10 +247,27 @@ def parse_description(description):
 
 
 def clean_instruction_string(instruction):
-    normalized_string = normalize_string(instruction)
+    # handle HTML tags that can be converted to markup
+    normalized_string = instruction \
+        .replace("<nobr>", "**") \
+        .replace("</nobr>", "**") \
+        .replace("<strong>", "**") \
+        .replace("</strong>", "**")
+    normalized_string = normalize_string(normalized_string)
     normalized_string = normalized_string.replace('\n', '  \n')
     normalized_string = normalized_string.replace('  \n  \n', '\n\n')
-    return normalized_string
+
+    # handle unsupported, special UTF8 character in Thermomix-specific instructions,
+    # that happen in nearly every recipe on Cookidoo, Zaubertopf Club, Rezeptwelt
+    # and in Thermomix-specific recipes on many other sites
+    return normalized_string \
+        .replace("", _('reverse rotation')) \
+        .replace("", _('careful rotation')) \
+        .replace("", _('knead')) \
+        .replace("Andicken ", _('thicken')) \
+        .replace("Erwärmen ", _('warm up')) \
+        .replace("Fermentieren ", _('ferment')) \
+        .replace("Sous-vide ", _("sous-vide"))
 
 
 def parse_instructions(instructions):
