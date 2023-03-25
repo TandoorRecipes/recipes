@@ -528,6 +528,35 @@ msgstr "Du hast mehr Benutzer in Deinem Space als erlaubt."
 msgid "One of queryset or hash_key must be provided"
 msgstr "Es muss die Abfrage oder der Hash_Key angeben werden"
 
+#: .\cookbook\helper\recipe_url_import.py:265
+msgid "reverse rotation"
+msgstr "Linkslauf"
+
+#: .\cookbook\helper\recipe_url_import.py:266
+msgid "careful rotation"
+msgstr "Kochlöffel"
+
+#: .\cookbook\helper\recipe_url_import.py:267
+msgid "knead"
+msgstr "Kneten"
+
+#: .\cookbook\helper\recipe_url_import.py:268
+msgid "thicken"
+msgstr "Andicken"
+
+#: .\cookbook\helper\recipe_url_import.py:269
+msgid "warm up"
+msgstr "Erwärmen"
+
+#: .\cookbook\helper\recipe_url_import.py:270
+msgid "ferment"
+msgstr "Fermentieren"
+
+#: .\cookbook\helper\recipe_url_import.py:271
+msgid "sous-vide"
+msgstr "Sous-vide"
+
+
 #: .\cookbook\helper\shopping_helper.py:152
 msgid "You must supply a servings size"
 msgstr "Sie müssen eine Portionsgröße angeben"
