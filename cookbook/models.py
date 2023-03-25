@@ -742,12 +742,14 @@ class FoodPropertyType(models.Model, PermissionModelMixin):
     NUTRITION = 'NUTRITION'
     ALLERGEN = 'ALLERGEN'
     PRICE = 'PRICE'
+    GOAL = 'GOAL'
+    OTHER = 'OTHER'
 
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.CharField(max_length=512, blank=True, null=True)
-    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('PRICE'))), null=True, blank=True)
+    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
 
     # TODO show if empty property?
     # TODO formatting property?
