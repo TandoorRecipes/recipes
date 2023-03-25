@@ -61,6 +61,14 @@ The deployment first fires up a init container to do the database migrations and
 
 The deployment then runs two containers, the recipes-nginx and the recipes container which runs the gunicorn app. The nginx container gets it's nginx.conf via config map to deliver static content `/static` and `/media`. The guincorn container gets it's secret key and the database password from the secret `recipes`. `gunicorn` runs as user `nobody`.
 
+Currently, this deployment is using the `latest` image. You may want to explicitly set the tag, e.g.
+
+~~~
+image: vabene1111/recipes:1.4.7
+~~~
+
+It is **extremely important** to use the same image in both the initialization `init-chmod-data` and the main `recipes` containers.
+
 ### 60-service.yaml
 
 Creating the app service.
@@ -91,7 +99,9 @@ I don't know how this check works, but this warning is simply wrong! ;-) Media a
 
 ## Updates
 
-These manifests are tested against Release 1.0.1. Newer versions may not work without changes.
+These manifests have been tested for several releases. Newer versions may not work without changes.
+
+If everything works as expected, the `init-chmod-data` initialization container performs the database migration and the update procedure is transparent. However, it is recommended to use specific tags to increase stability and avoid unnecessary migrations.
 
 ## Apply the manifets
 
