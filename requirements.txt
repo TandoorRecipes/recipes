@@ -27,7 +27,7 @@ uritemplate==4.1.1
 beautifulsoup4==4.11.1
 microdata==0.8.0
 Jinja2==3.1.2
-django-webpack-loader==1.8.0
+django-webpack-loader==1.8.1
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.52.0
 recipe-scrapers==14.30.0
