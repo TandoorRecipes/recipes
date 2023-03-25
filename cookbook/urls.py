@@ -12,7 +12,7 @@ from recipes.version import VERSION_NUMBER
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name, UserSpace, Space, NutritionType, UnitConversion)
+                     get_model_name, UserSpace, Space, FoodPropertyType, UnitConversion)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken
 
@@ -191,7 +191,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, NutritionType]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, FoodPropertyType]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')
