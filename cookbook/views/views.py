@@ -69,25 +69,28 @@ def space_overview(request):
     if request.POST:
         create_form = SpaceCreateForm(request.POST, prefix='create')
         join_form = SpaceJoinForm(request.POST, prefix='join')
-        if create_form.is_valid():
-            created_space = Space.objects.create(
-                name=create_form.cleaned_data['name'],
-                created_by=request.user,
-                max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
-                max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
-                max_users=settings.SPACE_DEFAULT_MAX_USERS,
-                allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
-            )
+        if settings.HOSTED and request.user.username == 'demo':
+            messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
+        else:
+            if create_form.is_valid():
+                created_space = Space.objects.create(
+                    name=create_form.cleaned_data['name'],
+                    created_by=request.user,
+                    max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
+                    max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
+                    max_users=settings.SPACE_DEFAULT_MAX_USERS,
+                    allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
+                )
 
-            user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
-            user_space.groups.add(Group.objects.filter(name='admin').get())
+                user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
+                user_space.groups.add(Group.objects.filter(name='admin').get())
 
-            messages.add_message(request, messages.SUCCESS,
-                                 _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
-            return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.space.pk]))
+                messages.add_message(request, messages.SUCCESS,
+                                     _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
+                return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.space.pk]))
 
-        if join_form.is_valid():
-            return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
+            if join_form.is_valid():
+                return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
             user_space = UserSpace.objects.create(space=Space.objects.first(), user=request.user, active=False)
