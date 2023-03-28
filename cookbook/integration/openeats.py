@@ -3,12 +3,18 @@ import json
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step, Keyword, Comment, CookLog
-
+from django.utils.translation import gettext as _
 
 class OpenEats(Integration):
 
     def get_recipe_from_file(self, file):
-        recipe = Recipe.objects.create(name=file['name'].strip(), description=file['info'], created_by=self.request.user, internal=True,
+
+        description = file['info']
+        description_max_length = Recipe._meta.get_field('description').max_length
+        if len(description) > description_max_length:
+            description = description[0:description_max_length]
+
+        recipe = Recipe.objects.create(name=file['name'].strip(), description=description, created_by=self.request.user, internal=True,
                                        servings=file['servings'], space=self.request.space, waiting_time=file['cook_time'], working_time=file['prep_time'])
 
         instructions = ''
@@ -17,7 +23,7 @@ class OpenEats(Integration):
             instructions += file["directions"]
 
         if file["source"] != '':
-            instructions += f'\nRecipe source: [{file["source"]}]({file["source"]})'
+            instructions += '\n' + _('Recipe source:') + f'[{file["source"]}]({file["source"]})'
 
         cuisine_keyword, created = Keyword.objects.get_or_create(name="Cuisine", space=self.request.space)      
         if file["cuisine"] != '':
