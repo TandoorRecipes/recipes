@@ -9,7 +9,7 @@ class OpenEats(Integration):
 
     def get_recipe_from_file(self, file):
 
-        description = file['info']
+        description = file['info'][:512]
         description_max_length = Recipe._meta.get_field('description').max_length
         if len(description) > description_max_length:
             description = description[0:description_max_length]
