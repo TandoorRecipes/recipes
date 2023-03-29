@@ -525,7 +525,7 @@ class RecipeSearch():
                                                                                  steps__ingredients__food__recipe__isnull=True), distinct=True),
             has_child_sub=Case(When(steps__ingredients__food__in=self.__children_substitute_filter(shopping_users), then=Value(1)), default=Value(0)),
             has_sibling_sub=Case(When(steps__ingredients__food__in=self.__sibling_substitute_filter(shopping_users), then=Value(1)), default=Value(0))
-        ).annotate(missingfood=F('count_food') - F('count_onhand') - F('count_ignore_shopping')).filter(missingfood=missing)
+        ).annotate(missingfood=F('count_food') - F('count_onhand') - F('count_ignore_shopping')).filter(missingfood__lte=missing)
         self._queryset = self._queryset.distinct().filter(id__in=makenow_recipes.values('id'))
 
     @staticmethod

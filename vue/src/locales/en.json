@@ -362,6 +362,7 @@
     "show_sortby": "Show Sort By",
     "search_rank": "Search Rank",
     "make_now": "Make Now",
+    "make_now_count": "At most missing ingredients",
     "recipe_filter": "Recipe Filter",
     "book_filter_help": "Include recipes from recipe filter in addition to manually assigned ones.",
     "review_shopping": "Review shopping entries before saving",
