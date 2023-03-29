@@ -662,8 +662,14 @@
                                                     <b-input-group-text>
                                                         {{ $t("make_now") }}
                                                         <b-form-checkbox v-model="search.makenow" name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em"/>
+                                                                        @change="refreshData(false)"
+                                                                        class="shadow-none" switch style="width: 4em"/>
+                                                    </b-input-group-text>
+                                                    <b-input-group-text>
+                                                        <span>{{ $t("make_now_count") }}</span>
+                                                        <b-form-input type="number" min="0" max="20" v-model="search.makenow_count"
+                                                                        @change="refreshData(false)"
+                                                                        size="sm" class="mt-1"></b-form-input>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                             </b-input-group>
@@ -1041,6 +1047,7 @@ export default {
                 timescooked: undefined,
                 timescooked_gte: true,
                 makenow: false,
+                makenow_count: 0,
                 cookedon: undefined,
                 cookedon_gte: true,
                 createdon: undefined,
@@ -1518,6 +1525,10 @@ export default {
             } else if (!this.search.timescooked_gte) {
                 timescooked = timescooked * -1
             }
+            let makenow = this.search.makenow || undefined
+            if (makenow !== undefined) {
+                makenow = parseInt(this.search.makenow_count)
+            }
             // when a filter is selected - added search params will be added to the filter
             params = {
                 ...params,
@@ -1530,7 +1541,7 @@ export default {
                 internal: this.search.search_internal,
                 random: this.random_search,
                 timescooked: timescooked,
-                makenow: this.search.makenow || undefined,
+                makenow: makenow,
                 cookedon: cookedon,
                 createdon: createdon,
                 updatedon: updatedon,
