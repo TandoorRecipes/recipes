@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-09 18:01+0100\n"
-"PO-Revision-Date: 2023-01-08 17:55+0000\n"
-"Last-Translator: Joachim Weber <joachim.weber@gmx.de>\n"
+"PO-Revision-Date: 2023-03-25 11:32+0000\n"
+"Last-Translator: Matěj Kubla <matykubla@gmail.com>\n"
 "Language-Team: Czech <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/cs/>\n"
 "Language: cs\n"
@@ -553,7 +553,7 @@ msgstr "Cesta musí být v následujícím formátu"
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
-msgstr "Zahájit synchronizaci"
+msgstr "Zahájit synchronizaci!"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
@@ -1036,7 +1036,7 @@ msgstr "Tento text je kurzívou"
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr "Lze použít i kvotace "
+msgstr "Lze použít i kvotace"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
@@ -1106,8 +1106,8 @@ msgid ""
 "rel=\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
 "Ruční vytváření tabulek pomocí značek je složité. Doporučujeme použít "
-"například <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
-"rel=\"noreferrer noopener\" target=\"_blank\">tento tabulkový editor</a>."
+"například <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
+"\"noreferrer noopener\" target=\"_blank\">tento tabulkový editor.</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1256,22 +1256,36 @@ msgid ""
 "                        "
 msgstr ""
 "\n"
-"                            <p>Modul jídelníčku umožňuje plánovat jídlo pomocí receptů i poznámek.</p>\n"
-"                            <p>Jednoduše vyberte recept ze seznamu naposledy navštívených receptů, nebo ho vyhledejte\n"
-"                                s přetáhněte na požadovaný den v rozvrhu. Můžete také přidat poznámku s popiskem\n"
-"                                a poté přetáhnout recept pro vytvoření plánu s vlatními popisky. Vytvořením samotné poznámky\n"
-"                                je možné přetažením pole poznámky do rozvrhu.</p>\n"
-"                            <p>Kliknutím na recept zobrazíte detailní náhled. Odtud lze také přidat položky\n"
-"                                do nákupního seznamu. Do nákupního seznamu můžete také přidat všechny recepty na daný den\n"
-"                                kliknutím na ikonu nákupního košíku na horní straně tabulky.</p>\n"
-"                            <p>V běžném případě se jídelníček plánuje hromadně, proto můžete v nastavení definovat\n"
-"                                se kterými uživateli si přejete jídelníčky sdílet.\n"
+"                            <p>Modul jídelníčku umožňuje plánovat jídlo "
+"pomocí receptů i poznámek.</p>\n"
+"                            <p>Jednoduše vyberte recept ze seznamu naposledy "
+"navštívených receptů, nebo ho vyhledejte\n"
+"                                s přetáhněte na požadovaný den v rozvrhu. "
+"Můžete také přidat poznámku s popiskem\n"
+"                                a poté přetáhnout recept pro vytvoření plánu "
+"s vlatními popisky. Vytvořením samotné poznámky\n"
+"                                je možné přetažením pole poznámky do "
+"rozvrhu.</p>\n"
+"                            <p>Kliknutím na recept zobrazíte detailní "
+"náhled. Odtud lze také přidat položky\n"
+"                                do nákupního seznamu. Do nákupního seznamu "
+"můžete také přidat všechny recepty na daný den\n"
+"                                kliknutím na ikonu nákupního košíku na horní "
+"straně tabulky.</p>\n"
+"                            <p>V běžném případě se jídelníček plánuje "
+"hromadně, proto můžete v nastavení definovat\n"
+"                                se kterými uživateli si přejete jídelníčky "
+"sdílet.\n"
 "                            </p>\n"
-"                            <p>Můžete také upravovat typy jídel, které si přejete naplánovat. Pokud budete sdílet jídelníček \n"
+"                            <p>Můžete také upravovat typy jídel, které si "
+"přejete naplánovat. Pokud budete sdílet jídelníček \n"
 "                                s někým, kdo\n"
-"                                má přidána jiná jídla, jeho typy jídel se objeví i ve vašem seznamu. Pro předcházení\n"
+"                                má přidána jiná jídla, jeho typy jídel se "
+"objeví i ve vašem seznamu. Pro předcházení\n"
 "                                duplicitám (např. Ostatní, Jiná)\n"
-"                                pojmenujte váš typ jídla stejně, jako uživatel se kterým své seznamy sdílíte. Tím budou seznamy sloučeny.</p>\n"
+"                                pojmenujte váš typ jídla stejně, jako "
+"uživatel se kterým své seznamy sdílíte. Tím budou seznamy\n"
+"                                sloučeny.</p>\n"
 "                        "
 
 #: .\cookbook\templates\meal_plan_entry.html:6
@@ -1333,12 +1347,12 @@ msgstr "Obrázek receptu"
 #: .\cookbook\templates\recipes_table.html:46
 #: .\cookbook\templates\url_import.html:55
 msgid "Preparation time ca."
-msgstr "Doba přípravy cca"
+msgstr "Doba přípravy cca."
 
 #: .\cookbook\templates\recipes_table.html:52
 #: .\cookbook\templates\url_import.html:60
 msgid "Waiting time ca."
-msgstr "Doba čekání cca"
+msgstr "Doba čekání cca."
 
 #: .\cookbook\templates\recipes_table.html:55
 msgid "External"
@@ -1386,7 +1400,7 @@ msgid ""
 " in the following examples:"
 msgstr ""
 "Použijte tajný klíč jako autorizační hlavičku definovanou slovním klíčem, "
-"jak je uvedeno v následujících příkladech."
+"jak je uvedeno v následujících příkladech:"
 
 #: .\cookbook\templates\settings.html:94
 msgid "or"
@@ -1808,7 +1822,7 @@ msgstr "Import není pro tohoto poskytovatele implementován!"
 
 #: .\cookbook\views\import_export.py:58
 msgid "Exporting is not implemented for this provider"
-msgstr "Eport není pro tohoto poskytovatele implementován!"
+msgstr "Export není pro tohoto poskytovatele implementován!"
 
 #: .\cookbook\views\lists.py:42
 msgid "Import Log"
@@ -1840,7 +1854,7 @@ msgstr "Komentář uložen!"
 
 #: .\cookbook\views\views.py:152
 msgid "This recipe is already linked to the book!"
-msgstr "Tento recept už v kuchařce existuje."
+msgstr "Tento recept už v kuchařce existuje!"
 
 #: .\cookbook\views\views.py:158
 msgid "Bookmark saved!"
