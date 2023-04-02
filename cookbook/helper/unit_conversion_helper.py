@@ -18,10 +18,14 @@ def base_conversions(ingredient_list):
             if i.unit.base_unit:
                 conversion_unit = i.unit.base_unit
             quantitiy = ureg.Quantity(f'{i.amount} {conversion_unit}')
-            for u in CONVERT_TO_UNITS['metric'] + CONVERT_TO_UNITS['us'] + CONVERT_TO_UNITS['uk']:
+
+            # TODO allow setting which units to convert to
+            units = Unit.objects.filter(base_unit__in=(CONVERT_TO_UNITS['metric'] + CONVERT_TO_UNITS['us'] + CONVERT_TO_UNITS['uk'])).all()
+
+            for u in units:
                 try:
-                    converted = quantitiy.to(u)
-                    ingredient = Ingredient(amount=converted.m, unit=Unit(name=str(converted.units)), food=ingredient_list[0].food, )
+                    converted = quantitiy.to(u.base_unit)
+                    ingredient = Ingredient(amount=converted.m, unit=u, food=ingredient_list[0].food, )
                     if not any((x.unit.name == ingredient.unit.name or x.unit.base_unit == ingredient.unit.name) for x in pint_converted_list):
                         pint_converted_list.append(ingredient)
                 except PintError:

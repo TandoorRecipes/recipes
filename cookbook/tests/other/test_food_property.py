@@ -42,4 +42,10 @@ def test_food_property(space_1, u1_s1):
         recipe_1.steps.add(step_2)
 
         property_values = calculate_recipe_properties(recipe_1)
+
+        assert property_values[property_fat.id]['name'] == property_fat.name
+        assert property_values[property_fat.id]['total_value'] == 525  # TODO manually validate those numbers
+        assert property_values[property_fat.id]['food_values'][food_1.id] == 275  # TODO manually validate those numbers
+        assert property_values[property_fat.id]['food_values'][food_2.id] == 250  # TODO manually validate those numbers
         print(property_values)
+        # TODO more property tests

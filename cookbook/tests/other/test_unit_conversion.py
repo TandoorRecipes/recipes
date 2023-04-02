@@ -1,3 +1,5 @@
+from _decimal import Decimal
+
 from django.contrib import auth
 from django_scopes import scopes_disabled
 
@@ -8,6 +10,7 @@ from cookbook.models import Unit, Food, Ingredient, UnitConversion
 def test_unit_conversions(space_1, u1_s1):
     with scopes_disabled():
         unit_gram = Unit.objects.create(name='gram', base_unit='g', space=space_1)
+        unit_kg = Unit.objects.create(name='kg', base_unit='kg', space=space_1)
         unit_pcs = Unit.objects.create(name='pcs', base_unit='', space=space_1)
         unit_floz1 = Unit.objects.create(name='fl. oz 1', base_unit='imperial_fluid_ounce', space=space_1)  # US and UK use different volume systems (US vs imperial)
         unit_floz2 = Unit.objects.create(name='fl. oz 2', base_unit='fluid_ounce', space=space_1)
@@ -24,7 +27,11 @@ def test_unit_conversions(space_1, u1_s1):
             space=space_1,
         )
 
-        print(get_conversions(ingredient_food_1_gram))
+        conversions = get_conversions(ingredient_food_1_gram)
+        print(conversions)
+        assert len(conversions) == 2
+        assert next(x for x in conversions if x.unit == unit_kg) is not None
+        assert next(x for x in conversions if x.unit == unit_kg).amount == 0.1
 
         print('\n----------- TEST BASE CONVERSIONS - VOLUMES ---------------')
 
@@ -35,7 +42,20 @@ def test_unit_conversions(space_1, u1_s1):
             space=space_1,
         )
 
-        print(get_conversions(ingredient_food_1_floz1))
+        conversions = get_conversions(ingredient_food_1_floz1)
+        assert len(conversions) == 2
+        assert next(x for x in conversions if x.unit == unit_floz2) is not None
+        assert next(x for x in conversions if x.unit == unit_floz2).amount == 96.07599404038842  # TODO validate value
+
+        print(conversions)
+
+        unit_pint = Unit.objects.create(name='pint', base_unit='pint', space=space_1)
+        conversions = get_conversions(ingredient_food_1_floz1)
+        assert len(conversions) == 3
+        assert next(x for x in conversions if x.unit == unit_pint) is not None
+        assert next(x for x in conversions if x.unit == unit_pint).amount == 6.004749627524276  # TODO validate value
+
+        print(conversions)
 
         print('\n----------- TEST BASE CUSTOM CONVERSION - TO CUSTOM CONVERSION ---------------')
         UnitConversion.objects.create(
@@ -46,8 +66,13 @@ def test_unit_conversions(space_1, u1_s1):
             space=space_1,
             created_by=auth.get_user(u1_s1),
         )
+        conversions = get_conversions(ingredient_food_1_gram)
 
-        print(get_conversions(ingredient_food_1_gram))
+        assert len(conversions) == 3
+        assert next(x for x in conversions if x.unit == unit_fantasy) is not None
+        assert next(x for x in conversions if x.unit == unit_fantasy).amount == Decimal('133.700')  # TODO validate value
+
+        print(conversions)
 
         print('\n----------- TEST CUSTOM CONVERSION - NO PCS ---------------')
         ingredient_food_1_pcs = Ingredient.objects.create(
@@ -64,6 +89,8 @@ def test_unit_conversions(space_1, u1_s1):
             space=space_1,
         )
 
+        assert len(get_conversions(ingredient_food_1_pcs)) == 1
+        assert len(get_conversions(ingredient_food_2_pcs)) == 1
         print(get_conversions(ingredient_food_1_pcs))
         print(get_conversions(ingredient_food_2_pcs))
 
@@ -78,7 +105,13 @@ def test_unit_conversions(space_1, u1_s1):
             created_by=auth.get_user(u1_s1),
         )
 
-        print(get_conversions(ingredient_food_1_pcs))
+        conversions = get_conversions(ingredient_food_1_pcs)
+        assert len(conversions) == 3
+        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
+        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        print(conversions)
+
+        assert len(get_conversions(ingredient_food_2_pcs)) == 1
         print(get_conversions(ingredient_food_2_pcs))
 
         print('\n----------- TEST CUSTOM CONVERSION - REVERSE CONVERSION ---------------')
@@ -92,6 +125,14 @@ def test_unit_conversions(space_1, u1_s1):
             created_by=auth.get_user(u1_s1),
         )
 
-        print(get_conversions(ingredient_food_1_pcs))
-        print(get_conversions(ingredient_food_2_pcs))
+        conversions = get_conversions(ingredient_food_1_pcs)
+        assert len(conversions) == 3
+        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
+        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        print(conversions)
 
+        conversions = get_conversions(ingredient_food_2_pcs)
+        assert len(conversions) == 3
+        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
+        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        print(conversions)
