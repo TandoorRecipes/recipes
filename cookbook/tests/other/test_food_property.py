@@ -1,9 +1,8 @@
 from django.contrib import auth
 from django_scopes import scopes_disabled
 
-from cookbook.helper.food_property_helper import calculate_recipe_properties
-from cookbook.helper.unit_conversion_helper import get_conversions
-from cookbook.models import Unit, Food, Ingredient, UnitConversion, FoodPropertyType, FoodProperty, Recipe, Step
+from cookbook.helper.food_property_helper import FoodPropertyHelper
+from cookbook.models import Unit, Food, FoodPropertyType, FoodProperty, Recipe, Step
 
 
 def test_food_property(space_1, u1_s1):
@@ -41,7 +40,7 @@ def test_food_property(space_1, u1_s1):
         step_2.ingredients.create(amount=50, unit=unit_gram, food=food_1, space=space_1)
         recipe_1.steps.add(step_2)
 
-        property_values = calculate_recipe_properties(recipe_1)
+        property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_1)
 
         assert property_values[property_fat.id]['name'] == property_fat.name
         assert property_values[property_fat.id]['total_value'] == 525  # TODO manually validate those numbers
@@ -49,3 +48,5 @@ def test_food_property(space_1, u1_s1):
         assert property_values[property_fat.id]['food_values'][food_2.id] == 250  # TODO manually validate those numbers
         print(property_values)
         # TODO more property tests
+
+        # TODO test space separation
