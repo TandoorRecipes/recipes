@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@emoji-mart/data": "^1.1.1",
-    "@popperjs/core": "^2.11.6",
+    "@popperjs/core": "^2.11.7",
     "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
     "@vue/composition-api": "1.7.1",
