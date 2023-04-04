@@ -22,9 +22,10 @@ from rest_framework.exceptions import NotFound, ValidationError
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.food_property_helper import FoodPropertyHelper
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
-from cookbook.helper.unit_conversion_helper import get_conversions
+from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Recipe, RecipeBook,
@@ -637,7 +638,6 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
     amount = CustomDecimalField()
     conversions = serializers.SerializerMethodField('get_conversions')
-    nutritions = serializers.SerializerMethodField('get_nutritions')
 
     def get_used_in_recipes(self, obj):
         used_in = []
@@ -647,27 +647,14 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         return used_in
 
     def get_conversions(self, obj):
-        conversions = []
-        # TODO add hardcoded base conversions for metric/imperial
         if obj.unit and obj.food:
-            conversions += get_conversions(obj.amount, obj.unit, obj.food)
-
-        return conversions
-
-    def get_nutritions(self, ingredient):
-        nutritions = {}
-
-        if ingredient.food:
-            for fn in ingredient.food.foodnutrition_set.all():
-                if fn.food_unit == ingredient.unit:
-                    nutritions[fn.property_type.id] = ingredient.amount / fn.food_amount * fn.property_amount
-                else:
-                    conversions = self.get_conversions(ingredient)
-                    for c in conversions:
-                        if fn.food_unit.id == c['unit']['id']:
-                            nutritions[fn.property_type.id] = c['amount'] / fn.food_amount * fn.property_amount
-
-        return nutritions
+            uch = UnitConversionHelper(self.context['request'].space)
+            conversions = []
+            for c in uch.get_conversions(obj):
+                conversions.append({'food': c.food.name, 'unit': c.unit.name , 'amount': c.amount})  # TODO do formatting in helper
+            return conversions
+        else:
+            return []
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -680,10 +667,11 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Ingredient
         fields = (
-            'id', 'food', 'unit', 'amount', 'nutritions', 'conversions', 'note', 'order',
+            'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
             'is_header', 'no_amount', 'original_text', 'used_in_recipes',
             'always_use_plural_unit', 'always_use_plural_food',
         )
+        read_only_fields = ['conversions', ]
 
 
 class IngredientSerializer(IngredientSimpleSerializer):
@@ -817,17 +805,22 @@ class RecipeSerializer(RecipeBaseSerializer):
     shared = UserSerializer(many=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    food_properties = serializers.SerializerMethodField('get_food_properties')
+
+    def get_food_properties(self, obj):
+        fph = FoodPropertyHelper(self.context['request'].space)
+        return fph.calculate_recipe_properties(obj)
 
     class Meta:
         model = Recipe
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'servings', 'file_path', 'servings_text', 'rating',
+            'internal', 'show_ingredient_overview', 'nutrition', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
             'last_cooked',
             'private', 'shared',
         )
-        read_only_fields = ['image', 'created_by', 'created_at']
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -959,11 +952,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+                obj.name
+                or getattr(obj.mealplan, 'title', None)
+                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
