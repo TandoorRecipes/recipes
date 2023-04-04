@@ -1414,6 +1414,7 @@ export default {
             this.search.pagination_page = 1
             this.search.timescooked = undefined
             this.search.makenow = false
+            this.search.make_now_count = 0
             this.search.cookedon = undefined
             this.search.viewedon = undefined
             this.search.createdon = undefined
