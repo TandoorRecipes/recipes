@@ -25,7 +25,7 @@ class FoodPropertyHelper:
             ingredients += s.ingredients.all()
 
         for fpt in property_types:  # TODO is this safe or should I require the request context?
-            computed_properties[fpt.id] = {'name': fpt.name, 'food_values': {}, 'total_value': 0}
+            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'icon': fpt.icon, 'description': fpt.description, 'unit': fpt.unit, 'food_values': {}, 'total_value': 0}
 
         # TODO unit conversion support
 
@@ -34,18 +34,18 @@ class FoodPropertyHelper:
                 p = i.food.foodproperty_set.filter(space=self.space, property_type=pt).first()
                 if p:
                     computed_properties[p.property_type.id]['total_value'] += (i.amount / p.food_amount) * p.property_amount
-                    computed_properties[p.property_type.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], i.food.id, (i.amount / p.food_amount) * p.property_amount)
+                    computed_properties[p.property_type.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], i.food.id, (i.amount / p.food_amount) * p.property_amount, i.food)
                 else:
-                    computed_properties[pt.id]['food_values'][i.food.id] = None
+                    computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
 
         return computed_properties
 
     # small dict helper to add to existing key or create new, probably a better way of doing this
     # TODO move to central helper ?
     @staticmethod
-    def add_or_create(d, key, value):
+    def add_or_create(d, key, value, food):
         if key in d:
-            d[key] += value
+            d[key]['value'] += value
         else:
-            d[key] = value
+            d[key] = {'id': food.id, 'food': food.name, 'value': value}
         return d
