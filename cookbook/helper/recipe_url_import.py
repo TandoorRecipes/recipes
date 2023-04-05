@@ -1,8 +1,8 @@
-import random
+# import random
 import re
 from html import unescape
-from unicodedata import decomposition
 
+from django.core.cache import caches
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
@@ -10,9 +10,11 @@ from isodate.isoerror import ISO8601Error
 from pytube import YouTube
 from recipe_scrapers._utils import get_host_name, get_minutes
 
-from cookbook.helper import recipe_url_import as helper
+# from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.models import Keyword, Automation
+from cookbook.models import Automation, Keyword
+
+# from unicodedata import decomposition
 
 
 # from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
@@ -127,7 +129,7 @@ def get_from_scraper(scrape, request):
     try:
         if scrape.author():
             keywords.append(scrape.author())
-    except:
+    except Exception:
         pass
 
     try:
@@ -367,10 +369,28 @@ def parse_time(recipe_time):
 
 def parse_keywords(keyword_json, space):
     keywords = []
+    keyword_aliases = {}
+    # retrieve keyword automation cache if it exists, otherwise build from database
+    KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
+    if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
+        self.food_aliases = c
+        caches['default'].touch(KEYWORD_CACHE_KEY, 30)
+    else:
+        for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
+            keyword_aliases[a.param_1] = a.param_2
+        caches['default'].set(KEYWORD_CACHE_KEY, keyword_aliases, 30)
+
     # keywords as list
     for kw in keyword_json:
         kw = normalize_string(kw)
+        # if alias exists use that instead
+
         if len(kw) != 0:
+            if keyword_aliases:
+                try:
+                    kw = keyword_aliases[kw]
+                except KeyError:
+                    pass
             if k := Keyword.objects.filter(name=kw, space=space).first():
                 keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
             else:
