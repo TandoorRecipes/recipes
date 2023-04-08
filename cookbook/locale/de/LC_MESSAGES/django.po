@@ -1252,7 +1252,7 @@ msgstr "Ausloggen"
 
 #: .\cookbook\templates\base.html:360
 msgid "You are using the free version of Tandor"
-msgstr "Du benützt die Gratis-Version von Tandoor"
+msgstr "Du benutzt die Gratis-Version von Tandoor"
 
 #: .\cookbook\templates\base.html:361
 msgid "Upgrade Now"
