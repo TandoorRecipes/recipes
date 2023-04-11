@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2022-05-22 11:20+0000\n"
-"Last-Translator: Ramon Aixa Juan <juanramonaixa@gmail.com>\n"
+"PO-Revision-Date: 2023-04-12 11:55+0000\n"
+"Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ca/>\n"
 "Language: ca\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -1414,7 +1414,7 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Cerca Recepta..."
+msgstr "Cerca Recepta ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
