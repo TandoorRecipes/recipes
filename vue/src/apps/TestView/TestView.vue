@@ -1,43 +1,133 @@
 <template>
 
     <div id="app">
-
-
-        <div class="row" v-if="recipe !== undefined">
-            <div class="col-6">
-                <div class="card">
-                    <table class="table table-bordered table-sm">
-
-                        <tr v-for="p in recipe.food_properties" v-bind:key="`id_${p.id}`">
-                            <td>
-                                <button class="btn btn-danger btn-sm"
-                                        @click="selected_property = p"><i
-                                        class="fas fa-exclamation-triangle"></i>
-                                </button>
-                                {{ p.icon }} {{ p.name }}
-                            </td>
-                            <td>{{ p.total_value }} {{ p.unit }}</td>
-                        </tr>
-
-
-                    </table>
-                </div>
+        <div class="row" v-if="food">
+            <div class="col-12">
+                <h2>{{ food.name }} <small class="text-muted" v-if="food.plural_name">{{ food.plural_name }}</small>
+                </h2>
             </div>
         </div>
 
-        <b-modal id="id_modal_property_overview" title="Property Overview" v-model="show_modal" @hidden="selected_property = undefined">
-            <template v-if="selected_property !== undefined">
-                {{ selected_property.description }}
-                <table class="table table-bordered">
-                    <tr v-for="f in selected_property.food_values" v-bind:key="`id_${selected_property.id}_food_${f.id}`">
-                        <td>{{ f.food }}</td>
-                        <td>{{ f.value }} {{ selected_property.unit }}</td>
-                    </tr>
-                </table>
-            </template>
+        <div class="row">
+            <div class="col-12">
+                <b-form v-if="food">
+                    <b-form-group :label="$t('Name')" description="">
+                        <b-form-input v-model="food.name"></b-form-input>
+                    </b-form-group>
+                    <b-form-group :label="$t('Plural')" description="">
+                        <b-form-input v-model="food.plural_name"></b-form-input>
+                    </b-form-group>
+
+                    <!-- Food properties -->
+
+                    <h5><i class="fas fa-database"></i> {{ $t('Properties') }} <small class="text-muted">{{ food.name }}</small></h5>
+                    <table class="table table-bordered" v-if="food_properties">
+                        <tr v-for="fp in food_properties" v-bind:key="fp.id">
+                            <td><input  v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
+                            <td><b> {{ fp.property_type.name }} </b></td>
+                            <td> /</td>
+                            <td><input  v-model="fp.food_amount" type="number"> </td>
+                            <td>
+                                <generic-multiselect
+                                        @change="fp.food_unit = $event.val;"
+                                        :model="Models.UNIT"
+                                        :initial_selection="fp.food_unit"
+                                        label="name"
+                                        :multiple="false"
+                                        :placeholder="$t('Unit')"
+                                ></generic-multiselect>
+                            </td>
+                        </tr>
+                    </table>
 
 
-        </b-modal>
+                    <!-- Unit conversion -->
+
+                    <!-- ADVANCED FEATURES somehow hide this stuff -->
+
+                    <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
+                        <generic-multiselect
+                                @change="food.recipe = $event.val;"
+                                :model="Models.RECIPE"
+                                :initial_selection="food.recipe"
+                                label="name"
+                                :multiple="false"
+                                :placeholder="$t('Recipe')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('OnHand_help')">
+                        <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('ignore_shopping_help')">
+                        <b-form-checkbox v-model="food.ignore_shopping">{{ $t('Ignore_Shopping') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
+                        <generic-multiselect
+                                @change="food.supermarket_category = $event.val;"
+                                :model="Models.SHOPPING_CATEGORY"
+                                :initial_selection="food.supermarket_category"
+                                label="name"
+                                :multiple="false"
+                                :allow_create="true"
+                                :placeholder="$t('Shopping_Category')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <hr/>
+                    <!-- todo add conditions if false disable dont hide -->
+                    <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
+                        <generic-multiselect
+                                @change="food.substitute = $event.val;"
+                                :model="Models.FOOD"
+                                :initial_selection="food.substitute"
+                                label="name"
+                                :multiple="false"
+                                :placeholder="$t('Substitutes')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :description="$t('substitute_siblings_help')">
+                        <b-form-checkbox v-model="food.substitute_siblings">{{
+                                $t('substitute_siblings')
+                            }}
+                        </b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
+                        <generic-multiselect
+                                @change="food.inherit_fields = $event.val;"
+                                :model="Models.FOOD_INHERIT_FIELDS"
+                                :initial_selection="food.inherit_fields"
+                                label="name"
+                                :multiple="false"
+                                :placeholder="$t('InheritFields')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
+                        <generic-multiselect
+                                @change="food.child_inherit_fields = $event.val;"
+                                :model="Models.FOOD_INHERIT_FIELDS"
+                                :initial_selection="food.child_inherit_fields"
+                                label="name"
+                                :multiple="false"
+                                :placeholder="$t('ChildInheritFields')"
+                        ></generic-multiselect>
+                    </b-form-group>
+
+                    <!-- TODO change to a button -->
+                    <b-form-group :description="$t('reset_children_help')">
+                        <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
+                    </b-form-group>
+
+                    <b-button variant="primary" @click="updateFood">{{ $t('Save') }}</b-button>
+                </b-form>
+
+            </div>
+        </div>
 
     </div>
 </template>
@@ -49,8 +139,9 @@ import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiApiFactory} from "@/utils/openapi/api";
-
-import {ApiMixin} from "@/utils/utils";
+import RecipeCard from "@/components/RecipeCard.vue";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
 
 
 Vue.use(BootstrapVue)
@@ -59,31 +150,48 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {},
+    components: {
+        GenericMultiselect
+    },
     data() {
         return {
-            recipe: undefined,
-            selected_property: undefined,
+            food: undefined,
+            food_properties: [],
         }
-    },
-    computed: {
-        show_modal: function () {
-            return this.selected_property !== undefined
-        },
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
-        apiClient.retrieveRecipe('1').then((r) => {
-            this.recipe = r.data
+        apiClient.retrieveFood('1').then((r) => {
+            this.food = r.data
         })
 
+        apiClient.listFoodPropertyTypes().then((r) => {
+            r.data.forEach((fp) => {
+                this.food_properties.push({
+                    'food_amount': 0,
+                    'food_unit': null,
+                    'food': this.food,
+                    'property_amount': 0,
+                    'property_type': fp,
+                })
+            })
+        })
     },
-    methods: {},
+    methods: {
+        updateFood: function () {
+            let apiClient = new ApiApiFactory()
+            apiClient.updateFood(this.food.id, this.food).then((r) => {
+                this.food = r.data
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        }
+    },
 }
 </script>
 
 <style>
-
 
 </style>
