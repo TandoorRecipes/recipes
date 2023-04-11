@@ -168,6 +168,7 @@
     "create_title": "New {type}",
     "edit_title": "Edit {type}",
     "Name": "Name",
+    "Properties": "Properties",
     "Type": "Type",
     "Description": "Description",
     "Recipe": "Recipe",

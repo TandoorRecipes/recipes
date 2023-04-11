@@ -651,7 +651,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
             uch = UnitConversionHelper(self.context['request'].space)
             conversions = []
             for c in uch.get_conversions(obj):
-                conversions.append({'food': c.food.name, 'unit': c.unit.name , 'amount': c.amount})  # TODO do formatting in helper
+                conversions.append({'food': c.food.name, 'unit': c.unit.name, 'amount': c.amount})  # TODO do formatting in helper
             return conversions
         else:
             return []
@@ -726,7 +726,7 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 class UnitConversionSerializer(WritableNestedModelSerializer):
     base_unit = UnitSerializer()
     converted_unit = UnitSerializer()
-    food = FoodSerializer(allow_null=True)
+    food = FoodSerializer(allow_null=True, required=False)
     base_amount = CustomDecimalField()
     converted_amount = CustomDecimalField()
 
@@ -740,7 +740,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
         fields = ('id', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food')
 
 
-class NutritionTypeSerializer(serializers.ModelSerializer):
+class FoodPropertyTypeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
@@ -748,6 +748,22 @@ class NutritionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodPropertyType
         fields = ('id', 'name', 'icon', 'unit', 'description')
+
+
+class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    property_type = FoodPropertyTypeSerializer()
+    food = FoodSimpleSerializer()
+    unit = UnitSerializer()
+    # TODO prevent updates
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = FoodProperty
+        fields = ('id', 'food_amount', 'food_unit', 'food', 'property_amount', 'property_type')
+        read_only_fields = ('id',)
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):

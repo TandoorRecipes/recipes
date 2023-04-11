@@ -595,7 +595,7 @@ export class Models {
                     form_field: true,
                     type: "text",
                     field: "converted_amount",
-                    label: "base_amount",
+                    label: "converted_amount",
                     placeholder: "",
                 },
                 converted_unit: {

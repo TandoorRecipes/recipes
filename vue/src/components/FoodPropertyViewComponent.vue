@@ -2,8 +2,8 @@
     <div>
 
 
-        <div class="card" v-if="recipe !== undefined">
-            <h5>Properties</h5>
+        <div class="card p-2" v-if="recipe !== undefined" >
+            <h5><i class="fas fa-database"></i> {{$t('Properties')}}</h5>
             <table class="table table-bordered table-sm">
 
                 <tr v-for="p in recipe.food_properties" v-bind:key="`id_${p.id}`">

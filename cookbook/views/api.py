@@ -92,7 +92,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, NutritionTypeSerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, FoodPropertyTypeSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -971,7 +971,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
 
 class NutritionTypeViewSet(viewsets.ModelViewSet):
     queryset = FoodPropertyType.objects
-    serializer_class = NutritionTypeSerializer
+    serializer_class = FoodPropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
