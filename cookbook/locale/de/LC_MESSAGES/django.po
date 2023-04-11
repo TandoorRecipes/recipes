@@ -17,8 +17,8 @@ msgstr ""
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
 "PO-Revision-Date: 2023-02-09 13:55+0000\n"
 "Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
-"recipes-backend/de/>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
+"backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -298,7 +298,7 @@ msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
-"Felder bei welchen Akzente ignoriert werden. Das aktivieren dieser Option "
+"Felder bei welchen Akzente ignoriert werden.  Das aktivieren dieser Option "
 "kann die Suchqualität je nach Sprache verbessern oder verschlechtern"
 
 #: .\cookbook\forms.py:448
@@ -307,7 +307,7 @@ msgid ""
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
 "Felder welche auf partielle Treffer durchsucht werden.  (z.B. eine Suche "
-"nach \"Spa\" wird \"Spaghetti\", \"Spargel\" und \"Grünspargel\" liefern.)"
+"nach 'Spa' wird 'Spaghetti', 'Spargel' und 'Grünspargel' liefern.)"
 
 #: .\cookbook\forms.py:450
 msgid ""
@@ -556,7 +556,6 @@ msgstr "Fermentieren"
 msgid "sous-vide"
 msgstr "Sous-vide"
 
-
 #: .\cookbook\helper\shopping_helper.py:152
 msgid "You must supply a servings size"
 msgstr "Sie müssen eine Portionsgröße angeben"
@@ -729,13 +728,11 @@ msgstr "Stichwort Alias"
 
 #: .\cookbook\models.py:1231
 #, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
 msgstr "Beschreibung"
 
 #: .\cookbook\models.py:1231
 #, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
 msgstr "Anleitung"
 
@@ -963,7 +960,7 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Dieser Email-Bestätigungslink ist abgelaufen oder ungültig. Bitte \n"
+"Dieser Email-Bestätigungslink ist abgelaufen oder ungültig. Bitte\n"
 "            <a href=\"%(email_url)s\">beantrage einen neuen Email-"
 "Bestätigungslink</a>."
 
@@ -1079,7 +1076,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr "Passwort ändern"
+msgstr "passwort ändern"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
@@ -1448,7 +1445,7 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Rezept suchen..."
+msgstr "Rezept suchen ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
@@ -1733,8 +1730,8 @@ msgid ""
 msgstr ""
 " \n"
 "            Die Volltextsuche versucht Wörter in übliche Varianten zu "
-"normalisieren.  z.B.: \"Kürbis\", \"Kürbissuppe\", \"Kürbiskuchen\" werden "
-"alle zu \"Kürbis\" normalisiert..\n"
+"normalisieren.  z.B.: 'Kürbis', 'Kürbissuppe', 'Kürbiskuchen' werden alle zu "
+"'Kürbis' normalisiert..\n"
 "            Es sind verschiedene Methoden verfügbar, welche weiter unten "
 "genau beschrieben werden. Diese beeinflussen das Suchergebnis bei einer "
 "Suche mit mehreren Wörtern.\n"
@@ -1937,7 +1934,7 @@ msgstr ""
 "            Die Indizes für alle Felder können auf der Admin Seite neu "
 "erstellt werden.'\n"
 "            Ansonsten können die Indizes auch mit dem management command "
-"\"python manage.py rebuildindex\" neu erstellt werden.\n"
+"'python manage.py rebuildindex' neu erstellt werden.\n"
 "            "
 
 #: .\cookbook\templates\settings.html:25
@@ -3075,7 +3072,6 @@ msgstr ""
 #~ msgstr "Erledigt"
 
 #, fuzzy
-#~| msgid "You are offline, shopping list might not syncronize."
 #~ msgid "You are offline, shopping list might not synchronize."
 #~ msgstr "Du bist offline, die Einkaufsliste wird ggf. nicht synchronisiert."
 
@@ -3500,7 +3496,6 @@ msgstr ""
 #~ msgstr "Datei auswählen"
 
 #, fuzzy
-#~| msgid "Delete Recipe"
 #~ msgid "Select Recipe"
 #~ msgstr "Rezept löschen"
 
