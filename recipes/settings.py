@@ -13,6 +13,8 @@ import ast
 import json
 import os
 import re
+import sys
+import traceback
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -117,6 +119,34 @@ INSTALLED_APPS = [
     'cookbook.apps.CookbookConfig',
     'treebeard',
 ]
+
+PLUGINS = []
+try:
+    for d in os.listdir(os.path.join(BASE_DIR, 'recipes', 'plugins')):
+        if d != '__pycache__':
+            try:
+                apps_path = f'recipes.plugins.{d}.apps'
+                __import__(apps_path)
+                app_config_classname = dir(sys.modules[apps_path])[1]
+                plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
+                if plugin_module not in INSTALLED_APPS:
+                    INSTALLED_APPS.append(plugin_module)
+                    plugin_class = getattr(sys.modules[apps_path], app_config_classname)
+                    plugin_config = {
+                        'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                        'module': f'recipes.plugins.{d}',
+                        'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
+                        'base_url': plugin_class.base_url,
+                        'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                    }
+                    PLUGINS.append(plugin_config)
+            except Exception:
+                if DEBUG:
+                    traceback.print_exc()
+                    print(f'ERROR failed to initialize plugin {d}')
+except Exception:
+    if DEBUG:
+        print('ERROR failed to initialize plugins')
 
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -363,8 +393,19 @@ WEBPACK_LOADER = {
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-    }
+    },
 }
+
+for p in PLUGINS:
+    if p['bundle_name'] != '':
+        WEBPACK_LOADER[p['bundle_name']] = {
+            'CACHE': not DEBUG,
+            'BUNDLE_DIR_NAME': f'{p["base_path"]}/vue/',  # must end with slash
+            'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
+            'POLL_INTERVAL': 0.1,
+            'TIMEOUT': None,
+            'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
