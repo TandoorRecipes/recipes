@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-19 19:14+0100\n"
-"PO-Revision-Date: 2022-05-24 20:32+0000\n"
-"Last-Translator: Krisztian Doka <master@dnome.hu>\n"
+"PO-Revision-Date: 2023-04-12 11:55+0000\n"
+"Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
 "Language: hu_HU\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -1435,7 +1435,7 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr "Recept keresése..."
+msgstr "Recept keresése ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
