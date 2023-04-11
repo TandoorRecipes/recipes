@@ -23,6 +23,7 @@ from oauth2_provider.models import AccessToken
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
                             SpaceCreateForm, SpaceJoinForm, User,
                             UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
+from cookbook.helper.food_property_helper import FoodPropertyHelper
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
@@ -451,3 +452,4 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+    FoodPropertyHelper(request.space).generate_debug_recipe()

@@ -137,8 +137,9 @@
 
             <div class="row" style="margin-top: 2vh; ">
                 <div class="col-lg-6 offset-lg-3 col-12">
-                    <Nutrition-component :recipe="recipe" id="nutrition_container"
-                                         :ingredient_factor="ingredient_factor"></Nutrition-component>
+<!--                    <Nutrition-component :recipe="recipe" id="nutrition_container"-->
+<!--                                         :ingredient_factor="ingredient_factor"></Nutrition-component>-->
+                    <food-property-view-component :recipe="recipe"></food-property-view-component>
                 </div>
             </div>
         </div>
@@ -185,6 +186,7 @@ import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import ImportTandoor from "@/components/Modals/ImportTandoor.vue";
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
+import FoodPropertyViewComponent from "@/components/FoodPropertyViewComponent.vue";
 
 Vue.prototype.moment = moment
 
@@ -202,13 +204,14 @@ export default {
         IngredientsCard,
         StepComponent,
         RecipeContextMenu,
-        NutritionComponent,
+        // NutritionComponent,
         KeywordsComponent,
         LoadingSpinner,
         AddRecipeToBook,
         RecipeSwitcher,
         CustomInputSpinButton,
         BottomNavigationBar,
+        FoodPropertyViewComponent,
     },
     computed: {
         ingredient_factor: function () {
