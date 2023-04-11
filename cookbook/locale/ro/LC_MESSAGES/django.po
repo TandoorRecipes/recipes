@@ -2353,7 +2353,7 @@ msgstr ""
 #: .\cookbook\views\data.py:111
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
-msgid_plural "Batch edit done. %(count)d Recipes where updated."
+msgid_plural "Batch edit done. %(count)d recipes were updated."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
