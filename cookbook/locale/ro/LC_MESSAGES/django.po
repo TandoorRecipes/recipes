@@ -2488,7 +2488,7 @@ msgstr ""
 
 #: .\cookbook\views\new.py:227
 msgid ""
-"You have send to many emails, please share the link manually or wait a few "
+"You have sent too many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
 
