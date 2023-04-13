@@ -2806,7 +2806,7 @@ msgstr "Link-ul invita cu succes trimite la utilizator."
 
 #: .\cookbook\views\new.py:227
 msgid ""
-"You have send to many emails, please share the link manually or wait a few "
+"You have sent too many emails, please share the link manually or wait a few "
 "hours."
 msgstr ""
 "Ați trimis prea multe e-mailuri, vă rugăm să partajați manual linkul sau să "
