@@ -68,7 +68,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodPropertyType)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodPropertyType, FoodProperty)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -92,7 +92,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, FoodPropertyTypeSerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, FoodPropertyTypeSerializer, FoodPropertySerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -969,12 +969,31 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class NutritionTypeViewSet(viewsets.ModelViewSet):
+class FoodPropertyTypeViewSet(viewsets.ModelViewSet):
     queryset = FoodPropertyType.objects
     serializer_class = FoodPropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class FoodPropertyViewSet(viewsets.ModelViewSet):
+    queryset = FoodProperty.objects
+    serializer_class = FoodPropertySerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    query_params = [
+        QueryParam(name='food',
+                   description=_('ID of food to return properties for.'),
+                   qtype='int'),
+    ]
+    schema = QueryParamAutoSchema()
+
+    def get_queryset(self):
+        if food := self.request.query_params.get('food', None):
+            self.queryset = self.queryset.filter(food__id=food)
+
         return self.queryset.filter(space=self.request.space)
 
 

@@ -23,15 +23,15 @@
                     <h5><i class="fas fa-database"></i> {{ $t('Properties') }} <small class="text-muted">{{ food.name }}</small></h5>
                     <table class="table table-bordered" v-if="food_properties">
                         <tr v-for="fp in food_properties" v-bind:key="fp.id">
-                            <td><input  v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
+                            <td><input v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
                             <td><b> {{ fp.property_type.name }} </b></td>
                             <td> /</td>
-                            <td><input  v-model="fp.food_amount" type="number"> </td>
+                            <td><input v-model="fp.food_amount" type="number"></td>
                             <td>
                                 <generic-multiselect
                                         @change="fp.food_unit = $event.val;"
                                         :model="Models.UNIT"
-                                        :initial_selection="fp.food_unit"
+                                        :initial_single_selection="fp.food_unit"
                                         label="name"
                                         :multiple="false"
                                         :placeholder="$t('Unit')"
@@ -164,19 +164,43 @@ export default {
         let apiClient = new ApiApiFactory()
         apiClient.retrieveFood('1').then((r) => {
             this.food = r.data
-        })
 
-        apiClient.listFoodPropertyTypes().then((r) => {
-            r.data.forEach((fp) => {
-                this.food_properties.push({
-                    'food_amount': 0,
-                    'food_unit': null,
-                    'food': this.food,
-                    'property_amount': 0,
-                    'property_type': fp,
+            let property_types = []
+            let property_values = []
+
+            let p1 = apiClient.listFoodPropertyTypes().then((r) => {
+                property_types = r.data
+            })
+
+            let p2 = apiClient.listFoodPropertys(this.food.id).then((r) => {
+                property_values = r.data
+            })
+
+            Promise.allSettled([p1, p2]).then(r => {
+                property_types.forEach(fpt => {
+                    let food_property = {
+                        'food_amount': 0,
+                        'food_unit': null,
+                        'food': this.food,
+                        'property_amount': 0,
+                        'property_type': fpt,
+                    }
+
+                    property_values.forEach(fpv => {
+                        if (fpv.property_type.id === fpt.id) {
+                            food_property.id = fpv.id
+                            food_property.food_amount = fpv.food_amount
+                            food_property.food_unit = fpv.food_unit
+                            food_property.property_amount = fpv.property_amount
+                        }
+                    })
+
+                    this.food_properties.push(food_property)
                 })
             })
         })
+
+
     },
     methods: {
         updateFood: function () {
@@ -186,6 +210,23 @@ export default {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+
+            this.food_properties.forEach(fp => {
+                if (fp.id === undefined) {
+                    apiClient.createFoodProperty(fp).then((r) => {
+                        fp = r.data
+                    }).catch(err => {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                    })
+                } else {
+                    apiClient.updateFoodProperty(fp.id, fp).then((r) => {
+                        fp = r.data
+                    }).catch(err => {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                    })
+                }
+
             })
         }
     },
