@@ -753,7 +753,10 @@ class FoodPropertyTypeSerializer(serializers.ModelSerializer):
 class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     property_type = FoodPropertyTypeSerializer()
     food = FoodSimpleSerializer()
-    unit = UnitSerializer()
+    food_unit = UnitSerializer()
+    food_amount = CustomDecimalField()
+    property_amount = CustomDecimalField()
+
     # TODO prevent updates
 
     def create(self, validated_data):

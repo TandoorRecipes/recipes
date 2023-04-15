@@ -589,6 +589,123 @@ export interface FoodInheritFields {
 /**
  * 
  * @export
+ * @interface FoodProperty
+ */
+export interface FoodProperty {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodProperty
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodProperty
+     */
+    food_amount?: string;
+    /**
+     * 
+     * @type {UnitConversionBaseUnit}
+     * @memberof FoodProperty
+     */
+    food_unit: UnitConversionBaseUnit;
+    /**
+     * 
+     * @type {FoodSubstitute}
+     * @memberof FoodProperty
+     */
+    food: FoodSubstitute;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodProperty
+     */
+    property_amount?: string;
+    /**
+     * 
+     * @type {FoodPropertyPropertyType}
+     * @memberof FoodProperty
+     */
+    property_type: FoodPropertyPropertyType;
+}
+/**
+ * 
+ * @export
+ * @interface FoodPropertyPropertyType
+ */
+export interface FoodPropertyPropertyType {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodPropertyPropertyType
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyPropertyType
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyPropertyType
+     */
+    icon?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyPropertyType
+     */
+    unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyPropertyType
+     */
+    description?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface FoodPropertyType
+ */
+export interface FoodPropertyType {
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodPropertyType
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyType
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyType
+     */
+    icon?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyType
+     */
+    unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodPropertyType
+     */
+    description?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface FoodRecipe
  */
 export interface FoodRecipe {
@@ -1908,43 +2025,6 @@ export interface MealType {
      * @memberof MealType
      */
     created_by?: string;
-}
-/**
- * 
- * @export
- * @interface NutritionType
- */
-export interface NutritionType {
-    /**
-     * 
-     * @type {number}
-     * @memberof NutritionType
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof NutritionType
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof NutritionType
-     */
-    icon?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof NutritionType
-     */
-    unit?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof NutritionType
-     */
-    description?: string | null;
 }
 /**
  * 
@@ -3728,7 +3808,7 @@ export interface UnitConversion {
      * @type {IngredientFood}
      * @memberof UnitConversion
      */
-    food: IngredientFood | null;
+    food?: IngredientFood | null;
 }
 /**
  * 
@@ -4360,12 +4440,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {NutritionType} [nutritionType] 
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFoodPropertyType: async (nutritionType?: NutritionType, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/nutrition-type/`;
+        createFoodProperty: async (foodProperty?: FoodProperty, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-property/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4384,7 +4464,40 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(nutritionType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodProperty, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createFoodPropertyType: async (foodPropertyType?: FoodPropertyType, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-property-type/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(foodPropertyType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5450,6 +5563,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyFoodProperty: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyFoodProperty', 'id', id)
+            const localVarPath = `/api/food-property/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food property type.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5457,7 +5603,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         destroyFoodPropertyType: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('destroyFoodPropertyType', 'id', id)
-            const localVarPath = `/api/nutrition-type/{id}/`
+            const localVarPath = `/api/food-property-type/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6516,7 +6662,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @throws {RequiredError}
          */
         listFoodPropertyTypes: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/nutrition-type/`;
+            const localVarPath = `/api/food-property-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -6527,6 +6673,40 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to return properties for.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFoodPropertys: async (food?: number, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-property/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (food !== undefined) {
+                localVarQueryParameter['food'] = food;
+            }
 
 
     
@@ -8175,15 +8355,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateFoodPropertyType: async (id: string, nutritionType?: NutritionType, options: any = {}): Promise<RequestArgs> => {
+        partialUpdateFoodProperty: async (id: string, foodProperty?: FoodProperty, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('partialUpdateFoodPropertyType', 'id', id)
-            const localVarPath = `/api/nutrition-type/{id}/`
+            assertParamExists('partialUpdateFoodProperty', 'id', id)
+            const localVarPath = `/api/food-property/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8203,7 +8383,44 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(nutritionType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodProperty, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateFoodPropertyType: async (id: string, foodPropertyType?: FoodPropertyType, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('partialUpdateFoodPropertyType', 'id', id)
+            const localVarPath = `/api/food-property-type/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(foodPropertyType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9505,6 +9722,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveFoodProperty: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('retrieveFoodProperty', 'id', id)
+            const localVarPath = `/api/food-property/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food property type.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9512,7 +9762,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         retrieveFoodPropertyType: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('retrieveFoodPropertyType', 'id', id)
-            const localVarPath = `/api/nutrition-type/{id}/`
+            const localVarPath = `/api/food-property-type/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10894,15 +11144,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFoodPropertyType: async (id: string, nutritionType?: NutritionType, options: any = {}): Promise<RequestArgs> => {
+        updateFoodProperty: async (id: string, foodProperty?: FoodProperty, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('updateFoodPropertyType', 'id', id)
-            const localVarPath = `/api/nutrition-type/{id}/`
+            assertParamExists('updateFoodProperty', 'id', id)
+            const localVarPath = `/api/food-property/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10922,7 +11172,44 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(nutritionType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodProperty, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateFoodPropertyType: async (id: string, foodPropertyType?: FoodPropertyType, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('updateFoodPropertyType', 'id', id)
+            const localVarPath = `/api/food-property-type/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(foodPropertyType, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11859,12 +12146,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {NutritionType} [nutritionType] 
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createFoodPropertyType(nutritionType?: NutritionType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NutritionType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createFoodPropertyType(nutritionType, options);
+        async createFoodProperty(foodProperty?: FoodProperty, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodProperty>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createFoodProperty(foodProperty, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createFoodPropertyType(foodPropertyType?: FoodPropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodPropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createFoodPropertyType(foodPropertyType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12180,6 +12477,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async destroyFood(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.destroyFood(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async destroyFoodProperty(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyFoodProperty(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12506,8 +12813,18 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFoodPropertyTypes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<NutritionType>>> {
+        async listFoodPropertyTypes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<FoodPropertyType>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFoodPropertyTypes(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to return properties for.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listFoodPropertys(food?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<FoodProperty>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listFoodPropertys(food, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12979,13 +13296,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async partialUpdateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NutritionType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateFoodPropertyType(id, nutritionType, options);
+        async partialUpdateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodProperty>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateFoodProperty(id, foodProperty, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodPropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateFoodPropertyType(id, foodPropertyType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13371,11 +13699,21 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async retrieveFoodProperty(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodProperty>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFoodProperty(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food property type.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async retrieveFoodPropertyType(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NutritionType>> {
+        async retrieveFoodPropertyType(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodPropertyType>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFoodPropertyType(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13790,13 +14128,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<NutritionType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFoodPropertyType(id, nutritionType, options);
+        async updateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodProperty>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFoodProperty(id, foodProperty, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodPropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateFoodPropertyType(id, foodPropertyType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14121,12 +14470,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {NutritionType} [nutritionType] 
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createFoodPropertyType(nutritionType?: NutritionType, options?: any): AxiosPromise<NutritionType> {
-            return localVarFp.createFoodPropertyType(nutritionType, options).then((request) => request(axios, basePath));
+        createFoodProperty(foodProperty?: FoodProperty, options?: any): AxiosPromise<FoodProperty> {
+            return localVarFp.createFoodProperty(foodProperty, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createFoodPropertyType(foodPropertyType?: FoodPropertyType, options?: any): AxiosPromise<FoodPropertyType> {
+            return localVarFp.createFoodPropertyType(foodPropertyType, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14411,6 +14769,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         destroyFood(id: string, options?: any): AxiosPromise<void> {
             return localVarFp.destroyFood(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyFoodProperty(id: string, options?: any): AxiosPromise<void> {
+            return localVarFp.destroyFoodProperty(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -14704,8 +15071,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFoodPropertyTypes(options?: any): AxiosPromise<Array<NutritionType>> {
+        listFoodPropertyTypes(options?: any): AxiosPromise<Array<FoodPropertyType>> {
             return localVarFp.listFoodPropertyTypes(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to return properties for.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listFoodPropertys(food?: number, options?: any): AxiosPromise<Array<FoodProperty>> {
+            return localVarFp.listFoodPropertys(food, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15134,13 +15510,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        partialUpdateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any): AxiosPromise<NutritionType> {
-            return localVarFp.partialUpdateFoodPropertyType(id, nutritionType, options).then((request) => request(axios, basePath));
+        partialUpdateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any): AxiosPromise<FoodProperty> {
+            return localVarFp.partialUpdateFoodProperty(id, foodProperty, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any): AxiosPromise<FoodPropertyType> {
+            return localVarFp.partialUpdateFoodPropertyType(id, foodPropertyType, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15490,11 +15876,20 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        retrieveFoodProperty(id: string, options?: any): AxiosPromise<FoodProperty> {
+            return localVarFp.retrieveFoodProperty(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this food property type.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        retrieveFoodPropertyType(id: string, options?: any): AxiosPromise<NutritionType> {
+        retrieveFoodPropertyType(id: string, options?: any): AxiosPromise<FoodPropertyType> {
             return localVarFp.retrieveFoodPropertyType(id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15868,13 +16263,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this food property type.
-         * @param {NutritionType} [nutritionType] 
+         * @param {string} id A unique integer value identifying this food property.
+         * @param {FoodProperty} [foodProperty] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any): AxiosPromise<NutritionType> {
-            return localVarFp.updateFoodPropertyType(id, nutritionType, options).then((request) => request(axios, basePath));
+        updateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any): AxiosPromise<FoodProperty> {
+            return localVarFp.updateFoodProperty(id, foodProperty, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this food property type.
+         * @param {FoodPropertyType} [foodPropertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any): AxiosPromise<FoodPropertyType> {
+            return localVarFp.updateFoodPropertyType(id, foodPropertyType, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -16190,13 +16595,24 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {NutritionType} [nutritionType] 
+     * @param {FoodProperty} [foodProperty] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public createFoodPropertyType(nutritionType?: NutritionType, options?: any) {
-        return ApiApiFp(this.configuration).createFoodPropertyType(nutritionType, options).then((request) => request(this.axios, this.basePath));
+    public createFoodProperty(foodProperty?: FoodProperty, options?: any) {
+        return ApiApiFp(this.configuration).createFoodProperty(foodProperty, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {FoodPropertyType} [foodPropertyType] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createFoodPropertyType(foodPropertyType?: FoodPropertyType, options?: any) {
+        return ApiApiFp(this.configuration).createFoodPropertyType(foodPropertyType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16543,6 +16959,17 @@ export class ApiApi extends BaseAPI {
      */
     public destroyFood(id: string, options?: any) {
         return ApiApiFp(this.configuration).destroyFood(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food property.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public destroyFoodProperty(id: string, options?: any) {
+        return ApiApiFp(this.configuration).destroyFoodProperty(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -16904,6 +17331,17 @@ export class ApiApi extends BaseAPI {
      */
     public listFoodPropertyTypes(options?: any) {
         return ApiApiFp(this.configuration).listFoodPropertyTypes(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} [food] ID of food to return properties for.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listFoodPropertys(food?: number, options?: any) {
+        return ApiApiFp(this.configuration).listFoodPropertys(food, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -17417,14 +17855,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id A unique integer value identifying this food property type.
-     * @param {NutritionType} [nutritionType] 
+     * @param {string} id A unique integer value identifying this food property.
+     * @param {FoodProperty} [foodProperty] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public partialUpdateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any) {
-        return ApiApiFp(this.configuration).partialUpdateFoodPropertyType(id, nutritionType, options).then((request) => request(this.axios, this.basePath));
+    public partialUpdateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateFoodProperty(id, foodProperty, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food property type.
+     * @param {FoodPropertyType} [foodPropertyType] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public partialUpdateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateFoodPropertyType(id, foodPropertyType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -17841,6 +18291,17 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveFoodInheritField(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveFoodInheritField(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food property.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public retrieveFoodProperty(id: string, options?: any) {
+        return ApiApiFp(this.configuration).retrieveFoodProperty(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -18305,14 +18766,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id A unique integer value identifying this food property type.
-     * @param {NutritionType} [nutritionType] 
+     * @param {string} id A unique integer value identifying this food property.
+     * @param {FoodProperty} [foodProperty] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public updateFoodPropertyType(id: string, nutritionType?: NutritionType, options?: any) {
-        return ApiApiFp(this.configuration).updateFoodPropertyType(id, nutritionType, options).then((request) => request(this.axios, this.basePath));
+    public updateFoodProperty(id: string, foodProperty?: FoodProperty, options?: any) {
+        return ApiApiFp(this.configuration).updateFoodProperty(id, foodProperty, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this food property type.
+     * @param {FoodPropertyType} [foodPropertyType] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public updateFoodPropertyType(id: string, foodPropertyType?: FoodPropertyType, options?: any) {
+        return ApiApiFp(this.configuration).updateFoodPropertyType(id, foodPropertyType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
