@@ -6,7 +6,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, FoodInheritField, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
@@ -433,6 +433,8 @@ def test_merge(u1_s1, obj_tree_1, obj_1, obj_3, space_1):
 
 def test_merge_errors(u1_s1, obj_tree_1, obj_3, space_1):
     with scope(space=space_1):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
 
     # attempt to merge with non-existent parent
@@ -507,7 +509,7 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
      'supermarket_category', True, 'cat_1'),
     ({'has_category': True, 'inherit': False},
      'supermarket_category', False, 'cat_1'),
-    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
+    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping', True, 'false'),
     ({'ignore_shopping': True, 'inherit': False},
      'ignore_shopping', False, 'false'),
     ({'substitute_children': True, 'inherit': True},

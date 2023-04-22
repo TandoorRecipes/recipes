@@ -50,7 +50,7 @@
             </td>
             <td v-if="detailed">
                 <div v-if="ingredient.note">
-                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable p-0 pl-md-2 pr-md-2">
+                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable p-0">
                         <i class="far fa-comment"></i>
                     </span>
 
@@ -101,7 +101,7 @@ export default {
 .touchable {
     padding-right: 2em;
     padding-left: 3em;
-    margin-right: -3em;
-    margin-left: -2em;
+    margin-right: -2em;
+    margin-left: -3em;
 }
 </style>
