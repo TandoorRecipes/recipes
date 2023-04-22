@@ -77,7 +77,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         if extracted:
             for prefs in extracted:
                 # intentionally break so it can be debugged later
-                self.userpreference[prefs] = extracted[prefs]/0
+                self.userpreference[prefs] = extracted[prefs] / 0
 
     class Meta:
         model = User
@@ -233,7 +233,7 @@ class MealTypeFactory(factory.django.DjangoModelFactory):
 @register
 class MealPlanFactory(factory.django.DjangoModelFactory):
     recipe = factory.Maybe(
-        factory.LazyAttribute(lambda x:  x.has_recipe),
+        factory.LazyAttribute(lambda x: x.has_recipe),
         yes_declaration=factory.SubFactory(
             'cookbook.tests.factories.RecipeFactory', space=factory.SelfAttribute('..space')),
         no_declaration=None
