@@ -49,13 +49,13 @@
                 </template>
             </td>
             <td v-if="detailed">
-                <div v-if="ingredient.note">
-                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable p-0">
+                <template v-if="ingredient.note">
+                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable py-0 px-2">
                         <i class="far fa-comment"></i>
                     </span>
 
                     <div class="d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}</div>
-                </div>
+                </template>
             </td>
         </template>
     </tr>
@@ -99,9 +99,9 @@ export default {
 <style scoped>
 /* increase size of hover/touchable space without changing spacing */
 .touchable {
-    padding-right: 2em;
-    padding-left: 3em;
-    margin-right: -2em;
-    margin-left: -3em;
+    /* padding-right: 2em;
+    padding-left: 2em; */
+    margin-right: -1em;
+    margin-left: -1em;
 }
 </style>
