@@ -527,5 +527,6 @@
     "plural_usage_info": "Use the plural form for units and food inside this space.",
     "Create Recipe": "Create Recipe",
     "Import Recipe": "Import Recipe",
-    "Never_Unit": "Never Unit"
+    "Never_Unit": "Never Unit",
+    "Transpose_Words": "Transpose Words"
 }
