@@ -477,8 +477,11 @@ def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root=0').content)
     assert len(response['results']) == 2
 
+    # django_tree bypasses ORM - best to retrieve all changed objects
     with scopes_disabled():
         obj_2.move(parent, node_location)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        parent = Food.objects.get(id=parent.id)
     # should return direct children of parent (obj_tree_1, obj_2), ignoring query filters
     response = json.loads(
         u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}').content)
@@ -491,9 +494,12 @@ def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
 def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
         # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
-        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
         obj_2.move(parent, node_location)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        parent = Food.objects.get(id=parent.id)
+
     # should return full tree starting at parent (obj_tree_1, obj_2), ignoring query filters
     response = json.loads(
         u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
