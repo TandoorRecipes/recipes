@@ -558,6 +558,8 @@ export class Models {
                         { value: "KEYWORD_ALIAS", text: "Keyword_Alias" },
                         { value: "DESCRIPTION_REPLACE", text: "Description_Replace" },
                         { value: "INSTRUCTION_REPLACE", text: "Instruction_Replace" },
+                        { value: "NEVER_UNIT", text: "Never_Unit" },
+                        { value: "TRANSPOSE_WORDS", text: "Transpose_Words" },
                     ],
                     field: "type",
                     label: "Type",
