@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 import oauth2_provider.models
-from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
@@ -14,13 +13,14 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q, Avg, Max
+from django.db.models import Avg, Index, Max, ProtectedError, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
 from django_scopes import ScopedManager, scopes_disabled
+from PIL import Image
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PREF_DEFAULT,
@@ -1314,10 +1314,12 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
     DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
     INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
+    NEVER_UNIT = 'NEVER_UNIT'
 
     type = models.CharField(max_length=128,
                             choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
-                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
+                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),
+                                     (NEVER_UNIT, _('Never Unit')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
