@@ -1320,11 +1320,12 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
     INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
     NEVER_UNIT = 'NEVER_UNIT'
+    TRANSPOSE_WORDS = 'TRANSPOSE_WORDS'
 
     type = models.CharField(max_length=128,
                             choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
                                      (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),
-                                     (NEVER_UNIT, _('Never Unit')),))
+                                     (NEVER_UNIT, _('Never Unit')), (TRANSPOSE_WORDS, _('Transpose Words')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
