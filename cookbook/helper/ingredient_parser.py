@@ -13,6 +13,7 @@ class IngredientParser:
     food_aliases = {}
     unit_aliases = {}
     never_unit = {}
+    transpose_words = {}
 
     def __init__(self, request, cache_mode, ignore_automations=False):
         """
@@ -50,10 +51,22 @@ class IngredientParser:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
                     self.never_unit[a.param_1] = a.param_2
                 caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
+
+            TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
+            if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
+                self.transpose_words = c
+                caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
+            else:
+                i = 0
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
+                    self.never_unit[i] = [a.param_1, a.param_2]
+                    i += 1
+                caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
             self.food_aliases = {}
             self.unit_aliases = {}
             self.never_unit = {}
+            self.transpose_words = {}
 
     def apply_food_automation(self, food):
         """
@@ -83,7 +96,7 @@ class IngredientParser:
         if self.ignore_rules:
             return unit
         else:
-            if self.unit_aliases:
+            if self.transpose_words:
                 try:
                     return self.unit_aliases[unit]
                 except KeyError:
@@ -249,15 +262,31 @@ class IngredientParser:
 
         return tokens
 
-    def parse_tokens(self, tokens):
+    def apply_transpose_words_automations(self, ingredient):
         """
-        parser that applies automations to unmodified tokens
+        If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
+        :param 1: first word to detect
+        :param 2: second word to detect
+        return: new ingredient string
         """
 
+        ####################################################
+        ####################################################
+        ####################################################
+        ####################################################
         if self.ignore_rules:
-            return tokens
+            return ingredient
 
-        return self.apply_never_unit_automations(tokens)
+        else:
+            if self.transpose_words:
+                for rule in self.transpose_words:
+                    ingredient = re.sub(rf"\b({rule[0]}) ({rule[1]})\b", r"\2 \1", ingredient)
+
+            else:
+                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).order_by('order'):
+                    ingredient = re.sub(rf"\b({rule.param_1}) ({rule.param_2})\b", r"\2 \1", ingredient)
+
+        return ingredient
 
     def parse(self, ingredient):
         """
@@ -274,6 +303,8 @@ class IngredientParser:
 
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
+
+        ingredient = self.apply_transpose_words_automations(ingredient)
 
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
@@ -311,7 +342,7 @@ class IngredientParser:
                 # three arguments if it already has a unit there can't be
                 # a fraction for the amount
                 if len(tokens) > 2:
-                    tokens = self.parse_tokens(tokens)
+                    tokens = self.apply_never_unit_automations(tokens)
                     try:
                         if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
