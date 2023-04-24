@@ -68,6 +68,17 @@ You can also create them manually by setting the following
 These rules are processed whenever you are importing recipes from websites or other apps
 and when using the simple ingredient input (shopping, recipe editor, ...).
 
+## Transpose Words
+
+Some recipes list the food before the units for some foods (garlic cloves). This automation will transpose 2 words in an
+ingredient so "garlic cloves" will automatically become "cloves garlic"
+
+-   **Parameter 1**: first word to detect
+-   **Parameter 2**: second word to detect
+
+These rules are processed whenever you are importing recipes from websites or other apps
+and when using the simple ingredient input (shopping, recipe editor, ...).
+
 # Order
 
 If the Automation type allows for more than one rule to be executed (for example description replace)
