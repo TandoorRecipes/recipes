@@ -3,6 +3,7 @@ import string
 import unicodedata
 
 from django.core.cache import caches
+from django.db.models import Q
 
 from cookbook.models import Automation, Food, Ingredient, Unit
 
@@ -59,7 +60,7 @@ class IngredientParser:
             else:
                 i = 0
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
-                    self.never_unit[i] = [a.param_1, a.param_2]
+                    self.transpose_words[i] = [a.param_1, a.param_2]
                     i += 1
                 caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
@@ -270,22 +271,21 @@ class IngredientParser:
         return: new ingredient string
         """
 
-        ####################################################
-        ####################################################
-        ####################################################
-        ####################################################
         if self.ignore_rules:
             return ingredient
 
         else:
+            tokens = ingredient.replace(',',' ').split()
             if self.transpose_words:
-                for rule in self.transpose_words:
-                    ingredient = re.sub(rf"\b({rule[0]}) ({rule[1]})\b", r"\2 \1", ingredient)
-
+                filtered_rules = {}
+                for key, value in self.transpose_words.items():
+                    if value[0] in tokens and value[1] in tokens:
+                        filtered_rules[key] = value
+                for k, v in filtered_rules.items():
+                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
             else:
-                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).order_by('order'):
-                    ingredient = re.sub(rf"\b({rule.param_1}) ({rule.param_2})\b", r"\2 \1", ingredient)
-
+                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).filter(Q(Q(param_1__in=tokens) | Q(param_2__in=tokens))).order_by('order'):
+                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
         return ingredient
 
     def parse(self, ingredient):
@@ -303,8 +303,6 @@ class IngredientParser:
 
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
-
-        ingredient = self.apply_transpose_words_automations(ingredient)
 
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
@@ -329,6 +327,8 @@ class IngredientParser:
         # if amount and unit are connected add space in between
         if re.match('([0-9])+([A-z])+\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
+
+        ingredient = self.apply_transpose_words_automations(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
