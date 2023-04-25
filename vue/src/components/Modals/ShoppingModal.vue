@@ -100,9 +100,7 @@ export default {
             recipe_servings: undefined,
             add_shopping: [],
             related_recipes: [],
-            settings: {
-                ingredient_context: false,
-            },
+            settings: null,
         }
     },
     mounted() {
