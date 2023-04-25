@@ -274,10 +274,6 @@ class IngredientParser:
         return: new ingredient string
         """
 
-        ####################################################
-        ####################################################
-        ####################################################
-        ####################################################
         if self.ignore_rules:
             return ingredient
 
@@ -312,8 +308,6 @@ class IngredientParser:
 
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
-
-        ingredient = self.apply_transpose_words_automations(ingredient)
 
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
