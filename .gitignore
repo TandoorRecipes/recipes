@@ -78,6 +78,7 @@ postgresql/
 
 /docker-compose.override.yml
 vue/node_modules
+plugins
 .vscode/
 vetur.config.js
 cookbook/static/vue
