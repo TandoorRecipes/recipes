@@ -1401,17 +1401,17 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
-    if request.user.is_authenticated:
-        if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
-            recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
-            link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-            return JsonResponse({'pk': pk, 'share': link.uuid,
-                                 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
-        else:
-            return JsonResponse({'error': 'sharing_disabled'}, status=403)
-
-    return JsonResponse({'error': 'not_authenticated'}, status=403)
+    if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
+        recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
+        link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
+        return JsonResponse({'pk': pk, 'share': link.uuid,
+                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+    else:
+        return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
 @group_required('user')
