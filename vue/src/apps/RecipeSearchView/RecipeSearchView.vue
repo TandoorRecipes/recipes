@@ -606,7 +606,6 @@
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                             </b-input-group>
-
                                         </div>
                                     </div>
 
