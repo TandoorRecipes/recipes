@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-26 07:46+0200\n"
-"PO-Revision-Date: 2023-04-12 11:55+0000\n"
-"Last-Translator: noxonad <noxonad@proton.me>\n"
+"PO-Revision-Date: 2023-04-29 07:55+0000\n"
+"Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
 "Language: it\n"
@@ -531,10 +531,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "Uno tra queryset o has_key deve essere fornito"
 
 #: .\cookbook\helper\recipe_url_import.py:266
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Usa frazioni"
+msgstr "rotazione inversa"
 
 #: .\cookbook\helper\recipe_url_import.py:267
 msgid "careful rotation"
@@ -604,10 +602,8 @@ msgid "Imported %s recipes."
 msgstr "Importate %s ricette."
 
 #: .\cookbook\integration\openeats.py:26
-#, fuzzy
-#| msgid "Recipe Home"
 msgid "Recipe source:"
-msgstr "Pagina iniziale ricette"
+msgstr "Fonte ricetta:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -1929,10 +1925,12 @@ msgid ""
 "Allows fine control over search results but might not return results if too "
 "many spelling mistakes are made."
 msgstr ""
+"Consente un controllo preciso sui risultati della ricerca, ma potrebbe non "
+"mostrare risultati se vengono commessi troppi errori."
 
 #: .\cookbook\templates\settings.html:44
 msgid "Perfect for large Databases"
-msgstr "Perfetto per database grandi"
+msgstr "Ideale per database grandi"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
@@ -1954,10 +1952,8 @@ msgstr "Crea super utente"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
-#, fuzzy
-#| msgid "Social Login"
 msgid "Social Network Login Failure"
-msgstr "Login con social network"
+msgstr "Errore di login con Social Network"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
