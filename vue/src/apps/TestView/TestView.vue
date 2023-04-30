@@ -9,6 +9,17 @@
                 <option v-for="v in metadata.versions" v-bind:key="v">{{ v }}</option>
             </select>
 
+            <select  class="form-control">
+                <option>{{$t('Metric')}}</option>
+                <option>{{$t('Imperial')}}</option>
+            </select>
+
+             <select  class="form-control">
+                 <option selected>{{$t('Ignore')}}</option>
+                 <option>{{$t('Merge')}}</option>
+                 <option>{{$t('Replace')}}</option>
+            </select>
+
             <div v-if="selected_version !== undefined">
                 <table class="table">
                     <tr>

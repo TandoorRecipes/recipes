@@ -54,6 +54,7 @@ from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.open_data_importer import import_units, import_category, import_property, import_supermarket
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
@@ -1437,31 +1438,15 @@ class ImportOpenData(APIView):
         response = requests.get(f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
         data = json.loads(response.content)
 
-        unit_name_list = []
-        for u in list(data['unit'].keys()):
-            unit_name_list.append(data['unit'][u]['name'])
-            unit_name_list.append(data['unit'][u]['plural_name'])
-
-        existing_units = Unit.objects.filter(space=request.space).filter(Q(name__in=unit_name_list) | Q(plural_name__in=unit_name_list)).values_list('name', 'plural_name')
-        existing_units = [item for sublist in existing_units for item in sublist]
-
-        insert_list = []
-        for u in list(data['unit'].keys()):
-            if not (data['unit'][u]['name'] in existing_units or data['unit'][u]['plural_name'] in existing_units):
-                insert_list.append(Unit(
-                    name=data['unit'][u]['name'],
-                    plural_name=data['unit'][u]['plural_name'],
-                    base_unit=data['unit'][u]['base_unit'] if data['unit'][u]['base_unit'] != '' else None,
-                    space=request.space
-                ))
-
-        Unit.objects.bulk_create(insert_list)
+        import_units(data, request)
+        import_category(data, request)
+        import_property(data, request)
+        import_supermarket(data, request)
 
         # TODO hardcode insert order?
         # TODO split into update/create lists with multiple parameters per datatype
-        print(existing_units)
         return Response({
-            'test': existing_units
+            'test': ''
         })
 
 
