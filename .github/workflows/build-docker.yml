@@ -115,13 +115,17 @@ jobs:
     needs: build-container
     if: startsWith(github.ref, 'refs/tags/')
     steps:
+      - name: Set tag name
+        run: |
+          # Strip "refs/tags/" prefix
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
       # Send stable discord notification
       - name: Discord notification
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
         uses: Ilshidur/action-discord@0.3.2
         with:
-          args: '🚀 Version {{ EVENT_PAYLOAD.release.tag_name }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ EVENT_PAYLOAD.release.tag_name }}'
+          args: '🚀 Version {{ VERSION }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ VERSION }}'
 
   notify-beta:
     name: Notify Beta
