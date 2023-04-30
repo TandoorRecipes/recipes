@@ -1,133 +1,35 @@
 <template>
 
     <div id="app">
-        <div class="row" v-if="food">
-            <div class="col-12">
-                <h2>{{ food.name }} <small class="text-muted" v-if="food.plural_name">{{ food.plural_name }}</small>
-                </h2>
+        Import Component
+
+        <div v-id="metadata !== undefined">
+
+            <select class="form-control" v-model="selected_version">
+                <option v-for="v in metadata.versions" v-bind:key="v">{{ v }}</option>
+            </select>
+
+            <div v-if="selected_version !== undefined">
+                <table class="table">
+                    <tr>
+                        <th>{{ $t('Datatype') }}</th>
+                        <th>{{ $t('Number of Objects') }}</th>
+                    </tr>
+                    <tr v-for="d in metadata.datatypes" v-bind:key="d">
+                        <td>{{ d }}</td>
+                        <td>{{ metadata[selected_version][d] }}</td>
+                    </tr>
+                </table>
+
+                <button class="btn btn-success" @click="doImport">{{ $t('Import') }}</button>
             </div>
+
+            <div v-if="response_data !== undefined">
+                {{response_data}}
+            </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-12">
-                <b-form v-if="food">
-                    <b-form-group :label="$t('Name')" description="">
-                        <b-form-input v-model="food.name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group :label="$t('Plural')" description="">
-                        <b-form-input v-model="food.plural_name"></b-form-input>
-                    </b-form-group>
-
-                    <!-- Food properties -->
-
-                    <h5><i class="fas fa-database"></i> {{ $t('Properties') }} <small class="text-muted">{{ food.name }}</small></h5>
-                    <table class="table table-bordered" v-if="food_properties">
-                        <tr v-for="fp in food_properties" v-bind:key="fp.id">
-                            <td><input v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
-                            <td><b> {{ fp.property_type.name }} </b></td>
-                            <td> /</td>
-                            <td><input v-model="fp.food_amount" type="number"></td>
-                            <td>
-                                <generic-multiselect
-                                        @change="fp.food_unit = $event.val;"
-                                        :model="Models.UNIT"
-                                        :initial_single_selection="fp.food_unit"
-                                        label="name"
-                                        :multiple="false"
-                                        :placeholder="$t('Unit')"
-                                ></generic-multiselect>
-                            </td>
-                        </tr>
-                    </table>
-
-
-                    <!-- Unit conversion -->
-
-                    <!-- ADVANCED FEATURES somehow hide this stuff -->
-
-                    <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
-                        <generic-multiselect
-                                @change="food.recipe = $event.val;"
-                                :model="Models.RECIPE"
-                                :initial_selection="food.recipe"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('Recipe')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('OnHand_help')">
-                        <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('ignore_shopping_help')">
-                        <b-form-checkbox v-model="food.ignore_shopping">{{ $t('Ignore_Shopping') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
-                        <generic-multiselect
-                                @change="food.supermarket_category = $event.val;"
-                                :model="Models.SHOPPING_CATEGORY"
-                                :initial_selection="food.supermarket_category"
-                                label="name"
-                                :multiple="false"
-                                :allow_create="true"
-                                :placeholder="$t('Shopping_Category')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <hr/>
-                    <!-- todo add conditions if false disable dont hide -->
-                    <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
-                        <generic-multiselect
-                                @change="food.substitute = $event.val;"
-                                :model="Models.FOOD"
-                                :initial_selection="food.substitute"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('Substitutes')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('substitute_siblings_help')">
-                        <b-form-checkbox v-model="food.substitute_siblings">{{
-                                $t('substitute_siblings')
-                            }}
-                        </b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
-                        <generic-multiselect
-                                @change="food.inherit_fields = $event.val;"
-                                :model="Models.FOOD_INHERIT_FIELDS"
-                                :initial_selection="food.inherit_fields"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('InheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
-                        <generic-multiselect
-                                @change="food.child_inherit_fields = $event.val;"
-                                :model="Models.FOOD_INHERIT_FIELDS"
-                                :initial_selection="food.child_inherit_fields"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('ChildInheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <!-- TODO change to a button -->
-                    <b-form-group :description="$t('reset_children_help')">
-                        <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-button variant="primary" @click="updateFood">{{ $t('Save') }}</b-button>
-                </b-form>
-
-            </div>
-        </div>
 
     </div>
 </template>
@@ -138,10 +40,8 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiApiFactory} from "@/utils/openapi/api";
-import RecipeCard from "@/components/RecipeCard.vue";
-import GenericMultiselect from "@/components/GenericMultiselect.vue";
-import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils";
+import axios from "axios";
 
 
 Vue.use(BootstrapVue)
@@ -150,83 +50,29 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {
-        GenericMultiselect
-    },
+    components: {},
     data() {
         return {
-            food: undefined,
-            food_properties: [],
+            metadata: undefined,
+            selected_version: undefined,
+            response_data: undefined,
         }
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveFood('1').then((r) => {
-            this.food = r.data
 
-            let property_types = []
-            let property_values = []
-
-            let p1 = apiClient.listFoodPropertyTypes().then((r) => {
-                property_types = r.data
-            })
-
-            let p2 = apiClient.listFoodPropertys(this.food.id).then((r) => {
-                property_values = r.data
-            })
-
-            Promise.allSettled([p1, p2]).then(r => {
-                property_types.forEach(fpt => {
-                    let food_property = {
-                        'food_amount': 0,
-                        'food_unit': null,
-                        'food': this.food,
-                        'property_amount': 0,
-                        'property_type': fpt,
-                    }
-
-                    property_values.forEach(fpv => {
-                        if (fpv.property_type.id === fpt.id) {
-                            food_property.id = fpv.id
-                            food_property.food_amount = fpv.food_amount
-                            food_property.food_unit = fpv.food_unit
-                            food_property.property_amount = fpv.property_amount
-                        }
-                    })
-
-                    this.food_properties.push(food_property)
-                })
-            })
+        axios.get(resolveDjangoUrl('api_import_open_data')).then(r => {
+            this.metadata = r.data
+        }).catch(err => {
+            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
         })
-
-
     },
     methods: {
-        updateFood: function () {
-            let apiClient = new ApiApiFactory()
-            apiClient.updateFood(this.food.id, this.food).then((r) => {
-                this.food = r.data
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+        doImport: function () {
+            axios.post(resolveDjangoUrl('api_import_open_data'), {'selected_version': this.selected_version, 'selected_datatypes': this.metadata.datatypes}).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
             }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
-
-            this.food_properties.forEach(fp => {
-                if (fp.id === undefined) {
-                    apiClient.createFoodProperty(fp).then((r) => {
-                        fp = r.data
-                    }).catch(err => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-                } else {
-                    apiClient.updateFoodProperty(fp.id, fp).then((r) => {
-                        fp = r.data
-                    }).catch(err => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-                }
-
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
             })
         }
     },
