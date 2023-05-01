@@ -158,10 +158,10 @@ class IngredientParser:
         end = 0
         while (end < len(x) and (x[end] in string.digits
                                  or (
-                                         (x[end] == '.' or x[end] == ',' or x[end] == '/')
-                                         and end + 1 < len(x)
-                                         and x[end + 1] in string.digits
-                                 ))):
+            (x[end] == '.' or x[end] == ',' or x[end] == '/')
+            and end + 1 < len(x)
+            and x[end + 1] in string.digits
+        ))):
             end += 1
         if end > 0:
             if "/" in x[:end]:
@@ -185,7 +185,8 @@ class IngredientParser:
         if unit is not None and unit.strip() == '':
             unit = None
 
-        if unit is not None and (unit.startswith('(') or unit.startswith('-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
+        if unit is not None and (unit.startswith('(') or unit.startswith(
+                '-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
             unit = None
             note = x
         return amount, unit, note
@@ -254,7 +255,8 @@ class IngredientParser:
                 return tokens
 
         else:
-            if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__in=[tokens[1], alt_unit], disabled=False).order_by('order').first():
+            if automation := Automation.objects.filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1__in=[
+                                                       tokens[1], alt_unit], disabled=False).order_by('order').first():
                 new_unit = automation.param_2
                 never_unit = True
 
@@ -275,7 +277,7 @@ class IngredientParser:
             return ingredient
 
         else:
-            tokens = ingredient.replace(',',' ').split()
+            tokens = ingredient.replace(',', ' ').split()
             if self.transpose_words:
                 filtered_rules = {}
                 for key, value in self.transpose_words.items():
@@ -284,7 +286,8 @@ class IngredientParser:
                 for k, v in filtered_rules.items():
                     ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
             else:
-                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).filter(Q(Q(param_1__in=tokens) | Q(param_2__in=tokens))).order_by('order'):
+                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).filter(
+                        Q(Q(param_1__in=tokens) | Q(param_2__in=tokens))).order_by('order'):
                     ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
         return ingredient
 
@@ -313,8 +316,8 @@ class IngredientParser:
 
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
-        if re.match('(.){1,6}\s\((.[^\(\)])+\)\s', ingredient):
-            match = re.search('\((.[^\(])+\)', ingredient)
+        if re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
+            match = re.search('\\((.[^\\(])+\\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
         # leading spaces before commas result in extra tokens, clean them out
@@ -322,10 +325,10 @@ class IngredientParser:
 
         # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
         # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
-        ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
+        ingredient = re.sub("^(\\d+|\\d+[\\.,]\\d+) - (\\d+|\\d+[\\.,]\\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
 
         # if amount and unit are connected add space in between
-        if re.match('([0-9])+([A-z])+\s', ingredient):
+        if re.match('([0-9])+([A-z])+\\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
 
         ingredient = self.apply_transpose_words_automations(ingredient)
