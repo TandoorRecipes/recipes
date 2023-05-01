@@ -54,7 +54,7 @@ from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.open_data_importer import import_units, import_category, import_property, import_supermarket
+from cookbook.helper.open_data_importer import OpenDataImporter
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
@@ -1438,13 +1438,13 @@ class ImportOpenData(APIView):
         response = requests.get(f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
         data = json.loads(response.content)
 
-        import_units(data, request)
-        import_category(data, request)
-        import_property(data, request)
-        import_supermarket(data, request)
+        data_importer = OpenDataImporter(request, data)
+        data_importer.import_units()
+        data_importer.import_category()
+        data_importer.import_property()
+        data_importer.import_supermarket()
+        data_importer.import_food()  # TODO pass metric parameter
 
-        # TODO hardcode insert order?
-        # TODO split into update/create lists with multiple parameters per datatype
         return Response({
             'test': ''
         })

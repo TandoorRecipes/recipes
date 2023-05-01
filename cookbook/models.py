@@ -573,6 +573,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     substitute_children = models.BooleanField(default=False)
     child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
+    preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
+    preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
+    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
+
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
@@ -755,9 +759,6 @@ class FoodPropertyType(models.Model, PermissionModelMixin):
     icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.CharField(max_length=512, blank=True, null=True)
     category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
-    preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
-    preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
-    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     # TODO show if empty property?
