@@ -22,7 +22,7 @@ from django.contrib.postgres.search import TrigramSimilarity
 from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
-from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When
+from django.db.models import Case, Count, OuterRef, ProtectedError, Q, Subquery, Value, When
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
@@ -612,7 +612,6 @@ class FoodViewSet(LoggingMixin, viewsets.ModelViewSet, TreeMixin):
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'), checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
         return self.queryset \
-            .annotate(shopping_status=Exists(shopping_status)) \
             .prefetch_related('onhand_users', 'inherit_fields', 'child_inherit_fields', 'substitute') \
             .select_related('recipe', 'supermarket_category')
 
