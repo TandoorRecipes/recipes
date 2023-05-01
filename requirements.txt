@@ -45,4 +45,4 @@ django-auth-ldap==4.2.0
 pytest-factoryboy==2.5.1
 pyppeteer==1.0.2
 validators==0.20.0
-pytube==12.1.0
+pytube==12.1.3
