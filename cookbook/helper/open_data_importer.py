@@ -147,7 +147,7 @@ class OpenDataImporter:
                     space=self.request.space,
                 ))
 
-        Food.objects.bulk_create(insert_list)
+        Food.load_bulk(insert_list, None)
 
         self._update_slug_cache(Food, 'food')
 
