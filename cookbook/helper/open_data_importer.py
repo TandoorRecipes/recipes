@@ -136,16 +136,16 @@ class OpenDataImporter:
 
         for k in list(self.data[datatype].keys()):
             if not (self.data[datatype][k]['name'] in existing_objects):
-                insert_list.append(Food(
-                    name=self.data[datatype][k]['name'],
-                    plural_name=self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
-                    preferred_unit_id=self.slug_id_cache['unit'][self.data[datatype][k][pref_unit_key]],
-                    preferred_shopping_unit_id=self.slug_id_cache['unit'][self.data[datatype][k][pref_shopping_unit_key]],
-                    supermarket_category_id=self.slug_id_cache['category'][self.data[datatype][k]['supermarket_category']],
-                    fdc_id=self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
-                    open_data_slug=k,
-                    space=self.request.space,
-                ))
+                insert_list.append({'data': {
+                    'name': self.data[datatype][k]['name'],
+                    'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
+                    'preferred_unit_id': self.slug_id_cache['unit'][self.data[datatype][k][pref_unit_key]],
+                    'preferred_shopping_unit_id': self.slug_id_cache['unit'][self.data[datatype][k][pref_shopping_unit_key]],
+                    'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['supermarket_category']],
+                    'fdc_id': self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
+                    'open_data_slug': k,
+                    'space': self.request.space.id,
+                }})
 
         Food.load_bulk(insert_list, None)
 
