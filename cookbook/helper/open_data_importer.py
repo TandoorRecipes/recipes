@@ -161,12 +161,15 @@ class OpenDataImporter:
                     food_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['properties']['food_unit']],
                     property_type_id=self.slug_id_cache['property'][fp['property_type']],
                     property_amount=fp['property_value'],
+                    space=self.request.space,
                 ))
 
             for a in self.data[datatype][k]['alias']:
                 alias_list.append(Automation(
                     param_1=a,
-                    param_2=self.data[datatype][k]['name']
+                    param_2=self.data[datatype][k]['name'],
+                    space=self.request.space,
+                    created_by=self.request.user,
                 ))
 
         FoodProperty.objects.bulk_create(food_property_list)
