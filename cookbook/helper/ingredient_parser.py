@@ -4,6 +4,7 @@ import unicodedata
 
 from django.core.cache import caches
 from django.db.models import Q
+from django.db.models.functions import Lower
 
 from cookbook.models import Automation, Food, Ingredient, Unit
 
@@ -32,7 +33,7 @@ class IngredientParser:
                 caches['default'].touch(FOOD_CACHE_KEY, 30)
             else:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.food_aliases[a.param_1] = a.param_2
+                    self.food_aliases[a.param_1.lower()] = a.param_2
                 caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
             UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
@@ -41,7 +42,7 @@ class IngredientParser:
                 caches['default'].touch(UNIT_CACHE_KEY, 30)
             else:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.unit_aliases[a.param_1] = a.param_2
+                    self.unit_aliases[a.param_1.lower()] = a.param_2
                 caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
 
             NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
@@ -50,7 +51,7 @@ class IngredientParser:
                 caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
             else:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
-                    self.never_unit[a.param_1] = a.param_2
+                    self.never_unit[a.param_1.lower()] = a.param_2
                 caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
 
             TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
@@ -60,7 +61,7 @@ class IngredientParser:
             else:
                 i = 0
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
-                    self.transpose_words[i] = [a.param_1, a.param_2]
+                    self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
                     i += 1
                 caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
@@ -80,11 +81,11 @@ class IngredientParser:
         else:
             if self.food_aliases:
                 try:
-                    return self.food_aliases[food]
+                    return self.food_aliases[food.lower()]
                 except KeyError:
                     return food
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).order_by('order').first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
                     return automation.param_2
         return food
 
@@ -99,11 +100,11 @@ class IngredientParser:
         else:
             if self.transpose_words:
                 try:
-                    return self.unit_aliases[unit]
+                    return self.unit_aliases[unit.lower()]
                 except KeyError:
                     return unit
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).order_by('order').first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
                     return automation.param_2
         return unit
 
@@ -249,14 +250,14 @@ class IngredientParser:
         never_unit = False
         if self.never_unit:
             try:
-                new_unit = self.never_unit[tokens[1]]
+                new_unit = self.never_unit[tokens[1].lower()]
                 never_unit = True
             except KeyError:
                 return tokens
 
         else:
-            if automation := Automation.objects.filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1__in=[
-                                                       tokens[1], alt_unit], disabled=False).order_by('order').first():
+            if automation := Automation.objects.annotate(param_1_lower=Lower('param_1')).filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1_lower__in=[
+                    tokens[1].lower(), alt_unit.lower()], disabled=False).order_by('order').first():
                 new_unit = automation.param_2
                 never_unit = True
 
@@ -277,18 +278,19 @@ class IngredientParser:
             return ingredient
 
         else:
-            tokens = ingredient.replace(',', ' ').split()
+            tokens = [x.lower() for x in ingredient.replace(',', ' ').split()]
             if self.transpose_words:
                 filtered_rules = {}
                 for key, value in self.transpose_words.items():
                     if value[0] in tokens and value[1] in tokens:
                         filtered_rules[key] = value
                 for k, v in filtered_rules.items():
-                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
+                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
             else:
-                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False).filter(
-                        Q(Q(param_1__in=tokens) | Q(param_2__in=tokens))).order_by('order'):
-                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient)
+                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
+                        .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
+                        .filter(Q(Q(param_1_lower__in=tokens) | Q(param_2_lower__in=tokens))).order_by('order'):
+                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
         return ingredient
 
     def parse(self, ingredient):
