@@ -44,7 +44,7 @@
                 <a v-else class="dropdown-item" href="#" @click="toggleIgnoreShopping()"> <i class="fas fa-ban fa-fw text-danger" /> {{ $t("No_Ignore_Shopping") }} </a>
 
                 <!-- list of substitutes onhand -->
-                <span v-if="ingredient.food.substitute_onhand && substitutes.length !== 0">
+                <span v-if="sub_onhand && substitutes.length !== 0">
                     <div class="dropdown-divider"></div>
                     <h5 class="dropdown-header">{{ $t("SubstitutesList") }}</h5>
                     <a class="dropdown-header mx-2 py-0" v-for="(s, i) in substitutes" v-bind:key="i">{{ s }}</a>
