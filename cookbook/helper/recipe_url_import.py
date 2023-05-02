@@ -15,7 +15,6 @@ from recipe_scrapers._utils import get_host_name, get_minutes
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Automation, Keyword, PropertyType
 
-
 # from unicodedata import decomposition
 
 
@@ -51,7 +50,8 @@ def get_from_scraper(scrape, request):
     recipe_json['internal'] = True
 
     try:
-        servings = scrape.schema.data.get('recipeYield') or 1  # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
+        # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
+        servings = scrape.schema.data.get('recipeYield') or 1
     except Exception:
         servings = 1
 
@@ -156,7 +156,14 @@ def get_from_scraper(scrape, request):
     parsed_description = parse_description(description)
     # TODO notify user about limit if reached
     # limits exist to limit the attack surface for dos style attacks
-    automations = Automation.objects.filter(type=Automation.DESCRIPTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').all().order_by('order')[:512]
+    automations = Automation.objects.filter(
+        type=Automation.DESCRIPTION_REPLACE,
+        space=request.space,
+        disabled=False).only(
+        'param_1',
+        'param_2',
+        'param_3').all().order_by('order')[
+            :512]
     for a in automations:
         if re.match(a.param_1, (recipe_json['source_url'])[:512]):
             parsed_description = re.sub(a.param_2, a.param_3, parsed_description, count=1)
@@ -206,7 +213,14 @@ def get_from_scraper(scrape, request):
         pass
 
     if 'source_url' in recipe_json and recipe_json['source_url']:
-        automations = Automation.objects.filter(type=Automation.INSTRUCTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
+        automations = Automation.objects.filter(
+            type=Automation.INSTRUCTION_REPLACE,
+            space=request.space,
+            disabled=False).only(
+            'param_1',
+            'param_2',
+            'param_3').order_by('order').all()[
+            :512]
         for a in automations:
             if re.match(a.param_1, (recipe_json['source_url'])[:512]):
                 for s in recipe_json['steps']:
@@ -272,7 +286,7 @@ def get_from_youtube_scraper(url, request):
 
 
 def parse_name(name):
-    if type(name) == list:
+    if isinstance(name, list):
         try:
             name = name[0]
         except Exception:
@@ -316,16 +330,16 @@ def parse_instructions(instructions):
     """
     instruction_list = []
 
-    if type(instructions) == list:
+    if isinstance(instructions, list):
         for i in instructions:
-            if type(i) == str:
+            if isinstance(i, str):
                 instruction_list.append(clean_instruction_string(i))
             else:
                 if 'text' in i:
                     instruction_list.append(clean_instruction_string(i['text']))
                 elif 'itemListElement' in i:
                     for ile in i['itemListElement']:
-                        if type(ile) == str:
+                        if isinstance(ile, str):
                             instruction_list.append(clean_instruction_string(ile))
                         elif 'text' in ile:
                             instruction_list.append(clean_instruction_string(ile['text']))
@@ -341,13 +355,13 @@ def parse_image(image):
     # check if list of images is returned, take first if so
     if not image:
         return None
-    if type(image) == list:
+    if isinstance(image, list):
         for pic in image:
-            if (type(pic) == str) and (pic[:4] == 'http'):
+            if (isinstance(pic, str)) and (pic[:4] == 'http'):
                 image = pic
             elif 'url' in pic:
                 image = pic['url']
-    elif type(image) == dict:
+    elif isinstance(image, dict):
         if 'url' in image:
             image = image['url']
 
@@ -358,12 +372,12 @@ def parse_image(image):
 
 
 def parse_servings(servings):
-    if type(servings) == str:
+    if isinstance(servings, str):
         try:
             servings = int(re.search(r'\d+', servings).group())
         except AttributeError:
             servings = 1
-    elif type(servings) == list:
+    elif isinstance(servings, list):
         try:
             servings = int(re.findall(r'\b\d+\b', servings[0])[0])
         except KeyError:
@@ -372,12 +386,12 @@ def parse_servings(servings):
 
 
 def parse_servings_text(servings):
-    if type(servings) == str:
+    if isinstance(servings, str):
         try:
-            servings = re.sub("\d+", '', servings).strip()
+            servings = re.sub("\\d+", '', servings).strip()
         except Exception:
             servings = ''
-    if type(servings) == list:
+    if isinstance(servings, list):
         try:
             servings = parse_servings_text(servings[1])
         except Exception:
@@ -394,7 +408,7 @@ def parse_time(recipe_time):
                 recipe_time = round(iso_parse_duration(recipe_time).seconds / 60)
             except ISO8601Error:
                 try:
-                    if (type(recipe_time) == list and len(recipe_time) > 0):
+                    if (isinstance(recipe_time, list) and len(recipe_time) > 0):
                         recipe_time = recipe_time[0]
                     recipe_time = round(parse_duration(recipe_time).seconds / 60)
                 except AttributeError:
@@ -413,7 +427,7 @@ def parse_keywords(keyword_json, space):
         caches['default'].touch(KEYWORD_CACHE_KEY, 30)
     else:
         for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-            keyword_aliases[a.param_1] = a.param_2
+            keyword_aliases[a.param_1.lower()] = a.param_2
         caches['default'].set(KEYWORD_CACHE_KEY, keyword_aliases, 30)
 
     # keywords as list
@@ -424,7 +438,7 @@ def parse_keywords(keyword_json, space):
         if len(kw) != 0:
             if keyword_aliases:
                 try:
-                    kw = keyword_aliases[kw]
+                    kw = keyword_aliases[kw.lower()]
                 except KeyError:
                     pass
             if k := Keyword.objects.filter(name=kw, space=space).first():
@@ -438,15 +452,15 @@ def parse_keywords(keyword_json, space):
 def listify_keywords(keyword_list):
     # keywords as string
     try:
-        if type(keyword_list[0]) == dict:
+        if isinstance(keyword_list[0], dict):
             return keyword_list
     except (KeyError, IndexError):
         pass
-    if type(keyword_list) == str:
+    if isinstance(keyword_list, str):
         keyword_list = keyword_list.split(',')
 
     # keywords as string in list
-    if (type(keyword_list) == list and len(keyword_list) == 1 and ',' in keyword_list[0]):
+    if (isinstance(keyword_list, list) and len(keyword_list) == 1 and ',' in keyword_list[0]):
         keyword_list = keyword_list[0].split(',')
     return [x.strip() for x in keyword_list]
 
@@ -500,13 +514,13 @@ def get_images_from_soup(soup, url):
 
 
 def clean_dict(input_dict, key):
-    if type(input_dict) == dict:
+    if isinstance(input_dict, dict):
         for x in list(input_dict):
             if x == key:
                 del input_dict[x]
-            elif type(input_dict[x]) == dict:
+            elif isinstance(input_dict[x], dict):
                 input_dict[x] = clean_dict(input_dict[x], key)
-            elif type(input_dict[x]) == list:
+            elif isinstance(input_dict[x], list):
                 temp_list = []
                 for e in input_dict[x]:
                     temp_list.append(clean_dict(e, key))
