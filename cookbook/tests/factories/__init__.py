@@ -116,7 +116,7 @@ class FoodFactory(factory.django.DjangoModelFactory):
             'cookbook.tests.factories.RecipeFactory', space=factory.SelfAttribute('..space')),
         no_declaration=None
     )
-    path = None
+    path = factory.LazyAttribute(lambda x: faker.numerify(text='%###'))
     space = factory.SubFactory(SpaceFactory)
 
     @factory.post_generation
