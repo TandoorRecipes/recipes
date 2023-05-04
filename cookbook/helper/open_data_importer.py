@@ -7,10 +7,12 @@ class OpenDataImporter:
     request = None
     data = {}
     slug_id_cache = {}
+    update_existing = False
 
-    def __init__(self, request, data):
+    def __init__(self, request, data, update_existing=False):
         self.request = request
         self.data = data
+        self.update_existing = update_existing
 
     def _update_slug_cache(self, object_class, datatype):
         self.slug_id_cache[datatype] = dict(object_class.objects.filter(space=self.request.space, open_data_slug__isnull=False).values_list('open_data_slug', 'id', ))
@@ -80,37 +82,36 @@ class OpenDataImporter:
         return len(insert_list)
 
     def import_supermarket(self):
-        identifier_list = []
         datatype = 'supermarket'
-        for k in list(self.data[datatype].keys()):
-            identifier_list.append(self.data[datatype][k]['name'])
-
-        existing_objects = Supermarket.objects.filter(space=self.request.space).filter(name__in=identifier_list).values_list('name', flat=True)
 
         self._update_slug_cache(SupermarketCategory, 'category')
+        insert_list = []
+        for k in list(self.data[datatype].keys()):
+            insert_list.append(Supermarket(
+                name=self.data[datatype][k]['name'],
+                open_data_slug=k,
+                space=self.request.space
+            ))
+
+        # always add open data slug if matching supermarket is found, otherwise relation might fail
+        Supermarket.objects.bulk_create(insert_list, unique_fields=('space', 'name',), update_conflicts=True, update_fields=('open_data_slug',))
+        self._update_slug_cache(Supermarket, 'supermarket')
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
-            if not (self.data[datatype][k]['name'] in existing_objects):  # TODO on large datasets see if bulk creating supermarkets and then relations as well is better
-                supermarket = Supermarket.objects.create(
-                    name=self.data[datatype][k]['name'],
-                    open_data_slug=k,
-                    space=self.request.space
-                )
-
-                relations = []
-                order = 0
-                for c in self.data[datatype][k]['categories']:
-                    relations.append(
-                        SupermarketCategoryRelation(
-                            supermarket=supermarket,
-                            category_id=self.slug_id_cache['category'][c],
-                            order=order,
-                        )
+            relations = []
+            order = 0
+            for c in self.data[datatype][k]['categories']:
+                relations.append(
+                    SupermarketCategoryRelation(
+                        supermarket_id=self.slug_id_cache[datatype][k],
+                        category_id=self.slug_id_cache['category'][c],
+                        order=order,
                     )
-                    order += 1
+                )
+                order += 1
 
-                SupermarketCategoryRelation.objects.bulk_create(relations)
+            SupermarketCategoryRelation.objects.bulk_create(relations, ignore_conflicts=True, unique_fields=('supermarket', 'category',))
 
         return len(insert_list)
 
@@ -172,8 +173,8 @@ class OpenDataImporter:
                     created_by=self.request.user,
                 ))
 
-        FoodProperty.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type'))
-        Automation.objects.bulk_create(alias_list)
+        FoodProperty.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type',))
+        Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
         return len(insert_list)
 
     def import_conversion(self):

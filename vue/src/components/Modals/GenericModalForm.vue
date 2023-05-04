@@ -9,7 +9,7 @@
                 <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
                 <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" />
                 <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" />
-                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
+                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled"/>
                 <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
                 <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
