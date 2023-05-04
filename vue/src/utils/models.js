@@ -91,6 +91,7 @@ export class Models {
                     "substitute_children",
                     "reset_inherit",
                     "child_inherit_fields",
+                    "open_data_slug",
                 ],
             ],
 
@@ -125,6 +126,14 @@ export class Models {
                     list: "RECIPE",
                     label: "Recipe", // form.label always translated in utils.getForm()
                     help_text: "food_recipe_help", // form.help_text always translated
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                 },
                 onhand: {
                     form_field: true,
@@ -269,8 +278,9 @@ export class Models {
         apiName: "Unit",
         paginated: true,
         create: {
-            params: [["name", "plural_name", "description",]],
+            params: [["name", "plural_name", "description","open_data_slug",]],
             form: {
+                show_help: true,
                 name: {
                     form_field: true,
                     type: "text",
@@ -291,6 +301,14 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                 },
             },
         },
