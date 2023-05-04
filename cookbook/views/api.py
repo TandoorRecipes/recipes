@@ -1434,21 +1434,23 @@ class ImportOpenData(APIView):
         print(request.data)
         selected_version = request.data['selected_version']
         selected_datatypes = request.data['selected_datatypes']
+        update_existing = str2bool(request.data['update_existing'])
+        use_metric = str2bool(request.data['use_metric'])
 
         response = requests.get(f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
         data = json.loads(response.content)
 
-        data_importer = OpenDataImporter(request, data, update_existing=True)
-        data_importer.import_units()
-        data_importer.import_category()
-        data_importer.import_property()
-        data_importer.import_supermarket()
-        data_importer.import_food()  # TODO pass metric parameter
-        data_importer.import_conversion()
+        response_obj = {}
 
-        return Response({
-            'test': ''
-        })
+        data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
+        response_obj['unit'] = len(data_importer.import_units())
+        response_obj['category'] = len(data_importer.import_category())
+        response_obj['property'] = len(data_importer.import_property())
+        response_obj['supermarket'] = len(data_importer.import_supermarket())
+        response_obj['food'] = len(data_importer.import_food())
+        response_obj['conversion'] = len(data_importer.import_conversion())
+
+        return Response(response_obj)
 
 
 def get_recipe_provider(recipe):

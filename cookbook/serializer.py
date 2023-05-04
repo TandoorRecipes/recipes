@@ -464,7 +464,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'plural_name', 'description', 'numrecipe', 'image')
+        fields = ('id', 'name', 'plural_name', 'description', 'numrecipe', 'image', 'open_data_slug')
         read_only_fields = ('id', 'numrecipe', 'image')
 
 
@@ -627,7 +627,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields'
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
