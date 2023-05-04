@@ -1438,7 +1438,7 @@ class ImportOpenData(APIView):
         response = requests.get(f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
         data = json.loads(response.content)
 
-        data_importer = OpenDataImporter(request, data)
+        data_importer = OpenDataImporter(request, data, update_existing=True)
         data_importer.import_units()
         data_importer.import_category()
         data_importer.import_property()

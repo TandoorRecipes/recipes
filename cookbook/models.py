@@ -498,6 +498,9 @@ class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
         return 'supermarket', 'space'
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['supermarket', 'category'], name='unique_sm_category_relation')
+        ]
         ordering = ('order',)
 
 

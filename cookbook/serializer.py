@@ -497,7 +497,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
 
     class Meta:
         model = Supermarket
-        fields = ('id', 'name', 'description', 'category_to_supermarket')
+        fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
 
 
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
@@ -737,7 +737,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UnitConversion
-        fields = ('id', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food')
+        fields = ('id', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
 class FoodPropertyTypeSerializer(serializers.ModelSerializer):

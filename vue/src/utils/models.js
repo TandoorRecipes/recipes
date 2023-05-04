@@ -418,6 +418,7 @@ export class Models {
         create: {
             params: [["name", "description", "category_to_supermarket"]],
             form: {
+                show_help: true,
                 name: {
                     form_field: true,
                     type: "text",
@@ -441,6 +442,14 @@ export class Models {
                     field: "category_to_supermarket",
                     label: "Categories", // form.label always translated in utils.getForm()
                     placeholder: "",
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                 },
             },
             config: {
@@ -572,8 +581,9 @@ export class Models {
             },
         },
         create: {
-            params: [['base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food']],
+            params: [['base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug']],
             form: {
+                show_help: true,
                 // TODO add proper help texts for everything
                 base_amount: {
                     form_field: true,
@@ -615,6 +625,14 @@ export class Models {
                     list_label: "Food",
                     label: "Food",
                     multiple: false,
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                 },
 
             },
