@@ -678,6 +678,11 @@ class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model
     def __str__(self):
         return f'{self.base_amount} {self.base_unit} -> {self.converted_amount} {self.converted_unit} {self.food}'
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space')
+        ]
+
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
     # delete method on Food and Unit checks if they are part of a Recipe, if it is raises a ProtectedError instead of cascading the delete

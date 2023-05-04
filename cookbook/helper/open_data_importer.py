@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from cookbook.models import Unit, SupermarketCategory, FoodProperty, FoodPropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation
+from cookbook.models import Unit, SupermarketCategory, FoodProperty, FoodPropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
 
 
 class OpenDataImporter:
@@ -172,6 +172,25 @@ class OpenDataImporter:
                     created_by=self.request.user,
                 ))
 
-        FoodProperty.objects.bulk_create(food_property_list)
+        FoodProperty.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type'))
         Automation.objects.bulk_create(alias_list)
+        return len(insert_list)
+
+    def import_conversion(self):
+        datatype = 'conversion'
+
+        insert_list = []
+        for k in list(self.data[datatype].keys()):
+            insert_list.append(UnitConversion(
+                base_amount=self.data[datatype][k]['base_amount'],
+                base_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['base_unit']],
+                converted_amount=self.data[datatype][k]['converted_amount'],
+                converted_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['converted_unit']],
+                food_id=self.slug_id_cache['food'][self.data[datatype][k]['food']],
+                open_data_slug=k,
+                space=self.request.space,
+                created_by=self.request.user,
+            ))
+
+        UnitConversion.objects.bulk_create(insert_list, ignore_conflicts=True, unique_fields=('space', 'base_unit', 'converted_unit', 'food', 'open_data_slug'))
         return len(insert_list)

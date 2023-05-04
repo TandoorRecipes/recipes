@@ -1444,6 +1444,7 @@ class ImportOpenData(APIView):
         data_importer.import_property()
         data_importer.import_supermarket()
         data_importer.import_food()  # TODO pass metric parameter
+        data_importer.import_conversion()
 
         return Response({
             'test': ''
