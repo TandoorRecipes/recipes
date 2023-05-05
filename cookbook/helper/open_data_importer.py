@@ -110,8 +110,8 @@ class OpenDataImporter:
         for f in Food.objects.filter(space=self.request.space).filter(name__in=identifier_list).values_list('id', 'name', 'plural_name'):
             existing_objects_flat.append(f[1])
             existing_objects_flat.append(f[2])
-            existing_objects['name'] = f
-            existing_objects['plural_name'] = f
+            existing_objects[f[1]] = f
+            existing_objects[f[2]] = f
 
         self._update_slug_cache(Unit, 'unit')
         self._update_slug_cache(FoodPropertyType, 'property')
@@ -159,7 +159,7 @@ class OpenDataImporter:
                     update_field_list = ['open_data_slug', ]
                     update_list.append(Food(id=existing_food_id, open_data_slug=k, ))
 
-        foods = Food.load_bulk(insert_list, None)
+        Food.load_bulk(insert_list, None)
         Food.objects.bulk_update(update_list, update_field_list)
 
         self._update_slug_cache(Food, 'food')
@@ -187,7 +187,7 @@ class OpenDataImporter:
 
         FoodProperty.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type',))
         Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
-        return foods
+        return insert_list + update_list
 
     def import_conversion(self):
         datatype = 'conversion'
