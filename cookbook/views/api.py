@@ -1428,9 +1428,7 @@ class ImportOpenData(APIView):
         return Response(metadata)
 
     def post(self, request, *args, **kwargs):
-        # serializer load data ?
         # TODO validate data
-        # TODO add option to handle merging of existing data (merge, override, ignore)
         print(request.data)
         selected_version = request.data['selected_version']
         selected_datatypes = request.data['selected_datatypes']
