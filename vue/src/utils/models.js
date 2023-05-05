@@ -97,6 +97,7 @@ export class Models {
 
             form: {
                 show_help: true,
+                component: "FoodEditor",
                 name: {
                     form_field: true,
                     type: "text",
