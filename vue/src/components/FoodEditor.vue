@@ -20,7 +20,9 @@
 
                     <!-- Food properties -->
 
-                    <h5><i class="fas fa-database"></i> {{ $t('Properties') }} <small class="text-muted">{{ food.name }}</small></h5>
+                    <h5><i class="fas fa-database"></i> {{ $t('Properties') }} <small class="text-muted">{{
+                            food.name
+                        }}</small></h5>
                     <table class="table table-bordered" v-if="food_properties">
                         <tr v-for="fp in food_properties" v-bind:key="fp.id">
                             <td><input v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
@@ -42,86 +44,91 @@
 
 
                     <!-- Unit conversion -->
-
+                    <b-button v-b-toggle.collapse-advanced class="m-1">{{$t('Advanced')}}</b-button>
                     <!-- ADVANCED FEATURES somehow hide this stuff -->
+                    <b-collapse id="collapse-advanced">
+                        <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
+                            <generic-multiselect
+                                    @change="food.recipe = $event.val;"
+                                    :model="Models.RECIPE"
+                                    :initial_selection="food.recipe"
+                                    label="name"
+                                    :multiple="false"
+                                    :placeholder="$t('Recipe')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
-                    <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
-                        <generic-multiselect
-                                @change="food.recipe = $event.val;"
-                                :model="Models.RECIPE"
-                                :initial_selection="food.recipe"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('Recipe')"
-                        ></generic-multiselect>
-                    </b-form-group>
+                        <b-form-group :description="$t('OnHand_help')">
+                            <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
+                        </b-form-group>
 
-                    <b-form-group :description="$t('OnHand_help')">
-                        <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
-                    </b-form-group>
+                        <b-form-group :description="$t('ignore_shopping_help')">
+                            <b-form-checkbox v-model="food.ignore_shopping">{{
+                                    $t('Ignore_Shopping')
+                                }}
+                            </b-form-checkbox>
+                        </b-form-group>
 
-                    <b-form-group :description="$t('ignore_shopping_help')">
-                        <b-form-checkbox v-model="food.ignore_shopping">{{ $t('Ignore_Shopping') }}</b-form-checkbox>
-                    </b-form-group>
+                        <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
+                            <generic-multiselect
+                                    @change="food.supermarket_category = $event.val;"
+                                    :model="Models.SHOPPING_CATEGORY"
+                                    :initial_selection="food.supermarket_category"
+                                    label="name"
+                                    :multiple="false"
+                                    :allow_create="true"
+                                    :placeholder="$t('Shopping_Category')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
-                    <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
-                        <generic-multiselect
-                                @change="food.supermarket_category = $event.val;"
-                                :model="Models.SHOPPING_CATEGORY"
-                                :initial_selection="food.supermarket_category"
-                                label="name"
-                                :multiple="false"
-                                :allow_create="true"
-                                :placeholder="$t('Shopping_Category')"
-                        ></generic-multiselect>
-                    </b-form-group>
+                        <hr/>
+                        <!-- todo add conditions if false disable dont hide -->
+                        <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
+                            <generic-multiselect
+                                    @change="food.substitute = $event.val;"
+                                    :model="Models.FOOD"
+                                    :initial_selection="food.substitute"
+                                    label="name"
+                                    :multiple="false"
+                                    :placeholder="$t('Substitutes')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
-                    <hr/>
-                    <!-- todo add conditions if false disable dont hide -->
-                    <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
-                        <generic-multiselect
-                                @change="food.substitute = $event.val;"
-                                :model="Models.FOOD"
-                                :initial_selection="food.substitute"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('Substitutes')"
-                        ></generic-multiselect>
-                    </b-form-group>
+                        <b-form-group :description="$t('substitute_siblings_help')">
+                            <b-form-checkbox v-model="food.substitute_siblings">{{
+                                    $t('substitute_siblings')
+                                }}
+                            </b-form-checkbox>
+                        </b-form-group>
 
-                    <b-form-group :description="$t('substitute_siblings_help')">
-                        <b-form-checkbox v-model="food.substitute_siblings">{{
-                                $t('substitute_siblings')
-                            }}
-                        </b-form-checkbox>
-                    </b-form-group>
+                        <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
+                            <generic-multiselect
+                                    @change="food.inherit_fields = $event.val;"
+                                    :model="Models.FOOD_INHERIT_FIELDS"
+                                    :initial_selection="food.inherit_fields"
+                                    label="name"
+                                    :multiple="false"
+                                    :placeholder="$t('InheritFields')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
-                    <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
-                        <generic-multiselect
-                                @change="food.inherit_fields = $event.val;"
-                                :model="Models.FOOD_INHERIT_FIELDS"
-                                :initial_selection="food.inherit_fields"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('InheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
+                        <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
+                            <generic-multiselect
+                                    @change="food.child_inherit_fields = $event.val;"
+                                    :model="Models.FOOD_INHERIT_FIELDS"
+                                    :initial_selection="food.child_inherit_fields"
+                                    label="name"
+                                    :multiple="false"
+                                    :placeholder="$t('ChildInheritFields')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
-                    <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
-                        <generic-multiselect
-                                @change="food.child_inherit_fields = $event.val;"
-                                :model="Models.FOOD_INHERIT_FIELDS"
-                                :initial_selection="food.child_inherit_fields"
-                                label="name"
-                                :multiple="false"
-                                :placeholder="$t('ChildInheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
+                        <!-- TODO change to a button -->
+                        <b-form-group :description="$t('reset_children_help')">
+                            <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
+                        </b-form-group>
+                    </b-collapse>
 
-                    <!-- TODO change to a button -->
-                    <b-form-group :description="$t('reset_children_help')">
-                        <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
-                    </b-form-group>
 
                     <b-button variant="primary" @click="updateFood">{{ $t('Save') }}</b-button>
                 </b-form>
