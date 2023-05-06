@@ -8,29 +8,38 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step
 
+from isoduration import parse_duration
+import re
 
 class RecipeSage(Integration):
 
     def get_recipe_from_file(self, file):
-
         recipe = Recipe.objects.create(
             name=file['name'].strip(),
             created_by=self.request.user, internal=True,
             space=self.request.space)
 
         try:
-            if file['recipeYield'] != '':
-                recipe.servings = int(file['recipeYield'])
-
-            if file['totalTime'] != '':
-                recipe.waiting_time = int(file['totalTime']) - int(file['timePrep'])
-
             if file['prepTime'] != '':
-                recipe.working_time = int(file['timePrep'])
-
+                prepTime = parse_duration(file['prepTime'])
+                recipe.working_time = prepTime.time.minutes + prepTime.time.hours*60
+            
+            if file['totalTime'] != '':
+                totalTime = parse_duration(file['totalTime'])
+                recipe.waiting_time = totalTime.time.minutes + totalTime.time.hours*60 - recipe.working_time
+            
             recipe.save()
         except Exception as e:
-            print('failed to parse yield or time ', str(e))
+            print('failed to parse time ', str(e))
+        
+        try:
+            if file['recipeYield'] != '':
+                splitYield = file['recipeYield'].split(" ",1)
+                recipe.servings_text = str(splitYield[1])
+                recipe.servings = int(re.search(r'\d+', splitYield[0]).group())
+            recipe.save()
+        except Exception as e:
+            print('failed to parse yield ', str(e))
 
         ingredient_parser = IngredientParser(self.request, True)
         ingredients_added = False
