@@ -617,7 +617,7 @@ export class Models {
                     field: "base_unit",
                     list: "UNIT",
                     list_label: "name",
-                    label: "Base Unit",
+                    label: "base_unit",
                     multiple: false,
                 },
                 converted_amount: {
@@ -633,7 +633,7 @@ export class Models {
                     field: "converted_unit",
                     list: "UNIT",
                     list_label: "name",
-                    label: "Converted Unit",
+                    label: "converted_unit",
                     multiple: false,
                 },
                 food: {
@@ -641,7 +641,7 @@ export class Models {
                     type: "lookup",
                     field: "food",
                     list: "FOOD",
-                    list_label: "Food",
+                    list_label: "name",
                     label: "Food",
                     multiple: false,
                 },
@@ -671,7 +671,7 @@ export class Models {
         create: {
             params: [['name', 'icon', 'unit', 'description']],
             form: {
-
+                show_help: true,
                 name: {
                     form_field: true,
                     type: "text",
@@ -699,6 +699,14 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                 },
             },
 

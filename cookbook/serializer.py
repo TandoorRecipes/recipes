@@ -724,11 +724,18 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 
 
 class UnitConversionSerializer(WritableNestedModelSerializer):
+    name = serializers.SerializerMethodField('get_conversion_name')
     base_unit = UnitSerializer()
     converted_unit = UnitSerializer()
     food = FoodSerializer(allow_null=True, required=False)
     base_amount = CustomDecimalField()
     converted_amount = CustomDecimalField()
+
+    def get_conversion_name(self, obj):
+        text = f'{round(obj.base_amount)} {obj.base_unit} '
+        if obj.food:
+            text += f' {obj.food}'
+        return text + f' = {round(obj.converted_amount)} {obj.converted_unit}'
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -737,7 +744,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UnitConversion
-        fields = ('id', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
+        fields = ('id', 'name','base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
 class FoodPropertyTypeSerializer(serializers.ModelSerializer):
@@ -747,7 +754,7 @@ class FoodPropertyTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FoodPropertyType
-        fields = ('id', 'name', 'icon', 'unit', 'description')
+        fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
 
 
 class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
