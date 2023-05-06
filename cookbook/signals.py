@@ -14,7 +14,7 @@ from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
-                             ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields, Unit)
+                             ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields, Unit, PropertyType)
 
 SQLITE = True
 if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
@@ -154,6 +154,12 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
 
 
 @receiver(post_save, sender=Unit)
-def create_search_preference(sender, instance=None, created=False, **kwargs):
+def clear_unit_cache(sender, instance=None, created=False, **kwargs):
     if instance:
         caches['default'].delete(CacheHelper(instance.space).BASE_UNITS_CACHE_KEY)
+
+
+@receiver(post_save, sender=PropertyType)
+def clear_property_type_cache(sender, instance=None, created=False, **kwargs):
+    if instance:
+        caches['default'].delete(CacheHelper(instance.space).PROPERTY_TYPE_CACHE_KEY)

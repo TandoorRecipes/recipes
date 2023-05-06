@@ -1,3 +1,6 @@
+from django.core.cache import caches
+
+from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import PropertyType, Unit, Food, FoodProperty, Recipe, Step
 
@@ -20,15 +23,18 @@ class FoodPropertyHelper:
         """
         ingredients = []
         computed_properties = {}
-        property_types = PropertyType.objects.filter(space=self.space).all()
 
         for s in recipe.steps.all():
             ingredients += s.ingredients.all()
 
-        for fpt in property_types:  # TODO is this safe or should I require the request context?
-            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'icon': fpt.icon, 'description': fpt.description, 'unit': fpt.unit, 'food_values': {}, 'total_value': 0, 'missing_value': False}
+        property_types = caches['default'].get(CacheHelper(self.space).PROPERTY_TYPE_CACHE_KEY, None)
 
-        # TODO unit conversion support
+        if not property_types:
+            property_types = PropertyType.objects.filter(space=self.space).all()
+            caches['default'].set(CacheHelper(self.space).PROPERTY_TYPE_CACHE_KEY, property_types, 60 * 60)  # cache is cleared on property type save signal so long duration is fine
+
+        for fpt in property_types:
+            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'icon': fpt.icon, 'description': fpt.description, 'unit': fpt.unit, 'food_values': {}, 'total_value': 0, 'missing_value': False}
 
         uch = UnitConversionHelper(self.space)
 
