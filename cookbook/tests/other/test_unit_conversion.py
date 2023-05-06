@@ -138,6 +138,10 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         assert len(uch.get_conversions(ingredient_food_2_pcs)) == 1
         print(uch.get_conversions(ingredient_food_2_pcs))
 
+        print('\n----------- TEST CUSTOM CONVERSION - CONVERT MULTI STEP ---------------')
+
+        # TODO add test for multi step conversion ... do I even do or want to support this ?
+
         print('\n----------- TEST CUSTOM CONVERSION - REVERSE CONVERSION ---------------')
         uc2 = UnitConversion.objects.create(
             base_amount=200,
