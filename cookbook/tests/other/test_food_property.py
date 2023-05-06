@@ -1,8 +1,8 @@
 from django.contrib import auth
 from django_scopes import scopes_disabled
 
-from cookbook.helper.food_property_helper import FoodPropertyHelper
-from cookbook.models import Unit, Food, FoodPropertyType, FoodProperty, Recipe, Step
+from cookbook.helper.property_helper import FoodPropertyHelper
+from cookbook.models import Unit, Food, PropertyType, FoodProperty, Recipe, Step
 
 
 def test_food_property(space_1, u1_s1):
@@ -16,10 +16,10 @@ def test_food_property(space_1, u1_s1):
         food_1 = Food.objects.create(name='food_1', space=space_1)
         food_2 = Food.objects.create(name='food_2', space=space_1)
 
-        property_fat = FoodPropertyType.objects.create(name='property_fat', space=space_1)
-        property_calories = FoodPropertyType.objects.create(name='property_calories', space=space_1)
-        property_nuts = FoodPropertyType.objects.create(name='property_nuts', space=space_1)
-        property_price = FoodPropertyType.objects.create(name='property_price', space=space_1)
+        property_fat = PropertyType.objects.create(name='property_fat', space=space_1)
+        property_calories = PropertyType.objects.create(name='property_calories', space=space_1)
+        property_nuts = PropertyType.objects.create(name='property_nuts', space=space_1)
+        property_price = PropertyType.objects.create(name='property_price', space=space_1)
 
         food_1_property_fat = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=50, property_type=property_fat, space=space_1)
         food_1_property_nuts = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=1, property_type=property_nuts, space=space_1)

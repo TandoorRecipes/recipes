@@ -70,7 +70,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodPropertyType, FoodProperty)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, PropertyType, FoodProperty)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -94,7 +94,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, FoodPropertyTypeSerializer, FoodPropertySerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, FoodPropertySerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -811,8 +811,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
-                self.queryset = self.queryset.filter(space=self.request.space).prefetch_related('steps', 'keywords',
+                self.queryset = self.queryset.filter(space=self.request.space).prefetch_related(
+                                                                                                'keywords',
                                                                                                 'shared',
+                                                                                                'properties',
+                                                                                                'properties__property_type',
+                                                                                                'steps',
                                                                                                 'steps__ingredients',
                                                                                                 'steps__ingredients__step_set',
                                                                                                 'steps__ingredients__step_set__recipe_set',
@@ -831,9 +835,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
                                                                                                 'steps__ingredients__unit__unit_conversion_converted_relation',
                                                                                                 'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                                                                                                'cooklog_set').select_related('nutrition')
 
-                                                                                                'cooklog_set').select_related(
-                    'nutrition')
             return super().get_queryset()
 
         self.queryset = self.queryset.filter(space=self.request.space).filter(
@@ -972,8 +975,8 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
 
 
 class FoodPropertyTypeViewSet(viewsets.ModelViewSet):
-    queryset = FoodPropertyType.objects
-    serializer_class = FoodPropertyTypeSerializer
+    queryset = PropertyType.objects
+    serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):

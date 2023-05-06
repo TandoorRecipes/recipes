@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from cookbook.models import Unit, SupermarketCategory, FoodProperty, FoodPropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
+from cookbook.models import Unit, SupermarketCategory, FoodProperty, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
 
 
 class OpenDataImporter:
@@ -55,14 +55,14 @@ class OpenDataImporter:
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
-            insert_list.append(FoodPropertyType(
+            insert_list.append(PropertyType(
                 name=self.data[datatype][k]['name'],
                 unit=self.data[datatype][k]['unit'],
                 open_data_slug=k,
                 space=self.request.space
             ))
 
-        return FoodPropertyType.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+        return PropertyType.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
 
     def import_supermarket(self):
         datatype = 'supermarket'
@@ -114,7 +114,7 @@ class OpenDataImporter:
             existing_objects[f[2]] = f
 
         self._update_slug_cache(Unit, 'unit')
-        self._update_slug_cache(FoodPropertyType, 'property')
+        self._update_slug_cache(PropertyType, 'property')
 
         pref_unit_key = 'preferred_unit_metric'
         pref_shopping_unit_key = 'preferred_packaging_unit_metric'

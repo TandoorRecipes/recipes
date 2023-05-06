@@ -659,9 +659,9 @@ export class Models {
         },
     }
 
-    static FOOD_PROPERTY_TYPE = {
-        name: "Food Property Type",
-        apiName: "FoodPropertyType",
+    static PROPERTY_TYPE = {
+        name: "Property Type",
+        apiName: "PropertyType",
         paginated: false,
         list: {
             header_component: {
