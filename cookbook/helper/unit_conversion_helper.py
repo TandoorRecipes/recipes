@@ -1,6 +1,7 @@
 from django.core.cache import caches
-from pint import UnitRegistry, UndefinedUnitError, PintError
 from decimal import Decimal
+
+
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.models import Ingredient, Unit
 
@@ -11,6 +12,38 @@ CONVERT_TO_UNITS = {
     'us': ['ounce', 'pound', 'fluid_ounce', 'pint', 'quart', 'gallon'],
     'uk': ['ounce', 'pound', 'imperial_fluid_ounce', 'imperial_pint', 'imperial_quart', 'imperial_gallon'],
 }
+
+CONVERSION_TABLE = {
+    'weight': {
+        'g': 1000,
+        'kg': 1,
+        'ounce': 35.274,
+        'pound': 2.20462
+    },
+    'volume': {
+        'ml': 1000,
+        'l': 1,
+        'fluid_ounce': 33.814,
+        'pint': 2.11338,
+        'quart': 1.05669,
+        'gallon': 0.264172,
+        'tbsp': 67.628,
+        'tsp': 202.884,
+        'imperial_fluid_ounce': 35.1951,
+        'imperial_pint': 1.75975,
+        'imperial_quart': 0.879877,
+        'imperial_gallon': 0.219969,
+        'imperial_tbsp': 56.3121,
+        'imperial_tsp': 168.936,
+    },
+}
+
+BASE_UNITS_WEIGHT = CONVERSION_TABLE['weight'].keys()
+BASE_UNITS_VOLUME = CONVERSION_TABLE['volume'].keys()
+
+
+class ConversionException(Exception):
+    pass
 
 
 class UnitConversionHelper:
@@ -23,6 +56,19 @@ class UnitConversionHelper:
         """
         self.space = space
 
+    @staticmethod
+    def convert_from_to(from_unit, to_unit, amount):
+        system = None
+        if from_unit in BASE_UNITS_WEIGHT and to_unit in BASE_UNITS_WEIGHT:
+            system = 'weight'
+        if from_unit in BASE_UNITS_VOLUME and to_unit in BASE_UNITS_VOLUME:
+            system = 'volume'
+
+        if not system:
+            raise ConversionException('Trying to convert units not existing or not in one unit system (weight/volume)')
+
+        return Decimal(amount / Decimal(CONVERSION_TABLE[system][from_unit] / CONVERSION_TABLE[system][to_unit]))
+
     def base_conversions(self, ingredient_list):
         """
         Calculates all possible base unit conversions for each ingredient give.
@@ -31,14 +77,12 @@ class UnitConversionHelper:
         :param ingredient_list: list of ingredients to convert
         :return: ingredient list with appended conversions
         """
-        ureg = UnitRegistry()
-        pint_converted_list = ingredient_list.copy()
+        base_conversion_ingredient_list = ingredient_list.copy()
         for i in ingredient_list:
             try:
                 conversion_unit = i.unit.name
                 if i.unit.base_unit:
                     conversion_unit = i.unit.base_unit
-                quantitiy = ureg.Quantity(f'{i.amount} {conversion_unit}')
 
                 # TODO allow setting which units to convert to? possibly only once conversions become visible
                 units = caches['default'].get(CacheHelper(self.space).BASE_UNITS_CACHE_KEY, None)
@@ -48,16 +92,15 @@ class UnitConversionHelper:
 
                 for u in units:
                     try:
-                        converted = quantitiy.to(u.base_unit)
-                        ingredient = Ingredient(amount=Decimal(converted.m), unit=u, food=ingredient_list[0].food, )
-                        if not any((x.unit.name == ingredient.unit.name or x.unit.base_unit == ingredient.unit.name) for x in pint_converted_list):
-                            pint_converted_list.append(ingredient)
-                    except PintError:
+                        ingredient = Ingredient(amount=self.convert_from_to(conversion_unit, u.base_unit, i.amount), unit=u, food=ingredient_list[0].food, )
+                        if not any((x.unit.name == ingredient.unit.name or x.unit.base_unit == ingredient.unit.name) for x in base_conversion_ingredient_list):
+                            base_conversion_ingredient_list.append(ingredient)
+                    except ConversionException:
                         pass
-            except PintError:
+            except Exception:
                 pass
 
-        return pint_converted_list
+        return base_conversion_ingredient_list
 
     def get_conversions(self, ingredient):
         """
@@ -94,21 +137,5 @@ class UnitConversionHelper:
         if uc.food is None or uc.food == food:
             if unit == uc.base_unit:
                 return Ingredient(amount=amount * (uc.converted_amount / uc.base_amount), unit=uc.converted_unit, food=food, space=self.space)
-                # return {
-                #     'amount': amount * (uc.converted_amount / uc.base_amount),
-                #     'unit': {
-                #         'id': uc.converted_unit.id,
-                #         'name': uc.converted_unit.name,
-                #         'plural_name': uc.converted_unit.plural_name
-                #     },
-                # }
             else:
                 return Ingredient(amount=amount * (uc.base_amount / uc.converted_amount), unit=uc.base_unit, food=food, space=self.space)
-                # return {
-                #     'amount': amount * (uc.base_amount / uc.converted_amount),
-                #     'unit': {
-                #         'id': uc.base_unit.id,
-                #         'name': uc.base_unit.name,
-                #         'plural_name': uc.base_unit.plural_name
-                #     },
-                # }

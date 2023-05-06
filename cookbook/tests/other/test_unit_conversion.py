@@ -7,6 +7,13 @@ from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import Unit, Food, Ingredient, UnitConversion
 
 
+def test_base_converter(space_1):
+    uch = UnitConversionHelper(space_1)
+    assert uch.convert_from_to('g', 'kg', 1234) == 1.234
+    assert uch.convert_from_to('kg', 'pound', 2) == 4.40924
+    # TODO add some more tests and test exception
+
+
 def test_unit_conversions(space_1, space_2, u1_s1):
     with scopes_disabled():
         uch = UnitConversionHelper(space_1)
@@ -159,4 +166,3 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         assert next(x for x in conversions if x.unit == unit_kg_space_2) is not None
         assert next(x for x in conversions if x.unit == unit_kg_space_2).amount == 0.1
         print(conversions)
-

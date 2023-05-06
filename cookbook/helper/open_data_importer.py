@@ -160,7 +160,8 @@ class OpenDataImporter:
                     update_list.append(Food(id=existing_food_id, open_data_slug=k, ))
 
         Food.load_bulk(insert_list, None)
-        Food.objects.bulk_update(update_list, update_field_list)
+        if len(update_list) > 0:
+            Food.objects.bulk_update(update_list, update_field_list)
 
         self._update_slug_cache(Food, 'food')
 

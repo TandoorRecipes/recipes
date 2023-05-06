@@ -821,6 +821,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__step_set',
                                                                                                 'steps__ingredients__step_set__recipe_set',
                                                                                                 'steps__ingredients__food',
+                                                                                                'steps__ingredients__food__foodproperty_set',
+                                                                                                'steps__ingredients__food__foodproperty_set__property_type',
                                                                                                 'steps__ingredients__food__inherit_fields',
                                                                                                 'steps__ingredients__food__supermarket_category',
                                                                                                 'steps__ingredients__food__onhand_users',
@@ -832,7 +834,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
                                                                                                 'steps__ingredients__unit__unit_conversion_converted_relation',
                                                                                                 'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
-                                                                                                'cooklog_set').select_related('nutrition')
+                                                                                                'cooklog_set',
+                                                                                                ).select_related('nutrition')
 
             return super().get_queryset()
 

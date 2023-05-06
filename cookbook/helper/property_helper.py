@@ -33,7 +33,7 @@ class FoodPropertyHelper:
         uch = UnitConversionHelper(self.space)
 
         for i in ingredients:
-            conversions = [i]  # uch.get_conversions(i)
+            conversions = uch.get_conversions(i)
             for pt in property_types:
                 found_property = False
                 for p in i.food.foodproperty_set.all():
