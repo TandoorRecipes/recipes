@@ -452,4 +452,3 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
-    FoodPropertyHelper(request.space).generate_debug_recipe()

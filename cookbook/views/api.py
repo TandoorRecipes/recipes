@@ -826,10 +826,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__food__onhand_users',
                                                                                                 'steps__ingredients__food__substitute',
                                                                                                 'steps__ingredients__food__child_inherit_fields',
-                                                                                                # 'steps__ingredients__food__foodnutrition_set',
-                                                                                                # 'steps__ingredients__food__foodnutrition_set__food',
-                                                                                                # 'steps__ingredients__food__foodnutrition_set__food_unit',
-                                                                                                # 'steps__ingredients__food__foodnutrition_set__nutrition_type',
+                                                                         
                                                                                                 'steps__ingredients__unit',
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation',
                                                                                                 'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
