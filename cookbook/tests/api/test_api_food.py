@@ -99,8 +99,12 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
-    obj_1.space = space_2
-    obj_1.save()
+    with scopes_disabled():
+        # for some reason the 'path' attribute changes between the factory and the test
+        obj_1 = Food.objects.get(id=obj_1.id)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        obj_1.space = space_2
+        obj_1.save()
 
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
@@ -494,10 +498,10 @@ def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
 def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
         # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
         obj_2.move(parent, node_location)
         obj_2 = Food.objects.get(id=obj_2.id)
-        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = Food.objects.get(id=parent.id)
 
     # should return full tree starting at parent (obj_tree_1, obj_2), ignoring query filters
