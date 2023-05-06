@@ -3,15 +3,29 @@ from _decimal import Decimal
 from django.contrib import auth
 from django_scopes import scopes_disabled
 
-from cookbook.helper.unit_conversion_helper import UnitConversionHelper
+from cookbook.helper.unit_conversion_helper import UnitConversionHelper, ConversionException
 from cookbook.models import Unit, Food, Ingredient, UnitConversion
 
 
 def test_base_converter(space_1):
     uch = UnitConversionHelper(space_1)
-    assert uch.convert_from_to('g', 'kg', 1234) == 1.234
-    assert uch.convert_from_to('kg', 'pound', 2) == 4.40924
-    # TODO add some more tests and test exception
+    assert abs(uch.convert_from_to('g', 'kg', 1234) - Decimal(1.234)) < 0.0001
+    assert abs(uch.convert_from_to('kg', 'pound', 2) - Decimal(4.40924)) < 0.00001
+    assert abs(uch.convert_from_to('kg', 'g', 1) - Decimal(1000)) < 0.00001
+    assert abs(uch.convert_from_to('imperial_gallon', 'gallon', 1000) - Decimal(1200.95104)) < 0.00001
+    assert abs(uch.convert_from_to('tbsp', 'ml', 20) - Decimal(295.73549)) < 0.00001
+
+    try:
+        assert uch.convert_from_to('kg', 'tbsp', 2) == 1234
+        assert False
+    except ConversionException:
+        assert True
+
+    try:
+        assert uch.convert_from_to('kg', 'g2', 2) == 1234
+        assert False
+    except ConversionException:
+        assert True
 
 
 def test_unit_conversions(space_1, space_2, u1_s1):
@@ -41,7 +55,7 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         print(conversions)
         assert len(conversions) == 2
         assert next(x for x in conversions if x.unit == unit_kg) is not None
-        assert next(x for x in conversions if x.unit == unit_kg).amount == 0.1
+        assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(0.1)) < 0.0001
 
         print('\n----------- TEST BASE CONVERSIONS - VOLUMES ---------------')
 
@@ -55,7 +69,7 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         conversions = uch.get_conversions(ingredient_food_1_floz1)
         assert len(conversions) == 2
         assert next(x for x in conversions if x.unit == unit_floz2) is not None
-        assert next(x for x in conversions if x.unit == unit_floz2).amount == 96.07599404038842  # TODO validate value
+        assert abs(next(x for x in conversions if x.unit == unit_floz2).amount - Decimal(96.07599404038842)) < 0.001  # TODO validate value
 
         print(conversions)
 
@@ -63,7 +77,7 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         conversions = uch.get_conversions(ingredient_food_1_floz1)
         assert len(conversions) == 3
         assert next(x for x in conversions if x.unit == unit_pint) is not None
-        assert next(x for x in conversions if x.unit == unit_pint).amount == 6.004749627524276  # TODO validate value
+        assert abs(next(x for x in conversions if x.unit == unit_pint).amount - Decimal(6.004749627524276)) < 0.001  # TODO validate value
 
         print(conversions)
 
@@ -80,7 +94,7 @@ def test_unit_conversions(space_1, space_2, u1_s1):
 
         assert len(conversions) == 3
         assert next(x for x in conversions if x.unit == unit_fantasy) is not None
-        assert next(x for x in conversions if x.unit == unit_fantasy).amount == Decimal('133.700')  # TODO validate value
+        assert abs(next(x for x in conversions if x.unit == unit_fantasy).amount - Decimal('133.700')) < 0.001  # TODO validate value
 
         print(conversions)
 
@@ -117,8 +131,8 @@ def test_unit_conversions(space_1, space_2, u1_s1):
 
         conversions = uch.get_conversions(ingredient_food_1_pcs)
         assert len(conversions) == 3
-        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
-        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
+        assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
         print(conversions)
 
         assert len(uch.get_conversions(ingredient_food_2_pcs)) == 1
@@ -137,19 +151,20 @@ def test_unit_conversions(space_1, space_2, u1_s1):
 
         conversions = uch.get_conversions(ingredient_food_1_pcs)
         assert len(conversions) == 3
-        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
-        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
+        assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
         print(conversions)
 
         conversions = uch.get_conversions(ingredient_food_2_pcs)
         assert len(conversions) == 3
-        assert next(x for x in conversions if x.unit == unit_gram).amount == 1000
-        assert next(x for x in conversions if x.unit == unit_kg).amount == 1
+        assert abs(next(x for x in conversions if x.unit == unit_gram).amount - Decimal(1000)) < 0.0001
+        assert abs(next(x for x in conversions if x.unit == unit_kg).amount - Decimal(1)) < 0.0001
         print(conversions)
 
         print('\n----------- TEST SPACE SEPARATION ---------------')
         uc2.space = space_2
         uc2.save()
+
         conversions = uch.get_conversions(ingredient_food_2_pcs)
         assert len(conversions) == 1
         print(conversions)
@@ -164,5 +179,5 @@ def test_unit_conversions(space_1, space_2, u1_s1):
         assert len(conversions) == 2
         assert not any(x for x in conversions if x.unit == unit_kg)
         assert next(x for x in conversions if x.unit == unit_kg_space_2) is not None
-        assert next(x for x in conversions if x.unit == unit_kg_space_2).amount == 0.1
+        assert abs(next(x for x in conversions if x.unit == unit_kg_space_2).amount - Decimal(0.1)) < 0.0001
         print(conversions)
