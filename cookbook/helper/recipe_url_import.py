@@ -1,5 +1,6 @@
 # import random
 import re
+import traceback
 from html import unescape
 
 from django.core.cache import caches
@@ -12,7 +13,8 @@ from recipe_scrapers._utils import get_host_name, get_minutes
 
 # from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.models import Automation, Keyword
+from cookbook.models import Automation, Keyword, PropertyType
+
 
 # from unicodedata import decomposition
 
@@ -193,6 +195,13 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
+    try:
+        recipe_json['properties'] = get_recipe_properties(request.space, scrape.schema.nutrients())
+        print(recipe_json['properties'])
+    except Exception:
+        traceback.print_exc()
+        pass
+
     if recipe_json['source_url']:
         automations = Automation.objects.filter(type=Automation.INSTRUCTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
         for a in automations:
@@ -201,6 +210,30 @@ def get_from_scraper(scrape, request):
                     s['instruction'] = re.sub(a.param_2, a.param_3, s['instruction'])
 
     return recipe_json
+
+
+def get_recipe_properties(space, property_data):
+    # {'servingSize': '1', 'calories': '302 kcal', 'proteinContent': '7,66g', 'fatContent': '11,56g', 'carbohydrateContent': '41,33g'}
+    properties = {
+        "property-calories": "calories",
+        "property-carbohydrates": "carbohydrateContent",
+        "property-proteins": "proteinContent",
+        "property-fats": "fatContent",
+    }
+    recipe_properties = []
+    for pt in PropertyType.objects.filter(space=space, open_data_slug__in=list(properties.keys())).all():
+        for p in list(properties.keys()):
+            if pt.open_data_slug == p:
+                if properties[p] in property_data:
+                    recipe_properties.append({
+                        'property_type': {
+                            'id': pt.id,
+                            'name': pt.name,
+                        },
+                        'property_amount': parse_servings(property_data[properties[p]]) / float(property_data['servingSize']),
+                    })
+
+    return recipe_properties
 
 
 def get_from_youtube_scraper(url, request):

@@ -22,7 +22,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.food_property_helper import FoodPropertyHelper
+from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -33,7 +33,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
                              SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodProperty,
-                             FoodPropertyType)
+                             PropertyType, RecipeProperty)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -744,21 +744,21 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UnitConversion
-        fields = ('id', 'name','base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
+        fields = ('id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
-class FoodPropertyTypeSerializer(serializers.ModelSerializer):
+class PropertyTypeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
     class Meta:
-        model = FoodPropertyType
+        model = PropertyType
         fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
 
 
 class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    property_type = FoodPropertyTypeSerializer()
+    property_type = PropertyTypeSerializer()
     food = FoodSimpleSerializer()
     food_unit = UnitSerializer()
     food_amount = CustomDecimalField()
@@ -773,6 +773,20 @@ class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     class Meta:
         model = FoodProperty
         fields = ('id', 'food_amount', 'food_unit', 'food', 'property_amount', 'property_type')
+        read_only_fields = ('id',)
+
+
+class RecipePropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    property_type = PropertyTypeSerializer()
+    property_amount = CustomDecimalField()
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = RecipeProperty
+        fields = ('id', 'property_type', 'property_amount',)
         read_only_fields = ('id',)
 
 
@@ -826,6 +840,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
 
 class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
+    properties = RecipePropertySerializer(many=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
     shared = UserSerializer(many=True, required=False)
@@ -842,7 +857,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
             'last_cooked',
             'private', 'shared',
         )

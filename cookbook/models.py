@@ -755,7 +755,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         indexes = (GinIndex(fields=["search_vector"]),)
 
 
-class FoodPropertyType(models.Model, PermissionModelMixin):
+class PropertyType(models.Model, PermissionModelMixin):
     NUTRITION = 'NUTRITION'
     ALLERGEN = 'ALLERGEN'
     PRICE = 'PRICE'
@@ -780,7 +780,7 @@ class FoodPropertyType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='food_property_type_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space')
         ]
 
 
@@ -789,7 +789,7 @@ class FoodProperty(models.Model, PermissionModelMixin):
     food_unit = models.ForeignKey(Unit, on_delete=models.CASCADE)
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
     property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
-    property_type = models.ForeignKey(FoodPropertyType, on_delete=models.PROTECT)
+    property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -801,6 +801,17 @@ class FoodProperty(models.Model, PermissionModelMixin):
         constraints = [
             models.UniqueConstraint(fields=['food', 'property_type', 'space'], name='food_property_unique_per_space')
         ]
+
+
+class RecipeProperty(models.Model, PermissionModelMixin):
+    property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
+    property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
@@ -841,6 +852,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
+    properties = models.ManyToManyField(RecipeProperty, blank=True)
     show_ingredient_overview = models.BooleanField(default=True)
     private = models.BooleanField(default=False)
     shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')

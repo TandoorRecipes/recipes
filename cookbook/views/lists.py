@@ -246,15 +246,15 @@ def unit_conversion(request):
 
 
 @group_required('user')
-def food_property_type(request):
+def property_type(request):
     # model-name is the models.js name of the model, probably ALL-CAPS
     return render(
         request,
         'generic/model_template.html',
         {
-            "title": _("Food Property Types"),
+            "title": _("Property Types"),
             "config": {
-                'model': "FOOD_PROPERTY_TYPE",  # *REQUIRED* name of the model in models.js
+                'model': "PROPERTY_TYPE",  # *REQUIRED* name of the model in models.js
             }
         }
     )
