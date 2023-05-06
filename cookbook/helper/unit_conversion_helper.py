@@ -1,6 +1,6 @@
 from django.core.cache import caches
 from pint import UnitRegistry, UndefinedUnitError, PintError
-
+from decimal import Decimal
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.models import Ingredient, Unit
 
@@ -49,7 +49,7 @@ class UnitConversionHelper:
                 for u in units:
                     try:
                         converted = quantitiy.to(u.base_unit)
-                        ingredient = Ingredient(amount=converted.m, unit=u, food=ingredient_list[0].food, )
+                        ingredient = Ingredient(amount=Decimal(converted.m), unit=u, food=ingredient_list[0].food, )
                         if not any((x.unit.name == ingredient.unit.name or x.unit.base_unit == ingredient.unit.name) for x in pint_converted_list):
                             pint_converted_list.append(ingredient)
                     except PintError:
@@ -68,11 +68,11 @@ class UnitConversionHelper:
         """
         conversions = [ingredient]
         if ingredient.unit:
-            for c in ingredient.unit.unit_conversion_base_relation.filter(space=self.space).all():
+            for c in ingredient.unit.unit_conversion_base_relation.all():
                 r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
                 if r and r not in conversions:
                     conversions.append(r)
-            for c in ingredient.unit.unit_conversion_converted_relation.filter(space=self.space).all():
+            for c in ingredient.unit.unit_conversion_converted_relation.all():
                 r = self._uc_convert(c, ingredient.amount, ingredient.unit, ingredient.food)
                 if r and r not in conversions:
                     conversions.append(r)

@@ -1,3 +1,4 @@
+from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import PropertyType, Unit, Food, FoodProperty, Recipe, Step
 
 
@@ -29,13 +30,20 @@ class FoodPropertyHelper:
 
         # TODO unit conversion support
 
+        uch = UnitConversionHelper(self.space)
+
         for i in ingredients:
+            conversions = [i]  # uch.get_conversions(i)
             for pt in property_types:
-                p = i.food.foodproperty_set.filter(space=self.space, property_type=pt).first()
-                if p:
-                    computed_properties[pt.id]['total_value'] += (i.amount / p.food_amount) * p.property_amount
-                    computed_properties[pt.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], i.food.id, (i.amount / p.food_amount) * p.property_amount, i.food)
-                else:
+                found_property = False
+                for p in i.food.foodproperty_set.all():
+                    if p.property_type == pt:
+                        for c in conversions:
+                            if c.unit == p.food_unit:
+                                found_property = True
+                                computed_properties[pt.id]['total_value'] += (c.amount / p.food_amount) * p.property_amount
+                                computed_properties[pt.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / p.food_amount) * p.property_amount, c.food)
+                if not found_property:
                     computed_properties[pt.id]['missing_value'] = True
                     computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
 
@@ -50,55 +58,3 @@ class FoodPropertyHelper:
         else:
             d[key] = {'id': food.id, 'food': food.name, 'value': value}
         return d
-
-    def generate_debug_recipe(self):
-        """
-        DEBUG FUNCTION ONLY, generates a test recipe
-        """
-        unit_gram = Unit.objects.create(name='gram', base_unit='g', space=self.space)
-        unit_pcs = Unit.objects.create(name='pcs', base_unit='', space=self.space)
-        unit_floz1 = Unit.objects.create(name='fl. oz 1', base_unit='imperial_fluid_ounce', space=self.space)  # US and UK use different volume systems (US vs imperial)
-        unit_floz2 = Unit.objects.create(name='fl. oz 2', base_unit='fluid_ounce', space=self.space)
-        unit_fantasy = Unit.objects.create(name='Fantasy Unit', base_unit='', space=self.space)
-
-        food_1 = Food.objects.create(name='Food 1', space=self.space)
-        food_2 = Food.objects.create(name='Food 2', space=self.space)
-
-        property_fat = PropertyType.objects.create(name='Fat', unit='g', space=self.space)
-        property_calories = PropertyType.objects.create(name='Calories', unit='kcal', space=self.space)
-        property_nuts = PropertyType.objects.create(name='Nuts', space=self.space)
-        property_price = PropertyType.objects.create(name='Price', unit='€', space=self.space)
-
-        food_1_property_fat = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=50, property_type=property_fat, space=self.space)
-        food_1_property_nuts = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=1, property_type=property_nuts, space=self.space)
-        food_1_property_price = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=7.50, property_type=property_price, space=self.space)
-
-        food_2_property_fat = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=25, property_type=property_fat, space=self.space)
-        food_2_property_nuts = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=0, property_type=property_nuts, space=self.space)
-        food_2_property_price = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=2.50, property_type=property_price, space=self.space)
-
-        recipe_1 = Recipe.objects.create(name='recipe_1', waiting_time=0, working_time=0, space=self.space, created_by=self.space.created_by)
-
-        step_1 = Step.objects.create(instruction='instruction_step_1', space=self.space)
-        step_1.ingredients.create(amount=500, unit=unit_gram, food=food_1, space=self.space)
-        step_1.ingredients.create(amount=1000, unit=unit_gram, food=food_2, space=self.space)
-        recipe_1.steps.add(step_1)
-
-        step_2 = Step.objects.create(instruction='instruction_step_1', space=self.space)
-        step_2.ingredients.create(amount=50, unit=unit_gram, food=food_1, space=self.space)
-        recipe_1.steps.add(step_2)
-
-
-class RecipePropertyHelper:
-    space = None
-
-    def __init__(self, space):
-        """
-        Helper to perform recipe property operations
-        :param space: space to limit scope to
-        """
-        self.space = space
-
-
-    def parse_properties_from_schema(self, schema):
-        pass
