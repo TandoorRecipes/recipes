@@ -2,23 +2,21 @@
     <div>
 
 
-        <div class="card p-2" v-if="recipe !== undefined">
-            <div class="flex-row">
-                <div class="flex-column">
+        <div class="card p-4 pb-2" v-if="recipe !== undefined">
+            <b-row>
+                <b-col>
                     <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
-                </div>
-                <div class="flex-column align-content-end text-right align-text-bottom">
-
-                    <span v-if="!show_total">{{ $t('per_serving') }}</span>
-                    <span v-if="show_total">{{ $t('total') }}</span>
+                </b-col>
+                <b-col class="text-right">
+                    <span v-if="!show_total">{{ $t('per_serving') }} </span>
+                    <span v-if="show_total">{{ $t('total') }} </span>
 
                     <a href="#" @click="show_total = !show_total">
                         <i class="fas fa-toggle-on" v-if="!show_total"></i>
                         <i class="fas fa-toggle-off" v-if="show_total"></i>
                     </a>
-
-                </div>
-            </div>
+                </b-col>
+            </b-row>
 
 
             <table class="table table-bordered table-sm">
