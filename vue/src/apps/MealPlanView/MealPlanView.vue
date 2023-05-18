@@ -290,6 +290,9 @@
                 <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus"></i> {{ $t("Create") }}
                 </button>
+                <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
+                    class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
+                </button>
                 <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                     {{ $t("Export_To_ICal") }}
                 </a>
@@ -302,11 +305,7 @@
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
-            <div class="col-md-3 col-6 mb-1 mb-md-0">
-                    <button class="btn btn-block btn-primary shadow-none" @click="createAutoPlan(new Date())">
-                        {{ $t("Auto_Planner") }}
-                    </button>
-            </div>
+
         </bottom-navigation-bar>
     </div>
 </template>
@@ -677,53 +676,59 @@ export default {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
 
-        }
+        },
         createAutoPlan() {
             this.$bvModal.show(`autoplan-modal`)
         },
-      async autoPlanThread(date,dateOffset,meal_type,keywords,servings,mealTypesKey){
+        async autoPlanThread(date, dateOffset, meal_type, keywords, servings, mealTypesKey) {
 
-          let apiClient = new ApiApiFactory()
-          let currentEntry = Object.assign({}, this.options.entryEditing)
-                currentEntry.date = moment(date).add(dateOffset,"d").format("YYYY-MM-DD")
-                currentEntry.servings = servings
-        await Promise.all([
-            currentEntry.recipe = await this.randomRecipe(keywords[mealTypesKey]).then((result)=>{return result}),
-            currentEntry.shared = await apiClient.listUserPreferences().then((result) => {return result.data[0].plan_share}),
-            currentEntry.meal_type = await this.getMealType(meal_type[mealTypesKey].id).then((result)=>{return result})
-        ])
-                currentEntry.title = currentEntry.recipe.name
-                this.createEntry(currentEntry)
-      },
-       doAutoPlan(autoPlan){
-          let dayInMilliseconds = (86400000)
-         let numberOfDays = ((autoPlan.endDay - autoPlan.startDay)/dayInMilliseconds) + 1
+            let apiClient = new ApiApiFactory()
+            let currentEntry = Object.assign({}, this.options.entryEditing)
+            currentEntry.date = moment(date).add(dateOffset, "d").format("YYYY-MM-DD")
+            currentEntry.servings = servings
+            await Promise.all([
+                currentEntry.recipe = await this.randomRecipe(keywords[mealTypesKey]).then((result) => {
+                    return result
+                }),
+                currentEntry.shared = await apiClient.listUserPreferences().then((result) => {
+                    return result.data[0].plan_share
+                }),
+                currentEntry.meal_type = await this.getMealType(meal_type[mealTypesKey].id).then((result) => {
+                    return result
+                })
+            ])
+            currentEntry.title = currentEntry.recipe.name
+            this.createEntry(currentEntry)
+        },
+        doAutoPlan(autoPlan) {
+            let dayInMilliseconds = (86400000)
+            let numberOfDays = ((autoPlan.endDay - autoPlan.startDay) / dayInMilliseconds) + 1
 
-         for (const mealTypesKey in autoPlan.meal_types) {
-           for (let dateOffset = 0; dateOffset < numberOfDays; dateOffset++) {
-             this.autoPlanThread(autoPlan.date, dateOffset, autoPlan.meal_types, autoPlan.keywords, autoPlan.servings, mealTypesKey)
-           }
-         }
+            for (const mealTypesKey in autoPlan.meal_types) {
+                for (let dateOffset = 0; dateOffset < numberOfDays; dateOffset++) {
+                    this.autoPlanThread(autoPlan.startDay, dateOffset, autoPlan.meal_types, autoPlan.keywords, autoPlan.servings, mealTypesKey)
+                }
+            }
         },
         randomRecipe(keywords) {
-          let url = "/api/recipe/?query="
-          for (const keywordsKey in keywords) {
-            let keyword = keywords[keywordsKey]
-            url += `&keywords_and=${keyword.id}`
-          }
-          return axios.get(url).then((response) => {
-            let result = response.data
-            let count = result.count
-            return result.results[Math.floor(Math.random() * count)]
-          }).catch((err) => {
+            let url = "/api/recipe/?query="
+            for (const keywordsKey in keywords) {
+                let keyword = keywords[keywordsKey]
+                url += `&keywords_and=${keyword.id}`
+            }
+            return axios.get(url).then((response) => {
+                let result = response.data
+                let count = result.count
+                return result.results[Math.floor(Math.random() * count)]
+            }).catch((err) => {
 
-          })
+            })
         },
         getMealType(id) {
-          let url = `/api/meal-type/${id}`
-          return axios.get(url).then((response) => {
-            return response.data
-          })
+            let url = `/api/meal-type/${id}`
+            return axios.get(url).then((response) => {
+                return response.data
+            })
         }
     },
     directives: {
