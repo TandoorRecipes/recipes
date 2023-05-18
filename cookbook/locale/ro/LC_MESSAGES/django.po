@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2023-04-12 11:55+0000\n"
+"PO-Revision-Date: 2023-04-27 08:55+0000\n"
 "Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Romanian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ro/>\n"
@@ -456,7 +456,7 @@ msgstr "Sursă"
 #: .\cookbook\templates\url_import.html:228
 #: .\cookbook\templates\url_import.html:459
 msgid "Servings"
-msgstr "Porţii"
+msgstr "Porții"
 
 #: .\cookbook\integration\safron.py:25
 msgid "Waiting time"
@@ -532,7 +532,7 @@ msgstr "Plan de alimentare"
 
 #: .\cookbook\models.py:204 .\cookbook\templates\base.html:90
 msgid "Books"
-msgstr "Cărţi"
+msgstr "Cărți"
 
 #: .\cookbook\models.py:212
 msgid "Small"
