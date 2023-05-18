@@ -167,8 +167,8 @@
     "Create_New_Keyword": "Añadir nueva Etiqueta",
     "Create_New_Unit": "Añadir nueva unidad",
     "Create_New_Meal_Type": "Añadir nuevo Tipo de Comida",
-    "and_up": "",
-    "and_down": "",
+    "and_up": "& Arriba",
+    "and_down": "& Abajo",
     "Instructions": "Instrucciones",
     "Unrated": "Sin puntuar",
     "Automate": "Automatizar",
@@ -443,5 +443,14 @@
     "Use_Plural_Unit_Simple": "",
     "Use_Plural_Food_Always": "",
     "Use_Plural_Food_Simple": "",
-    "plural_usage_info": ""
+    "plural_usage_info": "",
+    "Original_Text": "Texto original",
+    "Use_Fractions_Help": "Convertir automáticamente los decimales en fracciones al ver una receta.",
+    "Description_Replace": "Reemplazar Descripción",
+    "Instruction_Replace": "Reemplazar Instrucción",
+    "plan_share_desc": "Las Nuevas entradas del Plan de Comidas se compartirán automáticamente con los usuarios seleccionados.",
+    "Auto_Sort": "Ordenar Automáticamente",
+    "Auto_Sort_Help": "Mueva todos los ingredientes al paso que mejor se adapte.",
+    "Unpin": "Desanclar",
+    "Amount": "Cantidad"
 }

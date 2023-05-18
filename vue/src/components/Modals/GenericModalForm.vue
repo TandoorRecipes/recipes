@@ -15,6 +15,7 @@
                 <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
                 <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
                 <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" />
+				<number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
             </div>
             <template v-slot:modal-footer>
                 <div class="row w-100">
@@ -49,10 +50,11 @@ import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
 import SmallText from "@/components/Modals/SmallText"
 import HelpBadge from "@/components/Badges/Help"
+import NumberInput from "@/components/Modals/NumberInput.vue";
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge,DateInput },
+    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge,DateInput, NumberInput },
     mixins: [ApiMixin, ToastMixin],
     props: {
         model: { required: true, type: Object },

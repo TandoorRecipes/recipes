@@ -432,9 +432,13 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
-        plural_name = validated_data.pop('plural_name', None)
-        if plural_name:
+
+        if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
+
+        if unit := Unit.objects.filter(Q(name=name) | Q(plural_name=name)).first():
+            return unit
+
         space = validated_data.pop('space', self.context['request'].space)
         obj, created = Unit.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
         return obj
@@ -544,9 +548,13 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
-        plural_name = validated_data.pop('plural_name', None)
-        if plural_name:
+
+        if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
+
+        if food := Food.objects.filter(Q(name=name) | Q(plural_name=name)).first():
+            return food
+
         space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
@@ -876,11 +884,11 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                       obj.name
-                       or getattr(obj.mealplan, 'title', None)
-                       or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                       or obj.recipe.name
-               ) + f' ({value:.2g})'
+                obj.name
+                or getattr(obj.mealplan, 'title', None)
+                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                or obj.recipe.name
+        ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
         # TODO remove once old shopping list
@@ -1067,7 +1075,7 @@ class AutomationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Automation
         fields = (
-            'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'disabled', 'created_by',)
+            'id', 'type', 'name', 'description', 'param_1', 'param_2', 'param_3', 'order', 'disabled', 'created_by',)
         read_only_fields = ('created_by',)
 
 

@@ -32,11 +32,11 @@ admin.site.unregister(Group)
 @admin.action(description='Delete all data from a space')
 def delete_space_action(modeladmin, request, queryset):
     for space in queryset:
-        space.save()
+        space.safe_delete()
 
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing', 'use_plural')
+    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'

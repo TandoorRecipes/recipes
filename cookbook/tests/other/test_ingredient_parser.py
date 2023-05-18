@@ -75,6 +75,8 @@ def test_ingredient_parser():
     # an amount # and it starts with a lowercase letter, then that
     # is a unit ("etwas", "evtl.") does not apply to English tho
 
+    # TODO maybe add/improve support for weired stuff like this https://www.rainbownourishments.com/vegan-lemon-tart/#recipe
+
     ingredient_parser = IngredientParser(None, False, ignore_automations=True)
 
     count = 0

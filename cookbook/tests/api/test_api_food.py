@@ -6,7 +6,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, FoodInheritField, Ingredient, ShoppingList, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
@@ -56,23 +56,32 @@ def obj_tree_1(request, space_1):
         params = request.param  # request.param is a magic variable
     except AttributeError:
         params = {}
-    objs = []
     inherit = params.pop('inherit', False)
-    objs.extend(FoodFactory.create_batch(3, space=space_1, **params))
+    FoodFactory.create_batch(3, space=space_1, **params)
+    objs = Food.objects.values_list('id', flat=True)
+    obj_id = objs[1]
+    child_id = objs[0]
+    parent_id = objs[2]
 
     # set all foods to inherit everything
     if inherit:
         inherit = Food.inheritable_fields
-        Through = Food.objects.filter(space=space_1).first().inherit_fields.through
+        Through = Food.objects.filter(
+            space=space_1).first().inherit_fields.through
         for i in inherit:
             Through.objects.bulk_create([
                 Through(food_id=x, foodinheritfield_id=i.id)
                 for x in Food.objects.filter(space=space_1).values_list('id', flat=True)
             ])
 
-    objs[0].move(objs[1], node_location)
-    objs[1].move(objs[2], node_location)
-    return Food.objects.get(id=objs[1].id)  # whenever you move/merge a tree it's safest to re-get the object
+    Food.objects.get(id=child_id).move(
+        Food.objects.get(id=obj_id), node_location)
+
+    Food.objects.get(id=obj_id).move(
+        Food.objects.get(id=parent_id), node_location)
+
+    # whenever you move/merge a tree it's safest to re-get the object
+    return Food.objects.get(id=obj_id)
 
 
 @pytest.mark.parametrize("arg", [
@@ -90,8 +99,12 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 2
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
 
-    obj_1.space = space_2
-    obj_1.save()
+    with scopes_disabled():
+        # for some reason the 'path' attribute changes between the factory and the test
+        obj_1 = Food.objects.get(id=obj_1.id)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        obj_1.space = space_2
+        obj_1.save()
 
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 1
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
@@ -107,19 +120,23 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert obj_2.name in [x['name'] for x in response['results']]
     assert response['results'][0]['name'] < response['results'][1]['name']
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?page_size=1').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?page_size=1').content)
     assert len(response['results']) == 1
 
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?limit=1').content)
     assert len(response['results']) == 1
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=''&limit=1').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?query=''&limit=1').content)
     assert len(response['results']) == 1
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query=chicken').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?query=chicken').content)
     assert response['count'] == 0
 
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[:-4]}').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?query={obj_1.name[:-4]}').content)
     assert response['count'] == 1
 
 
@@ -262,8 +279,9 @@ def test_integrity(u1_s1, recipe_1_s1):
 
 def test_move(u1_s1, obj_tree_1, obj_2, obj_3, space_1):
     with scope(space=space_1):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
         assert parent.get_num_children() == 1
         assert parent.get_descendant_count() == 2
         assert Food.get_root_nodes().filter(space=space_1).count() == 2
@@ -295,8 +313,9 @@ def test_move(u1_s1, obj_tree_1, obj_2, obj_3, space_1):
 
 def test_move_errors(u1_s1, obj_tree_1, obj_3, space_1):
     with scope(space=space_1):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
     # move child to root
     r = u1_s1.put(reverse(MOVE_URL, args=[obj_tree_1.id, 0]))
     assert r.status_code == 200
@@ -351,7 +370,7 @@ def test_merge_shopping_entries(obj_tree_1, u1_s1, space_1):
     with scope(space=space_1):
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
-        ShoppingListEntryFactory.create(food=parent,  space=space_1)
+        ShoppingListEntryFactory.create(food=parent, space=space_1)
         ShoppingListEntryFactory.create(food=child, space=space_1)
         assert parent.get_num_children() == 1
         assert parent.get_descendant_count() == 2
@@ -371,8 +390,10 @@ def test_merge_shopping_entries(obj_tree_1, u1_s1, space_1):
         assert obj_tree_1.shopping_entries.count() == 1  # now has child's ingredient
 
 
-def test_merge(u1_s1,  obj_tree_1, obj_1, obj_3, space_1):
+def test_merge(u1_s1, obj_tree_1, obj_1, obj_3, space_1):
     with scope(space=space_1):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
         child = obj_tree_1.get_descendants()[0]
         assert parent.get_num_children() == 1
@@ -416,8 +437,9 @@ def test_merge(u1_s1,  obj_tree_1, obj_1, obj_3, space_1):
 
 def test_merge_errors(u1_s1, obj_tree_1, obj_3, space_1):
     with scope(space=space_1):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
 
     # attempt to merge with non-existent parent
     r = u1_s1.put(
@@ -451,44 +473,63 @@ def test_merge_errors(u1_s1, obj_tree_1, obj_3, space_1):
 
 def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
 
     # should return root objects in the space (obj_1, obj_2), ignoring query filters
     response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root=0').content)
     assert len(response['results']) == 2
 
+    # django_tree bypasses ORM - best to retrieve all changed objects
     with scopes_disabled():
         obj_2.move(parent, node_location)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        parent = Food.objects.get(id=parent.id)
     # should return direct children of parent (obj_tree_1, obj_2), ignoring query filters
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}').content)
     assert response['count'] == 2
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?root={parent.id}&query={obj_2.name[4:]}').content)
+    response = json.loads(u1_s1.get(
+        f'{reverse(LIST_URL)}?root={parent.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 2
 
 
 def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
+        # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
+        obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
         parent = obj_tree_1.get_parent()
-        child = obj_tree_1.get_descendants()[0]
         obj_2.move(parent, node_location)
+        obj_2 = Food.objects.get(id=obj_2.id)
+        parent = Food.objects.get(id=parent.id)
+
     # should return full tree starting at parent (obj_tree_1, obj_2), ignoring query filters
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
+    response = json.loads(
+        u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
     assert response['count'] == 4
-    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}&query={obj_2.name[4:]}').content)
+    response = json.loads(u1_s1.get(
+        f'{reverse(LIST_URL)}?tree={parent.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
 
 
 # This is more about the model than the API - should this be moved to a different test?
 @pytest.mark.parametrize("obj_tree_1, field, inherit, new_val", [
-    ({'has_category': True, 'inherit': True},  'supermarket_category', True, 'cat_1'),
-    ({'has_category': True, 'inherit': False}, 'supermarket_category', False, 'cat_1'),
-    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping',  True, 'false'),
-    ({'ignore_shopping': True, 'inherit': False}, 'ignore_shopping', False, 'false'),
-    ({'substitute_children': True, 'inherit': True}, 'substitute_children',  True, 'false'),
-    ({'substitute_children': True, 'inherit': False}, 'substitute_children', False, 'false'),
-    ({'substitute_siblings': True, 'inherit': True}, 'substitute_siblings',  True, 'false'),
-    ({'substitute_siblings': True, 'inherit': False}, 'substitute_siblings', False, 'false'),
+    ({'has_category': True, 'inherit': True},
+     'supermarket_category', True, 'cat_1'),
+    ({'has_category': True, 'inherit': False},
+     'supermarket_category', False, 'cat_1'),
+    ({'ignore_shopping': True, 'inherit': True}, 'ignore_shopping', True, 'false'),
+    ({'ignore_shopping': True, 'inherit': False},
+     'ignore_shopping', False, 'false'),
+    ({'substitute_children': True, 'inherit': True},
+     'substitute_children', True, 'false'),
+    ({'substitute_children': True, 'inherit': False},
+     'substitute_children', False, 'false'),
+    ({'substitute_siblings': True, 'inherit': True},
+     'substitute_siblings', True, 'false'),
+    ({'substitute_siblings': True, 'inherit': False},
+     'substitute_siblings', False, 'false'),
 ], indirect=['obj_tree_1'])  # indirect=True populates magic variable request.param of obj_tree_1 with the parameter
 def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     with scope(space=obj_tree_1.space):
@@ -498,8 +539,10 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     new_val = request.getfixturevalue(new_val)
     # if this test passes it demonstrates that inheritance works
     #  when moving to a parent as each food is created with a different category
-    assert (getattr(parent, field) == getattr(obj_tree_1, field)) in [inherit, True]
-    assert (getattr(obj_tree_1, field) == getattr(child, field)) in [inherit, True]
+    assert (getattr(parent, field) == getattr(
+        obj_tree_1, field)) in [inherit, True]
+    assert (getattr(obj_tree_1, field) == getattr(
+        child, field)) in [inherit, True]
     # change parent to a new value
     setattr(parent, field, new_val)
     with scope(space=parent.space):
@@ -515,7 +558,8 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
 
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'ignore_shopping': True, 'substitute_children': True, 'substitute_siblings': True}),
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
+     'substitute_children': True, 'substitute_siblings': True}),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("global_reset", [True, False])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
@@ -534,10 +578,13 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
             assert getattr(parent, field) != getattr(obj_tree_1, field)
 
         if global_reset:
-            space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
+            # set default inherit fields
+            space_1.food_inherit.add(
+                *Food.inheritable_fields.values_list('id', flat=True))
             parent.reset_inheritance(space=space_1)
         else:
-            obj_tree_1.child_inherit_fields.set(Food.inheritable_fields.values_list('id', flat=True))
+            obj_tree_1.child_inherit_fields.set(
+                Food.inheritable_fields.values_list('id', flat=True))
             obj_tree_1.save()
             parent.reset_inheritance(space=space_1, food=obj_tree_1)
         # djangotree bypasses ORM and need to be retrieved again
@@ -545,12 +592,14 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
         parent = Food.objects.get(id=parent.id)
         child = Food.objects.get(id=child.id)
 
-        assert (getattr(parent, field) == getattr(obj_tree_1, field)) == global_reset
+        assert (getattr(parent, field) == getattr(
+            obj_tree_1, field)) == global_reset
         assert getattr(obj_tree_1, field) == getattr(child, field)
 
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'ignore_shopping': True, 'substitute_children': True, 'substitute_siblings': True}),
+    ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
+     'substitute_children': True, 'substitute_siblings': True}),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
 def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
@@ -558,13 +607,17 @@ def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
         parent = obj_tree_1.get_parent()
         Food.objects.all().delete()
 
-        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))  # set default inherit fields
+        # set default inherit fields
+        space_1.food_inherit.add(
+            *Food.inheritable_fields.values_list('id', flat=True))
         parent.reset_inheritance(space=space_1)
 
 
 def test_onhand(obj_1, u1_s1, u2_s1):
-    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
+        'food_onhand'] == False
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
+        'food_onhand'] == False
 
     u1_s1.patch(
         reverse(
@@ -574,10 +627,13 @@ def test_onhand(obj_1, u1_s1, u2_s1):
         {'food_onhand': True},
         content_type='application/json'
     )
-    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == True
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == False
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
+        'food_onhand'] == True
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
+        'food_onhand'] == False
 
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
     user1.userpreference.shopping_share.add(user2)
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] == True
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
+        'food_onhand'] == True

@@ -12,7 +12,7 @@
                     <cookbook-edit-card :book="book" v-if="current_page === 1" v-on:editing="cookbook_editing = $event" v-on:refresh="$emit('refresh')" @reload="$emit('reload')"></cookbook-edit-card>
                 </transition>
                 <transition name="flip" mode="out-in">
-                    <recipe-card :recipe="display_recipes[0].recipe_content" v-if="current_page > 1" :key="display_recipes[0].recipe" :use_plural="use_plural"></recipe-card>
+                    <recipe-card :recipe="display_recipes[0].recipe_content" v-if="current_page > 1" :key="display_recipes[0].recipe" ></recipe-card>
                 </transition>
             </div>
             <div class="col-md-5">

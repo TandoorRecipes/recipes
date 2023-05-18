@@ -1,16 +1,12 @@
-import time
+import traceback
 import datetime
-import json
 import traceback
 import uuid
-from io import BytesIO, StringIO
+from io import BytesIO
 from zipfile import BadZipFile, ZipFile
 
-import lxml
-from django.core.cache import cache
-import datetime
-
 from bs4 import Tag
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files import File
 from django.db import IntegrityError
@@ -20,8 +16,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scope
 from lxml import etree
 
-from cookbook.forms import ImportExportBase
-from cookbook.helper.image_processing import get_filetype, handle_image
+from cookbook.helper.image_processing import handle_image
 from cookbook.models import Keyword, Recipe
 from recipes.settings import DEBUG
 from recipes.settings import EXPORT_FILE_CACHE_DURATION
@@ -182,7 +177,7 @@ class Integration:
                                 traceback.print_exc()
                                 self.handle_exception(e, log=il, message=f'-------------------- \nERROR \n{e}\n--------------------\n')
                         import_zip.close()
-                    elif '.json' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
+                    elif '.json' in f['name'] or '.xml' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         il.total_recipes += len(data_list)
                         for d in data_list:
