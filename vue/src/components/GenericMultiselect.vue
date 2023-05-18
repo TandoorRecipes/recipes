@@ -155,8 +155,9 @@ export default {
                 pageSize: this.limit,
                 query: query,
                 limit: this.limit,
+                options: {query: {simple: 1}}, // for API endpoints that support a simple view
             }
-            console.log(query, options)
+
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
                 this.objects = this.sticky_options.concat(result.data?.results ?? result.data)
                 if (this.nothingSelected && this.objects.length > 0) {

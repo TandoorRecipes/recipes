@@ -572,7 +572,7 @@
                                                                         {{ $t("Enable_Amount") }}
                                                                     </button>
 
-                                                                        <template v-if="use_plural">
+
                                                                             <button type="button" class="dropdown-item"
                                                                                     v-if="!ingredient.always_use_plural_unit"
                                                                                     @click="ingredient.always_use_plural_unit = true">
@@ -600,7 +600,7 @@
                                                                                 <i class="fas fa-filter fa-fw"></i>
                                                                                 {{ $t("Use_Plural_Food_Simple") }}
                                                                             </button>
-                                                                    </template>
+
                                                                     
                                                                     <button type="button" class="dropdown-item"
                                                                             @click="copyTemplateReference(index, ingredient)">

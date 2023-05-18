@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2021-04-11 15:23+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2023-04-17 20:55+0000\n"
+"Last-Translator: Espen Sellevåg <buskmenn.drammer03@icloud.com>\n"
 "Language-Team: Norwegian Bokmål <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.3\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:91
 #: .\cookbook\templates\forms\edit_internal_recipe.html:219
@@ -34,19 +34,23 @@ msgstr ""
 
 #: .\cookbook\forms.py:46
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
-msgstr ""
+msgstr "Standard enhet når ny ingrediens legges til en oppskrift."
 
 #: .\cookbook\forms.py:47
 msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Aktiverer støtte for deler av ingrediensmengde (konverterer feks. desimaler "
+"til deler automatisk)"
 
 #: .\cookbook\forms.py:48
 msgid ""
 "Users with whom newly created meal plan/shopping list entries should be "
 "shared by default."
 msgstr ""
+"Brukere som oppretter nye måltidsplaner/handlelister, deler disse "
+"oppføringene som standard."
 
 #: .\cookbook\forms.py:49
 msgid "Show recently viewed recipes on search page."
@@ -58,7 +62,7 @@ msgstr "Antall desimaler ingredienser skal avrundes til."
 
 #: .\cookbook\forms.py:51
 msgid "If you want to be able to create and see comments underneath recipes."
-msgstr ""
+msgstr "Hvis du ønsker å opprette og se kommentarer under oppskrifter."
 
 #: .\cookbook\forms.py:53
 msgid ""
@@ -67,6 +71,11 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"0 vil deaktivere automatisk synkronisering. Når en handleliste vises, "
+"oppdateres listen med oppgitt antall sekunders mellomrom for å synkronisere "
+"endringer fra andre brukere. Nyttig dersom flere brukere handler samtidig. "
+"Datatrafikk oppstår når aktiv. Hvis verdien er lavere enn grensen, "
+"tilbakestilles den ved lagring."
 
 #: .\cookbook\forms.py:56
 msgid "Makes the navbar stick to the top of the page."
@@ -100,11 +109,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:97 .\cookbook\forms.py:317
 msgid "Path"
-msgstr ""
+msgstr "Sti"
 
 #: .\cookbook\forms.py:98
 msgid "Storage UID"
-msgstr ""
+msgstr "Lagring UID"
 
 #: .\cookbook\forms.py:121
 msgid "Default"
@@ -129,7 +138,6 @@ msgid "Old Unit"
 msgstr "Gammel enhet"
 
 #: .\cookbook\forms.py:156
-#, fuzzy
 msgid "Unit that should be replaced."
 msgstr "Enhet som skal erstattes."
 
@@ -204,12 +212,11 @@ msgstr ""
 #: .\cookbook\views\views.py:112 .\cookbook\views\views.py:116
 #: .\cookbook\views\views.py:184
 msgid "You do not have the required permissions to view this page!"
-msgstr "Du har ikke påkrevd tilgang for å vise denne siden."
+msgstr "Du har ikke påkrevd tilgang for å vise denne siden!"
 
 #: .\cookbook\helper\permission_helper.py:141
-#, fuzzy
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Du er ikke innlogget og kan derfor ikke vise siden."
+msgstr "Du er ikke innlogget og kan derfor ikke vise siden!"
 
 #: .\cookbook\helper\permission_helper.py:145
 #: .\cookbook\helper\permission_helper.py:167
@@ -379,7 +386,7 @@ msgstr "Finner ikke siden du leter etter."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "Tilbake til Startsiden"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
@@ -388,12 +395,12 @@ msgstr "Rapporter en feil"
 #: .\cookbook\templates\account\login.html:7
 #: .\cookbook\templates\base.html:170
 msgid "Login"
-msgstr ""
+msgstr "Logg inn"
 
 #: .\cookbook\templates\account\login.html:13
 #: .\cookbook\templates\account\login.html:28
 msgid "Sign In"
-msgstr ""
+msgstr "Opprett bruker"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Social Login"
@@ -401,7 +408,7 @@ msgstr "Sosial innlogging"
 
 #: .\cookbook\templates\account\login.html:39
 msgid "You can use any of the following providers to sign in."
-msgstr ""
+msgstr "Velg en av følgende leverandører for å logge på."
 
 #: .\cookbook\templates\account\logout.html:5
 #: .\cookbook\templates\account\logout.html:9
@@ -416,20 +423,20 @@ msgstr "Er du sikker på at du vil logge ut?"
 #: .\cookbook\templates\account\password_reset.html:5
 #: .\cookbook\templates\account\password_reset_done.html:5
 msgid "Password Reset"
-msgstr ""
+msgstr "Nullstill passord"
 
 #: .\cookbook\templates\account\password_reset.html:9
 #: .\cookbook\templates\account\password_reset_done.html:9
 msgid "Password reset is not implemented for the time being!"
-msgstr ""
+msgstr "Det er foreløpig ikke implementert funksjon for å nullstille passord!"
 
 #: .\cookbook\templates\account\signup.html:5
 msgid "Register"
-msgstr ""
+msgstr "Registrer"
 
 #: .\cookbook\templates\account\signup.html:9
 msgid "Create your Account"
-msgstr "Opprett din konto"
+msgstr "Opprett konto"
 
 #: .\cookbook\templates\account\signup.html:14
 msgid "Create User"
@@ -442,11 +449,11 @@ msgstr "API-dokumentasjon"
 
 #: .\cookbook\templates\base.html:78
 msgid "Utensils"
-msgstr ""
+msgstr "Redskaper"
 
 #: .\cookbook\templates\base.html:88
 msgid "Shopping"
-msgstr ""
+msgstr "Handle"
 
 #: .\cookbook\templates\base.html:102 .\cookbook\views\delete.py:84
 #: .\cookbook\views\edit.py:93 .\cookbook\views\lists.py:26
@@ -456,27 +463,27 @@ msgstr "Nøkkelord"
 
 #: .\cookbook\templates\base.html:104
 msgid "Batch Edit"
-msgstr ""
+msgstr "Oppdatere flere"
 
 #: .\cookbook\templates\base.html:109
 msgid "Storage Data"
-msgstr ""
+msgstr "Datalagring"
 
 #: .\cookbook\templates\base.html:113
 msgid "Storage Backends"
-msgstr ""
+msgstr "Lagringsplasser"
 
 #: .\cookbook\templates\base.html:115
 msgid "Configure Sync"
-msgstr ""
+msgstr "Konfigurer synkronisering"
 
 #: .\cookbook\templates\base.html:117
 msgid "Discovered Recipes"
-msgstr ""
+msgstr "Oppdagede oppskrifter"
 
 #: .\cookbook\templates\base.html:119
 msgid "Discovery Log"
-msgstr ""
+msgstr "Logg Oppdagelser"
 
 #: .\cookbook\templates\base.html:121 .\cookbook\templates\stats.html:10
 msgid "Statistics"
@@ -484,7 +491,7 @@ msgstr "Statistikk"
 
 #: .\cookbook\templates\base.html:123
 msgid "Units & Ingredients"
-msgstr ""
+msgstr "Enheter & Ingredienser"
 
 #: .\cookbook\templates\base.html:125
 msgid "Import Recipe"
@@ -521,58 +528,61 @@ msgid "API Browser"
 msgstr "API-utforsker"
 
 #: .\cookbook\templates\base.html:165
-#, fuzzy
 msgid "Logout"
 msgstr "Logg ut"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr ""
+msgstr "Oppdater flere kategorier"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr ""
+msgstr "Oppdater flere oppskrifter"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
-msgstr ""
+msgstr "Legg til spesifikt nøkkelord til alle oppskrifter som inneholder et ord"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:76
 msgid "Sync"
-msgstr ""
+msgstr "Synkronisering"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr ""
+msgstr "Behandle overvåkede mapper"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"Her kan du behandle alle lagringsmapper og plasseringer for monitorering og "
+"synkronisering."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Stien må være i følgende format"
 
 #: .\cookbook\templates\batch\monitor.html:27
 msgid "Sync Now!"
-msgstr ""
+msgstr "Synkroniser nå!"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr ""
+msgstr "Importerer oppskrifter"
 
 #: .\cookbook\templates\batch\waiting.html:23
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Dette kan ta noen minutter, avhenging av antall oppskrifter som skal "
+"synkroniseres. Vennligst vent."
 
 #: .\cookbook\templates\books.html:5 .\cookbook\templates\books.html:11
 msgid "Recipe Books"
-msgstr ""
+msgstr "Oppskriftsbøker"
 
 #: .\cookbook\templates\books.html:15
 msgid "New Book"
@@ -584,32 +594,32 @@ msgstr "av"
 
 #: .\cookbook\templates\books.html:34
 msgid "Toggle Recipes"
-msgstr ""
+msgstr "Veksle oppskrifter"
 
 #: .\cookbook\templates\books.html:54
 #: .\cookbook\templates\meal_plan_entry.html:48
 #: .\cookbook\templates\recipes_table.html:64
 msgid "Last cooked"
-msgstr ""
+msgstr "Forrige tilbereding"
 
 #: .\cookbook\templates\books.html:71
 msgid "There are no recipes in this book yet."
-msgstr ""
+msgstr "Det er foreløpig ingen oppskrifter i denne boken."
 
 #: .\cookbook\templates\export.html:6 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr ""
+msgstr "Eksporter oppskrifter"
 
 #: .\cookbook\templates\export.html:14 .\cookbook\templates\export.html:20
 #: .\cookbook\templates\shopping_list.html:347
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "Eksporter"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr ""
+msgstr "Importer ny oppskrift"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
 #: .\cookbook\templates\forms\edit_internal_recipe.html:389
@@ -635,29 +645,29 @@ msgstr "Beskrivelse"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:72
 msgid "Waiting Time"
-msgstr ""
+msgstr "Ventetid"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:78
 msgid "Servings Text"
-msgstr ""
+msgstr "Porsjon beskrivelse"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:89
 msgid "Select Keywords"
-msgstr ""
+msgstr "Velg nøkkelord"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:90
 #: .\cookbook\templates\url_import.html:212
 msgid "Add Keyword"
-msgstr ""
+msgstr "Legg til nøkkelord"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:108
 msgid "Nutrition"
-msgstr ""
+msgstr "Næringsinnhold"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:112
 #: .\cookbook\templates\forms\edit_internal_recipe.html:162
 msgid "Delete Step"
-msgstr ""
+msgstr "Fjern trinn"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:116
 msgid "Calories"
@@ -678,15 +688,15 @@ msgstr "Proteiner"
 #: .\cookbook\templates\forms\edit_internal_recipe.html:146
 #: .\cookbook\templates\forms\edit_internal_recipe.html:454
 msgid "Step"
-msgstr ""
+msgstr "Trinn"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:167
 msgid "Show as header"
-msgstr ""
+msgstr "Vis som overskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:173
 msgid "Hide as header"
-msgstr ""
+msgstr "Skjul overskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:178
 msgid "Move Up"
@@ -698,15 +708,15 @@ msgstr "Flytt nedover"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:192
 msgid "Step Name"
-msgstr ""
+msgstr "Trinn navn"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:196
 msgid "Step Type"
-msgstr ""
+msgstr "Trinn type"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:207
 msgid "Step time in Minutes"
-msgstr ""
+msgstr "Trinn tid i minutter"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:261
 #: .\cookbook\templates\shopping_list.html:183
@@ -740,7 +750,7 @@ msgstr "Velg mat"
 #: .\cookbook\templates\meal_plan.html:256
 #: .\cookbook\templates\url_import.html:171
 msgid "Note"
-msgstr ""
+msgstr "Notis"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:319
 msgid "Delete Ingredient"
@@ -748,7 +758,7 @@ msgstr "Slett ingrediens"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:325
 msgid "Make Header"
-msgstr ""
+msgstr "Bruk som overskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:331
 msgid "Make Ingredient"
@@ -756,15 +766,15 @@ msgstr "Opprett ingrediens"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:337
 msgid "Disable Amount"
-msgstr ""
+msgstr "Deaktiver mengde"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:343
 msgid "Enable Amount"
-msgstr ""
+msgstr "Aktiver mengde"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:348
 msgid "Copy Template Reference"
-msgstr ""
+msgstr "Kopier mal-referanse"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:374
 #: .\cookbook\templates\url_import.html:196
@@ -773,29 +783,28 @@ msgstr "Instruksjoner"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:387
 #: .\cookbook\templates\forms\edit_internal_recipe.html:418
-#, fuzzy
 msgid "Save & View"
 msgstr "Lagre og vis"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:391
 #: .\cookbook\templates\forms\edit_internal_recipe.html:424
 msgid "Add Step"
-msgstr ""
+msgstr "Legg til trinn"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:394
 #: .\cookbook\templates\forms\edit_internal_recipe.html:428
 msgid "Add Nutrition"
-msgstr ""
+msgstr "Legg til næringsinnhold"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:396
 #: .\cookbook\templates\forms\edit_internal_recipe.html:430
 msgid "Remove Nutrition"
-msgstr ""
+msgstr "Fjern næringsinnhold"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:398
 #: .\cookbook\templates\forms\edit_internal_recipe.html:433
 msgid "View Recipe"
-msgstr ""
+msgstr "Vis oppskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:400
 #: .\cookbook\templates\forms\edit_internal_recipe.html:435
@@ -804,11 +813,11 @@ msgstr "Slett oppskrift"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:441
 msgid "Steps"
-msgstr ""
+msgstr "Trinn"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr ""
+msgstr "Rediger ingrediens"
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -820,54 +829,61 @@ msgid ""
 "them.\n"
 "    "
 msgstr ""
+"\n"
+"        Følgende skjema kan brukes dersom, tilfeldigvis, to eller flere "
+"enheter eller ingredienser er opprettet,\n"
+"        og burde være identiske.\n"
+"        Det slår sammen to enheter eller ingredienser og oppdaterer alle "
+"oppskrifter som inneholder disse.\n"
+"    "
 
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\stats.html:26
 msgid "Units"
-msgstr ""
+msgstr "Enheter"
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
-msgstr ""
+msgstr "Er du sikker på at du vil slå sammen disse enhetene?"
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr "Flett"
+msgstr "Slå sammen"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr ""
+msgstr "Er du sikker på at du vil slå sammen disse ingrediensene?"
 
 #: .\cookbook\templates\generic\delete_template.html:18
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
-msgstr ""
+msgstr "Er du sikker på at du vil slette %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:21
 msgid "Confirm"
-msgstr ""
+msgstr "Bekreft"
 
 #: .\cookbook\templates\generic\edit_template.html:30
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #: .\cookbook\templates\generic\edit_template.html:34
 msgid "Delete original file"
-msgstr ""
+msgstr "Slett opprinnelig fil"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:12
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: .\cookbook\templates\generic\list_template.html:25
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 #: .\cookbook\templates\generic\list_template.html:30
 msgid "Import all"
-msgstr ""
+msgstr "Importer alle"
 
 #: .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
@@ -891,19 +907,19 @@ msgstr "Vis logg"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Tilberedingslogg"
 
 #: .\cookbook\templates\import.html:6 .\cookbook\templates\test.html:6
 msgid "Import Recipes"
-msgstr ""
+msgstr "Importer oppskrifter"
 
 #: .\cookbook\templates\include\log_cooking.html:7
 msgid "Log Recipe Cooking"
-msgstr ""
+msgstr "Loggfør tilberedt oppskrift"
 
 #: .\cookbook\templates\include\log_cooking.html:13
 msgid "All fields are optional and can be left empty."
-msgstr ""
+msgstr "Alle felt er valgfri og kan stå tomme."
 
 #: .\cookbook\templates\include\log_cooking.html:19
 msgid "Rating"
@@ -943,44 +959,53 @@ msgid ""
 "can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        <b>Passord og nøkkelfeltene</b> er lagret som <b>ren tekst</b> i "
+"databasen.\n"
+"        Dette er nødvendig for å kunne utføre API-forespørsler, men det øker "
+"samtidig risiko for\n"
+"        uønsket tilgang til dem.<br/>\n"
+"        For å begrense kosekvensene av uønsket tilgang, kan nøkler eller "
+"kontoer med begrenset tilgang benyttes.\n"
+"    "
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Søk etter oppskrift..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Ny oppskrift"
 
 #: .\cookbook\templates\index.html:47
 msgid "Website Import"
-msgstr ""
+msgstr "Importer fra nettside"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Avansert søk"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Nullstill søk"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Sist sett"
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\meal_plan.html:178
 #: .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr ""
+msgstr "Oppskrifter"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Logg inn for å se oppskrifter"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Markdown informasjon"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -997,43 +1022,56 @@ msgid ""
 "below.\n"
 "    "
 msgstr ""
+"\n"
+"        Markdown er et lettvekts markup språk som benyttes for å formatere "
+"ren tekst.\n"
+"        Denne siden bruker biblioteket <a href=\"https://python-markdown."
+"github.io/\" target=\"_blank\">Python Markdown</a> for\n"
+"        å konvertere teksten din til velformatert HTML. Fullstendig "
+"dokumentasjon for markdown finner du\n"
+"        <a href=\"https://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">her</a>.\n"
+"        En ufullstendig, men sannsynligvis tilstrekkelig dokumentasjon "
+"finner du under her.\n"
+"    "
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Overskrifter"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Formatering"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
+"Linjeskift er satt inn ved å sette inn to mellomrom på slutten av en linje"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line inbetween."
-msgstr ""
+msgstr "eller ved å sette inn en tom linje mellom."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Denne teksten er Fet"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr ""
+msgstr "Denne teksten er Kursiv"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
 msgid "Blockquotes are also possible"
-msgstr ""
+msgstr "Det er også mulig å sitere avsnitt"
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Lister"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
@@ -1264,7 +1302,7 @@ msgstr ""
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr "Ingen tilganger."
+msgstr "Ingen tilgang"
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
@@ -1298,12 +1336,11 @@ msgstr ""
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr "Frakoblet."
+msgstr "Frakoblet"
 
 #: .\cookbook\templates\offline.html:19
-#, fuzzy
 msgid "You are currently offline!"
-msgstr "Du er ikke tilkoblet Internett."
+msgstr "Du er ikke tilkoblet!"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
@@ -1366,7 +1403,7 @@ msgstr "Stil"
 
 #: .\cookbook\templates\settings.html:79
 msgid "API Token"
-msgstr "API-symbol"
+msgstr "API nøkkel"
 
 #: .\cookbook\templates\settings.html:80
 msgid ""
@@ -1389,9 +1426,8 @@ msgid "Cookbook Setup"
 msgstr "Kokeboksoppsett"
 
 #: .\cookbook\templates\setup.html:14
-#, fuzzy
 msgid "Setup"
-msgstr "Sett opp"
+msgstr "Installering"
 
 #: .\cookbook\templates\setup.html:15
 msgid ""
@@ -1424,11 +1460,11 @@ msgstr "Mengde"
 
 #: .\cookbook\templates\shopping_list.html:226
 msgid "Supermarket"
-msgstr "Matbutikk"
+msgstr "Butikk"
 
 #: .\cookbook\templates\shopping_list.html:236
 msgid "Select Supermarket"
-msgstr "Velg matbutikk"
+msgstr "Velg butikk"
 
 #: .\cookbook\templates\shopping_list.html:260
 msgid "Select User"
@@ -1540,7 +1576,6 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:49 .\cookbook\templates\system.html:64
 #: .\cookbook\templates\system.html:80 .\cookbook\templates\system.html:95
-#, fuzzy
 msgid "Ok"
 msgstr "OK"
 

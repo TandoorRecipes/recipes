@@ -47,6 +47,8 @@ class RecipeShoppingEditor():
         self.mealplan = self._kwargs.get('mealplan', None)
         if type(self.mealplan) in [int, float]:
             self.mealplan = MealPlan.objects.filter(id=self.mealplan, space=self.space)
+        if type(self.mealplan) == dict:
+            self.mealplan = MealPlan.objects.filter(id=self.mealplan['id'], space=self.space).first()
         self.id = self._kwargs.get('id', None)
 
         self._shopping_list_recipe = self.get_shopping_list_recipe(self.id, self.created_by, self.space)
@@ -107,7 +109,10 @@ class RecipeShoppingEditor():
             self.servings = float(servings)
 
         if mealplan := kwargs.get('mealplan', None):
-            self.mealplan = mealplan
+            if type(mealplan) == dict:
+                self.mealplan = MealPlan.objects.filter(id=mealplan['id'], space=self.space).first()
+            else:
+                self.mealplan = mealplan
             self.recipe = mealplan.recipe
         elif recipe := kwargs.get('recipe', None):
             self.recipe = recipe

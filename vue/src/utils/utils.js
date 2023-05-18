@@ -359,6 +359,7 @@ export const ApiMixin = {
         }
     },
     methods: {
+        // if passing parameters that are not part of the offical schema of the endpoint use parameter: options: {query: {simple: 1}}
         genericAPI: function (model, action, options) {
             let setup = getConfig(model, action)
             if (setup?.config?.function) {
@@ -715,6 +716,12 @@ const specialCases = {
 export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
+        return form
+    },
+    AutomationOrderDefault: function (form) {
+        if (form.fields.filter((x) => x.field === "order")[0].value === undefined) {
+            form.fields.filter((x) => x.field === "order")[0].value = 1000
+        }
         return form
     },
 }

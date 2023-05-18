@@ -123,7 +123,7 @@ def share_link_valid(recipe, share):
             return c
 
         if link := ShareLink.objects.filter(recipe=recipe, uuid=share, abuse_blocked=False).first():
-            if 0 < settings.SHARING_LIMIT < link.request_count:
+            if 0 < settings.SHARING_LIMIT < link.request_count and not link.space.no_sharing_limit:
                 return False
             link.request_count += 1
             link.save()

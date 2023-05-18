@@ -31,6 +31,7 @@ Overview of the capabilities of the different integrations.
 | ChefTap            | ✔️      | ❌  |  ❌     |
 | Pepperplate        | ✔️      | ⌚  | ❌      |
 | RecipeSage         | ✔️      | ✔️  | ✔️      |
+| Rezeptsuite.de         | ✔️      | ❌ | ✔️      |
 | Domestica          | ✔️      | ⌚  | ✔️      |
 | MealMaster         | ✔️      | ❌  |  ❌     |
 | RezKonv            | ✔️      | ❌  |  ❌     |
@@ -177,7 +178,7 @@ This zip file can simply be imported into Tandoor.
 OpenEats does not provide any way to export the data using the interface. Luckily it is relatively easy to export it from the command line.
 You need to run the command `python manage.py dumpdata recipe ingredient` inside of the application api container.
 If you followed the default installation method you can use the following command `docker-compose -f docker-prod.yml run --rm --entrypoint 'sh' api ./manage.py dumpdata recipe ingredient`.
-This command might also work `docker exec -it openeats_api_1 ./manage.py dumpdata recipe ingredient > recipe_ingredients.json`
+This command might also work `docker exec -it openeats_api_1 ./manage.py dumpdata recipe ingredient rating recipe_groups > recipe_ingredients.json`
 
 Store the outputted json string in a `.json` file and simply import it using the importer. The file should look something like this
 ```json
@@ -215,6 +216,8 @@ Store the outputted json string in a `.json` file and simply import it using the
 
 ```
 
+To import your images you'll need to create the folder `openeats-import` in your Tandoor's `recipes` media folder (which is usually found inside `/opt/recipes/mediafiles`). After that you'll need to copy the `/code/site-media/upload` folder from the openeats API docker container to the `openeats` folder you created. You should now have the file path `/opt/recipes/mediafiles/recipes/openeats-import/upload/...` in Tandoor.
+
 ## Plantoeat
 
 Plan to eat allows you to export a text file containing all your recipes. Simply upload that text file to Tandoor to import all recipes
@@ -232,6 +235,9 @@ Cookmate allows you to export a `.mcb` file which you can simply upload to tando
 
 ## RecetteTek
 RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to import all your recipes. 
+
+## Rezeptsuite.de
+Rezeptsuite.de exports are `.xml` files which can simply be uploaded to tandoor to import all your recipes.
 
 ## Melarecipes
 

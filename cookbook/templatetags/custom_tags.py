@@ -57,6 +57,8 @@ def markdown(value):
         ]
     )
     markdown_attrs['*'] = markdown_attrs['*'] + ['class']
+    parsed_md = parsed_md[3:] # remove outer paragraph
+    parsed_md = parsed_md[:len(parsed_md)-4]
     return bleach.clean(parsed_md, tags, markdown_attrs)
 
 
@@ -101,6 +103,7 @@ def page_help(page_name):
         'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
         'view_import': 'https://docs.tandoor.dev/features/import_export/',
         'view_export': 'https://docs.tandoor.dev/features/import_export/',
+        'list_automation': 'https://docs.tandoor.dev/features/automation/',
     }
 
     link = help_pages.get(page_name, '')

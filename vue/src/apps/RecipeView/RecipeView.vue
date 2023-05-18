@@ -4,7 +4,7 @@
             <loading-spinner></loading-spinner>
         </template>
 
-        <div v-if="!loading">
+        <div v-if="!loading" style="padding-bottom: 60px">
             <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)"/>
             <div class="row">
                 <div class="col-12" style="text-align: center">
@@ -90,7 +90,6 @@
                         :ingredient_factor="ingredient_factor"
                         :servings="servings"
                         :header="true"
-                        :use_plural="use_plural"
                         id="ingredient_container"
                         @checked-state-changed="updateIngredientCheckedState"
                         @change-servings="servings = $event"
@@ -124,7 +123,6 @@
                     :step="s"
                     :ingredient_factor="ingredient_factor"
                     :index="index"
-                    :use_plural="use_plural"
                     :start_time="start_time"
                     @update-start-time="updateStartTime"
                     @checked-state-changed="updateIngredientCheckedState"
@@ -149,11 +147,14 @@
         <add-recipe-to-book :recipe="recipe"></add-recipe-to-book>
 
         <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh"
-             v-if="share_uid !== 'None'">
+             v-if="share_uid !== 'None' && !loading">
             <div class="col col-md-12">
-                <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)">{{ $t("Report Abuse") }}</a>
+                <import-tandoor></import-tandoor> <br/>
+                <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" class="mt-3">{{ $t("Report Abuse") }}</a>
             </div>
         </div>
+
+        <bottom-navigation-bar></bottom-navigation-bar>
     </div>
 </template>
 
@@ -182,6 +183,8 @@ import NutritionComponent from "@/components/NutritionComponent"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 import {ApiApiFactory} from "@/utils/openapi/api";
+import ImportTandoor from "@/components/Modals/ImportTandoor.vue";
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.prototype.moment = moment
 
@@ -191,6 +194,7 @@ export default {
     name: "RecipeView",
     mixins: [ResolveUrlMixin, ToastMixin],
     components: {
+        ImportTandoor,
         LastCooked,
         RecipeRating,
         PdfViewer,
@@ -204,6 +208,7 @@ export default {
         AddRecipeToBook,
         RecipeSwitcher,
         CustomInputSpinButton,
+        BottomNavigationBar,
     },
     computed: {
         ingredient_factor: function () {
@@ -221,7 +226,6 @@ export default {
     },
     data() {
         return {
-            use_plural: false,
             loading: true,
             recipe: undefined,
             rootrecipe: undefined,
@@ -244,10 +248,6 @@ export default {
         this.requestWakeLock()
         window.addEventListener('resize', this.handleResize);
 
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
-            this.use_plural = r.data.use_plural
-        })
     },
     beforeUnmount() {
         this.destroyWakeLock()

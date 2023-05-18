@@ -1,8 +1,8 @@
 {
-    "warning_feature_beta": "Fitur ini saat ini dalam status BETA (pengujian). Harap perkirakan bug dan kemungkinan kerusakan perubahan di masa mendatang (mungkin kehilangan data terkait fitur) saat menggunakan fitur ini.",
-    "err_fetching_resource": "Terjadi kesalahan saat mengambil sumber daya!",
+    "warning_feature_beta": "Fitur ini saat ini dalam status BETA (pengujian). Mungkin terdapat bug dan perubahan yang penting di masa mendatang (sehingga mungkin terjadi kehilangan data terkait fitur) saat menggunakan fitur ini.",
+    "err_fetching_resource": "Terjadi kesalahan saat memperoleh sumber daya!",
     "err_creating_resource": "Terjadi kesalahan saat membuat sumber daya!",
-    "err_updating_resource": "Terjadi kesalahan saat mengupdate sumber daya!",
+    "err_updating_resource": "Terjadi kesalahan saat memperbarui sumber daya!",
     "err_deleting_resource": "Terjadi kesalahan saat menghapus sumber daya!",
     "err_deleting_protected_resource": "Objek yang Anda coba hapus masih digunakan dan tidak dapat dihapus.",
     "err_moving_resource": "Terjadi kesalahan saat memindahkan sumber daya!",

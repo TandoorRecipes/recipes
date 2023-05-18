@@ -260,8 +260,9 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
-    use_plural = models.BooleanField(default=False)
+    use_plural = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
+    no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
@@ -367,7 +368,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True,blank=True, related_name='user_image')
+    image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
     nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
     default_unit = models.CharField(max_length=32, default='g')
@@ -680,7 +681,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
         if self.always_use_plural_unit and self.unit.plural_name not in (None, "") and not self.no_amount:
             unit = self.unit.plural_name
         else:
-            if self.amount > 1 and self.unit.plural_name not in (None, "") and not self.no_amount:
+            if self.amount > 1 and self.unit is not None and self.unit.plural_name not in (None, "") and not self.no_amount:
                 unit = self.unit.plural_name
             else:
                 unit = str(self.unit)
@@ -1223,15 +1224,20 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     FOOD_ALIAS = 'FOOD_ALIAS'
     UNIT_ALIAS = 'UNIT_ALIAS'
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+    DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
+    INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
 
     type = models.CharField(max_length=128,
-                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),))
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
+                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
     param_1 = models.CharField(max_length=128, blank=True, null=True)
     param_2 = models.CharField(max_length=128, blank=True, null=True)
     param_3 = models.CharField(max_length=128, blank=True, null=True)
+
+    order = models.IntegerField(default=1000)
 
     disabled = models.BooleanField(default=False)
 

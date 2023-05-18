@@ -180,11 +180,11 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /static {
+    location /static/ {
         alias /var/www/recipes/staticfiles;
     }
     
-    location /media {
+    location /media/ {
         alias /var/www/recipes/mediafiles;
     }
 

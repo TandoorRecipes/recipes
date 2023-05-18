@@ -95,7 +95,7 @@ export default {
 <style scoped>
 .context-menu {
     position: fixed;
-    z-index: 999;
+    z-index: 5000;
     overflow: hidden;
     background: #fff;
     border-radius: 4px;
