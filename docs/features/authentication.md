@@ -56,6 +56,11 @@ Use the superuser account to grant permissions to the newly created users.
     I do not have a ton of experience with using various single signon providers and also cannot test all of them.
     If you have any Feedback or issues let me know.
 
+It is possible to hide the built-in authentication form by setting the following variable in the configuration:
+```ini
+DISABLE_INTERNAL_AUTH=1
+```
+
 ### Third-party authentication example
 Keycloak is a popular IAM solution and integration is straight forward thanks to Django Allauth. This example can also be used as reference for other third-party authentication solutions, as documented by Allauth.
 
