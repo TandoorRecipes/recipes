@@ -16,33 +16,34 @@
         </div>
     </div>
 
-
-    <div class="row">
-        <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
-            <hr>
-            <form class="login" method="POST" action="{% url 'account_login' %}">
-                {% csrf_token %}
-                {{ form | crispy }}
-
-                {% if redirect_field_value %}
-                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                {% endif %}
-
-                <button class="btn btn-success" type="submit">{% trans "Sign In" %}</button>
-
-                {% if SIGNUP_ENABLED %}
-                    <a class="btn btn-secondary" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                {% endif %}
-
-                {% if EMAIL_ENABLED %}
-                    <p>{% trans 'Lost your password?' %} <a
-                            href="{% url 'account_reset_password' %}">{% trans "Reset My Password" %}</a></p>
-                {% endif %}
-            </form>
-        </div>
-    </div>
-
     {% get_providers as socialaccount_providers %}
+
+    {% if DISABLE_INTERNAL_AUTH == False or not socialaccount_providers %}
+        <div class="row">
+            <div class="col-sm-12 col-lg-6 col-md-6 offset-lg-3 offset-md-3">
+                <hr>
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+
+                    <button class="btn btn-success" type="submit">{% trans "Sign In" %}</button>
+
+                    {% if SIGNUP_ENABLED %}
+                        <a class="btn btn-secondary" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                    {% endif %}
+
+                    {% if EMAIL_ENABLED %}
+                        <p>{% trans 'Lost your password?' %} <a
+                                href="{% url 'account_reset_password' %}">{% trans "Reset My Password" %}</a></p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    {% endif %}
 
     {% if socialaccount_providers %}
         <div class="row" style="margin-top: 2vh">
@@ -64,9 +65,11 @@
         </div>
     {% endif %}
 
-    <script>
-        $('#id_login').focus()
-        $('#id_remember').prop('checked', true);
-    </script>
+    {% if DISABLE_INTERNAL_AUTH == False or not socialaccount_providers %}
+        <script>
+            $('#id_login').focus()
+            $('#id_remember').prop('checked', true);
+        </script>
+    {% endif %}
 
 {% endblock %}
