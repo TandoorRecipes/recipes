@@ -76,7 +76,8 @@ export default {
                 return {}
             },
         },
-        show: { required: true, type: Boolean, default: false },
+        show: {required: true, type: Boolean, default: false},
+        models: {required: false, type: Function, default: null}
     },
     data() {
         return {
@@ -92,6 +93,10 @@ export default {
     mounted() {
         this.id = Math.random()
         this.$root.$on("change", this.storeValue) // bootstrap modal placed at document so have to listen at root of component
+
+        if (this.models !== null){
+            this.Models = this.models // override models definition file with prop
+        }
     },
     computed: {
         advancedForm() {

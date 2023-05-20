@@ -311,7 +311,7 @@ export function calculateHourMinuteSplit(amount) {
         let minutes = amount - hours * 60
         let output_text = hours + " h"
 
-        if (minutes > 0){
+        if (minutes > 0) {
             output_text += " " + minutes + " min"
         }
 
@@ -368,6 +368,9 @@ export const ApiMixin = {
             let func = setup.function
             let parameters = buildParams(options, setup)
             let apiClient = new ApiApiFactory()
+            if (model.apiClient !== undefined) {
+                apiClient = model.apiClient
+            }
             return apiClient[func](...parameters)
         },
         genericGetAPI: function (url, options) {
