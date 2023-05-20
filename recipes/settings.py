@@ -144,6 +144,7 @@ try:
                         'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
                         'base_url': plugin_class.base_url,
                         'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                        'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
                     }
                     PLUGINS.append(plugin_config)
             except Exception:
