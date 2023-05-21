@@ -48,7 +48,7 @@ jobs:
       - name: clone open data plugin repo
         uses: actions/checkout@master
         with:
-          name: TandoorRecipes/open_data_plugin
+          repository: TandoorRecipes/open_data_plugin
           ref: master
           path: ./recipes/plugins/
 
