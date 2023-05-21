@@ -1,34 +1,43 @@
 <template>
     <div>
-        <b-modal :id="'modal_' + id" @hidden="cancelAction">
-            <template v-slot:modal-title>
-                <h4 class="d-inline">{{ form.title }}</h4>
-                <help-badge v-if="form.show_help" @show="show_help = true" @hide="show_help = false" :component="`GenericModal${form.title}`" />
-            </template>
-            <div v-for="(f, i) in form.fields" v-bind:key="i">
-                <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
-                <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" />
-                <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" />
-                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
-                <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
-                <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
-                <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" />
-				<number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
-            </div>
-            <template v-slot:modal-footer>
-                <div class="row w-100">
-                    <div class="col-6 align-self-end">
-                        <b-form-checkbox v-if="advancedForm" sm switch v-model="show_advanced">{{ $t("Advanced") }}</b-form-checkbox>
-                    </div>
-                    <div class="col-auto justify-content-end">
-                        <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
-                        <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
-                    </div>
+        <template v-if="form_component !== undefined">
+            <b-modal :id="'modal_' + id" @hidden="cancelAction" size="xl">
+                <component :is="form_component"></component>
+            </b-modal>
+
+        </template>
+        <template v-else>
+            <b-modal :id="'modal_' + id" @hidden="cancelAction" size="lg">
+                <template v-slot:modal-title>
+                    <h4 class="d-inline">{{ form.title }}</h4>
+                    <help-badge v-if="form.show_help" @show="show_help = true" @hide="show_help = false" :component="`GenericModal${form.title}`" />
+                </template>
+                <div v-for="(f, i) in form.fields" v-bind:key="i">
+                    <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
+                    <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" />
+                    <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" />
+                    <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled"/>
+                    <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
+                    <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
+                    <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
+                    <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
+                    <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" />
+                    <number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
                 </div>
-            </template>
-        </b-modal>
+                <template v-slot:modal-footer>
+                    <div class="row w-100">
+                        <div class="col-6 align-self-end">
+                            <b-form-checkbox v-if="advancedForm" sm switch v-model="show_advanced">{{ $t("Advanced") }}</b-form-checkbox>
+                        </div>
+                        <div class="col-auto justify-content-end">
+                            <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
+                            <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
+                        </div>
+                    </div>
+                </template>
+            </b-modal>
+        </template>
+
     </div>
 </template>
 
@@ -113,6 +122,15 @@ export default {
             if (this.show_help) {
                 return true
             } else {
+                return undefined
+            }
+        },
+        form_component() {
+            // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
+            // TODO this is not necessarily bad but maybe there are better options to do this
+            if (this.form.component !== undefined){
+                return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.form.component}`)
+            }else{
                 return undefined
             }
         },
