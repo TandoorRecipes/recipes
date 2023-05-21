@@ -50,7 +50,7 @@ jobs:
         with:
           repository: TandoorRecipes/open_data_plugin
           ref: master
-          path: ./recipes/plugins/
+          path: ./recipes/plugins/open_data_plugin
 
       # Build Vue frontend
       - uses: actions/setup-node@v3
