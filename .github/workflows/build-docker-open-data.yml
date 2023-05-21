@@ -65,6 +65,10 @@ jobs:
         working-directory: ./vue
         run: yarn build
 
+      - name: Setup Open Data Plugin Links
+        working-directory: ./recipes/plugins/open_data_plugin
+        run: python setup_repo.py
+        
       - name: Build Open Data Frontend
         working-directory: ./recipes/plugins/open_data_plugin/vue
         run: yarn build
