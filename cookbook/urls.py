@@ -61,7 +61,10 @@ router.register(r'access-token', api.AccessTokenViewSet)
 
 for p in PLUGINS:
     if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
-        router.extend(c)
+        try:
+            router.extend(c)
+        except AttributeError:
+            pass
 
 urlpatterns = [
     path('', views.index, name='index'),
