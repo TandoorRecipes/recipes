@@ -6,7 +6,7 @@ from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
-from recipes.settings import DEBUG
+from recipes.settings import DEBUG, PLUGINS
 from recipes.version import VERSION_NUMBER
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
@@ -16,7 +16,13 @@ from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keywor
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken
 
-router = routers.DefaultRouter()
+# extend DRF default router class to allow including additional routers
+class DefaultRouter(routers.DefaultRouter):
+    def extend(self, r):
+        self.registry.extend(r.registry)
+
+
+router = DefaultRouter()
 router.register(r'automation', api.AutomationViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'cook-log', api.CookLogViewSet)
@@ -52,6 +58,13 @@ router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
+
+for p in PLUGINS:
+    if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
+        try:
+            router.extend(c)
+        except AttributeError:
+            pass
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -118,7 +131,6 @@ urlpatterns = [
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
-
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
