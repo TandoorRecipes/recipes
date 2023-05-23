@@ -176,6 +176,7 @@ export default {
             if (this.dirty) {
                 this.dirty = false
                 this.$emit("finish-action", "cancel")
+                this.$emit("hidden")
             }
         },
         storeValue: function (field, value) {
