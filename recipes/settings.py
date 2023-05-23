@@ -147,6 +147,8 @@ try:
                         'base_url': plugin_class.base_url,
                         'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
                         'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                        'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
+                        'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
                     }
                     PLUGINS.append(plugin_config)
             except Exception:
