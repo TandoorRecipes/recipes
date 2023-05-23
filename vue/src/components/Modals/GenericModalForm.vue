@@ -222,7 +222,7 @@ export default {
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err, true)
                         this.$emit("finish-action", "cancel")
                     })
             } else {
@@ -232,7 +232,7 @@ export default {
                         StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err, true)
                         this.$emit("finish-action", "cancel")
                     })
             }
