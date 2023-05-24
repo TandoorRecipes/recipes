@@ -250,6 +250,9 @@ class MergeMixin(ViewSetMixin):
                 isTree = False
 
             try:
+                if isinstance(source, Food):
+                    FoodProperty.objects.filter(food=source).delete()
+
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
                     related = linkManager.all()
@@ -279,6 +282,7 @@ class MergeMixin(ViewSetMixin):
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
             except Exception:
+                traceback.print_exc()
                 content = {'error': True,
                            'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)

@@ -49,24 +49,34 @@
                 <table class="table table-bordered">
                     <tr v-for="f in selected_property.food_values"
                         v-bind:key="`id_${selected_property.id}_food_${f.id}`">
-                        <td>{{ f.food }}</td>
+                        <td><a href="#" @click="openFoodEditModal(f)">{{ f.food }}</a></td>
                         <td>{{ f.value }} {{ selected_property.unit }}</td>
                     </tr>
                 </table>
             </template>
 
-
         </b-modal>
+
+        <generic-modal-form
+            :model="Models.FOOD"
+            :action="Actions.UPDATE"
+            :item1="selected_food"
+            :show="show_food_edit_modal"
+            @hidden="foodEditorHidden"
+        >
+        </generic-modal-form>
     </div>
 </template>
 
 <script>
-import {ApiMixin} from "@/utils/utils";
+import {ApiMixin, StandardToasts} from "@/utils/utils";
+import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
+import {ApiApiFactory} from "@/utils/openapi/api";
 
 export default {
     name: "FoodPropertyViewComponent",
     mixins: [ApiMixin],
-    components: {},
+    components: {GenericModalForm},
     props: {
         recipe: Object,
         servings: Number,
@@ -74,6 +84,8 @@ export default {
     data() {
         return {
             selected_property: undefined,
+            selected_food: undefined,
+            show_food_edit_modal: false,
             show_total: false,
         }
     },
@@ -98,6 +110,20 @@ export default {
                     'minimumFractionDigits': 2
                 })
             }
+        },
+        openFoodEditModal: function (food) {
+            console.log(food)
+            let apiClient = ApiApiFactory()
+            apiClient.retrieveFood(food.id).then(r => {
+                this.selected_food = r.data;
+                this.show_food_edit_modal = true
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+            })
+        },
+        foodEditorHidden: function (){
+            this.show_food_edit_modal = false;
+            this.$emit("foodUpdated", "")
         }
     },
 }

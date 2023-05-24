@@ -1,7 +1,7 @@
 <template>
     <div>
         <template v-if="form_component !== undefined">
-            <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction"></component>
+            <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction" :item1="item1"></component>
         </template>
         <template v-else>
             <b-modal :id="'modal_' + id" @hidden="cancelAction" size="lg">
