@@ -106,6 +106,8 @@ class CustomOnHandField(serializers.Field):
         return instance
 
     def to_representation(self, obj):
+        if not self.context["request"].user.is_authenticated:
+            return []
         shared_users = []
         if c := caches['default'].get(
                 f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
@@ -540,6 +542,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     images = ['recipe__image']
 
     def get_substitute_onhand(self, obj):
+        if not self.context["request"].user.is_authenticated:
+            return []
         shared_users = []
         if c := caches['default'].get(
                 f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
@@ -750,6 +754,10 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
 class PropertyTypeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
+
+        if property_type := PropertyType.objects.filter(Q(name=validated_data['name']) ).first():
+            return property_type
+
         return super().create(validated_data)
 
     class Meta:
