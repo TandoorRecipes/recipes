@@ -82,31 +82,34 @@ class TreeManager(MP_NodeManager):
     # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
-
-        if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
-            return obj, False
+        if hasattr(self, 'space'):
+            if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
+                return obj, False
         else:
-            with scopes_disabled():
-                try:
-                    defaults = kwargs.pop('defaults', None)
-                    if defaults:
-                        kwargs = {**kwargs, **defaults}
-                    # ManyToMany fields can't be set this way, so pop them out to save for later
-                    fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
-                    many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
-                    obj = self.model.add_root(**kwargs)
-                    for field in many_to_many:
-                        field_model = getattr(obj, field).model
-                        for related_obj in many_to_many[field]:
-                            if isinstance(related_obj, User):
-                                getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
-                            else:
-                                getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
-                    return obj, True
-                except IntegrityError as e:
-                    if 'Key (path)' in e.args[0]:
-                        self.model.fix_tree(fix_paths=True)
-                        return self.model.add_root(**kwargs), True
+            if obj := self.filter(name__iexact=kwargs['name']).first():
+                return obj, False
+
+        with scopes_disabled():
+            try:
+                defaults = kwargs.pop('defaults', None)
+                if defaults:
+                    kwargs = {**kwargs, **defaults}
+                # ManyToMany fields can't be set this way, so pop them out to save for later
+                fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
+                many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
+                obj = self.model.add_root(**kwargs)
+                for field in many_to_many:
+                    field_model = getattr(obj, field).model
+                    for related_obj in many_to_many[field]:
+                        if isinstance(related_obj, User):
+                            getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
+                        else:
+                            getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
+                return obj, True
+            except IntegrityError as e:
+                if 'Key (path)' in e.args[0]:
+                    self.model.fix_tree(fix_paths=True)
+                    return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):

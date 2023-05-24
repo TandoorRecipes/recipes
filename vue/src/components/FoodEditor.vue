@@ -36,12 +36,12 @@
                                 <td><input v-model="fp.food_amount" type="number"></td>
                                 <td>
                                     <generic-multiselect
-                                            @change="fp.food_unit = $event.val;"
-                                            :model="Models.UNIT"
-                                            :initial_single_selection="fp.food_unit"
-                                            label="name"
-                                            :multiple="false"
-                                            :placeholder="$t('Unit')"
+                                        @change="fp.food_unit = $event.val;"
+                                        :model="Models.UNIT"
+                                        :initial_single_selection="fp.food_unit"
+                                        label="name"
+                                        :multiple="false"
+                                        :placeholder="$t('Unit')"
                                     ></generic-multiselect>
                                 </td>
                             </tr>
@@ -54,12 +54,12 @@
                         <b-collapse id="collapse-advanced">
                             <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
                                 <generic-multiselect
-                                        @change="food.recipe = $event.val;"
-                                        :model="Models.RECIPE"
-                                        :initial_single_selection="food.recipe"
-                                        label="name"
-                                        :multiple="false"
-                                        :placeholder="$t('Recipe')"
+                                    @change="food.recipe = $event.val;"
+                                    :model="Models.RECIPE"
+                                    :initial_single_selection="food.recipe"
+                                    label="name"
+                                    :multiple="false"
+                                    :placeholder="$t('Recipe')"
                                 ></generic-multiselect>
                             </b-form-group>
 
@@ -76,13 +76,13 @@
 
                             <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
                                 <generic-multiselect
-                                        @change="food.supermarket_category = $event.val;"
-                                        :model="Models.SHOPPING_CATEGORY"
-                                        :initial_single_selection="food.supermarket_category"
-                                        label="name"
-                                        :multiple="false"
-                                        :allow_create="true"
-                                        :placeholder="$t('Shopping_Category')"
+                                    @change="food.supermarket_category = $event.val;"
+                                    :model="Models.SHOPPING_CATEGORY"
+                                    :initial_single_selection="food.supermarket_category"
+                                    label="name"
+                                    :multiple="false"
+                                    :allow_create="true"
+                                    :placeholder="$t('Shopping_Category')"
                                 ></generic-multiselect>
                             </b-form-group>
 
@@ -90,12 +90,12 @@
                             <!-- todo add conditions if false disable dont hide -->
                             <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
                                 <generic-multiselect
-                                        @change="food.substitute = $event.val;"
-                                        :model="Models.FOOD"
-                                        :initial_selection="food.substitute"
-                                        label="name"
-                                        :multiple="true"
-                                        :placeholder="$t('Substitutes')"
+                                    @change="food.substitute = $event.val;"
+                                    :model="Models.FOOD"
+                                    :initial_selection="food.substitute"
+                                    label="name"
+                                    :multiple="true"
+                                    :placeholder="$t('Substitutes')"
                                 ></generic-multiselect>
                             </b-form-group>
 
@@ -108,24 +108,24 @@
 
                             <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
                                 <generic-multiselect
-                                        @change="food.inherit_fields = $event.val;"
-                                        :model="Models.FOOD_INHERIT_FIELDS"
-                                        :initial_selection="food.inherit_fields"
-                                        label="name"
-                                        :multiple="true"
-                                        :placeholder="$t('InheritFields')"
+                                    @change="food.inherit_fields = $event.val;"
+                                    :model="Models.FOOD_INHERIT_FIELDS"
+                                    :initial_selection="food.inherit_fields"
+                                    label="name"
+                                    :multiple="true"
+                                    :placeholder="$t('InheritFields')"
                                 ></generic-multiselect>
                             </b-form-group>
 
                             <b-form-group :label="$t('ChildInheritFields')"
                                           :description="$t('ChildInheritFields_help')">
                                 <generic-multiselect
-                                        @change="food.child_inherit_fields = $event.val;"
-                                        :model="Models.FOOD_INHERIT_FIELDS"
-                                        :initial_sselection="food.child_inherit_fields"
-                                        label="name"
-                                        :multiple="true"
-                                        :placeholder="$t('ChildInheritFields')"
+                                    @change="food.child_inherit_fields = $event.val;"
+                                    :model="Models.FOOD_INHERIT_FIELDS"
+                                    :initial_sselection="food.child_inherit_fields"
+                                    label="name"
+                                    :multiple="true"
+                                    :placeholder="$t('ChildInheritFields')"
                                 ></generic-multiselect>
                             </b-form-group>
 
@@ -174,15 +174,16 @@ export default {
     props: {
         id: {type: String, default: 'id_food_edit_modal_modal'},
         show: {required: true, type: Boolean, default: false},
+        item1: {
+            type: Object,
+            default: undefined
+        },
     },
     watch: {
         show: function () {
-            console.log('trigger')
             if (this.show) {
-                console.log('show modal')
                 this.$bvModal.show(this.id)
             } else {
-                console.log('show modal false')
                 this.$bvModal.hide(this.id)
             }
         },
@@ -197,9 +198,35 @@ export default {
         this.$bvModal.show(this.id)
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
-        apiClient.retrieveFood('1').then((r) => {
-            this.food = r.data
+        let pf
+        if (this.item1.id !== undefined) {
+            pf = apiClient.retrieveFood(this.item1.id).then((r) => {
+                this.food = r.data
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+            })
+        } else {
+            this.food = {
+                name: "",
+                plural_name: "",
+                description: "",
+                shopping: false,
+                recipe: null,
+                food_onhand: false,
+                supermarket_category: null,
+                parent: null,
+                numchild: 0,
+                inherit_fields: [],
+                ignore_shopping: false,
+                substitute: [],
+                substitute_siblings: false,
+                substitute_children: false,
+                substitute_onhand: false,
+                child_inherit_fields: [],
+            }
+        }
 
+        Promise.allSettled([pf]).then(r => {
             let property_types = []
             let property_values = []
 
@@ -207,15 +234,18 @@ export default {
                 property_types = r.data
             })
 
-            let p2 = apiClient.listFoodPropertys(this.food.id).then((r) => {
-                property_values = r.data
-            })
+            let p2
+            if (this.food.id !== undefined) {
+                p2 = apiClient.listFoodPropertys(this.food.id).then((r) => {
+                    property_values = r.data
+                })
+            }
 
             Promise.allSettled([p1, p2]).then(r => {
                 property_types.forEach(fpt => {
                     let food_property = {
-                        'food_amount': 0,
-                        'food_unit': null,
+                        'food_amount': 100,
+                        'food_unit': {'name': 'g'},
                         'food': this.food,
                         'property_amount': 0,
                         'property_type': fpt,
@@ -234,35 +264,46 @@ export default {
                 })
             })
         })
-
-
     },
     methods: {
         updateFood: function () {
             let apiClient = new ApiApiFactory()
-            apiClient.updateFood(this.food.id, this.food).then((r) => {
-                this.food = r.data
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            let p
+            if (this.food.id !== undefined) {
+                p = apiClient.updateFood(this.food.id, this.food).then((r) => {
+                    this.food = r.data
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                }).catch(err => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
+            } else {
+                p = apiClient.createFood(this.food).then((r) => {
+                    this.food = r.data
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+                }).catch(err => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
+            }
+
+            Promise.allSettled([p]).then(r => {
+                this.food_properties.forEach(fp => {
+                    fp.food = this.food
+                    if (fp.id === undefined) {
+                        apiClient.createFoodProperty(fp).then((r) => {
+                            fp = r.data
+                        }).catch(err => {
+                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                        })
+                    } else {
+                        apiClient.updateFoodProperty(fp.id, fp).then((r) => {
+                            fp = r.data
+                        }).catch(err => {
+                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                        })
+                    }
+                })
             })
 
-            this.food_properties.forEach(fp => {
-                if (fp.id === undefined) {
-                    apiClient.createFoodProperty(fp).then((r) => {
-                        fp = r.data
-                    }).catch(err => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-                } else {
-                    apiClient.updateFoodProperty(fp.id, fp).then((r) => {
-                        fp = r.data
-                    }).catch(err => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-                }
-
-            })
         },
         cancelAction: function () {
             this.$emit("hidden", "")
