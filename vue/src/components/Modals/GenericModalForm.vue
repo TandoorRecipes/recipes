@@ -109,6 +109,10 @@ export default {
     mounted() {
         this.id = Math.random()
         this.$root.$on("change", this.storeValue) // bootstrap modal placed at document so have to listen at root of component
+
+        if (this.models !== null){
+            this.Models = this.models // override models definition file with prop
+        }
     },
     computed: {
         advancedForm() {
@@ -179,6 +183,7 @@ export default {
             if (this.dirty) {
                 this.dirty = false
                 this.$emit("finish-action", "cancel")
+                this.$emit("hidden")
             }
         },
         storeValue: function (field, value) {
