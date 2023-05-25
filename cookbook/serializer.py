@@ -32,8 +32,8 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, FoodProperty,
-                             PropertyType, RecipeProperty)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, Property,
+                             PropertyType, Property)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -502,6 +502,36 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
 
 
+class PropertyTypeSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+
+        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).first():
+            return property_type
+
+        return super().create(validated_data)
+
+    class Meta:
+        model = PropertyType
+        fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
+
+
+class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    property_type = PropertyTypeSerializer()
+    property_amount = CustomDecimalField()
+
+    # TODO prevent updates
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = Property
+        fields = ('id', 'property_amount', 'property_type')
+        read_only_fields = ('id',)
+
+
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
     url = serializers.SerializerMethodField('get_url')
 
@@ -538,6 +568,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
 
+    properties = PropertySerializer(many=True, allow_null=True, required=False)
+    properties_food_unit = UnitSerializer(allow_null=True, required=False)
+
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
 
@@ -569,7 +602,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     #     return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
     def create(self, validated_data):
-        name = validated_data.pop('name').strip()
+        name = validated_data['name'].strip()
 
         if plural_name := validated_data.pop('plural_name', None):
             plural_name = plural_name.strip()
@@ -629,7 +662,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     class Meta:
         model = Food
         fields = (
-            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'food_onhand', 'supermarket_category',
+            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe',
+            'properties', 'properties_food_amount', 'properties_food_unit',
+            'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
             'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
         )
@@ -751,53 +786,6 @@ class UnitConversionSerializer(WritableNestedModelSerializer):
         fields = ('id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
-class PropertyTypeSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-
-        if property_type := PropertyType.objects.filter(Q(name=validated_data['name']) ).first():
-            return property_type
-
-        return super().create(validated_data)
-
-    class Meta:
-        model = PropertyType
-        fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
-
-
-class FoodPropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    property_type = PropertyTypeSerializer()
-    food = FoodSimpleSerializer()
-    food_unit = UnitSerializer()
-    food_amount = CustomDecimalField()
-    property_amount = CustomDecimalField()
-
-    # TODO prevent updates
-
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-    class Meta:
-        model = FoodProperty
-        fields = ('id', 'food_amount', 'food_unit', 'food', 'property_amount', 'property_type')
-        read_only_fields = ('id',)
-
-
-class RecipePropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
-    property_type = PropertyTypeSerializer()
-    property_amount = CustomDecimalField()
-
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        return super().create(validated_data)
-
-    class Meta:
-        model = RecipeProperty
-        fields = ('id', 'property_type', 'property_amount',)
-        read_only_fields = ('id',)
-
-
 class NutritionInformationSerializer(serializers.ModelSerializer):
     carbohydrates = CustomDecimalField()
     fats = CustomDecimalField()
@@ -848,7 +836,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
 
 class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
-    properties = RecipePropertySerializer(many=True, required=False)
+    properties = PropertySerializer(many=True, required=False)
     steps = StepSerializer(many=True)
     keywords = KeywordSerializer(many=True)
     shared = UserSerializer(many=True, required=False)

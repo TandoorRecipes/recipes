@@ -70,7 +70,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, PropertyType, FoodProperty)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, PropertyType, Property)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -94,7 +94,7 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, FoodPropertySerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, PropertySerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -251,7 +251,7 @@ class MergeMixin(ViewSetMixin):
 
             try:
                 if isinstance(source, Food):
-                    FoodProperty.objects.filter(food=source).delete()
+                    source.properties.through.objects.all().delete()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
@@ -825,8 +825,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                                                                                 'steps__ingredients__step_set',
                                                                                                 'steps__ingredients__step_set__recipe_set',
                                                                                                 'steps__ingredients__food',
-                                                                                                'steps__ingredients__food__foodproperty_set',
-                                                                                                'steps__ingredients__food__foodproperty_set__property_type',
+                                                                                                'steps__ingredients__food__properties',
+                                                                                                'steps__ingredients__food__properties__property_type',
                                                                                                 'steps__ingredients__food__inherit_fields',
                                                                                                 'steps__ingredients__food__supermarket_category',
                                                                                                 'steps__ingredients__food__onhand_users',
@@ -987,22 +987,12 @@ class PropertyTypeViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class FoodPropertyViewSet(viewsets.ModelViewSet):
-    queryset = FoodProperty.objects
-    serializer_class = FoodPropertySerializer
+class PropertyViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects
+    serializer_class = PropertySerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
-    query_params = [
-        QueryParam(name='food',
-                   description=_('ID of food to return properties for.'),
-                   qtype='int'),
-    ]
-    schema = QueryParamAutoSchema()
-
     def get_queryset(self):
-        if food := self.request.query_params.get('food', None):
-            self.queryset = self.queryset.filter(food__id=food)
-
         return self.queryset.filter(space=self.request.space)
 
 

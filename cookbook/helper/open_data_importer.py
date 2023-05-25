@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from cookbook.models import Unit, SupermarketCategory, FoodProperty, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
+from cookbook.models import Unit, SupermarketCategory, Property, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
 
 
 class OpenDataImporter:
@@ -169,10 +169,7 @@ class OpenDataImporter:
         alias_list = []
         for k in list(self.data[datatype].keys()):
             for fp in self.data[datatype][k]['properties']['type_values']:
-                food_property_list.append(FoodProperty(
-                    food_id=self.slug_id_cache['food'][k],
-                    food_amount=self.data[datatype][k]['properties']['food_amount'],
-                    food_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['properties']['food_unit']],
+                food_property_list.append(Property(
                     property_type_id=self.slug_id_cache['property'][fp['property_type']],
                     property_amount=fp['property_value'],
                     space=self.request.space,
@@ -186,7 +183,7 @@ class OpenDataImporter:
                     created_by=self.request.user,
                 ))
 
-        FoodProperty.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type',))
+        Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type',))
         Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
         return insert_list + update_list
 
