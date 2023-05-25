@@ -15,7 +15,7 @@ from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace, UnitConversion, PropertyType, FoodProperty, RecipeProperty)
+                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace, UnitConversion, PropertyType, Property)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -334,18 +334,11 @@ class PropertyTypeAdmin(admin.ModelAdmin):
 admin.site.register(PropertyType, PropertyTypeAdmin)
 
 
-class FoodPropertyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'food_amount', 'food_unit', 'food', 'property_amount', 'property_type')
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = ('property_amount', 'property_type')
 
 
-admin.site.register(FoodProperty, FoodPropertyAdmin)
-
-
-class RecipePropertyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'property_type', 'property_amount',)
-
-
-admin.site.register(RecipeProperty, RecipePropertyAdmin)
+admin.site.register(Property, PropertyAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):

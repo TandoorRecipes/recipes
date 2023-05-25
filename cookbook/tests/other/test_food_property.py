@@ -5,7 +5,7 @@ from decimal import Decimal
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.property_helper import FoodPropertyHelper
-from cookbook.models import Unit, Food, PropertyType, FoodProperty, Recipe, Step, UnitConversion
+from cookbook.models import Unit, Food, PropertyType, Property, Recipe, Step, UnitConversion, Property
 
 
 def test_food_property(space_1, space_2, u1_s1):
@@ -17,21 +17,23 @@ def test_food_property(space_1, space_2, u1_s1):
         unit_floz2 = Unit.objects.create(name='fl. oz 2', base_unit='fluid_ounce', space=space_1)
         unit_fantasy = Unit.objects.create(name='Fantasy Unit', base_unit='', space=space_1)
 
-        food_1 = Food.objects.create(name='food_1', space=space_1)
-        food_2 = Food.objects.create(name='food_2', space=space_1)
+        food_1 = Food.objects.create(name='food_1', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
+        food_2 = Food.objects.create(name='food_2', space=space_1, properties_food_unit=unit_gram, properties_food_amount=100)
 
         property_fat = PropertyType.objects.create(name='property_fat', space=space_1)
         property_calories = PropertyType.objects.create(name='property_calories', space=space_1)
         property_nuts = PropertyType.objects.create(name='property_nuts', space=space_1)
         property_price = PropertyType.objects.create(name='property_price', space=space_1)
 
-        food_1_property_fat = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=50, property_type=property_fat, space=space_1)
-        food_1_property_nuts = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=1, property_type=property_nuts, space=space_1)
-        food_1_property_price = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_1, property_amount=7.50, property_type=property_price, space=space_1)
+        food_1_property_fat = Property.objects.create(property_amount=50, property_type=property_fat, space=space_1)
+        food_1_property_nuts = Property.objects.create(property_amount=1, property_type=property_nuts, space=space_1)
+        food_1_property_price = Property.objects.create(property_amount=7.50, property_type=property_price, space=space_1)
+        food_1.properties.add(food_1_property_fat, food_1_property_nuts, food_1_property_price)
 
-        food_2_property_fat = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=25, property_type=property_fat, space=space_1)
-        food_2_property_nuts = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=0, property_type=property_nuts, space=space_1)
-        food_2_property_price = FoodProperty.objects.create(food_amount=100, food_unit=unit_gram, food=food_2, property_amount=2.50, property_type=property_price, space=space_1)
+        food_2_property_fat = Property.objects.create(property_amount=25, property_type=property_fat, space=space_1)
+        food_2_property_nuts = Property.objects.create(property_amount=0, property_type=property_nuts, space=space_1)
+        food_2_property_price = Property.objects.create(property_amount=2.50, property_type=property_price, space=space_1)
+        food_2.properties.add(food_2_property_fat, food_2_property_nuts, food_2_property_price)
 
         print('\n----------- TEST PROPERTY - PROPERTY CALCULATION MULTI STEP IDENTICAL UNIT ---------------')
         recipe_1 = Recipe.objects.create(name='recipe_1', waiting_time=0, working_time=0, space=space_1, created_by=auth.get_user(u1_s1))

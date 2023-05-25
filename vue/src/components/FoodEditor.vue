@@ -28,25 +28,77 @@
                         <!-- Food properties -->
 
                         <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
-                        <table class="table table-bordered" v-if="food_properties">
-                            <tr v-for="fp in food_properties" v-bind:key="fp.id">
-                                <td><input v-model="fp.property_amount" type="number"> {{ fp.property_type.unit }}</td>
-                                <td><b> {{ fp.property_type.name }} </b></td>
-                                <td> /</td>
-                                <td><input v-model="fp.food_amount" type="number"></td>
+
+                        <b-form-group :label="$t('Properties Food Amount')" description=""> <!-- TODO localize -->
+                            <b-form-input v-model="food.properties_food_amount"></b-form-input>
+                        </b-form-group>
+
+                        <b-form-group :label="$t('Properties Food Unit')" description=""> <!-- TODO localize -->
+                            <generic-multiselect
+                                @change="food.properties_food_unit = $event.val;"
+                                :model="Models.UNIT"
+                                :initial_single_selection="food.properties_food_unit"
+                                label="name"
+                                :multiple="false"
+                                :placeholder="$t('Unit')"
+                            ></generic-multiselect>
+                        </b-form-group>
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th> {{ $t('Property Amount') }}</th> <!-- TODO localize -->
+                                <th> {{ $t('Property Type') }}</th> <!-- TODO localize -->
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tr v-for="fp in food.properties" v-bind:key="fp.id">
+                                <td><input v-model="fp.property_amount" type="number"> <span
+                                    v-if="fp.property_type">{{ fp.property_type.unit }}</span></td>
                                 <td>
                                     <generic-multiselect
-                                        @change="fp.food_unit = $event.val;"
-                                        :model="Models.UNIT"
-                                        :initial_single_selection="fp.food_unit"
-                                        label="name"
-                                        :multiple="false"
-                                        :placeholder="$t('Unit')"
-                                    ></generic-multiselect>
+                                        @change="fp.property_type = $event.val"
+                                        :initial_single_selection="fp.property_type"
+                                        label="name" :model="Models.PROPERTY_TYPE"
+                                        :multiple="false"/>
+                                </td>
+                                <td> / <span>{{ food.properties_food_amount }} <span
+                                    v-if="food.properties_food_unit !== null">{{
+                                        food.properties_food_unit.name
+                                    }}</span></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
+                                        class="fas fa-trash-alt"></i></button>
                                 </td>
                             </tr>
                         </table>
 
+                        <div class="text-center">
+                            <b-button-group>
+                                <b-btn class="btn btn-success shadow-none" @click="addProperty()"><i
+                                    class="fa fa-plus"></i>
+                                </b-btn>
+                                <b-btn class="btn btn-secondary shadow-none" @click="addAllProperties()"><i
+                                    class="fa fa-plus"> <i class="ml-1 fas fa-list"></i></i>
+                                </b-btn>
+                            </b-button-group>
+
+                        </div>
+
+                        <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
+                            <generic-multiselect
+                                @change="food.supermarket_category = $event.val;"
+                                :model="Models.SHOPPING_CATEGORY"
+                                :initial_single_selection="food.supermarket_category"
+                                label="name"
+                                :multiple="false"
+                                :allow_create="true"
+                                :placeholder="$t('Shopping_Category')"
+                            ></generic-multiselect>
+                        </b-form-group>
 
                         <!-- Unit conversion -->
 
@@ -72,18 +124,6 @@
                                         $t('Ignore_Shopping')
                                     }}
                                 </b-form-checkbox>
-                            </b-form-group>
-
-                            <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
-                                <generic-multiselect
-                                    @change="food.supermarket_category = $event.val;"
-                                    :model="Models.SHOPPING_CATEGORY"
-                                    :initial_single_selection="food.supermarket_category"
-                                    label="name"
-                                    :multiple="false"
-                                    :allow_create="true"
-                                    :placeholder="$t('Shopping_Category')"
-                                ></generic-multiselect>
                             </b-form-group>
 
                             <hr/>
@@ -191,7 +231,6 @@ export default {
     data() {
         return {
             food: undefined,
-            food_properties: [],
         }
     },
     mounted() {
@@ -212,6 +251,9 @@ export default {
                 description: "",
                 shopping: false,
                 recipe: null,
+                properties: [],
+                properties_food_amount: 100,
+                properties_food_unit: null,
                 food_onhand: false,
                 supermarket_category: null,
                 parent: null,
@@ -225,85 +267,41 @@ export default {
                 child_inherit_fields: [],
             }
         }
-
-        Promise.allSettled([pf]).then(r => {
-            let property_types = []
-            let property_values = []
-
-            let p1 = apiClient.listPropertyTypes().then((r) => {
-                property_types = r.data
-            })
-
-            let p2
-            if (this.food.id !== undefined) {
-                p2 = apiClient.listFoodPropertys(this.food.id).then((r) => {
-                    property_values = r.data
-                })
-            }
-
-            Promise.allSettled([p1, p2]).then(r => {
-                property_types.forEach(fpt => {
-                    let food_property = {
-                        'food_amount': 100,
-                        'food_unit': {'name': 'g'},
-                        'food': this.food,
-                        'property_amount': 0,
-                        'property_type': fpt,
-                    }
-
-                    property_values.forEach(fpv => {
-                        if (fpv.property_type.id === fpt.id) {
-                            food_property.id = fpv.id
-                            food_property.food_amount = fpv.food_amount
-                            food_property.food_unit = fpv.food_unit
-                            food_property.property_amount = fpv.property_amount
-                        }
-                    })
-
-                    this.food_properties.push(food_property)
-                })
-            })
-        })
     },
     methods: {
         updateFood: function () {
             let apiClient = new ApiApiFactory()
-            let p
             if (this.food.id !== undefined) {
-                p = apiClient.updateFood(this.food.id, this.food).then((r) => {
+                apiClient.updateFood(this.food.id, this.food).then((r) => {
                     this.food = r.data
                     StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                 }).catch(err => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
             } else {
-                p = apiClient.createFood(this.food).then((r) => {
+                apiClient.createFood(this.food).then((r) => {
                     this.food = r.data
                     StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                 }).catch(err => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
             }
-
-            Promise.allSettled([p]).then(r => {
-                this.food_properties.forEach(fp => {
-                    fp.food = this.food
-                    if (fp.id === undefined) {
-                        apiClient.createFoodProperty(fp).then((r) => {
-                            fp = r.data
-                        }).catch(err => {
-                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                        })
-                    } else {
-                        apiClient.updateFoodProperty(fp.id, fp).then((r) => {
-                            fp = r.data
-                        }).catch(err => {
-                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                        })
-                    }
+        },
+        addProperty: function () {
+            this.food.properties.push({property_type: null, property_amount: 0})
+        },
+        addAllProperties: function () {
+            let apiClient = new ApiApiFactory()
+            apiClient.listPropertyTypes().then(r => {
+                r.data.forEach(x => {
+                    this.food.properties.push({property_type: x, property_amount: 0})
                 })
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
-
+        },
+        deleteProperty: function (p) {
+            this.food.properties = this.food.properties.filter(x => x !== p)
         },
         cancelAction: function () {
             this.$emit("hidden", "")
