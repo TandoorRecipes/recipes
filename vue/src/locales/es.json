@@ -73,7 +73,7 @@
     "Carbohydrates": "Carbohydratos",
     "Calories": "Calorias",
     "Energy": "Energia",
-    "Nutrition": "Nutricion",
+    "Nutrition": "Nutrición",
     "Date": "Fecha",
     "Share": "Compartir",
     "Automation": "Automatización",
@@ -452,5 +452,6 @@
     "Auto_Sort": "Ordenar Automáticamente",
     "Auto_Sort_Help": "Mueva todos los ingredientes al paso que mejor se adapte.",
     "Unpin": "Desanclar",
-    "Amount": "Cantidad"
+    "Amount": "Cantidad",
+    "PinnedConfirmation": "{recipe} ha sido fijada."
 }
