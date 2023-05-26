@@ -1,14 +1,11 @@
 import os
 import re
-import uuid
 from datetime import datetime
 from uuid import UUID
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -18,11 +15,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
-from oauth2_provider.models import AccessToken
 
-from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
-                            SpaceCreateForm, SpaceJoinForm, User,
-                            UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User,
+                            UserCreateForm, UserPreference)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)

@@ -19,6 +19,7 @@ from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.cache import caches
 from django.core.exceptions import FieldError, ValidationError
 from django.core.files import File
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
@@ -44,6 +45,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
@@ -52,10 +54,13 @@ from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.open_data_importer import OpenDataImporter
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
-                                               is_space_owner, switch_user_active_space, above_space_limit, CustomRecipePermission, CustomUserPermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
+                                               is_space_owner, switch_user_active_space, above_space_limit,
+                                               CustomRecipePermission, CustomUserPermission,
+                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup, clean_dict
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -65,7 +70,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog)
+                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, PropertyType, Property)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -88,7 +93,8 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
-                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer, RecipeExportSerializer)
+                                 UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
+                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, PropertySerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -171,7 +177,8 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                                                                       'field', flat=True)])
 
         if query is not None and query not in ["''", '']:
-            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']):
+            if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
+                                                                      'django.db.backends.postgresql']):
                 if any([self.model.__name__.lower() in x for x in
                         self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
@@ -243,6 +250,9 @@ class MergeMixin(ViewSetMixin):
                 isTree = False
 
             try:
+                if isinstance(source, Food):
+                    source.properties.through.objects.all().delete()
+
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
                     related = linkManager.all()
@@ -272,6 +282,7 @@ class MergeMixin(ViewSetMixin):
                 source.delete()
                 return Response(content, status=status.HTTP_200_OK)
             except Exception:
+                traceback.print_exc()
                 content = {'error': True,
                            'msg': _(f'An error occurred attempting to merge {source.name} with {target.name}')}
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
@@ -522,8 +533,20 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.request._shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [
-            self.request.user.id]
+        shared_users = []
+        if c := caches['default'].get(
+                f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}', None):
+            shared_users = c
+        else:
+            try:
+                shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [
+                    self.request.user.id]
+                caches['default'].set(
+                    f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
+                    shared_users, timeout=5 * 60)
+                # TODO ugly hack that improves API performance significantly, should be done properly
+            except AttributeError:  # Anonymous users (using share links) don't have shared users
+                pass
 
         self.queryset = super().get_queryset()
         shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
@@ -792,7 +815,32 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
-                self.queryset = self.queryset.filter(space=self.request.space)
+                self.queryset = self.queryset.filter(space=self.request.space).prefetch_related(
+                                                                                                'keywords',
+                                                                                                'shared',
+                                                                                                'properties',
+                                                                                                'properties__property_type',
+                                                                                                'steps',
+                                                                                                'steps__ingredients',
+                                                                                                'steps__ingredients__step_set',
+                                                                                                'steps__ingredients__step_set__recipe_set',
+                                                                                                'steps__ingredients__food',
+                                                                                                'steps__ingredients__food__properties',
+                                                                                                'steps__ingredients__food__properties__property_type',
+                                                                                                'steps__ingredients__food__inherit_fields',
+                                                                                                'steps__ingredients__food__supermarket_category',
+                                                                                                'steps__ingredients__food__onhand_users',
+                                                                                                'steps__ingredients__food__substitute',
+                                                                                                'steps__ingredients__food__child_inherit_fields',
+                                                                         
+                                                                                                'steps__ingredients__unit',
+                                                                                                'steps__ingredients__unit__unit_conversion_base_relation',
+                                                                                                'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
+                                                                                                'steps__ingredients__unit__unit_conversion_converted_relation',
+                                                                                                'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                                                                                                'cooklog_set',
+                                                                                                ).select_related('nutrition')
+
             return super().get_queryset()
 
         self.queryset = self.queryset.filter(space=self.request.space).filter(
@@ -802,7 +850,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         params = {x: self.request.GET.get(x) if len({**self.request.GET}[x]) == 1 else self.request.GET.getlist(x) for x
                   in list(self.request.GET)}
         search = RecipeSearch(self.request, **params)
-        self.queryset = search.get_queryset(self.queryset).prefetch_related('cooklog_set')
+        self.queryset = search.get_queryset(self.queryset).prefetch_related('keywords', 'cooklog_set')
         return self.queryset
 
     def list(self, request, *args, **kwargs):
@@ -919,6 +967,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
         qs = obj.get_related_recipes(
             levels=levels)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
         return Response(self.serializer_class(qs, many=True).data)
+
+
+class UnitConversionViewSet(viewsets.ModelViewSet):
+    queryset = UnitConversion.objects
+    serializer_class = UnitConversionSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class PropertyTypeViewSet(viewsets.ModelViewSet):
+    queryset = PropertyType.objects
+    serializer_class = PropertyTypeSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class PropertyViewSet(viewsets.ModelViewSet):
+    queryset = Property.objects
+    serializer_class = PropertySerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
 
 
 class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
@@ -1122,10 +1197,13 @@ class CustomAuthToken(ObtainAuthToken):
                                            context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(scope__contains='write').first():
+        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(
+                scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}', expires=(timezone.now() + timezone.timedelta(days=365 * 5)), scope='read write app')
+            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}',
+                                                      expires=(timezone.now() + timezone.timedelta(days=365 * 5)),
+                                                      scope='read write app')
         return Response({
             'id': access_token.id,
             'token': access_token.token,
@@ -1153,7 +1231,8 @@ def recipe_from_source(request):
     serializer = RecipeFromSourceSerializer(data=request.data)
     if serializer.is_valid():
 
-        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
+                bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
             serializer.validated_data['url'] = bookmarklet.url
             serializer.validated_data['data'] = bookmarklet.html
             bookmarklet.delete()
@@ -1175,13 +1254,21 @@ def recipe_from_source(request):
                         # 'recipe_html': '',
                         'recipe_images': [],
                     }, status=status.HTTP_200_OK)
-            if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
-                recipe_json = requests.get(url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1], '') + '?share=' + re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
+            if re.match(
+                    '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+                    url):
+                recipe_json = requests.get(
+                    url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
+                                                                         '') + '?share=' +
+                    re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
                 recipe_json = clean_dict(recipe_json, 'id')
                 serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                 if serialized_recipe.is_valid():
                     recipe = serialized_recipe.save()
-                    recipe.image = File(handle_image(request, File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'), filetype=pathlib.Path(recipe_json['image']).suffix),
+                    recipe.image = File(handle_image(request,
+                                                     File(io.BytesIO(requests.get(recipe_json['image']).content),
+                                                          name='image'),
+                                                     filetype=pathlib.Path(recipe_json['image']).suffix),
                                         name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                     recipe.save()
                     return Response({
@@ -1323,9 +1410,42 @@ def import_files(request):
 
             return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
         except NotImplementedError:
-            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')},
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ImportOpenData(APIView):
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    def get(self, request, format=None):
+        response = requests.get('https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/meta.json')
+        metadata = json.loads(response.content)
+        return Response(metadata)
+
+    def post(self, request, *args, **kwargs):
+        # TODO validate data
+        print(request.data)
+        selected_version = request.data['selected_version']
+        selected_datatypes = request.data['selected_datatypes']
+        update_existing = str2bool(request.data['update_existing'])
+        use_metric = str2bool(request.data['use_metric'])
+
+        response = requests.get(f'https://raw.githubusercontent.com/TandoorRecipes/open-tandoor-data/main/build/{selected_version}.json')  # TODO catch 404, timeout, ...
+        data = json.loads(response.content)
+
+        response_obj = {}
+
+        data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
+        response_obj['unit'] = len(data_importer.import_units())
+        response_obj['category'] = len(data_importer.import_category())
+        response_obj['property'] = len(data_importer.import_property())
+        response_obj['supermarket'] = len(data_importer.import_supermarket())
+        response_obj['food'] = len(data_importer.import_food())
+        response_obj['conversion'] = len(data_importer.import_conversion())
+
+        return Response(response_obj)
 
 
 def get_recipe_provider(recipe):

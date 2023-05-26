@@ -1,11 +1,10 @@
 <template>
-
-    <div id="app">
-
+    <div>
         <beta-warning></beta-warning>
 
         <div v-if="metadata !== undefined">
             {{ $t('Data_Import_Info') }}
+            <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{$t('Learn_More')}}</a>
 
 
             <select class="form-control" v-model="selected_version">
@@ -37,8 +36,8 @@
 
         </div>
     </div>
-</template>
 
+</template>
 
 <script>
 import Vue from "vue"
@@ -54,7 +53,7 @@ Vue.use(BootstrapVue)
 
 
 export default {
-    name: "TestView",
+    name: "OpenDataImportComponent",
     mixins: [ApiMixin],
     components: {BetaWarning},
     data() {
@@ -93,6 +92,3 @@ export default {
 }
 </script>
 
-<style>
-
-</style>

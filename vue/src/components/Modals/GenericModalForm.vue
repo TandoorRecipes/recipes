@@ -1,10 +1,7 @@
 <template>
     <div>
         <template v-if="form_component !== undefined">
-            <b-modal :id="'modal_' + id" @hidden="cancelAction" size="xl">
-                <component :is="form_component"></component>
-            </b-modal>
-
+            <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction" :item1="item1"></component>
         </template>
         <template v-else>
             <b-modal :id="'modal_' + id" @hidden="cancelAction" size="lg">
@@ -43,13 +40,13 @@
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
-import { getForm, formFunctions } from "@/utils/utils"
+import {BootstrapVue} from "bootstrap-vue"
+import {getForm, formFunctions} from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
-import { ApiApiFactory } from "@/utils/openapi/api"
-import { ApiMixin, StandardToasts, ToastMixin, getUserPreference } from "@/utils/utils"
+import {ApiApiFactory} from "@/utils/openapi/api"
+import {ApiMixin, StandardToasts, ToastMixin, getUserPreference} from "@/utils/utils"
 import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
@@ -63,10 +60,21 @@ import NumberInput from "@/components/Modals/NumberInput.vue";
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge,DateInput, NumberInput },
+    components: {
+        FileInput,
+        CheckboxInput,
+        LookupInput,
+        TextInput,
+        EmojiInput,
+        ChoiceInput,
+        SmallText,
+        HelpBadge,
+        DateInput,
+        NumberInput
+    },
     mixins: [ApiMixin, ToastMixin],
     props: {
-        model: { required: true, type: Object },
+        model: {required: true, type: Object},
         action: {
             type: Object,
             default() {
@@ -86,7 +94,6 @@ export default {
             },
         },
         show: {required: true, type: Boolean, default: false},
-        models: {required: false, type: Function, default: null}
     },
     data() {
         return {
@@ -128,9 +135,9 @@ export default {
         form_component() {
             // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
             // TODO this is not necessarily bad but maybe there are better options to do this
-            if (this.form.component !== undefined){
+            if (this.form.component !== undefined) {
                 return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.form.component}`)
-            }else{
+            } else {
                 return undefined
             }
         },
@@ -198,16 +205,16 @@ export default {
             return form
         },
         delete: function () {
-            this.genericAPI(this.model, this.Actions.DELETE, { id: this.item1.id })
+            this.genericAPI(this.model, this.Actions.DELETE, {id: this.item1.id})
                 .then((result) => {
                     this.$emit("finish-action")
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    if (err.response.status === 403){
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE_PROTECTED, err)
-                    }else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    if (err.response.status === 403) {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE_PROTECTED, err)
+                    } else {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                     }
                     this.$emit("finish-action", "cancel")
                 })
@@ -217,22 +224,22 @@ export default {
                 // if there is no item id assume it's a new item
                 this.genericAPI(this.model, this.Actions.CREATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action", { item: result.data })
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                        this.$emit("finish-action", {item: result.data})
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE, err, true)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                         this.$emit("finish-action", "cancel")
                     })
             } else {
                 this.genericAPI(this.model, this.Actions.UPDATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action", { item: result.data })
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        this.$emit("finish-action", {item: result.data})
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err, true)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                         this.$emit("finish-action", "cancel")
                     })
             }
@@ -248,13 +255,13 @@ export default {
                 this.$emit("finish-action", "cancel")
                 return
             }
-            this.genericAPI(this.model, this.Actions.MOVE, { source: this.item1.id, target: this.form_data.target.id })
+            this.genericAPI(this.model, this.Actions.MOVE, {source: this.item1.id, target: this.form_data.target.id})
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id })
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MOVE)
+                    this.$emit("finish-action", {target: this.form_data.target.id})
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MOVE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_MOVE, err)
                     this.$emit("finish-action", "cancel")
                 })
         },
@@ -274,11 +281,14 @@ export default {
                 target: this.form_data.target.id,
             })
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id, target_object: this.form_data.target }) //TODO temporary workaround to not change other apis
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
+                    this.$emit("finish-action", {
+                        target: this.form_data.target.id,
+                        target_object: this.form_data.target
+                    }) //TODO temporary workaround to not change other apis
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MERGE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_MERGE, err)
                     this.$emit("finish-action", "cancel")
                 })
 
