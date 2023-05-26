@@ -193,7 +193,7 @@ def get_from_scraper(scrape, request):
     except Exception:
         pass
 
-    if recipe_json['source_url']:
+    if 'source_url' in recipe_json and recipe_json['source_url']:
         automations = Automation.objects.filter(type=Automation.INSTRUCTION_REPLACE, space=request.space, disabled=False).only('param_1', 'param_2', 'param_3').order_by('order').all()[:512]
         for a in automations:
             if re.match(a.param_1, (recipe_json['source_url'])[:512]):
