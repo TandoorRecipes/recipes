@@ -1,4 +1,4 @@
-name: Build Docker Container
+name: Build Docker Container with open data plugin installed
 
 on: push
 
@@ -20,12 +20,6 @@ jobs:
             platforms: linux/amd64,linux/arm64
             suffix: ""
             continue-on-error: false
-          # Raspi build config
-          - name: Raspi
-            dockerfile: Dockerfile-raspi
-            platforms: linux/arm/v7
-            suffix: "-raspi"
-            continue-on-error: true
     steps:
       - uses: actions/checkout@v3
 
@@ -46,9 +40,17 @@ jobs:
         with:
           path: recipes/version.py
           contents: |
-            VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}'
+            VERSION_NUMBER = '${{ steps.get_version.outputs.VERSION }}-open-data'
             BUILD_REF = '${{ github.sha }}'
           write-mode: overwrite
+
+      # clone open data plugin
+      - name: clone open data plugin repo
+        uses: actions/checkout@master
+        with:
+          repository: TandoorRecipes/open_data_plugin
+          ref: master
+          path: ./recipes/plugins/open_data_plugin
 
       # Build Vue frontend
       - uses: actions/setup-node@v3
@@ -61,6 +63,14 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build dependencies
         working-directory: ./vue
+        run: yarn build
+
+      - name: Setup Open Data Plugin Links
+        working-directory: ./recipes/plugins/open_data_plugin
+        run: python setup_repo.py
+        
+      - name: Build Open Data Frontend
+        working-directory: ./recipes/plugins/open_data_plugin/vue
         run: yarn build
 
       - name: Set up QEMU
@@ -91,11 +101,11 @@ jobs:
             latest=false
             suffix=${{ matrix.suffix }}
           tags: |
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/') }}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
+            type=raw,value=latest,suffix=-open-data-plugin,enable=${{ startsWith(github.ref, 'refs/tags/') }}
+            type=semver,suffix=-open-data-plugin,pattern={{version}}
+            type=semver,suffix=-open-data-plugin,pattern={{major}}.{{minor}}
+            type=semver,suffix=-open-data-plugin,pattern={{major}}
+            type=ref,suffix=-open-data-plugin,event=branch
       - name: Build and Push
         uses: docker/build-push-action@v4
         with:
@@ -108,35 +118,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  notify-stable:
-    name: Notify Stable
-    runs-on: ubuntu-latest
-    needs: build-container
-    if: startsWith(github.ref, 'refs/tags/')
-    steps:
-      - name: Set tag name
-        run: |
-          # Strip "refs/tags/" prefix
-          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-      # Send stable discord notification
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
-        with:
-          args: '🚀 Version {{ VERSION }} of tandoor has been released 🥳 Check it out https://github.com/vabene1111/recipes/releases/tag/{{ VERSION }}'
-
-  notify-beta:
-    name: Notify Beta
-    runs-on: ubuntu-latest
-    needs: build-container
-    if: github.ref == 'refs/heads/beta'
-    steps:
-      # Send beta discord notification
-      - name: Discord notification
-        env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_BETA_WEBHOOK }}
-        uses: Ilshidur/action-discord@0.3.2
-        with:
-          args: '🚀 The BETA Image has been updated! 🥳'

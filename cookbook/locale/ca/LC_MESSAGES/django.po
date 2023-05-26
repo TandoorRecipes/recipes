@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-26 07:46+0200\n"
+"POT-Creation-Date: 2023-05-18 14:28+0200\n"
 "PO-Revision-Date: 2023-04-12 11:55+0000\n"
 "Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
@@ -116,7 +116,7 @@ msgstr "Nombre de decimals dels ingredients."
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr "Si vols poder crear i veure comentaris a sota de les receptes."
 
-#: .\cookbook\forms.py:79 .\cookbook\forms.py:492
+#: .\cookbook\forms.py:79 .\cookbook\forms.py:509
 msgid ""
 "Setting to 0 will disable auto sync. When viewing a shopping list the list "
 "is updated every set seconds to sync changes someone else might have made. "
@@ -133,7 +133,7 @@ msgstr ""
 msgid "Makes the navbar stick to the top of the page."
 msgstr "Barra de navegació s'enganxi a la part superior de la pàgina."
 
-#: .\cookbook\forms.py:83 .\cookbook\forms.py:495
+#: .\cookbook\forms.py:83 .\cookbook\forms.py:512
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
 "Afegeix automàticament els ingredients del pla d'àpats a la llista de la "
@@ -155,11 +155,11 @@ msgstr ""
 "Tots dos camps són opcionals. Si no se'n dóna cap, es mostrarà el nom "
 "d'usuari"
 
-#: .\cookbook\forms.py:123 .\cookbook\forms.py:297
+#: .\cookbook\forms.py:123 .\cookbook\forms.py:314
 msgid "Name"
 msgstr "Nom"
 
-#: .\cookbook\forms.py:124 .\cookbook\forms.py:298 .\cookbook\views\lists.py:88
+#: .\cookbook\forms.py:124 .\cookbook\forms.py:315 .\cookbook\views\lists.py:88
 msgid "Keywords"
 msgstr "Paraules clau"
 
@@ -171,7 +171,7 @@ msgstr "Temps de preparació en minuts"
 msgid "Waiting time (cooking/baking) in minutes"
 msgstr "Temps d'espera (cocció/fornejat) en minuts"
 
-#: .\cookbook\forms.py:127 .\cookbook\forms.py:266 .\cookbook\forms.py:299
+#: .\cookbook\forms.py:127 .\cookbook\forms.py:283 .\cookbook\forms.py:316
 msgid "Path"
 msgstr "Ruta"
 
@@ -183,7 +183,7 @@ msgstr "UID Emmagatzematge"
 msgid "Default"
 msgstr "Per defecte"
 
-#: .\cookbook\forms.py:173
+#: .\cookbook\forms.py:190
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
@@ -191,21 +191,21 @@ msgstr ""
 "Per evitar duplicats, s'ignoren les receptes amb el mateix nom que les "
 "existents. Marqueu aquesta casella per importar-ho tot."
 
-#: .\cookbook\forms.py:196
+#: .\cookbook\forms.py:213
 msgid "Add your comment: "
 msgstr "Afegir el teu comentari: "
 
-#: .\cookbook\forms.py:211
+#: .\cookbook\forms.py:228
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
 "Deixeu-lo buit per a Dropbox i introduïu la contrasenya de l'aplicació per a "
 "nextcloud."
 
-#: .\cookbook\forms.py:218
+#: .\cookbook\forms.py:235
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr "Deixeu-lo buit per a nextcloud i introduïu el token API per a Dropbox."
 
-#: .\cookbook\forms.py:227
+#: .\cookbook\forms.py:244
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
@@ -213,33 +213,33 @@ msgstr ""
 "Deixeu-lo buit per a Dropbox i introduïu només l'URL base per a Nextcloud "
 "(<code>/remote.php/webdav/</code> s'afegeix automàticament)"
 
-#: .\cookbook\forms.py:265 .\cookbook\views\edit.py:157
+#: .\cookbook\forms.py:282 .\cookbook\views\edit.py:157
 msgid "Storage"
 msgstr "Emmagatzematge"
 
-#: .\cookbook\forms.py:267
+#: .\cookbook\forms.py:284
 msgid "Active"
 msgstr "Actiu"
 
-#: .\cookbook\forms.py:273
+#: .\cookbook\forms.py:290
 msgid "Search String"
 msgstr "Cerca Cadena"
 
-#: .\cookbook\forms.py:300
+#: .\cookbook\forms.py:317
 msgid "File ID"
 msgstr "ID d'Arxiu"
 
-#: .\cookbook\forms.py:322
+#: .\cookbook\forms.py:339
 msgid "You must provide at least a recipe or a title."
 msgstr "Has de proporcionar com a mínim una recepta o un títol."
 
-#: .\cookbook\forms.py:335
+#: .\cookbook\forms.py:352
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
 "Podeu llistar els usuaris predeterminats amb els quals voleu compartir "
 "receptes a la configuració."
 
-#: .\cookbook\forms.py:336
+#: .\cookbook\forms.py:353
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
@@ -247,15 +247,15 @@ msgstr ""
 "Podeu utilitzar el marcador per donar format a aquest camp. Consulteu els <a "
 "href=\"/docs/markdown/\">documents aquí </a>"
 
-#: .\cookbook\forms.py:362
+#: .\cookbook\forms.py:379
 msgid "Maximum number of users for this space reached."
 msgstr "Nombre màxim d'usuaris assolit per a aquest espai."
 
-#: .\cookbook\forms.py:368
+#: .\cookbook\forms.py:385
 msgid "Email address already taken!"
 msgstr "Adreça de correu electrònic existent!"
 
-#: .\cookbook\forms.py:376
+#: .\cookbook\forms.py:393
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
@@ -263,15 +263,15 @@ msgstr ""
 "No cal una adreça de correu electrònic, però si està present, s'enviarà "
 "l'enllaç d'invitació a l'usuari."
 
-#: .\cookbook\forms.py:391
+#: .\cookbook\forms.py:408
 msgid "Name already taken."
 msgstr "Nom agafat."
 
-#: .\cookbook\forms.py:402
+#: .\cookbook\forms.py:419
 msgid "Accept Terms and Privacy"
 msgstr "Accepteu les condicions i la privadesa"
 
-#: .\cookbook\forms.py:434
+#: .\cookbook\forms.py:451
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
@@ -280,7 +280,7 @@ msgstr ""
 "de trigrama (p. ex., els valors baixos signifiquen que s'ignoren més errors "
 "ortogràfics)."
 
-#: .\cookbook\forms.py:444
+#: .\cookbook\forms.py:461
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
@@ -288,7 +288,7 @@ msgstr ""
 "Seleccioneu el tipus de mètode de cerca. Feu clic <a href=\"/docs/search/"
 "\">aquí</a> per obtenir una descripció completa de les opcions."
 
-#: .\cookbook\forms.py:445
+#: .\cookbook\forms.py:462
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
@@ -296,7 +296,7 @@ msgstr ""
 "Utilitzeu la concordança difusa en unitats, paraules clau i ingredients quan "
 "editeu i importeu receptes."
 
-#: .\cookbook\forms.py:447
+#: .\cookbook\forms.py:464
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
@@ -304,7 +304,7 @@ msgstr ""
 "Camps per cercar ignorant els accents. La selecció d'aquesta opció pot "
 "millorar o degradar la qualitat de la cerca en funció de l'idioma"
 
-#: .\cookbook\forms.py:449
+#: .\cookbook\forms.py:466
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
@@ -312,7 +312,7 @@ msgstr ""
 "Camps per cercar coincidències parcials. (p. ex., en cercar \"Pastís\" "
 "tornarà \"pastís\" i \"peça\" i \"sabó\")"
 
-#: .\cookbook\forms.py:451
+#: .\cookbook\forms.py:468
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
@@ -320,7 +320,7 @@ msgstr ""
 "Camps per cercar l'inici de les coincidències de paraula. (p. ex., en cercar "
 "\"sa\" es tornarà \"amanida\" i \"entrepà\")"
 
-#: .\cookbook\forms.py:453
+#: .\cookbook\forms.py:470
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
@@ -329,7 +329,7 @@ msgstr ""
 "trobareu \"recepta\".) Nota: aquesta opció entrarà en conflicte amb els "
 "mètodes de cerca \"web\" i \"cru\"."
 
-#: .\cookbook\forms.py:455
+#: .\cookbook\forms.py:472
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
@@ -337,35 +337,35 @@ msgstr ""
 "Camps per a la cerca de text complet. Nota: els mètodes de cerca \"web\", "
 "\"frase\" i \"en brut\" només funcionen amb camps de text complet."
 
-#: .\cookbook\forms.py:459
+#: .\cookbook\forms.py:476
 msgid "Search Method"
 msgstr "Mètode de cerca"
 
-#: .\cookbook\forms.py:460
+#: .\cookbook\forms.py:477
 msgid "Fuzzy Lookups"
 msgstr "Cerques difuses"
 
-#: .\cookbook\forms.py:461
+#: .\cookbook\forms.py:478
 msgid "Ignore Accent"
 msgstr "Ignora Accents"
 
-#: .\cookbook\forms.py:462
+#: .\cookbook\forms.py:479
 msgid "Partial Match"
 msgstr "Cerca Parcial"
 
-#: .\cookbook\forms.py:463
+#: .\cookbook\forms.py:480
 msgid "Starts With"
 msgstr "Comença amb"
 
-#: .\cookbook\forms.py:464
+#: .\cookbook\forms.py:481
 msgid "Fuzzy Search"
 msgstr "Cerca Difusa"
 
-#: .\cookbook\forms.py:465
+#: .\cookbook\forms.py:482
 msgid "Full Text"
 msgstr "Text Sencer"
 
-#: .\cookbook\forms.py:490
+#: .\cookbook\forms.py:507
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
@@ -373,7 +373,7 @@ msgstr ""
 "Els usuaris veuran tots els articles que afegiu a la vostra llista de la "
 "compra. Us han d'afegir per veure els elements de la seva llista."
 
-#: .\cookbook\forms.py:496
+#: .\cookbook\forms.py:513
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
@@ -381,7 +381,7 @@ msgstr ""
 "Quan afegiu un pla d'àpats a la llista de la compra (de manera manual o "
 "automàtica), inclou totes les receptes relacionades."
 
-#: .\cookbook\forms.py:497
+#: .\cookbook\forms.py:514
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
@@ -389,93 +389,93 @@ msgstr ""
 "Quan afegiu un pla d'àpats a la llista de la compra (manual o "
 "automàticament), excloeu els ingredients que teniu a mà."
 
-#: .\cookbook\forms.py:498
+#: .\cookbook\forms.py:515
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
 "Nombre d'hores per defecte per retardar l'entrada d'una llista de la compra."
 
-#: .\cookbook\forms.py:499
+#: .\cookbook\forms.py:516
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
 "Filtreu la llista de compres per incloure només categories de supermercats."
 
-#: .\cookbook\forms.py:500
+#: .\cookbook\forms.py:517
 msgid "Days of recent shopping list entries to display."
 msgstr "Dies de les entrades recents de la llista de la compra per mostrar."
 
-#: .\cookbook\forms.py:501
+#: .\cookbook\forms.py:518
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr "Marca el menjar com a \"A mà\" quan marqueu la llista de la compra."
 
-#: .\cookbook\forms.py:502
+#: .\cookbook\forms.py:519
 msgid "Delimiter to use for CSV exports."
 msgstr "Delimitador per a les exportacions CSV."
 
-#: .\cookbook\forms.py:503
+#: .\cookbook\forms.py:520
 msgid "Prefix to add when copying list to the clipboard."
 msgstr "Prefix per afegir en copiar la llista al porta-retalls."
 
-#: .\cookbook\forms.py:507
+#: .\cookbook\forms.py:524
 msgid "Share Shopping List"
 msgstr "Compartir Llista de la Compra"
 
-#: .\cookbook\forms.py:508
+#: .\cookbook\forms.py:525
 msgid "Autosync"
 msgstr "Autosync"
 
-#: .\cookbook\forms.py:509
+#: .\cookbook\forms.py:526
 msgid "Auto Add Meal Plan"
 msgstr "Afegeix automàticament un pla d'àpats"
 
-#: .\cookbook\forms.py:510
+#: .\cookbook\forms.py:527
 msgid "Exclude On Hand"
 msgstr "Exclou a mà"
 
-#: .\cookbook\forms.py:511
+#: .\cookbook\forms.py:528
 msgid "Include Related"
 msgstr "Incloure Relacionats"
 
-#: .\cookbook\forms.py:512
+#: .\cookbook\forms.py:529
 msgid "Default Delay Hours"
 msgstr "Hores de retard per defecte"
 
-#: .\cookbook\forms.py:513
+#: .\cookbook\forms.py:530
 msgid "Filter to Supermarket"
 msgstr "Filtrar a supermercat"
 
-#: .\cookbook\forms.py:514
+#: .\cookbook\forms.py:531
 msgid "Recent Days"
 msgstr "Dies recents"
 
-#: .\cookbook\forms.py:515
+#: .\cookbook\forms.py:532
 msgid "CSV Delimiter"
 msgstr "Delimitador CSV"
 
-#: .\cookbook\forms.py:516
+#: .\cookbook\forms.py:533
 msgid "List Prefix"
 msgstr "Prefix de Llista"
 
-#: .\cookbook\forms.py:517
+#: .\cookbook\forms.py:534
 msgid "Auto On Hand"
 msgstr "Auto a mà"
 
-#: .\cookbook\forms.py:527
+#: .\cookbook\forms.py:544
 msgid "Reset Food Inheritance"
 msgstr "Restablir Herència Alimentària"
 
-#: .\cookbook\forms.py:528
+#: .\cookbook\forms.py:545
 msgid "Reset all food to inherit the fields configured."
 msgstr "Restableix tots els aliments per heretar els camps configurats."
 
-#: .\cookbook\forms.py:540
+#: .\cookbook\forms.py:557
 msgid "Fields on food that should be inherited by default."
 msgstr "Camps dels aliments que s'han d'heretar per defecte."
 
-#: .\cookbook\forms.py:541
+#: .\cookbook\forms.py:558
 msgid "Show recipe counts on search filters"
 msgstr "Mostra el recompte de receptes als filtres de cerca"
 
-#: .\cookbook\forms.py:542
+#: .\cookbook\forms.py:559
 msgid "Use the plural form for units and food inside this space."
 msgstr ""
 
