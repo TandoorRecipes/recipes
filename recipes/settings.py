@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
 import json
+import mimetypes
 import os
 import re
 import sys
@@ -519,3 +520,5 @@ EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv(
     'ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
+
+mimetypes.add_type("text/javascript", ".js", True)
