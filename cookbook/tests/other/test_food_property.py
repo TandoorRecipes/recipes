@@ -104,6 +104,17 @@ def test_food_property(space_1, space_2, u1_s1):
         assert abs(property_values[property_fat.id]['food_values'][food_1.id]['value'] - Decimal(250)) < 0.0001
         assert abs(property_values[property_fat.id]['food_values'][food_2.id]['value'] - Decimal(250)) < 0.0001
 
+        print('\n----------- TEST PROPERTY - MISSING FOOD REFERENCE AMOUNT ---------------')
+        food_1.properties_food_unit = None
+        food_1.save()
+        food_2.properties_food_amount = 0
+        food_2.save()
+
+        property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_1)
+
+        assert property_values[property_fat.id]['name'] == property_fat.name
+        assert property_values[property_fat.id]['total_value'] == 0
+
         print('\n----------- TEST PROPERTY - SPACE SEPARATION ---------------')
 
         property_fat.space = space_2
@@ -114,3 +125,5 @@ def test_food_property(space_1, space_2, u1_s1):
         property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_2)
 
         assert property_fat.id not in property_values
+
+
