@@ -109,8 +109,7 @@ class CustomOnHandField(serializers.Field):
         if not self.context["request"].user.is_authenticated:
             return []
         shared_users = []
-        if c := caches['default'].get(
-                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
             shared_users = c
         else:
             try:
@@ -845,7 +844,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     food_properties = serializers.SerializerMethodField('get_food_properties')
 
     def get_food_properties(self, obj):
-        fph = FoodPropertyHelper(self.context['request'].space)
+        fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
     class Meta:
