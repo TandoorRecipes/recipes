@@ -137,7 +137,7 @@
 
             <div class="row" style="margin-top: 2vh; ">
                 <div class="col-lg-6 offset-lg-3 col-12">
-                    <food-property-view-component :recipe="recipe" :servings="servings" @foodUpdated="loadRecipe(recipe.id)"></food-property-view-component>
+                    <property-view-component :recipe="recipe" :servings="servings" @foodUpdated="loadRecipe(recipe.id)"></property-view-component>
                 </div>
             </div>
         </div>
@@ -184,7 +184,7 @@ import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import ImportTandoor from "@/components/Modals/ImportTandoor.vue";
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
-import FoodPropertyViewComponent from "@/components/FoodPropertyViewComponent.vue";
+import PropertyViewComponent from "@/components/PropertyViewComponent.vue";
 
 Vue.prototype.moment = moment
 
@@ -209,7 +209,7 @@ export default {
         RecipeSwitcher,
         CustomInputSpinButton,
         BottomNavigationBar,
-        FoodPropertyViewComponent,
+        PropertyViewComponent,
     },
     computed: {
         ingredient_factor: function () {
