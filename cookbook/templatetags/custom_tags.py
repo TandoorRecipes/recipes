@@ -16,7 +16,7 @@ from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import Space, get_model_name
 from recipes import settings
-from recipes.settings import STATIC_URL
+from recipes.settings import STATIC_URL, PLUGINS
 
 register = template.Library()
 
@@ -131,6 +131,14 @@ def is_debug():
 @register.simple_tag()
 def markdown_link():
     return f"{_('You can use markdown to format this field. See the ')}<a target='_blank' href='{reverse('docs_markdown')}'>{_('docs here')}</a>"
+
+@register.simple_tag
+def plugin_dropdown_nav_templates():
+    templates = []
+    for p in PLUGINS:
+        if p['nav_dropdown']:
+            templates.append(p['nav_dropdown'])
+    return templates
 
 
 @register.simple_tag

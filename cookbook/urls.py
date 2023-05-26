@@ -6,17 +6,23 @@ from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
-from recipes.settings import DEBUG
+from recipes.settings import DEBUG, PLUGINS
 from recipes.version import VERSION_NUMBER
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name, UserSpace, Space)
+                     get_model_name, UserSpace, Space, PropertyType, UnitConversion)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
-from .views.api import CustomAuthToken
+from .views.api import CustomAuthToken, ImportOpenData
 
-router = routers.DefaultRouter()
+# extend DRF default router class to allow including additional routers
+class DefaultRouter(routers.DefaultRouter):
+    def extend(self, r):
+        self.registry.extend(r.registry)
+
+
+router = DefaultRouter()
 router.register(r'automation', api.AutomationViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'cook-log', api.CookLogViewSet)
@@ -34,6 +40,9 @@ router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
+router.register(r'unit-conversion', api.UnitConversionViewSet)
+router.register(r'food-property-type', api.PropertyTypeViewSet)
+router.register(r'food-property', api.PropertyViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
@@ -52,6 +61,13 @@ router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
+
+for p in PLUGINS:
+    if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
+        try:
+            router.extend(c)
+        except AttributeError:
+            pass
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -119,7 +135,6 @@ urlpatterns = [
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
 
-
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
@@ -139,6 +154,7 @@ urlpatterns = [
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
+    path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
 
     path('offline/', views.offline, name='view_offline'),
 
@@ -189,7 +205,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

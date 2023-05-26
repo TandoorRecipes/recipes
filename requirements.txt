@@ -1,4 +1,4 @@
-Django==4.1.7
+Django==4.1.9
 cryptography==39.0.1
 django-annoying==0.10.6
 django-autocomplete-light==3.9.4
@@ -17,7 +17,7 @@ Markdown==3.4.3
 Pillow==9.4.0
 psycopg2-binary==2.9.5
 python-dotenv==0.21.0
-requests==2.28.2
+requests==2.31.0
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.2.0

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
 import json
+import mimetypes
 import os
 import re
 import sys
@@ -80,6 +81,8 @@ DJANGO_TABLES2_PAGE_RANGE = 8
 HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
+FDA_API_KEY = os.getenv('FDA_API_KEY', 'DEMO_KEY')
+
 SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
 
@@ -144,6 +147,9 @@ try:
                         'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
                         'base_url': plugin_class.base_url,
                         'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                        'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                        'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
+                        'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
                     }
                     PLUGINS.append(plugin_config)
             except Exception:
@@ -412,7 +418,7 @@ for p in PLUGINS:
     if p['bundle_name'] != '':
         WEBPACK_LOADER[p['bundle_name']] = {
             'CACHE': not DEBUG,
-            'BUNDLE_DIR_NAME': f'{p["base_path"]}/vue/',  # must end with slash
+            'BUNDLE_DIR_NAME': f'vue/',  # must end with slash
             'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
             'POLL_INTERVAL': 0.1,
             'TIMEOUT': None,
@@ -514,3 +520,5 @@ EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv(
     'ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
+
+mimetypes.add_type("text/javascript", ".js", True)

@@ -9,6 +9,7 @@
     {% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="robots" content="noindex,nofollow"/>
 
 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
@@ -49,7 +50,7 @@
     <script type="text/javascript">
         $.fn.select2.defaults.set("theme", "bootstrap");
         {% if request.user.is_authenticated %}
-        window.ACTIVE_SPACE_ID = '{{request.space.id}}';
+            window.ACTIVE_SPACE_ID = '{{request.space.id}}';
         {% endif %}
     </script>
 
@@ -269,6 +270,33 @@
                                     </div>
                                 </a>
                             </div>
+                            <div class="col-4">
+                                <a href="{% url 'list_property_type' %}" class="p-0 p-md-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-database fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
+                                            {% trans 'Food Properties' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row m-0 mt-2 mt-md-0">
+                            <div class="col-4">
+                                <a href="{% url 'list_unit_conversion' %}" class="p-0 p-md-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-exchange-alt fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
+                                            {% trans 'Unit Conversions' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
                         </div>
                     </div>
                 </li>
@@ -322,6 +350,12 @@
                             <a class="dropdown-item" href="{% url 'view_space_overview' %}"><i
                                     class="fas fa-list"></i> {% trans 'Overview' %}</a>
                         {% endif %}
+                        {% plugin_dropdown_nav_templates as plugin_dropdown_nav_templates %}
+                        {% for pn in plugin_dropdown_nav_templates %}
+                            <div class="dropdown-divider"></div>
+                            {% include pn %}
+                        {% endfor %}
+
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url 'docs_markdown' %}"><i
                                 class="fab fa-markdown fa-fw"></i> {% trans 'Markdown Guide' %}</a>
@@ -347,6 +381,7 @@
         </ul>
     </div>
 </nav>
+
 
 {% message_of_the_day request as message_of_the_day %}
 {% if message_of_the_day %}
@@ -412,7 +447,7 @@
     localStorage.setItem('STATIC_URL', "{% base_path request 'static_base' %}")
     localStorage.setItem('DEBUG', "{% is_debug %}")
     localStorage.setItem('USER_ID', "{{request.user.pk}}")
-    
+
     window.addEventListener("load", () => {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("{% url 'service_worker' %}", {scope: "{% base_path request 'base' %}" + '/'}).then(function (reg) {
