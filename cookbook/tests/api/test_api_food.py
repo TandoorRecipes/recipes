@@ -2,6 +2,7 @@ import json
 
 import pytest
 from django.contrib import auth
+from django.core.cache import caches
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
@@ -27,7 +28,6 @@ if (Food.node_order_by):
     node_location = 'sorted-child'
 else:
     node_location = 'last-child'
-
 
 register(FoodFactory, 'obj_1', space=LazyFixture('space_1'))
 register(FoodFactory, 'obj_2', space=LazyFixture('space_1'))
@@ -554,12 +554,13 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
     assert (getattr(obj_tree_1, field) == new_val) == inherit
     assert (getattr(child, field) == new_val) == inherit
 
+
 # TODO add test_inherit with child_inherit
 
 
 @pytest.mark.parametrize("obj_tree_1", [
     ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
-     'substitute_children': True, 'substitute_siblings': True}),
+      'substitute_children': True, 'substitute_siblings': True}),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("global_reset", [True, False])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
@@ -599,7 +600,7 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
 
 @pytest.mark.parametrize("obj_tree_1", [
     ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
-     'substitute_children': True, 'substitute_siblings': True}),
+      'substitute_children': True, 'substitute_siblings': True}),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
 def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
@@ -613,11 +614,9 @@ def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
         parent.reset_inheritance(space=space_1)
 
 
-def test_onhand(obj_1, u1_s1, u2_s1):
-    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
-        'food_onhand'] == False
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
-        'food_onhand'] == False
+def test_onhand(obj_1, u1_s1, u2_s1, space_1):
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is False
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is False
 
     u1_s1.patch(
         reverse(
@@ -627,13 +626,12 @@ def test_onhand(obj_1, u1_s1, u2_s1):
         {'food_onhand': True},
         content_type='application/json'
     )
-    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
-        'food_onhand'] == True
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
-        'food_onhand'] == False
+    assert json.loads(u1_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is False
 
     user1 = auth.get_user(u1_s1)
     user2 = auth.get_user(u2_s1)
     user1.userpreference.shopping_share.add(user2)
-    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)[
-        'food_onhand'] == True
+    caches['default'].set(f'shopping_shared_users_{space_1.id}_{user2.id}', None)
+
+    assert json.loads(u2_s1.get(reverse(DETAIL_URL, args={obj_1.id})).content)['food_onhand'] is True
