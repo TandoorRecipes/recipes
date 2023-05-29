@@ -110,11 +110,11 @@
                             <b-col>
                                 <span v-if="uc.id">
                                     <b-btn class="btn btn-sm" variant="danger" @click="deleteUnitConversion(uc)"><i class="fas fa-trash-alt"></i></b-btn>
-                                    {{uc.base_amount}}
-                                    {{uc.base_unit.name}}
+                                    {{ uc.base_amount }}
+                                    {{ uc.base_unit.name }}
                                     =
-                                    {{uc.converted_amount}}
-                                    {{uc.converted_unit.name}}
+                                    {{ uc.converted_amount }}
+                                    {{ uc.converted_unit.name }}
                                 </span>
                                 <b-form class="mt-1">
                                     <b-input-group>
@@ -305,7 +305,7 @@ export default {
                 recipe: null,
                 properties: [],
                 properties_food_amount: 100,
-                properties_food_unit: null,
+                properties_food_unit: {name: 'g'},
                 food_onhand: false,
                 supermarket_category: null,
                 parent: null,
@@ -393,7 +393,7 @@ export default {
                 }
             )
         },
-        deleteUnitConversion: function (uc){
+        deleteUnitConversion: function (uc) {
             this.unit_conversions = this.unit_conversions.filter(u => u !== uc)
             let apiClient = new ApiApiFactory()
             apiClient.destroyUnitConversion(uc.id).then(r => {
