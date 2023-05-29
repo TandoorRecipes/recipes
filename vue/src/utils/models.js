@@ -279,7 +279,7 @@ export class Models {
         apiName: "Unit",
         paginated: true,
         create: {
-            params: [["name", "plural_name", "description","open_data_slug",]],
+            params: [["name", "plural_name", "description", "open_data_slug",]],
             form: {
                 show_help: true,
                 name: {
@@ -600,10 +600,19 @@ export class Models {
             },
         },
         create: {
-            params: [['base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug']],
+            params: [['food', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'open_data_slug']],
             form: {
                 show_help: true,
                 // TODO add proper help texts for everything
+                food: {
+                    form_field: true,
+                    type: "lookup",
+                    field: "food",
+                    list: "FOOD",
+                    list_label: "name",
+                    label: "Food",
+                    multiple: false,
+                },
                 base_amount: {
                     form_field: true,
                     type: "text",
@@ -634,15 +643,6 @@ export class Models {
                     list: "UNIT",
                     list_label: "name",
                     label: "converted_unit",
-                    multiple: false,
-                },
-                food: {
-                    form_field: true,
-                    type: "lookup",
-                    field: "food",
-                    list: "FOOD",
-                    list_label: "name",
-                    label: "Food",
                     multiple: false,
                 },
                 open_data_slug: {
