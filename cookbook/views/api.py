@@ -816,30 +816,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.detail:  # if detail request and not list, private condition is verified by permission class
             if not share:  # filter for space only if not shared
                 self.queryset = self.queryset.filter(space=self.request.space).prefetch_related(
-                                                                                                'keywords',
-                                                                                                'shared',
-                                                                                                'properties',
-                                                                                                'properties__property_type',
-                                                                                                'steps',
-                                                                                                'steps__ingredients',
-                                                                                                'steps__ingredients__step_set',
-                                                                                                'steps__ingredients__step_set__recipe_set',
-                                                                                                'steps__ingredients__food',
-                                                                                                'steps__ingredients__food__properties',
-                                                                                                'steps__ingredients__food__properties__property_type',
-                                                                                                'steps__ingredients__food__inherit_fields',
-                                                                                                'steps__ingredients__food__supermarket_category',
-                                                                                                'steps__ingredients__food__onhand_users',
-                                                                                                'steps__ingredients__food__substitute',
-                                                                                                'steps__ingredients__food__child_inherit_fields',
-                                                                         
-                                                                                                'steps__ingredients__unit',
-                                                                                                'steps__ingredients__unit__unit_conversion_base_relation',
-                                                                                                'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
-                                                                                                'steps__ingredients__unit__unit_conversion_converted_relation',
-                                                                                                'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
-                                                                                                'cooklog_set',
-                                                                                                ).select_related('nutrition')
+                    'keywords',
+                    'shared',
+                    'properties',
+                    'properties__property_type',
+                    'steps',
+                    'steps__ingredients',
+                    'steps__ingredients__step_set',
+                    'steps__ingredients__step_set__recipe_set',
+                    'steps__ingredients__food',
+                    'steps__ingredients__food__properties',
+                    'steps__ingredients__food__properties__property_type',
+                    'steps__ingredients__food__inherit_fields',
+                    'steps__ingredients__food__supermarket_category',
+                    'steps__ingredients__food__onhand_users',
+                    'steps__ingredients__food__substitute',
+                    'steps__ingredients__food__child_inherit_fields',
+
+                    'steps__ingredients__unit',
+                    'steps__ingredients__unit__unit_conversion_base_relation',
+                    'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
+                    'steps__ingredients__unit__unit_conversion_converted_relation',
+                    'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                    'cooklog_set',
+                ).select_related('nutrition')
 
             return super().get_queryset()
 
@@ -973,8 +973,16 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
     queryset = UnitConversion.objects
     serializer_class = UnitConversionSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    query_params = [
+        QueryParam(name='food_id', description='ID of food to filter for', qtype='int'),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
+        food_id = self.request.query_params.get('food_id', None)
+        if food_id is not None:
+            self.queryset = self.queryset.filter(food_id=food_id)
+
         return self.queryset.filter(space=self.request.space)
 
 
