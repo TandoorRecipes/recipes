@@ -633,7 +633,10 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             else:
                 validated_data['onhand_users'] = list(set(onhand_users) - set(shared_users))
 
-        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space,
+        if properties_food_unit := validated_data.pop('properties_food_unit', None):
+            properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
+
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
                                                   defaults=validated_data)
         return obj
 
