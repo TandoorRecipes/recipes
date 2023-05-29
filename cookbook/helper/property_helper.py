@@ -39,23 +39,24 @@ class FoodPropertyHelper:
         uch = UnitConversionHelper(self.space)
 
         for i in ingredients:
-            conversions = uch.get_conversions(i)
-            for pt in property_types:
-                found_property = False
-                if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:
-                    computed_properties[pt.id]['missing_value'] = True
-                    computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
-                else:
-                    for p in i.food.properties.all():
-                        if p.property_type == pt:
-                            for c in conversions:
-                                if c.unit == i.food.properties_food_unit:
-                                    found_property = True
-                                    computed_properties[pt.id]['total_value'] += (c.amount / i.food.properties_food_amount) * p.property_amount
-                                    computed_properties[pt.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
-                if not found_property:
-                    computed_properties[pt.id]['missing_value'] = True
-                    computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+            if i.food is not None:
+                conversions = uch.get_conversions(i)
+                for pt in property_types:
+                    found_property = False
+                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:
+                        computed_properties[pt.id]['missing_value'] = True
+                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                    else:
+                        for p in i.food.properties.all():
+                            if p.property_type == pt:
+                                for c in conversions:
+                                    if c.unit == i.food.properties_food_unit:
+                                        found_property = True
+                                        computed_properties[pt.id]['total_value'] += (c.amount / i.food.properties_food_amount) * p.property_amount
+                                        computed_properties[pt.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
+                    if not found_property:
+                        computed_properties[pt.id]['missing_value'] = True
+                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
 
         return computed_properties
 
