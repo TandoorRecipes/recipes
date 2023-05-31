@@ -70,7 +70,7 @@ sudo apt install -y libsasl2-dev python3-dev libldap2-dev libssl-dev
 Using binaries from the virtual env:
 
 ```shell
-/var/www/recipes/bin/pip3 install -r requirements.txt
+/var/www/recipes/bin/activate install -r requirements.txt
 ```
 
 You will also need to install front end requirements and build them. For this navigate to the `./vue` folder and run
