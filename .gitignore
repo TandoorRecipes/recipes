@@ -86,3 +86,5 @@ vue/webpack-stats.json
 cookbook/templates/sw.js
 .prettierignore
 vue/.yarn
+
+node_modules

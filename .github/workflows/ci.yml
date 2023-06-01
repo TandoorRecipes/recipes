@@ -38,3 +38,38 @@ jobs:
     - name: Django Testing project
       run: |
         pytest
+
+  e2eTests:
+    if: ${{ github.event_name == 'pull_request' || github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Cancel previous runs
+      uses: styfle/cancel-workflow-action@0.11.0
+      with:
+        all_but_latest: true
+        access_token: ${{ secrets.CANCEL_PREV_BUILD_TOKEN }}
+    - uses: actions/checkout@v3
+    - name: Set up node Version
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16.x"
+    - name: Set up tandoor
+      run: |
+        cp .env.template .env
+        secret_key=$(base64 /dev/urandom | head -c50)
+        sed -i "s#SECRET_KEY=.*#SECRET_KEY=$secret_key#;s#POSTGRES_PASSWORD=.*#POSTGRES_PASSWORD=password#;" .env
+        wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/plain/docker-compose.yml
+        docker compose up -d
+    - name: Wait for services
+      run: |
+        sudo apt-get install wait-for-it -y
+        wait-for-it -h localhost -p 5432 -t 10 -- echo "psql is up and running."
+        wait-for-it -h localhost -p 80 -t 10 -- echo "django is up and running."
+    - name: e2e tests
+      working-directory: ./tests
+      env:
+        APP_URL: http://localhost/
+      run: |
+        npm install -D
+        npm run test:e2e e2e/features
