@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2022-10-17 11:33+0000\n"
-"Last-Translator: Sokratis Potamias <sokratespot@gmail.com>\n"
+"PO-Revision-Date: 2023-05-31 17:19+0000\n"
+"Last-Translator: sweeney <sweeneytodd91@protonmail.com>\n"
 "Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/el/>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
@@ -26,7 +26,7 @@ msgstr "Συστατικά"
 
 #: .\cookbook\forms.py:53
 msgid "Default unit"
-msgstr ""
+msgstr "Προεπιλεγμένη μονάδα μέτρησης"
 
 #: .\cookbook\forms.py:54
 msgid "Use fractions"
@@ -34,7 +34,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:55
 msgid "Use KJ"
-msgstr ""
+msgstr "Χρήση KiloJoule(KJ)"
 
 #: .\cookbook\forms.py:56
 msgid "Theme"
@@ -42,7 +42,7 @@ msgstr "Θέμα"
 
 #: .\cookbook\forms.py:57
 msgid "Navbar color"
-msgstr ""
+msgstr "Χρώμα μπάρας πλοήγησης"
 
 #: .\cookbook\forms.py:58
 msgid "Sticky navbar"
@@ -50,19 +50,19 @@ msgstr ""
 
 #: .\cookbook\forms.py:59
 msgid "Default page"
-msgstr ""
+msgstr "Προεπιλεγμένη σελίδα"
 
 #: .\cookbook\forms.py:60
 msgid "Show recent recipes"
-msgstr ""
+msgstr "Προβολή πρόσφατων συνταγών"
 
 #: .\cookbook\forms.py:61
 msgid "Search style"
-msgstr ""
+msgstr "Τρόπος αναζήτησης"
 
 #: .\cookbook\forms.py:62
 msgid "Plan sharing"
-msgstr ""
+msgstr "Κοινοποίηση προγράμματος"
 
 #: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
@@ -70,7 +70,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:64
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Χρονική περίοδος αυτόματου συγχρονισμού λίστας αγορών"
 
 #: .\cookbook\forms.py:65 .\cookbook\templates\recipe_view.html:21
 #: .\cookbook\templates\stats.html:47
@@ -79,17 +79,21 @@ msgstr "Σχόλια"
 
 #: .\cookbook\forms.py:66
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Έκδοση για αριστερόχειρες"
 
 #: .\cookbook\forms.py:70
 msgid ""
 "Color of the top navigation bar. Not all colors work with all themes, just "
 "try them out!"
 msgstr ""
+"Χρώμα της πάνω μπάρας πλοήγησης. Δεν δουλεύουν όλα τα χρώματα με όλα τα "
+"θέματα, απλά δοκιμάστε τα!"
 
 #: .\cookbook\forms.py:72
 msgid "Default Unit to be used when inserting a new ingredient into a recipe."
 msgstr ""
+"Προεπιλεγμένη μονάδα μέτρησης που θα χρησιμοποιείται όταν προστίθεται ένα "
+"υλικό σε μια συνταγή."
 
 #: .\cookbook\forms.py:74
 msgid ""
@@ -104,18 +108,20 @@ msgstr ""
 #: .\cookbook\forms.py:77
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
+"Χρήστες με του οποίους η κοινοποίηση του προγραμματισμού των γευμάτων θα "
+"γίνεται από προεπιλογή."
 
 #: .\cookbook\forms.py:78
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "Χρήστες με του οποίους θα γίνει κοινοποίηση των λιστών αγορών."
 
 #: .\cookbook\forms.py:80
 msgid "Show recently viewed recipes on search page."
-msgstr ""
+msgstr "Προβολή των προσφάτως προβεβλημένων συνταγών στη σελίδα αναζήτησης."
 
 #: .\cookbook\forms.py:81
 msgid "Number of decimals to round ingredients."
-msgstr ""
+msgstr "Αριθμός των δεκαδικών στα οποία θα γίνεται στρογγυλοποίηση."
 
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
@@ -153,20 +159,20 @@ msgstr ""
 
 #: .\cookbook\forms.py:128 .\cookbook\forms.py:301
 msgid "Name"
-msgstr ""
+msgstr "Όνομα"
 
 #: .\cookbook\forms.py:129 .\cookbook\forms.py:302
 #: .\cookbook\templates\stats.html:24 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr ""
+msgstr "Λέξεις κλειδιά"
 
 #: .\cookbook\forms.py:130
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Χρόνος προετοιμασίας σε λεπτά"
 
 #: .\cookbook\forms.py:131
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Χρόνος αναμονής (μαγείρεμα/ ψήσιμο) σε λεπτά"
 
 #: .\cookbook\forms.py:132 .\cookbook\forms.py:270 .\cookbook\forms.py:303
 msgid "Path"
@@ -188,15 +194,18 @@ msgstr ""
 
 #: .\cookbook\forms.py:200
 msgid "Add your comment: "
-msgstr ""
+msgstr "Προσθήκη σχολίου: "
 
 #: .\cookbook\forms.py:215
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
+"Για dropbox παρακαλώ αφήστε το κενό και πληκτρολογήστε το password για "
+"nextcloud."
 
 #: .\cookbook\forms.py:222
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr ""
+"Για nextcloud αφήστε το κενό και για dropbox πληκτρολογήστε το api token."
 
 #: .\cookbook\forms.py:231
 msgid ""
@@ -240,7 +249,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:372
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Αυτή η διεύθυνση email δεν είναι διαθέσιμη!"
 
 #: .\cookbook\forms.py:380
 msgid ""
@@ -306,7 +315,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:463
 msgid "Search Method"
-msgstr ""
+msgstr "Μέθοδος αναζήτησης"
 
 #: .\cookbook\forms.py:464
 msgid "Fuzzy Lookups"
@@ -330,19 +339,24 @@ msgstr ""
 
 #: .\cookbook\forms.py:469
 msgid "Full Text"
-msgstr ""
+msgstr "Πλήρες κείμενο"
 
 #: .\cookbook\forms.py:494
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
+"Οι χρήστες θα μπορούν να δουν όλα τα αντικείμενα που προστίθενται στην λίστα "
+"αγορών σας. Για να δείτε τα αντικείμενα στις λίστα αυτών θα πρέπει να σας "
+"προστέσουν."
 
 #: .\cookbook\forms.py:500
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
+"Όταν προστίθεται ένα πρόγραμμα γευμάτων στη λίστα αγορών (χειροκίνητα ή "
+"αυτόματα), να συμπεριλαμβάνονται όλες οι σχετικές συνταγές."
 
 #: .\cookbook\forms.py:501
 msgid ""
@@ -353,18 +367,23 @@ msgstr ""
 #: .\cookbook\forms.py:502
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
+"Προεπιλεγμένος αριθμός ωρών για την  καθυστέρηση μιας εγγραφής στη λίστα "
+"αγορών."
 
 #: .\cookbook\forms.py:503
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
+"Φιλτράρισμα λίστας αγορών ώστε να περιλαμβάνει μόνο τις κατηγορίες του "
+"supermarker."
 
 #: .\cookbook\forms.py:504
 msgid "Days of recent shopping list entries to display."
-msgstr ""
+msgstr "Αριθμός ημερών για τη προβολή των πρόσφατων εγγραφών της λίστας αγορών."
 
 #: .\cookbook\forms.py:505
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
+"Χαρακτηρισμός ενός τροφίμου ως 'Διαθέσιμο' όταν τσεκαριστεί στη λίστα αγορών."
 
 #: .\cookbook\forms.py:506
 msgid "Delimiter to use for CSV exports."
@@ -376,27 +395,27 @@ msgstr ""
 
 #: .\cookbook\forms.py:511
 msgid "Share Shopping List"
-msgstr ""
+msgstr "Κοινοποίηση λίστας αγορών"
 
 #: .\cookbook\forms.py:512
 msgid "Autosync"
-msgstr ""
+msgstr "Αυτόματος συγχρονισμός"
 
 #: .\cookbook\forms.py:513
 msgid "Auto Add Meal Plan"
-msgstr ""
+msgstr "Αυτόματη προσθήκη προγραμματισμού γευμάτων"
 
 #: .\cookbook\forms.py:514
 msgid "Exclude On Hand"
-msgstr ""
+msgstr "Αποκλεισμός διαθέσιμων"
 
 #: .\cookbook\forms.py:515
 msgid "Include Related"
-msgstr ""
+msgstr "Συμπερίληψη σχετικών"
 
 #: .\cookbook\forms.py:516
 msgid "Default Delay Hours"
-msgstr ""
+msgstr "Προεπιλεγμένες ώρες καθυστέρησης"
 
 #: .\cookbook\forms.py:517
 msgid "Filter to Supermarket"
@@ -404,7 +423,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:518
 msgid "Recent Days"
-msgstr ""
+msgstr "Πρόσφατες ημέρες"
 
 #: .\cookbook\forms.py:519
 msgid "CSV Delimiter"
@@ -439,11 +458,13 @@ msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Για να αποκλείσουμε πιθανά spam, το email που ζητήθηκε δεν στάλθηκε. "
+"Παρακαλώ περιμένετε λίγα λεπτά και δοκιμάστε ξανά."
 
 #: .\cookbook\helper\permission_helper.py:149
 #: .\cookbook\helper\permission_helper.py:172 .\cookbook\views\views.py:152
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Δεν μπορείτε να δείτε αυτή τη σελίδα γιατί δεν είστε συνδεδεμένος!"
 
 #: .\cookbook\helper\permission_helper.py:153
 #: .\cookbook\helper\permission_helper.py:159
@@ -455,7 +476,7 @@ msgstr ""
 #: .\cookbook\views\views.py:163 .\cookbook\views\views.py:170
 #: .\cookbook\views\views.py:249
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "Δεν έχετε τα απαιτούμενα δικαιώματα να δείτε αυτή τη σελίδα!"
 
 #: .\cookbook\helper\permission_helper.py:177
 #: .\cookbook\helper\permission_helper.py:200
@@ -463,14 +484,15 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:237
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr ""
+"Δεν μπορείτε να αλληλεπιδράστε με αυτό το αντικείμενο γιατί δεν σας ανήκει!"
 
 #: .\cookbook\helper\permission_helper.py:321
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Έχετε υπερβεί τον μέγιστο αριθμό συνταγών για τον χώρο σας."
 
 #: .\cookbook\helper\permission_helper.py:333
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Έχετε περισσότερους χρήστες από το επιτρεπόμενο στον χώρο σας."
 
 #: .\cookbook\helper\recipe_search.py:565
 msgid "One of queryset or hash_key must be provided"
@@ -519,33 +541,33 @@ msgstr ""
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
-msgstr ""
+msgstr "Σημειώσεις"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Διατροφικές πληροφορίες"
 
 #: .\cookbook\integration\paprika.py:53
 msgid "Source"
-msgstr ""
+msgstr "Πηγή"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "Μερίδες"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "Χρόνος αναμονής"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "Χρόνος προετοιμασίας"
 
 #: .\cookbook\integration\saffron.py:29
 #: .\cookbook\templates\forms\ingredients.html:7
 #: .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "Βιβλίο συνταγών"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
@@ -569,19 +591,19 @@ msgstr ""
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "Πρωινό"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Μεσημεριανό"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Βραδινό"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29
 msgid "Other"
-msgstr ""
+msgstr "Άλλο"
 
 #: .\cookbook\models.py:251
 msgid ""
