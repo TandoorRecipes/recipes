@@ -482,5 +482,15 @@
     "per_serving": "Per porsjon",
     "open_data_help_text": "Tandoor Open Data prosjektet gir fra fellesskapet til Tandoor. Dette feltet fylles ut automatisk når det importeres og tillater oppdateringer i fremtiden.",
     "Open_Data_Slug": "Åpne data Slug",
-    "Open_Data_Import": "Åpne Data Import"
+    "Open_Data_Import": "Åpne Data Import",
+    "recipe_property_info": "Du kan også legge til egenskaper til mat for å kalkulere dem automatisk basert på oppskriften!",
+    "Update_Existing_Data": "Oppdater eksisterende data",
+    "Use_Metric": "Bruk metriske enheter",
+    "Learn_More": "Lær mer",
+    "converted_unit": "Konverter enhet",
+    "converted_amount": "Konverter mengde",
+    "base_unit": "Baseenhet",
+    "base_amount": "Basemengde",
+    "Datatype": "Data-type",
+    "Number of Objects": "Antall objekter"
 }
