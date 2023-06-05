@@ -4,37 +4,65 @@ on: [push, pull_request]
 
 jobs:
   build:
-    if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.10']
+        python-version: ["3.10"]
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    # Build Vue frontend
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-    - name: Install Vue dependencies
-      working-directory: ./vue
-      run: yarn install
-    - name: Build Vue dependencies
-      working-directory: ./vue
-      run: yarn build
-    - name: Install Django dependencies
-      run: |
-        sudo apt-get -y update
-        sudo apt-get install -y libsasl2-dev python3-dev libldap2-dev libssl-dev
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        python3 manage.py collectstatic --noinput
-        python3 manage.py collectstatic_js_reverse
-    - name: Django Testing project
-      run: |
-        pytest
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          # Build Vue frontend
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install Vue dependencies
+        working-directory: ./vue
+        run: yarn install
+      - name: Build Vue dependencies
+        working-directory: ./vue
+        run: yarn build
+      - name: Install Django dependencies
+        run: |
+          sudo apt-get -y update
+          sudo apt-get install -y libsasl2-dev python3-dev libldap2-dev libssl-dev
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python3 manage.py collectstatic --noinput
+          python3 manage.py collectstatic_js_reverse
+      - name: Django Testing project
+        run: |
+          pytest
+
+  e2eTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up node Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+
+      - name: Set up tandoor
+        run: |
+          wget https://gist.githubusercontent.com/KarunAtreya/4a2bcb95acfb47ac5a0c8754bb0cb134/raw/df871ae00f066ac3c5b8f0691ee9ab17e603df89/.env
+          docker compose up -d
+
+      - name: Wait for services
+        run: |
+          sudo apt-get install wait-for-it -y
+          wait-for-it -h localhost -p 5432 -t 10 -- echo "psql is up and running."
+          wait-for-it -h localhost -p 80 -t 10 -- echo "django is up and running."
+
+      - name: e2e tests
+        working-directory: ./tests
+        env:
+          APP_URL: http://localhost/
+        run: |
+          npm install -D
+          npm run test:e2e e2e/features    
