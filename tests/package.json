@@ -14,5 +14,8 @@
     "@cucumber/pretty-formatter": "^1.0.0",
     "@playwright/test": "^1.34.3",
     "playwright": "^1.34.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.1.4"
   }
 }

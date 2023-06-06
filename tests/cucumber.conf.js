@@ -2,6 +2,9 @@
 
 const { Before, BeforeAll, AfterAll, After, setDefaultTimeout } = require("@cucumber/cucumber");
 const { chromium } = require("playwright");
+require("dotenv").config()
+
+const tandoorURL = process.env.APP_URL || "http://localhost/"
 
 setDefaultTimeout(60000)
 
@@ -28,3 +31,6 @@ After(async function () {
   await global.page.close();
   await global.context.close();
 });
+
+
+module.exports = { tandoorURL };
