@@ -4,6 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
+    if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
