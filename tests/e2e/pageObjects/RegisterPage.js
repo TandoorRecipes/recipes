@@ -14,7 +14,6 @@ class RegisterPage {
   }
 
   async goToRegisterPage() {
-    await console.log(this.baseUrl)
     await page.goto(this.setupURL);
   }
 
