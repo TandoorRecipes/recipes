@@ -9,7 +9,7 @@ Feature: Register as super user
 
 
     Scenario Outline: user tries to register with invalid credentials
-        When user registers in with username "<username>" ,password "<password>" and confirm password "<confirm password>"
+        When user registers with username "<username>" ,password "<password>" and confirm password "<confirm password>"
         Then user should see message "<message>"
         Examples:
             | username | password | confirm password | message                                                                                                                            |

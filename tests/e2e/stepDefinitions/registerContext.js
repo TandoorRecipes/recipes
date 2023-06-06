@@ -13,7 +13,7 @@ Given("user has navigated to the Setup page", async function () {
 });
 
 When(
-  "user logs in with username {string} ,password {string} and confirm password {string}",
+  "user registers with username {string} ,password {string} and confirm password {string}",
   async function (username, password, cPassword) {
     await registerPage.submitRegisterData(username, password, cPassword);
   }
@@ -28,7 +28,7 @@ Then("user should see message {string}", async function (message) {
   );
 });
 
-Then("user should redirect to login page", async function () {
+Then("user should redirect to sign in page", async function () {
   assert.equal(
     page.url(),
     await registerPage.loginURL,
@@ -36,7 +36,7 @@ Then("user should redirect to login page", async function () {
   );
 });
 
-Then("user should get sucess message {string}", async function (succesMsg) {
+Then("user should get success message {string}", async function (succesMsg) {
   let errors = await registerPage.getSuccessMsg();
   assert.equal(
     errors[0],
