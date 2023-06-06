@@ -1,7 +1,8 @@
 require("dotenv").config();
+const config=require("../../cucumber.conf.js")
 class RegisterPage {
   constructor() {
-    this.baseUrl = process.env.URL;
+    this.baseUrl = config.tandoorURL;
     this.setupURL = this.baseUrl + "setup/";
     this.loginURL = this.baseUrl + "accounts/login/";
     this.username = `//input[@name="name"]`;
@@ -13,6 +14,7 @@ class RegisterPage {
   }
 
   async goToRegisterPage() {
+    await console.log(this.baseUrl)
     await page.goto(this.setupURL);
   }
 
