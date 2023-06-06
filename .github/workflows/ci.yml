@@ -43,7 +43,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # simple change
       - name: Cancel previous runs
         uses: styfle/cancel-workflow-action@0.11.0
         with:
