@@ -3,6 +3,8 @@
 const { Before, BeforeAll, AfterAll, After, setDefaultTimeout } = require("@cucumber/cucumber");
 const { chromium } = require("playwright");
 require("dotenv").config()
+const util = require('util')
+const exec = util.promisify(require('child_process').exec);
 
 const tandoorURL = process.env.APP_URL || "http://localhost/"
 
@@ -26,11 +28,21 @@ Before(async function () {
   global.page = await global.context.newPage();
 });
 
+async function cleanup() {
+  try {
+    const { stdout, stderr } = await exec('bash ./database_controller/cleanup.sh');
+  } catch (error) {
+    console.log(`exec error: ${error}`);
+  }
+}
+
 // Cleanup after each scenario
 After(async function () {
+  await cleanup();
   await global.page.close();
   await global.context.close();
 });
+
 
 
 module.exports = { tandoorURL };
