@@ -10,7 +10,7 @@ Feature: login feature
 
 
     Scenario: user logs in with valid credentials
-        When the user logs in with valid username "user" and valid password "aaaa1234"
+        When the user logs in with username "user" and password "aaaa1234"
         Then the user should be navigated to the search page
         And the user should be displayed the message "Successfully signed in as user."
 

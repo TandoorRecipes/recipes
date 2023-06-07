@@ -19,11 +19,6 @@ Given('the user has browsed to login page', async function () {
   await page.goto(loginPage.loginPageUrl)
 });
 
-
-When('the user logs in with valid username {string} and valid password {string}', async function (username, password) {
-  await loginPage.login(username, password)
-});
-
 When('the user logs in with username {string} and password {string}', async function (username, password) {
   await loginPage.login(username, password)
 });
