@@ -43,6 +43,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          all_but_latest: true
+          access_token: ${{ secrets.CANCEL_PREV_BUILD_TOKEN }}
+
       - uses: actions/checkout@v3
       - name: Set up node Version
         uses: actions/setup-node@v3
@@ -51,7 +57,9 @@ jobs:
 
       - name: Set up tandoor
         run: |
-          wget https://gist.githubusercontent.com/KarunAtreya/4a2bcb95acfb47ac5a0c8754bb0cb134/raw/df871ae00f066ac3c5b8f0691ee9ab17e603df89/.env
+          cp .env.template .env
+          secret_key=$(base64 /dev/urandom | head -c50)
+          sed -i "s#SECRET_KEY=.*#SECRET_KEY=$secret_key#;s#POSTGRES_PASSWORD=.*#POSTGRES_PASSWORD=password#;" .env
           docker compose up -d
 
       - name: Wait for services
