@@ -6,7 +6,7 @@ Feature: login feature
 
     Background:
         Given the user has registered with username "user" and password "aaaa1234"
-        And user has browsed to login page
+        And the user has browsed to login page
 
 
     Scenario: user logs in with valid credentials
