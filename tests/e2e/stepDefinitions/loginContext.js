@@ -23,7 +23,7 @@ When('the user logs in with username {string} and password {string}', async func
   await loginPage.login(username, password)
 });
 
-Then('the user should be navigated to the search page', async function () {
+Then('the user should be navigated to the homepage', async function () {
   actualUrl=await page.url()
   assert.equal(
     config.tandoorURL,
@@ -33,7 +33,7 @@ Then('the user should be navigated to the search page', async function () {
 });
 
 
-Then('the user should be displayed the message {string}', async function (expectedMessage) {
+Then('the user should see the message {string}', async function (expectedMessage) {
   actualMessage=(await homePage.getSigninSuccessMessage()).split("\n")
   assert.equal(
     expectedMessage,
@@ -42,7 +42,7 @@ Then('the user should be displayed the message {string}', async function (expect
   )
 });
 
-Then('the user should be displayed the error message {string}', async function (expectedMessage) {
+Then('the user should see the error message {string}', async function (expectedMessage) {
   actualMessage=await loginPage.getMessage()
   assert.equal(
     expectedMessage,
