@@ -9,9 +9,9 @@ const loginPage = new LoginPage()
 const homePage = new HomePage()
 const registerPage = new RegisterPage()
 
-Given('the user has registered with username {string} and password {string}', async function (username, password) {
+Given('the user has signed up with the following details', async function (userTable) {
     await registerPage.goToRegisterPage();
-    await registerPage.submitRegisterData(username, password, password);
+    await registerPage.submitRegisterData(userTable);
 
   });
 

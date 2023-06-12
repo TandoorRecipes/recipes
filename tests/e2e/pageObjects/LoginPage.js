@@ -20,6 +20,11 @@ class LoginPage{
     async getMessage() {
         return await page.innerText(this.loginFailMessage)
     }
+
+    async goToLoginPage() {
+        await page.goto(this.loginURL);
+      }
+
 }
 
 module.exports = { LoginPage }

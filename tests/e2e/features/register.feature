@@ -5,14 +5,17 @@ Feature: Register as super user
 
 
     Background:
-        Given user has navigated to the Setup page
+        Given the user has navigated to the setup page
 
 
-    Scenario Outline: user tries to register with invalid credentials
-        When user registers with username "<username>" ,password "<password>" and confirm password "<confirm password>"
-        Then user should see message "<message>"
+    Scenario Outline: user tries to sign up with invalid credentials
+        When the user signs up with the following details
+            | username         | <username>         |
+            | password         | <password>         |
+            | confirm_password | <confirm_password> |
+        Then the user should see message "<message>"
         Examples:
-            | username | password | confirm password | message                                                                                                                            |
+            | username | password | confirm_password | message                                                                                                                            |
             | user     | 1234567  | 12345            | Passwords dont match!                                                                                                              |
             | user     | qwecvb1  | qwecvb1          | This password is too short. It must contain at least 8 characters.                                                                 |
             | user     | aaaaaaaa | aaaaaaaa         | This password is too common.                                                                                                       |
@@ -21,6 +24,9 @@ Feature: Register as super user
 
 
     Scenario: user registers with valid credentials
-        When user registers with username "user" ,password "aaaa1234" and confirm password "aaaa1234"
-        Then user should redirect to sign in page
-        And user should get success message "User has been created, please login!"
+        When the user signs up with the following details
+            | username         | user     |
+            | password         | aaaa1234 |
+            | confirm_password | aaaa1234 |
+        Then the user should redirect to sign in page
+        And the user should get success message "User has been created, please login!"
