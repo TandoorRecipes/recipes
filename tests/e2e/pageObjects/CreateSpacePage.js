@@ -31,8 +31,7 @@ class CreateSpacePage {
   }
 
   async getErrorMessage() {
-    let error = await page.innerText(this.errorMsg);
-    return error;
+    return await page.innerText(this.errorMsg);
   }
 
   async getSuccessMsg() {
@@ -41,10 +40,7 @@ class CreateSpacePage {
       .split("\n")
       .filter((n) => n);
   }
-
-  async createSpaceExixt() {
-    return await page.isVisible(this.createSpaceBtn);
-  }
+  
   async getSpace(spaceName) {
     return await page.isVisible(format(this.spaceName, spaceName));
   }

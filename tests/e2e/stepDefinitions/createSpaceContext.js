@@ -11,18 +11,17 @@ Then("user should see options to create space", async function () {
   );
 });
 
-When(
-  "user tries to create a space with name {string}",
-  async function (spaceName) {
-    await createSpacePage.createSpace(spaceName);
-  }
-);
+When("the user creates a space {string}", async function (spaceName) {
+  await createSpacePage.createSpace(spaceName);
+});
 
-Then("redirects to search page", async function () {
+Then("the user redirects to search page", async function () {
   assert.equal(
     page.url(),
     createSpacePage.searchURL,
-    `Expected to get redirected to ${createSpacePage.searchURL} but got redirected to: ${page.url()}`
+    `Expected to get redirected to "${
+      createSpacePage.searchURL
+    }" but got redirected to: "${page.url()}"`
   );
 });
 
@@ -34,7 +33,7 @@ Then(
   }
 );
 
-Given("user is on space overview page", async function () {
+Given("the user has browsed to the space overview page", async function () {
   await createSpacePage.goToOverviewPage();
   assert.equal(
     page.url(),
@@ -45,11 +44,15 @@ Given("user is on space overview page", async function () {
   );
 });
 
-Then("user should get error message {string}", async function (errorMessage) {
+Then("the user should get error message {string}", async function (errorMessage) {
   let actualError = await createSpacePage.getErrorMessage();
   assert.deepEqual(
     actualError,
     errorMessage,
-    `Expected to get ${errorMessage} but got diffrent errors: ${actualError}`
+    `Expected to get "${errorMessage}" but got diffrent errors: "${actualError}"`
   );
+});
+
+Given("the user has created a space {string}", async function (spaceName) {
+  await createSpacePage.createSpace(spaceName);
 });
