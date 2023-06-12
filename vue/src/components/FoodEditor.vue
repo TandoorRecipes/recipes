@@ -293,6 +293,7 @@ export default {
         if (this.item1.id !== undefined) {
             pf = apiClient.retrieveFood(this.item1.id).then((r) => {
                 this.food = r.data
+                this.food.properties_food_unit = {name: 'g'}
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
