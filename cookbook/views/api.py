@@ -1450,7 +1450,7 @@ class ImportOpenData(APIView):
         response_obj['unit'] = len(data_importer.import_units())
         response_obj['category'] = len(data_importer.import_category())
         response_obj['property'] = len(data_importer.import_property())
-        response_obj['supermarket'] = len(data_importer.import_supermarket())
+        response_obj['store'] = len(data_importer.import_supermarket())
         response_obj['food'] = len(data_importer.import_food())
         response_obj['conversion'] = len(data_importer.import_conversion())
 
