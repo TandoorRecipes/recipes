@@ -172,15 +172,17 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
-        fuzzy = self.request.user.searchpreference.lookup or any([self.model.__name__.lower() in x for x in
-                                                                  self.request.user.searchpreference.trigram.values_list(
-                                                                      'field', flat=True)])
+        if self.request.user.is_authenticated:
+            fuzzy = self.request.user.searchpreference.lookup or any([self.model.__name__.lower() in x for x in
+                                                                      self.request.user.searchpreference.trigram.values_list(
+                                                                          'field', flat=True)])
+        else:
+            fuzzy = True
 
         if query is not None and query not in ["''", '']:
             if fuzzy and (settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
                                                                       'django.db.backends.postgresql']):
-                if any([self.model.__name__.lower() in x for x in
-                        self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                if self.request.user.is_authenticated and any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
                 else:
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name', query))
@@ -188,14 +190,13 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
             else:
                 # TODO have this check unaccent search settings or other search preferences?
                 filter = Q(name__icontains=query)
-                if any([self.model.__name__.lower() in x for x in
-                        self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
-                    filter |= Q(name__unaccent__icontains=query)
+                if self.request.user.is_authenticated:
+                    if any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)]):
+                        filter |= Q(name__unaccent__icontains=query)
 
                 self.queryset = (
-                    self.queryset
-                    .annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
-                                          default=Value(0)))  # put exact matches at the top of the result set
+                    self.queryset.annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
+                                                       default=Value(0)))  # put exact matches at the top of the result set
                     .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
@@ -1449,7 +1450,7 @@ class ImportOpenData(APIView):
         response_obj['unit'] = len(data_importer.import_units())
         response_obj['category'] = len(data_importer.import_category())
         response_obj['property'] = len(data_importer.import_property())
-        response_obj['supermarket'] = len(data_importer.import_supermarket())
+        response_obj['store'] = len(data_importer.import_supermarket())
         response_obj['food'] = len(data_importer.import_food())
         response_obj['conversion'] = len(data_importer.import_conversion())
 
