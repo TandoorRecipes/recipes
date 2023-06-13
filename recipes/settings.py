@@ -451,6 +451,7 @@ LANGUAGES = [
     ('hu', _('Hungarian')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
+    ('nb', _('Norwegian ')),
     ('pl', _('Polish')),
     ('ru', _('Russian')),
     ('es', _('Spanish')),

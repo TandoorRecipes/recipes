@@ -44,8 +44,8 @@ class FoodPropertyHelper:
                 for pt in property_types:
                     found_property = False
                     if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:
-                        computed_properties[pt.id]['missing_value'] = True
                         computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                        computed_properties[pt.id]['missing_value'] = i.food.properties_food_unit is None
                     else:
                         for p in i.food.properties.all():
                             if p.property_type == pt:
