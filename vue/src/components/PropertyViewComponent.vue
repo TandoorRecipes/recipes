@@ -21,9 +21,9 @@
                         <span v-if="show_recipe_properties">{{ $t('Recipe') }} </span>
 
                         <a href="#" @click="show_recipe_properties = !show_recipe_properties">
-                        <i class="fas fa-toggle-on" v-if="!show_recipe_properties"></i>
-                        <i class="fas fa-toggle-off" v-if="show_recipe_properties"></i>
-                    </a>
+                            <i class="fas fa-toggle-on" v-if="!show_recipe_properties"></i>
+                            <i class="fas fa-toggle-off" v-if="show_recipe_properties"></i>
+                        </a>
                     </div>
 
                 </b-col>
@@ -53,7 +53,7 @@
         </div>
 
 
-        <b-modal id="id_modal_property_overview" title="Property Overview" v-model="show_modal"
+        <b-modal id="id_modal_property_overview" :title="selected_property.name" v-model="show_modal" v-if="selected_property !== undefined"
                  @hidden="selected_property = undefined">
             <template v-if="selected_property !== undefined">
                 {{ selected_property.description }}

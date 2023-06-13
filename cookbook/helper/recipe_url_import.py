@@ -35,6 +35,9 @@ def get_from_scraper(scrape, request):
         except Exception:
             recipe_json['name'] = ''
 
+    if isinstance(recipe_json['name'], list) and len(recipe_json['name']) > 0:
+        recipe_json['name'] = recipe_json['name'][0]
+
     try:
         description = scrape.description() or None
     except Exception:
