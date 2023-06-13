@@ -1,30 +1,27 @@
-const config=require("../../cucumber.conf.js")
+const config = require("../../cucumber.conf.js");
 
-class LoginPage{
+class LoginPage {
+  constructor() {
+    this.loginPageUrl = config.tandoorURL + "accounts/login/";
+    this.usernameInputSelector = "//input[@id='id_login']";
+    this.passwordInputSelector = "//input[@id='id_password']";
+    this.signinButtonSelector = "//div[@id='div_id_password']/following-sibling::button[contains(@class,'btn-success')]";
+    this.loginFailMessageSelector = "//div[contains(@class,'alert-danger')]//li";
+  }
 
-    constructor(){
-        this.loginPageUrl=config.tandoorURL+"accounts/login/";
-        this.usernameInput="//input[@id='id_login']"
-        this.passwordInput="//input[@id='id_password']"
-        this.signinButton="//div[@id='div_id_password']/following-sibling::button[@class='btn btn-success']"
-        this.loginFailMessage="//div[@class='alert alert-block alert-danger']//li"
+  async login(username, password) {
+    await page.locator(this.usernameInputSelector).fill(username);
+    await page.locator(this.passwordInputSelector).fill(password);
+    await page.locator(this.signinButtonSelector).click();
+  }
 
-    }
+  getMessage() {
+    return page.locator(this.loginFailMessageSelector).innerText();
+  }
 
-    async login(username, password) {
-        await page.fill(this.usernameInput, username)
-        await page.fill(this.passwordInput, password)
-        await page.click(this.signinButton)
-    }
-
-    async getMessage() {
-        return await page.innerText(this.loginFailMessage)
-    }
-
-    async goToLoginPage() {
-        await page.goto(this.loginURL);
-      }
-
+  async goToLoginPage() {
+    await page.goto(this.loginPageUrl);
+  }
 }
 
 module.exports = { LoginPage }

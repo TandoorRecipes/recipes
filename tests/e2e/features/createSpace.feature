@@ -1,33 +1,31 @@
-Feature: Create space super user
-    As a user
+Feature: Create a space
+    As a super superuser
     I want to create a space
     So that I can add recipes and share my recipes
 
-
     Background:
-        Given the user has registered with username "user" and password "aaaa1234"
-        And the user has browsed to login page
-        And the user logs in with username "user" and password "aaaa1234"
+        Given the superuser has signed up with the following details
+            | username         | superuser |
+            | password         | super1234 |
+        And the superuser has logged in with username "superuser" and password "super1234"
 
 
-    Scenario: user tries to create a space
-        When the user creates a space "user's Space"
-        And the user redirects to search page
-        Then the user should get success message "You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you."
-        And userspace "user's Space" should be visible on option menu
+    Scenario: superuser creates a space
+        When the superuser creates a space "superuser's Space"
+        Then the superuser should get a success message "You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you."
+        And superuser's space "superuser's Space" should be visible on option menu
 
 
-    Scenario: user tries to create a space on space overview page
-        Given the user has browsed to the space overview page
-        When the user creates a space "user's new Space"
-        And the user redirects to search page
-        Then the user should get success message "You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you."
-        And userspace "user's new Space" should be visible on option menu
+    Scenario: superuser creates a space from space overview page
+        Given the superuser has browsed to the space overview page
+        When the superuser creates a space "superuser's new Space"
+        Then the superuser should get a success message "You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you."
+        And superuser's space "superuser's new Space" should be visible on option menu
 
 
-    Scenario: user tries to create space with existing name
-        Given the user has browsed to the space overview page
-        And the user has created a space "user's new Space"
-        And the user has browsed to the space overview page
-        When the user creates a space "user's new Space"
-        Then the user should get error message "Name already taken."
+    Scenario: superuser tries to create space with existing name
+        Given the superuser has browsed to the space overview page
+        And the superuser has created a space "superuser's new Space"
+        And the superuser has browsed to the space overview page
+        When the superuser tries to create a space "superuser's new Space"
+        Then the superuser should get an error message "Name already taken."

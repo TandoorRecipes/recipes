@@ -1,15 +1,15 @@
-require("dotenv").config();
-const config=require("../../cucumber.conf.js")
+const config = require("../../cucumber.conf.js");
+
 class RegisterPage {
   constructor() {
     this.baseUrl = config.tandoorURL;
     this.setupURL = this.baseUrl + "setup/";
-    this.username = `//input[@name="name"]`;
-    this.password = `#id_password`;
-    this.cPassword = `//input[@name="password_confirm"]`;
-    this.registerBtn = `//button[@class="btn btn-success"]`;
-    this.errorMsg = `//div[@id="div_id_password"]/div`;
-    this.succesMsg = `//div[@class="alert alert-success alert-dismissible fade show"]`;
+    this.usernameSelector = '//input[@name="name"]';
+    this.passwordSelector = '//input[@name="password"]';
+    this.cPasswordSelector = '//input[@name="password_confirm"]';
+    this.registerBtnSelector = '//button[contains(@class,"btn-success")]';
+    this.errorMsgSelector = '//div[@id="div_id_password"]/div';
+    this.succesMsgSelector = '//div[contains(@class,"alert-success")]';
   }
 
   async goToRegisterPage() {
@@ -17,21 +17,27 @@ class RegisterPage {
   }
 
   async submitRegisterData(userTable) {
-    await page.fill(this.username, userTable.raw()[0][1]);
-    await page.fill(this.password, userTable.raw()[1][1]);
-    await page.fill(this.cPassword, userTable.raw()[2][1]);
-    await page.click(this.registerBtn);
+    await page.locator(this.usernameSelector).fill(userTable.raw()[0][1]);
+    await page.locator(this.passwordSelector).fill(userTable.raw()[1][1]);
+    await page
+      .locator(this.cPasswordSelector)
+      .fill(
+        userTable.raw()[2] ? userTable.raw()[2][1] : userTable.raw()[1][1]
+      );
+    await page.locator(this.registerBtnSelector).click();
   }
 
   async getErrorMessage() {
-    return (await page.innerText(this.errorMsg))
+    return (await page.locator(this.errorMsgSelector).innerText())
       .split("\n")
       .filter((n) => n);
   }
 
   async getSuccessMsg() {
-    return (await page.innerText(this.succesMsg)).split("\n").filter((n) => n);
+    return (await page.locator(this.succesMsgSelector).innerText())
+      .split("\n")
+      .filter((n) => n);
   }
 }
 
-module.exports = { RegisterPage };
+module.exports = { RegisterPage }

@@ -1,13 +1,14 @@
 const config=require("../../cucumber.conf.js")
 
 class HomePage {
+
     constructor() {
         this.homePageUrl = config.tandoorURL
-        this.signinSuccessMessage = "//div[@class='alert alert-success alert-dismissible fade show']"
+        this.signinSuccessMessageSelector = "//div[contains(@class, 'alert-success')]"
     }
 
     async getSigninSuccessMessage() {
-        return (await page.innerText(this.signinSuccessMessage))
+        return (await page.locator(this.signinSuccessMessageSelector).innerText())
     }
 }
 module.exports = { HomePage }

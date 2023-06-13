@@ -1,22 +1,24 @@
-require("dotenv").config();
 const { format } = require("util");
+
 const config = require("../../cucumber.conf.js");
+
 class CreateSpacePage {
+
   constructor() {
     this.baseUrl = config.tandoorURL;
-    this.searchURL = this.baseUrl + `search/`;
-    this.spaceOverviewURL = this.baseUrl + `space-overview`;
-    this.createSpaceBtn = `//input[@value="Create Space"]`;
-    this.spaceNameInput = `#id_create-name`;
-    this.succesMsg = `//div[@class="alert alert-success alert-dismissible fade show"]`;
-    this.errorMsg = `//p[@id="error_1_id_create-name"]/strong`;
-    this.optionMenu = `#navbarDropdownMenuLink`;
-    this.spaceName = `//a[text()="%s"]`;
+    this.searchURL = this.baseUrl + 'search/';
+    this.spaceOverviewURL = this.baseUrl + 'space-overview';
+    this.createSpaceBtnSelector = '//input[@value="Create Space"]';
+    this.spaceNameInputSelector = '#id_create-name';
+    this.succesMsgSelector = '//div[contains(@class,"alert-success")]';
+    this.errorMsgSelector = '//p[@id="error_1_id_create-name"]/strong';
+    this.optionMenuSelector = '#navbarDropdownMenuLink';
+    this.spaceNameSelector = '//a[text()="%s"]';
   }
 
   async createSpace(spaceName) {
-    await page.fill(this.spaceNameInput, spaceName);
-    await page.click(this.createSpaceBtn);
+    await page.locator(this.spaceNameInputSelector).fill(spaceName);
+    await page.locator(this.createSpaceBtnSelector).click();
   }
 
   async goToOverviewPage() {
@@ -24,26 +26,26 @@ class CreateSpacePage {
   }
 
   async submitRegisterData(username, password) {
-    await page.fill(this.username, username);
-    await page.fill(this.password, password);
-    await page.fill(this.cPassword, password);
-    await page.click(this.registerBtn);
+    await page.locator(this.usernameSelector).fill(username);
+    await page.locator(this.passwordSelector).fill(password);
+    await page.locator(this.cPasswordSelector).fill(password);
+    await page.locator(this.registerBtnSelector).click();
   }
 
-  async getErrorMessage() {
-    return await page.innerText(this.errorMsg);
+  getErrorMessage() {
+    return page.locator(this.errorMsgSelector).innerText();
   }
 
   async getSuccessMsg() {
-    return (await page.innerText(this.succesMsg))
+    return (await page.locator(this.succesMsgSelector).innerText())
       .trim()
       .split("\n")
       .filter((n) => n);
   }
   
-  async getSpace(spaceName) {
-    return await page.isVisible(format(this.spaceName, spaceName));
+  getSpace(spaceName) {
+    return page.locator(format(this.spaceNameSelector, spaceName)).isVisible();
   }
 }
 
-module.exports = { CreateSpacePage };
+module.exports = { CreateSpacePage }
