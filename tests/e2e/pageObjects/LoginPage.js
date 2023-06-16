@@ -1,8 +1,8 @@
-const config = require("../../cucumber.conf.js");
+const { tandoorURL } = require("../../cucumber.conf.js");
 
 class LoginPage {
   constructor() {
-    this.loginPageUrl = config.tandoorURL + "accounts/login/";
+    this.loginPageUrl = tandoorURL + "accounts/login/";
     this.usernameInputSelector = "//input[@id='id_login']";
     this.passwordInputSelector = "//input[@id='id_password']";
     this.signinButtonSelector = "//div[@id='div_id_password']/following-sibling::button[contains(@class,'btn-success')]";

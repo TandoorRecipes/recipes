@@ -1,8 +1,8 @@
-const config = require("../../cucumber.conf.js");
+const { tandoorURL } = require("../../cucumber.conf.js");
 
 class RegisterPage {
   constructor() {
-    this.baseUrl = config.tandoorURL;
+    this.baseUrl = tandoorURL;
     this.setupURL = this.baseUrl + "setup/";
     this.usernameSelector = '//input[@name="name"]';
     this.passwordSelector = '//input[@name="password"]';

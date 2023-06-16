@@ -1,9 +1,9 @@
-const config=require("../../cucumber.conf.js")
+const { tandoorURL } =require("../../cucumber.conf.js")
 
 class HomePage {
 
     constructor() {
-        this.homePageUrl = config.tandoorURL
+        this.homePageUrl = tandoorURL
         this.signinSuccessMessageSelector = "//div[contains(@class, 'alert-success')]"
     }
 

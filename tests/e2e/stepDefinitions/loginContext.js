@@ -2,7 +2,7 @@ const { Given, When, Then } = require("@cucumber/cucumber");
 const { LoginPage } = require("../pageObjects/LoginPage");
 const { HomePage } = require("../pageObjects/HomePage.js");
 const { RegisterPage } = require("../pageObjects/RegisterPage.js");
-const config = require("../../cucumber.conf.js");
+const { tandoorURL } = require("../../cucumber.conf.js");
 
 const assert = require("assert");
 const loginPage = new LoginPage();
@@ -38,7 +38,7 @@ Given(
 Then("the superuser should be navigated to the homepage", async function () {
   actualUrl = await page.url();
   assert.equal(
-    config.tandoorURL,
+    tandoorURL,
     actualUrl,
     `Expected user to be navigated to home page but redirected to ${actualUrl}`
   );

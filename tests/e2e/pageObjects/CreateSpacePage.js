@@ -1,13 +1,13 @@
 const { format } = require("util");
 
-const config = require("../../cucumber.conf.js");
+const { tandoorURL } = require("../../cucumber.conf.js");
 
 class CreateSpacePage {
 
   constructor() {
-    this.baseUrl = config.tandoorURL;
-    this.searchURL = this.baseUrl + 'search/';
-    this.spaceOverviewURL = this.baseUrl + 'space-overview';
+    this.baseUrl = tandoorURL;
+    this.searchURL = tandoorURL + 'search/';
+    this.spaceOverviewURL = tandoorURL + 'space-overview';
     this.createSpaceBtnSelector = '//input[@value="Create Space"]';
     this.spaceNameInputSelector = '#id_create-name';
     this.succesMsgSelector = '//div[contains(@class,"alert-success")]';

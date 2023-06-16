@@ -6,20 +6,23 @@ require("dotenv").config()
 const util = require('util')
 const exec = util.promisify(require('child_process').exec);
 
-const tandoorURL = process.env.APP_URL || "http://localhost/"
+const config = {
+  tandoorURL: process.env.APP_URL || "http://localhost/",
+  filesForUpload: "filesForUpload/"
+}
 
 setDefaultTimeout(60000)
 
 // launch the browser
 BeforeAll(async function () {
   global.browser = await chromium.launch({
-      headless: true,
+    headless: true,
   });
 });
 
 // close the browser
 AfterAll(async function () {
-   await global.browser.close();
+  await global.browser.close();
 });
 
 // Create a new browser context and page per scenario
@@ -43,7 +46,4 @@ After(async function () {
   await global.context.close();
 });
 
-
-
-
-module.exports = { tandoorURL };
+module.exports = config;
