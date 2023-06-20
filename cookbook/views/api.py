@@ -1274,11 +1274,12 @@ def recipe_from_source(request):
                 serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                 if serialized_recipe.is_valid():
                     recipe = serialized_recipe.save()
-                    recipe.image = File(handle_image(request,
-                                                     File(io.BytesIO(requests.get(recipe_json['image']).content),
-                                                          name='image'),
-                                                     filetype=pathlib.Path(recipe_json['image']).suffix),
-                                        name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
+                    if validators.url(recipe_json['image'], public=True):
+                        recipe.image = File(handle_image(request,
+                                                         File(io.BytesIO(requests.get(recipe_json['image']).content),
+                                                              name='image'),
+                                                         filetype=pathlib.Path(recipe_json['image']).suffix),
+                                            name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                     recipe.save()
                     return Response({
                         'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
