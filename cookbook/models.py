@@ -467,7 +467,8 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_category_unique_open_data_slug_per_space')
         ]
 
 
@@ -485,7 +486,8 @@ class Supermarket(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_unique_open_data_slug_per_space')
         ]
 
 
@@ -553,7 +555,8 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_unique_open_data_slug_per_space')
         ]
 
 
@@ -579,7 +582,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     substitute_children = models.BooleanField(default=False)
     child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
-    properties = models.ManyToManyField("Property", blank=True)
+    properties = models.ManyToManyField("Property", blank=True, through='FoodProperty')
     properties_food_amount = models.IntegerField(default=100, blank=True)
     properties_food_unit = models.ForeignKey(Unit, on_delete=models.PROTECT, blank=True, null=True)
 
@@ -661,7 +664,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='food_unique_open_data_slug_per_space')
         ]
         indexes = (
             Index(fields=['id']),
@@ -690,7 +694,8 @@ class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space')
+            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_conversion_unique_open_data_slug_per_space')
         ]
 
 
@@ -787,7 +792,8 @@ class PropertyType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='property_type_unique_open_data_slug_per_space')
         ]
 
 
@@ -795,11 +801,28 @@ class Property(models.Model, PermissionModelMixin):
     property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
     property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
 
+    import_food_id = models.IntegerField(null=True, blank=True)  # field to hold food id when importing properties from the open data project
+
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
     def __str__(self):
         return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'property_type', 'import_food_id'], name='property_unique_import_food_per_space')
+        ]
+
+
+class FoodProperty(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food')
+        ]
 
 
 class NutritionInformation(models.Model, PermissionModelMixin):
