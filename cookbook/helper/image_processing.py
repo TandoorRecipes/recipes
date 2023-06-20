@@ -40,7 +40,12 @@ def get_filetype(name):
 # TODO also add env variable to define which images sizes should be compressed
 # filetype argument can not be optional, otherwise this function will treat all images as if they were a jpeg
 # Because it's no longer optional, no reason to return it
-def handle_image(request, image_object, filetype): 
+def handle_image(request, image_object, filetype):
+    try:
+        Image.open(image_object).verify()
+    except Exception:
+        return None
+
     if (image_object.size / 1000) > 500:  # if larger than 500 kb compress
         if filetype == '.jpeg' or filetype == '.jpg':
             return rescale_image_jpeg(image_object)

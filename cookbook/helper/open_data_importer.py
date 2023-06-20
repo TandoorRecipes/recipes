@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from cookbook.models import Unit, SupermarketCategory, Property, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion
+from cookbook.models import Unit, SupermarketCategory, Property, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion, FoodProperty
 
 
 class OpenDataImporter:
@@ -78,7 +78,7 @@ class OpenDataImporter:
 
         # always add open data slug if matching supermarket is found, otherwise relation might fail
         supermarkets = Supermarket.objects.bulk_create(insert_list, unique_fields=('space', 'name',), update_conflicts=True, update_fields=('open_data_slug',))
-        self._update_slug_cache(Supermarket, 'supermarket')
+        self._update_slug_cache(Supermarket, 'store')
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
@@ -172,6 +172,7 @@ class OpenDataImporter:
                 food_property_list.append(Property(
                     property_type_id=self.slug_id_cache['property'][fp['property_type']],
                     property_amount=fp['property_value'],
+                    import_food_id=self.slug_id_cache['food'][k],
                     space=self.request.space,
                 ))
 
@@ -183,8 +184,15 @@ class OpenDataImporter:
             #         created_by=self.request.user,
             #     ))
 
-        Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'food', 'property_type',))
-        #Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
+        Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
+
+        property_food_relation_list = []
+        for p in Property.objects.filter(space=self.request.space, import_food_id__isnull=False).values_list('import_food_id', 'id', ):
+            property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
+
+        FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
+
+        # Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
         return insert_list + update_list
 
     def import_conversion(self):
