@@ -51,9 +51,15 @@ class NextcloudCookbook(Integration):
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
-            step = Step.objects.create(
-                instruction=s, space=self.request.space,
-            )
+            instruction_text = ''
+            if 'text' in s:
+                step = Step.objects.create(
+                    instruction=s['text'], name=s['name'], space=self.request.space,
+                )
+            else:
+                step = Step.objects.create(
+                    instruction=s, space=self.request.space,
+                )
             if not ingredients_added:
                 if len(recipe_json['description'].strip()) > 500:
                     step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
@@ -98,10 +104,9 @@ class NextcloudCookbook(Integration):
         return recipe
 
     def formatTime(self, min):
-        h = min//60
+        h = min // 60
         m = min % 60
         return f'PT{h}H{m}M0S'
-
 
     def get_file_from_recipe(self, recipe):
 
@@ -111,7 +116,7 @@ class NextcloudCookbook(Integration):
         export['url'] = recipe.source_url
         export['prepTime'] = self.formatTime(recipe.working_time)
         export['cookTime'] = self.formatTime(recipe.waiting_time)
-        export['totalTime'] = self.formatTime(recipe.working_time+recipe.waiting_time)
+        export['totalTime'] = self.formatTime(recipe.working_time + recipe.waiting_time)
         export['recipeYield'] = recipe.servings
         export['image'] = f'/Recipes/{recipe.name}/full.jpg'
         export['imageUrl'] = f'/Recipes/{recipe.name}/full.jpg'
@@ -132,7 +137,6 @@ class NextcloudCookbook(Integration):
 
         export['recipeIngredient'] = recipeIngredient
         export['recipeInstructions'] = recipeInstructions
-
 
         return "recipe.json", json.dumps(export)
 
@@ -163,7 +167,7 @@ class NextcloudCookbook(Integration):
 
         export_zip_obj.close()
 
-        return [[ self.get_export_file_name(), export_zip_stream.getvalue() ]]
+        return [[self.get_export_file_name(), export_zip_stream.getvalue()]]
 
     def getJPEG(self, imageByte):
         image = Image.open(BytesIO(imageByte))
@@ -172,14 +176,14 @@ class NextcloudCookbook(Integration):
         bytes = BytesIO()
         image.save(bytes, "JPEG")
         return bytes.getvalue()
-    
+
     def getThumb(self, size, imageByte):
         image = Image.open(BytesIO(imageByte))
 
         w, h = image.size
-        m = min(w, h) 
+        m = min(w, h)
 
-        image = image.crop(((w-m)//2, (h-m)//2, (w+m)//2, (h+m)//2))
+        image = image.crop(((w - m) // 2, (h - m) // 2, (w + m) // 2, (h + m) // 2))
         image = image.resize([size, size], Image.Resampling.LANCZOS)
         image = image.convert('RGB')
 
