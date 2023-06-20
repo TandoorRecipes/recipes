@@ -78,7 +78,7 @@ class OpenDataImporter:
 
         # always add open data slug if matching supermarket is found, otherwise relation might fail
         supermarkets = Supermarket.objects.bulk_create(insert_list, unique_fields=('space', 'name',), update_conflicts=True, update_fields=('open_data_slug',))
-        self._update_slug_cache(Supermarket, 'supermarket')
+        self._update_slug_cache(Supermarket, 'store')
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
