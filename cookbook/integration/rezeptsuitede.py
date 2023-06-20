@@ -22,9 +22,12 @@ class Rezeptsuitede(Integration):
             name=recipe_xml.find('head').attrib['title'].strip(),
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        if recipe_xml.find('head').attrib['servingtype']:
-            recipe.servings = parse_servings(recipe_xml.find('head').attrib['servingtype'].strip())
-            recipe.servings_text = parse_servings_text(recipe_xml.find('head').attrib['servingtype'].strip())
+        try:
+            if recipe_xml.find('head').attrib['servingtype']:
+                recipe.servings = parse_servings(recipe_xml.find('head').attrib['servingtype'].strip())
+                recipe.servings_text = parse_servings_text(recipe_xml.find('head').attrib['servingtype'].strip())
+        except KeyError:
+            pass
 
         if recipe_xml.find('remark') is not None:  # description is a list of <li>'s with text
             if recipe_xml.find('remark').find('line') is not None:
@@ -50,7 +53,9 @@ class Rezeptsuitede(Integration):
             for ingredient in recipe_xml.find('part').findall('ingredient'):
                 f = ingredient_parser.get_food(ingredient.attrib['item'])
                 u = ingredient_parser.get_unit(ingredient.attrib['unit'])
-                amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
+                amount = 0
+                if ingredient.attrib['qty'].strip() != '':
+                    amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
                 ingredient_step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=amount, space=self.request.space, ))
 
         try:

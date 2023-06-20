@@ -239,6 +239,9 @@ RecetteTek exports are `.rtk` files which can simply be uploaded to tandoor to i
 ## Rezeptsuite.de
 Rezeptsuite.de exports are `.xml` files which can simply be uploaded to tandoor to import all your recipes.
 
+It appears that Reptsuite, depending on the client, might export a `.zip` file containing a `.cml` file.
+If this happens just unzip the zip file and change `.cml` to `.xml` to import your recipes. 
+
 ## Melarecipes
 
 Melarecipes provides multiple export formats but only the `MelaRecipes` format can export the complete collection.
