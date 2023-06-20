@@ -481,5 +481,22 @@
     "Amount": "Menge",
     "Original_Text": "Originaler Text",
     "Import Recipe": "Rezept importieren",
-    "Create Recipe": "Rezept erstellen"
+    "Create Recipe": "Rezept erstellen",
+    "recipe_property_info": "Sie können auch Eigenschaften zu Lebensmitteln hinzufügen, um sie automatisch auf der Grundlage Ihres Rezepts zu berechnen!",
+    "per_serving": "pro Portion",
+    "open_data_help_text": "Das Tandoor Open Data Projekt bietet von der Gemeinschaft bereitgestellte Daten für Tandoor. Dieses Feld wird beim Importieren automatisch ausgefüllt und ermöglicht künftige Aktualisierungen.",
+    "Open_Data_Import": "Datenimport öffnen",
+    "Update_Existing_Data": "Vorhandene Daten aktualisieren",
+    "Data_Import_Info": "Verbessern Sie Ihren Space, indem Sie eine von der Community kuratierte Liste von Lebensmitteln, Einheiten und mehr importieren, um Ihre Rezeptsammlung zu verbessern.",
+    "Learn_More": "Mehr erfahren",
+    "Use_Metric": "Metrische Einheiten verwenden",
+    "converted_unit": "Umgerechnete Einheit",
+    "converted_amount": "Umgerechneter Betrag",
+    "base_unit": "Basiseinheit",
+    "base_amount": "Grundbetrag",
+    "Datatype": "Datentyp",
+    "Number of Objects": "Anzahl von Objekten",
+    "Property": "Eigenschaft",
+    "Conversion": "Umrechnung",
+    "Properties": "Eigenschaften"
 }
