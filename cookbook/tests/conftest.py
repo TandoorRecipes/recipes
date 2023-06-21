@@ -13,6 +13,8 @@ from cookbook.tests.factories import SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
+
+
 # register(FoodFactory, space=LazyFixture('space_2'))
 # TODO refactor clients to be factories
 
@@ -141,7 +143,7 @@ def validate_recipe(expected, recipe):
         for k in expected_lists[key]:
             try:
                 print('comparing ', any([dict_compare(k, i)
-                      for i in target_lists[key]]))
+                                         for i in target_lists[key]]))
                 assert any([dict_compare(k, i) for i in target_lists[key]])
             except AssertionError:
                 for result in [dict_compare(k, i, details=True) for i in target_lists[key]]:
@@ -169,7 +171,6 @@ def dict_compare(d1, d2, details=False):
 
 
 def transpose(text, number=2):
-
     # select random token
     tokens = text.split()
     positions = list(i for i, e in enumerate(tokens) if len(e) > 1)
@@ -210,6 +211,14 @@ def ext_recipe_1_s1(space_1, u1_s1):
     r.link = 'test'
     r.save()
     return r
+
+
+def get_random_food(space_1, u1_s1):
+    return Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0]
+
+
+def get_random_unit(space_1, u1_s1):
+    return Unit.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0]
 
 
 # ---------------------- USER FIXTURES -----------------------

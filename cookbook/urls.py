@@ -12,9 +12,9 @@ from recipes.version import VERSION_NUMBER
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name, UserSpace, Space)
+                     get_model_name, UserSpace, Space, PropertyType, UnitConversion)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
-from .views.api import CustomAuthToken
+from .views.api import CustomAuthToken, ImportOpenData
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
@@ -40,6 +40,9 @@ router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
+router.register(r'unit-conversion', api.UnitConversionViewSet)
+router.register(r'food-property-type', api.PropertyTypeViewSet)
+router.register(r'food-property', api.PropertyViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
@@ -151,6 +154,7 @@ urlpatterns = [
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
+    path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
 
     path('offline/', views.offline, name='view_offline'),
 
@@ -201,7 +205,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

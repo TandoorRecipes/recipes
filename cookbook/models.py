@@ -82,31 +82,34 @@ class TreeManager(MP_NodeManager):
     # model.Manager get_or_create() is not compatible with MP_Tree
     def get_or_create(self, *args, **kwargs):
         kwargs['name'] = kwargs['name'].strip()
-
-        if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
-            return obj, False
+        if hasattr(self, 'space'):
+            if obj := self.filter(name__iexact=kwargs['name'], space=kwargs['space']).first():
+                return obj, False
         else:
-            with scopes_disabled():
-                try:
-                    defaults = kwargs.pop('defaults', None)
-                    if defaults:
-                        kwargs = {**kwargs, **defaults}
-                    # ManyToMany fields can't be set this way, so pop them out to save for later
-                    fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
-                    many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
-                    obj = self.model.add_root(**kwargs)
-                    for field in many_to_many:
-                        field_model = getattr(obj, field).model
-                        for related_obj in many_to_many[field]:
-                            if isinstance(related_obj, User):
-                                getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
-                            else:
-                                getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
-                    return obj, True
-                except IntegrityError as e:
-                    if 'Key (path)' in e.args[0]:
-                        self.model.fix_tree(fix_paths=True)
-                        return self.model.add_root(**kwargs), True
+            if obj := self.filter(name__iexact=kwargs['name']).first():
+                return obj, False
+
+        with scopes_disabled():
+            try:
+                defaults = kwargs.pop('defaults', None)
+                if defaults:
+                    kwargs = {**kwargs, **defaults}
+                # ManyToMany fields can't be set this way, so pop them out to save for later
+                fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
+                many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
+                obj = self.model.add_root(**kwargs)
+                for field in many_to_many:
+                    field_model = getattr(obj, field).model
+                    for related_obj in many_to_many[field]:
+                        if isinstance(related_obj, User):
+                            getattr(obj, field).add(field_model.objects.get(id=related_obj.id))
+                        else:
+                            getattr(obj, field).add(field_model.objects.get(**dict(related_obj)))
+                return obj, True
+            except IntegrityError as e:
+                if 'Key (path)' in e.args[0]:
+                    self.model.fix_tree(fix_paths=True)
+                    return self.model.add_root(**kwargs), True
 
 
 class TreeModel(MP_Node):
@@ -454,6 +457,7 @@ class Sync(models.Model, PermissionModelMixin):
 class SupermarketCategory(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -463,7 +467,8 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_category_unique_open_data_slug_per_space')
         ]
 
 
@@ -471,6 +476,7 @@ class Supermarket(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     categories = models.ManyToManyField(SupermarketCategory, through='SupermarketCategoryRelation')
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -480,7 +486,8 @@ class Supermarket(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_unique_open_data_slug_per_space')
         ]
 
 
@@ -496,6 +503,9 @@ class SupermarketCategoryRelation(models.Model, PermissionModelMixin):
         return 'supermarket', 'space'
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['supermarket', 'category'], name='unique_sm_category_relation')
+        ]
         ordering = ('order',)
 
 
@@ -534,6 +544,8 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     description = models.TextField(blank=True, null=True)
+    base_unit = models.TextField(max_length=256, null=True, blank=True, default=None)
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -543,7 +555,8 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='u_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_unique_open_data_slug_per_space')
         ]
 
 
@@ -569,6 +582,15 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     substitute_children = models.BooleanField(default=False)
     child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
+    properties = models.ManyToManyField("Property", blank=True, through='FoodProperty')
+    properties_food_amount = models.IntegerField(default=100, blank=True)
+    properties_food_unit = models.ForeignKey(Unit, on_delete=models.PROTECT, blank=True, null=True)
+
+    preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
+    preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
+    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
+
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space', _manager_class=TreeManager)
 
@@ -642,12 +664,39 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space')
+            models.UniqueConstraint(fields=['space', 'name'], name='f_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='food_unique_open_data_slug_per_space')
         ]
         indexes = (
             Index(fields=['id']),
             Index(fields=['name']),
         )
+
+
+class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model, PermissionModelMixin):
+    base_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    base_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_base_relation')
+    converted_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_converted_relation')
+
+    food = models.ForeignKey('Food', on_delete=models.CASCADE, null=True, blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.base_amount} {self.base_unit} -> {self.converted_amount} {self.converted_unit} {self.food}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_conversion_unique_open_data_slug_per_space')
+        ]
 
 
 class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, PermissionModelMixin):
@@ -661,8 +710,6 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     always_use_plural_unit = models.BooleanField(default=False)
     always_use_plural_food = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
-    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
-
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -720,6 +767,64 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         indexes = (GinIndex(fields=["search_vector"]),)
 
 
+class PropertyType(models.Model, PermissionModelMixin):
+    NUTRITION = 'NUTRITION'
+    ALLERGEN = 'ALLERGEN'
+    PRICE = 'PRICE'
+    GOAL = 'GOAL'
+    OTHER = 'OTHER'
+
+    name = models.CharField(max_length=128)
+    unit = models.CharField(max_length=64, blank=True, null=True)
+    icon = models.CharField(max_length=16, blank=True, null=True)
+    description = models.CharField(max_length=512, blank=True, null=True)
+    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
+
+    # TODO show if empty property?
+    # TODO formatting property?
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='property_type_unique_open_data_slug_per_space')
+        ]
+
+
+class Property(models.Model, PermissionModelMixin):
+    property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
+    property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
+
+    import_food_id = models.IntegerField(null=True, blank=True)  # field to hold food id when importing properties from the open data project
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f'{self.property_amount} {self.property_type.unit} {self.property_type.name}'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'property_type', 'import_food_id'], name='property_unique_import_food_per_space')
+        ]
+
+
+class FoodProperty(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food')
+        ]
+
+
 class NutritionInformation(models.Model, PermissionModelMixin):
     fats = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     carbohydrates = models.DecimalField(
@@ -735,14 +840,6 @@ class NutritionInformation(models.Model, PermissionModelMixin):
     def __str__(self):
         return f'Nutrition {self.pk}'
 
-
-# class NutritionType(models.Model, PermissionModelMixin):
-#     name = models.CharField(max_length=128)
-#     icon = models.CharField(max_length=16, blank=True, null=True)
-#     description = models.CharField(max_length=512, blank=True, null=True)
-#
-#     space = models.ForeignKey(Space, on_delete=models.CASCADE)
-#     objects = ScopedManager(space='space')
 
 class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
     def get_queryset(self):
@@ -766,6 +863,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     waiting_time = models.IntegerField(default=0)
     internal = models.BooleanField(default=False)
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
+    properties = models.ManyToManyField(Property, blank=True)
     show_ingredient_overview = models.BooleanField(default=True)
     private = models.BooleanField(default=False)
     shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')
