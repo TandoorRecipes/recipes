@@ -35,12 +35,12 @@
 
                         <div class="card-img-overlay d-flex flex-column justify-content-left float-left text-left pt-2" style="width:40%"
                              v-if="recipe.working_time !== 0 || recipe.waiting_time !== 0">
-                            <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0">
+                            <b-badge pill variant="light" class="mt-1 font-weight-normal" v-if="recipe.working_time !== 0 && recipe.working_time !== undefined">
                                 <i
                                     class="fa fa-clock"></i> {{ working_time }}
                             </b-badge>
                             <b-badge pill variant="secondary" class="mt-1 font-weight-normal"
-                                     v-if="recipe.waiting_time !== 0">
+                                     v-if="recipe.waiting_time !== 0 && recipe.waiting_time !== undefined">
                                 <i class="fa fa-pause"></i> {{ waiting_time }}
                             </b-badge>
                         </div>
@@ -58,7 +58,7 @@
                         <div class="justify-content-end">
                             <recipe-context-menu :recipe="recipe" class="justify-content-end float-right align-items-end pr-0"
                                                      :disabled_options="context_disabled_options"
-                                                     v-if="recipe !== null"></recipe-context-menu>
+                                                     v-if="recipe !== null && show_context_menu"></recipe-context-menu>
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                                 </div>
                             </transition>
 
-                            <b-badge pill variant="info" v-if="!recipe.internal">{{ $t("External") }}</b-badge>
+                            <b-badge pill variant="info" v-if="recipe.internal !== undefined && !recipe.internal">{{ $t("External") }}</b-badge>
                         </template>
 
                     </b-card-text>
