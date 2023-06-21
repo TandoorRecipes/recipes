@@ -118,6 +118,10 @@
                 <a class="nav-link" href="{% url 'view_books' %}"><i
                         class="fas fa-fw fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
+            {% plugin_main_nav_templates as plugin_main_nav_templates %}
+            {% for pn in plugin_main_nav_templates %}
+                {% include pn %}
+            {% endfor %}
         </ul>
 
         <ul class="navbar-nav ml-auto">

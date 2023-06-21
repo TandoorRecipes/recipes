@@ -140,6 +140,14 @@ def plugin_dropdown_nav_templates():
             templates.append(p['nav_dropdown'])
     return templates
 
+@register.simple_tag
+def plugin_main_nav_templates():
+    templates = []
+    for p in PLUGINS:
+        if p['nav_main']:
+            templates.append(p['nav_main'])
+    return templates
+
 
 @register.simple_tag
 def bookmarklet(request):
