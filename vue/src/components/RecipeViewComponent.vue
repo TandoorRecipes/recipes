@@ -182,7 +182,6 @@ import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import CustomInputSpinButton from "@/components/CustomInputSpinButton"
 import {ApiApiFactory} from "@/utils/openapi/api";
 import ImportTandoor from "@/components/Modals/ImportTandoor.vue";
-import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import PropertyViewComponent from "@/components/PropertyViewComponent.vue";
 
 Vue.prototype.moment = moment
@@ -201,13 +200,11 @@ export default {
         IngredientsCard,
         StepComponent,
         RecipeContextMenu,
-        // NutritionComponent,
         KeywordsComponent,
         LoadingSpinner,
         AddRecipeToBook,
         RecipeSwitcher,
         CustomInputSpinButton,
-        BottomNavigationBar,
         PropertyViewComponent,
     },
     computed: {
