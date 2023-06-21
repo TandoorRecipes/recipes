@@ -270,6 +270,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
+    internal_note = models.TextField(blank=True, null=True)
+
     def safe_delete(self):
         """
         Safely deletes a space by deleting all objects belonging to the space first and then deleting the space itself
