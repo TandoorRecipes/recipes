@@ -293,6 +293,12 @@
                 <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
                     class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
                 </button>
+                <button class="btn btn-primary shadow-none" @click="deleteAll()"><i
+                    class="fas fa-calendar-plus"></i> {{ "DEBUG:deleteAll" }}
+                </button>
+                <button class="btn btn-primary shadow-none" @click="refreshEntries()"><i
+                    class="fas fa-calendar-plus"></i> {{ "DEBUG:RefreshMeals" }}
+                </button>
                 <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                     {{ $t("Export_To_ICal") }}
                 </a>
@@ -680,55 +686,34 @@ export default {
         createAutoPlan() {
             this.$bvModal.show(`autoplan-modal`)
         },
-        async autoPlanThread(date, dateOffset, meal_type, keywords, servings, mealTypesKey) {
-
+        async autoPlanThread(autoPlan, mealTypeIndex) {
             let apiClient = new ApiApiFactory()
-            let currentEntry = Object.assign({}, this.options.entryEditing)
-            currentEntry.date = moment(date).add(dateOffset, "d").format("YYYY-MM-DD")
-            currentEntry.servings = servings
-            await Promise.all([
-                currentEntry.recipe = await this.randomRecipe(keywords[mealTypesKey]).then((result) => {
-                    return result
-                }),
-                currentEntry.shared = await apiClient.listUserPreferences().then((result) => {
-                    return result.data[0].plan_share
-                }),
-                currentEntry.meal_type = await this.getMealType(meal_type[mealTypesKey].id).then((result) => {
-                    return result
-                })
-            ])
-            currentEntry.title = currentEntry.recipe.name
-            this.createEntry(currentEntry)
-        },
-        doAutoPlan(autoPlan) {
-            let dayInMilliseconds = (86400000)
-            let numberOfDays = ((autoPlan.endDay - autoPlan.startDay) / dayInMilliseconds) + 1
-
-            for (const mealTypesKey in autoPlan.meal_types) {
-                for (let dateOffset = 0; dateOffset < numberOfDays; dateOffset++) {
-                    this.autoPlanThread(autoPlan.startDay, dateOffset, autoPlan.meal_types, autoPlan.keywords, autoPlan.servings, mealTypesKey)
-                }
+            let data = {
+              "start_date" : moment(autoPlan.startDay).format("YYYY-MM-DD"),
+              "end_date" : moment(autoPlan.endDay).format("YYYY-MM-DD"),
+              "meal_type_id" : autoPlan.meal_types[mealTypeIndex].id,
+              "keywords" : autoPlan.keywords[mealTypeIndex],
+              "servings" : autoPlan.servings,
+              "shared" : autoPlan.shared
             }
-        },
-        randomRecipe(keywords) {
-            let url = "/api/recipe/?query="
-            for (const keywordsKey in keywords) {
-                let keyword = keywords[keywordsKey]
-                url += `&keywords_and=${keyword.id}`
-            }
-            return axios.get(url).then((response) => {
-                let result = response.data
-                let count = result.count
-                return result.results[Math.floor(Math.random() * count)]
-            }).catch((err) => {
+            await apiClient.createAutoPlanViewSet(data)
 
-            })
         },
-        getMealType(id) {
-            let url = `/api/meal-type/${id}`
-            return axios.get(url).then((response) => {
-                return response.data
-            })
+        async doAutoPlan(autoPlan) {
+            for (let i = 0; i < autoPlan.meal_types.length; i++) {
+              if (autoPlan.keywords[i].length === 0) continue
+              await this.autoPlanThread(autoPlan, i)
+            }
+            this.refreshEntries()
+        },
+        refreshEntries(){//todo Remove method
+          let date = this.current_period
+          useMealPlanStore().refreshFromAPI(moment(date.periodStart).format("YYYY-MM-DD"), moment(date.periodEnd).format("YYYY-MM-DD"))
+        },
+        deleteAll(){//todo Remove method, only used in debugging
+          for (let i = 0; i < useMealPlanStore().plan_list.length; i++) {
+            useMealPlanStore().deleteObject(useMealPlanStore().plan_list[i])
+          }
         }
     },
     directives: {
