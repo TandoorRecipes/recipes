@@ -409,7 +409,7 @@ def parse_keywords(keyword_json, space):
     # retrieve keyword automation cache if it exists, otherwise build from database
     KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
     if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
-        self.food_aliases = c
+        keyword_aliases = c
         caches['default'].touch(KEYWORD_CACHE_KEY, 30)
     else:
         for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
