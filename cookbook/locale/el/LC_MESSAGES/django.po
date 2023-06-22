@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-05-31 17:19+0000\n"
+"PO-Revision-Date: 2023-06-23 09:19+0000\n"
 "Last-Translator: sweeney <sweeneytodd91@protonmail.com>\n"
 "Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/el/>\n"
@@ -30,7 +30,7 @@ msgstr "Προεπιλεγμένη μονάδα μέτρησης"
 
 #: .\cookbook\forms.py:54
 msgid "Use fractions"
-msgstr ""
+msgstr "Χρήση κλασμάτων"
 
 #: .\cookbook\forms.py:55
 msgid "Use KJ"
@@ -46,7 +46,7 @@ msgstr "Χρώμα μπάρας πλοήγησης"
 
 #: .\cookbook\forms.py:58
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Σταθερή μπάρα πλοήγησης"
 
 #: .\cookbook\forms.py:59
 msgid "Default page"
@@ -100,10 +100,12 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Ενεργοποιεί τη υποστήριξη για κλάσματα στις ποσότητες των υλικών (π.χ. "
+"μετατρέπει τα δεκαδικά σε κλάσματα αυτόματα)"
 
 #: .\cookbook\forms.py:76
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Εμφάνιση της διατροφικής ενεργειακής αξίας σε joules αντί για θερμίδες"
 
 #: .\cookbook\forms.py:77
 msgid "Users with whom newly created meal plans should be shared by default."
@@ -126,6 +128,8 @@ msgstr "Αριθμός των δεκαδικών στα οποία θα γίνε
 #: .\cookbook\forms.py:82
 msgid "If you want to be able to create and see comments underneath recipes."
 msgstr ""
+"Εάν θέλετε να μπορείτε να δημιουργείτε και να βλέπετε σχόλια κάτω από τις "
+"συνταγές."
 
 #: .\cookbook\forms.py:84 .\cookbook\forms.py:496
 msgid ""
@@ -134,28 +138,38 @@ msgid ""
 "Useful when shopping with multiple people but might use a little bit of "
 "mobile data. If lower than instance limit it is reset when saving."
 msgstr ""
+"Η ρύθμιση στο 0 θα απενεργοποιήσει τον αυτόματο συγχρονισμό. Όταν προβάλλετε "
+"μια λίστα αγορών, η λίστα ενημερώνεται κάθε καθορισμένα δευτερόλεπτα για να "
+"συγχρονίσει τις αλλαγές που μπορεί να έχει κάνει κάποιος άλλος. Χρήσιμο όταν "
+"ψωνίζετε με πολλούς ανθρώπους, αλλά μπορεί να χρησιμοποιήσει λίγα δεδομένα "
+"κινητής τηλεφωνίας. Εάν είναι μικρότερο από το όριο του στιγμιότυπου, "
+"επαναφέρεται όταν γίνεται αποθήκευση."
 
 #: .\cookbook\forms.py:87
 msgid "Makes the navbar stick to the top of the page."
-msgstr ""
+msgstr "Καθιστά τη γραμμή πλοήγησης κολλημένη στην κορυφή της σελίδας."
 
 #: .\cookbook\forms.py:88 .\cookbook\forms.py:499
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
+"Αυτόματη προσθήκη των υλικών του γεύματος που έχει προγραμματιστεί στη λίστα "
+"αγορών."
 
 #: .\cookbook\forms.py:89
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Αποκλεισμός υλικών που είναι διαθέσιμα."
 
 #: .\cookbook\forms.py:90
 msgid "Will optimize the UI for use with your left hand."
-msgstr ""
+msgstr "Θα βελτιστοποιήσει το περιβάλλον χρήστη για χρήση με το αριστερό χέρι."
 
 #: .\cookbook\forms.py:107
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Και τα δύο πεδία είναι προαιρετικά. Αν κανένα δεν συμπληρωθεί, α εμφανιστεί "
+"αντί αυτών το όνομα χρήστη"
 
 #: .\cookbook\forms.py:128 .\cookbook\forms.py:301
 msgid "Name"
@@ -176,21 +190,23 @@ msgstr "Χρόνος αναμονής (μαγείρεμα/ ψήσιμο) σε λ
 
 #: .\cookbook\forms.py:132 .\cookbook\forms.py:270 .\cookbook\forms.py:303
 msgid "Path"
-msgstr ""
+msgstr "Διαδρομή"
 
 #: .\cookbook\forms.py:133
 msgid "Storage UID"
-msgstr ""
+msgstr "Αναγνωριστικό αποθήκευσης (Storage UID)"
 
 #: .\cookbook\forms.py:165
 msgid "Default"
-msgstr ""
+msgstr "Προεπιλογή"
 
 #: .\cookbook\forms.py:177
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Για την αποτροπή της εισαγωγής διπλών συνταγών, συνταγές με το ίδιο όνομα με "
+"υπάρχουσες, αγνοούνται. Επιλέξτε αυτό το πλαίσιο για να εισαγάγετε τα πάντα."
 
 #: .\cookbook\forms.py:200
 msgid "Add your comment: "
@@ -212,30 +228,34 @@ msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Αφήστε το κενό για το Dropbox και εισάγετε μόνο τη βασική διεύθυνση URL για "
+"το Nextcloud (το <code>/remote.php/webdav/</code> προστίθεται αυτόματα)"
 
 #: .\cookbook\forms.py:269 .\cookbook\views\edit.py:157
 msgid "Storage"
-msgstr ""
+msgstr "Χώρος αποθήκευσης"
 
 #: .\cookbook\forms.py:271
 msgid "Active"
-msgstr ""
+msgstr "Ενεργό"
 
 #: .\cookbook\forms.py:277
 msgid "Search String"
-msgstr ""
+msgstr "Κείμενο αναζήτησης"
 
 #: .\cookbook\forms.py:304
 msgid "File ID"
-msgstr ""
+msgstr "ID αρχείου"
 
 #: .\cookbook\forms.py:326
 msgid "You must provide at least a recipe or a title."
-msgstr ""
+msgstr "Πρέπει να παρέχετε τουλάχιστον μια συνταγή ή έναν τίτλο."
 
 #: .\cookbook\forms.py:339
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
+"Μπορείτε να καταχωρίσετε τους προεπιλεγμένους χρήστες με τους οποίους θέλετε "
+"να μοιράζεστε συνταγές στις ρυθμίσεις."
 
 #: .\cookbook\forms.py:340
 msgid ""
@@ -245,7 +265,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:366
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Έχει επιτευχθεί ο μέγιστος αριθμός χρηστών για αυτόν τον χώρο."
 
 #: .\cookbook\forms.py:372
 msgid "Email address already taken!"
@@ -256,26 +276,33 @@ msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Δεν απαιτείται η διεύθυνση email, αλλά αν υπάρχει, ο σύνδεσμος πρόσκλησης θα "
+"αποσταλεί στον χρήστη."
 
 #: .\cookbook\forms.py:395
 msgid "Name already taken."
-msgstr ""
+msgstr "Το όνομα αυτό είναι ήδη πιασμένο."
 
 #: .\cookbook\forms.py:406
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Αποδοχή των όρων και της πολιτικής απορρήτου"
 
 #: .\cookbook\forms.py:438
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Καθορίζει πόσο ασαφής είναι η αναζήτηση εάν χρησιμοποιείται η αντιστοίχιση "
+"ομοιότητας τριγώνων (trigram similarity matching) (π.χ. χαμηλές τιμές "
+"σημαίνουν ότι αγνοούνται περισσότερα λάθη πληκτρολόγησης)."
 
 #: .\cookbook\forms.py:448
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Επιλέξτε τη μέθοδο αναζήτησης. Κάντε κλικ <a href=\"/docs/search/\">εδώ</a> "
+"για πλήρη περιγραφή των επιλογών."
 
 #: .\cookbook\forms.py:449
 msgid ""
@@ -288,6 +315,8 @@ msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Πεδία αναζήτησης αγνοώντας τις τόνους.   Η επιλογή αυτή μπορεί να βελτιώσει "
+"ή να επιδεινώσει την ποιότητα της αναζήτησης, ανάλογα με τη γλώσσα"
 
 #: .\cookbook\forms.py:453
 msgid ""
@@ -300,6 +329,8 @@ msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Πεδία για αναζήτηση αρχής λέξεων. (π.χ. η αναζήτηση για το γράμμα 'σα' θα "
+"επιστρέψει τις λέξεις 'σαλάτα' και 'σάντουιτς')"
 
 #: .\cookbook\forms.py:457
 msgid ""
@@ -323,19 +354,19 @@ msgstr ""
 
 #: .\cookbook\forms.py:465
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Αγνόηση τόνων"
 
 #: .\cookbook\forms.py:466
 msgid "Partial Match"
-msgstr ""
+msgstr "Μερική ταύτιση"
 
 #: .\cookbook\forms.py:467
 msgid "Starts With"
-msgstr ""
+msgstr "Ξεκινάει με"
 
 #: .\cookbook\forms.py:468
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Ασαφής αναζήτηση(fuzzy)"
 
 #: .\cookbook\forms.py:469
 msgid "Full Text"
@@ -363,11 +394,13 @@ msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
+"Όταν προσθέτετε ένα προγραμματισμό γεύματος στη λίστα αγορών (χειροκίνητα ή "
+"αυτόματα), αποκλείστε τα συστατικά που έχετε ήδη στη διάθεσή σας."
 
 #: .\cookbook\forms.py:502
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
-"Προεπιλεγμένος αριθμός ωρών για την  καθυστέρηση μιας εγγραφής στη λίστα "
+"Προεπιλεγμένος αριθμός ωρών για την καθυστέρηση μιας εγγραφής στη λίστα "
 "αγορών."
 
 #: .\cookbook\forms.py:503
@@ -392,6 +425,8 @@ msgstr ""
 #: .\cookbook\forms.py:507
 msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
+"Πρόθεμα που προστίθεται κατά την αντιγραφή της λίστας στο πρόχειρο "
+"(clipboard)."
 
 #: .\cookbook\forms.py:511
 msgid "Share Shopping List"
@@ -435,7 +470,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:521
 msgid "Auto On Hand"
-msgstr ""
+msgstr "Αυτόματα διαθέσιμο"
 
 #: .\cookbook\forms.py:531
 msgid "Reset Food Inheritance"
@@ -447,7 +482,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:544
 msgid "Fields on food that should be inherited by default."
-msgstr ""
+msgstr "Πεδία στα φαγητά που πρέπει να κληρονομούνται από προεπιλογή."
 
 #: .\cookbook\forms.py:545
 msgid "Show recipe counts on search filters"
@@ -500,7 +535,7 @@ msgstr ""
 
 #: .\cookbook\helper\shopping_helper.py:152
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Θα πρέπει να προσθέσετε το μέγεθος της μερίδας"
 
 #: .\cookbook\helper\template_helper.py:64
 #: .\cookbook\helper\template_helper.py:66
@@ -510,34 +545,38 @@ msgstr ""
 #: .\cookbook\integration\copymethat.py:41
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Αγαπημένα"
 
 #: .\cookbook\integration\copymethat.py:70
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:63
 msgid "Imported from"
-msgstr ""
+msgstr "Εισήχθη από"
 
 #: .\cookbook\integration\integration.py:223
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"Ο εισαγωγέας περίμενε ένα αρχείο .zip. Έχετε σίγουρα διαλέξει τον σωστό τύπο "
+"εισαγωγέα για τα δεδομένα θέλετε να εισάγετε;"
 
 #: .\cookbook\integration\integration.py:226
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Παρουσιάστηκε ένα απρόβλεπτο σφάλμα κατά την εισαγωγή. Βεβαιωθείτε ότι έχετε "
+"μεταφορτώσει ένα έγκυρο αρχείο."
 
 #: .\cookbook\integration\integration.py:231
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Οι παρακάτω συνταγές αγνοήθηκαν επειδή υπήρχαν ήδη:"
 
 #: .\cookbook\integration\integration.py:235
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Εισήχθησαν %s συνταγές."
 
 #: .\cookbook\integration\paprika.py:46
 msgid "Notes"
@@ -571,11 +610,11 @@ msgstr "Βιβλίο συνταγών"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Τομέας"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Αναδόμηση πλήρους ευρετηρίου αναζήτησης κειμένου για τις συνταγές"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
@@ -583,11 +622,11 @@ msgstr ""
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Η αναδόμηση του ευρετηρίου των συνταγών ολοκληρώθηκε."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Η αναδόμηση του ευρετηρίου των συνταγών απέτυχε."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -610,50 +649,52 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Μέγιστος χώρος αποθήκευσης αρχείων σε MB. Ορίστε το σε 0 για απεριόριστο "
+"χώρο, σε -1 για να απενεργοποιήσετε τη μεταφόρτωση αρχείων."
 
 #: .\cookbook\models.py:353 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\space_manage.html:7
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #: .\cookbook\models.py:354 .\cookbook\templates\base.html:107
 #: .\cookbook\templates\meal_plan.html:7 .\cookbook\views\delete.py:178
 #: .\cookbook\views\edit.py:211 .\cookbook\views\new.py:179
 msgid "Meal-Plan"
-msgstr ""
+msgstr "Πραγματισμός γευμάτων"
 
 #: .\cookbook\models.py:355 .\cookbook\templates\base.html:115
 msgid "Books"
-msgstr ""
+msgstr "Βιβλία"
 
 #: .\cookbook\models.py:363
 msgid "Small"
-msgstr ""
+msgstr "Μικρό"
 
 #: .\cookbook\models.py:363
 msgid "Large"
-msgstr ""
+msgstr "Μεγάλο"
 
 #: .\cookbook\models.py:363 .\cookbook\templates\generic\new_template.html:6
 #: .\cookbook\templates\generic\new_template.html:14
 msgid "New"
-msgstr ""
+msgstr "Νέο"
 
 #: .\cookbook\models.py:584
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " είναι μέρος ενός βήματος συνταγής και δεν μπορεί να διαγράφει"
 
 #: .\cookbook\models.py:1162 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Απλό"
 
 #: .\cookbook\models.py:1163 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Φράση"
 
 #: .\cookbook\models.py:1164 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Δίκτυο"
 
 #: .\cookbook\models.py:1165 .\cookbook\templates\search_info.html:47
 msgid "Raw"
@@ -676,61 +717,66 @@ msgstr ""
 #: .\cookbook\views\delete.py:36 .\cookbook\views\edit.py:251
 #: .\cookbook\views\new.py:48
 msgid "Recipe"
-msgstr ""
+msgstr "Συνταγή"
 
 #: .\cookbook\models.py:1228
 msgid "Food"
-msgstr ""
+msgstr "Φαγητό"
 
 #: .\cookbook\models.py:1229 .\cookbook\templates\base.html:138
 msgid "Keyword"
-msgstr ""
+msgstr "Λέξη κλειδί"
 
 #: .\cookbook\serializer.py:207
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Δεν είναι δυνατή η τροποποίηση των δικαιωμάτων του ιδιοκτήτη του χώρου."
 
 #: .\cookbook\serializer.py:290
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Οι μεταφορτώσεις αρχείων δεν είναι ενεργοποιημένες για αυτόν τον χώρο."
 
 #: .\cookbook\serializer.py:301
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Έχετε φτάσει το όριο μεταφόρτωσης αρχείων."
 
 #: .\cookbook\serializer.py:1081
 msgid "Hello"
-msgstr ""
+msgstr "Γεια"
 
 #: .\cookbook\serializer.py:1081
 msgid "You have been invited by "
-msgstr ""
+msgstr "Έχετε προσκληθεί από "
 
 #: .\cookbook\serializer.py:1082
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " για να συνδεθείτε στό χώρο συνταγών του Tandoor "
 
 #: .\cookbook\serializer.py:1083
 msgid "Click the following link to activate your account: "
 msgstr ""
+"Κάντε κλικ στον παρακάτω σύνδεσμο για να ενεργοποιήσετε τον λογαριασμό σας: "
 
 #: .\cookbook\serializer.py:1084
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Εάν ο σύνδεσμος δεν λειτουργεί, χρησιμοποιήστε τον παρακάτω κωδικό για να "
+"εγγραφείτε χειροκίνητα στον χώρο: "
 
 #: .\cookbook\serializer.py:1085
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "Η πρόσκληση είναι σε ισχύ μέχρι "
 
 #: .\cookbook\serializer.py:1086
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Το Tandoor Recipes είναι ένας διαχειριστής συνταγών ανοιχτού κώδικα. Ρίξτε "
+"μια ματιά στο GitHub "
 
 #: .\cookbook\serializer.py:1089
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Πρόσκληση στο Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1209
 msgid "Existing shopping list to update"
@@ -1155,7 +1201,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:326
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:328
 msgid "Translate Tandoor"
@@ -2630,3 +2676,5 @@ msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"Ο σύνδεσμος κοινοποίησης συνταγής έχει απενεργοποιηθεί! Για περαιτέρω "
+"πληροφορίες, παρακαλώ επικοινωνήστε με τον διαχειριστή της σελίδας."
