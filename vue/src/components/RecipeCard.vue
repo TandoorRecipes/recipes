@@ -21,7 +21,7 @@
         <template v-else>
             <b-card no-body v-hover v-if="recipe" style="height: 100%">
 
-                <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null">
+                <a :href="recipe_link">
                     <div class="content">
                         <div class="content-overlay" v-if="recipe.description !== null && recipe.description !== ''"></div>
                         <b-card-img-lazy style="height: 15vh; object-fit: cover" class="" :src="recipe_image"
@@ -50,7 +50,7 @@
                 <b-card-body class="p-2 pl-3 pr-3">
                     <div class="d-flex flex-row">
                         <div class="flex-grow-1">
-                            <a :href="this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null" class="text-body font-weight-bold two-row-text">
+                            <a :href="recipe_link" class="text-body font-weight-bold two-row-text">
                             <template v-if="recipe !== null">{{ recipe.name }}</template>
                             <template v-else>{{ meal_plan.title }}</template>
                         </a>
@@ -71,7 +71,7 @@
 
                             <p class="mt-1 mb-1">
                                 <last-cooked :recipe="recipe"></last-cooked>
-                                <keywords-component :recipe="recipe" :limit="3"
+                                <keywords-component :recipe="recipe" :limit="3" :enable_keyword_links="enable_keyword_links"
                                                     style="margin-top: 4px; position: relative; z-index: 3;"></keywords-component>
                             </p>
                             <transition name="fade" mode="in-out">
@@ -152,6 +152,8 @@ export default {
         detailed: {type: Boolean, default: true},
         show_context_menu: {type: Boolean, default: true},
         context_disabled_options: Object,
+        open_recipe_on_click: {type: Boolean, default: true},
+        enable_keyword_links: {type: Boolean, default: true},
     },
     data() {
         return {
@@ -178,6 +180,13 @@ export default {
         waiting_time: function () {
             return calculateHourMinuteSplit(this.recipe.waiting_time)
         },
+        recipe_link: function (){
+            if(this.open_recipe_on_click){
+                return this.recipe.id !== undefined ? resolveDjangoUrl('view_recipe', this.recipe.id) : null
+            } else {
+                return "#"
+            }
+        }
     },
     methods: {},
     directives: {
