@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <recipe-view-component></recipe-view-component>
+    <div id="app" v-if="recipe_id !== undefined">
+        <recipe-view-component :recipe_id="recipe_id"></recipe-view-component>
 
         <bottom-navigation-bar></bottom-navigation-bar>
     </div>
@@ -12,6 +12,7 @@ import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
 import RecipeViewComponent from "@/components/RecipeViewComponent.vue";
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(BootstrapVue)
 
@@ -19,13 +20,15 @@ export default {
     name: "RecipeView",
     mixins: [],
     components: {
-        RecipeViewComponent
+        RecipeViewComponent,
+        BottomNavigationBar
     },
     computed: {},
     data() {
-        return {}
+        return {
+            recipe_id: window.RECIPE_ID
+        }
     },
-
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
     },
