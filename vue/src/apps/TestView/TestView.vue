@@ -1,103 +1,41 @@
 <template>
 
     <div id="app">
-        <div class="row" v-if="food">
-            <div class="col-12">
-                <h2>{{ food.name }}</h2>
+
+        <beta-warning></beta-warning>
+
+        <div v-if="metadata !== undefined">
+            {{ $t('Data_Import_Info') }}
+
+
+            <select class="form-control" v-model="selected_version">
+                <option v-for="v in metadata.versions" v-bind:key="v">{{ v }}</option>
+            </select>
+
+            <b-checkbox v-model="update_existing" class="mt-1">{{ $t('Update_Existing_Data') }}</b-checkbox>
+            <b-checkbox v-model="use_metric" class="mt-1">{{ $t('Use_Metric') }}</b-checkbox>
+
+
+            <div v-if="selected_version !== undefined" class="mt-3">
+                <table class="table">
+                    <tr>
+                        <th>{{ $t('Datatype') }}</th>
+                        <th>{{ $t('Number of Objects') }}</th>
+                        <th>{{ $t('Imported') }}</th>
+                    </tr>
+                    <tr v-for="d in metadata.datatypes" v-bind:key="d">
+                        <td>{{ $t(d.charAt(0).toUpperCase() + d.slice(1)) }}</td>
+                        <td>{{ metadata[selected_version][d] }}</td>
+                        <td>
+                            <template v-if="import_count !== undefined">{{ import_count[d] }}</template>
+                        </td>
+                    </tr>
+                </table>
+
+                <button class="btn btn-success" @click="doImport">{{ $t('Import') }}</button>
             </div>
+
         </div>
-
-        <div class="row">
-            <div class="col-12">
-                <b-form v-if="food">
-                    <b-form-group :label="$t('Name')" description="">
-                        <b-form-input v-model="food.name"></b-form-input>
-                    </b-form-group>
-                    <b-form-group :label="$t('Plural')" description="">
-                        <b-form-input v-model="food.plural_name"></b-form-input>
-                    </b-form-group>
-
-
-                    <b-form-group :label="$t('Recipe')" :description="$t('food_recipe_help')">
-                        <generic-multiselect
-                            @change="food.recipe = $event.val;"
-                            :model="Models.RECIPE"
-                            :initial_selection="food.recipe"
-                            label="name"
-                            :multiple="false"
-                            :placeholder="$t('Recipe')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('OnHand_help')">
-                        <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('ignore_shopping_help')">
-                        <b-form-checkbox v-model="food.ignore_shopping">{{ $t('Ignore_Shopping') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('Shopping_Category')" :description="$t('shopping_category_help')">
-                        <generic-multiselect
-                            @change="food.supermarket_category = $event.val;"
-                            :model="Models.SHOPPING_CATEGORY"
-                            :initial_selection="food.supermarket_category"
-                            label="name"
-                            :multiple="false"
-                            :placeholder="$t('Shopping_Category')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <hr/>
-                    <!-- todo add conditions if false disable dont hide -->
-                    <b-form-group :label="$t('Substitutes')" :description="$t('substitute_help')">
-                        <generic-multiselect
-                            @change="food.substitute = $event.val;"
-                            :model="Models.FOOD"
-                            :initial_selection="food.substitute"
-                            label="name"
-                            :multiple="false"
-                            :placeholder="$t('Substitutes')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :description="$t('substitute_siblings_help')">
-                        <b-form-checkbox v-model="food.substitute_siblings">{{ $t('substitute_siblings') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
-                        <generic-multiselect
-                            @change="food.inherit_fields = $event.val;"
-                            :model="Models.FOOD_INHERIT_FIELDS"
-                            :initial_selection="food.inherit_fields"
-                            label="name"
-                            :multiple="false"
-                            :placeholder="$t('InheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <b-form-group :label="$t('ChildInheritFields')" :description="$t('ChildInheritFields_help')">
-                        <generic-multiselect
-                            @change="food.child_inherit_fields = $event.val;"
-                            :model="Models.FOOD_INHERIT_FIELDS"
-                            :initial_selection="food.child_inherit_fields"
-                            label="name"
-                            :multiple="false"
-                            :placeholder="$t('ChildInheritFields')"
-                        ></generic-multiselect>
-                    </b-form-group>
-
-                    <!-- TODO change to a button -->
-                    <b-form-group :description="$t('reset_children_help')">
-                        <b-form-checkbox v-model="food.reset_inherit">{{ $t('reset_children') }}</b-form-checkbox>
-                    </b-form-group>
-
-                    <b-button variant="primary" @click="updateFood">{{ $t('Save') }}</b-button>
-                </b-form>
-
-            </div>
-        </div>
-
     </div>
 </template>
 
@@ -107,10 +45,9 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiApiFactory} from "@/utils/openapi/api";
-import RecipeCard from "@/components/RecipeCard.vue";
-import GenericMultiselect from "@/components/GenericMultiselect.vue";
-import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils";
+import axios from "axios";
+import BetaWarning from "@/components/BetaWarning.vue";
 
 
 Vue.use(BootstrapVue)
@@ -119,33 +56,39 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {
-        GenericMultiselect
-    },
+    components: {BetaWarning},
     data() {
         return {
-            food: undefined,
-
+            metadata: undefined,
+            selected_version: undefined,
+            update_existing: true,
+            use_metric: true,
+            import_count: undefined,
         }
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveFood('1').then((r) => {
-            this.food = r.data
-        })
 
+        axios.get(resolveDjangoUrl('api_import_open_data')).then(r => {
+            this.metadata = r.data
+        }).catch(err => {
+            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+        })
     },
     methods: {
-        updateFood: function () {
-            let apiClient = new ApiApiFactory()
-            apiClient.updateFood(this.food.id, this.food).then((r) => {
-                this.food = r.data
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+        doImport: function () {
+            axios.post(resolveDjangoUrl('api_import_open_data'), {
+                'selected_version': this.selected_version,
+                'selected_datatypes': this.metadata.datatypes,
+                'update_existing': this.update_existing,
+                'use_metric': this.use_metric,
+            }).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+                this.import_count = r.data
             }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
             })
-        }
+        },
     },
 }
 </script>
