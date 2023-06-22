@@ -21,7 +21,7 @@
                                                     :initial_selection="AutoPlan.keywords[meal_type]"
                                                     :parent_variable="`${k}`"
                                                     :model="Models.KEYWORD"
-                                                    :placeholder="$t('Keywords')"
+                                                    :placeholder="$t('Keywords, leave blank to exclude meal type')"
                                                     :limit="50"
                                                 />
                                         </div>
@@ -35,9 +35,9 @@
 
                           <div class="">
                             <div class="row m-3 mb-0">
-                            <b-form-datepicker class="col" :value-as-date="true" :value="current_period.periodStart" @input="updateStartDay"></b-form-datepicker>
+                            <b-form-datepicker class="col" :value-as-date="true" :value="AutoPlan.startDay" @input="updateStartDay"></b-form-datepicker>
                             <div class="col"></div>
-                            <b-form-datepicker class="col" :value-as-date="true" :value="current_period.periodEnd" @input="updateEndDay"></b-form-datepicker>
+                            <b-form-datepicker class="col" :value-as-date="true" :value="AutoPlan.endDay" @input="updateEndDay"></b-form-datepicker>
                           </div>
                           <div class="row align-top m-3 mt-0">
                             <small tabindex="-1" class="col align-text-top text-muted">{{ $t("Start Day") }}</small>
@@ -102,7 +102,7 @@ export default {
           this.refreshMealTypes()
 
           this.AutoPlan.servings = 1
-          this.AutoPlan.startDay = this.current_period.periodStart
+          this.AutoPlan.startDay = new Date()
           this.AutoPlan.endDay = this.current_period.periodEnd
         },
        sortMealTypes() {
@@ -148,7 +148,6 @@ export default {
         },
       updateStartDay(date){
           this.AutoPlan.startDay = date
-        console.log(date)
       },
       updateEndDay(date){
           this.AutoPlan.endDay = date
