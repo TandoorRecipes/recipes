@@ -1,3 +1,4 @@
+import random
 import traceback
 import uuid
 from datetime import datetime, timedelta
@@ -977,6 +978,16 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
             'meal_type_name', 'shopping'
         )
         read_only_fields = ('created_by',)
+
+
+class AutoMealPlanSerializer(serializers.Serializer):
+
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    meal_type_id = serializers.IntegerField()
+    keywords = KeywordSerializer(many=True)
+    servings = CustomDecimalField()
+    shared = UserSerializer(many=True, required=False, allow_null=True)
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
