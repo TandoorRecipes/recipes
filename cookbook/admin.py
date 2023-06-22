@@ -10,12 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField, ImportLog,
-                     Ingredient, InviteLink, Keyword, MealPlan, MealType, NutritionInformation,
-                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
-                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
-                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
+from .models import (Automation, BookmarkletImport, Comment, CookLog, Food, FoodInheritField,
+                     ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
+                     NutritionInformation, Property, PropertyType, Recipe, RecipeBook,
+                     RecipeBookEntry, RecipeImport, SearchPreference, ShareLink, ShoppingList,
+                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
+                     SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, TelegramBot,
+                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -150,9 +151,16 @@ class KeywordAdmin(TreeAdmin):
 admin.site.register(Keyword, KeywordAdmin)
 
 
+@admin.action(description='Delete Steps not part of a Recipe.')
+def delete_unattached_steps(modeladmin, request, queryset):
+    with scopes_disabled():
+        Step.objects.filter(recipe=None).delete()
+
+
 class StepAdmin(admin.ModelAdmin):
     list_display = ('name', 'order',)
     search_fields = ('name',)
+    actions = [delete_unattached_steps]
 
 
 admin.site.register(Step, StepAdmin)
@@ -201,9 +209,24 @@ class FoodAdmin(TreeAdmin):
 admin.site.register(Food, FoodAdmin)
 
 
+class UnitConversionAdmin(admin.ModelAdmin):
+    list_display = ('base_amount', 'base_unit', 'food', 'converted_amount', 'converted_unit')
+    search_fields = ('food__name', 'unit__name')
+
+
+admin.site.register(UnitConversion, UnitConversionAdmin)
+
+
+@admin.action(description='Delete Ingredients not part of a Recipe.')
+def delete_unattached_ingredients(modeladmin, request, queryset):
+    with scopes_disabled():
+        Ingredient.objects.filter(step__recipe=None).delete()
+
+
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('food', 'amount', 'unit')
     search_fields = ('food__name', 'unit__name')
+    actions = [delete_unattached_ingredients]
 
 
 admin.site.register(Ingredient, IngredientAdmin)
@@ -317,6 +340,20 @@ class ShareLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShareLink, ShareLinkAdmin)
+
+
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+admin.site.register(PropertyType, PropertyTypeAdmin)
+
+
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = ('property_amount', 'property_type')
+
+
+admin.site.register(Property, PropertyAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):
