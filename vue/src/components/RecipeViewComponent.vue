@@ -6,7 +6,7 @@
         </template>
 
         <div v-if="!loading" style="padding-bottom: 60px">
-            <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)"/>
+            <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)" v-if="show_recipe_switcher"/>
             <div class="row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
@@ -27,7 +27,7 @@
             </div>
 
             <div style="text-align: center">
-                <keywords-component :recipe="recipe"></keywords-component>
+                <keywords-component :recipe="recipe" :enable_keyword_links="enable_keyword_links"></keywords-component>
             </div>
 
             <hr/>
@@ -77,7 +77,7 @@
 
                 <div class="col col-md-2 col-2 mt-2 mt-md-0 text-right">
                     <recipe-context-menu v-bind:recipe="recipe" :servings="servings"
-                                         :disabled_options="{print:false}"></recipe-context-menu>
+                                         :disabled_options="{print:false}" v-if="show_context_menu"></recipe-context-menu>
                 </div>
             </div>
             <hr/>
@@ -234,13 +234,20 @@ export default {
             ingredient_height: '250',
         }
     },
+    props: {
+        recipe_id: Number,
+        show_context_menu: {type: Boolean, default: true},
+        enable_keyword_links: {type: Boolean, default: true},
+        show_recipe_switcher: {type: Boolean, default: true},
+        //show_comments: {type: Boolean, default: true},
+    },
     watch: {
         servings(newVal, oldVal) {
             this.servings_cache[this.recipe.id] = this.servings
         },
     },
     mounted() {
-        this.loadRecipe(window.RECIPE_ID)
+        this.loadRecipe(this.recipe_id)
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.requestWakeLock()
         window.addEventListener('resize', this.handleResize);
