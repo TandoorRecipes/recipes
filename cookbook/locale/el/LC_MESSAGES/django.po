@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-06-24 13:32+0000\n"
+"PO-Revision-Date: 2023-06-25 14:19+0000\n"
 "Last-Translator: sweeney <sweeneytodd91@protonmail.com>\n"
 "Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/el/>\n"
@@ -1038,20 +1038,26 @@ msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you "
 "an e-mail allowing you to reset it."
 msgstr ""
+"Ξεχάσατε τον κωδικό πρόσβασης σας; Εισάγετε τη διεύθυνση ηλεκτρονικού "
+"ταχυδρομείου σας παρακάτω και θα σας στείλουμε ένα email που θα σας "
+"επιτρέψει να τον επαναφέρετε."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
 msgstr ""
+"Η επαναφορά κωδικού πρόσβασης είναι απενεργοποιημένη σε αυτήν την πλατφόρμα."
 
 #: .\cookbook\templates\account\password_reset_done.html:16
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
+"Σας έχουμε στείλει ένα email. Παρακαλούμε επικοινωνήστε μαζί μας αν δεν το "
+"λάβετε εντός λίγων λεπτών."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
-msgstr ""
+msgstr "Μη έγκυρο token"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:25
 #, python-format
@@ -1061,168 +1067,172 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
+"Ο σύνδεσμος επαναφοράς κωδικού πρόσβασης ήταν άκυρος, πιθανώς επειδή έχει "
+"ήδη χρησιμοποιηθεί.\n"
+"                    Παρακαλώ ζητήστε έναν <a href=\"%(passwd_reset_url)s\""
+">νέο σύνδεσμο επαναφοράς κωδικού πρόσβασης</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr ""
+msgstr "Αλλαγή κωδικού πρόσβασης"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Ο κωδικός πρόσβασης σας έχει αλλάξει."
 
 #: .\cookbook\templates\account\password_set.html:6
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "Ορισμός Κωδικού Πρόσβασης"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "Εγγραφή"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "Δημιουργία λογαριασμού"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "Αποδέχομαι τα παρακάτω"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Όροι και προϋποθέσεις"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "και"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Πολιτική απορρήτου"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "Δημιουργία χρήστη"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "Έχετε ήδη λογαριασμό;"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "Οι εγγραφές έκλεισαν"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "Λυπούμαστε, αλλά οι εγγραφές έχουν ήδη κλείσει."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:330
 #: .\cookbook\templates\rest_framework\api.html:11
 msgid "API Documentation"
-msgstr ""
+msgstr "Τεκμηρίωση API"
 
 #: .\cookbook\templates\base.html:103 .\cookbook\templates\index.html:87
 #: .\cookbook\templates\stats.html:22
 msgid "Recipes"
-msgstr ""
+msgstr "Συνταγές"
 
 #: .\cookbook\templates\base.html:111
 msgid "Shopping"
-msgstr ""
+msgstr "Αγορές"
 
 #: .\cookbook\templates\base.html:150 .\cookbook\views\lists.py:105
 msgid "Foods"
-msgstr ""
+msgstr "Φαγητά"
 
 #: .\cookbook\templates\base.html:162
 #: .\cookbook\templates\forms\ingredients.html:24
 #: .\cookbook\templates\stats.html:26 .\cookbook\views\lists.py:122
 msgid "Units"
-msgstr ""
+msgstr "Μονάδες μέτρησης"
 
 #: .\cookbook\templates\base.html:176 .\cookbook\templates\supermarket.html:7
 msgid "Supermarket"
-msgstr ""
+msgstr "Supermarket"
 
 #: .\cookbook\templates\base.html:188
 msgid "Supermarket Category"
-msgstr ""
+msgstr "Κατηγορία Supermarket"
 
 #: .\cookbook\templates\base.html:200 .\cookbook\views\lists.py:171
 msgid "Automations"
-msgstr ""
+msgstr "Αυτοματισμοί"
 
 #: .\cookbook\templates\base.html:214 .\cookbook\views\lists.py:207
 msgid "Files"
-msgstr ""
+msgstr "Αρχεία"
 
 #: .\cookbook\templates\base.html:226
 msgid "Batch Edit"
-msgstr ""
+msgstr "Μαζική Επεξεργασία"
 
 #: .\cookbook\templates\base.html:238 .\cookbook\templates\history.html:6
 #: .\cookbook\templates\history.html:14
 msgid "History"
-msgstr ""
+msgstr "Ιστορικό"
 
 #: .\cookbook\templates\base.html:252
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
 msgid "Ingredient Editor"
-msgstr ""
+msgstr "Επεξεργαστής Συστατικών"
 
 #: .\cookbook\templates\base.html:264
 #: .\cookbook\templates\export_response.html:7
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "Εξαγωγή"
 
 #: .\cookbook\templates\base.html:280 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr ""
+msgstr "Εισαγωγή συνταγής"
 
 #: .\cookbook\templates\base.html:282
 msgid "Create"
-msgstr ""
+msgstr "Δημιουργία"
 
 #: .\cookbook\templates\base.html:295
 #: .\cookbook\templates\generic\list_template.html:14
 #: .\cookbook\templates\stats.html:43
 msgid "External Recipes"
-msgstr ""
+msgstr "Εξωτερικές Συνταγές"
 
 #: .\cookbook\templates\base.html:298
 #: .\cookbook\templates\space_manage.html:15
 msgid "Space Settings"
-msgstr ""
+msgstr "Ρυθμίσεις χώρου"
 
 #: .\cookbook\templates\base.html:303 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "Σύστημα"
 
 #: .\cookbook\templates\base.html:305
 msgid "Admin"
-msgstr ""
+msgstr "Διαχειριστής"
 
 #: .\cookbook\templates\base.html:309
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr ""
+msgstr "Οι χώροι σας"
 
 #: .\cookbook\templates\base.html:320
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Σύνοψη"
 
 #: .\cookbook\templates\base.html:324
 msgid "Markdown Guide"
-msgstr ""
+msgstr "Οδηγός χρήσης του Markdown"
 
 #: .\cookbook\templates\base.html:326
 msgid "GitHub"
@@ -1230,53 +1240,57 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:328
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Μεταφράστε το Tandoor"
 
 #: .\cookbook\templates\base.html:332
 msgid "API Browser"
-msgstr ""
+msgstr "Περιηγητής API"
 
 #: .\cookbook\templates\base.html:335
 msgid "Log out"
-msgstr ""
+msgstr "Αποσύνδεση"
 
 #: .\cookbook\templates\base.html:357
 msgid "You are using the free version of Tandor"
-msgstr ""
+msgstr "Χρησιμοποιείται την δωρεάν έκδοση του Tandoor"
 
 #: .\cookbook\templates\base.html:358
 msgid "Upgrade Now"
-msgstr ""
+msgstr "Αναβαθμιστείτε τώρα"
 
 #: .\cookbook\templates\batch\edit.html:6
 msgid "Batch edit Category"
-msgstr ""
+msgstr "Μαζική τροποποίηση κατηγοριών"
 
 #: .\cookbook\templates\batch\edit.html:15
 msgid "Batch edit Recipes"
-msgstr ""
+msgstr "Μαζική τροποποίηση Συνταγών"
 
 #: .\cookbook\templates\batch\edit.html:20
 msgid "Add the specified keywords to all recipes containing a word"
 msgstr ""
+"Προσθέστε τις καθορισμένες λέξεις-κλειδιά σε όλες τις συνταγές που περιέχουν "
+"μια λέξη"
 
 #: .\cookbook\templates\batch\monitor.html:6 .\cookbook\views\edit.py:73
 msgid "Sync"
-msgstr ""
+msgstr "Συγχρονισμός"
 
 #: .\cookbook\templates\batch\monitor.html:10
 msgid "Manage watched Folders"
-msgstr ""
+msgstr "Διαχείριση φακέλων που έχουν προβληθεί"
 
 #: .\cookbook\templates\batch\monitor.html:14
 msgid ""
 "On this Page you can manage all storage folder locations that should be "
 "monitored and synced."
 msgstr ""
+"Σε αυτήν τη σελίδα μπορείτε να διαχειριστείτε όλες τις τοποθεσίες "
+"αποθήκευσης φακέλων που πρέπει να παρακολουθούνται και να συγχρονίζονται."
 
 #: .\cookbook\templates\batch\monitor.html:16
 msgid "The path must be in the following format"
-msgstr ""
+msgstr "Η διαδρομή (path) πρέπει να είναι στην ακόλουθη μορφή"
 
 #: .\cookbook\templates\batch\monitor.html:20
 #: .\cookbook\templates\forms\edit_import_recipe.html:14
@@ -1288,55 +1302,57 @@ msgstr ""
 #: .\cookbook\templates\settings.html:202
 #: .\cookbook\templates\settings.html:213
 msgid "Save"
-msgstr ""
+msgstr "Αποθήκευση"
 
 #: .\cookbook\templates\batch\monitor.html:21
 msgid "Manage External Storage"
-msgstr ""
+msgstr "Διαχείριση εξωτερικού χώρου αποθήκευσης"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr ""
+msgstr "Συγχρονισμός τώρα!"
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
-msgstr ""
+msgstr "Προβολή Συνταγών"
 
 #: .\cookbook\templates\batch\monitor.html:30
 msgid "Show Log"
-msgstr ""
+msgstr "Προβολή αρχείων καταγραφής"
 
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr ""
+msgstr "Οι συνταγές εισάγονται"
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
 "This can take a few minutes, depending on the number of recipes in sync, "
 "please wait."
 msgstr ""
+"Αυτή η διαδικασία μπορεί να πάρει μερικά λεπτά, ανάλογα με τον αριθμό των "
+"συνταγών που πρέπει να συγχρονιστούν, παρακαλώ περιμένετε."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr ""
+msgstr "Βιβλία Συνταγών"
 
 #: .\cookbook\templates\export.html:8 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
-msgstr ""
+msgstr "Εξαγωγή Συνταγών"
 
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr ""
+msgstr "Εισαγωγή μια νέας συνταγή"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
-msgstr ""
+msgstr "Τροποποίηση συνταγής"
 
 #: .\cookbook\templates\forms\ingredients.html:15
 msgid "Edit Ingredients"
-msgstr ""
+msgstr "Τροποποίηση υλικών"
 
 #: .\cookbook\templates\forms\ingredients.html:16
 msgid ""
@@ -1348,32 +1364,41 @@ msgid ""
 "them.\n"
 "    "
 msgstr ""
+"\n"
+"        Την παρακάτω φόρμα μπορεί να χρησιμοποιηθεί στην περίπτωση που, κατά "
+"λάθος, δημιουργήθηκαν δύο (ή περισσότερες) μονάδες μέτρησης ή συστατικά που "
+"θα έπρεπε να είναι\n"
+"         τα ίδια.\n"
+"        Αυτή η φόρμα συγχωνεύει δύο μονάδες ή συστατικά και ενημερώνει όλες "
+"τις συνταγές που τα χρησιμοποιούν.\n"
+"    "
 
 #: .\cookbook\templates\forms\ingredients.html:26
 msgid "Are you sure that you want to merge these two units?"
-msgstr ""
+msgstr "Είστε βέβαιος ότι θέλετε να συγχωνεύσετε αυτές τις δύο μονάδες;"
 
 #: .\cookbook\templates\forms\ingredients.html:31
 #: .\cookbook\templates\forms\ingredients.html:40
 msgid "Merge"
-msgstr ""
+msgstr "Συγχώνευση"
 
 #: .\cookbook\templates\forms\ingredients.html:36
 msgid "Are you sure that you want to merge these two ingredients?"
-msgstr ""
+msgstr "Είστε βέβαιος ότι θέλετε να συγχωνεύσετε αυτά τα δύο υλικά;"
 
 #: .\cookbook\templates\generic\delete_template.html:21
 #, python-format
 msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr ""
+"Είστε σίγουροι ότι θέλετε να διαγράψετε τα %(title)s: <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "Αυτό δεν μπορεί να αναιρεθεί!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Προστατευμένο"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
@@ -1381,68 +1406,68 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
-msgstr ""
+msgstr "Ακύρωση"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr ""
+msgstr "Προβολή"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
-msgstr ""
+msgstr "Διαγραφή πρωτότυπου αρχείου"
 
 #: .\cookbook\templates\generic\list_template.html:6
 #: .\cookbook\templates\generic\list_template.html:22
 msgid "List"
-msgstr ""
+msgstr "Λίστα"
 
 #: .\cookbook\templates\generic\list_template.html:36
 msgid "Filter"
-msgstr ""
+msgstr "Φίλτρο"
 
 #: .\cookbook\templates\generic\list_template.html:41
 msgid "Import all"
-msgstr ""
+msgstr "Εισαγωγή όλων"
 
 #: .\cookbook\templates\generic\table_template.html:76
 #: .\cookbook\templates\recipes_table.html:121
 msgid "previous"
-msgstr ""
+msgstr "προηγούμενο"
 
 #: .\cookbook\templates\generic\table_template.html:98
 #: .\cookbook\templates\recipes_table.html:143
 msgid "next"
-msgstr ""
+msgstr "επόμενο"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr ""
+msgstr "Προβολή αρχείων καταγραφής"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
-msgstr ""
+msgstr "Αρχείο καταγραφής μαγειρέματος"
 
 #: .\cookbook\templates\import.html:6
 msgid "Import Recipes"
-msgstr ""
+msgstr "Εισαγωγή Συνταγών"
 
 #: .\cookbook\templates\import.html:14 .\cookbook\templates\import.html:20
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:86
 #: .\cookbook\views\edit.py:191
 msgid "Import"
-msgstr ""
+msgstr "Εισαγωγή"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:18
 msgid "Close"
-msgstr ""
+msgstr "Κλείσιμο"
 
 #: .\cookbook\templates\include\recipe_open_modal.html:32
 msgid "Open Recipe"
-msgstr ""
+msgstr "Άνοιγμα Συνταγής"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
-msgstr ""
+msgstr "Προειδοποίηση ασφαλείας"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:5
 msgid ""
@@ -1459,32 +1484,32 @@ msgstr ""
 
 #: .\cookbook\templates\index.html:29
 msgid "Search recipe ..."
-msgstr ""
+msgstr "Αναζήτηση συνταγής ..."
 
 #: .\cookbook\templates\index.html:44
 msgid "New Recipe"
-msgstr ""
+msgstr "Νέα συνταγή"
 
 #: .\cookbook\templates\index.html:53
 msgid "Advanced Search"
-msgstr ""
+msgstr "Αναζήτηση για προχωρημένους"
 
 #: .\cookbook\templates\index.html:57
 msgid "Reset Search"
-msgstr ""
+msgstr "Επαναφορά αναζήτησης"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr ""
+msgstr "Τελευταίες προβολές"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr ""
+msgstr "Συνδεθείτε για να δείτε τις συνταγές"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
 msgid "Markdown Info"
-msgstr ""
+msgstr "Πληροφορίες για το Markdown"
 
 #: .\cookbook\templates\markdown_info.html:14
 msgid ""
@@ -1504,31 +1529,33 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:25
 msgid "Headers"
-msgstr ""
+msgstr "Επικεφαλίδες"
 
 #: .\cookbook\templates\markdown_info.html:54
 msgid "Formatting"
-msgstr ""
+msgstr "Μορφοποίηση"
 
 #: .\cookbook\templates\markdown_info.html:56
 #: .\cookbook\templates\markdown_info.html:72
 msgid "Line breaks are inserted by adding two spaces after the end of a line"
 msgstr ""
+"Οι αλλαγές γραμμής εισάγονται προσθέτοντας δύο κενά μετά το τέλος μιας "
+"γραμμής"
 
 #: .\cookbook\templates\markdown_info.html:57
 #: .\cookbook\templates\markdown_info.html:73
 msgid "or by leaving a blank line in between."
-msgstr ""
+msgstr "ή αφήνοντας μια κενή γραμμή μεταξύ τους."
 
 #: .\cookbook\templates\markdown_info.html:59
 #: .\cookbook\templates\markdown_info.html:74
 msgid "This text is bold"
-msgstr ""
+msgstr "Το κείμενο είναι έντονο (bold)"
 
 #: .\cookbook\templates\markdown_info.html:60
 #: .\cookbook\templates\markdown_info.html:75
 msgid "This text is italic"
-msgstr ""
+msgstr "Αυτό το κείμενο είναι πλάγιο (italic)"
 
 #: .\cookbook\templates\markdown_info.html:61
 #: .\cookbook\templates\markdown_info.html:77
@@ -1537,7 +1564,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:84
 msgid "Lists"
-msgstr ""
+msgstr "Λίστες"
 
 #: .\cookbook\templates\markdown_info.html:85
 msgid ""
@@ -1575,7 +1602,7 @@ msgstr ""
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr ""
+msgstr "Φωτογραφίες και σύνδεσμοι"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
