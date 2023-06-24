@@ -78,6 +78,19 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             return path
 
 
+class OpenDataModelMixin(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
+            validated_data['open_data_slug'] = None
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
+            validated_data['open_data_slug'] = None
+        return super().update(instance, validated_data)
+
+
 class CustomDecimalField(serializers.Field):
     """
     Custom decimal field to normalize useless decimal places
@@ -440,7 +453,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
 
-class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
+class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
@@ -469,7 +482,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         read_only_fields = ('id', 'numrecipe', 'image')
 
 
-class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer, OpenDataModelMixin):
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
@@ -493,7 +506,7 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
         fields = ('id', 'category', 'supermarket', 'order')
 
 
-class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
+class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
 
     class Meta:
@@ -501,7 +514,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
 
 
-class PropertyTypeSerializer(serializers.ModelSerializer):
+class PropertyTypeSerializer(OpenDataModelMixin):
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
 
@@ -556,7 +569,7 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'plural_name')
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     # shopping = serializers.SerializerMethodField('get_shopping_status')
@@ -764,7 +777,7 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
         )
 
 
-class UnitConversionSerializer(WritableNestedModelSerializer):
+class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin):
     name = serializers.SerializerMethodField('get_conversion_name')
     base_unit = UnitSerializer()
     converted_unit = UnitSerializer()
