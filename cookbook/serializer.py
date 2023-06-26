@@ -514,11 +514,13 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
         fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
 
 
-class PropertyTypeSerializer(OpenDataModelMixin):
+class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
+    id = serializers.IntegerField(required=False)
+
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
 
-        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).first():
+        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).filter(space=self.context['request'].space).first():
             return property_type
 
         return super().create(validated_data)
@@ -532,8 +534,6 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     property_type = PropertyTypeSerializer()
     property_amount = CustomDecimalField()
 
-    # TODO prevent updates
-
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
@@ -541,7 +541,6 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     class Meta:
         model = Property
         fields = ('id', 'property_amount', 'property_type')
-        read_only_fields = ('id',)
 
 
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
@@ -650,8 +649,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if properties_food_unit := validated_data.pop('properties_food_unit', None):
             properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
 
+        properties = validated_data.pop('properties', None)
+
         obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
                                                   defaults=validated_data)
+
+        if properties and len(properties) > 0:
+            for p in properties:
+                obj.properties.add(Property.objects.create(property_type_id=p['property_type']['id'], property_amount=p['property_amount'], space=space))
+
         return obj
 
     def update(self, instance, validated_data):
