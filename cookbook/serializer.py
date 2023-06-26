@@ -78,6 +78,19 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             return path
 
 
+class OpenDataModelMixin(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
+            validated_data['open_data_slug'] = None
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
+            validated_data['open_data_slug'] = None
+        return super().update(instance, validated_data)
+
+
 class CustomDecimalField(serializers.Field):
     """
     Custom decimal field to normalize useless decimal places
@@ -96,7 +109,7 @@ class CustomDecimalField(serializers.Field):
             if data == '':
                 return 0
             try:
-                return float(data.replace(',', ''))
+                return float(data.replace(',', '.'))
             except ValueError:
                 raise ValidationError('A valid number is required')
 
@@ -440,7 +453,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
 
-class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
+class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin):
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
@@ -469,7 +482,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
         read_only_fields = ('id', 'numrecipe', 'image')
 
 
-class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer, OpenDataModelMixin):
 
     def create(self, validated_data):
         name = validated_data.pop('name').strip()
@@ -493,7 +506,7 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
         fields = ('id', 'category', 'supermarket', 'order')
 
 
-class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
+class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
 
     class Meta:
@@ -501,11 +514,13 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer):
         fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
 
 
-class PropertyTypeSerializer(serializers.ModelSerializer):
+class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
+    id = serializers.IntegerField(required=False)
+
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
 
-        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).first():
+        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).filter(space=self.context['request'].space).first():
             return property_type
 
         return super().create(validated_data)
@@ -519,8 +534,6 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     property_type = PropertyTypeSerializer()
     property_amount = CustomDecimalField()
 
-    # TODO prevent updates
-
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
@@ -528,7 +541,6 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     class Meta:
         model = Property
         fields = ('id', 'property_amount', 'property_type')
-        read_only_fields = ('id',)
 
 
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
@@ -556,7 +568,7 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'plural_name')
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     # shopping = serializers.SerializerMethodField('get_shopping_status')
@@ -569,6 +581,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
+    properties_food_amount = CustomDecimalField(required=False)
 
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
@@ -636,8 +649,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if properties_food_unit := validated_data.pop('properties_food_unit', None):
             properties_food_unit = Unit.objects.filter(name=properties_food_unit['name']).first()
 
+        properties = validated_data.pop('properties', None)
+
         obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
                                                   defaults=validated_data)
+
+        if properties and len(properties) > 0:
+            for p in properties:
+                obj.properties.add(Property.objects.create(property_type_id=p['property_type']['id'], property_amount=p['property_amount'], space=space))
+
         return obj
 
     def update(self, instance, validated_data):
@@ -764,7 +784,7 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
         )
 
 
-class UnitConversionSerializer(WritableNestedModelSerializer):
+class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin):
     name = serializers.SerializerMethodField('get_conversion_name')
     base_unit = UnitSerializer()
     converted_unit = UnitSerializer()
