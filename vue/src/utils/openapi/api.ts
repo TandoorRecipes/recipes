@@ -471,10 +471,10 @@ export interface Food {
     properties?: Array<FoodProperties> | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Food
      */
-    properties_food_amount?: number;
+    properties_food_amount: string;
     /**
      * 
      * @type {FoodPropertiesFoodUnit}
@@ -1112,10 +1112,10 @@ export interface IngredientFood {
     properties?: Array<FoodProperties> | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof IngredientFood
      */
-    properties_food_amount?: number;
+    properties_food_amount: string;
     /**
      * 
      * @type {FoodPropertiesFoodUnit}

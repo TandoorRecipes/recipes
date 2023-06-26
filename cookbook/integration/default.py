@@ -1,4 +1,5 @@
 import json
+import traceback
 from io import BytesIO, StringIO
 from re import match
 from zipfile import ZipFile
@@ -19,7 +20,10 @@ class Default(Integration):
         recipe = self.decode_recipe(recipe_string)
         images = list(filter(lambda v: match('image.*', v), recipe_zip.namelist()))
         if images:
-            self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
+            try:
+                self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
+            except AttributeError as e:
+                traceback.print_exc()
         return recipe
 
     def decode_recipe(self, string):
