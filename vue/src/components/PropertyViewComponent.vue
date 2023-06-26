@@ -2,7 +2,7 @@
     <div>
 
 
-        <div class="card p-4 pb-2" v-if="recipe !== undefined">
+        <div class="card p-4 pb-2" v-if="recipe !== undefined && property_list.length > 0">
             <b-row>
                 <b-col>
                     <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
