@@ -581,7 +581,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
-    properties_food_amount = CustomDecimalField()
+    properties_food_amount = CustomDecimalField(required=False)
 
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
