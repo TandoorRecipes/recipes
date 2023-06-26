@@ -50,6 +50,7 @@
                 <b-form-select-option value="DARKLY">Darkly</b-form-select-option>
                 <b-form-select-option value="FLATLY">Flatly</b-form-select-option>
                 <b-form-select-option value="SUPERHERO">Superhero</b-form-select-option>
+                <b-form-select-option value="TANDOOR_DARK">Tandoor Dark (INCOMPLETE)</b-form-select-option>
             </b-form-select>
 
         </b-form-group>

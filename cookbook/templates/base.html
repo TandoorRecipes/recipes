@@ -73,7 +73,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-{% nav_color request %}"
+<nav class="navbar navbar-expand-lg {% nav_color request %}"
      id="id_main_nav"
      style="{% sticky_nav request %}">
 
@@ -118,6 +118,10 @@
                 <a class="nav-link" href="{% url 'view_books' %}"><i
                         class="fas fa-fw fa-book-open"></i> {% trans 'Books' %}</a>
             </li>
+            {% plugin_main_nav_templates as plugin_main_nav_templates %}
+            {% for pn in plugin_main_nav_templates %}
+                {% include pn %}
+            {% endfor %}
         </ul>
 
         <ul class="navbar-nav ml-auto">

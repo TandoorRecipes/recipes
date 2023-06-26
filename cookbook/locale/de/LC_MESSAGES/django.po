@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-02-09 13:55+0000\n"
-"Last-Translator: Marion Kämpfer <marion@murphyslantech.de>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2023-06-21 14:19+0000\n"
+"Last-Translator: Tobias Huppertz <tobias.huppertz@mail.de>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -600,9 +600,8 @@ msgid "Imported %s recipes."
 msgstr "%s Rezepte importiert."
 
 #: .\cookbook\integration\openeats.py:26
-#, fuzzy
 msgid "Recipe source:"
-msgstr "Rezept-Hauptseite"
+msgstr "Rezept-Quelle:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"

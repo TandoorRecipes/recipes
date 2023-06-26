@@ -270,6 +270,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
+    internal_note = models.TextField(blank=True, null=True)
+
     def safe_delete(self):
         """
         Safely deletes a space by deleting all objects belonging to the space first and then deleting the space itself
@@ -329,6 +331,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     FLATLY = 'FLATLY'
     SUPERHERO = 'SUPERHERO'
     TANDOOR = 'TANDOOR'
+    TANDOOR_DARK = 'TANDOOR_DARK'
 
     THEMES = (
         (TANDOOR, 'Tandoor'),
@@ -336,6 +339,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         (DARKLY, 'Darkly'),
         (FLATLY, 'Flatly'),
         (SUPERHERO, 'Superhero'),
+        (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
     )
 
     # Nav colors
@@ -583,7 +587,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
     properties = models.ManyToManyField("Property", blank=True, through='FoodProperty')
-    properties_food_amount = models.IntegerField(default=100, blank=True)
+    properties_food_amount = models.DecimalField(default=100, max_digits=16, decimal_places=2, blank=True)
     properties_food_unit = models.ForeignKey(Unit, on_delete=models.PROTECT, blank=True, null=True)
 
     preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')

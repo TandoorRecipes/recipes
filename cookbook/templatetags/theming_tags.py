@@ -16,6 +16,7 @@ def theme_url(request):
         UserPreference.DARKLY: 'themes/darkly.min.css',
         UserPreference.SUPERHERO: 'themes/superhero.min.css',
         UserPreference.TANDOOR: 'themes/tandoor.min.css',
+        UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
     }
     if request.user.userpreference.theme in themes:
         return static(themes[request.user.userpreference.theme])
@@ -27,7 +28,11 @@ def theme_url(request):
 def nav_color(request):
     if not request.user.is_authenticated:
         return 'primary'
-    return request.user.userpreference.nav_color.lower()
+
+    if request.user.userpreference.nav_color.lower() in ['light', 'warning', 'info', 'success']:
+        return f'navbar-light bg-{request.user.userpreference.nav_color.lower()}'
+    else:
+        return f'navbar-dark bg-{request.user.userpreference.nav_color.lower()}'
 
 
 @register.simple_tag
