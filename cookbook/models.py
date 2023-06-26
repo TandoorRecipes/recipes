@@ -331,6 +331,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     FLATLY = 'FLATLY'
     SUPERHERO = 'SUPERHERO'
     TANDOOR = 'TANDOOR'
+    TANDOOR_DARK = 'TANDOOR_DARK'
 
     THEMES = (
         (TANDOOR, 'Tandoor'),
@@ -338,6 +339,7 @@ class UserPreference(models.Model, PermissionModelMixin):
         (DARKLY, 'Darkly'),
         (FLATLY, 'Flatly'),
         (SUPERHERO, 'Superhero'),
+        (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
     )
 
     # Nav colors
