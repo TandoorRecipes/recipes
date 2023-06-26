@@ -109,7 +109,7 @@ class CustomDecimalField(serializers.Field):
             if data == '':
                 return 0
             try:
-                return float(data.replace(',', ''))
+                return float(data.replace(',', '.'))
             except ValueError:
                 raise ValidationError('A valid number is required')
 
@@ -582,6 +582,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
+    properties_food_amount = CustomDecimalField()
 
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
