@@ -3371,7 +3371,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     padding: .25rem 1.5rem;
     clear: both;
     font-weight: 400;
-    color: #212529;
+    color: #fff;
     text-align: inherit;
     white-space: nowrap;
     background-color: transparent;
@@ -4587,7 +4587,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-header {
     padding: .75rem 1.25rem;
     margin-bottom: 0;
-    background-color: #444;
+    background-color: rgb(37 37 37);
     border-bottom: 1px solid rgba(0, 0, 0, .125)
 }
 
@@ -5778,7 +5778,7 @@ a.close.disabled {
     flex-direction: column;
     width: 100%;
     pointer-events: auto;
-    background-color: #fff;
+    background-color: rgb(37 37 37);
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, .2);
     border-radius: .3rem;
@@ -9822,7 +9822,7 @@ a.text-light:focus, a.text-light:hover {
 }
 
 .text-dark {
-    color: #221e1e !important
+    color: #fff !important
 }
 
 a.text-dark:focus, a.text-dark:hover {
@@ -10407,7 +10407,8 @@ footer a:hover {
 }
 
 .form-control {
-    font-size: 14px
+    font-size: 14px;
+    background-color: rgb(20 20 20);
 }
 
 .form-control, .form-control:focus {
@@ -10456,7 +10457,8 @@ footer a:hover {
 }
 
 textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([class="select2-search__field"]):not([class="vue-treeselect__input"]), select {
-    background-color: white !important;
+    background-color: rgb(20 20 20);
+    color: #fff;
     border-radius: .25rem !important;
     border: 1px solid #ced4da !important;
 }
