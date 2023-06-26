@@ -585,7 +585,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     child_inherit_fields = models.ManyToManyField(FoodInheritField, blank=True, related_name='child_inherit')
 
     properties = models.ManyToManyField("Property", blank=True, through='FoodProperty')
-    properties_food_amount = models.IntegerField(default=100, blank=True)
+    properties_food_amount = models.DecimalField(default=100, max_digits=16, decimal_places=2, blank=True)
     properties_food_unit = models.ForeignKey(Unit, on_delete=models.PROTECT, blank=True, null=True)
 
     preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
