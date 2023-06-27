@@ -17,15 +17,9 @@ jobs:
           # Standard build config
           - name: Standard
             dockerfile: Dockerfile
-            platforms: linux/amd64,linux/arm64
+            platforms: linux/amd64,linux/arm64,linux/arm/v7
             suffix: ""
             continue-on-error: false
-          # Raspi build config
-          - name: Raspi
-            dockerfile: Dockerfile-raspi
-            platforms: linux/arm/v7
-            suffix: "-raspi"
-            continue-on-error: true
     steps:
       - uses: actions/checkout@v3
 
