@@ -1254,23 +1254,28 @@ export default {
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
                     promises.push(this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
+
                         let unit = null
                         if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
-                        parsed_ing_list.push({
+                        let new_ingredient = {
                             amount: result.data.amount,
                             unit: unit,
                             food: {name: result.data.food},
                             note: result.data.note,
                             original_text: ing,
-                        })
+                        }
+                        console.log(ing, new_ingredient)
+                        parsed_ing_list.push(new_ingredient)
                     }))
                 }
             })
             Promise.allSettled(promises).then(() => {
                 ing_list.forEach(ing => {
-                    step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    if(ing.trim() !== ""){
+                        step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    }
                 })
             })
         },

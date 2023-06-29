@@ -71,8 +71,8 @@
                                         }}</span></span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
-                                            class="fas fa-trash-alt"></i></button>
+                                        <a class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
+                                            class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             </table>
@@ -293,7 +293,9 @@ export default {
         if (this.item1.id !== undefined) {
             pf = apiClient.retrieveFood(this.item1.id).then((r) => {
                 this.food = r.data
-                this.food.properties_food_unit = {name: 'g'}
+                if (this.food.properties_food_unit === null) {
+                    this.food.properties_food_unit = {name: 'g'}
+                }
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
