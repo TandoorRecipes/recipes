@@ -71,8 +71,8 @@
                                         }}</span></span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
-                                            class="fas fa-trash-alt"></i></button>
+                                        <a class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
+                                            class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             </table>
