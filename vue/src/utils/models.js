@@ -258,12 +258,14 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 icon: {
                     form_field: true,
                     type: "emoji",
                     field: "icon",
                     label: "Icon",
+                    optional: true,
                 },
                 full_name: {
                     form_field: true,
@@ -295,6 +297,7 @@ export class Models {
                     field: "plural_name",
                     label: "Plural name",
                     placeholder: "",
+                    optional: true,
                 },
                 description: {
                     form_field: true,
@@ -302,6 +305,7 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 open_data_slug: {
                     form_field: true,
@@ -310,6 +314,7 @@ export class Models {
                     disabled: true,
                     label: "Open_Data_Slug",
                     help_text: "open_data_help_text",
+                    optional: true,
                 },
             },
         },
@@ -364,12 +369,14 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 icon: {
                     form_field: true,
                     type: "emoji",
                     field: "icon",
                     label: "Icon",
+                    optional: true,
                 },
                 filter: {
                     form_field: true,
@@ -377,6 +384,7 @@ export class Models {
                     field: "filter",
                     label: "Custom Filter",
                     list: "CUSTOM_FILTER",
+                    optional: true,
                 },
             },
         },
@@ -401,6 +409,7 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
             },
         },
@@ -451,6 +460,7 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 categories: {
                     form_field: true,
@@ -461,6 +471,7 @@ export class Models {
                     field: "category_to_supermarket",
                     label: "Categories", // form.label always translated in utils.getForm()
                     placeholder: "",
+                    optional: true,
                 },
                 open_data_slug: {
                     form_field: true,
@@ -469,6 +480,7 @@ export class Models {
                     disabled: true,
                     label: "Open_Data_Slug",
                     help_text: "open_data_help_text",
+                    optional: true,
                 },
             },
             config: {
@@ -507,6 +519,7 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 type: {
                     form_field: true,
@@ -652,6 +665,7 @@ export class Models {
                     disabled: true,
                     label: "Open_Data_Slug",
                     help_text: "open_data_help_text",
+                    optional: true,
                 },
 
             },
@@ -685,6 +699,7 @@ export class Models {
                     field: "icon",
                     label: "Icon",
                     placeholder: "",
+                    optional: true,
                 },
                 unit: {
                     form_field: true,
@@ -692,6 +707,7 @@ export class Models {
                     field: "unit",
                     label: "Unit",
                     placeholder: "",
+                    optional: true,
                 },
                 description: {
                     form_field: true,
@@ -699,6 +715,7 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
                 },
                 open_data_slug: {
                     form_field: true,
@@ -707,6 +724,7 @@ export class Models {
                     disabled: true,
                     label: "Open_Data_Slug",
                     help_text: "open_data_help_text",
+                    optional: true,
                 },
             },
 
@@ -853,15 +871,8 @@ export class Models {
         apiName: "InviteLink",
         paginated: false,
         create: {
-            params: [["email", "group", "valid_until", "reusable"]],
+            params: [["email", "group", "valid_until", "reusable", "internal_note"]],
             form: {
-                email: {
-                    form_field: true,
-                    type: "text",
-                    field: "email",
-                    label: "Email",
-                    placeholder: "",
-                },
                 group: {
                     form_field: true,
                     type: "lookup",
@@ -878,6 +889,14 @@ export class Models {
                     label: "Valid Until",
                     placeholder: "",
                 },
+                email: {
+                    form_field: true,
+                    type: "text",
+                    field: "email",
+                    label: "Email",
+                    placeholder: "",
+                    optional: true,
+                },
                 reusable: {
                     form_field: true,
                     type: "checkbox",
@@ -886,6 +905,15 @@ export class Models {
                     help_text: "reusable_help_text",
                     placeholder: "",
                 },
+                internal_note: {
+                    form_field: true,
+                    type: "textarea",
+                    field: "internal_note",
+                    label: "Note",
+                    placeholder: "",
+                    optional: true,
+                },
+                form_function: "InviteLinkDefaultValid",
             },
         },
     }
