@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form-group v-bind:label="label" class="mb-3">
+        <b-form-group v-bind:label="field_label" class="mb-3">
             <b-form-input v-model="new_value" type="text" :placeholder="placeholder" :disabled="disabled"></b-form-input>
             <em v-if="help" class="small text-muted">{{ help }}</em>
             <small v-if="subtitle" class="text-muted">{{ subtitle }}</small>
@@ -18,11 +18,21 @@ export default {
         placeholder: { type: String, default: "You Should Add Placeholder Text" },
         help: { type: String, default: undefined },
         subtitle: { type: String, default: undefined },
-        disabled: { type: Boolean, default: false }
+        disabled: { type: Boolean, default: false },
+        optional: {type: Boolean, default: false},
     },
     data() {
         return {
             new_value: undefined,
+        }
+    },
+    computed: {
+        field_label: function () {
+            if (this.optional) {
+                return this.label
+            } else {
+                return this.label + '*'
+            }
         }
     },
     mounted() {
