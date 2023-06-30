@@ -14,6 +14,7 @@ import {BToast} from "bootstrap-vue"
 // * */
 import Vue from "vue"
 import {Actions, Models} from "./models"
+import moment from "moment";
 
 export const ToastMixin = {
     name: "ToastMixin",
@@ -719,6 +720,10 @@ const specialCases = {
 export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
+        return form
+    },
+    InviteLinkDefaultValid: function (form){
+        form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format('yyyy-MM-DD')
         return form
     },
     AutomationOrderDefault: function (form) {
