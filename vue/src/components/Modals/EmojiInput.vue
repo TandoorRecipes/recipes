@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form-group
-            v-bind:label="label"
+            v-bind:label="field_label"
             class="mb-3">
 
             <input class="form-control" v-model="new_value">
@@ -27,6 +27,7 @@ export default {
         field: {type: String, default: 'You Forgot To Set Field Name'},
         label: {type: String, default: ''},
         value: {type: String, default: ''},
+        optional: {type: Boolean, default: false},
     },
     data() {
         return {
@@ -34,6 +35,15 @@ export default {
             id: null,
             emojiIndex: emojiIndex,
             emojisOutput: ""
+        }
+    },
+    computed: {
+        field_label: function () {
+            if (this.optional) {
+                return this.label
+            } else {
+                return this.label + '*'
+            }
         }
     },
     watch: {

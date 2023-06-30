@@ -2,7 +2,7 @@
     <div>
         <b-form-group :class="class_list">
             <template #label v-if="show_label">
-                {{ form.label }}
+                {{ field_label }}
             </template>
             <generic-multiselect
                 @change="new_value = $event.val"
@@ -27,11 +27,11 @@
 
 <script>
 import GenericMultiselect from "@/components/GenericMultiselect"
-import { StandardToasts, ApiMixin } from "@/utils/utils"
+import {StandardToasts, ApiMixin} from "@/utils/utils"
 
 export default {
     name: "LookupInput",
-    components: { GenericMultiselect },
+    components: {GenericMultiselect},
     mixins: [ApiMixin],
     props: {
         form: {
@@ -46,11 +46,13 @@ export default {
                 return undefined
             },
         },
-        class_list: { type: String, default: "mb-3" },
-        show_label: { type: Boolean, default: true },
-        clear: { type: Number },
-        help: { type: String, default: undefined },
+        class_list: {type: String, default: "mb-3"},
+        show_label: {type: Boolean, default: true},
+        clear: {type: Number},
+        help: {type: String, default: undefined},
+        optional: {type: Boolean, default: false},
     },
+
     data() {
         return {
             new_value: undefined,
@@ -67,7 +69,7 @@ export default {
         this.label = this.form?.label ?? ""
         this.sticky_options = this.form?.sticky_options ?? []
         this.sticky_options = this.sticky_options.map((x) => {
-            return { ...x, name: this.$t(x.name) }
+            return {...x, name: this.$t(x.name)}
         })
         this.list_label = this.form?.list_label ?? undefined
         if (this.list_label?.includes("::")) {
@@ -75,6 +77,13 @@ export default {
         }
     },
     computed: {
+        field_label: function () {
+            if (this.optional) {
+                return this.form.label
+            } else {
+                return this.form.label + '*'
+            }
+        },
         modelName() {
             return this.$t(this?.model?.name) ?? this.$t("Search")
         },
@@ -124,7 +133,7 @@ export default {
             let item = undefined
             let label = this.form.list_label.split("::")
             itemlist.forEach((x) => {
-                item = { ...x }
+                item = {...x}
                 for (const [k, v] of Object.entries(x)) {
                     if (k == label[0]) {
                         item["id"] = v.id
