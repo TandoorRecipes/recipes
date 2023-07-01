@@ -59,7 +59,7 @@
     "@vue/compiler-sfc": "^3.2.45",
     "@vue/eslint-config-typescript": "^10.0.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.28.0",
+    "eslint": "^8.44.0",
     "eslint-plugin-vue": "^8.7.1",
     "typescript": "~4.9.3",
     "vue-cli-plugin-i18n": "^2.3.2",
