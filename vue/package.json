@@ -66,7 +66,7 @@
     "webpack-bundle-tracker": "1.8.1",
     "workbox-background-sync": "^6.5.4",
     "workbox-expiration": "^6.5.4",
-    "workbox-navigation-preload": "^6.5.4",
+    "workbox-navigation-preload": "^7.0.0",
     "workbox-precaching": "^6.5.4",
     "workbox-routing": "^6.5.4",
     "workbox-strategies": "^6.2.4"
