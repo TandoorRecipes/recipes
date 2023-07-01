@@ -61,7 +61,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.28.0",
     "eslint-plugin-vue": "^8.7.1",
-    "typescript": "~4.9.3",
+    "typescript": "~5.1.6",
     "vue-cli-plugin-i18n": "^2.3.2",
     "webpack-bundle-tracker": "1.8.1",
     "workbox-background-sync": "^6.5.4",
