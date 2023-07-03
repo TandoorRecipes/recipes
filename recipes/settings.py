@@ -139,10 +139,11 @@ try:
                     __import__(apps_path)
                     app_config_classname = dir(sys.modules[apps_path])[1]
                     plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
-                    if plugin_module not in INSTALLED_APPS:
+                    plugin_class = getattr(sys.modules[apps_path], app_config_classname)
+
+                    if plugin_module not in INSTALLED_APPS and not plugin_class.disabled:
                         INSTALLED_APPS.append(plugin_module)
-                        plugin_class = getattr(
-                            sys.modules[apps_path], app_config_classname)
+
                         plugin_config = {
                             'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
                             'module': f'recipes.plugins.{d}',
@@ -154,6 +155,7 @@ try:
                             'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
                         }
                         PLUGINS.append(plugin_config)
+                        print(f'PLUGIN {d} loaded')
                 except Exception:
                     if DEBUG:
                         traceback.print_exc()
