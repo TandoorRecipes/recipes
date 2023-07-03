@@ -132,7 +132,7 @@ PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 PLUGINS = []
 try:
     if os.path.isdir(PLUGINS_DIRECTORY):
-        for d in os.listdir():
+        for d in os.listdir(PLUGINS_DIRECTORY):
             if d != '__pycache__':
                 try:
                     apps_path = f'recipes.plugins.{d}.apps'
