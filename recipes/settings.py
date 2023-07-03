@@ -140,8 +140,10 @@ try:
                     app_config_classname = dir(sys.modules[apps_path])[1]
                     plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
                     plugin_class = getattr(sys.modules[apps_path], app_config_classname)
-
-                    if plugin_module not in INSTALLED_APPS and not plugin_class.disabled:
+                    plugin_disabled = False
+                    if hasattr(plugin_class, 'disabled'):
+                        plugin_disabled = plugin_class.disabled
+                    if plugin_module not in INSTALLED_APPS and not plugin_disabled:
                         INSTALLED_APPS.append(plugin_module)
 
                         plugin_config = {
