@@ -434,3 +434,10 @@ def switch_user_active_space(user, space):
             return us
     except ObjectDoesNotExist:
         return None
+
+
+class IsReadOnlyDRF(permissions.BasePermission):
+    message = 'You cannot interact with this object as it is not owned by you!'
+
+    def has_permission(self, request, view):
+        return request.method in SAFE_METHODS

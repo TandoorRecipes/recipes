@@ -421,6 +421,10 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
+        internal_note = self.request.query_params.get('internal_note', None)
+        if internal_note is not None:
+            self.queryset = self.queryset.filter(internal_note=internal_note)
+
         if is_space_owner(self.request.user, self.request.space):
             return self.queryset.filter(space=self.request.space)
         else:
@@ -1165,6 +1169,11 @@ class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsSpaceOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+
+        internal_note = self.request.query_params.get('internal_note', None)
+        if internal_note is not None:
+            self.queryset = self.queryset.filter(internal_note=internal_note)
+
         if is_space_owner(self.request.user, self.request.space):
             self.queryset = self.queryset.filter(space=self.request.space).all()
             return super().get_queryset()
