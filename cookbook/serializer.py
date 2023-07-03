@@ -1362,7 +1362,7 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
         model = Recipe
         fields = (
             'name', 'description', 'keywords', 'steps', 'working_time',
-            'waiting_time', 'internal', 'nutrition', 'servings', 'servings_text',
+            'waiting_time', 'internal', 'nutrition', 'servings', 'servings_text', 'source_url',
         )
 
     def create(self, validated_data):
