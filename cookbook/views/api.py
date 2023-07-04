@@ -1051,6 +1051,21 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             Q(created_by=self.request.user)
             | Q(shoppinglist__shared=self.request.user)
             | Q(created_by__in=list(self.request.user.get_shopping_share()))
+        ).prefetch_related(
+            'created_by',
+            'food',
+            'food__properties',
+            'food__properties__property_type',
+            'food__inherit_fields',
+            'food__supermarket_category',
+            'food__onhand_users',
+            'food__substitute',
+            'food__child_inherit_fields',
+
+            'unit',
+            'list_recipe',
+            'list_recipe__mealplan',
+            'list_recipe__mealplan__recipe',
         ).distinct().all()
 
         if pk := self.request.query_params.getlist('id', []):
