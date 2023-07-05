@@ -415,6 +415,9 @@ class UserSpace(models.Model, PermissionModelMixin):
     # that having more than one active space should just break certain parts of the application and not leak any data
     active = models.BooleanField(default=False)
 
+    invite_link = models.ForeignKey("InviteLink", on_delete=models.PROTECT, null=True, blank=True)
+    internal_note = models.TextField(blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -718,25 +721,6 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
-
-    def __str__(self):
-        food = ""
-        unit = ""
-        if self.always_use_plural_food and self.food.plural_name not in (None, "") and not self.no_amount:
-            food = self.food.plural_name
-        else:
-            if self.amount > 1 and self.food.plural_name not in (None, "") and not self.no_amount:
-                food = self.food.plural_name
-            else:
-                food = str(self.food)
-        if self.always_use_plural_unit and self.unit.plural_name not in (None, "") and not self.no_amount:
-            unit = self.unit.plural_name
-        else:
-            if self.amount > 1 and self.unit is not None and self.unit.plural_name not in (None, "") and not self.no_amount:
-                unit = self.unit.plural_name
-            else:
-                unit = str(self.unit)
-        return str(self.amount) + ' ' + str(unit) + ' ' + str(food)
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1143,6 +1127,8 @@ class InviteLink(ExportModelOperationsMixin('invite_link'), models.Model, Permis
     reusable = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    internal_note = models.TextField(blank=True, null=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')

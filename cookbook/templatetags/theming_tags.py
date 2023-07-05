@@ -27,7 +27,7 @@ def theme_url(request):
 @register.simple_tag
 def nav_color(request):
     if not request.user.is_authenticated:
-        return 'primary'
+        return 'navbar-light bg-primary'
 
     if request.user.userpreference.nav_color.lower() in ['light', 'warning', 'info', 'success']:
         return f'navbar-light bg-{request.user.userpreference.nav_color.lower()}'

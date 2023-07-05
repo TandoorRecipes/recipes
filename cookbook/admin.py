@@ -39,6 +39,8 @@ def delete_space_action(modeladmin, request, queryset):
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
+    autocomplete_fields = ('created_by',)
+    filter_horizontal = ('food_inherit',)
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
     actions = [delete_space_action]
@@ -50,6 +52,8 @@ admin.site.register(Space, SpaceAdmin)
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
     search_fields = ('user__username', 'space__name',)
+    filter_horizontal = ('groups',)
+    autocomplete_fields = ('user', 'space',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)
@@ -60,6 +64,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page',)
     date_hierarchy = 'created_at'
+    filter_horizontal = ('plan_share', 'shopping_share',)
 
     @staticmethod
     def name(obj):
