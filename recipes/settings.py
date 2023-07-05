@@ -128,34 +128,40 @@ INSTALLED_APPS = [
     'treebeard',
 ]
 
+PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 PLUGINS = []
 try:
-    for d in os.listdir(os.path.join(BASE_DIR, 'recipes', 'plugins')):
-        if d != '__pycache__':
-            try:
-                apps_path = f'recipes.plugins.{d}.apps'
-                __import__(apps_path)
-                app_config_classname = dir(sys.modules[apps_path])[1]
-                plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
-                if plugin_module not in INSTALLED_APPS:
-                    INSTALLED_APPS.append(plugin_module)
-                    plugin_class = getattr(
-                        sys.modules[apps_path], app_config_classname)
-                    plugin_config = {
-                        'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
-                        'module': f'recipes.plugins.{d}',
-                        'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
-                        'base_url': plugin_class.base_url,
-                        'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
-                        'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
-                        'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
-                        'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
-                    }
-                    PLUGINS.append(plugin_config)
-            except Exception:
-                if DEBUG:
-                    traceback.print_exc()
-                    print(f'ERROR failed to initialize plugin {d}')
+    if os.path.isdir(PLUGINS_DIRECTORY):
+        for d in os.listdir(PLUGINS_DIRECTORY):
+            if d != '__pycache__':
+                try:
+                    apps_path = f'recipes.plugins.{d}.apps'
+                    __import__(apps_path)
+                    app_config_classname = dir(sys.modules[apps_path])[1]
+                    plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
+                    plugin_class = getattr(sys.modules[apps_path], app_config_classname)
+                    plugin_disabled = False
+                    if hasattr(plugin_class, 'disabled'):
+                        plugin_disabled = plugin_class.disabled
+                    if plugin_module not in INSTALLED_APPS and not plugin_disabled:
+                        INSTALLED_APPS.append(plugin_module)
+
+                        plugin_config = {
+                            'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                            'module': f'recipes.plugins.{d}',
+                            'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
+                            'base_url': plugin_class.base_url,
+                            'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                            'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                            'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
+                            'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
+                        }
+                        PLUGINS.append(plugin_config)
+                        print(f'PLUGIN {d} loaded')
+                except Exception:
+                    if DEBUG:
+                        traceback.print_exc()
+                        print(f'ERROR failed to initialize plugin {d}')
 except Exception:
     if DEBUG:
         print('ERROR failed to initialize plugins')

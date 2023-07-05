@@ -370,7 +370,7 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
 
                 if request.user.userspace_set.count() == 1:
                     user_space.active = True

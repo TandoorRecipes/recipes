@@ -80,7 +80,7 @@ Basic guide to setup Docker and Portainer TrueNAS Core.
 services:
   db_recipes:
     restart: always
-    image: postgres:11-alpine
+    image: postgres:15-alpine
     volumes:
       - ./postgresql:/var/lib/postgresql/data
     env_file:
@@ -93,7 +93,8 @@ services:
       - stack.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-      - nginx_config:/opt/recipes/nginx/conf.d
+	  # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      - nginx_config:/opt/recipes/nginx/conf.d 
       - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
       - db_recipes
@@ -108,6 +109,7 @@ services:
     depends_on:
       - web_recipes
     volumes:
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static
       - ./mediafiles:/media

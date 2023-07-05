@@ -421,6 +421,10 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
+        internal_note = self.request.query_params.get('internal_note', None)
+        if internal_note is not None:
+            self.queryset = self.queryset.filter(internal_note=internal_note)
+
         if is_space_owner(self.request.user, self.request.space):
             return self.queryset.filter(space=self.request.space)
         else:
@@ -1047,6 +1051,21 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             Q(created_by=self.request.user)
             | Q(shoppinglist__shared=self.request.user)
             | Q(created_by__in=list(self.request.user.get_shopping_share()))
+        ).prefetch_related(
+            'created_by',
+            'food',
+            'food__properties',
+            'food__properties__property_type',
+            'food__inherit_fields',
+            'food__supermarket_category',
+            'food__onhand_users',
+            'food__substitute',
+            'food__child_inherit_fields',
+
+            'unit',
+            'list_recipe',
+            'list_recipe__mealplan',
+            'list_recipe__mealplan__recipe',
         ).distinct().all()
 
         if pk := self.request.query_params.getlist('id', []):
@@ -1165,6 +1184,11 @@ class InviteLinkViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [CustomIsSpaceOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+
+        internal_note = self.request.query_params.get('internal_note', None)
+        if internal_note is not None:
+            self.queryset = self.queryset.filter(internal_note=internal_note)
+
         if is_space_owner(self.request.user, self.request.space):
             self.queryset = self.queryset.filter(space=self.request.space).all()
             return super().get_queryset()

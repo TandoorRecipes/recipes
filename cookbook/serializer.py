@@ -322,8 +322,8 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'created_at', 'updated_at', 'space')
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
 class SpacedModelSerializer(serializers.ModelSerializer):
@@ -1245,7 +1245,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     class Meta:
         model = InviteLink
         fields = (
-            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'created_by', 'created_at',)
+            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by', 'created_at',)
         read_only_fields = ('id', 'uuid', 'created_by', 'created_at',)
 
 
@@ -1362,7 +1362,7 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
         model = Recipe
         fields = (
             'name', 'description', 'keywords', 'steps', 'working_time',
-            'waiting_time', 'internal', 'nutrition', 'servings', 'servings_text',
+            'waiting_time', 'internal', 'nutrition', 'servings', 'servings_text', 'source_url',
         )
 
     def create(self, validated_data):
