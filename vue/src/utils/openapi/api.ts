@@ -5263,6 +5263,12 @@ export interface UserPreference {
     left_handed?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    show_step_ingredients?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof UserPreference
      */

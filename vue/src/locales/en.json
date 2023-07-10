@@ -368,6 +368,8 @@
     "filter_name": "Filter Name",
     "left_handed": "Left-handed mode",
     "left_handed_help": "Will optimize the UI for use with your left hand.",
+    "show_step_ingredients": "Show Step Ingredients",
+    "show_step_ingredients_help": "For each step of a recipe that has listed ingredients, show those ingredients in a table next to the step",
     "Custom Filter": "Custom Filter",
     "shared_with": "Shared With",
     "sort_by": "Sort By",

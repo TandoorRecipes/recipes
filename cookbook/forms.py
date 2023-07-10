@@ -46,6 +46,7 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed',
+            'show_step_ingredients',
         )
 
         labels = {
@@ -60,7 +61,8 @@ class UserPreferenceForm(forms.ModelForm):
             'ingredient_decimals': _('Ingredient decimal places'),
             'shopping_auto_sync': _('Shopping list auto sync period'),
             'comments': _('Comments'),
-            'left_handed': _('Left-handed mode')
+            'left_handed': _('Left-handed mode'),
+            'show_step_ingredients': _('Show step 1 ingredients table')
         }
 
         help_texts = {
@@ -82,7 +84,8 @@ class UserPreferenceForm(forms.ModelForm):
             'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
-            'left_handed': _('Will optimize the UI for use with your left hand.')
+            'left_handed': _('Will optimize the UI for use with your left hand.'),
+            'show_step_ingredients': _('Show a table of ingredients for each step of the recipe that lists ingredients')
         }
 
         widgets = {

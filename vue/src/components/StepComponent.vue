@@ -33,7 +33,7 @@
             <div class="row">
                 <!-- ingredients table -->
                 <div class="col col-md-4"
-                     v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
+                     v-if="user_preferences.show_step_ingredients && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
                         <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
@@ -124,10 +124,7 @@
 </template>
 
 <script>
-import {calculateAmount} from "@/utils/utils"
-
-import {GettextMixin} from "@/utils/utils"
-
+import {calculateAmount, GettextMixin, getUserPreference} from "@/utils/utils"
 import CompileComponent from "@/components/CompileComponent"
 import IngredientsCard from "@/components/IngredientsCard"
 import Vue from "vue"
@@ -163,10 +160,12 @@ export default {
         return {
             details_visible: true,
             set_time_input: "",
+            user_preferences: undefined,
         }
     },
     mounted() {
         this.set_time_input = moment(this.start_time).add(this.step.time_offset, "minutes").format("yyyy-MM-DDTHH:mm")
+        this.user_preferences = getUserPreference()
     },
     methods: {
         calculateAmount: function (x) {
