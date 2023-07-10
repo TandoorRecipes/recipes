@@ -103,6 +103,7 @@
 
 import draggable from "vuedraggable";
 import stringSimilarity from "string-similarity"
+import {getUserPreference} from "@/utils/utils"
 
 export default {
     name: "ImportViewStepEditor",
@@ -117,6 +118,7 @@ export default {
             recipe_json: undefined,
             current_edit_ingredient: null,
             current_edit_step: null,
+            user_preferences: null,
         }
     },
     watch: {
@@ -126,6 +128,7 @@ export default {
     },
     mounted() {
         this.recipe_json = this.recipe
+        this.user_preferences = getUserPreference();
     },
     methods: {
         /**
@@ -138,7 +141,7 @@ export default {
             let steps = []
             step.instruction.split(split_character).forEach(part => {
                 if (part.trim() !== '') {
-                    steps.push({'instruction': part, 'ingredients': []})
+                    steps.push({'instruction': part, 'ingredients': [], 'show_ingredients_table': this.user_preferences.show_step_ingredients})
                 }
             })
             steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
