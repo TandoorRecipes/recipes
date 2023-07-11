@@ -27,7 +27,7 @@ def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     result = c.get(reverse(LIST_URL))
     assert result.status_code == arg[1]
     if arg[1] == 200:
-        assert len(json.loads(result.content)) == arg[2]
+        assert len(json.loads(result.content)['results']) == arg[2]
 
 
 @pytest.mark.parametrize("arg", [
