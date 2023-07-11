@@ -414,6 +414,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
     serializer_class = UserSpaceSerializer
     permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch', 'delete']
+    pagination_class = DefaultPagination
 
     def destroy(self, request, *args, **kwargs):
         if request.space.created_by == UserSpace.objects.get(pk=kwargs['pk']).user:
