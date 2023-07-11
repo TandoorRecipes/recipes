@@ -48,7 +48,7 @@
                         </tr>
                         </thead>
                         <tr v-for="us in user_spaces" :key="us.id">
-                            <td>{{ us.user.username }}</td>
+                            <td>{{ us.user.display_name }}</td>
                             <td>
                                 <generic-multiselect
                                         class="input-group-text m-0 p-0"
@@ -238,8 +238,8 @@ export default {
         apiFactory.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.space = r.data
         })
-        apiFactory.listUserSpaces().then(r => {
-            this.user_spaces = r.data
+        apiFactory.listUserSpaces(1, 25).then(r => { //TODO build proper pagination
+            this.user_spaces = r.data.results
         })
         this.loadInviteLinks()
     },

@@ -357,118 +357,6 @@ export interface CustomFilterShared {
 /**
  * 
  * @export
- * @interface EnterpriseSocialEmbed
- */
-export interface EnterpriseSocialEmbed {
-    /**
-     * 
-     * @type {number}
-     * @memberof EnterpriseSocialEmbed
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialEmbed
-     */
-    name: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialEmbed
-     */
-    type: EnterpriseSocialEmbedTypeEnum;
-    /**
-     * 
-     * @type {Array<RecipeKeywords>}
-     * @memberof EnterpriseSocialEmbed
-     */
-    keywords: Array<RecipeKeywords>;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialEmbed
-     */
-    background_color?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialEmbed
-     */
-    accent_color?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialEmbed
-     */
-    uuid?: string;
-}
-
-/**
-    * @export
-    * @enum {string}
-    */
-export enum EnterpriseSocialEmbedTypeEnum {
-    Recipe = 'RECIPE',
-    RecipeKeyword = 'RECIPE_KEYWORD',
-    MealPlan = 'MEAL_PLAN',
-    Shopping = 'SHOPPING',
-    Book = 'BOOK'
-}
-
-/**
- * 
- * @export
- * @interface EnterpriseSocialRecipeSearch
- */
-export interface EnterpriseSocialRecipeSearch {
-    /**
-     * 
-     * @type {number}
-     * @memberof EnterpriseSocialRecipeSearch
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSocialRecipeSearch
-     */
-    name?: string;
-    /**
-     * 
-     * @type {any}
-     * @memberof EnterpriseSocialRecipeSearch
-     */
-    image?: any | null;
-    /**
-     * 
-     * @type {Array<RecipeKeywords>}
-     * @memberof EnterpriseSocialRecipeSearch
-     */
-    keywords?: Array<RecipeKeywords>;
-}
-/**
- * 
- * @export
- * @interface EnterpriseSpace
- */
-export interface EnterpriseSpace {
-    /**
-     * 
-     * @type {number}
-     * @memberof EnterpriseSpace
-     */
-    space: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof EnterpriseSpace
-     */
-    licensed_modules: string;
-}
-/**
- * 
- * @export
  * @interface ExportLog
  */
 export interface ExportLog {
@@ -1432,8 +1320,39 @@ export interface InlineResponse20011 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ViewLog>}
+     * @type {Array<UserSpace>}
      * @memberof InlineResponse20011
+     */
+    results?: Array<UserSpace>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse20012
+ */
+export interface InlineResponse20012 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20012
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20012
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20012
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ViewLog>}
+     * @memberof InlineResponse20012
      */
     results?: Array<ViewLog>;
 }
@@ -5571,72 +5490,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEnterpriseSocialEmbed: async (enterpriseSocialEmbed?: EnterpriseSocialEmbed, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-embed/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSocialEmbed, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEnterpriseSpace: async (enterpriseSpace?: EnterpriseSpace, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-space/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSpace, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6991,72 +6844,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyEnterpriseSocialEmbed: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('destroyEnterpriseSocialEmbed', 'id', id)
-            const localVarPath = `/api/enterprise-social-embed/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyEnterpriseSpace: async (space: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'space' is not null or undefined
-            assertParamExists('destroyEnterpriseSpace', 'space', space)
-            const localVarPath = `/api/enterprise-space/{space}/`
-                .replace(`{${"space"}}`, encodeURIComponent(String(space)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -8179,609 +7966,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseCreateKeyword: async (keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-keyword/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseCreateRecipe: async (recipe?: Recipe, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-recipe/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseDestroyKeyword: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseDestroyKeyword', 'id', id)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseDestroyRecipe: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseDestroyRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {any} [image] 
-         * @param {string} [imageUrl] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseImageRecipe: async (id: string, image?: any, imageUrl?: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseImageRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/image/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
-
-
-            if (image !== undefined) { 
-                localVarFormParams.append('image', image as any);
-            }
-    
-            if (imageUrl !== undefined) { 
-                localVarFormParams.append('image_url', imageUrl as any);
-            }
-    
-    
-            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = localVarFormParams;
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseListKeywords: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-keyword/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseListRecipes: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-recipe/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseMergeKeyword: async (id: string, target: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseMergeKeyword', 'id', id)
-            // verify required parameter 'target' is not null or undefined
-            assertParamExists('enterpriseMergeKeyword', 'target', target)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/merge/{target}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"target"}}`, encodeURIComponent(String(target)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseMoveKeyword: async (id: string, parent: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseMoveKeyword', 'id', id)
-            // verify required parameter 'parent' is not null or undefined
-            assertParamExists('enterpriseMoveKeyword', 'parent', parent)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/move/{parent}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
-                .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterprisePartialUpdateKeyword: async (id: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterprisePartialUpdateKeyword', 'id', id)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterprisePartialUpdateRecipe: async (id: string, recipe?: Recipe, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterprisePartialUpdateRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRelatedRecipe: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseRelatedRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/related/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRetrieveKeyword: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseRetrieveKeyword', 'id', id)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRetrieveRecipe: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseRetrieveRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseShoppingRecipe: async (id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseShoppingRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/shopping/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeShoppingUpdate, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseUpdateKeyword: async (id: string, keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseUpdateKeyword', 'id', id)
-            const localVarPath = `/api/enterprise-social-keyword/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseUpdateRecipe: async (id: string, recipe?: Recipe, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('enterpriseUpdateRecipe', 'id', id)
-            const localVarPath = `/api/enterprise-social-recipe/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
          * @param {string} [imageUrl] 
@@ -8960,64 +8144,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          */
         listCustomFilters: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/custom-filter/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEnterpriseSocialEmbeds: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-social-embed/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEnterpriseSpaces: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/enterprise-space/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -9504,6 +8630,35 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          */
         listOpenDataPropertys: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/open-data-property/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listOpenDataStatisticsViewSets: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-stats/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -10420,10 +9575,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserSpaces: async (options: any = {}): Promise<RequestArgs> => {
+        listUserSpaces: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-space/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10435,6 +9592,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -10928,80 +10093,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        partialUpdateEnterpriseSocialEmbed: async (id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('partialUpdateEnterpriseSocialEmbed', 'id', id)
-            const localVarPath = `/api/enterprise-social-embed/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSocialEmbed, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        partialUpdateEnterpriseSpace: async (space: string, enterpriseSpace?: EnterpriseSpace, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'space' is not null or undefined
-            assertParamExists('partialUpdateEnterpriseSpace', 'space', space)
-            const localVarPath = `/api/enterprise-space/{space}/`
-                .replace(`{${"space"}}`, encodeURIComponent(String(space)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSpace, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12587,72 +11678,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             assertParamExists('retrieveCustomFilter', 'id', id)
             const localVarPath = `/api/custom-filter/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        retrieveEnterpriseSocialEmbed: async (id: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('retrieveEnterpriseSocialEmbed', 'id', id)
-            const localVarPath = `/api/enterprise-social-embed/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        retrieveEnterpriseSpace: async (space: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'space' is not null or undefined
-            assertParamExists('retrieveEnterpriseSpace', 'space', space)
-            const localVarPath = `/api/enterprise-space/{space}/`
-                .replace(`{${"space"}}`, encodeURIComponent(String(space)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -14388,80 +13413,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateEnterpriseSocialEmbed: async (id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('updateEnterpriseSocialEmbed', 'id', id)
-            const localVarPath = `/api/enterprise-social-embed/{id}/`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSocialEmbed, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateEnterpriseSpace: async (space: string, enterpriseSpace?: EnterpriseSpace, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'space' is not null or undefined
-            assertParamExists('updateEnterpriseSpace', 'space', space)
-            const localVarPath = `/api/enterprise-space/{space}/`
-                .replace(`{${"space"}}`, encodeURIComponent(String(space)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(enterpriseSpace, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
@@ -15777,26 +14728,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createEnterpriseSocialEmbed(enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSocialEmbed>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createEnterpriseSocialEmbed(enterpriseSocialEmbed, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createEnterpriseSpace(enterpriseSpace?: EnterpriseSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createEnterpriseSpace(enterpriseSpace, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16202,26 +15133,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async destroyEnterpriseSocialEmbed(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyEnterpriseSocialEmbed(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async destroyEnterpriseSpace(space: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.destroyEnterpriseSpace(space, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16562,185 +15473,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseCreateKeyword(keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseCreateKeyword(keyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseCreateRecipe(recipe?: Recipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseCreateRecipe(recipe, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseDestroyKeyword(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseDestroyKeyword(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseDestroyRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseDestroyRecipe(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {any} [image] 
-         * @param {string} [imageUrl] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseImageRecipe(id: string, image?: any, imageUrl?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseImageRecipe(id, image, imageUrl, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseListKeywords(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Keyword>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseListKeywords(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseListRecipes(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EnterpriseSocialRecipeSearch>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseListRecipes(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseMergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseMergeKeyword(id, target, keyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseMoveKeyword(id: string, parent: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseMoveKeyword(id, parent, keyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterprisePartialUpdateKeyword(id: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterprisePartialUpdateKeyword(id, keyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterprisePartialUpdateRecipe(id: string, recipe?: Recipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterprisePartialUpdateRecipe(id, recipe, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseRelatedRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeSimple>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseRelatedRecipe(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseRetrieveKeyword(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseRetrieveKeyword(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseRetrieveRecipe(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseRetrieveRecipe(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseShoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeShoppingUpdate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseShoppingRecipe(id, recipeShoppingUpdate, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseUpdateKeyword(id: string, keyword?: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseUpdateKeyword(id, keyword, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async enterpriseUpdateRecipe(id: string, recipe?: Recipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.enterpriseUpdateRecipe(id, recipe, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
          * @param {string} [imageUrl] 
@@ -16796,24 +15528,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listCustomFilters(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CustomFilter>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listCustomFilters(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listEnterpriseSocialEmbeds(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EnterpriseSocialEmbed>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listEnterpriseSocialEmbeds(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listEnterpriseSpaces(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EnterpriseSpace>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listEnterpriseSpaces(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16956,6 +15670,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async listOpenDataPropertys(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<OpenDataProperty>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listOpenDataPropertys(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listOpenDataStatisticsViewSets(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<any>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listOpenDataStatisticsViewSets(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17212,11 +15935,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUserSpaces(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserSpace>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserSpaces(options);
+        async listUserSpaces(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20011>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserSpaces(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17235,7 +15960,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20011>> {
+        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20012>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -17361,28 +16086,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateCustomFilter(id, customFilter, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async partialUpdateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSocialEmbed>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async partialUpdateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateEnterpriseSpace(space, enterpriseSpace, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17855,26 +16558,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async retrieveCustomFilter(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveCustomFilter(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async retrieveEnterpriseSocialEmbed(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSocialEmbed>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveEnterpriseSocialEmbed(id, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async retrieveEnterpriseSpace(space: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveEnterpriseSpace(space, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -18396,28 +17079,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSocialEmbed>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EnterpriseSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateEnterpriseSpace(space, enterpriseSpace, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
@@ -18841,24 +17502,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEnterpriseSocialEmbed(enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): AxiosPromise<EnterpriseSocialEmbed> {
-            return localVarFp.createEnterpriseSocialEmbed(enterpriseSocialEmbed, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createEnterpriseSpace(enterpriseSpace?: EnterpriseSpace, options?: any): AxiosPromise<EnterpriseSpace> {
-            return localVarFp.createEnterpriseSpace(enterpriseSpace, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -19224,24 +17867,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyEnterpriseSocialEmbed(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.destroyEnterpriseSocialEmbed(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        destroyEnterpriseSpace(space: string, options?: any): AxiosPromise<void> {
-            return localVarFp.destroyEnterpriseSpace(space, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -19548,168 +18173,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseCreateKeyword(keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterpriseCreateKeyword(keyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseCreateRecipe(recipe?: Recipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.enterpriseCreateRecipe(recipe, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseDestroyKeyword(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.enterpriseDestroyKeyword(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseDestroyRecipe(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.enterpriseDestroyRecipe(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {any} [image] 
-         * @param {string} [imageUrl] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseImageRecipe(id: string, image?: any, imageUrl?: string, options?: any): AxiosPromise<RecipeImage> {
-            return localVarFp.enterpriseImageRecipe(id, image, imageUrl, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseListKeywords(options?: any): AxiosPromise<Array<Keyword>> {
-            return localVarFp.enterpriseListKeywords(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseListRecipes(options?: any): AxiosPromise<Array<EnterpriseSocialRecipeSearch>> {
-            return localVarFp.enterpriseListRecipes(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseMergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterpriseMergeKeyword(id, target, keyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseMoveKeyword(id: string, parent: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterpriseMoveKeyword(id, parent, keyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterprisePartialUpdateKeyword(id: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterprisePartialUpdateKeyword(id, keyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterprisePartialUpdateRecipe(id: string, recipe?: Recipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.enterprisePartialUpdateRecipe(id, recipe, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRelatedRecipe(id: string, options?: any): AxiosPromise<RecipeSimple> {
-            return localVarFp.enterpriseRelatedRecipe(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRetrieveKeyword(id: string, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterpriseRetrieveKeyword(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseRetrieveRecipe(id: string, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.enterpriseRetrieveRecipe(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseShoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): AxiosPromise<RecipeShoppingUpdate> {
-            return localVarFp.enterpriseShoppingRecipe(id, recipeShoppingUpdate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this keyword.
-         * @param {Keyword} [keyword] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseUpdateKeyword(id: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.enterpriseUpdateKeyword(id, keyword, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this recipe.
-         * @param {Recipe} [recipe] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        enterpriseUpdateRecipe(id: string, recipe?: Recipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.enterpriseUpdateRecipe(id, recipe, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this recipe.
          * @param {any} [image] 
          * @param {string} [imageUrl] 
@@ -19760,22 +18223,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listCustomFilters(options?: any): AxiosPromise<Array<CustomFilter>> {
             return localVarFp.listCustomFilters(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEnterpriseSocialEmbeds(options?: any): AxiosPromise<Array<EnterpriseSocialEmbed>> {
-            return localVarFp.listEnterpriseSocialEmbeds(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listEnterpriseSpaces(options?: any): AxiosPromise<Array<EnterpriseSpace>> {
-            return localVarFp.listEnterpriseSpaces(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19904,6 +18351,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         listOpenDataPropertys(options?: any): AxiosPromise<Array<OpenDataProperty>> {
             return localVarFp.listOpenDataPropertys(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listOpenDataStatisticsViewSets(options?: any): AxiosPromise<Array<any>> {
+            return localVarFp.listOpenDataStatisticsViewSets(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20136,11 +18591,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserSpaces(options?: any): AxiosPromise<Array<UserSpace>> {
-            return localVarFp.listUserSpaces(options).then((request) => request(axios, basePath));
+        listUserSpaces(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20011> {
+            return localVarFp.listUserSpaces(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * optional parameters  - **filter_list**: array of user id\'s to get names for
@@ -20157,7 +18614,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20011> {
+        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20012> {
             return localVarFp.listViewLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -20272,26 +18729,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
             return localVarFp.partialUpdateCustomFilter(id, customFilter, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        partialUpdateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): AxiosPromise<EnterpriseSocialEmbed> {
-            return localVarFp.partialUpdateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        partialUpdateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any): AxiosPromise<EnterpriseSpace> {
-            return localVarFp.partialUpdateEnterpriseSpace(space, enterpriseSpace, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20721,24 +19158,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         retrieveCustomFilter(id: string, options?: any): AxiosPromise<CustomFilter> {
             return localVarFp.retrieveCustomFilter(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        retrieveEnterpriseSocialEmbed(id: string, options?: any): AxiosPromise<EnterpriseSocialEmbed> {
-            return localVarFp.retrieveEnterpriseSocialEmbed(id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        retrieveEnterpriseSpace(space: string, options?: any): AxiosPromise<EnterpriseSpace> {
-            return localVarFp.retrieveEnterpriseSpace(space, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -21208,26 +19627,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} id A unique integer value identifying this enterprise social embed.
-         * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any): AxiosPromise<EnterpriseSocialEmbed> {
-            return localVarFp.updateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} space A unique value identifying this enterprise space.
-         * @param {EnterpriseSpace} [enterpriseSpace] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any): AxiosPromise<EnterpriseSpace> {
-            return localVarFp.updateEnterpriseSpace(space, enterpriseSpace, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
          * @param {string} id A unique integer value identifying this export log.
          * @param {ExportLog} [exportLog] 
          * @param {*} [options] Override http request option.
@@ -21624,28 +20023,6 @@ export class ApiApi extends BaseAPI {
      */
     public createCustomFilter(customFilter?: CustomFilter, options?: any) {
         return ApiApiFp(this.configuration).createCustomFilter(customFilter, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public createEnterpriseSocialEmbed(enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any) {
-        return ApiApiFp(this.configuration).createEnterpriseSocialEmbed(enterpriseSocialEmbed, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {EnterpriseSpace} [enterpriseSpace] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public createEnterpriseSpace(enterpriseSpace?: EnterpriseSpace, options?: any) {
-        return ApiApiFp(this.configuration).createEnterpriseSpace(enterpriseSpace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22095,28 +20472,6 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} id A unique integer value identifying this enterprise social embed.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public destroyEnterpriseSocialEmbed(id: string, options?: any) {
-        return ApiApiFp(this.configuration).destroyEnterpriseSocialEmbed(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} space A unique value identifying this enterprise space.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public destroyEnterpriseSpace(space: string, options?: any) {
-        return ApiApiFp(this.configuration).destroyEnterpriseSpace(space, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {string} id A unique integer value identifying this export log.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -22491,202 +20846,6 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {Keyword} [keyword] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseCreateKeyword(keyword?: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseCreateKeyword(keyword, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {Recipe} [recipe] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseCreateRecipe(recipe?: Recipe, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseCreateRecipe(recipe, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseDestroyKeyword(id: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseDestroyKeyword(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseDestroyRecipe(id: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseDestroyRecipe(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {any} [image] 
-     * @param {string} [imageUrl] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseImageRecipe(id: string, image?: any, imageUrl?: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseImageRecipe(id, image, imageUrl, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseListKeywords(options?: any) {
-        return ApiApiFp(this.configuration).enterpriseListKeywords(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseListRecipes(options?: any) {
-        return ApiApiFp(this.configuration).enterpriseListRecipes(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {string} target 
-     * @param {Keyword} [keyword] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseMergeKeyword(id: string, target: string, keyword?: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseMergeKeyword(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {string} parent 
-     * @param {Keyword} [keyword] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseMoveKeyword(id: string, parent: string, keyword?: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseMoveKeyword(id, parent, keyword, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {Keyword} [keyword] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterprisePartialUpdateKeyword(id: string, keyword?: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).enterprisePartialUpdateKeyword(id, keyword, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {Recipe} [recipe] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterprisePartialUpdateRecipe(id: string, recipe?: Recipe, options?: any) {
-        return ApiApiFp(this.configuration).enterprisePartialUpdateRecipe(id, recipe, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseRelatedRecipe(id: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseRelatedRecipe(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseRetrieveKeyword(id: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseRetrieveKeyword(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseRetrieveRecipe(id: string, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseRetrieveRecipe(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseShoppingRecipe(id: string, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseShoppingRecipe(id, recipeShoppingUpdate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this keyword.
-     * @param {Keyword} [keyword] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseUpdateKeyword(id: string, keyword?: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseUpdateKeyword(id, keyword, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this recipe.
-     * @param {Recipe} [recipe] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public enterpriseUpdateRecipe(id: string, recipe?: Recipe, options?: any) {
-        return ApiApiFp(this.configuration).enterpriseUpdateRecipe(id, recipe, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
      * @param {string} id A unique integer value identifying this recipe.
      * @param {any} [image] 
      * @param {string} [imageUrl] 
@@ -22748,26 +20907,6 @@ export class ApiApi extends BaseAPI {
      */
     public listCustomFilters(options?: any) {
         return ApiApiFp(this.configuration).listCustomFilters(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public listEnterpriseSocialEmbeds(options?: any) {
-        return ApiApiFp(this.configuration).listEnterpriseSocialEmbeds(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public listEnterpriseSpaces(options?: any) {
-        return ApiApiFp(this.configuration).listEnterpriseSpaces(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22924,6 +21063,16 @@ export class ApiApi extends BaseAPI {
      */
     public listOpenDataPropertys(options?: any) {
         return ApiApiFp(this.configuration).listOpenDataPropertys(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public listOpenDataStatisticsViewSets(options?: any) {
+        return ApiApiFp(this.configuration).listOpenDataStatisticsViewSets(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -23203,12 +21352,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listUserSpaces(options?: any) {
-        return ApiApiFp(this.configuration).listUserSpaces(options).then((request) => request(this.axios, this.basePath));
+    public listUserSpaces(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listUserSpaces(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -23366,30 +21517,6 @@ export class ApiApi extends BaseAPI {
      */
     public partialUpdateCustomFilter(id: string, customFilter?: CustomFilter, options?: any) {
         return ApiApiFp(this.configuration).partialUpdateCustomFilter(id, customFilter, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this enterprise social embed.
-     * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public partialUpdateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any) {
-        return ApiApiFp(this.configuration).partialUpdateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} space A unique value identifying this enterprise space.
-     * @param {EnterpriseSpace} [enterpriseSpace] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public partialUpdateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any) {
-        return ApiApiFp(this.configuration).partialUpdateEnterpriseSpace(space, enterpriseSpace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -23905,28 +22032,6 @@ export class ApiApi extends BaseAPI {
      */
     public retrieveCustomFilter(id: string, options?: any) {
         return ApiApiFp(this.configuration).retrieveCustomFilter(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this enterprise social embed.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public retrieveEnterpriseSocialEmbed(id: string, options?: any) {
-        return ApiApiFp(this.configuration).retrieveEnterpriseSocialEmbed(id, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} space A unique value identifying this enterprise space.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public retrieveEnterpriseSpace(space: string, options?: any) {
-        return ApiApiFp(this.configuration).retrieveEnterpriseSpace(space, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -24495,30 +22600,6 @@ export class ApiApi extends BaseAPI {
      */
     public updateCustomFilter(id: string, customFilter?: CustomFilter, options?: any) {
         return ApiApiFp(this.configuration).updateCustomFilter(id, customFilter, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} id A unique integer value identifying this enterprise social embed.
-     * @param {EnterpriseSocialEmbed} [enterpriseSocialEmbed] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public updateEnterpriseSocialEmbed(id: string, enterpriseSocialEmbed?: EnterpriseSocialEmbed, options?: any) {
-        return ApiApiFp(this.configuration).updateEnterpriseSocialEmbed(id, enterpriseSocialEmbed, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {string} space A unique value identifying this enterprise space.
-     * @param {EnterpriseSpace} [enterpriseSpace] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public updateEnterpriseSpace(space: string, enterpriseSpace?: EnterpriseSpace, options?: any) {
-        return ApiApiFp(this.configuration).updateEnterpriseSpace(space, enterpriseSpace, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
