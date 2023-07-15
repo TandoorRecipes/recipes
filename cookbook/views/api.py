@@ -60,7 +60,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
                                                is_space_owner, switch_user_active_space, above_space_limit,
                                                CustomRecipePermission, CustomUserPermission,
-                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission)
+                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, has_group_permission, IsReadOnlyDRF)
 from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup, clean_dict
 from cookbook.helper.scrapers.scrapers import text_scraper
@@ -402,11 +402,11 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [IsReadOnlyDRF & CustomIsUser | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
-        return self.queryset.filter(id=self.request.space.id, created_by=self.request.user)
+        return self.queryset.filter(id=self.request.space.id)
 
 
 class UserSpaceViewSet(viewsets.ModelViewSet):
