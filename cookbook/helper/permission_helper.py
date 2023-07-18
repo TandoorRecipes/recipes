@@ -322,7 +322,7 @@ class CustomRecipePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):  # user is either at least a guest or a share link is given and the request is safe
         share = request.query_params.get('share', None)
-        return has_group_permission(request.user, ['guest']) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
+        return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(request.user, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
 
     def has_object_permission(self, request, view, obj):
         share = request.query_params.get('share', None)
@@ -332,7 +332,7 @@ class CustomRecipePermission(permissions.BasePermission):
             if obj.private:
                 return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
             else:
-                return has_group_permission(request.user, ['guest']) and obj.space == request.space
+                return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(request.user, ['user'])) and obj.space == request.space
 
 
 class CustomUserPermission(permissions.BasePermission):
