@@ -48,7 +48,7 @@ def recipe(request, space_1, u1_s1):
 
 
 @pytest.mark.parametrize("arg", [
-    ['g1_s1', 204],
+    ['g1_s1', 403],
     ['u1_s1', 204],
     ['u1_s2', 404],
     ['a1_s1', 204],
