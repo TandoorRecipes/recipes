@@ -1,5 +1,5 @@
-Django==4.1.9
-cryptography==41.0.0
+Django==4.1.10
+cryptography===41.0.2
 django-annoying==0.10.6
 django-autocomplete-light==3.9.4
 django-cleanup==7.0.0
@@ -20,7 +20,7 @@ python-dotenv==0.21.0
 requests==2.31.0
 six==1.16.0
 webdavclient3==3.14.6
-whitenoise==6.2.0
+whitenoise==6.5.0
 icalendar==5.0.4
 pyyaml==6.0
 uritemplate==4.1.1
@@ -45,4 +45,4 @@ django-auth-ldap==4.2.0
 pytest-factoryboy==2.5.1
 pyppeteer==1.0.2
 validators==0.20.0
-pytube==12.1.0
+pytube==15.0.0
