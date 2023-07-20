@@ -511,7 +511,8 @@
     "imperial_gallon": "imperial gal [imp gal] (UK, volume)",
     "imperial_tbsp": "imperial tablespoon [imp tbsp] (UK, volume)",
     "imperial_tsp": "imperial teaspoon [imp tsp] (UK, volume)",
-
+    "Choose_Category": "Choose Category",
+    "Back": "Back",
     "Use_Plural_Unit_Always": "Use plural form for unit always",
     "Use_Plural_Unit_Simple": "Use plural form for unit dynamically",
     "Use_Plural_Food_Always": "Use plural form for food always",
