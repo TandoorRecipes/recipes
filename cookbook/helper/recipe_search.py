@@ -85,9 +85,9 @@ class RecipeSearch():
         self._viewedon = self._params.get('viewedon', None)
         self._makenow = self._params.get('makenow', None)
         # this supports hidden feature to find recipes missing X ingredients
-        if type(self._makenow) == bool and self._makenow == True:
+        if isinstance(self._makenow, bool) and self._makenow == True:
             self._makenow = 0
-        elif type(self._makenow) == str and self._makenow in ["yes", "true"]:
+        elif isinstance(self._makenow, str) and self._makenow in ["yes", "true"]:
             self._makenow = 0
         else:
             try:
@@ -150,7 +150,7 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self._makenow_filter(missing=self._makenow)
         self.string_filters(string=self._string)
-        return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
+        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
 
     def _sort_includes(self, *args):
         for x in args:
@@ -436,9 +436,9 @@ class RecipeSearch():
         if rating or self._sort_includes('rating'):
             lessthan = self._sort_includes('-rating') or '-' in (rating or [])
             if lessthan:
-                default = 100
-            else:
                 default = 0
+            else:
+                default = 100
             # TODO make ratings a settings user-only vs all-users
             self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(
                 cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
@@ -560,7 +560,7 @@ class RecipeSearch():
             self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
     def _makenow_filter(self, missing=None):
-        if missing is None or (type(missing) == bool and missing == False):
+        if missing is None or (isinstance(missing, bool) and missing == False):
             return
         shopping_users = [
             *self._request.user.get_shopping_share(), self._request.user]
