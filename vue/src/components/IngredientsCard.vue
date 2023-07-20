@@ -27,7 +27,6 @@
                                         :detailed="detailed"
                                         @checked-state-changed="$emit('checked-state-changed', $event)"
                                         :settings="settings"
-                                        :sub_badge="substitutes"
                                     />
                                 </template>
                             </template>
