@@ -478,7 +478,7 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin)
 
     class Meta:
         model = Unit
-        fields = ('id', 'name', 'plural_name', 'description', 'numrecipe', 'image', 'open_data_slug')
+        fields = ('id', 'name', 'plural_name', 'description', 'base_unit', 'numrecipe', 'image', 'open_data_slug')
         read_only_fields = ('id', 'numrecipe', 'image')
 
 
