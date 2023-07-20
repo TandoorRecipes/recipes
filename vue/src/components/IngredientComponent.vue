@@ -63,7 +63,6 @@ export default {
         ingredient_factor: { type: Number, default: 1 },
         detailed: { type: Boolean, default: true },
         settings: Object,
-        sub_badge: { type: Boolean, default: false },
     },
     mixins: [ResolveUrlMixin, EscapeCSSMixin],
     components: { IngredientContextMenu, SubstituteBadge },
