@@ -25,6 +25,9 @@
                             <b-form-group :label="$t('Plural')" description="">
                                 <b-form-input v-model="food.plural_name"></b-form-input>
                             </b-form-group>
+                            <b-form-group :label="$t('Description')" description="">
+                                <b-form-textarea v-model="food.description" rows="2"></b-form-textarea>
+                            </b-form-group>
 
                             <!-- Food properties -->
 
