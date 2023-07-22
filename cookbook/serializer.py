@@ -684,7 +684,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     class Meta:
         model = Food
         fields = (
-            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe',
+            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url',
             'properties', 'properties_food_amount', 'properties_food_unit',
             'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
