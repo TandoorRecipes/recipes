@@ -4575,6 +4575,12 @@ export interface Step {
      * @memberof Step
      */
     numrecipe?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Step
+     */
+    show_ingredeints_table?: boolean;
 }
 /**
  * 
