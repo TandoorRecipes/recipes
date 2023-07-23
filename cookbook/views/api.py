@@ -688,7 +688,7 @@ class AutoPlanViewSet(viewsets.ViewSet):
 
             for i in range(0, days):
                 day = start_date + datetime.timedelta(i)
-                recipe = random.choice(recipes)
+                recipe = recipes[i % len(recipes)]
                 args = {'recipe': recipe, 'servings': servings, 'title': recipe.name,
                         'created_by': request.user,
                         'meal_type': meal_type,
