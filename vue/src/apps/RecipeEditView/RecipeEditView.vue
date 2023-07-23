@@ -240,6 +240,16 @@
                                                 v-if="step_index !== recipe.steps.length - 1">
                                             <i class="fa fa-arrow-down fa-fw"></i> {{ $t("Move_Down") }}
                                         </button>
+                                        <!-- Show "Hide step ingredients if state is currently set to shown"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, false)"
+                                                v-if="step.show_ingredients_table && step.ingredients_visible">
+                                            <i class="op-icon fa fa-mavon-eye-slash"></i> {{ $t("hide_step_ingredients") }}
+                                        </button>
+                                        <!-- Show "Show step ingredients if state is currently set to hidden"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, true)"
+                                                v-if="! step.show_ingredients_table && !step.ingredients_visible">
+                                            <i class="op-icon fa fa-mavon-eye"></i> {{ $t("show_step_ingredients") }}
+                                        </button>                                        
                                     </div>
                                 </div>
                             </div>
@@ -770,7 +780,8 @@ import {
     ResolveUrlMixin,
     StandardToasts,
     convertEnergyToCalories,
-    energyHeading
+    energyHeading,
+    getUserPreference
 } from "@/utils/utils"
 import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
@@ -815,6 +826,7 @@ export default {
             use_plural: false,
             additional_visible: false,
             create_food: undefined,
+            user_preferences: undefined,
             md_editor_toolbars: {
                 bold: true,
                 italic: true,
@@ -858,6 +870,8 @@ export default {
         this.searchKeywords("")
         this.searchFiles("")
         this.searchRecipes("")
+        // TODO: update to actually use this value...
+        this.user_preferences = getUserPreference()
 
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
@@ -925,7 +939,9 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
+                        // TODO: refactor to combine show_ingredients_table & ingredients_visible into one field?
+                        // Or does keeping them separate make this edit-UI oriented behavior cleaner?
+                        this.$set(s, "ingredients_visible", s.show_ingredients_table && (s.ingredients.length > 0 || this.recipe.steps.length === 1))
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
@@ -1082,6 +1098,10 @@ export default {
             this.recipe.steps.splice(this.recipe.steps.indexOf(step), 1)
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
+        },
+        setStepShowIngredientsTable: function (step, show_state) {
+            step.ingredients_visible = show_state
+            step.show_ingredients_table = show_state
         },
         moveIngredient: function (step, ingredient, new_index) {
             step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
