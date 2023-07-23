@@ -33,7 +33,7 @@
             <div class="row">
                 <!-- ingredients table -->
                 <div class="col col-md-4"
-                     v-if="user_preferences.show_step_ingredients && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
+                     v-if="step.show_ingredients_table && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
                         <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
