@@ -770,7 +770,8 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data', 'numrecipe'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 
+            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
         )
 
 
@@ -1350,7 +1351,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Step
-        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header', 'show_ingredients_table')
 
 
 class RecipeExportSerializer(WritableNestedModelSerializer):
