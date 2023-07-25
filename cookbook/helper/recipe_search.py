@@ -32,6 +32,9 @@ class RecipeSearch():
             if custom_filter:
                 self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
+                # json.loads casts rating as an integer, expecting string
+                if isinstance(self._params.get('rating', None), int):
+                    self._params['rating'] = str(self._params['rating'])
             else:
                 self._params = {**(params or {})}
         else:
