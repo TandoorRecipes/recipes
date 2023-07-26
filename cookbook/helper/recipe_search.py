@@ -32,6 +32,9 @@ class RecipeSearch():
             if custom_filter:
                 self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
+                # json.loads casts rating as an integer, expecting string
+                if isinstance(self._params.get('rating', None), int):
+                    self._params['rating'] = str(self._params['rating'])
             else:
                 self._params = {**(params or {})}
         else:
@@ -434,22 +437,21 @@ class RecipeSearch():
 
     def rating_filter(self, rating=None):
         if rating or self._sort_includes('rating'):
-            lessthan = self._sort_includes('-rating') or '-' in (rating or [])
-            if lessthan:
-                default = 0
-            else:
+            lessthan = '-' in (rating or [])
+            reverse = 'rating' in (self._sort_order or []) and '-rating' not in (self._sort_order or [])
+            if lessthan or reverse:
                 default = 100
+            else:
+                default = 0
             # TODO make ratings a settings user-only vs all-users
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(
-                cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
         if rating is None:
             return
 
         if rating == '0':
             self._queryset = self._queryset.filter(rating=0)
         elif lessthan:
-            self._queryset = self._queryset.filter(
-                rating__lte=int(rating[1:])).exclude(rating=0)
+            self._queryset = self._queryset.filter(rating__lte=int(rating[1:])).exclude(rating=0)
         else:
             self._queryset = self._queryset.filter(rating__gte=int(rating))
 
