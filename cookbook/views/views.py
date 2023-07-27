@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+import traceback
 from datetime import datetime
 from uuid import UUID
 
@@ -321,25 +322,30 @@ def system(request):
     r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR)
     # r = subprocess.check_output(['git', 'show', '-s'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', 'enterprise_plugin'))
     version_info = []
-    version_info.append({
-        'name': 'Tandoor',
-        'version': re.sub(r'<.*>', '', r.decode()),
-        'website': 'https://github.com/TandoorRecipes/recipes',
-    })
-
-    for p in PLUGINS:
-        r = subprocess.check_output(['git', 'show', '-s'], cwd=p['base_path'])
+    try:
         version_info.append({
-            'name': p['name'],
+            'name': 'Tandoor ' + VERSION_NUMBER,
             'version': re.sub(r'<.*>', '', r.decode()),
-            'website': p['website']
+            'website': 'https://github.com/TandoorRecipes/recipes',
+            'commit_link': 'https://github.com/TandoorRecipes/recipes/commit/' + r.decode().split('\n')[0].split(' ')[1],
         })
+
+        for p in PLUGINS:
+            r = subprocess.check_output(['git', 'show', '-s'], cwd=p['base_path'])
+            version_info.append({
+                'name': 'Plugin: ' + p['name'],
+                'version': re.sub(r'<.*>', '', r.decode()),
+                'website': p['website'],
+                'commit_link': p['website'] + '/commit/' + r.decode().split('\n')[0].split(' ')[1],
+            })
+    except:
+        if settings.DEBUG:
+            traceback.print_exc()
 
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
-        'version': VERSION_NUMBER,
         'version_info': version_info,
         'ref': BUILD_REF,
         'plugins': PLUGINS,
