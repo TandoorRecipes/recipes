@@ -22,6 +22,7 @@ from cookbook.helper.permission_helper import group_required, has_group_permissi
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
+from recipes.settings import PLUGINS
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -322,6 +323,7 @@ def system(request):
         'postgres': postgres,
         'version': VERSION_NUMBER,
         'ref': BUILD_REF,
+        'plugins': PLUGINS,
         'secret_key': secret_key
     })
 
