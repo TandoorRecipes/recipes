@@ -1,5 +1,6 @@
 import os
 import re
+import subprocess
 from datetime import datetime
 from uuid import UUID
 
@@ -22,7 +23,7 @@ from cookbook.helper.permission_helper import group_required, has_group_permissi
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
-from recipes.settings import PLUGINS
+from recipes.settings import PLUGINS, BASE_DIR
 from recipes.version import BUILD_REF, VERSION_NUMBER
 
 
@@ -317,11 +318,16 @@ def system(request):
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
+    r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR)
+    r = subprocess.check_output(['git', 'show', '-s'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', 'enterprise_plugin'))
+    version_info = r.decode()
+
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
         'version': VERSION_NUMBER,
+        'version_info': version_info,
         'ref': BUILD_REF,
         'plugins': PLUGINS,
         'secret_key': secret_key
