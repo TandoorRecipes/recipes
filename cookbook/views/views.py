@@ -319,8 +319,21 @@ def system(request):
     secret_key = False if os.getenv('SECRET_KEY') else True
 
     r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR)
-    r = subprocess.check_output(['git', 'show', '-s'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', 'enterprise_plugin'))
-    version_info = r.decode()
+    # r = subprocess.check_output(['git', 'show', '-s'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', 'enterprise_plugin'))
+    version_info = []
+    version_info.append({
+        'name': 'Tandoor',
+        'version': re.sub(r'<.*>', '', r.decode()),
+        'website': 'https://github.com/TandoorRecipes/recipes',
+    })
+
+    for p in PLUGINS:
+        r = subprocess.check_output(['git', 'show', '-s'], cwd=p['base_path'])
+        version_info.append({
+            'name': p['name'],
+            'version': re.sub(r'<.*>', '', r.decode()),
+            'website': p['website']
+        })
 
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,

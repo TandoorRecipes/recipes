@@ -11,31 +11,39 @@
 {% block content %}
 
     <h1>{% trans 'System' %}</h1>
-
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-
-    <h3>{% trans 'System Information' %}</h3>
-
     {% blocktrans %}
         Django Recipes is an open source free software application. It can be found on
         <a href="https://github.com/vabene1111/recipes">GitHub</a>.
         Changelogs can be found <a href="https://github.com/vabene1111/recipes/releases">here</a>.
     {% endblocktrans %}
-    <br/>
-    <br/>
-    Current Version: {% if version and version != '' %}
-    <a href="https://github.com/vabene1111/recipes/releases/tag/{{ version }}">{{ version }}</a>{% else %}
-    {{ version }}{% endif %}<br/>
-    Ref: <a href="https://github.com/vabene1111/recipes/commit/{{ ref }}">{{ ref }}</a>
 
-    <pre>{{ version_info }}</pre>
-    <br/>
-    <br/>
-    <br/>
-    <h4>{% trans 'Media Serving' %} <span class="badge badge-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
+    <h3 class="mt-5">{% trans 'System Information' %}</h3>
+
+    <span class="mt-3">
+        Current Version: {% if version and version != '' %}
+        <a href="https://github.com/vabene1111/recipes/releases/tag/{{ version }}">{{ version }}</a>{% else %}
+        {{ version }}{% endif %}<br/>
+    </span>
+
+    <div class="list-group">
+        {% for v in version_info %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    {% if v.website %}
+                        <a href="{{ v.website }}" target="_blank"><h5 class="mb-1">{{ v.name }}</h5></a>
+                    {% else %}
+                        <h5 class="mb-1">{{ v.name }}</h5>
+                    {% endif %}
+                </div>
+                <pre class="card-text">{{ v.version }}</pre>
+
+            </div>
+
+        {% endfor %}
+    </div>
+
+
+    <h4 class="mt-3">{% trans 'Media Serving' %} <span class="badge badge-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if gunicorn_media %}
         {% blocktrans %}Serving media files directly using gunicorn/python is <b>not recommend</b>!
