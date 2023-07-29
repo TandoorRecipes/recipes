@@ -24,8 +24,9 @@ from cookbook.helper.permission_helper import group_required, has_group_permissi
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
-from recipes.settings import PLUGINS, BASE_DIR
-from recipes.version import BUILD_REF, VERSION_NUMBER
+from recipes.settings import PLUGINS
+
+from version_info import VERSION_INFO
 
 
 def index(request):
@@ -319,34 +320,11 @@ def system(request):
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
-    version_info = []
-    try:
-        r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR)
-        version_info.append({
-            'name': 'Tandoor ' + VERSION_NUMBER,
-            'version': re.sub(r'<.*>', '', r.decode()),
-            'website': 'https://github.com/TandoorRecipes/recipes',
-            'commit_link': 'https://github.com/TandoorRecipes/recipes/commit/' + r.decode().split('\n')[0].split(' ')[1],
-        })
-
-        for p in PLUGINS:
-            r = subprocess.check_output(['git', 'show', '-s'], cwd=p['base_path'])
-            version_info.append({
-                'name': 'Plugin: ' + p['name'],
-                'version': re.sub(r'<.*>', '', r.decode()),
-                'website': p['website'],
-                'commit_link': p['website'] + '/commit/' + r.decode().split('\n')[0].split(' ')[1],
-            })
-    except:
-        if settings.DEBUG:
-            traceback.print_exc()
-
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
-        'version_info': version_info,
-        'ref': BUILD_REF,
+        'version_info': VERSION_INFO,
         'plugins': PLUGINS,
         'secret_key': secret_key
     })
