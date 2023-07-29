@@ -26,10 +26,10 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     venv/bin/pip install wheel==0.37.1 && \
     venv/bin/pip install setuptools_rust==1.1.2 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
-    /opt/recipes/venv/bin/python version.py && \
     apk --purge del .build-deps
 
 #Copy project and execute it.
 COPY . ./
+RUN /opt/recipes/venv/bin/python version.py
 RUN chmod +x boot.sh
 ENTRYPOINT ["/opt/recipes/boot.sh"]
