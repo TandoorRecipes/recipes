@@ -8,6 +8,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 
 version_info = []
+tandoor_tag = ''
+tandoor_hash = ''
 try:
     r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR).decode()
     tandoor_branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=BASE_DIR).decode()
@@ -15,7 +17,7 @@ try:
     try:
         tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', tandoor_hash], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode().replace('\n', '')
     except:
-        tandoor_tag = ''
+        pass
 
     version_info.append({
         'name': 'Tandoor ',
