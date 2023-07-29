@@ -30,6 +30,11 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 
 #Copy project and execute it.
 COPY . ./
+
+# collect information from git repositories
 RUN /opt/recipes/venv/bin/python version.py
+# delete git repositories to reduce image size
+RUN find . -type d -name ".git" | xargs rm -rf
+
 RUN chmod +x boot.sh
 ENTRYPOINT ["/opt/recipes/boot.sh"]
