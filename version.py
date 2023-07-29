@@ -11,11 +11,12 @@ version_info = []
 tandoor_tag = ''
 tandoor_hash = ''
 try:
+    print('getting tandoor version')
     r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR).decode()
     tandoor_branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=BASE_DIR).decode()
     tandoor_hash = r.split('\n')[0].split(' ')[1]
     try:
-        tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', tandoor_hash], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode().replace('\n', '')
+        tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', tandoor_hash], cwd=BASE_DIR).decode().replace('\n', '')
     except:
         pass
 
@@ -39,6 +40,7 @@ try:
                     plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
                     plugin_class = getattr(sys.modules[apps_path], app_config_classname)
 
+                    print('getting plugin version for ', plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name)
                     r = subprocess.check_output(['git', 'show', '-s'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode()
                     branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode()
                     commit_hash = r.split('\n')[0].split(' ')[1]
@@ -56,8 +58,12 @@ try:
                         'branch': branch,
                         'tag': tag
                     })
+                except subprocess.CalledProcessError as e:
+                    print("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
                 except Exception:
                     traceback.print_exc()
+except subprocess.CalledProcessError as e:
+    print("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 except:
     traceback.print_exc()
 
