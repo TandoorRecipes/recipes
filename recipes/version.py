@@ -1,2 +1,0 @@
-VERSION_NUMBER = ""
-BUILD_REF = ""
