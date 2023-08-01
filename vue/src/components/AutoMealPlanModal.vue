@@ -32,6 +32,21 @@
                             <b-form-input class="w-25 m-2 mb-0" :value = "AutoPlan.servings" :type="'number'" @input="updateServings"></b-form-input>
                             <small tabindex="-1" class="m-2 mt-0 form-text text-muted">{{ $t("Servings") }}</small>
                           </div>
+                          <b-form-group class="mt-3">
+                            <generic-multiselect
+                                required
+                                @change="AutoPlan.shared = $event.val"
+                                parent_variable="entryEditing.shared"
+                                :label="'display_name'"
+                                :model="Models.USER_NAME"
+                                style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                v-bind:placeholder="$t('Share')"
+                                :limit="10"
+                                :multiple="true"
+                                :initial_selection="AutoPlan.shared"
+                            ></generic-multiselect>
+                            <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
+                          </b-form-group>
 
                           <div class="">
                             <div class="row m-3 mb-0">
@@ -61,6 +76,7 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import {ApiMixin} from "@/utils/utils"
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const { ApiApiFactory } = require("@/utils/openapi/api")
 const { StandardToasts } = require("@/utils/utils")
@@ -89,7 +105,8 @@ export default {
             servings: 1,
             date: Date.now(),
             startDay: null,
-            endDay: null
+            endDay: null,
+            shared: []
           }
         }
     },
@@ -104,6 +121,9 @@ export default {
           this.AutoPlan.servings = 1
           this.AutoPlan.startDay = new Date()
           this.AutoPlan.endDay = this.current_period.periodEnd
+          useUserPreferenceStore().getData().then(userPreference => {
+                    this.AutoPlan.shared = userPreference.plan_share
+            })
         },
        sortMealTypes() {
             this.meal_types.forEach(function (element, index) {

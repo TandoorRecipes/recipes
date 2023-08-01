@@ -371,7 +371,8 @@ export default {
             servings: 1,
             date: Date.now(),
             startDay: null,
-            endDay: null
+            endDay: null,
+            shared: []
           },
             showDate: new Date(),
             plan_entries: [],
