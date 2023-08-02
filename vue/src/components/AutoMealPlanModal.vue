@@ -47,6 +47,12 @@
                             ></generic-multiselect>
                             <small tabindex="-1" class="form-text text-muted">{{ $t("Share") }}</small>
                           </b-form-group>
+                          <b-input-group v-if="!autoMealPlan">
+                              <b-form-checkbox id="AddToShopping" v-model="mealplan_settings.addshopping"/>
+                              <small tabindex="-1" class="form-text text-muted">{{
+                                      $t("AddToShopping")
+                                  }}</small>
+                          </b-input-group>
 
                           <div class="">
                             <div class="row m-3 mb-0">
@@ -77,11 +83,14 @@ import {BootstrapVue} from "bootstrap-vue"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import {ApiMixin} from "@/utils/utils"
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import VueCookies from "vue-cookies";
 
 const { ApiApiFactory } = require("@/utils/openapi/api")
 const { StandardToasts } = require("@/utils/utils")
 
 Vue.use(BootstrapVue)
+Vue.use(VueCookies)
+let MEALPLAN_COOKIE_NAME = "mealplan_settings"
 
 export default {
     name: "AutoMealPlanModal",
@@ -106,16 +115,38 @@ export default {
             date: Date.now(),
             startDay: null,
             endDay: null,
-            shared: []
-          }
+            shared: [],
+            addshopping: false
+          },
+          mealplan_settings: {
+                addshopping: false,
+            }
         }
     },
-    mounted: function () {},
+  watch: {
+        mealplan_settings: {
+            handler(newVal) {
+                this.$cookies.set(MEALPLAN_COOKIE_NAME, this.mealplan_settings)
+            },
+            deep: true,
+        },
+    },
+    mounted: function () {
+        useUserPreferenceStore().updateIfStaleOrEmpty()
+    },
+    computed: {
+        autoMealPlan: function () {
+            return useUserPreferenceStore().getStaleData()?.mealplan_autoadd_shopping
+        },
+    },
     methods: {
         genericSelectChanged: function (obj) {
           this.AutoPlan.keywords[obj.var] = obj.val
         },
         showModal() {
+          if (this.$cookies.isKey(MEALPLAN_COOKIE_NAME)) {
+                this.mealplan_settings = Object.assign({}, this.mealplan_settings, this.$cookies.get(MEALPLAN_COOKIE_NAME))
+          }
           this.refreshMealTypes()
 
           this.AutoPlan.servings = 1
@@ -164,6 +195,7 @@ export default {
         },
       createPlan() {
             this.$bvModal.hide(`autoplan-modal`)
+            this.AutoPlan.addshopping = this.mealplan_settings.addshopping
             this.$emit("create-plan", this.AutoPlan)
         },
       updateStartDay(date){

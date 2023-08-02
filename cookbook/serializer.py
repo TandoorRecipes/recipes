@@ -988,6 +988,7 @@ class AutoMealPlanSerializer(serializers.Serializer):
     keywords = KeywordSerializer(many=True)
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
+    addshopping = serializers.BooleanField()
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):

@@ -372,7 +372,8 @@ export default {
             date: Date.now(),
             startDay: null,
             endDay: null,
-            shared: []
+            shared: [],
+            addshopping: false
           },
             showDate: new Date(),
             plan_entries: [],
@@ -695,7 +696,8 @@ export default {
               "meal_type_id" : autoPlan.meal_types[mealTypeIndex].id,
               "keywords" : autoPlan.keywords[mealTypeIndex],
               "servings" : autoPlan.servings,
-              "shared" : autoPlan.shared
+              "shared" : autoPlan.shared,
+              "addshopping": autoPlan.addshopping
             }
             await apiClient.createAutoPlanViewSet(data)
 
