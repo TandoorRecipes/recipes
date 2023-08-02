@@ -688,6 +688,8 @@ class AutoPlanViewSet(viewsets.ViewSet):
             for keyword in keywords:
                 recipes = recipes.filter(keywords__name=keyword['name'])
 
+            if len(recipes) == 0:
+                return Response(serializer.data)
             recipes = recipes.order_by('?')[:days]
             recipes = list(recipes)
 
@@ -707,7 +709,7 @@ class AutoPlanViewSet(viewsets.ViewSet):
             for m in meal_plans:
                 m.shared.set(shared_pks)
 
-                if request.data.get('addshopping', False) and request.data.get('recipe', None):
+                if request.data.get('addshopping', False):
                     SLR = RecipeShoppingEditor(user=request.user, space=request.space)
                     SLR.create(mealplan=m, servings=servings)
 
