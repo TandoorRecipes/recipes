@@ -7,7 +7,7 @@ from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
 from recipes.settings import DEBUG, PLUGINS
-from version_info import TANDOOR_VERSION
+from cookbook.version_info import TANDOOR_VERSION
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
