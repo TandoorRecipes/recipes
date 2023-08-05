@@ -18,6 +18,7 @@ try:
     try:
         tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', tandoor_hash], cwd=BASE_DIR).decode().replace('\n', '')
     except:
+
         pass
 
     version_info.append({
@@ -45,6 +46,7 @@ try:
                     branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode()
                     commit_hash = r.split('\n')[0].split(' ')[1]
                     try:
+                        print('running describe')
                         tag = subprocess.check_output(['git', 'describe', '--exact-match', commit_hash], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode().replace('\n', '')
                     except:
                         tag = ''
@@ -68,4 +70,5 @@ except:
     traceback.print_exc()
 
 with open('version_info.py', 'w+', encoding='UTF-8') as f:
+    print(f"writing version info {version_info}")
     f.write(f'TANDOOR_VERSION = "{tandoor_tag}"\nTANDOOR_REF = "{tandoor_hash}"\nVERSION_INFO = {version_info}')
