@@ -1,7 +1,5 @@
 import os
 import re
-import subprocess
-import traceback
 from datetime import datetime
 from uuid import UUID
 
@@ -24,9 +22,8 @@ from cookbook.helper.permission_helper import group_required, has_group_permissi
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
+from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS
-
-from version_info import VERSION_INFO
 
 
 def index(request):

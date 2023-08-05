@@ -69,6 +69,6 @@ except subprocess.CalledProcessError as e:
 except:
     traceback.print_exc()
 
-with open('version_info.py', 'w+', encoding='UTF-8') as f:
+with open('cookbook/version_info.py', 'w+', encoding='UTF-8') as f:
     print(f"writing version info {version_info}")
     f.write(f'TANDOOR_VERSION = "{tandoor_tag}"\nTANDOOR_REF = "{tandoor_hash}"\nVERSION_INFO = {version_info}')
