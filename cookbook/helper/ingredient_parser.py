@@ -290,7 +290,7 @@ class IngredientParser:
                 for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
                         .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
                         .filter(Q(Q(param_1_lower__in=tokens) | Q(param_2_lower__in=tokens))).order_by('order'):
-                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
+                    ingredient = re.sub(rf"\b({rule.param_1})\W*({rule.param_1})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
         return ingredient
 
     def parse(self, ingredient):
