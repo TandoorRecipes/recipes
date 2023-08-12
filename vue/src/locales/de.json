@@ -357,7 +357,7 @@
     "search_rank": "Such-Rang",
     "paste_ingredients": "Zutaten einfügen",
     "Ingredient Editor": "Zutateneditor",
-    "Protected": "Schützen",
+    "Protected": "Geschützt",
     "not": "nicht",
     "warning_duplicate_filter": "Warnung: Wegen technischen Limitierungen können mehrere Filter der selben Kombination (und/oder/nicht) zu unerwarteten Ergebnissen führen.",
     "and_down": "& Runter",
@@ -502,5 +502,6 @@
     "Property": "Eigenschaft",
     "Conversion": "Umrechnung",
     "Properties": "Eigenschaften",
-    "total": "gesamt"
+    "total": "gesamt",
+    "Open_Data_Slug": "Open Data Slug"
 }
