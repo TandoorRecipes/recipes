@@ -362,7 +362,7 @@
     "warning_duplicate_filter": "Warnung: Wegen technischen Limitierungen können mehrere Filter der selben Kombination (und/oder/nicht) zu unerwarteten Ergebnissen führen.",
     "and_down": "& Runter",
     "enable_expert": "Expertenmodus aktivieren",
-    "filter_name": "Name des Filters",
+    "filter_name": "Filtername",
     "shared_with": "geteilt mit",
     "asc": "Aufsteigend",
     "desc": "Absteigend",
@@ -461,7 +461,7 @@
     "Comments_setting": "Kommentare anzeigen",
     "reset_food_inheritance": "Vererbung zurücksetzen",
     "food_inherit_info": "Datenfelder des Lebensmittels, die standardmäßig vererbt werden sollen.",
-    "Are_You_Sure": "Sind sie sicher?",
+    "Are_You_Sure": "Sind Sie sicher?",
     "Plural": "Plural",
     "plural_short": "Plural",
     "Use_Plural_Unit_Always": "Pluralform der Maßeinheit immer verwenden",
@@ -503,5 +503,9 @@
     "Conversion": "Umrechnung",
     "Properties": "Eigenschaften",
     "total": "gesamt",
-    "Open_Data_Slug": "Open Data Slug"
+    "Open_Data_Slug": "Open Data Slug",
+    "g": "Gramm [g] (metrisch, Gewicht)",
+    "kg": "Kilogramm [kg] (metrisch, Gewicht)",
+    "ounce": "Unze [oz] (Gewicht)",
+    "pound": "Pfund (Gewicht)"
 }
