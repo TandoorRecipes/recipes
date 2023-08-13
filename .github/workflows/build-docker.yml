@@ -6,7 +6,6 @@ jobs:
   build-container:
     name: Build ${{ matrix.name }} Container
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'TandoorRecipes'
     continue-on-error: ${{ matrix.continue-on-error }}
     permissions:
       contents: read
