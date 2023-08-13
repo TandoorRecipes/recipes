@@ -102,7 +102,7 @@
                         <div class="col-12">
                             <img class="img img-fluid rounded" :src="recipe.image" :alt="$t('Recipe_Image')"
                                  v-if="recipe.image !== null" @load="onImgLoad"
-                                 :style="{ 'max-height': ingredient_height }"/>
+                            />
                         </div>
                     </div>
                 </div>
