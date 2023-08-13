@@ -136,21 +136,7 @@
                     <a class="nav-link" href="{% url 'data_import_url' %}">
                         <i class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
                 </li>
-            
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'data_import_url,new_recipe' %}active{% endif %}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false"><i
-                            class="fas fa-fw fa-plus fa-lg"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-center"
-                         aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url 'data_import_url' %}"><i
-                                class="fas fa-file-import"></i> {% trans 'Import Recipe' %}</a>
-                        <a class="dropdown-item " href="{% url 'new_recipe' %}"><i
-                                class="fas fa-plus"></i> {% trans 'Create' %}</a>
-                    </div>
-                </li>
-    
+
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
