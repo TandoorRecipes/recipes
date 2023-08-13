@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col col-md-12">
                         <div class="row justify-content-center">
-                            <div class="col-12 col-lg-10 col-xl-10 mt-2">
+                            <div class="col-12 mt-2">
                                 <b-input-group>
                                     <b-input
                                         class="form-control form-control-lg form-control-borderless form-control-search"
@@ -786,7 +786,7 @@
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
+                    <div class="col-12">
                         <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
 
                             <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm"
