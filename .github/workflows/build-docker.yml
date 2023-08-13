@@ -16,7 +16,7 @@ jobs:
           # Standard build config
           - name: Standard
             dockerfile: Dockerfile
-            platforms: linux/amd64,linux/arm64,linux/arm/v7
+            platforms: linux/amd64,linux/arm64
             suffix: ""
             continue-on-error: false
     steps:
@@ -68,8 +68,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            vabene1111/recipes
-            ghcr.io/TandoorRecipes/recipes
+            localserverz/recipes
           flavor: |
             latest=false
             suffix=${{ matrix.suffix }}
