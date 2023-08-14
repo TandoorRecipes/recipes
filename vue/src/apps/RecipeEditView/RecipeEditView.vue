@@ -1281,6 +1281,7 @@ export default {
         },
         duplicateIngredient: function (step, ingredient, new_index) {
             delete ingredient.id
+            ingredient = JSON.parse(JSON.stringify(ingredient))
             step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
         }
     },

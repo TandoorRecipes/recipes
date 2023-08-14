@@ -579,6 +579,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    url = models.CharField(max_length=1024, blank=True, null=True, default='')
     supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
     ignore_shopping = models.BooleanField(default=False)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
