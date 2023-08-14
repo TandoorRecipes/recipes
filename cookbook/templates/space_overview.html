@@ -33,11 +33,11 @@
 
                             <div class="card">
                                 {% if us.space.image and us.space.image.is_image %}
-                                    <img style="height: 15vh; object-fit: cover" src="{{ us.space.image.file.url }}"
+                                    <img style="height: 15vh; min-height:120px; object-fit: cover" src="{{ us.space.image.file.url }}"
                                          class="card-img-top" alt="Image">
                                 {% else %}
 
-                                    <img style="height: 15vh; object-fit: cover" src="{% static 'assets/recipe_no_image.svg' %}"
+                                    <img style="height: 15vh; min-height:120px; object-fit: cover" src="{% static 'assets/recipe_no_image.svg' %}"
                                          class="card-img-top" alt="Image">
                                 {% endif %}
                                 <div class="card-body">

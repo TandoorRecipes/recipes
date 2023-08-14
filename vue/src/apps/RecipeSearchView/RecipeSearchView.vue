@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col col-md-12">
                         <div class="row justify-content-center">
-                            <div class="col-12 col-lg-10 col-xl-10 mt-2">
+                            <div class="col-12 mt-2">
                                 <b-input-group>
                                     <b-input
                                         class="form-control form-control-lg form-control-borderless form-control-search"
@@ -31,15 +31,7 @@
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class="row">
-                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
-                                            <a class="btn btn-primary btn-block text-uppercase"
-                                               :href="resolveDjangoUrl('new_recipe')">{{ $t("New_Recipe") }}</a>
-                                        </div>
-                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
-                                            <a class="btn btn-primary btn-block text-uppercase"
-                                               :href="resolveDjangoUrl('data_import_url')">{{ $t("Import") }}</a>
-                                        </div>
-                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
+                                        <div class="col-md-6 col-12 mb-1 mb-md-0">
                                             <button
                                                 class="btn btn-block text-uppercase"
                                                 v-b-tooltip.hover
@@ -55,7 +47,7 @@
                                             </button>
                                         </div>
 
-                                        <div class="col-md-3 col-6 mb-1 mb-md-0">
+                                        <div class="col-md-6 col-12 mb-1 mb-md-0">
                                             <button id="id_settings_button"
                                                     class="btn btn-primary btn-block text-uppercase"><i
                                                 class="fas fa-cog fa-lg m-1"></i></button>
@@ -794,7 +786,7 @@
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
+                    <div class="col-12">
                         <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
 
                             <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm"
