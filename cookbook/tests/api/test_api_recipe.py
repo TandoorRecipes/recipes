@@ -81,10 +81,10 @@ def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 200],
+    ['g1_s1', 403],
     ['u1_s1', 200],
     ['a1_s1', 200],
-    ['g1_s2', 404],
+    ['g1_s2', 403],
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])
@@ -140,7 +140,7 @@ def test_update_private_recipe(u1_s1, u2_s1, recipe_1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 201],
+    ['g1_s1', 403],
     ['u1_s1', 201],
     ['a1_s1', 201],
 ])

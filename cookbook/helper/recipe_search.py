@@ -32,6 +32,9 @@ class RecipeSearch():
             if custom_filter:
                 self._params = {**json.loads(custom_filter.search)}
                 self._original_params = {**(params or {})}
+                # json.loads casts rating as an integer, expecting string
+                if isinstance(self._params.get('rating', None), int):
+                    self._params['rating'] = str(self._params['rating'])
             else:
                 self._params = {**(params or {})}
         else:
@@ -85,9 +88,9 @@ class RecipeSearch():
         self._viewedon = self._params.get('viewedon', None)
         self._makenow = self._params.get('makenow', None)
         # this supports hidden feature to find recipes missing X ingredients
-        if type(self._makenow) == bool and self._makenow == True:
+        if isinstance(self._makenow, bool) and self._makenow == True:
             self._makenow = 0
-        elif type(self._makenow) == str and self._makenow in ["yes", "true"]:
+        elif isinstance(self._makenow, str) and self._makenow in ["yes", "true"]:
             self._makenow = 0
         else:
             try:
@@ -150,7 +153,7 @@ class RecipeSearch():
         self.unit_filters(units=self._units)
         self._makenow_filter(missing=self._makenow)
         self.string_filters(string=self._string)
-        return self._queryset.filter(space=self._request.space).distinct().order_by(*self.orderby)
+        return self._queryset.filter(space=self._request.space).order_by(*self.orderby)
 
     def _sort_includes(self, *args):
         for x in args:
@@ -434,22 +437,21 @@ class RecipeSearch():
 
     def rating_filter(self, rating=None):
         if rating or self._sort_includes('rating'):
-            lessthan = self._sort_includes('-rating') or '-' in (rating or [])
-            if lessthan:
+            lessthan = '-' in (rating or [])
+            reverse = 'rating' in (self._sort_order or []) and '-rating' not in (self._sort_order or [])
+            if lessthan or reverse:
                 default = 100
             else:
                 default = 0
             # TODO make ratings a settings user-only vs all-users
-            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(
-                cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
+            self._queryset = self._queryset.annotate(rating=Round(Avg(Case(When(cooklog__created_by=self._request.user, then='cooklog__rating'), default=default))))
         if rating is None:
             return
 
         if rating == '0':
             self._queryset = self._queryset.filter(rating=0)
         elif lessthan:
-            self._queryset = self._queryset.filter(
-                rating__lte=int(rating[1:])).exclude(rating=0)
+            self._queryset = self._queryset.filter(rating__lte=int(rating[1:])).exclude(rating=0)
         else:
             self._queryset = self._queryset.filter(rating__gte=int(rating))
 
@@ -560,7 +562,7 @@ class RecipeSearch():
             self._filters += [Q(pk__in=self._fuzzy_match.values('pk'))]
 
     def _makenow_filter(self, missing=None):
-        if missing is None or (type(missing) == bool and missing == False):
+        if missing is None or (isinstance(missing, bool) and missing == False):
             return
         shopping_users = [
             *self._request.user.get_shopping_share(), self._request.user]

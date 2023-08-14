@@ -314,6 +314,7 @@ admin.site.register(InviteLink, InviteLinkAdmin)
 
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
+    search_fields = ('recipe__name', 'space__name',)
 
 
 admin.site.register(CookLog, CookLogAdmin)

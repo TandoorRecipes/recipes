@@ -675,12 +675,26 @@ export default {
          */
         autoImport: function () {
             this.collapse_visible.import = true
-            this.website_url_list.split('\n').forEach(r => {
-                this.loadRecipe(r, true, undefined).then((recipe_json) => {
+            let url_list = this.website_url_list.split('\n').filter(x => x.trim() !== '')
+            if (url_list.length > 0) {
+                let url = url_list.shift()
+                this.website_url_list = url_list.join('\n')
+
+
+                this.loadRecipe(url, true, undefined).then((recipe_json) => {
                     this.importRecipe('multi_import', recipe_json, true)
+                    setTimeout(() => {
+                        this.autoImport()
+                    }, 2000)
+                }).catch((err) => {
+
                 })
-            })
-            this.website_url_list = ''
+            } else {
+                this.import_loading = false
+                this.loading = false
+            }
+
+
         },
         /**
          * Import recipes with uploaded files and app integration

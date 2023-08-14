@@ -7,7 +7,7 @@ from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
 from recipes.settings import DEBUG, PLUGINS
-from recipes.version import VERSION_NUMBER
+from cookbook.version_info import TANDOOR_VERSION
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
                      RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
@@ -148,7 +148,7 @@ urlpatterns = [
     path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
 
-    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
+    path('openapi/', get_schema_view(title="Django Recipes", version=TANDOOR_VERSION, public=True,
                                      permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
