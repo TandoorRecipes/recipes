@@ -1,2 +1,0 @@
-VERSION_NUMBER = "0.0.0"
-BUILD_REF = ""

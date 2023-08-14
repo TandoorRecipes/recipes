@@ -25,6 +25,9 @@
                             <b-form-group :label="$t('Plural')" description="">
                                 <b-form-input v-model="food.plural_name"></b-form-input>
                             </b-form-group>
+                            <b-form-group :label="$t('Description')" description="">
+                                <b-form-textarea v-model="food.description" rows="2"></b-form-textarea>
+                            </b-form-group>
 
                             <!-- Food properties -->
 
@@ -167,6 +170,10 @@
                                 ></generic-multiselect>
                             </b-form-group>
 
+                            <b-form-group :label="$t('URL')" description="">
+                                <b-form-input v-model="food.url"></b-form-input>
+                            </b-form-group>
+
                             <b-form-group :description="$t('OnHand_help')">
                                 <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
                             </b-form-group>
@@ -306,6 +313,7 @@ export default {
                 description: "",
                 shopping: false,
                 recipe: null,
+                url: '',
                 properties: [],
                 properties_food_amount: 100,
                 properties_food_unit: {name: 'g'},

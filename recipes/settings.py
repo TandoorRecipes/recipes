@@ -148,6 +148,9 @@ try:
 
                         plugin_config = {
                             'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                            'version': plugin_class.VERSION if hasattr(plugin_class, 'VERSION') else 'unknown',
+                            'website': plugin_class.website if hasattr(plugin_class, 'website') else '',
+                            'github': plugin_class.github if hasattr(plugin_class, 'github') else '',
                             'module': f'recipes.plugins.{d}',
                             'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
                             'base_url': plugin_class.base_url,

@@ -30,21 +30,13 @@
             </td>
             <td @click="done">
                 <template v-if="ingredient.food !== null">
-                    <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">{{
-                        ingredient.food.name
-                    }}</a>
-                    <template v-if="ingredient.food.recipe === null">
-                        <template>
-                            <template v-if="ingredient.food.plural_name === '' || ingredient.food.plural_name === null">
-                                <span>{{ ingredient.food.name }}</span>
-                            </template>
-                            <template v-else>
-                                <span v-if="ingredient.always_use_plural_food">{{ ingredient.food.plural_name }}</span>
-                                <span v-else-if="ingredient.no_amount">{{ ingredient.food.name }}</span>
-                                <span v-else-if="ingredient.amount * this.ingredient_factor > 1">{{ ingredient.food.plural_name }}</span>
-                                <span v-else>{{ ingredient.food.name }}</span>
-                            </template>
-                        </template>
+                    <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">
+                        {{ ingredientName(ingredient) }}
+                    </a>
+                    <a :href="ingredient.food.url" v-else-if="ingredient.food.url !== ''" target="_blank" rel="noopener noreferrer">
+                        {{ ingredientName(ingredient) }}</a>
+                    <template v-else>
+                        <span>{{ ingredientName(ingredient) }}</span>
                     </template>
                 </template>
             </td>
@@ -62,7 +54,7 @@
 </template>
 
 <script>
-import { calculateAmount, ResolveUrlMixin } from "@/utils/utils"
+import {calculateAmount, ResolveUrlMixin} from "@/utils/utils"
 
 import Vue from "vue"
 import VueSanitize from "vue-sanitize"
@@ -73,8 +65,8 @@ export default {
     name: "IngredientComponent",
     props: {
         ingredient: Object,
-        ingredient_factor: { type: Number, default: 1 },
-        detailed: { type: Boolean, default: true },
+        ingredient_factor: {type: Number, default: 1},
+        detailed: {type: Boolean, default: true},
     },
     mixins: [ResolveUrlMixin],
     data() {
@@ -83,7 +75,8 @@ export default {
         }
     },
     watch: {},
-    mounted() {},
+    mounted() {
+    },
     methods: {
         calculateAmount: function (x) {
             return this.$sanitize(calculateAmount(x, this.ingredient_factor))
@@ -92,6 +85,20 @@ export default {
         done: function () {
             this.$emit("checked-state-changed", this.ingredient)
         },
+        ingredientName: function (ingredient) {
+            if (ingredient.food.plural_name == null || ingredient.food.plural_name === '') {
+                return ingredient.food.name
+            }
+            if (ingredient.always_use_plural_food) {
+                return ingredient.food.plural_name
+            } else if (ingredient.no_amount) {
+                return ingredient.food.name
+            } else if (ingredient.amount * this.ingredient_factor > 1) {
+                return ingredient.food.plural_name
+            } else {
+                return ingredient.food.name
+            }
+        }
     },
 }
 </script>
