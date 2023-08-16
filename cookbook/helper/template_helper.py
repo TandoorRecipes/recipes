@@ -2,7 +2,6 @@ from gettext import gettext as _
 
 import bleach
 import markdown as md
-from bleach_allowlist import markdown_attrs, markdown_tags
 from jinja2 import Template, TemplateSyntaxError, UndefinedError
 from markdown.extensions.tables import TableExtension
 
@@ -53,9 +52,17 @@ class IngredientObject(object):
 def render_instructions(step):  # TODO deduplicate markdown cleanup code
     instructions = step.instruction
 
-    tags = markdown_tags + [
-        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead', 'img'
-    ]
+    tags = {
+        "h1", "h2", "h3", "h4", "h5", "h6",
+        "b", "i", "strong", "em", "tt",
+        "p", "br",
+        "span", "div", "blockquote", "code", "pre", "hr",
+        "ul", "ol", "li", "dd", "dt",
+        "img",
+        "a",
+        "sub", "sup",
+        'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
+    }
     parsed_md = md.markdown(
         instructions,
         extensions=[
@@ -63,7 +70,11 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
-    markdown_attrs['*'] = markdown_attrs['*'] + ['class', 'width', 'height']
+    markdown_attrs = {
+        "*": ["id", "class", 'width', 'height'],
+        "img": ["src", "alt", "title"],
+        "a": ["href", "alt", "title"],
+    }
 
     instructions = bleach.clean(parsed_md, tags, markdown_attrs)
 
