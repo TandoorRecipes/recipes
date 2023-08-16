@@ -678,7 +678,6 @@ class AutoPlanViewSet(viewsets.ViewSet):
             keywords = serializer.validated_data['keywords']
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
-            meal_type = MealType.objects.get(pk=serializer.validated_data['meal_type_id'])
             servings = serializer.validated_data['servings']
             shared = serializer.get_initial().get('shared', None)
             shared_pks = list()
@@ -686,8 +685,9 @@ class AutoPlanViewSet(viewsets.ViewSet):
                 for i in range(len(shared)):
                     shared_pks.append(shared[i]['id'])
 
-            days = (end_date - start_date).days + 1
-            recipes = Recipe.objects.all()
+            days = min((end_date - start_date).days + 1, 14)
+
+            recipes = Recipe.objects.values('id', 'name')
             meal_plans = list()
 
             for keyword in keywords:
@@ -695,15 +695,14 @@ class AutoPlanViewSet(viewsets.ViewSet):
 
             if len(recipes) == 0:
                 return Response(serializer.data)
-            recipes = recipes.order_by('?')[:days]
-            recipes = list(recipes)
+            recipes = list(recipes.order_by('?')[:days])
 
             for i in range(0, days):
                 day = start_date + datetime.timedelta(i)
                 recipe = recipes[i % len(recipes)]
-                args = {'recipe': recipe, 'servings': servings, 'title': recipe.name,
+                args = {'recipe_id': recipe['id'], 'servings': servings,
                         'created_by': request.user,
-                        'meal_type': meal_type,
+                        'meal_type_id': serializer.validated_data['meal_type_id'],
                         'note': '', 'date': day, 'space': request.space}
 
                 m = MealPlan(**args)
