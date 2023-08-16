@@ -1,7 +1,9 @@
+import datetime
 import io
 import json
 import mimetypes
 import pathlib
+import random
 import re
 import threading
 import traceback
@@ -25,6 +27,7 @@ from django.core.files import File
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
+from django.db.models.signals import post_save
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -94,7 +97,8 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, PropertySerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer,
+                                 PropertySerializer, AutoMealPlanSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -664,6 +668,67 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         if to_date is not None:
             queryset = queryset.filter(date__lte=to_date)
         return queryset
+
+
+class AutoPlanViewSet(viewsets.ViewSet):
+    def create(self, request):
+        serializer = AutoMealPlanSerializer(data=request.data)
+
+        if serializer.is_valid():
+            keywords = serializer.validated_data['keywords']
+            start_date = serializer.validated_data['start_date']
+            end_date = serializer.validated_data['end_date']
+            meal_type = MealType.objects.get(pk=serializer.validated_data['meal_type_id'])
+            servings = serializer.validated_data['servings']
+            shared = serializer.get_initial().get('shared', None)
+            shared_pks = list()
+            if shared is not None:
+                for i in range(len(shared)):
+                    shared_pks.append(shared[i]['id'])
+
+            days = (end_date - start_date).days + 1
+            recipes = Recipe.objects.all()
+            meal_plans = list()
+
+            for keyword in keywords:
+                recipes = recipes.filter(keywords__name=keyword['name'])
+
+            if len(recipes) == 0:
+                return Response(serializer.data)
+            recipes = recipes.order_by('?')[:days]
+            recipes = list(recipes)
+
+            for i in range(0, days):
+                day = start_date + datetime.timedelta(i)
+                recipe = recipes[i % len(recipes)]
+                args = {'recipe': recipe, 'servings': servings, 'title': recipe.name,
+                        'created_by': request.user,
+                        'meal_type': meal_type,
+                        'note': '', 'date': day, 'space': request.space}
+
+                m = MealPlan(**args)
+                meal_plans.append(m)
+
+            MealPlan.objects.bulk_create(meal_plans)
+
+            for m in meal_plans:
+                m.shared.set(shared_pks)
+
+                if request.data.get('addshopping', False):
+                    SLR = RecipeShoppingEditor(user=request.user, space=request.space)
+                    SLR.create(mealplan=m, servings=servings)
+
+                else:
+                    post_save.send(
+                        sender=m.__class__,
+                        instance=m,
+                        created=True,
+                        update_fields=None,
+                    )
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, 400)
 
 
 class MealTypeViewSet(viewsets.ModelViewSet):
