@@ -83,7 +83,7 @@
                                         </div>
 
                                     </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id" >
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
@@ -279,11 +279,10 @@
             :create_date="mealplan_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
-      <auto-meal-plan-modal
-        :modal_title="'Auto create meal plan'"
-        :current_period="current_period"
-        @create-plan="doAutoPlan"
-      ></auto-meal-plan-modal>
+        <auto-meal-plan-modal
+            :modal_title="'Auto create meal plan'"
+            :current_period="current_period"
+        ></auto-meal-plan-modal>
 
         <div class="row d-none d-lg-block">
             <div class="col-12 float-right">
@@ -293,12 +292,6 @@
                 <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
                     class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
                 </button>
-                <button class="btn btn-primary shadow-none" @click="deleteAll()"><i
-                    class="fas fa-calendar-plus"></i> {{ "DEBUG:deleteAll" }}
-                </button>
-                <button class="btn btn-primary shadow-none" @click="refreshEntries()"><i
-                    class="fas fa-calendar-plus"></i> {{ "DEBUG:RefreshMeals" }}
-                </button>
                 <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                     {{ $t("Export_To_ICal") }}
                 </a>
@@ -307,7 +300,7 @@
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
-                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan') }}</h6>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
@@ -351,7 +344,7 @@ let SETTINGS_COOKIE_NAME = "mealplan_settings"
 export default {
     name: "MealPlanView",
     components: {
-      AutoMealPlanModal,
+        AutoMealPlanModal,
         MealPlanEditModal,
         MealPlanCard,
         CalendarView,
@@ -365,16 +358,16 @@ export default {
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {
         return {
-          AutoPlan: {
-            meal_types: [],
-            keywords: [[]],
-            servings: 1,
-            date: Date.now(),
-            startDay: null,
-            endDay: null,
-            shared: [],
-            addshopping: false
-          },
+            AutoPlan: {
+                meal_types: [],
+                keywords: [[]],
+                servings: 1,
+                date: Date.now(),
+                startDay: null,
+                endDay: null,
+                shared: [],
+                addshopping: false
+            },
             showDate: new Date(),
             plan_entries: [],
             recipe_viewed: {},
@@ -688,36 +681,7 @@ export default {
         createAutoPlan() {
             this.$bvModal.show(`autoplan-modal`)
         },
-        async autoPlanThread(autoPlan, mealTypeIndex) {
-            let apiClient = new ApiApiFactory()
-            let data = {
-              "start_date" : moment(autoPlan.startDay).format("YYYY-MM-DD"),
-              "end_date" : moment(autoPlan.endDay).format("YYYY-MM-DD"),
-              "meal_type_id" : autoPlan.meal_types[mealTypeIndex].id,
-              "keywords" : autoPlan.keywords[mealTypeIndex],
-              "servings" : autoPlan.servings,
-              "shared" : autoPlan.shared,
-              "addshopping": autoPlan.addshopping
-            }
-            await apiClient.createAutoPlanViewSet(data)
 
-        },
-        async doAutoPlan(autoPlan) {
-            for (let i = 0; i < autoPlan.meal_types.length; i++) {
-              if (autoPlan.keywords[i].length === 0) continue
-              await this.autoPlanThread(autoPlan, i)
-            }
-            this.refreshEntries()
-        },
-        refreshEntries(){//todo Remove method
-          let date = this.current_period
-          useMealPlanStore().refreshFromAPI(moment(date.periodStart).format("YYYY-MM-DD"), moment(date.periodEnd).format("YYYY-MM-DD"))
-        },
-        deleteAll(){//todo Remove method, only used in debugging
-          for (let i = 0; i < useMealPlanStore().plan_list.length; i++) {
-            useMealPlanStore().deleteObject(useMealPlanStore().plan_list[i])
-          }
-        }
     },
     directives: {
         hover: {
