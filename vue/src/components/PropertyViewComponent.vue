@@ -76,6 +76,15 @@
             @hidden="foodEditorHidden"
         >
         </generic-modal-form>
+        
+        <generic-modal-form
+            :model="Models.EQUIPMENT"
+            :action="Actions.UPDATE"
+            :item1="selected_equipment"
+            :show="show_equipment_edit_modal"
+            @hidden="equipmentEditorHidden"
+        >
+        </generic-modal-form>
     </div>
 </template>
 
@@ -95,6 +104,8 @@ export default {
     data() {
         return {
             selected_property: undefined,
+            selected_equipment: undefined,
+            show_equipment_edit_modal: false,
             selected_food: undefined,
             show_food_edit_modal: false,
             show_recipe_properties: false,
@@ -173,6 +184,33 @@ export default {
         }
     },
     methods: {
+        get_amount: function (amount) {
+            if (this.show_total) {
+                return (amount * (this.servings / this.recipe.servings)).toLocaleString(window.CUSTOM_LOCALE, {
+                    'maximumFractionDigits': 2,
+                    'minimumFractionDigits': 2
+                })
+            } else {
+                return (amount / this.recipe.servings).toLocaleString(window.CUSTOM_LOCALE, {
+                    'maximumFractionDigits': 2,
+                    'minimumFractionDigits': 2
+                })
+            }
+        },
+        openEquipmentEditModal: function (equipment) {
+            console.log(equipment)
+            let apiClient = ApiApiFactory()
+            apiClient.retrieveEquipment(equipment.id).then(r => {
+                this.selected_equipment = r.data;
+                this.show_equipment_edit_modal = true
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+            })
+        },
+        equipmentEditorHidden: function () {
+            this.show_equipment_edit_modal = false;
+            this.$emit("equipmentUpdated", "")
+        },
         openFoodEditModal: function (food) {
             console.log(food)
             let apiClient = ApiApiFactory()

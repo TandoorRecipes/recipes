@@ -8,6 +8,8 @@
         <b-form-group :label="$t('Decimals')">
             <b-form-input type="number" min="0" max="4" step="1" v-model="user_preferences.ingredient_decimals"
                           @change="updateSettings(false)"></b-form-input>
+            <b-form-input type="number" min="0" max="4" step="1" v-model="user_preferences.equipmentset_decimals"
+                          @change="updateSettings(false)"></b-form-input>
         </b-form-group>
 
         <b-form-group :description="$t('Use_Fractions_Help')">

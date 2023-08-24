@@ -7,6 +7,8 @@
             </template>
             <b-dropdown-item :href="resolveDjangoUrl('list_food')"> <i class="fas fa-leaf fa-fw"></i> {{ $t(Models["FOOD"].name) }} </b-dropdown-item>
 
+            <b-dropdown-item :href="resolveDjangoUrl('list_equipment')"> <i class="fas fa-toolbox fa-fw"></i> {{ $t(Models["EQUIPMENT"].name) }} </b-dropdown-item>
+
             <b-dropdown-item :href="resolveDjangoUrl('list_keyword')"> <i class="fas fa-tags fa-fw"></i> {{ $t(Models["KEYWORD"].name) }} </b-dropdown-item>
 
             <b-dropdown-item :href="resolveDjangoUrl('list_unit')"> <i class="fas fa-balance-scale fa-fw"></i> {{ $t(Models["UNIT"].name) }} </b-dropdown-item>

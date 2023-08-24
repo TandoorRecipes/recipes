@@ -159,8 +159,19 @@
                 <span class="text-muted small">{{ $t('food_inherit_info') }}</span><br/>
 
                 <a class="btn btn-success" @click="updateSpace()">{{ $t('Update') }}</a><br/>
-                <a class="btn btn-warning mt-1" @click="resetInheritance()">{{ $t('reset_food_inheritance') }}</a><br/>
+                <a class="btn btn-warning mt-1" @click="resetFoodInheritance()">{{ $t('reset_food_inheritance') }}</a><br/>
                 <span class="text-muted small">{{ $t('reset_food_inheritance_info') }}</span>
+                <br/>
+                <label>{{ $t('EquipmentInherit') }}</label>
+                <generic-multiselect :initial_selection="space.equipment_inherit"
+                                     :model="Models.EQUIPMENT_INHERIT_FIELDS"
+                                     @change="space.equipment_inherit = $event.val;">
+                </generic-multiselect>
+                <span class="text-muted small">{{ $t('equipment_inherit_info') }}</span><br/>
+
+                <a class="btn btn-success" @click="updateSpace()">{{ $t('Update') }}</a><br/>
+                <a class="btn btn-warning mt-1" @click="resetEquipmentInheritance()">{{ $t('reset_equipment_inheritance') }}</a><br/>
+                <span class="text-muted small">{{ $t('reset_equipment_inheritance_info') }}</span>
             </div>
         </div>
 
@@ -293,8 +304,15 @@ export default {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
         },
-        resetInheritance: function () {
+        resetFoodInheritance: function () {
             axios.get(resolveDjangoUrl('api_reset_food_inheritance')).then(r => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch(err => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        },
+        resetEquipmentInheritance: function () {
+            axios.get(resolveDjangoUrl('api_reset_equipment_inheritance')).then(r => {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)

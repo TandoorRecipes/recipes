@@ -221,7 +221,7 @@
                                 <generic-multiselect
                                     @change="food.child_inherit_fields = $event.val;"
                                     :model="Models.FOOD_INHERIT_FIELDS"
-                                    :initial_sselection="food.child_inherit_fields"
+                                    :initial_selection="food.child_inherit_fields"
                                     label="name"
                                     :multiple="true"
                                     :placeholder="$t('ChildInheritFields')"

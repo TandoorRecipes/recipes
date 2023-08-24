@@ -729,6 +729,10 @@ export const formFunctions = {
         form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format('yyyy-MM-DD')
         return form
     },
+    EquipmentCreateDefault: function (form) {
+        form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("equipment_inherit_default")
+        return form
+    },
     AutomationOrderDefault: function (form) {
         if (form.fields.filter((x) => x.field === "order")[0].value === undefined) {
             form.fields.filter((x) => x.field === "order")[0].value = 1000

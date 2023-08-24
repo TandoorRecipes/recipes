@@ -313,6 +313,9 @@ export default {
                 if (this.model === this.Models.KEYWORD) {
                     automation.type = "KEYWORD_ALIAS"
                 }
+                if (this.model === this.Models.EQUIPMENT) {
+                    automation.type = "EQUIPMENT_ALIAS"
+                }
 
                 apiClient.createAutomation(automation)
             }

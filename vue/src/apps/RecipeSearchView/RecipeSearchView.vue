@@ -124,6 +124,13 @@
                                                                      id="popover-show_foods" size="sm"
                                                                      class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
+                                                <b-form-group v-bind:label="$t('show_equipments')"
+                                                              label-for="popover-show_equipments" label-cols="8"
+                                                              class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_equipments"
+                                                                     id="popover-show_equipments" size="sm"
+                                                                     class="mt-2"></b-form-checkbox>
+                                                </b-form-group>
                                                 <b-form-group v-bind:label="$t('show_books')"
                                                               label-for="popover-input-show_books" label-cols="8"
                                                               class="mb-1">
@@ -419,6 +426,81 @@
                                                 <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
                                                         <b-form-checkbox v-model="search.search_foods[i].not"
+                                                                         name="check-button"
+                                                                         @change="refreshData(false)"
+                                                                         class="shadow-none">
+                                                            <span class="text-uppercase">{{ $t("not") }}</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                            </b-input-group>
+                                        </div>
+                                    </div>
+
+                                    <!-- equipments filter -->
+                                    <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.equipments_fields > 1">
+                                        {{ $t("Equipments") }}
+                                    </h6>
+                                    <span class="text-sm-left text-warning"
+                                          v-if="ui.expert_mode && search.equipments_fields > 1 && hasDuplicateFilter(search.search_equipments, search.equipments_fields)">{{
+                                            $t("warning_duplicate_filter")
+                                        }}</span>
+                                    <div class="row" v-if="ui.show_equipments">
+                                        <div class="col-12">
+                                            <b-input-group class="mt-2" v-for="(e, i) in equipmentFields" :key="i">
+                                                <template #prepend v-if="ui.expert_mode">
+                                                    <b-input-group-text style="width: 3em"
+                                                                        @click="addField('equipments', e)">
+                                                        <i class="fas fa-plus-circle text-primary"
+                                                           v-if="e == search.equipments_fields && f < 4"/>
+                                                    </b-input-group-text>
+                                                    <b-input-group-text style="width: 3em"
+                                                                        @click="removeField('equipments', e)">
+                                                        <i class="fas fa-minus-circle text-primary"
+                                                           v-if="e == search.equipments_fields && e > 1"/>
+                                                    </b-input-group-text>
+                                                </template>
+                                                <treeselect
+                                                    v-if="ui.tree_select"
+                                                    v-model="search.search_equipments[i].items"
+                                                    :options="facets.Equipments"
+                                                    :load-options="loadEquipmentChildren"
+                                                    :multiple="true"
+                                                    :flat="true"
+                                                    :auto-load-root-options="false"
+                                                    searchNested
+                                                    :placeholder="$t('Equipments')"
+                                                    :normalizer="normalizer"
+                                                    @input="refreshData(false)"
+                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                                />
+                                                <generic-multiselect
+                                                    v-if="!ui.tree_select"
+                                                    @change="genericSelectChanged"
+                                                    :parent_variable="`search_equipments::${i}`"
+                                                    :initial_selection="search.search_equipments[i].items"
+                                                    :model="Models.EQUIPMENT"
+                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                                    :placeholder="$t('Equipments')"
+                                                    :limit="50"
+                                                />
+                                                <b-input-group-append>
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.search_equipments[i].operator"
+                                                                         name="check-button"
+                                                                         @change="refreshData(false)"
+                                                                         class="shadow-none" switch style="width: 5em">
+                                                            <span class="text-uppercase"
+                                                                  v-if="search.search_equipments[i].operator">{{
+                                                                    $t("or")
+                                                                }}</span>
+                                                            <span class="text-uppercase" v-else>{{ $t("and") }}</span>
+                                                        </b-form-checkbox>
+                                                    </b-input-group-text>
+                                                </b-input-group-append>
+                                                <b-input-group-append v-if="ui.expert_mode">
+                                                    <b-input-group-text>
+                                                        <b-form-checkbox v-model="search.search_equipments[i].not"
                                                                          name="check-button"
                                                                          @change="refreshData(false)"
                                                                          class="shadow-none">
@@ -736,6 +818,19 @@
                                                     </template>
                                                 </span>
 
+                                                <span v-for="e in search.search_equipments" v-bind:key="e.id">
+                                                    <template v-if="e.items.length > 0">
+                                                        and
+                                                        <b v-if="e.not">don't</b>
+                                                        contain
+                                                        <b v-if="e.operator">any</b><b
+                                                        v-else>all</b> of the following <span
+                                                        class="text-success">equipments</span>:
+                                                        <i>{{ e.items.flatMap((x) => x.name).join(", ") }}</i>
+                                                        <br/>
+                                                    </template>
+                                                </span>
+
                                                 <span v-for="k in search.search_books" v-bind:key="k.id">
                                                     <template v-if="k.items.length > 0">
                                                         and
@@ -1004,7 +1099,7 @@ export default {
             // this.Models and this.Actions inherited from ApiMixin
             recipes: [],
             recipes_loading: true,
-            facets: {Books: [], Foods: [], Keywords: []},
+            facets: {Books: [], Foods: [], Keywords: [], Equipments: [],},
             meal_plans: [],
             meal_plan_store: null,
             last_viewed_recipes: [],
@@ -1022,6 +1117,13 @@ export default {
                     {items: [], operator: false, not: true},
                 ],
                 search_foods: [
+                    {items: [], operator: true, not: false},
+                    {items: [], operator: false, not: false},
+                    {items: [], operator: true, not: true},
+                    {items: [], operator: false, not: true},
+                ],
+                
+                search_equipments: [
                     {items: [], operator: true, not: false},
                     {items: [], operator: false, not: false},
                     {items: [], operator: true, not: true},
@@ -1054,6 +1156,7 @@ export default {
 
                 keywords_fields: 1,
                 foods_fields: 1,
+                equipments_fields: 1,
                 books_fields: 1,
                 rating_fields: 1,
                 units_fields: 1,
@@ -1071,6 +1174,7 @@ export default {
                 tree_select: false,
                 show_keywords: true,
                 show_foods: true,
+                show_equipments: true,
                 show_books: true,
                 show_rating: true,
                 show_units: false,
@@ -1172,6 +1276,9 @@ export default {
         foodFields: function () {
             return !this.ui.expert_mode ? 1 : this.search.foods_fields
         },
+        equipmentFields: function () {
+            return !this.ui.expert_mode ? 1 : this.search.equipments_fields
+        },
         bookFields: function () {
             return !this.ui.expert_mode ? 1 : this.search.books_fields
         },
@@ -1248,6 +1355,9 @@ export default {
             for (let x of this.search.search_foods.map((x) => x.items).flat()) {
                 this.facets.Foods.push({id: x, name: "loading..."})
             }
+            for (let x of this.search.search_equipments.map((x) => x.items).flat()) {
+                this.facets.Equipments.push({id: x, name: "loading..."})
+            }
 
             for (let x of this.search.search_keywords.map((x) => x.items).flat()) {
                 this.facets.Keywords.push({id: x, name: "loading..."})
@@ -1312,6 +1422,9 @@ export default {
                     return {...x, not: false}
                 })
                 this.search.search_foods = this.search.search_foods.map((x) => {
+                    return {...x, not: false}
+                })
+                this.search.search_equipments = this.search.search_equipments.map((x) => {
                     return {...x, not: false}
                 })
                 this.search.search_books = this.search.search_books.map((x) => {
@@ -1414,6 +1527,7 @@ export default {
 
             this.search.keywords_fields = 1
             this.search.foods_fields = 1
+            this.search.equipments_fields = 1
             this.search.books_fields = 1
 
             if (!filter) {
@@ -1475,6 +1589,13 @@ export default {
                 }
             }
         },
+        loadEquipmentChildren({action, parentNode, callback}) {
+            if (action === LOAD_CHILDREN_OPTIONS) {
+                if (this.facets?.cache_key) {
+                    this.getFacets(this.facets.cache_key, "equipment", parentNode.id).then(callback())
+                }
+            }
+        },
         loadKeywordChildren({action, parentNode, callback}) {
             if (action === LOAD_CHILDREN_OPTIONS) {
                 if (this.facets?.cache_key) {
@@ -1523,6 +1644,7 @@ export default {
                 ...params,
                 ...this.addFields("keywords"),
                 ...this.addFields("foods"),
+                ...this.addFields("equipments"),
                 ...this.addFields("books"),
                 units: this.search.search_units.flatMap((x) => x.id),
                 query: this.search.search_input,
@@ -1551,6 +1673,7 @@ export default {
             let filtered =
                 this.search?.search_keywords?.[0]?.items?.length !== 0 ||
                 this.search?.search_foods?.[0]?.items?.length !== 0 ||
+                this.search?.search_equipments?.[0]?.items?.length !== 0 ||
                 this.search?.search_books?.[0]?.items?.length !== 0 ||
                 this.search?.search_units?.length !== 0 ||
                 this.random_search ||

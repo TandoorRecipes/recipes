@@ -191,6 +191,9 @@ export default {
                     if (this.this_model === this.Models.UNIT) {
                         window.location.href = url + '?unit_id=' + e.source.id
                     }
+                    if (this.this_model === this.Models.EQUIPMENT) {
+                        window.location.href = url + '?equipment_id=' + e.source.id
+                    }
                     break
                 }
                 case "move":
@@ -411,6 +414,9 @@ export default {
                 }
                 if (this.this_model === this.Models.KEYWORD) {
                     automation.type = "KEYWORD_ALIAS"
+                }
+                if (this.this_model === this.Models.EQUIPMENT) {
+                    automation.type = "EQUIPMENT_ALIAS"
                 }
 
                 apiClient.createAutomation(automation)

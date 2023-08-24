@@ -9,6 +9,7 @@
 
             <b-dropdown-item v-on:click="$emit('item-action', 'delete')" v-if="show_delete"> <i class="fas fa-trash-alt fa-fw"></i> {{ $t("Delete") }} </b-dropdown-item>
             <b-dropdown-item v-on:click="$emit('item-action', 'ingredient-editor')" v-if="show_ingredient_editor"> <i class="fas fa-th-list fa-dw"></i> {{ $t("Ingredient Editor") }} </b-dropdown-item>
+            <b-dropdown-item v-on:click="$emit('item-action', 'equipmentset-editor')" v-if="show_equipmentset_editor"> <i class="fas fa-th-list fa-dw"></i> {{ $t("Equipmentset Editor") }} </b-dropdown-item>
 
             <b-dropdown-item v-on:click="$emit('item-action', 'add-shopping')" v-if="show_shopping">
                 <i class="fas fa-cart-plus fa-fw"></i> {{ $t("Add_to_Shopping") }}
@@ -40,6 +41,7 @@ export default {
         show_shopping: { type: Boolean, default: false },
         show_onhand: { type: Boolean, default: false },
         show_ingredient_editor: { type: Boolean, default: false },
+        show_equiupmentset_editor: { type: Boolean, default: false },
     },
 }
 </script>

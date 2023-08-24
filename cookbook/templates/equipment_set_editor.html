@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %}{% trans 'EquipmentSet Editor' %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col col-md-12">
+            <h3>{% trans 'EquipmentSet Editor' %}</h3>
+        </div>
+    </div>
+    <div id="app">
+
+        <equipment-set-editor-view></equipment-set-editor-view>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+        window.DEFAULT_EQUIPMENT = {{ equipment_id }}
+        window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
+    </script>
+
+    {% render_bundle 'equipment_set_editor_view' %}
+{% endblock %}

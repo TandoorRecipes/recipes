@@ -65,6 +65,7 @@
                         :show_shopping="useShopping"
                         :show_onhand="useOnhand"
                         :show_ingredient_editor="useIngredientEditor"
+                        :show_equipmentset_editor="useEquipmentSetEditor"
                         @item-action="$emit('item-action', { action: $event, source: item })"
                     >
                     </generic-context-menu>
@@ -200,8 +201,11 @@ export default {
         useDrag: function () {
             return this.useMove || this.useMerge
         },
-        useIngredientEditor: function (){
+        useIngredientEditor: function () {
             return (this.model === this.Models.FOOD || this.model === this.Models.UNIT)
+        },
+        useEquipmentSetEditor: function () {
+            return this.model === this.Models.EQUIPMENT
         },
         itemTags: function () {
             return this.model?.tags ?? []

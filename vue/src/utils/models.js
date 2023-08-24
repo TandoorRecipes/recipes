@@ -231,50 +231,205 @@ export class Models {
         apiName: "FoodInheritField",
     }
 
-    static KEYWORD = {
-        name: "Keyword", // *OPTIONAL: parameters will be built model -> model_type -> default
-        apiName: "Keyword",
-        model_type: this.TREE,
-        paginated: true,
-        move: true,
-        merge: true,
-        badges: {
-            icon: true,
-        },
-        create: {
-            // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "icon"]],
-            form: {
-                name: {
-                    form_field: true,
-                    type: "text",
-                    field: "name",
-                    label: "Name",
-                    placeholder: "",
-                },
-                description: {
-                    form_field: true,
-                    type: "text",
-                    field: "description",
-                    label: "Description",
-                    placeholder: "",
-                    optional: true,
-                },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    optional: true,
-                },
-                full_name: {
-                    form_field: true,
-                    type: "smalltext",
-                    field: "full_name",
-                },
-            },
-        },
-    }
+	static EQUIPMENT = {
+		name: "Equipment",
+		apiName: "Equipment",
+		model_type: this.TREE,
+		paginated: true,
+		move: true,
+		merge: true,
+		shop: false,
+		onhand: false,
+		badges: {
+			linked_recipe: true,
+		},
+		create: {
+			params: [
+				[
+					"name",
+					"plural_name",
+					"description",
+					"recipe",
+					"location",
+					"available_quantity",
+					"inherit",
+					"inherit_fields",
+					"reset_inherit",
+					"capacity_amount",
+					"capacity_unit",
+					"serial_number",
+					"weight",
+                    "weight_unit",
+					"child_inherit_fields"
+				],
+			],
+			
+			form: {
+				show_help: true,
+                component: "EquipmentEditor",
+				name: {
+					form_field: true,
+					type: "text",
+					field: "name",
+					label: "Name", // form.label always translated in utils.getForm()
+					placeholder: "", // form.placeholder always translated
+					subtitle_field: "full_name",
+				},
+				plural_name: {
+					form_field: true,
+					type: "text",
+					field: "plural_name",
+					label: "Plural",
+					placeholder: "",
+				},
+				description: {
+					form_field: true,
+					type: "text",
+					field: "description",
+					label: "Description", // form.label always translated in utils.getForm()
+					placeholder: "",
+				},
+				recipe: {
+					form_field: true,
+					type: "lookup",
+					field: "recipe",
+					list: "RECIPE",
+					label: "Recipe", // form.label always translated in utils.getForm()
+					help_text: "equipment_recipe_help", // form.help_text always translated
+				},
+				location: {
+					form_field: true,
+					type: "text",
+					field: "location",
+					label: "Location",
+					placeholder: "",
+				},
+				available_quantity: {
+					form_field: true,
+					type: "number",
+					field: "available_quantity",
+					label: "Available quantity",
+					placeholder: ""
+				},
+				capacity_amount: {
+					form_field: true,
+					type: "number",
+					field: "capacity_amount",
+					label: "Capacity",
+					placeholder: ""
+				},
+				capacity_unit: {
+					form_field: true,
+					type: "lookup",
+					field: "capacity_unit",
+					label: "Unit",
+					list: "UNIT",
+					allow_create: true
+				},
+				weight: {
+					form_field: true,
+					type: "number",
+					field: "weight",
+					label: "Weight",
+					placeholder: ""
+				},
+				weight_unit: {
+					form_field: true,
+					type: "lookup",
+					field: "weight_unit",
+					label: "Unit",
+					list: "UNIT",
+					allow_create: true
+				},
+				serial_number: {
+					form_field: true,
+					type: "text",
+					filed: "serial_number",
+					label: "Serial Number",
+					placeholder: ""
+				},
+				inherit_fields: {
+					form_field: true,
+					advanced: true,
+					type: "lookup",
+					multiple: true,
+					field: "inherit_fields",
+					list: "EQUIPMENT_INHERIT_FIELDS",
+					label: "InheritFields",
+					condition: {field: "equipment_children_exist", value: true, condition: "preference_equals"},
+					help_text: "InheritFields_help",
+				},
+				child_inherit_fields: {
+					form_field: true,
+					advanced: true,
+					type: "lookup",
+					multiple: true,
+					field: "child_inherit_fields",
+					list: "EQUIPMENT_INHERIT_FIELDS",
+					label: "ChildInheritFields", // form.label always translated in utils.getForm()
+					condition: {field: "numchild", value: 0, condition: "gt"},
+					help_text: "ChildInheritFields_help", // form.help_text always translated
+				},
+				reset_inherit: {
+					form_field: true,
+					advanced: true,
+					type: "checkbox",
+					field: "reset_inherit",
+					label: "reset_children",
+					help_text: "reset_children_help",
+					condition: {field: "numchild", value: 0, condition: "gt"},
+				},
+				form_function: "EquipmentCreateDefault",
+			},
+		},
+	}
+	static EQUIPMENT_INHERIT_FIELDS = {
+		name: "EquipmentInherit",
+		apiName: "EquipmentInheritField",
+	}
+
+	static KEYWORD = {
+		name: "Keyword", // *OPTIONAL: parameters will be built model -> model_type -> default
+		apiName: "Keyword",
+		model_type: this.TREE,
+		paginated: true,
+		move: true,
+		merge: true,
+		badges: {
+			icon: true,
+		},
+		create: {
+			// if not defined partialUpdate will use the same parameters, prepending 'id'
+			params: [["name", "description", "icon"]],
+			form: {
+				name: {
+					form_field: true,
+					type: "text",
+					field: "name",
+					label: "Name",
+					placeholder: "",
+				},
+				description: {
+					form_field: true,
+					type: "text",
+					field: "description",
+					label: "Description",
+					placeholder: "",
+				},
+				icon: {
+					form_field: true,
+					type: "emoji",
+					field: "icon",
+					label: "Icon",
+				},
+				full_name: {
+					form_field: true,
+					type: "smalltext",
+					field: "full_name",
+				},
+			},
+		},
+	}
 
     static UNIT = {
         name: "Unit",
@@ -522,111 +677,111 @@ export class Models {
         },
     }
 
-    static AUTOMATION = {
-        name: "Automation",
-        apiName: "Automation",
-        paginated: true,
-        list: {
-            header_component: {
-                name: "BetaWarning",
-            },
-        },
-        create: {
-            params: [["name", "description", "type", "param_1", "param_2", "param_3", "order", "disabled"]],
-            form: {
-                name: {
-                    form_field: true,
-                    type: "text",
-                    field: "name",
-                    label: "Name",
-                    placeholder: "",
-                },
-                description: {
-                    form_field: true,
-                    type: "text",
-                    field: "description",
-                    label: "Description",
-                    placeholder: "",
-                    optional: true,
-                },
-                type: {
-                    form_field: true,
-                    type: "choice",
-                    options: [
-                        {value: "FOOD_ALIAS", text: "Food_Alias"},
-                        {value: "UNIT_ALIAS", text: "Unit_Alias"},
-                        {value: "KEYWORD_ALIAS", text: "Keyword_Alias"},
-                        {value: "DESCRIPTION_REPLACE", text: "Description_Replace"},
-                        {value: "INSTRUCTION_REPLACE", text: "Instruction_Replace"},
-                    ],
-                    field: "type",
-                    label: "Type",
-                    placeholder: "",
-                },
-                param_1: {
-                    form_field: true,
-                    type: "text",
-                    field: "param_1",
-                    label: {
-                        function: "translate",
-                        phrase: "parameter_count",
-                        params: [
-                            {
-                                token: "count",
-                                attribute: "1",
-                            },
-                        ],
-                    },
-                    placeholder: "",
-                },
-                param_2: {
-                    form_field: true,
-                    type: "text",
-                    field: "param_2",
-                    label: {
-                        function: "translate",
-                        phrase: "parameter_count",
-                        params: [
-                            {
-                                token: "count",
-                                attribute: "2",
-                            },
-                        ],
-                    },
-                    placeholder: "",
-                },
-                param_3: {
-                    form_field: true,
-                    type: "text",
-                    field: "param_3",
-                    label: {
-                        function: "translate",
-                        phrase: "parameter_count",
-                        params: [
-                            {
-                                token: "count",
-                                attribute: "3",
-                            },
-                        ],
-                    },
-                    placeholder: "",
-                },
-                order: {
-                    form_field: true,
-                    type: "number",
-                    field: "order",
-                    label: "Order",
-                    placeholder: 0,
-                },
-                disabled: {
-                    form_field: true,
-                    type: "checkbox",
-                    field: "disabled",
-                    label: "Disabled",
-                    placeholder: "",
-                },
-                form_function: "AutomationOrderDefault"
-            },
+	static AUTOMATION = {
+		name: "Automation",
+		apiName: "Automation",
+		paginated: true,
+		list: {
+			header_component: {
+				name: "BetaWarning",
+			},
+		},
+		create: {
+			params: [["name", "description", "type", "param_1", "param_2", "param_3", "order", "disabled"]],
+			form: {
+				name: {
+					form_field: true,
+					type: "text",
+					field: "name",
+					label: "Name",
+					placeholder: "",
+				},
+				description: {
+					form_field: true,
+					type: "text",
+					field: "description",
+					label: "Description",
+					placeholder: "",
+				},
+				type: {
+					form_field: true,
+					type: "choice",
+					options: [
+						{value: "EQUIPMENT_ALIAS", text: "Equipment_Alias"},
+						{value: "FOOD_ALIAS", text: "Food_Alias"},
+						{value: "UNIT_ALIAS", text: "Unit_Alias"},
+						{value: "KEYWORD_ALIAS", text: "Keyword_Alias"},
+						{value: "DESCRIPTION_REPLACE", text: "Description_Replace"},
+						{value: "INSTRUCTION_REPLACE", text: "Instruction_Replace"},
+					],
+					field: "type",
+					label: "Type",
+					placeholder: "",
+				},
+				param_1: {
+					form_field: true,
+					type: "text",
+					field: "param_1",
+					label: {
+						function: "translate",
+						phrase: "parameter_count",
+						params: [
+							{
+								token: "count",
+								attribute: "1",
+							},
+						],
+					},
+					placeholder: "",
+				},
+				param_2: {
+					form_field: true,
+					type: "text",
+					field: "param_2",
+					label: {
+						function: "translate",
+						phrase: "parameter_count",
+						params: [
+							{
+								token: "count",
+								attribute: "2",
+							},
+						],
+					},
+					placeholder: "",
+				},
+				param_3: {
+					form_field: true,
+					type: "text",
+					field: "param_3",
+					label: {
+						function: "translate",
+						phrase: "parameter_count",
+						params: [
+							{
+								token: "count",
+								attribute: "3",
+							},
+						],
+					},
+					placeholder: "",
+				},
+				order: {
+					form_field: true,
+					type: "number",
+					field: "order",
+					label: "Order",
+					placeholder: 0,
+				},
+				disabled: {
+					form_field: true,
+					type: "checkbox",
+					field: "disabled",
+					label: "Disabled",
+					placeholder: "",
+				},
+				form_function: "AutomationOrderDefault"
+			},
 
         },
     }
@@ -695,9 +850,7 @@ export class Models {
                     help_text: "open_data_help_text",
                     optional: true,
                 },
-
             },
-
         },
     }
 
@@ -784,6 +937,11 @@ export class Models {
                 "foods_and",
                 "foods_or_not",
                 "foods_and_not",
+				"equipments",
+				"equipments_or",
+				"equipments_and",
+				"equipments_or_not",
+				"equipments_and_not",
                 "units",
                 "rating",
                 "books",
@@ -806,7 +964,7 @@ export class Models {
             ],
         },
         shopping: {
-            params: ["id", ["id", "list_recipe", "ingredients", "servings"]],
+            params: ["id", ["id", "list_recipe", "ingredients", "equipmentsets", "servings"]],
         },
     }
 

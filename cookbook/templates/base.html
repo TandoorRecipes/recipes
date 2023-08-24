@@ -129,7 +129,7 @@
                 {% page_help request.resolver_match.url_name as help_button %}
                 {% if help_button %}{{ help_button|safe }}{% endif %}
 
-                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
+                <li class="nav-item dropdown {% if request.resolver_match.url_name in 'list_keyword,list_food,list_equipment,list_unit,view_supermarket,data_batch_edit,view_history' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-fw fa-toolbox fa-lg"></i>
@@ -161,6 +161,20 @@
                                 </a>
                             </div>
                             <div class="col-4">
+                                <a href="{% url 'list_equipment' %}" class="p-0 p-md-1">
+                                    <div class="card p-0 no-gutters border-0">
+                                        <div class="card-body text-center p-0 no-gutters">
+                                            <i class="fas fa-toolbox fa-2x"></i>
+                                        </div>
+                                        <div class="card-body text-break text-center p-0 no-gutters text-muted menu-dropdown-text">
+                                            {% trans 'Equipments' %}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row m-0 mt-2 mt-md-0">
+                            <div class="col-4">
                                 <a href="{% url 'list_unit' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
@@ -172,8 +186,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_supermarket' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -198,6 +210,8 @@
                                     </div>
                                 </a>
                             </div>
+                        </div>
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_automation' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -210,8 +224,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_user_file' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -236,6 +248,8 @@
                                     </div>
                                 </a>
                             </div>
+                        </div>
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'view_history' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -248,8 +262,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'view_ingredient_editor' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -274,6 +286,8 @@
                                     </div>
                                 </a>
                             </div>
+                        </div>
+                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_property_type' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">
@@ -286,8 +300,6 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
-                        <div class="row m-0 mt-2 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_unit_conversion' %}" class="p-0 p-md-1">
                                     <div class="card p-0 no-gutters border-0">

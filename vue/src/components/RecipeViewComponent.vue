@@ -84,8 +84,9 @@
 
             <div class="row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"
-                     v-if="recipe && ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)">
-                    <ingredients-card
+                     v-if="recipe && ((ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)) || (equipmentset_count > 0 && (recipe.show_equipmentset_overview || recipe.steps.length < 2)))">
+                    <div v-if="ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)">
+                        <ingredients-card
                         :recipe="recipe.id"
                         :steps="recipe.steps"
                         :ingredient_factor="ingredient_factor"
@@ -94,7 +95,20 @@
                         id="ingredient_container"
                         @checked-state-changed="updateIngredientCheckedState"
                         @change-servings="servings = $event"
-                    />
+                        />
+                    </div>
+                    <div v-if="equipmentset_count > 0 && (recipe.show_equipmentset_overview || recipe.steps.length < 2)">
+                        <equipment-sets-card
+                        :recipe="recipe.id"
+                        :steps="recipe.steps"
+                        :equipmentset_factor="equipmentset_factor"
+                        :servings="servings"
+                        :header="true"
+                        id="equipmentset_container"
+                        @checked-state-changed="updateEquipmentSetCheckedState"
+                        @change-servings="servings = $event"
+                        />
+                    </div>
                 </div>
 
                 <div class="col-12 order-1 col-sm-12 order-sm-1 col-md-6 order-md-2">
@@ -176,6 +190,7 @@ import LoadingSpinner from "@/components/LoadingSpinner"
 import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
 import RecipeRating from "@/components/RecipeRating"
 import LastCooked from "@/components/LastCooked"
+import EquipmentSetsCard from "@/components/EquipmentSetsCard"
 import IngredientsCard from "@/components/IngredientsCard"
 import StepComponent from "@/components/StepComponent"
 import KeywordsComponent from "@/components/KeywordsComponent"
@@ -199,6 +214,7 @@ export default {
         PdfViewer,
         ImageViewer,
         IngredientsCard,
+        EquipmentSetsCard,
         StepComponent,
         RecipeContextMenu,
         KeywordsComponent,
@@ -214,6 +230,12 @@ export default {
         },
         ingredient_count() {
             return this.recipe?.steps.map((x) => x.ingredients).flat().length
+        },
+        equipmentset_factor: function () {
+            return this.servings / this.recipe.servings
+        },
+        equipmentset_count() {
+            return this.recipe?.steps.map((x) => x.equipmentsets).flat().length
         },
         working_time: function () {
             return calculateHourMinuteSplit(this.recipe.working_time)
@@ -233,6 +255,7 @@ export default {
             share_uid: window.SHARE_UID,
             wake_lock: null,
             ingredient_height: '250',
+            equipmentset_height: '250',
         }
     },
     props: {
@@ -279,8 +302,10 @@ export default {
         handleResize: function () {
             if (document.getElementById('nutrition_container') !== null) {
                 this.ingredient_height = document.getElementById('ingredient_container').clientHeight - document.getElementById('nutrition_container').clientHeight
+                this.equipmentset_height = document.getElementById('equipmentset_container').clientHeight - document.getElementById('nutrition_container').clientHeight
             } else {
                 this.ingredient_height = document.getElementById('ingredient_container').clientHeight
+                this.equipmentset_height = document.getElementById('equipmentset_container').clientHeight
             }
         },
         destroyWakeLock: function () {
@@ -338,6 +363,15 @@ export default {
                 for (let ingredient of step.ingredients) {
                     if (ingredient.id === e.id) {
                         this.$set(ingredient, "checked", !ingredient.checked)
+                    }
+                }
+            }
+        },
+        updateEquipmentSetCheckedState: function (e) {
+            for (let step of this.recipe.steps) {
+                for (let equipmentset of step.equipmentsets) {
+                    if (equipmentset.id === e.id) {
+                        this.$set(equipmentset, "checked", !equipmentset.checked)
                     }
                 }
             }
