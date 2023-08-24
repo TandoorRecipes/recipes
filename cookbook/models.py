@@ -254,6 +254,18 @@ class FoodInheritField(models.Model, PermissionModelMixin):
         return _(self.name)
 
 
+class EquipmentInheritField(models.Model, PermissionModelMixin):
+    field = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=64, unique=True)
+
+    def __str__(self):
+        return _(self.name)
+
+    @staticmethod
+    def get_name(self):
+        return _(self.name)
+
+
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
@@ -268,6 +280,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
+    equipment_inherit = models.ManyToManyField(EquipmentInheritField, blank=True)
     show_facet_count = models.BooleanField(default=False)
 
     internal_note = models.TextField(blank=True, null=True)
@@ -285,6 +298,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         Comment.objects.filter(recipe__space=self).delete()
         Keyword.objects.filter(space=self).delete()
         Ingredient.objects.filter(space=self).delete()
+        EquipmentSet.objects.filter(space=self).delete()
+        Equipment.objects.filter(space=self).delete()
         Food.objects.filter(space=self).delete()
         Unit.objects.filter(space=self).delete()
         Step.objects.filter(space=self).delete()
@@ -385,6 +400,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     plan_share = models.ManyToManyField(User, blank=True, related_name='plan_share_default')
     shopping_share = models.ManyToManyField(User, blank=True, related_name='shopping_share')
     ingredient_decimals = models.IntegerField(default=2)
+    equipmentset_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
     sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
@@ -731,10 +747,120 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
         )
 
 
+class Equipment(ExportModelOperationsMixin('equipment'), TreeModel, PermissionModelMixin):
+    inheritable_fields = EquipmentInheritField.objects.exclude(field__in=[])
+
+    if SORT_TREE_BY_NAME:
+        node_order_by = ['name']
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
+    description = models.TextField(default='', blank=True)
+    recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
+    location = models.CharField(max_length=128, null=True, blank=True, default=None)
+    available_quantity = models.PositiveIntegerField(default=1)
+    inherit_fields = models.ManyToManyField(EquipmentInheritField, blank=True)
+    capacity_amount = models.DecimalField(null=True, blank=True, default=None, decimal_places=16, max_digits=32)
+    capacity_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, default=None, null=True, blank=True, related_name="related_equipment_capacity_unit")
+    serial_number = models.CharField(max_length=128, null=True, blank=True, default=None)
+    weight = models.DecimalField(null=True, default=None, blank=True, decimal_places=16, max_digits=32)
+    weight_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, default=None, null=True, blank=True, related_name="related_equipment_weight_unit")
+    child_inherit_fields = models.ManyToManyField(EquipmentInheritField, blank=True, related_name='child_inherit')
+
+    open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space', _manager_class=TreeManager)
+
+    def __str__(self):
+        return self.name
+    
+    def delete(self):
+        if self.equipmentset_set.all().exclude(step=None).count() > 0:
+            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.equipmentset_set.all().exclude(step=None))
+        else:
+            return super().delete()
+    
+    def move(self, *args, **kwargs):
+        super().move(*args, **kwargs)
+        # treebeard bypasses ORM, need to explicity save to trigger post save signals retrieve the object again to avoid writing previous state back to disk
+        obj = self.__class__.objects.get(id=self.id)
+        if parent := obj.get_parent():
+            # child should inherit what the parent defines it should inherit
+            fields = list(parent.child_inherit_fields.all() or parent.inherit_fields.all())
+            if len(fields) > 0:
+                obj.inherit_fields.set(fields)
+        obj.save()
+
+    @staticmethod
+    def reset_inheritance(space=None, equipment=None):
+        # resets inherited fields to the space defaults and updates all inherited fields to root object values
+        if equipment:
+            # if child inherit fields is preset children should be set to that, otherwise inherit this equipments inherited fields
+            inherit = list((equipment.child_inherit_fields.all() or equipment.inherit_fields.all()).values('id', 'field'))
+            tree_filter = Q(path__startswith=equipment.path, space=space, depth=equipment.depth + 1)
+        else:
+            inherit = list(space.equipment_inherit.all().values('id', 'field'))
+            tree_filter = Q(space=space)
+
+        # remove all inherited fields from equipment
+        trough = Equipment.inherit_fields.through
+        trough.objects.all().delete()
+
+        # equipment is going to inherit attributes
+        if len(inherit) > 0:
+            # ManyToMany cannot be updated through an UPDATE operation
+            for i in inherit:
+                trough.objects.bulk_create([
+                    trough(equipment_id=x, equipmentinheritfield_id=i['id'])
+                    for x in Equipment.objects.filter(tree_filter).values_list('id', flat=True)
+                ])
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='eq_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='eq_unique_open_data_slug_per_space')
+        ]
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['name']),
+        )
+
+
+class EquipmentSet(ExportModelOperationsMixin('equipment_set'), models.Model, PermissionModelMixin):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, null=True, blank=True)
+    amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
+    note = models.CharField(max_length=256, null=True, blank=True)
+    is_header = models.BooleanField(default=False)
+    no_amount = models.BooleanField(default=False)
+    always_use_plural = models.BooleanField(default=False)
+    original_text = models.CharField(max_length=512, null=True, blank=True, default=None)
+    
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        equipment = ""
+        if self.always_use_plural_equipment and self.equipment.plural_name not in (None, ""):
+            equipment = self.equipment.plural_name
+        else:
+            if self.amount and self.amount > 1 and self.equipment.plural_name not in (None, ""):
+                equipment = self.equipment.plural_name
+            else:
+                equipment = str(self.equipment)
+        return str(self.amount) + ' ' + str(equipment)
+
+    class Meta:
+        ordering = ['order', 'pk']
+        indexes = (
+            Index(fields=['id']),
+        )
+
+
 class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, default='', blank=True)
     instruction = models.TextField(blank=True)
     ingredients = models.ManyToManyField(Ingredient, blank=True)
+    equipmentsets = models.ManyToManyField(EquipmentSet, blank=True)
     time = models.IntegerField(default=0, blank=True)
     order = models.IntegerField(default=0)
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
@@ -858,6 +984,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
     properties = models.ManyToManyField(Property, blank=True)
     show_ingredient_overview = models.BooleanField(default=True)
+    show_equipmentset_overview = models.BooleanField(default=True)
     private = models.BooleanField(default=False)
     shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')
 
@@ -880,7 +1007,8 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         step_recipes = Q(id__in=self.steps.exclude(step_recipe=None).values_list('step_recipe'))
         # recipes for foods
         food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe=self).exclude(recipe=None).values_list('recipe'))
-        related_recipes = Recipe.objects.filter(step_recipes | food_recipes)
+        equipment_recipes = Q(id__in=Equipment.objects.filter(equipmentset__step__recipe=self).exclude(recipe=None).values_list('recipe'))
+        related_recipes = Recipe.objects.filter(step_recipes | food_recipes | equipment_recipes)
         if levels == 1:
             return related_recipes
 
@@ -888,7 +1016,8 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         # for now keeping it at 2 levels max, should be sufficient in 99.9% of scenarios
         sub_step_recipes = Q(id__in=Step.objects.filter(recipe__in=related_recipes.values_list('steps')).exclude(step_recipe=None).values_list('step_recipe'))
         sub_food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe__in=related_recipes).exclude(recipe=None).values_list('recipe'))
-        return Recipe.objects.filter(Q(id__in=related_recipes.values_list('id')) | sub_step_recipes | sub_food_recipes)
+        sub_equipment_recipes = Q(id__in=Equipment.objects.filter(equipmentset__step__recipe__in=related_recipes).exclude(recipe=None).values_list('recipe'))
+        return Recipe.objects.filter(Q(id__in=related_recipes.values_list('id')) | sub_step_recipes | sub_food_recipes | sub_equipment_recipes)
 
     class Meta():
         indexes = (
@@ -1317,11 +1446,12 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     FOOD_ALIAS = 'FOOD_ALIAS'
     UNIT_ALIAS = 'UNIT_ALIAS'
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
+    EQUIPMENT_ALIAS = 'EQUIPMENT_ALIAS'
     DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
     INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
 
     type = models.CharField(max_length=128,
-                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
+                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')), (EQUIPMENT_ALIAS, _('Equipment Alias')),
                                      (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
@@ -1346,11 +1476,13 @@ class CustomFilter(models.Model, PermissionModelMixin):
     RECIPE = 'RECIPE'
     FOOD = 'FOOD'
     KEYWORD = 'KEYWORD'
+    EQUIPMENT = 'EQUIPMENT'
 
     MODELS = (
         (RECIPE, _('Recipe')),
         (FOOD, _('Food')),
         (KEYWORD, _('Keyword')),
+        (EQUIPMENT, _('Equipment'))
     )
 
     name = models.CharField(max_length=128, null=False, blank=False)

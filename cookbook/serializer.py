@@ -28,7 +28,8 @@ from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
-                             ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
+                             ExportLog, Equipment, EquipmentInheritField, EquipmentSet, Food,
+                             FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Recipe, RecipeBook,
                              RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
@@ -200,6 +201,21 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerialize
         read_only_fields = ['id']
 
 
+class EquipmentInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
+    name = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+    field = serializers.CharField(allow_null=True, allow_blank=True, required=False)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+    
+    def update(self, instance, validated_data):
+        return instance
+    
+    class Meta:
+        model = EquipmentInheritField
+        fields = ('id', 'name', 'field',)
+        read_only_fields = ['id']
+
 class UserFileSerializer(serializers.ModelSerializer):
     file = serializers.FileField(write_only=True)
     file_download = serializers.SerializerMethodField('get_download_link')
@@ -281,6 +297,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     food_inherit = FoodInheritFieldSerializer(many=True)
+    equipment_inherit = EquipmentInheritFieldSerializer(many=True)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
@@ -303,7 +320,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'use_plural',)
+            'image', 'use_plural', 'equipment_inherit',)
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo',)
@@ -348,17 +365,26 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
+    equipment_inherit_default = serializers.SerializerMethodField('get_equipment_inherit_defaults')
     plan_share = UserSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserSerializer(many=True, allow_null=True, required=False)
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
+    equipment_children_exist = serializers.SerializerMethodField('get_equipment_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
     def get_food_inherit_defaults(self, obj):
         return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
 
+    def get_equipment_inherit_defaults(self, obj):
+        return EquipmentInheritFieldSerializer(obj.user.get_active_space().equipment_inherit.all(), many=True).data
+
     def get_food_children_exist(self, obj):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
+    
+    def get_equipment_children_exist(self, obj):
+        space = getattr(self.context.get('request', None), 'space', None)
+        return Equipment.objects.filter(depth__gt=0, space=space).exists()
 
     def update(self, instance, validated_data):
         with scopes_disabled():
@@ -371,12 +397,12 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
         model = UserPreference
         fields = (
             'user', 'image', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
-            'plan_share', 'sticky_navbar',
+            'plan_share', 'sticky_navbar', 'equipment_inherit_default',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
-            'food_inherit_default', 'default_delay',
+            'food_inherit_default', 'default_delay', 'equipmentset_decimals',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
             'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients', 'food_children_exist'
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients','food_children_exist', 'equipment_children_exist',
         )
 
 
@@ -694,6 +720,66 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
 
+class EquipmentSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Equipment
+        fields = ('id', 'name', 'plural_name')
+
+
+class EquipmentSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
+    recipe = RecipeSimpleSerializer(allow_null=True, required=False)
+    inherit_fields = EquipmentInheritFieldSerializer(many=True, allow_null=True, required=False)
+    child_inherit_fields = EquipmentInheritFieldSerializer(many=True, allow_null=True, required=False)
+    capacity_unit = UnitSerializer(allow_null=True, required=False)
+    capacity_amount = CustomDecimalField(allow_null=True, required=False)
+    weight = CustomDecimalField(allow_null=True, required=False)
+    weight_unit = UnitSerializer(allow_null=True, required=False)
+
+    recipe_filter = 'steps__equipmentsets__equipment'
+    images = ['recipe__image']
+
+    def create(self, validated_data):
+        print("equipment serializer create")
+        name = validated_data['name'].strip()
+
+        if plural_name := validated_data.pop('plural_name', None):
+            plural_name = plural_name.strip()
+
+        if equipment := Equipment.objects.filter(Q(name=name) | Q(plural_name=name)).first():
+            return equipment
+
+        space = validated_data.pop('space', self.context['request'].space)
+        print(f"space id {space}")
+
+        if recipe := validated_data.get('recipe', None):
+            validated_data['recipe'] = Recipe.objects.get(**recipe)
+        
+        obj, created = Equipment.objects.get_or_create(name=name, plural_name=plural_name, space=space, defaults=validated_data)
+        return obj
+    
+    def update(self, instance, validated_data):
+        print("equipment serializer update")
+        if name := validated_data.get('name', None):
+            validated_data['name'] = name.strip()
+        if plural_name := validated_data.get('plural_name', None):
+            validated_data['plural_name'] = plural_name.strip()
+        reset_inherit = self.initial_data.get('reset_inherit', False)
+
+        saved_instance = super(EquipmentSerializer, self).update(instance, validated_data)
+        if reset_inherit and (r := self.context.get('request', None)):
+            Equipment.reset_inheritance(equipment=saved_instance, space=r.space)
+        return saved_instance
+    
+    class Meta:
+        model = Equipment
+        fields = (
+            'id', 'name', 'plural_name', 'description', 'recipe', 'location', 'available_quantity',
+            'inherit_fields', 'capacity_amount', 'capacity_unit', 'serial_number', 'full_name',
+            'weight', 'weight_unit', 'child_inherit_fields', 'numchild', 'numrecipe', 'open_data_slug',
+        )
+        read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
+
+
 class IngredientSimpleSerializer(WritableNestedModelSerializer):
     food = FoodSimpleSerializer(allow_null=True)
     unit = UnitSerializer(allow_null=True)
@@ -740,10 +826,45 @@ class IngredientSerializer(IngredientSimpleSerializer):
     food = FoodSerializer(allow_null=True)
 
 
+class EquipmentSetSimpleSerializer(WritableNestedModelSerializer):
+    equipment = EquipmentSimpleSerializer(allow_null=True)
+    used_in_recipes = serializers.SerializerMethodField('get_used_in_recipes')
+    amount = CustomDecimalField()
+
+    def get_used_in_recipes(self, obj):
+        used_in = []
+        for s in obj.step_set.all():
+            for r in s.recipe_set.all():
+                used_in.append({'id': r.id, 'name': r.name})
+        return used_in
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data.pop('original_text', None)
+        return super().update(instance, validated_data)
+    
+    class Meta:
+        model = EquipmentSet
+        fields = (
+            'id', 'equipment', 'amount', 'note', 'always_use_plural', 'order',
+            'is_header', 'no_amount', 'original_text', 'used_in_recipes',
+        )
+    
+
+class EquipmentSetSerializer(EquipmentSetSimpleSerializer):
+    equipment = EquipmentSerializer(allow_null=True)
+
+
 class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     ingredients = IngredientSerializer(many=True)
     ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
     ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
+    equipmentsets = EquipmentSetSerializer(many=True)
+    equipmentsets_markdown = serializers.SerializerMethodField('get_equipmentsets_markdown')
+    equipmentsets_vue = serializers.SerializerMethodField('get_equipmentsets_vue')
     file = UserFileViewSerializer(allow_null=True, required=False)
     step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
     recipe_filter = 'steps'
@@ -756,6 +877,12 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         return obj.get_instruction_render()
 
     def get_ingredients_markdown(self, obj):
+        return obj.get_instruction_render()
+
+    def get_equipmentsets_vue(self, obj):
+        return obj.get_instruction_render()
+
+    def get_equipmentsets_markdown(self, obj):
         return obj.get_instruction_render()
 
     def get_step_recipes(self, obj):
@@ -771,8 +898,9 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 
+            'step_recipe_data', 'numrecipe', 'show_ingredients_table',
+            'equipmentsets', 'equipmentsets_markdown', 'equipmentsets_vue',
         )
 
 
@@ -1353,8 +1481,28 @@ class IngredientExportSerializer(WritableNestedModelSerializer):
                   'always_use_plural_food')
 
 
+class EquipmentExportSerializer(EquipmentSerializer):
+    class Meta:
+        model = Equipment
+        fields =('name', 'plural_name', 'description',)
+
+
+class EquipmentSetExportSerializer(WritableNestedModelSerializer):
+    equipment = EquipmentExportSerializer(allow_null=True)
+    amount = CustomDecimalField()
+
+    def create(self, validated_data):
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+    
+    class Meta:
+        model = EquipmentSet
+        fields = ('equipment', 'amount', 'always_use_plural', 'note', 'order', 'is_header', 'no_amount',)
+
+
 class StepExportSerializer(WritableNestedModelSerializer):
     ingredients = IngredientExportSerializer(many=True)
+    equipmentsets = EquipmentSetExportSerializer(many=True)
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -1362,7 +1510,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Step
-        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header', 'show_ingredients_table')
+        fields = ('name', 'instruction', 'ingredients','equipmentsets', 'time', 'order', 'show_as_header', 'show_ingredients_table')
 
 
 class RecipeExportSerializer(WritableNestedModelSerializer):
