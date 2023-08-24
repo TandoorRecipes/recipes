@@ -47,7 +47,7 @@ class CookBookApp(Integration):
             pass
 
         # assuming import files only contain single step
-        step = Step.objects.create(instruction=recipe_json['steps'][0]['instruction'], space=self.request.space, )
+        step = Step.objects.create(instruction=recipe_json['steps'][0]['instruction'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
 
         if 'nutrition' in recipe_json:
             step.instruction = step.instruction + '\n\n' + recipe_json['nutrition']
