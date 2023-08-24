@@ -14,7 +14,7 @@ from rest_framework.authtoken.models import Token
 
 from cookbook.forms import BatchEditForm, SyncForm
 from cookbook.helper.permission_helper import group_required, has_group_permission, above_space_limit
-from cookbook.models import (Comment, Food, Keyword, Recipe, RecipeImport, Sync,
+from cookbook.models import (Comment, Equipment, Food, Keyword, Recipe, RecipeImport, Sync,
                              Unit, UserPreference, BookmarkletImport)
 from cookbook.tables import SyncTable
 from recipes import settings

@@ -13,7 +13,7 @@ from django_scopes import scope, scopes_disabled
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
-from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
+from cookbook.models import (Food, FoodInheritField, Ingredient, EquipmentSet, MealPlan, Recipe,
                              ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields, Unit, PropertyType)
 
 SQLITE = True

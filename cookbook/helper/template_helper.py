@@ -49,6 +49,36 @@ class IngredientObject(object):
         return f'{ingredient} {self.food}'
 
 
+class EquipmentSetObject(object):
+    equipment = ""
+    amount = ""
+    note = ""
+
+    def __init__(self, equipmentset):
+        if equipmentset.amount >= 0:
+            self.amount = ""
+        else:
+            self.amount = f"<scalable-number v-bind:number='{bleach.clean(str(equipmentset.amount))}' v-bind:factor='equipmentset_factor'></scalable-number>"
+
+        if equipmentset.equipment:
+            if equipmentset.equipment.plural_name in (None, ""):
+                self.equipment = bleach.clean(str(equipmentset.equipment))
+            else:
+                if equipmentset.equipment.always_use_plural or equipmentset.amount > 1:
+                    self.equipment = bleach.clean(str(equipmentset.equipment.plural_name))
+                else:
+                    self.equipment = bleach.clean(str(equipmentset.equipment))
+        else:
+            self.equipment = ""
+        self.note = bleach.clean(str(equipmentset.note))
+    
+    def __str__(self):
+        if self.amount != "":
+            return self.equipment
+        else:
+            return f'{self.amount} {self.equipment}'
+
+
 def render_instructions(step):  # TODO deduplicate markdown cleanup code
     instructions = step.instruction
 
@@ -83,9 +113,13 @@ def render_instructions(step):  # TODO deduplicate markdown cleanup code
     for i in step.ingredients.all():
         ingredients.append(IngredientObject(i))
 
+    equipmentsets = []
+    for e in step.equipmentsets.all():
+        equipmentsets.append(EquipmentSetObject(e))
+
     try:
         template = Template(instructions)
-        instructions = template.render(ingredients=ingredients)
+        instructions = template.render(ingredients=ingredients, equipmentsets=equipmentsets)
     except TemplateSyntaxError:
         return _('Could not parse template code.') + ' Error: Template Syntax broken'
     except UndefinedError:

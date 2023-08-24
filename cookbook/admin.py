@@ -16,7 +16,8 @@ from .models import (Automation, BookmarkletImport, Comment, CookLog, Food, Food
                      RecipeBookEntry, RecipeImport, SearchPreference, ShareLink, ShoppingList,
                      ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
                      SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, TelegramBot,
-                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog)
+                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog,
+                     Equipment, EquipmentInheritField, EquipmentSet,)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -122,19 +123,22 @@ class SyncLogAdmin(admin.ModelAdmin):
 admin.site.register(SyncLog, SyncLogAdmin)
 
 
-@admin.action(description='Temporarily ENABLE sorting on Foods and Keywords.')
+@admin.action(description='Temporarily ENABLE sorting on Equipments, Foods and Keywords.')
 def enable_tree_sorting(modeladmin, request, queryset):
     Food.node_order_by = ['name']
     Keyword.node_order_by = ['name']
+    Equipment.node_order_by = ['name']
     with scopes_disabled():
         Food.fix_tree(fix_paths=True)
         Keyword.fix_tree(fix_paths=True)
+        Equipment.fix_tree(fix_paths=True)
 
 
-@admin.action(description='Temporarily DISABLE sorting on Foods and Keywords.')
+@admin.action(description='Temporarily DISABLE sorting on Equipments, Foods and Keywords.')
 def disable_tree_sorting(modeladmin, request, queryset):
     Food.node_order_by = []
     Keyword.node_order_by = []
+    Equipment.node_order_by = []
 
 
 @admin.action(description='Fix problems and sort tree by name')
@@ -228,6 +232,16 @@ def delete_unattached_ingredients(modeladmin, request, queryset):
         Ingredient.objects.filter(step__recipe=None).delete()
 
 
+class EquipmentAdmin(admin.ModelAdmin):
+    form = movenodeform_factory(Keyword)
+    ordering = ('space', 'path',)
+    search_fields = ('name',)
+    actions = [sort_tree, enable_tree_sorting, disable_tree_sorting]
+
+
+admin.site.register(Equipment, EquipmentAdmin)
+
+
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('food', 'amount', 'unit')
     search_fields = ('food__name', 'unit__name')
@@ -235,6 +249,14 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Ingredient, IngredientAdmin)
+
+
+class EquipmentSetAdmin(admin.ModelAdmin):
+    list_display = ('equipment', 'amount')
+    search_fields = ('equipment__name',)
+
+
+admin.site.register(EquipmentSet, EquipmentSetAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):

@@ -1,4 +1,4 @@
-from cookbook.models import Food, Keyword, Recipe, Unit
+from cookbook.models import Equipment, Food, Keyword, Recipe, Unit
 
 from dal import autocomplete
 
@@ -16,6 +16,9 @@ class BaseAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
 
         return qs
+
+class EquipmentSetAutocomplete(BaseAutocomplete):
+    model = Equipment
 
 
 class KeywordAutocomplete(BaseAutocomplete):

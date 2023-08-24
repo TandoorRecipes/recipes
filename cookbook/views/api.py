@@ -58,6 +58,7 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
+from cookbook.helper.equipmentset_parser import EquipmentSetParser
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner,
                                                CustomIsOwnerReadOnly, CustomIsShared,
                                                CustomIsSpaceOwner, CustomIsUser, group_required,
@@ -68,20 +69,23 @@ from cookbook.helper.recipe_search import RecipeFacet, RecipeSearch
 from cookbook.helper.recipe_url_import import get_from_youtube_scraper, get_images_from_soup, clean_dict
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, InviteLink, Keyword, MealPlan,
-                             MealType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
-                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, PropertyType, Property)
+from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Equipment,
+                             EquipmentInheritField, EquipmentSet, Food, FoodInheritField, ImportLog,
+                             Ingredient, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+                             RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry,
+                             ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory,
+                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UserFile, UserPreference,
+                             UserSpace, ViewLog, UnitConversion, PropertyType, Property)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSerializer,
                                  BookmarkletImportSerializer, CookLogSerializer,
-                                 CustomFilterSerializer, ExportLogSerializer,
-                                 FoodInheritFieldSerializer, FoodSerializer,
+                                 CustomFilterSerializer, EquipmentSerializer, EquipmentSimpleSerializer,
+                                 EquipmentInheritFieldSerializer, EquipmentSetSimpleSerializer,
+                                 EquipmentSetSerializer, ExportLogSerializer,
+                                 FoodInheritFieldSerializer, FoodSimpleSerializer, FoodSerializer,
                                  FoodShoppingUpdateSerializer, GroupSerializer, ImportLogSerializer,
                                  IngredientSerializer, IngredientSimpleSerializer,
                                  InviteLinkSerializer, KeywordSerializer, MealPlanSerializer,
@@ -143,10 +147,14 @@ class ExtendedRecipeMixin():
     @classmethod
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
+        print(f"Is extended {extended}")
         if extended:
+            print(f"Params: {queryset}, request {request}, serializer: {serializer}, tree: {tree}")
             recipe_filter = serializer.recipe_filter
             images = serializer.images
             space = request.space
+
+            print(f"filters: recipe: {recipe_filter}, images: {images}, space: {space}")
 
             # add a recipe count annotation to the query
             #  explanation on construction https://stackoverflow.com/a/43771738/15762829
@@ -256,6 +264,9 @@ class MergeMixin(ViewSetMixin):
 
             try:
                 if isinstance(source, Food):
+                    source.properties.remove()
+                
+                if isinstance(source, Equipment):
                     source.properties.remove()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
@@ -602,6 +613,43 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
+class EquipmentInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = EquipmentInheritField.objects
+    serializer_class = EquipmentInheritFieldSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        # exclude fields not yet implemented
+        self.queryset = Equipment.inheritable_fields
+        return super().get_queryset()
+
+
+class EquipmentViewSet(viewsets.ModelViewSet, TreeMixin):
+    queryset = Equipment.objects
+    model = Equipment
+    serializer_class = EquipmentSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_queryset(self):
+        self.queryset = super().get_queryset()
+        return self.queryset \
+            .prefetch_related('inherit_fields', 'child_inherit_fields',) \
+            .select_related('recipe')
+
+    def get_serializer_class(self):
+        if self.request and self.request.query_params.get('simple', False):
+            return EquipmentSimpleSerializer
+        return self.serializer_class
+    
+    def destroy(self, *args, **kwargs):
+        try:
+            return (super().destroy(self, *args, **kwargs))
+        except ProtectedError as e:
+            content = {'error': True, 'msg': e.args[0]}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+
+
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
@@ -769,6 +817,26 @@ class IngredientViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class EquipmentSetViewSet(viewsets.ModelViewSet):
+    queryset = EquipmentSet.objects
+    serializer_class = EquipmentSetSerializer
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
+
+    def get_serializer_class(self):
+        if self.request and self.request.query_params.get('simple', False):
+            return EquipmentSetSimpleSerializer
+        return self.serializer_class
+    
+    def get_queryset(self):
+        queryset = self.queryset.filter(step__recipe__space=self.request.space)
+        equipment = self.request.query_params.get('equipment', None)
+        if equipment and re.match(r'^(\d)+$', equipment):
+            queryset = queryset.filter(equipment_id=equipment)
+        
+        return queryset
+
+
 class StepViewSet(viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
@@ -847,6 +915,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
                    description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), qtype='int'),
         QueryParam(name='foods_and_not',
                    description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), qtype='int'),
+        QueryParam(name='equipments', description=_('ID of equipment a recipe should have. For multiple repeat parameter.'),
+                   qtype='int'),
+        QueryParam(name='equipments_or',
+                   description=_('Equipment IDs, repeat for multiple. Return recipes with any of the equipments'), qtype='int'),
+        QueryParam(name='equipments_and',
+                   description=_('Equipment IDs, repeat for multiple. Return recipes with all of the equipments.'), qtype='int'),
+        QueryParam(name='equipments_or_not',
+                   description=_('Equipment IDs, repeat for multiple. Exclude recipes with any of the equipments.'), qtype='int'),
+        QueryParam(name='equipments_and_not',
+                   description=_('Equipment IDs, repeat for multiple. Exclude recipes with all of the equipments.'), qtype='int'),
         QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
         QueryParam(name='rating', description=_(
             'Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), qtype='int'),
@@ -908,6 +986,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
                     'steps__ingredients__unit__unit_conversion_converted_relation',
                     'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+
+                    'steps__equipmentsets',
+                    'steps__equipmentsets__step_set',
+                    'steps__equipmentsets__step_set__recipe_set',
+                    'steps__equipmentsets__equipment__inherit_fields',
+                    'steps__equipmentsets__equipment__child_inherit_fields',
                     'cooklog_set',
                 ).select_related('nutrition')
 
@@ -1446,6 +1530,22 @@ def reset_food_inheritance(request):
 # @schema(AutoSchema()) #TODO add proper schema
 @permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
+def reset_equipment_inheritance(request):
+    """
+    function to reset inheritance from api, see equipment method for docs
+    """
+    try:
+        Equipment.reset_inheritance(space=request.space)
+        return Response({'message': 'success', }, status=status.HTTP_200_OK)
+    except Exception as e:
+        traceback.print_exc()
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+# @schema(AutoSchema()) #TODO add proper schema
+@permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
+# TODO add rate limiting
 def switch_active_space(request, space_id):
     """
     api endpoint to switch space function
@@ -1710,16 +1810,36 @@ def ingredient_from_string(request):
 
 
 @group_required('user')
+def equipmentset_from_string(request):
+    text = request.POST['text']
+
+    equipmentset_parser = EquipmentSetParser(request, False)
+    amount, equipment, note = equipmentset_parser.parse(text)
+
+    return JsonResponse(
+        {
+            'amount': amount,
+            'equipment': equipment,
+            'note': note
+        },
+        status=200
+    )
+
+
+@group_required('user')
 def get_facets(request):
     key = request.GET.get('hash', None)
     food = request.GET.get('food', None)
     keyword = request.GET.get('keyword', None)
+    equipment = request.GET.get('equipment', None)
     facets = RecipeFacet(request, hash_key=key)
 
     if food:
         results = facets.add_food_children(food)
     elif keyword:
         results = facets.add_keyword_children(keyword)
+    elif equipment:
+        results = facets.add_equipment_children(equipment)
     else:
         results = facets.get_facets()
 

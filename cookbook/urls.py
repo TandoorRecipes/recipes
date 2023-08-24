@@ -9,8 +9,8 @@ from cookbook.helper import dal
 from recipes.settings import DEBUG, PLUGINS
 from cookbook.version_info import TANDOOR_VERSION
 
-from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
+from .models import (Automation, Comment, CustomFilter, Equipment, EquipmentSet, Food, InviteLink, Keyword, MealPlan,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
                      Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
                      get_model_name, UserSpace, Space, PropertyType, UnitConversion)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
@@ -29,6 +29,9 @@ router.register(r'cook-log', api.CookLogViewSet)
 router.register(r'custom-filter', api.CustomFilterViewSet)
 router.register(r'food', api.FoodViewSet)
 router.register(r'food-inherit-field', api.FoodInheritFieldViewSet)
+router.register(r'equipment', api.EquipmentViewSet)
+router.register(r'equipment-inherit-field', api.EquipmentInheritFieldViewSet)
+router.register(r'equipmentset', api.EquipmentSetViewSet)
 router.register(r'import-log', api.ImportLogViewSet)
 router.register(r'export-log', api.ExportLogViewSet)
 router.register(r'group', api.GroupViewSet)
@@ -90,6 +93,7 @@ urlpatterns = [
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
+    path('equipment-set-editor/', views.equipment_set_editor, name='view_equipment_set_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
     path('api/import/', api.import_files, name='view_import'),
@@ -130,9 +134,11 @@ urlpatterns = [
     path('api/recipe-from-source/', api.recipe_from_source, name='api_recipe_from_source'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
+    path('api/equipmentset-from-string/', api.equipmentset_from_string, name='api_equipmentset_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
     path('api/get_facets/', api.get_facets, name='api_get_facets'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
+    path('api/reset-equipment-inheritance/', api.reset_equipment_inheritance, name='api_reset_equipment_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
 
@@ -140,6 +146,7 @@ urlpatterns = [
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
     path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
     path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
+    path('dal/equipment/', dal.EquipmentSetAutocomplete.as_view(), name='dal_equipment'),  # TODO is this deprecated?
 
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
@@ -206,7 +213,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
+vue_models = [Equipment, Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

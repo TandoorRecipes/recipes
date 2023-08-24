@@ -9,7 +9,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, Food, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
+from .models import (Comment, Food, Equipment, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
                      RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
@@ -46,7 +46,7 @@ class UserPreferenceForm(forms.ModelForm):
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
             'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed',
-            'show_step_ingredients',
+            'show_step_ingredients', "equipmentset_decimals",
         )
 
         labels = {
@@ -59,6 +59,7 @@ class UserPreferenceForm(forms.ModelForm):
             'default_page': _('Default page'),
             'plan_share': _('Plan sharing'),
             'ingredient_decimals': _('Ingredient decimal places'),
+            'equipmentset_decimals': _('Equipmentset decimal places'),
             'shopping_auto_sync': _('Shopping list auto sync period'),
             'comments': _('Comments'),
             'left_handed': _('Left-handed mode'),
@@ -76,6 +77,7 @@ class UserPreferenceForm(forms.ModelForm):
             'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
             'shopping_share': _('Users with whom to share shopping lists.'),
             'ingredient_decimals': _('Number of decimals to round ingredients.'),  
+            'equipmentset_decimals': _('Number of decimals to round equipmentsets'),
             'comments': _('If you want to be able to create and see comments underneath recipes.'),  
             'shopping_auto_sync': _(
                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  
@@ -546,22 +548,27 @@ class SpacePreferenceForm(forms.ModelForm):
     prefix = 'space'
     reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
                                             help_text=_("Reset all food to inherit the fields configured."))
+    reset_equipment_inherit = forms.BooleanField(label=_("Reset Equipment Inheritance"), initial=False, required=False,
+                                            help_text=_("Reset all equipment to inherit the fields configured."))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)  # populates the post
         self.fields['food_inherit'].queryset = Food.inheritable_fields
+        self.fields['equipment_inherit'].queryset = Equipment.inheritable_fields
 
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count', 'use_plural')
+        fields = ('food_inherit', 'reset_food_inherit', 'equipment_inherit', 'reset_equipment_inherit', 'show_facet_count', 'use_plural')
 
         help_texts = {
             'food_inherit': _('Fields on food that should be inherited by default.'),
+            'equipment_inherit': _('Fields on equipment that should be inherited by default.'),
             'show_facet_count': _('Show recipe counts on search filters'), 
-            'use_plural': _('Use the plural form for units and food inside this space.'),
+            'use_plural': _('Use the plural form for units, food and equipment inside this space.'),
         }
 
         widgets = {
-            'food_inherit': MultiSelectWidget
+            'food_inherit': MultiSelectWidget,
+            'equipment_inherit': MultiSelectWidget
         }

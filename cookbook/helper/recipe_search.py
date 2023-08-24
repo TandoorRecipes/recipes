@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 
 from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.managers import DICTIONARY
-from cookbook.models import (CookLog, CustomFilter, Food, Keyword, Recipe, SearchFields,
+from cookbook.models import (CookLog, CustomFilter, Food, Equipment, Keyword, Recipe, SearchFields,
                              SearchPreference, ViewLog)
 from recipes import settings
 
@@ -63,6 +63,12 @@ class RecipeSearch():
             'and': self._params.get('foods_and', None),
             'or_not': self._params.get('foods_or_not', None),
             'and_not': self._params.get('foods_and_not', None)
+        }
+        self._equipments = {
+            'or': self._params.get('equipments_or', None) or self._params.get('equipments', None),
+            'and': self._params.get('equipments_and', None),
+            'or_not': self._params.get('equipments_or_not', None),
+            'and_not': self._params.get('equipments_and_not', None)
         }
         self._books = {
             'or': self._params.get('books_or', None) or self._params.get('books', None),
@@ -146,6 +152,7 @@ class RecipeSearch():
         self._new_recipes()
         self.keyword_filters(**self._keywords)
         self.food_filters(**self._foods)
+        self.equipment_filters(**self._equipments)
         self.book_filters(**self._books)
         self.rating_filter(rating=self._rating)
         self.internal_filter(internal=self._internal)
@@ -425,6 +432,40 @@ class RecipeSearch():
                     self._queryset = self._queryset.exclude(
                         id__in=recipes.values('id'))
 
+    def equipment_filters(self, **kwargs):
+        if all([kwargs[x] is None for x in kwargs]):
+            return
+        for fd_filter in kwargs:
+            if not kwargs[fd_filter]:
+                continue
+            if not isinstance(kwargs[fd_filter], list):
+                kwargs[fd_filter] = [kwargs[fd_filter]]
+
+            equipments = Equipment.objects.filter(pk__in=kwargs[fd_filter])
+            if 'or' in fd_filter:
+                if self._include_children:
+                    f_or = Q(steps__equipmentsets__equipment__in=Equipment.include_descendants(equipments))
+                else:
+                    f_or = Q(steps__equipmentsets__equipment__in=equipments)
+
+                if 'not' in fd_filter:
+                    self._queryset = self._queryset.exclude(f_or)
+                else:
+                    self._queryset = self._queryset.filter(f_or)
+            elif 'and' in fd_filter:
+                recipes = Recipe.objects.all()
+                for equipment in equipments:
+                    if self._include_children:
+                        f_and = Q(steps__equipmentsets__equipment__in=equipment.get_descendants_and_self())
+                    else:
+                        f_and = Q(steps__equipmentsets__equipment=equipment)
+                    if 'not' in fd_filter:
+                        recipes = recipes.filter(f_and)
+                    else:
+                        self._queryset = self._queryset.filter(f_and)
+                if 'not' in fd_filter:
+                    self._queryset = self._queryset.exclude(id__in=recipes.values('id'))
+
     def unit_filters(self, units=None, operator=True):
         if operator != True:
             raise NotImplementedError
@@ -522,8 +563,10 @@ class RecipeSearch():
                             self.search_query, cover_density=True))
             if 'steps__ingredients__food__name' in self._fulltext_include:
                 vectors.append('steps__ingredients__food__name__unaccent')
-                rank.append(SearchRank('steps__ingredients__food__name',
-                            self.search_query, cover_density=True))
+                rank.append(SearchRank('steps__ingredients__food__name', self.search_query, cover_density=True))
+            if 'steps__equipmentsets__equipment__name' in self._fulltext_include:
+                vectors.append('steps__equipmentsets__equipment__name__unaccent')
+                rank.append(SearchRank('steps__equipmentsets__equipment__name', self.search_query, cover_density=True))
 
             for r in rank:
                 if self.search_rank is None:
@@ -642,6 +685,7 @@ class RecipeFacet():
 
         self.Keywords = self._cache.get('Keywords', None)
         self.Foods = self._cache.get('Foods', None)
+        self.Equipments = self._cache.get('Equipments', None)
         self.Books = self._cache.get('Books', None)
         self.Ratings = self._cache.get('Ratings', None)
         # TODO Move Recent to recipe annotation/serializer:  requrires change in RecipeSearch(), RecipeSearchView.vue and serializer
@@ -653,9 +697,11 @@ class RecipeFacet():
             self._search_params = {
                 'keyword_list': self._request.query_params.getlist('keywords', []),
                 'food_list': self._request.query_params.getlist('foods', []),
+                'equipment_list': self._request.query_params.getlist('equipment', []),
                 'book_list': self._request.query_params.getlist('book', []),
                 'search_keywords_or': str2bool(self._request.query_params.get('keywords_or', True)),
                 'search_foods_or': str2bool(self._request.query_params.get('foods_or', True)),
+                'search_equipments_or': str2bool(self._request.query_params.get('equipments_or', True)),
                 'search_books_or': str2bool(self._request.query_params.get('books_or', True)),
                 'space': self._request.space,
             }
@@ -664,9 +710,11 @@ class RecipeFacet():
             self._search_params = {
                 'keyword_list': self._cache.get('keyword_list', None),
                 'food_list': self._cache.get('food_list', None),
+                'equipment_list': self._cache.get('equipment_list', None),
                 'book_list': self._cache.get('book_list', None),
                 'search_keywords_or': self._cache.get('search_keywords_or', None),
                 'search_foods_or': self._cache.get('search_foods_or', None),
+                'search_equipments_or': self._cache.get('search_equipments_or', None),
                 'search_books_or': self._cache.get('search_books_or', None),
                 'space': self._cache.get('space', None),
             }
@@ -678,6 +726,7 @@ class RecipeFacet():
             'Recent': self.Recent,
             'Keywords': self.Keywords,
             'Foods': self.Foods,
+            'Equipments': self.Equipments,
             'Books': self.Books
 
         }
@@ -692,6 +741,7 @@ class RecipeFacet():
                 'Recent': self.Recent or [],
                 'Keywords': self.Keywords or [],
                 'Foods': self.Foods or [],
+                'Equipments': self.Equipments or [],
                 'Books': self.Books or []
             }
         return {
@@ -700,6 +750,7 @@ class RecipeFacet():
             'Recent': self.get_recent(),
             'Keywords': self.get_keywords(),
             'Foods': self.get_foods(),
+            'Equipments': self.get_equipments(),
             'Books': self.get_books()
         }
 
@@ -749,6 +800,21 @@ class RecipeFacet():
                           if x['numchild'] > 0 else x for x in list(foods)]
             self.set_cache('Foods', self.Foods)
         return self.Foods
+    
+    def get_equipments(self):
+        if self.Equipments is None:
+            # # if using an OR search, will annotate all keywords, otherwise, just those that appear in results
+            if self._search_params['search_equipments_or']:
+                equipments = Equipment.objects.filter(space=self._request.space).distinct()
+            else:
+                equipments = Equipment.objects.filter(Q(equipmentset__step__recipe__in=self._recipe_list) | Q(depth=1)).filter(space=self._request.space).distinct()
+
+            # set keywords to root objects only
+            equipments = self._equipment_queryset(equipments)
+
+            self.Equipments = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(equipments)]
+            self.set_cache('Equipments', self.Equipments)
+        return self.Equipments
 
     def get_ratings(self):
         if self.Ratings is None:
@@ -792,6 +858,22 @@ class RecipeFacet():
         self.set_cache('Foods', self.Foods)
         return self.get_facets()
 
+    def add_equipment_children(self, id):
+        try:
+            equipment = Equipment.objects.get(id=id)
+            nodes = equipment.get_ancestors()
+        except Equipment.DoesNotExist:
+            return self.get_facets()
+        equipments = self._equipment_queryset(equipment.get_children(), equipment)
+        deep_search = self.Equipments
+        for node in nodes:
+            index = next((i for i, x in enumerate(deep_search) if x["id"] == node.id), None)
+            deep_search = deep_search[index]['children']
+        index = next((i for i, x in enumerate(deep_search) if x["id"] == equipment.id), None)
+        deep_search[index]['children'] = [{**x, 'children': None} if x['numchild'] > 0 else x for x in list(equipments)]
+        self.set_cache('Equipments', self.Equipments)
+        return self.get_facets()
+
     def add_keyword_children(self, id):
         try:
             keyword = Keyword.objects.get(id=id)
@@ -832,6 +914,17 @@ class RecipeFacet():
 
         if not self._request.space.demo and self._request.space.show_facet_count:
             return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__ingredients__food', depth, steplen)), 0)
+                                     ).filter(depth__lte=depth, count__gt=0
+                                              ).values('id', 'name', 'count', 'numchild').order_by(Lower('name').asc())[:200]
+        else:
+            return queryset.filter(depth__lte=depth).values('id', 'name', 'numchild').order_by(Lower('name').asc())
+
+    def _equipment_queryset(self, queryset, equipment=None):
+        depth = getattr(equipment, 'depth', 0) + 1
+        steplen = depth * Equipment.steplen
+
+        if not self._request.space.demo and self._request.space.show_facet_count:
+            return queryset.annotate(count=Coalesce(Subquery(self._recipe_count_queryset('steps__equipmentsets__equipment', depth, steplen)), 0)
                                      ).filter(depth__lte=depth, count__gt=0
                                               ).values('id', 'name', 'count', 'numchild').order_by(Lower('name').asc())[:200]
         else:

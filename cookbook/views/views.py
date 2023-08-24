@@ -203,6 +203,16 @@ def ingredient_editor(request):
     return render(request, 'ingredient_editor.html', template_vars)
 
 
+@group_required('user')
+def equipment_set_editor(request):
+    template_vars = {'equipment_id': -1,}
+    equipment_id = request.GET.get('equipment_id', None)
+    if equipment_id and re.match(r'^(\d)+$', equipment_id):
+        template_vars['equipment_id'] = equipment_id
+
+    return render(request, 'equipment_set_editor.html', template_vars)
+
+
 @group_required('guest')
 def shopping_settings(request):
     if request.space.demo:
