@@ -4575,6 +4575,12 @@ export interface Step {
      * @memberof Step
      */
     numrecipe?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Step
+     */
+    show_ingredeints_table?: boolean;
 }
 /**
  * 
@@ -5180,6 +5186,12 @@ export interface UserPreference {
      * @memberof UserPreference
      */
     left_handed?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    show_step_ingredients?: boolean;
     /**
      * 
      * @type {string}
