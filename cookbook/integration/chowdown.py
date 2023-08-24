@@ -55,7 +55,7 @@ class Chowdown(Integration):
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions), space=self.request.space,
+            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
         )
 
         ingredient_parser = IngredientParser(self.request, True)

@@ -147,7 +147,7 @@ def get_from_scraper(scrape, request):
     recipe_json['steps'] = []
     try:
         for i in parse_instructions(scrape.instructions()):
-            recipe_json['steps'].append({'instruction': i, 'ingredients': [], })
+            recipe_json['steps'].append({'instruction': i, 'ingredients': [], 'show_ingredients_table': request.user.userpreference.show_step_ingredients,})
     except Exception:
         pass
     if len(recipe_json['steps']) == 0:

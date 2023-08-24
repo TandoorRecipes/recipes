@@ -50,7 +50,7 @@ class Cookmate(Integration):
             for step in recipe_text.getchildren():
                 if step.text:
                     step = Step.objects.create(
-                        instruction=step.text.strip(), space=self.request.space,
+                        instruction=step.text.strip(), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                     )
                     recipe.steps.add(step)
 

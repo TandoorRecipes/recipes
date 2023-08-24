@@ -43,7 +43,7 @@ class Saffron(Integration):
 
         recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space, )
 
-        step = Step.objects.create(instruction='\n'.join(directions), space=self.request.space, )
+        step = Step.objects.create(instruction='\n'.join(directions), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
