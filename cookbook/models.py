@@ -768,6 +768,7 @@ class PropertyType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
     icon = models.CharField(max_length=16, blank=True, null=True)
+    order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
     category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
@@ -786,6 +787,7 @@ class PropertyType(models.Model, PermissionModelMixin):
             models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='property_type_unique_open_data_slug_per_space')
         ]
+        ordering = ('order',)
 
 
 class Property(models.Model, PermissionModelMixin):

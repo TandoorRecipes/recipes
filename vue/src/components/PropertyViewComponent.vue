@@ -131,6 +131,7 @@ export default {
                             'property_amount_total': rp.property_amount * this.recipe.servings * (this.servings / this.recipe.servings),
                             'missing_value': false,
                             'unit': rp.property_type.unit,
+                            'type': rp.property_type,
                         }
                     )
                 })
@@ -147,11 +148,23 @@ export default {
                             'property_amount_total': fp.total_value * (this.servings / this.recipe.servings),
                             'missing_value': fp.missing_value,
                             'unit': fp.unit,
+                            'type': fp,
                         }
                     )
                 }
             }
-            return pt_list
+
+            function compare(a,b){
+                if(a.type.order > b.type.order){
+                    return 1
+                }
+                if(a.type.order < b.type.order){
+                    return -1
+                }
+                return 0
+            }
+
+            return pt_list.sort(compare)
         }
     },
     mounted() {
