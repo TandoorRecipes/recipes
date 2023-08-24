@@ -528,7 +528,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
+        fields = ('id', 'name', 'icon', 'unit', 'description', 'order', 'open_data_slug')
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -771,7 +771,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
             'step_recipe_data', 'numrecipe', 'show_ingredients_table'
         )
 
@@ -1002,7 +1002,6 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 
 class AutoMealPlanSerializer(serializers.Serializer):
-
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     meal_type_id = serializers.IntegerField()

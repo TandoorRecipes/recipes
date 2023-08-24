@@ -281,7 +281,7 @@ export class Models {
         apiName: "Unit",
         paginated: true,
         create: {
-            params: [["name", "plural_name", "description", "base_unit","open_data_slug",]],
+            params: [["name", "plural_name", "description", "base_unit", "open_data_slug",]],
             form: {
                 show_help: true,
                 name: {
@@ -711,7 +711,7 @@ export class Models {
             },
         },
         create: {
-            params: [['name', 'icon', 'unit', 'description']],
+            params: [['name', 'icon', 'unit', 'description','order']],
             form: {
                 show_help: true,
                 name: {
@@ -744,6 +744,15 @@ export class Models {
                     label: "Description",
                     placeholder: "",
                     optional: true,
+                },
+                order: {
+                    form_field: true,
+                    type: "number",
+                    field: "order",
+                    label: "Order",
+                    placeholder: "",
+                    optional: true,
+                    helpt_text: "OrderInformation",
                 },
                 open_data_slug: {
                     form_field: true,

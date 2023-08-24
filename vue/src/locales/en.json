@@ -319,6 +319,7 @@
     "CategoryName": "Category Name",
     "SupermarketName": "Supermarket Name",
     "CategoryInstruction": "Drag categories to change the order categories appear in shopping list.",
+    "OrderInformation": "Objects are ordered from small to large numbers.",
     "shopping_recent_days_desc": "Days of recent shopping list entries to display.",
     "shopping_recent_days": "Recent Days",
     "download_pdf": "Download PDF",
