@@ -43,7 +43,10 @@
     "action": "/data/import/url",
     "method": "GET",
     "params": {
-      "url": "url"
+      "title": "title",
+      "url": "url",
+      "text": "text"
+
     }
   }
 }
