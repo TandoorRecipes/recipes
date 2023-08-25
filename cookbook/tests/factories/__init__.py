@@ -335,7 +335,7 @@ class StepFactory(factory.django.DjangoModelFactory):
     # file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = True
     # TODO: need to update to fetch from User's preferences
-    show_step_ingredients = True
+    show_ingredients_table = True
     step_recipe__has_recipe = False
     ingredients__food_recipe_count = 0
     space = factory.SubFactory(SpaceFactory)
