@@ -511,6 +511,10 @@ export default {
             this.website_url = urlParams.get('url')
             this.loadRecipe(this.website_url)
         }
+        if (urlParams.has("text")) {
+            this.website_url = urlParams.get('text')
+            this.loadRecipe(this.website_url)
+        }
     },
     methods: {
         /**
