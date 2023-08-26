@@ -3,8 +3,10 @@ import string
 import unicodedata
 
 from django.core.cache import caches
+from django.db.models import Q
+from django.db.models.functions import Lower
 
-from cookbook.models import Unit, Food, Automation, Ingredient
+from cookbook.models import Automation, Food, Ingredient, Unit
 
 
 class IngredientParser:
@@ -12,6 +14,8 @@ class IngredientParser:
     ignore_rules = False
     food_aliases = {}
     unit_aliases = {}
+    never_unit = {}
+    transpose_words = {}
 
     def __init__(self, request, cache_mode, ignore_automations=False):
         """
@@ -29,7 +33,7 @@ class IngredientParser:
                 caches['default'].touch(FOOD_CACHE_KEY, 30)
             else:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.food_aliases[a.param_1] = a.param_2
+                    self.food_aliases[a.param_1.lower()] = a.param_2
                 caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
             UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
@@ -38,11 +42,33 @@ class IngredientParser:
                 caches['default'].touch(UNIT_CACHE_KEY, 30)
             else:
                 for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.unit_aliases[a.param_1] = a.param_2
+                    self.unit_aliases[a.param_1.lower()] = a.param_2
                 caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
+
+            NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
+            if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
+                self.never_unit = c
+                caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
+            else:
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
+                    self.never_unit[a.param_1.lower()] = a.param_2
+                caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
+
+            TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
+            if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
+                self.transpose_words = c
+                caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
+            else:
+                i = 0
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
+                    self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
+                    i += 1
+                caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
             self.food_aliases = {}
             self.unit_aliases = {}
+            self.never_unit = {}
+            self.transpose_words = {}
 
     def apply_food_automation(self, food):
         """
@@ -55,11 +81,11 @@ class IngredientParser:
         else:
             if self.food_aliases:
                 try:
-                    return self.food_aliases[food]
+                    return self.food_aliases[food.lower()]
                 except KeyError:
                     return food
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).order_by('order').first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
                     return automation.param_2
         return food
 
@@ -72,13 +98,13 @@ class IngredientParser:
         if self.ignore_rules:
             return unit
         else:
-            if self.unit_aliases:
+            if self.transpose_words:
                 try:
-                    return self.unit_aliases[unit]
+                    return self.unit_aliases[unit.lower()]
                 except KeyError:
                     return unit
             else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).order_by('order').first():
+                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
                     return automation.param_2
         return unit
 
@@ -133,10 +159,10 @@ class IngredientParser:
         end = 0
         while (end < len(x) and (x[end] in string.digits
                                  or (
-                                         (x[end] == '.' or x[end] == ',' or x[end] == '/')
-                                         and end + 1 < len(x)
-                                         and x[end + 1] in string.digits
-                                 ))):
+            (x[end] == '.' or x[end] == ',' or x[end] == '/')
+            and end + 1 < len(x)
+            and x[end + 1] in string.digits
+        ))):
             end += 1
         if end > 0:
             if "/" in x[:end]:
@@ -160,7 +186,8 @@ class IngredientParser:
         if unit is not None and unit.strip() == '':
             unit = None
 
-        if unit is not None and (unit.startswith('(') or unit.startswith('-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
+        if unit is not None and (unit.startswith('(') or unit.startswith(
+                '-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
             unit = None
             note = x
         return amount, unit, note
@@ -205,6 +232,67 @@ class IngredientParser:
             food, note = self.parse_food_with_comma(tokens)
         return food, note
 
+    def apply_never_unit_automations(self, tokens):
+        """
+        Moves a string that should never be treated as a unit to next token and optionally replaced with default unit
+        e.g. NEVER_UNIT: param1: egg, param2: None would modify ['1', 'egg', 'white'] to ['1', '', 'egg', 'white']
+        or NEVER_UNIT: param1: egg, param2: pcs would modify ['1', 'egg', 'yolk'] to ['1', 'pcs', 'egg', 'yolk']
+        :param1 string: string that should never be considered a unit, will be moved to token[2]
+        :param2 (optional) unit as string: will insert unit string into token[1]
+        :return: unit as string (possibly changed by automation)
+        """
+
+        if self.ignore_rules:
+            return tokens
+
+        new_unit = None
+        alt_unit = self.apply_unit_automation(tokens[1])
+        never_unit = False
+        if self.never_unit:
+            try:
+                new_unit = self.never_unit[tokens[1].lower()]
+                never_unit = True
+            except KeyError:
+                return tokens
+
+        else:
+            if automation := Automation.objects.annotate(param_1_lower=Lower('param_1')).filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1_lower__in=[
+                    tokens[1].lower(), alt_unit.lower()], disabled=False).order_by('order').first():
+                new_unit = automation.param_2
+                never_unit = True
+
+        if never_unit:
+            tokens.insert(1, new_unit)
+
+        return tokens
+
+    def apply_transpose_words_automations(self, ingredient):
+        """
+        If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
+        :param 1: first word to detect
+        :param 2: second word to detect
+        return: new ingredient string
+        """
+
+        if self.ignore_rules:
+            return ingredient
+
+        else:
+            tokens = [x.lower() for x in ingredient.replace(',', ' ').split()]
+            if self.transpose_words:
+                filtered_rules = {}
+                for key, value in self.transpose_words.items():
+                    if value[0] in tokens and value[1] in tokens:
+                        filtered_rules[key] = value
+                for k, v in filtered_rules.items():
+                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
+            else:
+                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
+                        .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
+                        .filter(Q(Q(param_1_lower__in=tokens) | Q(param_2_lower__in=tokens))).order_by('order'):
+                    ingredient = re.sub(rf"\b({rule.param_1})\W*({rule.param_1})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
+        return ingredient
+
     def parse(self, ingredient):
         """
         Main parsing function, takes an ingredient string (e.g. '1 l Water') and extracts amount, unit, food, ...
@@ -230,8 +318,8 @@ class IngredientParser:
 
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
-        if re.match('(.){1,6}\s\((.[^\(\)])+\)\s', ingredient):
-            match = re.search('\((.[^\(])+\)', ingredient)
+        if re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
+            match = re.search('\\((.[^\\(])+\\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
         # leading spaces before commas result in extra tokens, clean them out
@@ -239,11 +327,13 @@ class IngredientParser:
 
         # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
         # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
-        ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
+        ingredient = re.sub("^(\\d+|\\d+[\\.,]\\d+) - (\\d+|\\d+[\\.,]\\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
 
         # if amount and unit are connected add space in between
-        if re.match('([0-9])+([A-z])+\s', ingredient):
+        if re.match('([0-9])+([A-z])+\\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
+
+        ingredient = self.apply_transpose_words_automations(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
@@ -257,6 +347,7 @@ class IngredientParser:
                 # three arguments if it already has a unit there can't be
                 # a fraction for the amount
                 if len(tokens) > 2:
+                    tokens = self.apply_never_unit_automations(tokens)
                     try:
                         if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
