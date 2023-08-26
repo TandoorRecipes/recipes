@@ -463,5 +463,5 @@
     "Instruction_Replace": "Instruction Remplacer",
     "recipe_property_info": "Vous pouvez également ajouter des propriétés aux aliments pour les calculer automatiquement en fonction de votre recette !",
     "per_serving": "par portions",
-    "open_data_help_text": "Le projet «Tandoor Open Data» est une base de données fournit par la communauté. Ce champ est rempli automatiquement lors de l'importation des données et permet les mises à jour dans le futur."
+    "open_data_help_text": "Le projet «Tandoor Open Data» est une base de données fournie par la communauté. Ce champ est rempli automatiquement lors de l'importation des données et permet les mises à jour dans le futur."
 }
