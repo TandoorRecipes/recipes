@@ -149,6 +149,7 @@ def get_from_scraper(scrape, request):
     parsed_description = parse_description(description)
     # TODO notify user about limit if reached
     # limits exist to limit the attack surface for dos style attacks
+    # TODO migrate to AutomationEngine
     automations = Automation.objects.filter(
         type=Automation.DESCRIPTION_REPLACE,
         space=request.space,
@@ -206,6 +207,7 @@ def get_from_scraper(scrape, request):
         pass
 
     if 'source_url' in recipe_json and recipe_json['source_url']:
+        # TODO migrate to AutomationEngine
         automations = Automation.objects.filter(
             type=Automation.INSTRUCTION_REPLACE,
             space=request.space,
@@ -414,6 +416,7 @@ def parse_keywords(keyword_json, space):
     keywords = []
     keyword_aliases = {}
     # retrieve keyword automation cache if it exists, otherwise build from database
+    # TODO migrate to AutomationEngine
     KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
     if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
         keyword_aliases = c

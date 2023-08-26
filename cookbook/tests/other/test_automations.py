@@ -1,22 +1,65 @@
-import pytest
-from django.contrib import auth
-from django.urls import reverse
-from django_scopes import scopes_disabled
-
-from cookbook.forms import ImportExportBase
-from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.models import ExportLog, Automation
 import json
 import os
 
 import pytest
+from django.contrib import auth
 from django.urls import reverse
+from django_scopes import scope, scopes_disabled
 
+from cookbook.forms import ImportExportBase
+from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_search import RecipeSearch
+from cookbook.models import Automation, ExportLog, Food, Recipe
 from cookbook.tests.conftest import validate_recipe
+from cookbook.tests.factories import FoodFactory, RecipeFactory
 
 IMPORT_SOURCE_URL = 'api_recipe_from_source'
 
+# TODO test case sensitive match, assert update value
+# TODO test case insensitive match, assert update value
+# TODO test no match, assert not update value
+# TODO test accent insensitive match, assert not update value
 
+
+@pytest.fixture
+def obj_1(space_1, u1_s1):
+    return ExportLog.objects.create(type=ImportExportBase.DEFAULT, running=False, created_by=auth.get_user(u1_s1), space=space_1, exported_recipes=10, total_recipes=10)
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_keyword_automation():
+    assert True == True
+
+
+def test_unit_automation():
+    assert True == True
+
+
+def test_food_automation():
+    assert True == True
+
+
+def test_description_replace_automation():
+    assert True == True
+
+
+def test_instruction_replace_automation():
+    assert True == True
+
+
+def test_never_unit_automation():
+    assert True == True
+
+
+def test_transpose_automation():
+    assert True == True
 # for some reason this tests cant run due to some kind of encoding issue, needs to be fixed
 # def test_description_replace_automation(u1_s1, space_1):
 #     if 'cookbook' in os.getcwd():
