@@ -6,16 +6,18 @@ from django.core.cache import caches
 from django.db.models import Q
 from django.db.models.functions import Lower
 
+from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.models import Automation, Food, Ingredient, Unit
 
 
 class IngredientParser:
     request = None
     ignore_rules = False
-    food_aliases = {}
+    # food_aliases = {}
     unit_aliases = {}
     never_unit = {}
     transpose_words = {}
+    automation = None
 
     def __init__(self, request, cache_mode, ignore_automations=False):
         """
@@ -26,15 +28,16 @@ class IngredientParser:
         """
         self.request = request
         self.ignore_rules = ignore_automations
+        self.automation = AutomationEngine(self.request, use_cache=cache_mode)
         if cache_mode:
-            FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
-            if c := caches['default'].get(FOOD_CACHE_KEY, None):
-                self.food_aliases = c
-                caches['default'].touch(FOOD_CACHE_KEY, 30)
-            else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.food_aliases[a.param_1.lower()] = a.param_2
-                caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
+            # FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
+            # if c := caches['default'].get(FOOD_CACHE_KEY, None):
+            #     self.food_aliases = c
+            #     caches['default'].touch(FOOD_CACHE_KEY, 30)
+            # else:
+            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
+            #         self.food_aliases[a.param_1.lower()] = a.param_2
+            #     caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
             UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
             if c := caches['default'].get(UNIT_CACHE_KEY, None):
@@ -65,29 +68,29 @@ class IngredientParser:
                     i += 1
                 caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
-            self.food_aliases = {}
+            # self.food_aliases = {}
             self.unit_aliases = {}
             self.never_unit = {}
             self.transpose_words = {}
 
-    def apply_food_automation(self, food):
-        """
-        Apply food alias automations to passed food
-        :param food: unit as string
-        :return: food as string (possibly changed by automation)
-        """
-        if self.ignore_rules:
-            return food
-        else:
-            if self.food_aliases:
-                try:
-                    return self.food_aliases[food.lower()]
-                except KeyError:
-                    return food
-            else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
-                    return automation.param_2
-        return food
+    # def apply_food_automation(self, food):
+    #     """
+    #     Apply food alias automations to passed food
+    #     :param food: unit as string
+    #     :return: food as string (possibly changed by automation)
+    #     """
+    #     if self.ignore_rules:
+    #         return food
+    #     else:
+    #         if self.food_aliases:
+    #             try:
+    #                 return self.food_aliases[food.lower()]
+    #             except KeyError:
+    #                 return food
+    #         else:
+    #             if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
+    #                 return automation.param_2
+    #     return food
 
     def apply_unit_automation(self, unit):
         """
@@ -130,7 +133,7 @@ class IngredientParser:
         if not food:
             return None
         if len(food) > 0:
-            f, created = Food.objects.get_or_create(name=self.apply_food_automation(food), space=self.request.space)
+            f, created = Food.objects.get_or_create(name=self.automation.apply_food_automation(food), space=self.request.space)
             return f
         return None
 
@@ -397,7 +400,7 @@ class IngredientParser:
         if unit:
             unit = self.apply_unit_automation(unit.strip())
 
-        food = self.apply_food_automation(food.strip())
+        food = self.automation.apply_food_automation(food)
         if len(food) > Food._meta.get_field('name').max_length:  # test if food name is to long
             # try splitting it at a space and taking only the first arg
             if len(food.split()) > 1 and len(food.split()[0]) < Food._meta.get_field('name').max_length:
