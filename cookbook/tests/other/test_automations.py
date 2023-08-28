@@ -37,20 +37,44 @@ def test_food_automation(u1_s1, arg):
         assert (automation.apply_food_automation(arg[0]) == target_name) is True
 
 
-# @pytest.mark.parametrize("arg", [
-#     ['a_u', 302],
-#     ['g1_s1', 302],
-#     ['u1_s1', 200],
-#     ['a1_s1', 200],
-#     ['u1_s2', 404],
-#     ['a1_s2', 404],
-# ])
-# def test_keyword_automation(request, u1_s1):
-#     assert True == True
+@pytest.mark.parametrize("arg", [
+    ['Match', True],
+    ['mAtCh', True],
+    ['No Match', False],
+    ['Màtch', False],
+])
+def test_keyword_automation(u1_s1, arg):
+    target_name = "Matched Automation"
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    automation = AutomationEngine(request, False)
+
+    with scope(space=space):
+        Automation.objects.get_or_create(name='food test', type=Automation.KEYWORD_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
+        assert (automation.apply_keyword_automation(arg[0]) == target_name) is True
 
 
-# def test_unit_automation():
-#     assert True == True
+@pytest.mark.parametrize("arg", [
+    ['Match', True],
+    ['mAtCh', True],
+    ['No Match', False],
+    ['Màtch', False],
+])
+def test_unit_automation(u1_s1, arg):
+    target_name = "Matched Automation"
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    automation = AutomationEngine(request, False)
+
+    with scope(space=space):
+        Automation.objects.get_or_create(name='food test', type=Automation.UNIT_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
+        assert (automation.apply_unit_automation(arg[0]) == target_name) is True
 
 
 # def test_description_replace_automation():

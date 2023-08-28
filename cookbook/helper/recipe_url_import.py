@@ -131,7 +131,7 @@ def get_from_scraper(scrape, request):
         pass
 
     try:
-        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request.space)
+        recipe_json['keywords'] = parse_keywords(list(set(map(str.casefold, keywords))), request)
     except AttributeError:
         recipe_json['keywords'] = keywords
 
@@ -412,19 +412,20 @@ def parse_time(recipe_time):
     return recipe_time
 
 
-def parse_keywords(keyword_json, space):
+def parse_keywords(keyword_json, request):
     keywords = []
-    keyword_aliases = {}
+    automation_engine = AutomationEngine(request)
+    # keyword_aliases = {}
     # retrieve keyword automation cache if it exists, otherwise build from database
     # TODO migrate to AutomationEngine
-    KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
-    if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
-        keyword_aliases = c
-        caches['default'].touch(KEYWORD_CACHE_KEY, 30)
-    else:
-        for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-            keyword_aliases[a.param_1.lower()] = a.param_2
-        caches['default'].set(KEYWORD_CACHE_KEY, keyword_aliases, 30)
+    # KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
+    # if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
+    #     keyword_aliases = c
+    #     caches['default'].touch(KEYWORD_CACHE_KEY, 30)
+    # else:
+    #     for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
+    #         keyword_aliases[a.param_1.lower()] = a.param_2
+    #     caches['default'].set(KEYWORD_CACHE_KEY, keyword_aliases, 30)
 
     # keywords as list
     for kw in keyword_json:
@@ -432,12 +433,13 @@ def parse_keywords(keyword_json, space):
         # if alias exists use that instead
 
         if len(kw) != 0:
-            if keyword_aliases:
-                try:
-                    kw = keyword_aliases[kw.lower()]
-                except KeyError:
-                    pass
-            if k := Keyword.objects.filter(name=kw, space=space).first():
+            # if keyword_aliases:
+            #     try:
+            #         kw = keyword_aliases[kw.lower()]
+            #     except KeyError:
+            #         pass
+            automation_engine.apply_keyword_automation(kw)
+            if k := Keyword.objects.filter(name=kw, space=request.space).first():
                 keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
             else:
                 keywords.append({'label': kw, 'name': kw})
