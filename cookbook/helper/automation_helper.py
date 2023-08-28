@@ -2,10 +2,10 @@ from django.core.cache import caches
 from django.db.models import Q
 from django.db.models.functions import Lower
 
-from cookbook.models import Automation, Food, Ingredient, Unit
+from cookbook.models import Automation
 
 
-class AutomationEngine():
+class AutomationEngine:
     request = None
     use_cache = None
     food_aliases = None
