@@ -9,6 +9,7 @@ class AutomationEngine:
     request = None
     use_cache = None
     food_aliases = None
+    keyword_aliases = None
     unit_aliases = None
     never_unit = None
     transpose_words = None
@@ -20,9 +21,51 @@ class AutomationEngine:
         self.use_cache = use_cache
 
     def apply_keyword_automation(self, keyword):
+        keyword = keyword.strip()
+        if self.use_cache and self.keyword_aliases is None:
+            self.keyword_aliases = {}
+            KEYWORD_CACHE_KEY = f'automation_keyword_alias_{self.request.space.pk}'
+            if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
+                self.keyword_aliases = c
+                caches['default'].touch(KEYWORD_CACHE_KEY, 30)
+            else:
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
+                    self.keyword_aliases[a.param_1.lower()] = a.param_2
+                caches['default'].set(KEYWORD_CACHE_KEY, self.keyword_aliases, 30)
+        else:
+            self.keyword_aliases = {}
+        if self.keyword_aliases:
+            try:
+                keyword = self.keyword_aliases[keyword.lower()]
+            except KeyError:
+                pass
+        else:
+            if automation := Automation.objects.filter(space=self.request.space, type=Automation.KEYWORD_ALIAS, param_1__iexact=keyword, disabled=False).order_by('order').first():
+                return automation.param_2
         return keyword
 
     def apply_unit_automation(self, unit):
+        unit = unit.strip()
+        if self.use_cache and self.unit_aliases is None:
+            self.unit_aliases = {}
+            UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
+            if c := caches['default'].get(UNIT_CACHE_KEY, None):
+                self.unit_aliases = c
+                caches['default'].touch(UNIT_CACHE_KEY, 30)
+            else:
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
+                    self.unit_aliases[a.param_1.lower()] = a.param_2
+                caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
+        else:
+            self.unit_aliases = {}
+        if self.unit_aliases:
+            try:
+                unit = self.unit_aliases[unit.lower()]
+            except KeyError:
+                pass
+        else:
+            if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
+                return automation.param_2
         return unit
 
     def apply_food_automation(self, food):
