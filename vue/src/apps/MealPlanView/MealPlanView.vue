@@ -124,31 +124,6 @@
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
-                    <div class="col-12 col-md-3 calender-options">
-                        <h5>{{ $t("Planner_Settings") }}</h5>
-                        <b-form>
-                            <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')"
-                                          label-for="UomInput">
-                                <b-form-select id="UomInput" v-model="settings.displayPeriodUom"
-                                               :options="options.displayPeriodUom"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="PeriodInput" :label="$t('Periods')"
-                                          :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
-                                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount"
-                                               :options="options.displayPeriodCount"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')"
-                                          label-for="DaysInput">
-                                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek"
-                                               :options="dayNames"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="WeekNumInput" :label="$t('Week_Numbers')">
-                                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
-                                    {{ $t("Show_Week_Numbers") }}
-                                </b-form-checkbox>
-                            </b-form-group>
-                        </b-form>
-                    </div>
                     <div class="col-12 col-md-9 col-lg-6">
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
@@ -417,16 +392,6 @@ export default {
         },
         detailed_items: function () {
             return this.settings.displayPeriodUom === "week"
-        },
-        dayNames: function () {
-            let options = []
-            this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
-                options.push({text: day, value: index})
-            })
-            return options
-        },
-        userLocale: function () {
-            return this.getDefaultBrowserLocale
         },
         item_height: function () {
             if (this.settings.displayPeriodUom === "week") {

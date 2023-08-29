@@ -116,10 +116,7 @@ class TreeModel(MP_Node):
     _full_name_separator = ' > '
 
     def __str__(self):
-        if self.icon:
-            return f"{self.icon} {self.name}"
-        else:
-            return f"{self.name}"
+        return f"{self.name}"
 
     @property
     def parent(self):
@@ -533,7 +530,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
     if SORT_TREE_BY_NAME:
         node_order_by = ['name']
     name = models.CharField(max_length=64)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # TODO deprecate
     updated_at = models.DateTimeField(auto_now=True)  # TODO deprecate
@@ -767,7 +763,6 @@ class PropertyType(models.Model, PermissionModelMixin):
 
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
     category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
@@ -937,7 +932,6 @@ class RecipeImport(models.Model, PermissionModelMixin):
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
@@ -980,7 +974,6 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
     default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
