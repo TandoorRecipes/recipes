@@ -4575,6 +4575,12 @@ export interface Step {
      * @memberof Step
      */
     numrecipe?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Step
+     */
+    show_ingredeints_table?: boolean;
 }
 /**
  * 
@@ -5182,6 +5188,12 @@ export interface UserPreference {
     left_handed?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    show_step_ingredients?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof UserPreference
      */
@@ -5350,6 +5362,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutoPlanViewSet: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/auto-plan/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14688,6 +14733,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createAutoPlanViewSet(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createAutoPlanViewSet(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17466,6 +17521,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutoPlanViewSet(body?: any, options?: any): AxiosPromise<any> {
+            return localVarFp.createAutoPlanViewSet(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {Automation} [automation] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -19979,6 +20043,17 @@ export class ApiApi extends BaseAPI {
      */
     public createAccessToken(accessToken?: AccessToken, options?: any) {
         return ApiApiFp(this.configuration).createAccessToken(accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {any} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createAutoPlanViewSet(body?: any, options?: any) {
+        return ApiApiFp(this.configuration).createAutoPlanViewSet(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

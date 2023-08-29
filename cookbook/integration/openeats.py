@@ -51,7 +51,7 @@ class OpenEats(Integration):
             recipe.image = f'recipes/openeats-import/{file["photo"]}'
             recipe.save()
 
-        step = Step.objects.create(instruction=instructions, space=self.request.space,)
+        step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file['ingredients']:

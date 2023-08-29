@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-12 19:20+0200\n"
-"PO-Revision-Date: 2023-06-25 14:19+0000\n"
-"Last-Translator: sweeney <sweeneytodd91@protonmail.com>\n"
+"PO-Revision-Date: 2023-08-21 09:19+0000\n"
+"Last-Translator: Theodoros Grammenos <teogramm@outlook.com>\n"
 "Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/el/>\n"
 "Language: el\n"
@@ -22,7 +22,7 @@ msgstr ""
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\stats.html:28
 msgid "Ingredients"
-msgstr "Συστατικά"
+msgstr "Υλικά"
 
 #: .\cookbook\forms.py:53
 msgid "Default unit"
@@ -66,7 +66,7 @@ msgstr "Κοινοποίηση προγράμματος"
 
 #: .\cookbook\forms.py:63
 msgid "Ingredient decimal places"
-msgstr ""
+msgstr "Δεκαδικά ψηφία υλικών"
 
 #: .\cookbook\forms.py:64
 msgid "Shopping list auto sync period"

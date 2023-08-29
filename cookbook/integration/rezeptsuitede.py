@@ -37,7 +37,7 @@ class Rezeptsuitede(Integration):
             try:
                 if prep.find('step').text:
                     step = Step.objects.create(
-                        instruction=prep.find('step').text.strip(), space=self.request.space,
+                        instruction=prep.find('step').text.strip(), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                     )
                     recipe.steps.add(step)
             except Exception:
