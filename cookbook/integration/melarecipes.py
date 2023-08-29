@@ -67,7 +67,7 @@ class MelaRecipes(Integration):
                 f = ingredient_parser.get_food(food)
                 u = ingredient_parser.get_unit(unit)
                 step.ingredients.add(Ingredient.objects.create(
-                    food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                    food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 ))
         recipe.steps.add(step)
 

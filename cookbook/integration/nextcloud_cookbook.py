@@ -54,11 +54,11 @@ class NextcloudCookbook(Integration):
             instruction_text = ''
             if 'text' in s:
                 step = Step.objects.create(
-                    instruction=s['text'], name=s['name'], space=self.request.space,
+                    instruction=s['text'], name=s['name'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
             else:
                 step = Step.objects.create(
-                    instruction=s, space=self.request.space,
+                    instruction=s, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
             if not ingredients_added:
                 if len(recipe_json['description'].strip()) > 500:

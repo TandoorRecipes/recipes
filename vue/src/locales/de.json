@@ -507,5 +507,9 @@
     "g": "Gramm [g] (metrisch, Gewicht)",
     "kg": "Kilogramm [kg] (metrisch, Gewicht)",
     "ounce": "Unze [oz] (Gewicht)",
-    "pound": "Pfund (Gewicht)"
+    "pound": "Pfund (Gewicht)",
+    "ml": "Milliliter",
+    "l": "Liter",
+    "tbsp": "Esslöffel",
+    "tsp": "Teelöffel"
 }

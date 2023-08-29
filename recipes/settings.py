@@ -46,7 +46,11 @@ INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
-REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+if os.getenv('REVERSE_PROXY_AUTH') is not None:
+    print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
+    REMOTE_USER_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+else:
+    REMOTE_USER_AUTH = bool(int(os.getenv('REMOTE_USER_AUTH', False)))
 
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
@@ -273,7 +277,7 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
-if REVERSE_PROXY_AUTH:
+if REMOTE_USER_AUTH:
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append(
         'django.contrib.auth.backends.RemoteUserBackend')

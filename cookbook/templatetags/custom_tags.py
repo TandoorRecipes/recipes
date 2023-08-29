@@ -5,7 +5,6 @@ import bleach
 import markdown as md
 from django_scopes import ScopeError
 from markdown.extensions.tables import TableExtension
-from bleach_allowlist import markdown_attrs, markdown_tags
 from django import template
 from django.db.models import Avg
 from django.templatetags.static import static
@@ -46,9 +45,17 @@ def delete_url(model, pk):
 
 @register.filter()
 def markdown(value):
-    tags = markdown_tags + [
+    tags = {
+        "h1", "h2", "h3", "h4", "h5", "h6",
+        "b", "i", "strong", "em", "tt",
+        "p", "br",
+        "span", "div", "blockquote", "code", "pre", "hr",
+        "ul", "ol", "li", "dd", "dt",
+        "img",
+        "a",
+        "sub", "sup",
         'pre', 'table', 'td', 'tr', 'th', 'tbody', 'style', 'thead'
-    ]
+    }
     parsed_md = md.markdown(
         value,
         extensions=[
@@ -56,7 +63,12 @@ def markdown(value):
             UrlizeExtension(), MarkdownFormatExtension()
         ]
     )
-    markdown_attrs['*'] = markdown_attrs['*'] + ['class']
+    markdown_attrs = {
+        "*": ["id", "class"],
+        "img": ["src", "alt", "title"],
+        "a": ["href", "alt", "title"],
+    }
+
     parsed_md = parsed_md[3:] # remove outer paragraph
     parsed_md = parsed_md[:len(parsed_md)-4]
     return bleach.clean(parsed_md, tags, markdown_attrs)
