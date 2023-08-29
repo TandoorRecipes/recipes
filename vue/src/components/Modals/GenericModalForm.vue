@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="form_component !== undefined">
+        <template v-if="form_component !== undefined && (action === Actions.UPDATE || action === Actions.CREATE)">
             <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction" :item1="item1"></component>
         </template>
         <template v-else>

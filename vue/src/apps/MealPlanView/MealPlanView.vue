@@ -83,7 +83,7 @@
                                         </div>
 
                                     </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id" >
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
@@ -279,11 +279,18 @@
             :create_date="mealplan_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
+        <auto-meal-plan-modal
+            :modal_title="'Auto create meal plan'"
+            :current_period="current_period"
+        ></auto-meal-plan-modal>
 
         <div class="row d-none d-lg-block">
             <div class="col-12 float-right">
                 <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus"></i> {{ $t("Create") }}
+                </button>
+                <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
+                    class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
                 </button>
                 <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                     {{ $t("Export_To_ICal") }}
@@ -293,10 +300,11 @@
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
-                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan') }}</h6>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
+
         </bottom-navigation-bar>
     </div>
 </template>
@@ -322,6 +330,8 @@ import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/component
 import {ApiApiFactory} from "@/utils/openapi/api"
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
+import axios from "axios";
+import AutoMealPlanModal from "@/components/AutoMealPlanModal";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -334,6 +344,7 @@ let SETTINGS_COOKIE_NAME = "mealplan_settings"
 export default {
     name: "MealPlanView",
     components: {
+        AutoMealPlanModal,
         MealPlanEditModal,
         MealPlanCard,
         CalendarView,
@@ -347,6 +358,16 @@ export default {
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {
         return {
+            AutoPlan: {
+                meal_types: [],
+                keywords: [[]],
+                servings: 1,
+                date: Date.now(),
+                startDay: null,
+                endDay: null,
+                shared: [],
+                addshopping: false
+            },
             showDate: new Date(),
             plan_entries: [],
             recipe_viewed: {},
@@ -656,7 +677,11 @@ export default {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
 
-        }
+        },
+        createAutoPlan() {
+            this.$bvModal.show(`autoplan-modal`)
+        },
+
     },
     directives: {
         hover: {

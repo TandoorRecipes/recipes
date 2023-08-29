@@ -1,7 +1,9 @@
+import datetime
 import io
 import json
 import mimetypes
 import pathlib
+import random
 import re
 import threading
 import traceback
@@ -25,6 +27,7 @@ from django.core.files import File
 from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, Subquery, Value, When, Avg, Max
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
+from django.db.models.signals import post_save
 from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -94,7 +97,8 @@ from cookbook.serializer import (AutomationSerializer, BookmarkletImportListSeri
                                  SyncLogSerializer, SyncSerializer, UnitSerializer,
                                  UserFileSerializer, UserSerializer, UserPreferenceSerializer,
                                  UserSpaceSerializer, ViewLogSerializer, AccessTokenSerializer, FoodSimpleSerializer,
-                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer, PropertySerializer)
+                                 RecipeExportSerializer, UnitConversionSerializer, PropertyTypeSerializer,
+                                 PropertySerializer, AutoMealPlanSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 
@@ -666,6 +670,66 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class AutoPlanViewSet(viewsets.ViewSet):
+    def create(self, request):
+        serializer = AutoMealPlanSerializer(data=request.data)
+
+        if serializer.is_valid():
+            keywords = serializer.validated_data['keywords']
+            start_date = serializer.validated_data['start_date']
+            end_date = serializer.validated_data['end_date']
+            servings = serializer.validated_data['servings']
+            shared = serializer.get_initial().get('shared', None)
+            shared_pks = list()
+            if shared is not None:
+                for i in range(len(shared)):
+                    shared_pks.append(shared[i]['id'])
+
+            days = min((end_date - start_date).days + 1, 14)
+
+            recipes = Recipe.objects.values('id', 'name')
+            meal_plans = list()
+
+            for keyword in keywords:
+                recipes = recipes.filter(keywords__name=keyword['name'])
+
+            if len(recipes) == 0:
+                return Response(serializer.data)
+            recipes = list(recipes.order_by('?')[:days])
+
+            for i in range(0, days):
+                day = start_date + datetime.timedelta(i)
+                recipe = recipes[i % len(recipes)]
+                args = {'recipe_id': recipe['id'], 'servings': servings,
+                        'created_by': request.user,
+                        'meal_type_id': serializer.validated_data['meal_type_id'],
+                        'note': '', 'date': day, 'space': request.space}
+
+                m = MealPlan(**args)
+                meal_plans.append(m)
+
+            MealPlan.objects.bulk_create(meal_plans)
+
+            for m in meal_plans:
+                m.shared.set(shared_pks)
+
+                if request.data.get('addshopping', False):
+                    SLR = RecipeShoppingEditor(user=request.user, space=request.space)
+                    SLR.create(mealplan=m, servings=servings)
+
+                else:
+                    post_save.send(
+                        sender=m.__class__,
+                        instance=m,
+                        created=True,
+                        update_fields=None,
+                    )
+
+            return Response(serializer.data)
+
+        return Response(serializer.errors, 400)
+
+
 class MealTypeViewSet(viewsets.ModelViewSet):
     """
     returns list of meal types created by the
@@ -897,7 +961,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 try:
                     url = serializer.validated_data['image_url']
                     if validators.url(url, public=True):
-                        response = requests.get(url)
+                        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
                         image = File(io.BytesIO(response.content))
                         filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
                 except UnidentifiedImageError as e:

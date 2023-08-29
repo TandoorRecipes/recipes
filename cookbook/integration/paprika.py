@@ -58,7 +58,7 @@ class Paprika(Integration):
                 pass
 
             step = Step.objects.create(
-                instruction=instructions, space=self.request.space,
+                instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
             )
 
             if 'description' in recipe_json and len(recipe_json['description'].strip()) > 500:

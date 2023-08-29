@@ -25,7 +25,7 @@ class Mealie(Integration):
             created_by=self.request.user, internal=True, space=self.request.space)
 
         for s in recipe_json['recipe_instructions']:
-            step = Step.objects.create(instruction=s['text'], space=self.request.space, )
+            step = Step.objects.create(instruction=s['text'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
             recipe.steps.add(step)
 
         step = recipe.steps.first()
