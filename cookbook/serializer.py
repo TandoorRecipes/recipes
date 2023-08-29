@@ -342,7 +342,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
+        fields = ('id', 'name', 'order', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -449,7 +449,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     class Meta:
         model = Keyword
         fields = (
-            'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'id', 'name',  'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
@@ -528,7 +528,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'icon', 'unit', 'description', 'order', 'open_data_slug')
+        fields = ('id', 'name',  'unit', 'description', 'order', 'open_data_slug')
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -939,7 +939,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by', 'filter')
+        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter')
         read_only_fields = ('created_by',)
 
 
@@ -1309,7 +1309,7 @@ class AccessTokenSerializer(serializers.ModelSerializer):
 class KeywordExportSerializer(KeywordSerializer):
     class Meta:
         model = Keyword
-        fields = ('name', 'icon', 'description', 'created_at', 'updated_at')
+        fields = ('name', 'description', 'created_at', 'updated_at')
 
 
 class NutritionInformationExportSerializer(NutritionInformationSerializer):
