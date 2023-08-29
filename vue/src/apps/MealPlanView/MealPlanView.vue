@@ -139,9 +139,7 @@
                                             </div>
                                             <div class="col-10">
                                                 <h5 class="mt-1 mb-1">
-                                                    {{ meal_type.icon }} {{
-                                                        meal_type.name
-                                                    }}<span class="float-right text-primary" style="cursor: pointer"
+                                                    {{ meal_type.name  }}<span class="float-right text-primary" style="cursor: pointer"
                                                 ><i class="fa"
                                                     v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
                                                     @click="editOrSaveMealType(index)" aria-hidden="true"></i
@@ -155,10 +153,6 @@
                                             <label>{{ $t("Name") }}</label>
                                             <input class="form-control" :placeholder="$t('Name')"
                                                    v-model="meal_type.name"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <emoji-input :field="'icon'" :label="$t('Icon')"
-                                                         :value="meal_type.icon"></emoji-input>
                                         </div>
                                         <div class="form-group">
                                             <label>{{ $t("Color") }}</label>
@@ -294,7 +288,6 @@ import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import MealPlanCard from "@/components/MealPlanCard"
 import MealPlanEditModal from "@/components/MealPlanEditModal"
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader"
-import EmojiInput from "@/components/Modals/EmojiInput"
 
 import moment from "moment"
 import draggable from "vuedraggable"
@@ -326,7 +319,6 @@ export default {
         ContextMenu,
         ContextMenuItem,
         MealPlanCalenderHeader,
-        EmojiInput,
         draggable,
         BottomNavigationBar,
     },
@@ -432,7 +424,6 @@ export default {
                 this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
-        this.$root.$on("change", this.updateEmoji)
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)
     },
@@ -524,13 +515,6 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
-        },
-        updateEmoji: function (field, value) {
-            this.meal_types.forEach((meal_type) => {
-                if (meal_type.editing) {
-                    meal_type.icon = value
-                }
-            })
         },
         datePickerChanged(ctx) {
             this.setShowDate(ctx.selectedDate)
