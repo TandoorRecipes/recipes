@@ -23,7 +23,7 @@ export class Models {
                         false: undefined,
                     },
                 },
-                tree: {default: undefined},
+                tree: { default: undefined },
             },
         },
         delete: {
@@ -50,7 +50,7 @@ export class Models {
                     type: "lookup",
                     field: "target",
                     list: "self",
-                    sticky_options: [{id: 0, name: "tree_root"}],
+                    sticky_options: [{ id: 0, name: "tree_root" }],
                 },
             },
         },
@@ -71,7 +71,7 @@ export class Models {
             food_onhand: true,
             shopping: true,
         },
-        tags: [{field: "supermarket_category", label: "name", color: "info"}],
+        tags: [{ field: "supermarket_category", label: "name", color: "info" }],
         // REQUIRED: unordered array of fields that can be set during create
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
@@ -177,7 +177,7 @@ export class Models {
                     field: "substitute_siblings",
                     label: "substitute_siblings", // form.label always translated in utils.getForm()
                     help_text: "substitute_siblings_help", // form.help_text always translated
-                    condition: {field: "parent", value: true, condition: "field_exists"},
+                    condition: { field: "parent", value: true, condition: "field_exists" },
                 },
                 substitute_children: {
                     form_field: true,
@@ -186,7 +186,7 @@ export class Models {
                     field: "substitute_children",
                     label: "substitute_children",
                     help_text: "substitute_children_help",
-                    condition: {field: "numchild", value: 0, condition: "gt"},
+                    condition: { field: "numchild", value: 0, condition: "gt" },
                 },
                 inherit_fields: {
                     form_field: true,
@@ -196,7 +196,7 @@ export class Models {
                     field: "inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
                     label: "InheritFields",
-                    condition: {field: "food_children_exist", value: true, condition: "preference_equals"},
+                    condition: { field: "food_children_exist", value: true, condition: "preference_equals" },
                     help_text: "InheritFields_help",
                 },
                 child_inherit_fields: {
@@ -207,7 +207,7 @@ export class Models {
                     field: "child_inherit_fields",
                     list: "FOOD_INHERIT_FIELDS",
                     label: "ChildInheritFields", // form.label always translated in utils.getForm()
-                    condition: {field: "numchild", value: 0, condition: "gt"},
+                    condition: { field: "numchild", value: 0, condition: "gt" },
                     help_text: "ChildInheritFields_help", // form.help_text always translated
                 },
                 reset_inherit: {
@@ -217,7 +217,7 @@ export class Models {
                     field: "reset_inherit",
                     label: "reset_children",
                     help_text: "reset_children_help",
-                    condition: {field: "numchild", value: 0, condition: "gt"},
+                    condition: { field: "numchild", value: 0, condition: "gt" },
                 },
                 form_function: "FoodCreateDefault",
             },
@@ -243,7 +243,7 @@ export class Models {
         },
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "icon"]],
+            params: [["name", "description"]],
             form: {
                 name: {
                     form_field: true,
@@ -260,13 +260,6 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    optional: true,
-                },
                 full_name: {
                     form_field: true,
                     type: "smalltext",
@@ -281,7 +274,7 @@ export class Models {
         apiName: "Unit",
         paginated: true,
         create: {
-            params: [["name", "plural_name", "description", "base_unit","open_data_slug",]],
+            params: [["name", "plural_name", "description", "base_unit", "open_data_slug"]],
             form: {
                 show_help: true,
                 name: {
@@ -311,24 +304,24 @@ export class Models {
                     form_field: true,
                     type: "choice",
                     options: [
-                        {value: "g", text: "g"},
-                        {value: "kg", text: "kg"},
-                        {value: "ounce", text: "ounce"},
-                        {value: "pound", text: "pound"},
-                        {value: "ml", text: "ml"},
-                        {value: "l", text: "l"},
-                        {value: "fluid_ounce", text: "fluid_ounce"},
-                        {value: "pint", text: "pint"},
-                        {value: "quart", text: "quart"},
-                        {value: "gallon", text: "gallon"},
-                        {value: "tbsp", text: "tbsp"},
-                        {value: "tsp", text: "tsp"},
-                        {value: "imperial_fluid_ounce", text: "imperial_fluid_ounce"},
-                        {value: "imperial_pint", text: "imperial_pint"},
-                        {value: "imperial_quart", text: "imperial_quart"},
-                        {value: "imperial_gallon", text: "imperial_gallon"},
-                        {value: "imperial_tbsp", text: "imperial_tbsp"},
-                        {value: "imperial_tsp", text: "imperial_tsp"},
+                        { value: "g", text: "g" },
+                        { value: "kg", text: "kg" },
+                        { value: "ounce", text: "ounce" },
+                        { value: "pound", text: "pound" },
+                        { value: "ml", text: "ml" },
+                        { value: "l", text: "l" },
+                        { value: "fluid_ounce", text: "fluid_ounce" },
+                        { value: "pint", text: "pint" },
+                        { value: "quart", text: "quart" },
+                        { value: "gallon", text: "gallon" },
+                        { value: "tbsp", text: "tbsp" },
+                        { value: "tsp", text: "tsp" },
+                        { value: "imperial_fluid_ounce", text: "imperial_fluid_ounce" },
+                        { value: "imperial_pint", text: "imperial_pint" },
+                        { value: "imperial_quart", text: "imperial_quart" },
+                        { value: "imperial_gallon", text: "imperial_gallon" },
+                        { value: "imperial_tbsp", text: "imperial_tbsp" },
+                        { value: "imperial_tsp", text: "imperial_tsp" },
                     ],
                     field: "base_unit",
                     label: "Base Unit",
@@ -382,7 +375,7 @@ export class Models {
         name: "Recipe_Book",
         apiName: "RecipeBook",
         create: {
-            params: [["name", "description", "icon", "filter"]],
+            params: [["name", "description",  "filter"]],
             form: {
                 name: {
                     form_field: true,
@@ -399,13 +392,7 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    optional: true,
-                },
+
                 filter: {
                     form_field: true,
                     type: "lookup",
@@ -470,7 +457,7 @@ export class Models {
     static SUPERMARKET = {
         name: "Supermarket",
         apiName: "Supermarket",
-        ordered_tags: [{field: "category_to_supermarket", label: "category::name", color: "info"}],
+        ordered_tags: [{ field: "category_to_supermarket", label: "category::name", color: "info" }],
         create: {
             params: [["name", "description", "category_to_supermarket"]],
             form: {
@@ -553,11 +540,13 @@ export class Models {
                     form_field: true,
                     type: "choice",
                     options: [
-                        {value: "FOOD_ALIAS", text: "Food_Alias"},
-                        {value: "UNIT_ALIAS", text: "Unit_Alias"},
-                        {value: "KEYWORD_ALIAS", text: "Keyword_Alias"},
-                        {value: "DESCRIPTION_REPLACE", text: "Description_Replace"},
-                        {value: "INSTRUCTION_REPLACE", text: "Instruction_Replace"},
+                        { value: "FOOD_ALIAS", text: "Food_Alias" },
+                        { value: "UNIT_ALIAS", text: "Unit_Alias" },
+                        { value: "KEYWORD_ALIAS", text: "Keyword_Alias" },
+                        { value: "DESCRIPTION_REPLACE", text: "Description_Replace" },
+                        { value: "INSTRUCTION_REPLACE", text: "Instruction_Replace" },
+                        { value: "NEVER_UNIT", text: "Never_Unit" },
+                        { value: "TRANSPOSE_WORDS", text: "Transpose_Words" },
                     ],
                     field: "type",
                     label: "Type",
@@ -625,9 +614,8 @@ export class Models {
                     label: "Disabled",
                     placeholder: "",
                 },
-                form_function: "AutomationOrderDefault"
+                form_function: "AutomationOrderDefault",
             },
-
         },
     }
 
@@ -641,7 +629,7 @@ export class Models {
             },
         },
         create: {
-            params: [['food', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'open_data_slug']],
+            params: [["food", "base_amount", "base_unit", "converted_amount", "converted_unit", "open_data_slug"]],
             form: {
                 show_help: true,
                 // TODO add proper help texts for everything
@@ -695,9 +683,7 @@ export class Models {
                     help_text: "open_data_help_text",
                     optional: true,
                 },
-
             },
-
         },
     }
 
@@ -711,7 +697,7 @@ export class Models {
             },
         },
         create: {
-            params: [['name', 'icon', 'unit', 'description']],
+            params: [["name", "unit", "description", "order"]],
             form: {
                 show_help: true,
                 name: {
@@ -721,14 +707,7 @@ export class Models {
                     label: "Name",
                     placeholder: "",
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    placeholder: "",
-                    optional: true,
-                },
+
                 unit: {
                     form_field: true,
                     type: "text",
@@ -745,6 +724,15 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
+                order: {
+                    form_field: true,
+                    type: "number",
+                    field: "order",
+                    label: "Order",
+                    placeholder: "",
+                    optional: true,
+                    helpt_text: "OrderInformation",
+                },
                 open_data_slug: {
                     form_field: true,
                     type: "text",
@@ -755,7 +743,6 @@ export class Models {
                     optional: true,
                 },
             },
-
         },
     }
 
@@ -843,7 +830,7 @@ export class Models {
             params: ["filter_list"],
         },
         create: {
-            params: [["name",]],
+            params: [["name"]],
             form: {
                 name: {
                     form_field: true,
@@ -1008,7 +995,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: {function: "translate", phrase: "Save"},
+            ok_label: { function: "translate", phrase: "Save" },
         },
     }
     static UPDATE = {
@@ -1043,7 +1030,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: {function: "translate", phrase: "Delete"},
+            ok_label: { function: "translate", phrase: "Delete" },
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -1070,17 +1057,17 @@ export class Actions {
         suffix: "s",
         params: ["query", "page", "pageSize", "options"],
         config: {
-            query: {default: undefined},
-            page: {default: 1},
-            pageSize: {default: 25},
+            query: { default: undefined },
+            page: { default: 1 },
+            pageSize: { default: 25 },
         },
     }
     static MERGE = {
         function: "merge",
         params: ["source", "target"],
         config: {
-            source: {type: "string"},
-            target: {type: "string"},
+            source: { type: "string" },
+            target: { type: "string" },
         },
         form: {
             title: {
@@ -1095,7 +1082,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: {function: "translate", phrase: "Merge"},
+            ok_label: { function: "translate", phrase: "Merge" },
             instruction: {
                 form_field: true,
                 type: "instruction",
@@ -1129,8 +1116,8 @@ export class Actions {
         function: "move",
         params: ["source", "target"],
         config: {
-            source: {type: "string"},
-            target: {type: "string"},
+            source: { type: "string" },
+            target: { type: "string" },
         },
         form: {
             title: {
@@ -1145,7 +1132,7 @@ export class Actions {
                     },
                 ],
             },
-            ok_label: {function: "translate", phrase: "Move"},
+            ok_label: { function: "translate", phrase: "Move" },
             instruction: {
                 form_field: true,
                 type: "instruction",

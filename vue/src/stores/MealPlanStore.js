@@ -12,6 +12,12 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
     state: () => ({
         plans: {},
         currently_updating: null,
+        client_settings: {
+            displayPeriodUom: "week",
+            displayPeriodCount: 2,
+            startingDayOfWeek: 1,
+            displayWeekNumbers: true,
+        },
     }),
     getters: {
         plan_list: function () {

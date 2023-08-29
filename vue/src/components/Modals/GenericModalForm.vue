@@ -1,6 +1,6 @@
 <template>
     <div>
-        <template v-if="form_component !== undefined">
+        <template v-if="form_component !== undefined && (action === Actions.UPDATE || action === Actions.CREATE)">
             <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction" :item1="item1"></component>
         </template>
         <template v-else>
@@ -16,7 +16,6 @@
                     <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
                     <text-area-input v-if="visibleCondition(f, 'textarea')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
                     <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" :optional="f.optional"/>
-                    <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
                     <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
                     <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
                     <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
@@ -52,7 +51,6 @@ import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
 import DateInput from "@/components/Modals/DateInput"
-import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
 import SmallText from "@/components/Modals/SmallText"
@@ -67,7 +65,6 @@ export default {
         CheckboxInput,
         LookupInput,
         TextInput,
-        EmojiInput,
         ChoiceInput,
         SmallText,
         HelpBadge,

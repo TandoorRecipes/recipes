@@ -46,7 +46,7 @@ class RecetteTek(Integration):
         if not instructions:
             instructions = ''
 
-        step = Step.objects.create(instruction=instructions, space=self.request.space,)
+        step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 
         # Append the original import url to the step (if it exists)
         try:

@@ -5,7 +5,6 @@ import uuid
 from datetime import date, timedelta
 
 import oauth2_provider.models
-from PIL import Image
 from annoying.fields import AutoOneToOneField
 from django.contrib import auth
 from django.contrib.auth.models import Group, User
@@ -14,13 +13,14 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
 from django.core.validators import MinLengthValidator
 from django.db import IntegrityError, models
-from django.db.models import Index, ProtectedError, Q, Avg, Max
+from django.db.models import Avg, Index, Max, ProtectedError, Q
 from django.db.models.fields.related import ManyToManyField
 from django.db.models.functions import Substr
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_prometheus.models import ExportModelOperationsMixin
 from django_scopes import ScopedManager, scopes_disabled
+from PIL import Image
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PREF_DEFAULT,
@@ -116,10 +116,7 @@ class TreeModel(MP_Node):
     _full_name_separator = ' > '
 
     def __str__(self):
-        if self.icon:
-            return f"{self.icon} {self.name}"
-        else:
-            return f"{self.name}"
+        return f"{self.name}"
 
     @property
     def parent(self):
@@ -394,6 +391,7 @@ class UserPreference(models.Model, PermissionModelMixin):
     shopping_add_onhand = models.BooleanField(default=False)
     filter_to_supermarket = models.BooleanField(default=False)
     left_handed = models.BooleanField(default=False)
+    show_step_ingredients = models.BooleanField(default=True)
     default_delay = models.DecimalField(default=4, max_digits=8, decimal_places=4)
     shopping_recent_days = models.PositiveIntegerField(default=7)
     csv_delim = models.CharField(max_length=2, default=",")
@@ -532,7 +530,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
     if SORT_TREE_BY_NAME:
         node_order_by = ['name']
     name = models.CharField(max_length=64)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # TODO deprecate
     updated_at = models.DateTimeField(auto_now=True)  # TODO deprecate
@@ -738,6 +735,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
     order = models.IntegerField(default=0)
     file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = models.BooleanField(default=True)
+    show_ingredients_table = models.BooleanField(default=True)
     search_vector = SearchVectorField(null=True)
     step_recipe = models.ForeignKey('Recipe', default=None, blank=True, null=True, on_delete=models.PROTECT)
 
@@ -765,9 +763,10 @@ class PropertyType(models.Model, PermissionModelMixin):
 
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
+    order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
-    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')), (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
+                                (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     # TODO show if empty property?
@@ -784,6 +783,7 @@ class PropertyType(models.Model, PermissionModelMixin):
             models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
             models.UniqueConstraint(fields=['space', 'open_data_slug'], name='property_type_unique_open_data_slug_per_space')
         ]
+        ordering = ('order',)
 
 
 class Property(models.Model, PermissionModelMixin):
@@ -932,7 +932,6 @@ class RecipeImport(models.Model, PermissionModelMixin):
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
@@ -975,7 +974,6 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
     default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -1315,10 +1313,13 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     KEYWORD_ALIAS = 'KEYWORD_ALIAS'
     DESCRIPTION_REPLACE = 'DESCRIPTION_REPLACE'
     INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
+    NEVER_UNIT = 'NEVER_UNIT'
+    TRANSPOSE_WORDS = 'TRANSPOSE_WORDS'
 
     type = models.CharField(max_length=128,
                             choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
-                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),))
+                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),
+                                     (NEVER_UNIT, _('Never Unit')), (TRANSPOSE_WORDS, _('Transpose Words')),))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 

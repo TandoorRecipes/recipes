@@ -83,7 +83,7 @@
                                         </div>
 
                                     </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id" >
+                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
                                         <div class="d-flex flex-row align-items-center">
                                             <div>
                                                 <b-img style="height: 50px; width: 50px; object-fit: cover"
@@ -124,31 +124,6 @@
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
-                    <div class="col-12 col-md-3 calender-options">
-                        <h5>{{ $t("Planner_Settings") }}</h5>
-                        <b-form>
-                            <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')"
-                                          label-for="UomInput">
-                                <b-form-select id="UomInput" v-model="settings.displayPeriodUom"
-                                               :options="options.displayPeriodUom"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="PeriodInput" :label="$t('Periods')"
-                                          :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
-                                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount"
-                                               :options="options.displayPeriodCount"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')"
-                                          label-for="DaysInput">
-                                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek"
-                                               :options="dayNames"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="WeekNumInput" :label="$t('Week_Numbers')">
-                                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
-                                    {{ $t("Show_Week_Numbers") }}
-                                </b-form-checkbox>
-                            </b-form-group>
-                        </b-form>
-                    </div>
                     <div class="col-12 col-md-9 col-lg-6">
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
@@ -164,9 +139,7 @@
                                             </div>
                                             <div class="col-10">
                                                 <h5 class="mt-1 mb-1">
-                                                    {{ meal_type.icon }} {{
-                                                        meal_type.name
-                                                    }}<span class="float-right text-primary" style="cursor: pointer"
+                                                    {{ meal_type.name  }}<span class="float-right text-primary" style="cursor: pointer"
                                                 ><i class="fa"
                                                     v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
                                                     @click="editOrSaveMealType(index)" aria-hidden="true"></i
@@ -180,10 +153,6 @@
                                             <label>{{ $t("Name") }}</label>
                                             <input class="form-control" :placeholder="$t('Name')"
                                                    v-model="meal_type.name"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <emoji-input :field="'icon'" :label="$t('Icon')"
-                                                         :value="meal_type.icon"></emoji-input>
                                         </div>
                                         <div class="form-group">
                                             <label>{{ $t("Color") }}</label>
@@ -279,11 +248,18 @@
             :create_date="mealplan_default_date"
             @reload-meal-types="refreshMealTypes"
         ></meal-plan-edit-modal>
+        <auto-meal-plan-modal
+            :modal_title="'Auto create meal plan'"
+            :current_period="current_period"
+        ></auto-meal-plan-modal>
 
         <div class="row d-none d-lg-block">
             <div class="col-12 float-right">
                 <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus"></i> {{ $t("Create") }}
+                </button>
+                <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
+                    class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
                 </button>
                 <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
                     {{ $t("Export_To_ICal") }}
@@ -293,10 +269,11 @@
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>
-                <h6 class="dropdown-header">{{ $t('Meal_Plan')}}</h6>
+                <h6 class="dropdown-header">{{ $t('Meal_Plan') }}</h6>
                 <a class="dropdown-item" @click="createEntryClick(new Date())"><i
                     class="fas fa-calendar-plus fa-fw"></i> {{ $t("Create") }}</a>
             </template>
+
         </bottom-navigation-bar>
     </div>
 </template>
@@ -311,7 +288,6 @@ import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import MealPlanCard from "@/components/MealPlanCard"
 import MealPlanEditModal from "@/components/MealPlanEditModal"
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader"
-import EmojiInput from "@/components/Modals/EmojiInput"
 
 import moment from "moment"
 import draggable from "vuedraggable"
@@ -322,6 +298,8 @@ import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/component
 import {ApiApiFactory} from "@/utils/openapi/api"
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
+import axios from "axios";
+import AutoMealPlanModal from "@/components/AutoMealPlanModal";
 
 const {makeToast} = require("@/utils/utils")
 
@@ -334,19 +312,29 @@ let SETTINGS_COOKIE_NAME = "mealplan_settings"
 export default {
     name: "MealPlanView",
     components: {
+        AutoMealPlanModal,
         MealPlanEditModal,
         MealPlanCard,
         CalendarView,
         ContextMenu,
         ContextMenuItem,
         MealPlanCalenderHeader,
-        EmojiInput,
         draggable,
         BottomNavigationBar,
     },
     mixins: [CalendarMathMixin, ApiMixin, ResolveUrlMixin],
     data: function () {
         return {
+            AutoPlan: {
+                meal_types: [],
+                keywords: [[]],
+                servings: 1,
+                date: Date.now(),
+                startDay: null,
+                endDay: null,
+                shared: [],
+                addshopping: false
+            },
             showDate: new Date(),
             plan_entries: [],
             recipe_viewed: {},
@@ -397,16 +385,6 @@ export default {
         detailed_items: function () {
             return this.settings.displayPeriodUom === "week"
         },
-        dayNames: function () {
-            let options = []
-            this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
-                options.push({text: day, value: index})
-            })
-            return options
-        },
-        userLocale: function () {
-            return this.getDefaultBrowserLocale
-        },
         item_height: function () {
             if (this.settings.displayPeriodUom === "week") {
                 return "10rem"
@@ -446,7 +424,6 @@ export default {
                 this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
-        this.$root.$on("change", this.updateEmoji)
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)
     },
@@ -538,13 +515,6 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
-        },
-        updateEmoji: function (field, value) {
-            this.meal_types.forEach((meal_type) => {
-                if (meal_type.editing) {
-                    meal_type.icon = value
-                }
-            })
         },
         datePickerChanged(ctx) {
             this.setShowDate(ctx.selectedDate)
@@ -656,7 +626,11 @@ export default {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
 
-        }
+        },
+        createAutoPlan() {
+            this.$bvModal.show(`autoplan-modal`)
+        },
+
     },
     directives: {
         hover: {

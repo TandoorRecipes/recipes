@@ -1,3 +1,4 @@
+import random
 import traceback
 import uuid
 from datetime import datetime, timedelta
@@ -341,7 +342,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'icon', 'color', 'default', 'created_by')
+        fields = ('id', 'name', 'order', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -375,7 +376,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
             'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'food_children_exist'
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients', 'food_children_exist'
         )
 
 
@@ -448,7 +449,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     class Meta:
         model = Keyword
         fields = (
-            'id', 'name', 'icon', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'id', 'name',  'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
@@ -527,7 +528,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'icon', 'unit', 'description', 'open_data_slug')
+        fields = ('id', 'name',  'unit', 'description', 'order', 'open_data_slug')
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -770,7 +771,8 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data', 'numrecipe'
+            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
+            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
         )
 
 
@@ -937,7 +939,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'icon', 'shared', 'created_by', 'filter')
+        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter')
         read_only_fields = ('created_by',)
 
 
@@ -997,6 +999,16 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
             'meal_type_name', 'shopping'
         )
         read_only_fields = ('created_by',)
+
+
+class AutoMealPlanSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    meal_type_id = serializers.IntegerField()
+    keywords = KeywordSerializer(many=True)
+    servings = CustomDecimalField()
+    shared = UserSerializer(many=True, required=False, allow_null=True)
+    addshopping = serializers.BooleanField()
 
 
 class ShoppingListRecipeSerializer(serializers.ModelSerializer):
@@ -1297,7 +1309,7 @@ class AccessTokenSerializer(serializers.ModelSerializer):
 class KeywordExportSerializer(KeywordSerializer):
     class Meta:
         model = Keyword
-        fields = ('name', 'icon', 'description', 'created_at', 'updated_at')
+        fields = ('name', 'description', 'created_at', 'updated_at')
 
 
 class NutritionInformationExportSerializer(NutritionInformationSerializer):
@@ -1350,7 +1362,7 @@ class StepExportSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Step
-        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header')
+        fields = ('name', 'instruction', 'ingredients', 'time', 'order', 'show_as_header', 'show_ingredients_table')
 
 
 class RecipeExportSerializer(WritableNestedModelSerializer):
