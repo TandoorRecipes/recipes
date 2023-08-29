@@ -243,7 +243,7 @@ export class Models {
         },
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "icon"]],
+            params: [["name", "description"]],
             form: {
                 name: {
                     form_field: true,
@@ -258,13 +258,6 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
-                    optional: true,
-                },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
                     optional: true,
                 },
                 full_name: {
@@ -382,7 +375,7 @@ export class Models {
         name: "Recipe_Book",
         apiName: "RecipeBook",
         create: {
-            params: [["name", "description", "icon", "filter"]],
+            params: [["name", "description",  "filter"]],
             form: {
                 name: {
                     form_field: true,
@@ -399,13 +392,7 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    optional: true,
-                },
+
                 filter: {
                     form_field: true,
                     type: "lookup",
@@ -710,7 +697,7 @@ export class Models {
             },
         },
         create: {
-            params: [["name", "icon", "unit", "description", "order"]],
+            params: [["name", "unit", "description", "order"]],
             form: {
                 show_help: true,
                 name: {
@@ -720,14 +707,7 @@ export class Models {
                     label: "Name",
                     placeholder: "",
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    placeholder: "",
-                    optional: true,
-                },
+
                 unit: {
                     form_field: true,
                     type: "text",

@@ -124,31 +124,6 @@
             </b-tab>
             <b-tab :title="$t('Settings')">
                 <div class="row mt-3">
-                    <div class="col-12 col-md-3 calender-options">
-                        <h5>{{ $t("Planner_Settings") }}</h5>
-                        <b-form>
-                            <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')"
-                                          label-for="UomInput">
-                                <b-form-select id="UomInput" v-model="settings.displayPeriodUom"
-                                               :options="options.displayPeriodUom"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="PeriodInput" :label="$t('Periods')"
-                                          :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
-                                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount"
-                                               :options="options.displayPeriodCount"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')"
-                                          label-for="DaysInput">
-                                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek"
-                                               :options="dayNames"></b-form-select>
-                            </b-form-group>
-                            <b-form-group id="WeekNumInput" :label="$t('Week_Numbers')">
-                                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
-                                    {{ $t("Show_Week_Numbers") }}
-                                </b-form-checkbox>
-                            </b-form-group>
-                        </b-form>
-                    </div>
                     <div class="col-12 col-md-9 col-lg-6">
                         <h5>{{ $t("Meal_Types") }}</h5>
                         <div>
@@ -164,9 +139,7 @@
                                             </div>
                                             <div class="col-10">
                                                 <h5 class="mt-1 mb-1">
-                                                    {{ meal_type.icon }} {{
-                                                        meal_type.name
-                                                    }}<span class="float-right text-primary" style="cursor: pointer"
+                                                    {{ meal_type.name  }}<span class="float-right text-primary" style="cursor: pointer"
                                                 ><i class="fa"
                                                     v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
                                                     @click="editOrSaveMealType(index)" aria-hidden="true"></i
@@ -180,10 +153,6 @@
                                             <label>{{ $t("Name") }}</label>
                                             <input class="form-control" :placeholder="$t('Name')"
                                                    v-model="meal_type.name"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <emoji-input :field="'icon'" :label="$t('Icon')"
-                                                         :value="meal_type.icon"></emoji-input>
                                         </div>
                                         <div class="form-group">
                                             <label>{{ $t("Color") }}</label>
@@ -319,7 +288,6 @@ import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
 import MealPlanCard from "@/components/MealPlanCard"
 import MealPlanEditModal from "@/components/MealPlanEditModal"
 import MealPlanCalenderHeader from "@/components/MealPlanCalenderHeader"
-import EmojiInput from "@/components/Modals/EmojiInput"
 
 import moment from "moment"
 import draggable from "vuedraggable"
@@ -351,7 +319,6 @@ export default {
         ContextMenu,
         ContextMenuItem,
         MealPlanCalenderHeader,
-        EmojiInput,
         draggable,
         BottomNavigationBar,
     },
@@ -418,16 +385,6 @@ export default {
         detailed_items: function () {
             return this.settings.displayPeriodUom === "week"
         },
-        dayNames: function () {
-            let options = []
-            this.getFormattedWeekdayNames(this.userLocale, "long", 0).forEach((day, index) => {
-                options.push({text: day, value: index})
-            })
-            return options
-        },
-        userLocale: function () {
-            return this.getDefaultBrowserLocale
-        },
         item_height: function () {
             if (this.settings.displayPeriodUom === "week") {
                 return "10rem"
@@ -467,7 +424,6 @@ export default {
                 this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
             }
         })
-        this.$root.$on("change", this.updateEmoji)
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)
     },
@@ -559,13 +515,6 @@ export default {
                 .catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                 })
-        },
-        updateEmoji: function (field, value) {
-            this.meal_types.forEach((meal_type) => {
-                if (meal_type.editing) {
-                    meal_type.icon = value
-                }
-            })
         },
         datePickerChanged(ctx) {
             this.setShowDate(ctx.selectedDate)
