@@ -33,8 +33,7 @@
 
                 <tr v-for="p in property_list" v-bind:key="`id_${p.id}`">
                     <td>
-
-                        {{ p.icon }} {{ p.name }}
+                        {{ p.name }}
                     </td>
                     <td class="text-right">{{ p.property_amount_per_serving }}</td>
                     <td class="text-right">{{ p.property_amount_total }}</td>
