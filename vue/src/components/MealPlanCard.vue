@@ -14,7 +14,7 @@
         <div class="card-header p-1 text-center text-primary border-bottom-0" v-if="detailed" :style="`background-color: ${background_color}`">
             <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{ entry.entry.meal_type.icon }}</span>
             <span class="font-light d-none d-md-inline">{{ entry.entry.meal_type.name }}</span>
-            <span v-if="entry.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs float-left" v-b-tooltip.hover.top :title="$t('in_shopping')" /></span>
+            <span v-if="entry.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs float-left" v-b-tooltip.hover.top :title="$t('in_shopping')"/></span>
         </div>
         <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right p-0" v-if="detailed">
             <a>
@@ -41,11 +41,8 @@
         <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null" :style="`background-color: ${background_color}`">
             <p>{{ entry.entry.note }}</p>
         </div>
+
         <div class="row p-1 flex-nowrap" v-if="!detailed" :style="`background-color: ${background_color}`">
-            <div class="col-2">
-                <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null" v-b-tooltip.hover.left :title="entry.entry.meal_type.name">{{ entry.entry.meal_type.icon }}</span>
-                <span class="font-light text-center" v-if="entry.entry.meal_type.icon == null" v-b-tooltip.hover.left :title="entry.entry.meal_type.name">❓</span>
-            </div>
             <div class="col-10 d-inline-block text-truncate" :style="`max-height:${item_height}`">
                 <span class="font-light">{{ title }}</span>
             </div>
@@ -71,7 +68,8 @@ export default {
             image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
-    mounted() {},
+    mounted() {
+    },
     computed: {
         entry: function () {
             return this.value.originalItem

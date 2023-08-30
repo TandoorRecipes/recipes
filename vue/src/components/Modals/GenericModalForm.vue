@@ -19,6 +19,7 @@
                     <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
                     <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
                     <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
+                    <color-input v-if="visibleCondition(f, 'color')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
                     <number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
                 </div>
                 <template v-slot:modal-footer>

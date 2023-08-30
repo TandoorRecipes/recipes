@@ -2,122 +2,153 @@
     <div>
         <b-tabs content-class="mt-3" v-model="current_tab">
             <b-tab :title="$t('Planner')" active>
-                <div class="row calender-row d-none d-lg-block">
-                    <div class="col-12 calender-parent">
-                        <calendar-view
-                            :show-date="showDate"
-                            :enable-date-selection="true"
-                            class="theme-default"
-                            :items="plan_items"
-                            :display-period-uom="settings.displayPeriodUom"
-                            :period-changed-callback="periodChangedCallback"
-                            :enable-drag-drop="true"
-                            :item-content-height="item_height"
-                            @click-date="createEntryClick"
-                            @drop-on-date="moveEntry"
-                            :display-period-count="settings.displayPeriodCount"
-                            :starting-day-of-week="settings.startingDayOfWeek"
-                            :display-week-numbers="settings.displayWeekNumbers"
-                        >
-                            <template #item="{ value, weekStartDate, top }">
-                                <meal-plan-card
-                                    :value="value"
-                                    :week-start-date="weekStartDate"
-                                    :top="top"
-                                    :detailed="detailed_items"
-                                    :item_height="item_height"
-                                    @dragstart="dragged_item = value"
-                                    @click-item="entryClick"
-                                    @open-context-menu="openContextMenu"
-                                />
-                            </template>
-                            <template #header="{ headerProps }">
-                                <meal-plan-calender-header
-                                    ref="header"
-                                    :header-props="headerProps"
-                                    @input="setShowDate"
-                                    @delete-dragged="deleteEntry(dragged_item)"
-                                    @create-new="createEntryClick(new Date())"
-                                    @set-starting-day-back="setStartingDay(-1)"
-                                    @set-starting-day-forward="setStartingDay(1)"
-                                    :i-cal-url="iCalUrl"
-                                    :options="options"
-                                    :settings_prop="settings"
-                                />
-                            </template>
-                        </calendar-view>
-                    </div>
-                </div>
-                <div class="row d-block d-lg-none">
-                    <div>
-                        <div class="col-12">
-                            <div class="col-12 d-flex justify-content-center mt-2">
-                                <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-                                    <b-button-group class="mx-1">
-                                        <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
-                                                  @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                                    </b-button-group>
-                                    <b-button-group class="mx-1">
-                                        <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                            class="fas fa-home"></i></b-button>
-                                        <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
-                                    </b-button-group>
-                                    <b-button-group class="mx-1">
-                                        <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
-                                                  @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-                                    </b-button-group>
-                                </b-button-toolbar>
+                <div class=" d-none d-lg-block">
+                    <div class="row">
+                        <div class="col col-2">
+                            <h4>{{ $t('Meal_Types') }}</h4>
+
+                            <b-form-checkbox :button-variant="danger" v-model="mt.checked" size="lg" v-for="mt in meal_types" v-bind:key="mt.id">
+
+                                <b-badge variant="primary" :style="{'background-color':mt.color}">{{ mt.name }}</b-badge>
+                            </b-form-checkbox>
+
+                            <hr/>
+                            <button class="btn btn-success shadow-none mt-1 btn-block" @click="createEntryClick(new Date())"><i
+                                class="fas fa-calendar-plus"></i> {{ $t("Create") }}
+                            </button>
+                            <button class="btn btn-primary shadow-none mt-1 btn-block" @click="createAutoPlan(new Date())"><i
+                                class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
+                            </button>
+                            <a class="btn btn-primary shadow-none mt-1 btn-blockmt-1 btn-block" :href="iCalUrl"><i class="fas fa-download"></i>
+                                {{ $t("Export_To_ICal") }}
+                            </a>
+
+
+                        </div>
+                        <div class="col col-10">
+                            <div class="row calender-row ">
+                                <div class="col-12 calender-parent">
+                                    <calendar-view
+                                        :show-date="showDate"
+                                        :enable-date-selection="true"
+                                        class="theme-default"
+                                        :items="plan_items"
+                                        :display-period-uom="settings.displayPeriodUom"
+                                        :period-changed-callback="periodChangedCallback"
+                                        :enable-drag-drop="true"
+                                        :item-content-height="item_height"
+                                        @click-date="createEntryClick"
+                                        @drop-on-date="moveEntry"
+                                        :display-period-count="settings.displayPeriodCount"
+                                        :starting-day-of-week="settings.startingDayOfWeek"
+                                        :display-week-numbers="settings.displayWeekNumbers"
+                                    >
+                                        <template #item="{ value, weekStartDate, top }">
+                                            <meal-plan-card
+                                                :value="value"
+                                                :week-start-date="weekStartDate"
+                                                :top="top"
+                                                :detailed="detailed_items"
+                                                :item_height="item_height"
+                                                @dragstart="dragged_item = value"
+                                                @click-item="entryClick"
+                                                @open-context-menu="openContextMenu"
+                                            />
+                                        </template>
+                                        <template #header="{ headerProps }">
+                                            <meal-plan-calender-header
+                                                ref="header"
+                                                :header-props="headerProps"
+                                                @input="setShowDate"
+                                                @delete-dragged="deleteEntry(dragged_item)"
+                                                @create-new="createEntryClick(new Date())"
+                                                @set-starting-day-back="setStartingDay(-1)"
+                                                @set-starting-day-forward="setStartingDay(1)"
+                                                :i-cal-url="iCalUrl"
+                                                :options="options"
+                                                :settings_prop="settings"
+                                            />
+                                        </template>
+                                    </calendar-view>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 mt-2" style="padding-bottom: 60px">
-                            <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
-                                <b-list-group>
-                                    <b-list-group-item>
-                                        <div class="d-flex flex-row align-middle">
-                                            <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
-
-                                            <div class="flex-grow-1 text-right">
-                                                <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
-                                                    class="fa fa-plus"></i></b-button>
-                                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="row d-block d-lg-none">
+                                <div>
+                                    <div class="col-12">
+                                        <div class="col-12 d-flex justify-content-center mt-2">
+                                            <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+                                                <b-button-group class="mx-1">
+                                                    <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
+                                                              @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                                                </b-button-group>
+                                                <b-button-group class="mx-1">
+                                                    <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
+                                                        class="fas fa-home"></i></b-button>
+                                                    <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
+                                                </b-button-group>
+                                                <b-button-group class="mx-1">
+                                                    <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
+                                                              @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                                                </b-button-group>
+                                            </b-button-toolbar>
                                         </div>
+                                    </div>
+                                    <div class="col-12 mt-2" style="padding-bottom: 60px">
+                                        <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
+                                            <b-list-group>
+                                                <b-list-group-item>
+                                                    <div class="d-flex flex-row align-middle">
+                                                        <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
 
-                                    </b-list-group-item>
-                                    <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
-                                        <div class="d-flex flex-row align-items-center">
-                                            <div>
-                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
-                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
-                                            </div>
-                                            <div class="flex-grow-1 ml-2"
-                                                 style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                        <div class="flex-grow-1 text-right">
+                                                            <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                                                class="fa fa-plus"></i></b-button>
+                                                        </div>
+                                                    </div>
+
+                                                </b-list-group-item>
+                                                <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
+                                                    <div class="d-flex flex-row align-items-center">
+                                                        <div>
+                                                            <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                                   :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
+                                                            <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                                                   :src="image_placeholder" rounded="circle" v-else></b-img>
+                                                        </div>
+                                                        <div class="flex-grow-1 ml-2"
+                                                             style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
                                                         <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
-                                                <span v-if="plan.entry.note" class="two-row-text">
+                                                            <span v-if="plan.entry.note" class="two-row-text">
                                                     <small>{{ plan.entry.note }}</small> <br/>
                                                 </span>
-                                                <small class="text-muted">
-                                                    <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
-                                                    {{ plan.entry.meal_type_name }}
-                                                    <span v-if="plan.entry.recipe">
+                                                            <small class="text-muted">
+                                                                <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
+                                                                {{ plan.entry.meal_type_name }}
+                                                                <span v-if="plan.entry.recipe">
                                                      - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t('min') }}
                                                 </span>
-                                                </small>
-                                            </div>
-                                            <div class="hover-button">
-                                                <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
-                                            </div>
-                                        </div>
-                                    </b-list-group-item>
+                                                            </small>
+                                                        </div>
+                                                        <div class="hover-button">
+                                                            <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </b-list-group-item>
 
-                                </b-list-group>
+                                            </b-list-group>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -139,7 +170,7 @@
                                             </div>
                                             <div class="col-10">
                                                 <h5 class="mt-1 mb-1">
-                                                    {{ meal_type.name  }}<span class="float-right text-primary" style="cursor: pointer"
+                                                    {{ meal_type.name }}<span class="float-right text-primary" style="cursor: pointer"
                                                 ><i class="fa"
                                                     v-bind:class="{ 'fa-pen': !meal_type.editing, 'fa-save': meal_type.editing }"
                                                     @click="editOrSaveMealType(index)" aria-hidden="true"></i
@@ -252,20 +283,6 @@
             :modal_title="'Auto create meal plan'"
             :current_period="current_period"
         ></auto-meal-plan-modal>
-
-        <div class="row d-none d-lg-block">
-            <div class="col-12 float-right">
-                <button class="btn btn-success shadow-none" @click="createEntryClick(new Date())"><i
-                    class="fas fa-calendar-plus"></i> {{ $t("Create") }}
-                </button>
-                <button class="btn btn-primary shadow-none" @click="createAutoPlan(new Date())"><i
-                    class="fas fa-calendar-plus"></i> {{ $t("Auto_Planner") }}
-                </button>
-                <a class="btn btn-primary shadow-none" :href="iCalUrl"><i class="fas fa-download"></i>
-                    {{ $t("Export_To_ICal") }}
-                </a>
-            </div>
-        </div>
 
         <bottom-navigation-bar :create_links="[{label:$t('Export_To_ICal'), url: iCalUrl, icon:'fas fa-download'}]">
             <template #custom_create_functions>

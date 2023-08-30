@@ -135,10 +135,9 @@ import Vue from "vue"
 import VueCookies from "vue-cookies"
 import {BootstrapVue} from "bootstrap-vue"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import {ApiMixin, getUserPreference} from "@/utils/utils"
+import {ApiMixin, getUserPreference, ToastMixin} from "@/utils/utils"
 
 const {ApiApiFactory} = require("@/utils/openapi/api")
-const {StandardToasts} = require("@/utils/utils")
 
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
@@ -163,7 +162,7 @@ export default {
             default: true,
         },
     },
-    mixins: [ApiMixin],
+    mixins: [ApiMixin, ToastMixin],
     components: {
         GenericMultiselect,
         RecipeCard: () => import("@/components/RecipeCard.vue"),
@@ -234,9 +233,11 @@ export default {
         editEntry() {
 
             if (this.entryEditing.meal_type == null) {
+                this.makeToast('Warning', this.$t('Meal_Type_Required'), 'warning')
                 return;
             }
             if (this.entryEditing.recipe == null && this.entryEditing.title === "") {
+                this.makeToast('Warning', this.$t('Title_or_Recipe_Required'), 'warning')
                 return
             }
             //TODO properly validate
