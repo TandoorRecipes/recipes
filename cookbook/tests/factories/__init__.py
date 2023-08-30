@@ -143,7 +143,6 @@ class RecipeBookFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(
         nb_words=3, variable_nb_words=False))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
-    icon = None
     # shared = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
     created_by = factory.SubFactory(
         UserFactory, space=factory.SelfAttribute('..space'))

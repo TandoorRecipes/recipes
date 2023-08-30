@@ -34,7 +34,7 @@ class FoodPropertyHelper:
             caches['default'].set(CacheHelper(self.space).PROPERTY_TYPE_CACHE_KEY, property_types, 60 * 60)  # cache is cleared on property type save signal so long duration is fine
 
         for fpt in property_types:
-            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'icon': fpt.icon, 'description': fpt.description, 'unit': fpt.unit, 'order': fpt.order, 'food_values': {}, 'total_value': 0, 'missing_value': False}
+            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'description': fpt.description, 'unit': fpt.unit, 'order': fpt.order, 'food_values': {}, 'total_value': 0, 'missing_value': False}
 
         uch = UnitConversionHelper(self.space)
 
