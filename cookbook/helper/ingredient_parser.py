@@ -14,12 +14,12 @@ class IngredientParser:
     request = None
     ignore_rules = False
     # food_aliases = {}
-    unit_aliases = {}
-    never_unit = {}
+    # unit_aliases = {}
+    # never_unit = {}
     transpose_words = {}
     automation = None
 
-    def __init__(self, request, cache_mode, ignore_automations=False):
+    def __init__(self, request, cache_mode=True, ignore_automations=False):
         """
         Initialize ingredient parser
         :param request: request context (to control caching, rule ownership, etc.)
@@ -49,14 +49,14 @@ class IngredientParser:
             #     caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
 
             # TODO migrated to automation engine
-            NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
-            if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
-                self.never_unit = c
-                caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
-            else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
-                    self.never_unit[a.param_1.lower()] = a.param_2
-                caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
+            # NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
+            # if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
+            #     self.never_unit = c
+            #     caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
+            # else:
+            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
+            #         self.never_unit[a.param_1.lower()] = a.param_2
+            #     caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
 
             # TODO migrated to automation engine
             TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
@@ -71,8 +71,8 @@ class IngredientParser:
                 caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
         else:
             # self.food_aliases = {}
-            self.unit_aliases = {}
-            self.never_unit = {}
+            # self.unit_aliases = {}
+            # self.never_unit = {}
             self.transpose_words = {}
 
     # def apply_food_automation(self, food):
@@ -122,7 +122,10 @@ class IngredientParser:
         if not unit:
             return None
         if len(unit) > 0:
-            u, created = Unit.objects.get_or_create(name=self.automation.apply_unit_automation(unit), space=self.request.space)
+            if self.ignore_rules:
+                u, created = Unit.objects.get_or_create(name=unit.strip(), space=self.request.space)
+            else:
+                u, created = Unit.objects.get_or_create(name=self.automation.apply_unit_automation(unit), space=self.request.space)
             return u
         return None
 
@@ -135,7 +138,10 @@ class IngredientParser:
         if not food:
             return None
         if len(food) > 0:
-            f, created = Food.objects.get_or_create(name=self.automation.apply_food_automation(food), space=self.request.space)
+            if self.ignore_rules:
+                f, created = Food.objects.get_or_create(name=food.strip(), space=self.request.space)
+            else:
+                f, created = Food.objects.get_or_create(name=self.automation.apply_food_automation(food), space=self.request.space)
             return f
         return None
 
@@ -237,40 +243,39 @@ class IngredientParser:
             food, note = self.parse_food_with_comma(tokens)
         return food, note
 
-    # TODO migrated to automation engine
-    def apply_never_unit_automations(self, tokens):
-        """
-        Moves a string that should never be treated as a unit to next token and optionally replaced with default unit
-        e.g. NEVER_UNIT: param1: egg, param2: None would modify ['1', 'egg', 'white'] to ['1', '', 'egg', 'white']
-        or NEVER_UNIT: param1: egg, param2: pcs would modify ['1', 'egg', 'yolk'] to ['1', 'pcs', 'egg', 'yolk']
-        :param1 string: string that should never be considered a unit, will be moved to token[2]
-        :param2 (optional) unit as string: will insert unit string into token[1]
-        :return: unit as string (possibly changed by automation)
-        """
+    # def apply_never_unit_automations(self, tokens):
+    #     """
+    #     Moves a string that should never be treated as a unit to next token and optionally replaced with default unit
+    #     e.g. NEVER_UNIT: param1: egg, param2: None would modify ['1', 'egg', 'white'] to ['1', '', 'egg', 'white']
+    #     or NEVER_UNIT: param1: egg, param2: pcs would modify ['1', 'egg', 'yolk'] to ['1', 'pcs', 'egg', 'yolk']
+    #     :param1 string: string that should never be considered a unit, will be moved to token[2]
+    #     :param2 (optional) unit as string: will insert unit string into token[1]
+    #     :return: unit as string (possibly changed by automation)
+    #     """
 
-        if self.ignore_rules:
-            return tokens
+    #     if self.ignore_rules:
+    #         return tokens
 
-        new_unit = None
-        alt_unit = self.apply_unit_automation(tokens[1])
-        never_unit = False
-        if self.never_unit:
-            try:
-                new_unit = self.never_unit[tokens[1].lower()]
-                never_unit = True
-            except KeyError:
-                return tokens
+        # new_unit = None
+        # alt_unit = self.apply_unit_automation(tokens[1])
+        # never_unit = False
+        # if self.never_unit:
+        #     try:
+        #         new_unit = self.never_unit[tokens[1].lower()]
+        #         never_unit = True
+        #     except KeyError:
+        #         return tokens
 
-        else:
-            if automation := Automation.objects.annotate(param_1_lower=Lower('param_1')).filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1_lower__in=[
-                    tokens[1].lower(), alt_unit.lower()], disabled=False).order_by('order').first():
-                new_unit = automation.param_2
-                never_unit = True
+        # else:
+        #     if automation := Automation.objects.annotate(param_1_lower=Lower('param_1')).filter(space=self.request.space, type=Automation.NEVER_UNIT, param_1_lower__in=[
+        #             tokens[1].lower(), alt_unit.lower()], disabled=False).order_by('order').first():
+        #         new_unit = automation.param_2
+        #         never_unit = True
 
-        if never_unit:
-            tokens.insert(1, new_unit)
+        # if never_unit:
+        #     tokens.insert(1, new_unit)
 
-        return tokens
+        # return tokens
 
     # TODO migrated to automation engine
     def apply_transpose_words_automations(self, ingredient):
@@ -356,7 +361,7 @@ class IngredientParser:
                 # a fraction for the amount
                 if len(tokens) > 2:
                     # TODO migrated to automation engine
-                    tokens = self.apply_never_unit_automations(tokens)
+                    tokens = self.automation.apply_never_unit_automation(tokens)
                     try:
                         if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
@@ -403,10 +408,11 @@ class IngredientParser:
         if unit_note not in note:
             note += ' ' + unit_note
 
-        if unit:
+        if unit and not self.ignore_rules:
             unit = self.automation.apply_unit_automation(unit)
 
-        food = self.automation.apply_food_automation(food)
+        if food and not self.ignore_rules:
+            food = self.automation.apply_food_automation(food)
         if len(food) > Food._meta.get_field('name').max_length:  # test if food name is to long
             # try splitting it at a space and taking only the first arg
             if len(food.split()) > 1 and len(food.split()[0]) < Food._meta.get_field('name').max_length:

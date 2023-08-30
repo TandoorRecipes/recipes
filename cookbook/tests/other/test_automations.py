@@ -53,7 +53,7 @@ def test_keyword_automation(u1_s1, arg):
     automation = AutomationEngine(request, False)
 
     with scope(space=space):
-        Automation.objects.get_or_create(name='food test', type=Automation.KEYWORD_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
+        Automation.objects.get_or_create(name='keyword test', type=Automation.KEYWORD_ALIAS, param_1=arg[0], param_2=arg[1], created_by=user, space=space)
         assert (automation.apply_keyword_automation(arg[0]) == target_name) is True
 
 
@@ -73,7 +73,7 @@ def test_unit_automation(u1_s1, arg):
     automation = AutomationEngine(request, False)
 
     with scope(space=space):
-        Automation.objects.get_or_create(name='food test', type=Automation.UNIT_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
+        Automation.objects.get_or_create(name='unit test', type=Automation.UNIT_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
         assert (automation.apply_unit_automation(arg[0]) == target_name) is True
 
 
@@ -84,9 +84,23 @@ def test_unit_automation(u1_s1, arg):
 # def test_instruction_replace_automation():
 #     assert True == True
 
+@pytest.mark.parametrize("arg", [
+    [[1, 'egg', 'white'], '', [1, '', 'egg', 'white']],
+    [[1, 'Egg', 'white'], '', [1, '', 'Egg', 'white']],
+    [[1, 'êgg', 'white'], '', [1, 'êgg', 'white']],
+    [[1, 'egg', 'white'], 'whole', [1, 'whole', 'egg', 'white']],
+])
+def test_never_unit_automation(u1_s1, arg):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    automation = AutomationEngine(request, False)
 
-# def test_never_unit_automation():
-#     assert True == True
+    with scope(space=space):
+        Automation.objects.get_or_create(name='never unit test', type=Automation.NEVER_UNIT, param_1='egg', param_2=arg[1], created_by=user, space=space)
+        assert automation.apply_never_unit_automation(arg[0]) == arg[2]
 
 
 # def test_transpose_automation():
