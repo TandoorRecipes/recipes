@@ -39,15 +39,16 @@ class IngredientParser:
             #         self.food_aliases[a.param_1.lower()] = a.param_2
             #     caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
-            UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
-            if c := caches['default'].get(UNIT_CACHE_KEY, None):
-                self.unit_aliases = c
-                caches['default'].touch(UNIT_CACHE_KEY, 30)
-            else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.unit_aliases[a.param_1.lower()] = a.param_2
-                caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
+            # UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
+            # if c := caches['default'].get(UNIT_CACHE_KEY, None):
+            #     self.unit_aliases = c
+            #     caches['default'].touch(UNIT_CACHE_KEY, 30)
+            # else:
+            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
+            #         self.unit_aliases[a.param_1.lower()] = a.param_2
+            #     caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
 
+            # TODO migrated to automation engine
             NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
             if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
                 self.never_unit = c
@@ -57,6 +58,7 @@ class IngredientParser:
                     self.never_unit[a.param_1.lower()] = a.param_2
                 caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
 
+            # TODO migrated to automation engine
             TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
             if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
                 self.transpose_words = c
@@ -92,24 +94,24 @@ class IngredientParser:
     #                 return automation.param_2
     #     return food
 
-    def apply_unit_automation(self, unit):
-        """
-        Apply unit alias automations to passed unit
-        :param unit: unit as string
-        :return: unit as string (possibly changed by automation)
-        """
-        if self.ignore_rules:
-            return unit
-        else:
-            if self.transpose_words:
-                try:
-                    return self.unit_aliases[unit.lower()]
-                except KeyError:
-                    return unit
-            else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
-                    return automation.param_2
-        return unit
+    # def apply_unit_automation(self, unit):
+    #     """
+    #     Apply unit alias automations to passed unit
+    #     :param unit: unit as string
+    #     :return: unit as string (possibly changed by automation)
+    #     """
+    #     if self.ignore_rules:
+    #         return unit
+    #     else:
+    #         if self.transpose_words:
+    #             try:
+    #                 return self.unit_aliases[unit.lower()]
+    #             except KeyError:
+    #                 return unit
+    #         else:
+    #             if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
+    #                 return automation.param_2
+    #     return unit
 
     def get_unit(self, unit):
         """
@@ -120,7 +122,7 @@ class IngredientParser:
         if not unit:
             return None
         if len(unit) > 0:
-            u, created = Unit.objects.get_or_create(name=self.apply_unit_automation(unit), space=self.request.space)
+            u, created = Unit.objects.get_or_create(name=self.automation.apply_unit_automation(unit), space=self.request.space)
             return u
         return None
 
@@ -235,6 +237,7 @@ class IngredientParser:
             food, note = self.parse_food_with_comma(tokens)
         return food, note
 
+    # TODO migrated to automation engine
     def apply_never_unit_automations(self, tokens):
         """
         Moves a string that should never be treated as a unit to next token and optionally replaced with default unit
@@ -269,6 +272,7 @@ class IngredientParser:
 
         return tokens
 
+    # TODO migrated to automation engine
     def apply_transpose_words_automations(self, ingredient):
         """
         If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
@@ -336,6 +340,7 @@ class IngredientParser:
         if re.match('([0-9])+([A-z])+\\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
 
+        # TODO migrated to automation engine
         ingredient = self.apply_transpose_words_automations(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
@@ -350,6 +355,7 @@ class IngredientParser:
                 # three arguments if it already has a unit there can't be
                 # a fraction for the amount
                 if len(tokens) > 2:
+                    # TODO migrated to automation engine
                     tokens = self.apply_never_unit_automations(tokens)
                     try:
                         if unit is not None:
@@ -398,7 +404,7 @@ class IngredientParser:
             note += ' ' + unit_note
 
         if unit:
-            unit = self.apply_unit_automation(unit.strip())
+            unit = self.automation.apply_unit_automation(unit)
 
         food = self.automation.apply_food_automation(food)
         if len(food) > Food._meta.get_field('name').max_length:  # test if food name is to long
