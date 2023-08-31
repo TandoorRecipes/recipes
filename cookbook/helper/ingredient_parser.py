@@ -44,7 +44,6 @@ class IngredientParser:
         #         self.unit_aliases[a.param_1.lower()] = a.param_2
         #     caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
 
-        # TODO migrated to automation engine
         # NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
         # if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
         #     self.never_unit = c
@@ -54,7 +53,6 @@ class IngredientParser:
         #         self.never_unit[a.param_1.lower()] = a.param_2
         #     caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
 
-        # TODO migrated to automation engine
         # TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
         # if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
         #     self.transpose_words = c
