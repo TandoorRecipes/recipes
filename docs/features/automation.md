@@ -50,10 +50,12 @@ In order to prevent denial of service attacks on the RegEx engine the number of 
 and the length of the inputs that are processed are limited. Those limits should never be reached
 during normal usage.
 
-## Instruction Replace
+## Instructtion Replace, Title Replace, Food Replace & Unit Replace
 
-This works just like the Description Replace automation but runs against all instruction texts
-in all steps of a recipe during import.
+These work just like the Description Replace automation.
+Instruction, Food and Unit Replace will run against every iteration of the object in a recipe during import.
+- Instruction Replace will run for the instructions in every step.  It will also replace every occurrence, not just the first.
+- Food & Unit Replace will run for every food and unit in every ingredient in every step.
 
 Also instead of just replacing a single occurrence of the matched pattern it will replace all.
 

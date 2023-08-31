@@ -77,7 +77,7 @@ class AutomationEngine:
         else:
             if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1__iexact=unit, disabled=False).order_by('order').first():
                 return automation.param_2
-        return unit
+        return self.apply_regex_replace_automation(unit, Automation.UNIT_REPLACE)
 
     def apply_food_automation(self, food):
         food = food.strip()
@@ -102,7 +102,7 @@ class AutomationEngine:
         else:
             if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
                 return automation.param_2
-        return self.apply_regex_replace_automation(food)
+        return self.apply_regex_replace_automation(food, Automation.FOOD_REPLACE)
 
     def apply_never_unit_automation(self, tokens):
         """
@@ -189,7 +189,6 @@ class AutomationEngine:
         field_type are Automation.type that apply regex replacements
         Automation.DESCRIPTION_REPLACE
         Automation.INSTRUCTION_REPLACE
-        # TODO implement these
         Automation.FOOD_REPLACE
         Automation.UNIT_REPLACE
         Automation.TITLE_REPLACE
