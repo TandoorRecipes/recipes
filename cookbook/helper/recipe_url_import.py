@@ -9,13 +9,37 @@ from isodate.isoerror import ISO8601Error
 from pytube import YouTube
 from recipe_scrapers._utils import get_host_name, get_minutes
 
+from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Automation, Keyword, PropertyType
 
 
 def get_from_scraper(scrape, request):
     # converting the scrape_me object to the existing json format based on ld+json
-    recipe_json = {}
+
+    recipe_json = {
+        'steps': [],
+        'internal': True
+    }
+    keywords = []
+
+    # assign source URL
+    try:
+        source_url = scrape.canonical_url()
+    except Exception:
+        try:
+            source_url = scrape.url
+        except Exception:
+            pass
+    if source_url:
+        recipe_json['source_url'] = source_url
+        try:
+            keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
+        except Exception:
+            recipe_json['source_url'] = ''
+
+    automation_engine = AutomationEngine(request, source=recipe_json['source_url'])
+    # assign recipe name
     try:
         recipe_json['name'] = parse_name(scrape.title()[:128] or None)
     except Exception:
@@ -29,6 +53,8 @@ def get_from_scraper(scrape, request):
     if isinstance(recipe_json['name'], list) and len(recipe_json['name']) > 0:
         recipe_json['name'] = recipe_json['name'][0]
 
+    # assign recipe description
+    # TODO notify user about limit if reached - >256 description will be truncated
     try:
         description = scrape.description() or None
     except Exception:
@@ -39,8 +65,21 @@ def get_from_scraper(scrape, request):
         except Exception:
             description = ''
 
-    recipe_json['internal'] = True
+    recipe_json['description'] = parse_description(description)
 
+    # automations = Automation.objects.filter(
+    #     type=Automation.DESCRIPTION_REPLACE,
+    #     space=request.space,
+    #     disabled=False).only(
+    #     'param_1',
+    #     'param_2',
+    #     'param_3').all().order_by('order')[
+    #         :512]
+    # for a in automations:
+    #     if re.match(a.param_1, (recipe_json['source_url'])[:512]):
+    recipe_json['description'] = automation_engine.apply_regex_replace_automation(recipe_json['description'], Automation.DESCRIPTION_REPLACE)
+
+    # assign servings attributes
     try:
         # dont use scrape.yields() as this will always return "x servings" or "x items", should be improved in scrapers directly
         servings = scrape.schema.data.get('recipeYield') or 1
@@ -50,6 +89,7 @@ def get_from_scraper(scrape, request):
     recipe_json['servings'] = parse_servings(servings)
     recipe_json['servings_text'] = parse_servings_text(servings)
 
+    # assign time attributes
     try:
         recipe_json['working_time'] = get_minutes(scrape.prep_time()) or 0
     except Exception:
@@ -74,6 +114,7 @@ def get_from_scraper(scrape, request):
             except Exception:
                 pass
 
+    # assign image
     try:
         recipe_json['image'] = parse_image(scrape.image()) or None
     except Exception:
@@ -84,7 +125,7 @@ def get_from_scraper(scrape, request):
         except Exception:
             recipe_json['image'] = ''
 
-    keywords = []
+    # assign keywords
     try:
         if scrape.schema.data.get("keywords"):
             keywords += listify_keywords(scrape.schema.data.get("keywords"))
@@ -110,20 +151,6 @@ def get_from_scraper(scrape, request):
             pass
 
     try:
-        source_url = scrape.canonical_url()
-    except Exception:
-        try:
-            source_url = scrape.url
-        except Exception:
-            pass
-    if source_url:
-        recipe_json['source_url'] = source_url
-        try:
-            keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
-        except Exception:
-            recipe_json['source_url'] = ''
-
-    try:
         if scrape.author():
             keywords.append(scrape.author())
     except Exception:
@@ -136,7 +163,7 @@ def get_from_scraper(scrape, request):
 
     ingredient_parser = IngredientParser(request, True)
 
-    recipe_json['steps'] = []
+    # assign steps
     try:
         for i in parse_instructions(scrape.instructions()):
             recipe_json['steps'].append({'instruction': i, 'ingredients': [], 'show_ingredients_table': request.user.userpreference.show_step_ingredients, })
@@ -145,26 +172,10 @@ def get_from_scraper(scrape, request):
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
-    parsed_description = parse_description(description)
-    # TODO notify user about limit if reached
-    # limits exist to limit the attack surface for dos style attacks
-    # TODO migrate to AutomationEngine
-    automations = Automation.objects.filter(
-        type=Automation.DESCRIPTION_REPLACE,
-        space=request.space,
-        disabled=False).only(
-        'param_1',
-        'param_2',
-        'param_3').all().order_by('order')[
-            :512]
-    for a in automations:
-        if re.match(a.param_1, (recipe_json['source_url'])[:512]):
-            parsed_description = re.sub(a.param_2, a.param_3, parsed_description, count=1)
-
-    if len(parsed_description) > 256:  # split at 256 as long descriptions don't look good on recipe cards
-        recipe_json['steps'][0]['instruction'] = f'*{parsed_description}*  \n\n' + recipe_json['steps'][0]['instruction']
+    if len(recipe_json['description']) > 256:  # split at 256 as long descriptions don't look good on recipe cards
+        recipe_json['steps'][0]['instruction'] = f"*{recipe_json['description']}*  \n\n" + recipe_json['steps'][0]['instruction']
     else:
-        recipe_json['description'] = parsed_description[:512]
+        recipe_json['description'] = recipe_json['description'][:512]
 
     try:
         for x in scrape.ingredients():
@@ -205,20 +216,20 @@ def get_from_scraper(scrape, request):
         traceback.print_exc()
         pass
 
-    if 'source_url' in recipe_json and recipe_json['source_url']:
-        # TODO migrate to AutomationEngine
-        automations = Automation.objects.filter(
-            type=Automation.INSTRUCTION_REPLACE,
-            space=request.space,
-            disabled=False).only(
-            'param_1',
-            'param_2',
-            'param_3').order_by('order').all()[
-            :512]
-        for a in automations:
-            if re.match(a.param_1, (recipe_json['source_url'])[:512]):
-                for s in recipe_json['steps']:
-                    s['instruction'] = re.sub(a.param_2, a.param_3, s['instruction'])
+    # if 'source_url' in recipe_json and recipe_json['source_url']:
+        # automations = Automation.objects.filter(
+        #     type=Automation.INSTRUCTION_REPLACE,
+        #     space=request.space,
+        #     disabled=False).only(
+        #     'param_1',
+        #     'param_2',
+        #     'param_3').order_by('order').all()[
+        #     :512]
+        # for a in automations:
+        #     if re.match(a.param_1, (recipe_json['source_url'])[:512]):
+    for s in recipe_json['steps']:
+        s['instruction'] = automation_engine.apply_regex_replace_automation(s['instruction'], Automation.INSTRUCTION_REPLACE)
+        # re.sub(a.param_2, a.param_3, s['instruction'])
 
     return recipe_json
 
@@ -268,6 +279,7 @@ def get_from_youtube_scraper(url, request):
         ]
     }
 
+    # TODO add automation here
     try:
         video = YouTube(url=url)
         default_recipe_json['name'] = video.title
@@ -416,7 +428,6 @@ def parse_keywords(keyword_json, request):
     automation_engine = AutomationEngine(request)
     # keyword_aliases = {}
     # retrieve keyword automation cache if it exists, otherwise build from database
-    # TODO migrate to AutomationEngine
     # KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
     # if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
     #     keyword_aliases = c

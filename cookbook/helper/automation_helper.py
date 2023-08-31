@@ -8,18 +8,28 @@ from cookbook.models import Automation
 
 class AutomationEngine:
     request = None
+    source = None
     use_cache = None
     food_aliases = None
     keyword_aliases = None
     unit_aliases = None
     never_unit = None
     transpose_words = None
-    description_replace = None
-    instruction_replace = None
+    regex_replace = {
+        Automation.DESCRIPTION_REPLACE: None,
+        Automation.INSTRUCTION_REPLACE: None,
+        Automation.FOOD_REPLACE: None,
+        Automation.UNIT_REPLACE: None,
+        Automation.TITLE_REPLACE: None,
+    }
 
-    def __init__(self, request, use_cache=True):
+    def __init__(self, request, use_cache=True, source=None):
         self.request = request
         self.use_cache = use_cache
+        if not source:
+            self.source = "default_string_to_avoid_false_regex_match"
+        else:
+            self.source = source
 
     def apply_keyword_automation(self, keyword):
         keyword = keyword.strip()
@@ -92,7 +102,7 @@ class AutomationEngine:
         else:
             if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
                 return automation.param_2
-        return food
+        return self.apply_regex_replace_automation(food)
 
     def apply_never_unit_automation(self, tokens):
         """
@@ -151,7 +161,8 @@ class AutomationEngine:
                 caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
             else:
                 i = 0
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only(
+                        'param_1', 'param_2').order_by('order').all()[:512]:
                     self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
                     i += 1
                 caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
@@ -166,10 +177,52 @@ class AutomationEngine:
         else:
             for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
                     .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
-                    .filter(param_1_lower__in=tokens, param_2_lower__in=tokens).order_by('order'):
+                    .filter(param_1_lower__in=tokens, param_2_lower__in=tokens).order_by('order')[:512]:
                 if rule.param_1 in tokens and rule.param_2 in tokens:
                     string = re.sub(rf"\b({rule.param_1})\W*({rule.param_2})\b", r"\2 \1", string, flags=re.IGNORECASE)
         return string
 
-    def apply_regex_replace_automation(self, string):
+    def apply_regex_replace_automation(self, string, automation_type):
+        # TODO add warning - maybe on SPACE page? when a max of 512 automations of a specific type is exceeded (ALIAS types excluded?)
+        """
+        Replaces strings in a recipe field that are from a matched source
+        field_type are Automation.type that apply regex replacements
+        Automation.DESCRIPTION_REPLACE
+        Automation.INSTRUCTION_REPLACE
+        # TODO implement these
+        Automation.FOOD_REPLACE
+        Automation.UNIT_REPLACE
+        Automation.TITLE_REPLACE
+
+        regex replacment utilized the following fields from the Automation model
+        :param 1: source that should apply the automation in regex format ('.*' for all)
+        :param 2: regex pattern to match ()
+        :param 3: replacement string (leave blank to delete)
+        return: new string
+        """
+        if self.use_cache and self.regex_replace[automation_type] is None:
+            self.regex_replace[automation_type] = {}
+            REGEX_REPLACE_CACHE_KEY = f'automation_regex_replace_{self.request.space.pk}'
+            if c := caches['default'].get(REGEX_REPLACE_CACHE_KEY, None):
+                self.regex_replace[automation_type] = c[automation_type]
+                caches['default'].touch(REGEX_REPLACE_CACHE_KEY, 30)
+            else:
+                i = 0
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=automation_type).only(
+                        'param_1', 'param_2', 'param_3').order_by('order').all()[:512]:
+                    self.regex_replace[automation_type][i] = [a.param_1, a.param_2, a.param_3]
+                    i += 1
+                caches['default'].set(REGEX_REPLACE_CACHE_KEY, self.regex_replace, 30)
+        else:
+            self.regex_replace[automation_type] = {}
+
+        if self.regex_replace[automation_type]:
+            for rule in self.regex_replace[automation_type].values():
+                if re.match(rule[0], (self.source)[:512]):
+                    string = re.sub(rule[1], rule[2], string)
+        else:
+            for rule in Automation.objects.filter(space=self.request.space, disabled=False, type=automation_type).only(
+                    'param_1', 'param_2', 'param_3').order_by('order').all()[:512]:
+                if re.match(rule.param_1, (self.source)[:512]):
+                    string = re.sub(rule.param_2, rule.param_3, string)
         return string
