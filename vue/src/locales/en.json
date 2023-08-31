@@ -529,5 +529,8 @@
     "Create Recipe": "Create Recipe",
     "Import Recipe": "Import Recipe",
     "Never_Unit": "Never Unit",
-    "Transpose_Words": "Transpose Words"
+    "Transpose_Words": "Transpose Words",
+    "Title_Replace":"Title Replace",
+    "Food_Replace":"Food Replace",
+    "Unit_Replace":"Unit Replace"
 }
