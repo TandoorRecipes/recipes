@@ -43,7 +43,7 @@ def test_keyword_automation(u1_s1, arg):
     automation = AutomationEngine(request, False)
 
     with scope(space=space):
-        Automation.objects.get_or_create(name='keyword test', type=Automation.KEYWORD_ALIAS, param_1=arg[0], param_2=arg[1], created_by=user, space=space)
+        Automation.objects.get_or_create(name='keyword test', type=Automation.KEYWORD_ALIAS, param_1=arg[0], param_2=target_name, created_by=user, space=space)
         assert (automation.apply_keyword_automation(arg[0]) == target_name) is True
 
 
@@ -67,13 +67,6 @@ def test_unit_automation(u1_s1, arg):
         assert (automation.apply_unit_automation(arg[0]) == target_name) is True
 
 
-# def test_description_replace_automation():
-#     assert True == True
-
-
-# def test_instruction_replace_automation():
-#     assert True == True
-
 @pytest.mark.parametrize("arg", [
     [[1, 'egg', 'white'], '', [1, '', 'egg', 'white']],
     [[1, 'Egg', 'white'], '', [1, '', 'Egg', 'white']],
@@ -93,6 +86,38 @@ def test_never_unit_automation(u1_s1, arg):
         assert automation.apply_never_unit_automation(arg[0]) == arg[2]
 
 
+@pytest.mark.parametrize("source", [
+    ['.*', True],
+    ['.*allrecipes.*', True],
+    ['.*google.*', False],
+])
+@pytest.mark.parametrize("arg", [
+    [Automation.DESCRIPTION_REPLACE],
+    [Automation.INSTRUCTION_REPLACE],
+    [Automation.TITLE_REPLACE],
+    [Automation.FOOD_REPLACE],
+    [Automation.UNIT_REPLACE],
+])
+def test_regex_automation(u1_s1, arg, source):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    automation = AutomationEngine(request, use_cache=False, source='https://www.allrecipes.com/recipe/24010/easy-chicken-marsala/')
+    middle = 'test_remove_phrase'
+    beginning = 'remove_test phrase'
+    fail = 'test remove_phrase'
+    target = 'test phrase'
+
+    with scope(space=space):
+        Automation.objects.get_or_create(name='regex middle test', type=arg[0], param_1=source[0], param_2='_remove_', param_3=' ', created_by=user, space=space)
+        Automation.objects.get_or_create(name='regex beginning test', type=arg[0], param_1=source[0], param_2='^remove_', param_3='', created_by=user, space=space)
+        assert (automation.apply_regex_replace_automation(middle, arg[0]) == target) == source[1]
+        assert (automation.apply_regex_replace_automation(beginning, arg[0]) == target) == source[1]
+        assert (automation.apply_regex_replace_automation(fail, arg[0]) == target) == False
+
+
 @pytest.mark.parametrize("arg", [
     ['second first', 'first second'],
     ['longer string second first longer string', 'longer string first second longer string'],
@@ -110,7 +135,6 @@ def test_transpose_automation(u1_s1, arg):
         Automation.objects.get_or_create(name='transpose words test', type=Automation.TRANSPOSE_WORDS, param_1='second', param_2='first', created_by=user, space=space)
         assert automation.apply_transpose_automation(arg[0]) == arg[1]
 
-    assert True == True
 # # for some reason this tests cant run due to some kind of encoding issue, needs to be fixed
 # # def test_description_replace_automation(u1_s1, space_1):
 # #     if 'cookbook' in os.getcwd():
