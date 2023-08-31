@@ -1,5 +1,6 @@
+import re
+
 from django.core.cache import caches
-from django.db.models import Q
 from django.db.models.functions import Lower
 
 from cookbook.models import Automation
@@ -136,6 +137,38 @@ class AutomationEngine:
         return tokens
 
     def apply_transpose_automation(self, string):
+        """
+        If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
+        :param 1: first word to detect
+        :param 2: second word to detect
+        return: new ingredient string
+        """
+        if self.use_cache and self.transpose_words is None:
+            self.transpose_words = {}
+            TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
+            if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
+                self.transpose_words = c
+                caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
+            else:
+                i = 0
+                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
+                    self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
+                    i += 1
+                caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
+        else:
+            self.transpose_words = {}
+
+        tokens = [x.lower() for x in string.replace(',', ' ').split()]
+        if self.transpose_words:
+            for key, value in self.transpose_words.items():
+                if value[0] in tokens and value[1] in tokens:
+                    string = re.sub(rf"\b({value[0]})\W*({value[1]})\b", r"\2 \1", string, flags=re.IGNORECASE)
+        else:
+            for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
+                    .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
+                    .filter(param_1_lower__in=tokens, param_2_lower__in=tokens).order_by('order'):
+                if rule.param_1 in tokens and rule.param_2 in tokens:
+                    string = re.sub(rf"\b({rule.param_1})\W*({rule.param_2})\b", r"\2 \1", string, flags=re.IGNORECASE)
         return string
 
     def apply_regex_replace_automation(self, string):
