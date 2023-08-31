@@ -1,4 +1,3 @@
-import pytest
 from django.contrib import auth
 from django.test import RequestFactory
 from django_scopes import scope

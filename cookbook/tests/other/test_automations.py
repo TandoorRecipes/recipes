@@ -6,16 +6,6 @@ from django_scopes import scope
 from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.models import Automation
 
-# TODO test case sensitive match, assert update value
-# TODO test case insensitive match, assert update value
-# TODO test no match, assert not update value
-# TODO test accent insensitive match, assert not update value
-
-
-# @pytest.fixture()
-# def automation_food(space_1):
-#     return Keyword.objects.get_or_create(name='test_1', space=space_1)[0]
-
 
 @pytest.mark.parametrize("arg", [
     ['Match', True],
@@ -103,8 +93,24 @@ def test_never_unit_automation(u1_s1, arg):
         assert automation.apply_never_unit_automation(arg[0]) == arg[2]
 
 
-# def test_transpose_automation():
-#     assert True == True
+@pytest.mark.parametrize("arg", [
+    ['second first', 'first second'],
+    ['longer string second first longer string', 'longer string first second longer string'],
+    ['second fails first', 'second fails first'],
+])
+def test_transpose_automation(u1_s1, arg):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    automation = AutomationEngine(request, False)
+
+    with scope(space=space):
+        Automation.objects.get_or_create(name='transpose words test', type=Automation.TRANSPOSE_WORDS, param_1='second', param_2='first', created_by=user, space=space)
+        assert automation.apply_transpose_automation(arg[0]) == arg[1]
+
+    assert True == True
 # # for some reason this tests cant run due to some kind of encoding issue, needs to be fixed
 # # def test_description_replace_automation(u1_s1, space_1):
 # #     if 'cookbook' in os.getcwd():

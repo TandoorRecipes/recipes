@@ -2,12 +2,8 @@ import re
 import string
 import unicodedata
 
-from django.core.cache import caches
-from django.db.models import Q
-from django.db.models.functions import Lower
-
 from cookbook.helper.automation_helper import AutomationEngine
-from cookbook.models import Automation, Food, Ingredient, Unit
+from cookbook.models import Food, Ingredient, Unit
 
 
 class IngredientParser:
@@ -16,7 +12,7 @@ class IngredientParser:
     # food_aliases = {}
     # unit_aliases = {}
     # never_unit = {}
-    transpose_words = {}
+    # transpose_words = {}
     automation = None
 
     def __init__(self, request, cache_mode=True, ignore_automations=False):
@@ -29,51 +25,51 @@ class IngredientParser:
         self.request = request
         self.ignore_rules = ignore_automations
         self.automation = AutomationEngine(self.request, use_cache=cache_mode)
-        if cache_mode:
-            # FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
-            # if c := caches['default'].get(FOOD_CACHE_KEY, None):
-            #     self.food_aliases = c
-            #     caches['default'].touch(FOOD_CACHE_KEY, 30)
-            # else:
-            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-            #         self.food_aliases[a.param_1.lower()] = a.param_2
-            #     caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
+        # if cache_mode:
+        # FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
+        # if c := caches['default'].get(FOOD_CACHE_KEY, None):
+        #     self.food_aliases = c
+        #     caches['default'].touch(FOOD_CACHE_KEY, 30)
+        # else:
+        #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
+        #         self.food_aliases[a.param_1.lower()] = a.param_2
+        #     caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
 
-            # UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
-            # if c := caches['default'].get(UNIT_CACHE_KEY, None):
-            #     self.unit_aliases = c
-            #     caches['default'].touch(UNIT_CACHE_KEY, 30)
-            # else:
-            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
-            #         self.unit_aliases[a.param_1.lower()] = a.param_2
-            #     caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
+        # UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
+        # if c := caches['default'].get(UNIT_CACHE_KEY, None):
+        #     self.unit_aliases = c
+        #     caches['default'].touch(UNIT_CACHE_KEY, 30)
+        # else:
+        #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
+        #         self.unit_aliases[a.param_1.lower()] = a.param_2
+        #     caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
 
-            # TODO migrated to automation engine
-            # NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
-            # if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
-            #     self.never_unit = c
-            #     caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
-            # else:
-            #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
-            #         self.never_unit[a.param_1.lower()] = a.param_2
-            #     caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
+        # TODO migrated to automation engine
+        # NEVER_UNIT_CACHE_KEY = f'automation_never_unit_{self.request.space.pk}'
+        # if c := caches['default'].get(NEVER_UNIT_CACHE_KEY, None):
+        #     self.never_unit = c
+        #     caches['default'].touch(NEVER_UNIT_CACHE_KEY, 30)
+        # else:
+        #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.NEVER_UNIT).only('param_1', 'param_2').order_by('order').all():
+        #         self.never_unit[a.param_1.lower()] = a.param_2
+        #     caches['default'].set(NEVER_UNIT_CACHE_KEY, self.never_unit, 30)
 
-            # TODO migrated to automation engine
-            TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
-            if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
-                self.transpose_words = c
-                caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
-            else:
-                i = 0
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
-                    self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
-                    i += 1
-                caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
-        else:
-            # self.food_aliases = {}
-            # self.unit_aliases = {}
-            # self.never_unit = {}
-            self.transpose_words = {}
+        # TODO migrated to automation engine
+        # TRANSPOSE_WORDS_CACHE_KEY = f'automation_transpose_words_{self.request.space.pk}'
+        # if c := caches['default'].get(TRANSPOSE_WORDS_CACHE_KEY, None):
+        #     self.transpose_words = c
+        #     caches['default'].touch(TRANSPOSE_WORDS_CACHE_KEY, 30)
+        # else:
+        #     i = 0
+        #     for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.TRANSPOSE_WORDS).only('param_1', 'param_2').order_by('order').all():
+        #         self.transpose_words[i] = [a.param_1.lower(), a.param_2.lower()]
+        #         i += 1
+        #     caches['default'].set(TRANSPOSE_WORDS_CACHE_KEY, self.transpose_words, 30)
+        # else:
+        # self.food_aliases = {}
+        # self.unit_aliases = {}
+        # self.never_unit = {}
+        # self.transpose_words = {}
 
     # def apply_food_automation(self, food):
     #     """
@@ -277,33 +273,32 @@ class IngredientParser:
 
         # return tokens
 
-    # TODO migrated to automation engine
-    def apply_transpose_words_automations(self, ingredient):
-        """
-        If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
-        :param 1: first word to detect
-        :param 2: second word to detect
-        return: new ingredient string
-        """
+    # def apply_transpose_words_automations(self, ingredient):
+    #     """
+    #     If two words (param_1 & param_2) are detected in sequence, swap their position in the ingredient string
+    #     :param 1: first word to detect
+    #     :param 2: second word to detect
+    #     return: new ingredient string
+    #     """
 
-        if self.ignore_rules:
-            return ingredient
+    #     if self.ignore_rules:
+    #         return ingredient
 
-        else:
-            tokens = [x.lower() for x in ingredient.replace(',', ' ').split()]
-            if self.transpose_words:
-                filtered_rules = {}
-                for key, value in self.transpose_words.items():
-                    if value[0] in tokens and value[1] in tokens:
-                        filtered_rules[key] = value
-                for k, v in filtered_rules.items():
-                    ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
-            else:
-                for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
-                        .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
-                        .filter(Q(Q(param_1_lower__in=tokens) | Q(param_2_lower__in=tokens))).order_by('order'):
-                    ingredient = re.sub(rf"\b({rule.param_1})\W*({rule.param_1})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
-        return ingredient
+    #     else:
+    #         tokens = [x.lower() for x in ingredient.replace(',', ' ').split()]
+    #         if self.transpose_words:
+    #             filtered_rules = {}
+    #             for key, value in self.transpose_words.items():
+    #                 if value[0] in tokens and value[1] in tokens:
+    #                     filtered_rules[key] = value
+    #             for k, v in filtered_rules.items():
+    #                 ingredient = re.sub(rf"\b({v[0]})\W*({v[1]})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
+    #         else:
+    #             for rule in Automation.objects.filter(space=self.request.space, type=Automation.TRANSPOSE_WORDS, disabled=False) \
+    #                     .annotate(param_1_lower=Lower('param_1'), param_2_lower=Lower('param_2')) \
+    #                     .filter(Q(Q(param_1_lower__in=tokens) | Q(param_2_lower__in=tokens))).order_by('order'):
+    #                 ingredient = re.sub(rf"\b({rule.param_1})\W*({rule.param_1})\b", r"\2 \1", ingredient, flags=re.IGNORECASE)
+    #     return ingredient
 
     def parse(self, ingredient):
         """
@@ -345,8 +340,8 @@ class IngredientParser:
         if re.match('([0-9])+([A-z])+\\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
 
-        # TODO migrated to automation engine
-        ingredient = self.apply_transpose_words_automations(ingredient)
+        if not self.ignore_rules:
+            ingredient = self.automation.apply_transpose_words_automations(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
@@ -360,8 +355,8 @@ class IngredientParser:
                 # three arguments if it already has a unit there can't be
                 # a fraction for the amount
                 if len(tokens) > 2:
-                    # TODO migrated to automation engine
-                    tokens = self.automation.apply_never_unit_automation(tokens)
+                    if not self.ignore_rules:
+                        tokens = self.automation.apply_never_unit_automation(tokens)
                     try:
                         if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
