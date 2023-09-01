@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-08-16 21:19+0000\n"
-"Last-Translator: Alexandre Braure <alex@tkclab.ca>\n"
+"PO-Revision-Date: 2023-09-02 20:25+0000\n"
+"Last-Translator: AJ <alexandre.jacquin@hotmail.fr>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -546,8 +546,6 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "Il est nécessaire de fournir soit le queryset, soit la clé de hachage"
 
 #: .\cookbook\helper\recipe_url_import.py:266
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
 msgstr "sens inverse"
 
@@ -557,7 +555,7 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:268
 msgid "knead"
-msgstr ""
+msgstr "pétrir"
 
 #: .\cookbook\helper\recipe_url_import.py:269
 msgid "thicken"
@@ -565,11 +563,11 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:270
 msgid "warm up"
-msgstr ""
+msgstr "réchauffer"
 
 #: .\cookbook\helper\recipe_url_import.py:271
 msgid "ferment"
-msgstr ""
+msgstr "fermenter"
 
 #: .\cookbook\helper\recipe_url_import.py:272
 msgid "sous-vide"
@@ -590,7 +588,6 @@ msgid "Favorite"
 msgstr "Favori"
 
 #: .\cookbook\integration\copymethat.py:50
-#, fuzzy
 msgid "I made this"
 msgstr "J'ai fait ça"
 
@@ -646,7 +643,7 @@ msgstr "Portions"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr "temps d’attente"
+msgstr "Temps d’attente"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
@@ -2657,7 +2654,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1394
 msgid "Sync successful!"
-msgstr "Synchro réussie !"
+msgstr "Synchronisation réussie !"
 
 #: .\cookbook\views\api.py:1399
 msgid "Error synchronizing with Storage"
