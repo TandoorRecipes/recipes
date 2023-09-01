@@ -261,10 +261,12 @@ def get_from_youtube_scraper(url, request):
 
     # TODO add automation here
     try:
+        automation_engine = AutomationEngine(request, source=url)
         video = YouTube(url=url)
-        default_recipe_json['name'] = video.title
+        default_recipe_json['name'] = automation_engine.apply_regex_replace_automation(video.title, Automation.NAME_REPLACE)
         default_recipe_json['image'] = video.thumbnail_url
-        default_recipe_json['steps'][0]['instruction'] = video.description
+        default_recipe_json['steps'][0]['instruction'] = automation_engine.apply_regex_replace_automation(video.description, Automation.INSTRUCTION_REPLACE)
+
     except Exception:
         pass
 
