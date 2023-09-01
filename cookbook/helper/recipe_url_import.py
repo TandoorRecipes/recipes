@@ -68,17 +68,6 @@ def get_from_scraper(scrape, request):
             description = ''
 
     recipe_json['description'] = parse_description(description)
-
-    # automations = Automation.objects.filter(
-    #     type=Automation.DESCRIPTION_REPLACE,
-    #     space=request.space,
-    #     disabled=False).only(
-    #     'param_1',
-    #     'param_2',
-    #     'param_3').all().order_by('order')[
-    #         :512]
-    # for a in automations:
-    #     if re.match(a.param_1, (recipe_json['source_url'])[:512]):
     recipe_json['description'] = automation_engine.apply_regex_replace_automation(recipe_json['description'], Automation.DESCRIPTION_REPLACE)
 
     # assign servings attributes
@@ -218,17 +207,6 @@ def get_from_scraper(scrape, request):
         traceback.print_exc()
         pass
 
-    # if 'source_url' in recipe_json and recipe_json['source_url']:
-        # automations = Automation.objects.filter(
-        #     type=Automation.INSTRUCTION_REPLACE,
-        #     space=request.space,
-        #     disabled=False).only(
-        #     'param_1',
-        #     'param_2',
-        #     'param_3').order_by('order').all()[
-        #     :512]
-        # for a in automations:
-        #     if re.match(a.param_1, (recipe_json['source_url'])[:512]):
     for s in recipe_json['steps']:
         s['instruction'] = automation_engine.apply_regex_replace_automation(s['instruction'], Automation.INSTRUCTION_REPLACE)
         # re.sub(a.param_2, a.param_3, s['instruction'])
