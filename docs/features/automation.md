@@ -31,7 +31,7 @@ This automation is a bit more complicated than the alias rules. It is run when i
 from a website.
 
 It uses Regular Expressions (RegEx) to determine if a description should be altered, what exactly to remove
-and what to replace it with.
+and what to replace it with.  The search string ignores case, the replacement string respects case.
 
 -   **Parameter 1**: pattern of which sites to match (e.g. `.*.chefkoch.de.*`, `.*`)
 -   **Parameter 2**: pattern of what to replace (e.g. `.*`)

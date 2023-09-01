@@ -38,7 +38,7 @@ def get_from_scraper(scrape, request):
         except Exception:
             recipe_json['source_url'] = ''
 
-    automation_engine = AutomationEngine(request, source=recipe_json['source_url'])
+    automation_engine = AutomationEngine(request, source=recipe_json.get('source_url'))
     # assign recipe name
     try:
         recipe_json['name'] = parse_name(scrape.title()[:128] or None)
@@ -52,6 +52,8 @@ def get_from_scraper(scrape, request):
 
     if isinstance(recipe_json['name'], list) and len(recipe_json['name']) > 0:
         recipe_json['name'] = recipe_json['name'][0]
+
+    recipe_json['name'] = automation_engine.apply_regex_replace_automation(recipe_json['name'], Automation.NAME_REPLACE)
 
     # assign recipe description
     # TODO notify user about limit if reached - >256 description will be truncated

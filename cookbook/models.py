@@ -1316,7 +1316,7 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     TRANSPOSE_WORDS = 'TRANSPOSE_WORDS'
     FOOD_REPLACE = 'FOOD_REPLACE'
     UNIT_REPLACE = 'UNIT_REPLACE'
-    TITLE_REPLACE = 'TITLE_REPLACE'
+    NAME_REPLACE = 'NAME_REPLACE'
 
     type = models.CharField(max_length=128,
                             choices=(
@@ -1329,7 +1329,7 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
                                 (TRANSPOSE_WORDS, _('Transpose Words')),
                                 (FOOD_REPLACE, _('Food Replace')),
                                 (UNIT_REPLACE, _('Unit Replace')),
-                                (TITLE_REPLACE, _('Title Replace')),
+                                (NAME_REPLACE, _('Name Replace')),
                             ))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)

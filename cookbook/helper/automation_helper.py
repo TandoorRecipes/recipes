@@ -20,7 +20,7 @@ class AutomationEngine:
         Automation.INSTRUCTION_REPLACE: None,
         Automation.FOOD_REPLACE: None,
         Automation.UNIT_REPLACE: None,
-        Automation.TITLE_REPLACE: None,
+        Automation.NAME_REPLACE: None,
     }
 
     def __init__(self, request, use_cache=True, source=None):
@@ -191,7 +191,7 @@ class AutomationEngine:
         Automation.INSTRUCTION_REPLACE
         Automation.FOOD_REPLACE
         Automation.UNIT_REPLACE
-        Automation.TITLE_REPLACE
+        Automation.NAME_REPLACE
 
         regex replacment utilized the following fields from the Automation model
         :param 1: source that should apply the automation in regex format ('.*' for all)
@@ -218,10 +218,10 @@ class AutomationEngine:
         if self.regex_replace[automation_type]:
             for rule in self.regex_replace[automation_type].values():
                 if re.match(rule[0], (self.source)[:512]):
-                    string = re.sub(rule[1], rule[2], string)
+                    string = re.sub(rule[1], rule[2], string, flags=re.IGNORECASE)
         else:
             for rule in Automation.objects.filter(space=self.request.space, disabled=False, type=automation_type).only(
                     'param_1', 'param_2', 'param_3').order_by('order').all()[:512]:
                 if re.match(rule.param_1, (self.source)[:512]):
-                    string = re.sub(rule.param_2, rule.param_3, string)
+                    string = re.sub(rule.param_2, rule.param_3, string, flags=re.IGNORECASE)
         return string

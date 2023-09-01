@@ -339,7 +339,7 @@ class IngredientParser:
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
 
         if not self.ignore_rules:
-            ingredient = self.automation.apply_transpose_words_automations(ingredient)
+            ingredient = self.automation.apply_transpose_automation(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
