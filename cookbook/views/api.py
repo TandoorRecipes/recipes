@@ -969,10 +969,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
         ingredients = request.data.get('ingredients', None)
+
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
         mealplan = request.data.get('mealplan', None)
-        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan)
+        SLR = RecipeShoppingEditor(request.user, request.space, id=list_recipe, recipe=obj, mealplan=mealplan, servings=servings)
 
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
         http_status = status.HTTP_204_NO_CONTENT

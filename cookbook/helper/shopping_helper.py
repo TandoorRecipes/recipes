@@ -176,7 +176,7 @@ class RecipeShoppingEditor():
         if not ingredients:
             return
         elif isinstance(ingredients, list):
-            ingredients = Ingredient.objects.filter(id__in=ingredients)
+            ingredients = Ingredient.objects.filter(id__in=ingredients, food__ignore_shopping=False)
         existing = self._shopping_list_recipe.entries.filter(ingredient__in=ingredients).values_list('ingredient__pk', flat=True)
         add_ingredients = ingredients.exclude(id__in=existing)
 
