@@ -58,6 +58,7 @@ import SmallText from "@/components/Modals/SmallText"
 import HelpBadge from "@/components/Badges/Help"
 import NumberInput from "@/components/Modals/NumberInput.vue";
 import TextAreaInput from "@/components/Modals/TextAreaInput.vue";
+import ColorInput from "@/components/Modals/ColorInput.vue";
 
 export default {
     name: "GenericModalForm",
@@ -71,7 +72,8 @@ export default {
         HelpBadge,
         DateInput,
         NumberInput,
-        TextAreaInput
+        TextAreaInput,
+        ColorInput
     },
     mixins: [ApiMixin, ToastMixin],
     props: {
