@@ -21,7 +21,7 @@
     "core-js": "^3.29.1",
     "html2pdf.js": "^0.10.1",
     "lodash": "^4.17.21",
-    "mavon-editor": "^2.10.4",
+    "mavon-editor": "^3.0.1",
     "moment": "^2.29.4",
     "pinia": "^2.0.30",
     "prismjs": "^1.29.0",
