@@ -4,7 +4,7 @@
         v-model="selected_objects"
         :options="objects"
         :close-on-select="true"
-        :clear-on-select="multiple"
+        :clear-on-select="true"
         :hide-selected="multiple"
         :preserve-search="true"
         :internal-search="false"
@@ -27,11 +27,11 @@
 <script>
 import Vue from "vue"
 import Multiselect from "vue-multiselect"
-import {ApiMixin, StandardToasts} from "@/utils/utils"
+import { ApiMixin, StandardToasts } from "@/utils/utils"
 
 export default {
     name: "GenericMultiselect",
-    components: {Multiselect},
+    components: { Multiselect },
     mixins: [ApiMixin],
     data() {
         return {
@@ -43,16 +43,16 @@ export default {
         }
     },
     props: {
-        placeholder: {type: String, default: undefined},
+        placeholder: { type: String, default: undefined },
         model: {
             type: Object,
             default() {
                 return {}
             },
         },
-        label: {type: String, default: "name"},
-        parent_variable: {type: String, default: undefined},
-        limit: {type: Number, default: 25},
+        label: { type: String, default: "name" },
+        parent_variable: { type: String, default: undefined },
+        limit: { type: Number, default: 25 },
         sticky_options: {
             type: Array,
             default() {
@@ -69,11 +69,11 @@ export default {
             type: Object,
             default: undefined,
         },
-        search_on_load: {type: Boolean, default: true},
-        multiple: {type: Boolean, default: true},
-        allow_create: {type: Boolean, default: false},
-        create_placeholder: {type: String, default: "You Forgot to Add a Tag Placeholder"},
-        clear: {type: Number},
+        search_on_load: { type: Boolean, default: true },
+        multiple: { type: Boolean, default: true },
+        allow_create: { type: Boolean, default: false },
+        create_placeholder: { type: String, default: "You Forgot to Add a Tag Placeholder" },
+        clear: { type: Number },
     },
     watch: {
         initial_selection: function (newVal, oldVal) {
@@ -84,12 +84,12 @@ export default {
             empty[this.label] = `..${this.$t("loading")}..`
             this.selected_objects.forEach((x) => {
                 if (typeof x !== "object") {
-                    this.selected_objects[this.selected_objects.indexOf(x)] = {...empty, id: x}
+                    this.selected_objects[this.selected_objects.indexOf(x)] = { ...empty, id: x }
                     get_details.push(x)
                 }
             })
             get_details.forEach((x) => {
-                this.genericAPI(this.model, this.Actions.FETCH, {id: x})
+                this.genericAPI(this.model, this.Actions.FETCH, { id: x })
                     .then((result) => {
                         // this.selected_objects[this.selected_objects.map((y) => y.id).indexOf(x)] = result.data
                         Vue.set(this.selected_objects, this.selected_objects.map((y) => y.id).indexOf(x), result.data)
@@ -105,8 +105,8 @@ export default {
             if (typeof this.selected_objects !== "object") {
                 let empty = {}
                 empty[this.label] = `..${this.$t("loading")}..`
-                this.selected_objects = {...empty, id: this.selected_objects}
-                this.genericAPI(this.model, this.Actions.FETCH, {id: this.selected_objects})
+                this.selected_objects = { ...empty, id: this.selected_objects }
+                this.genericAPI(this.model, this.Actions.FETCH, { id: this.selected_objects })
                     .then((result) => {
                         this.selected_objects = result.data
                     })
@@ -149,13 +149,12 @@ export default {
     methods: {
         // this.genericAPI inherited from ApiMixin
         search: function (query) {
-
             let options = {
                 page: 1,
                 pageSize: this.limit,
                 query: query,
                 limit: this.limit,
-                options: {query: {simple: 1}}, // for API endpoints that support a simple view
+                options: { query: { simple: 1 } }, // for API endpoints that support a simple view
             }
 
             this.genericAPI(this.model, this.Actions.LIST, options).then((result) => {
@@ -183,24 +182,26 @@ export default {
             }
         },
         selectionChanged: function () {
-            this.$emit("change", {var: this.parent_variable, val: this.selected_objects})
+            this.$emit("change", { var: this.parent_variable, val: this.selected_objects })
         },
         addNew(e) {
             //TODO add ability to choose field name other than "name"
-            console.log('CREATEING NEW with -> ', e)
-            this.genericAPI(this.model, this.Actions.CREATE, {name: e}).then(result => {
-                let createdObj = result.data?.results ?? result.data
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                if (this.multiple) {
-                    this.selected_objects.push(createdObj)
-                } else {
-                    this.selected_objects = createdObj
-                }
-                this.objects.push(createdObj)
-                this.selectionChanged()
-            }).catch((r, err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
-            })
+            console.log("CREATEING NEW with -> ", e)
+            this.genericAPI(this.model, this.Actions.CREATE, { name: e })
+                .then((result) => {
+                    let createdObj = result.data?.results ?? result.data
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+                    if (this.multiple) {
+                        this.selected_objects.push(createdObj)
+                    } else {
+                        this.selected_objects = createdObj
+                    }
+                    this.objects.push(createdObj)
+                    this.selectionChanged()
+                })
+                .catch((r, err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
+                })
         },
     },
 }
