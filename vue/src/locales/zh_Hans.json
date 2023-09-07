@@ -479,5 +479,7 @@
     "Auto_Sort": "自动分类",
     "Auto_Sort_Help": "将所有食材移动到最恰当的步骤。",
     "Create Recipe": "创建食谱",
-    "Import Recipe": "导入食谱"
+    "Import Recipe": "导入食谱",
+    "recipe_property_info": "您也可以为食物添加属性，以便根据食谱自动计算！",
+    "per_serving": "每份"
 }
