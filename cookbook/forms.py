@@ -45,8 +45,7 @@ class UserPreferenceForm(forms.ModelForm):
         model = UserPreference
         fields = (
             'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
-            'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed',
-            'show_step_ingredients',
+            'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed', 'show_step_ingredients',
         )
 
         labels = {
@@ -67,21 +66,19 @@ class UserPreferenceForm(forms.ModelForm):
 
         help_texts = {
             'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
-            
-            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),  
+            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),
             'use_fractions': _(
                 'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
-            
-            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),  
+            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),
             'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
             'shopping_share': _('Users with whom to share shopping lists.'),
-            'ingredient_decimals': _('Number of decimals to round ingredients.'),  
-            'comments': _('If you want to be able to create and see comments underneath recipes.'),  
+            'ingredient_decimals': _('Number of decimals to round ingredients.'),
+            'comments': _('If you want to be able to create and see comments underneath recipes.'),
             'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  
-                'of mobile data. If lower than instance limit it is reset when saving.'  
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
+                'of mobile data. If lower than instance limit it is reset when saving.'
             ),
-            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),  
+            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
             'left_handed': _('Will optimize the UI for use with your left hand.'),
@@ -186,6 +183,7 @@ class MultipleFileField(forms.FileField):
         else:
             result = single_file_clean(data, initial)
         return result
+
 
 class ImportForm(ImportExportBase):
     files = MultipleFileField(required=True)
@@ -352,9 +350,8 @@ class MealPlanForm(forms.ModelForm):
         )
 
         help_texts = {
-            'shared': _('You can list default users to share recipes with in the settings.'),  
+            'shared': _('You can list default users to share recipes with in the settings.'),
             'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
-            
         }
 
         widgets = {
@@ -509,8 +506,8 @@ class ShoppingPreferenceForm(forms.ModelForm):
         help_texts = {
             'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
             'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '  
-                'of mobile data. If lower than instance limit it is reset when saving.'  
+                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
+                'of mobile data. If lower than instance limit it is reset when saving.'
             ),
             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
             'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
@@ -554,11 +551,10 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'show_facet_count', 'use_plural')
+        fields = ('food_inherit', 'reset_food_inherit', 'use_plural')
 
         help_texts = {
             'food_inherit': _('Fields on food that should be inherited by default.'),
-            'show_facet_count': _('Show recipe counts on search filters'), 
             'use_plural': _('Use the plural form for units and food inside this space.'),
         }
 

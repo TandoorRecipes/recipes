@@ -1,9 +1,7 @@
-# import random
 import re
 import traceback
 from html import unescape
 
-from django.core.cache import caches
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
@@ -11,14 +9,8 @@ from isodate.isoerror import ISO8601Error
 from pytube import YouTube
 from recipe_scrapers._utils import get_host_name, get_minutes
 
-# from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import Automation, Keyword, PropertyType
-
-# from unicodedata import decomposition
-
-
-# from recipe_scrapers._utils import get_minutes  ## temporary until/unless upstream incorporates get_minutes() PR
 
 
 def get_from_scraper(scrape, request):
@@ -147,7 +139,7 @@ def get_from_scraper(scrape, request):
     recipe_json['steps'] = []
     try:
         for i in parse_instructions(scrape.instructions()):
-            recipe_json['steps'].append({'instruction': i, 'ingredients': [], 'show_ingredients_table': request.user.userpreference.show_step_ingredients,})
+            recipe_json['steps'].append({'instruction': i, 'ingredients': [], 'show_ingredients_table': request.user.userpreference.show_step_ingredients, })
     except Exception:
         pass
     if len(recipe_json['steps']) == 0:

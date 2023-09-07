@@ -16,7 +16,6 @@
     "file_upload_disabled": "Opplasting av filer er ikke aktivert i området ditt.",
     "warning_space_delete": "Du kan slette området, inkludert alle oppskrifter, handlelister, måltidsplaner og alt annet du har opprettet. Dette kan ikke angres! Er du sikker på at du vil gjøre dette?",
     "food_inherit_info": "Felter på matvarer som skal arves som standard.",
-    "facet_count_info": "Vis oppskriftsantall i søkefilter.",
     "step_time_minutes": "Tid for trinn, i minutter",
     "confirm_delete": "Er du sikker på at du vil slette dette {object}?",
     "import_running": "Importering pågår. Vennligst vent!",
