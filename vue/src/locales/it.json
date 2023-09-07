@@ -304,7 +304,6 @@
     "tree_select": "Usa selezione ad albero",
     "sql_debug": "Debug SQL",
     "remember_search": "Ricorda ricerca",
-    "facet_count_info": "Mostra il conteggio delle ricette nei filtri di ricerca.",
     "warning_space_delete": "Stai per eliminare la tua istanza che include tutte le ricette, liste della spesa, piani alimentari e tutto ciò che hai creato. Questa azione non può essere annullata! Sei sicuro di voler procedere?",
     "food_inherit_info": "Campi di alimenti che devono essere ereditati per impostazione predefinita.",
     "enable_expert": "Abilita modalità esperto",

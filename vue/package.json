@@ -10,7 +10,6 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@popperjs/core": "^2.11.7",
-    "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
     "@vue/composition-api": "1.7.1",
     "axios": "^1.2.0",
@@ -37,7 +36,7 @@
     "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^9.1.2",
     "vue-sanitize": "^0.2.2",
-    "vue-simple-calendar": "5.0.1",
+    "vue-simple-calendar": "TandoorRecipes/vue-simple-calendar#lastvue2",
     "vue-template-compiler": "2.7.14",
     "vue2-touch-events": "^3.2.2",
     "vuedraggable": "^2.24.3",

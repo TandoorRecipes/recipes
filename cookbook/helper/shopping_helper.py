@@ -1,16 +1,13 @@
 from datetime import timedelta
 from decimal import Decimal
 
-from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from cookbook.helper.HelperFunctions import Round, str2bool
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
                              SupermarketCategoryRelation)
-from recipes import settings
 
 
 def shopping_helper(qs, request):
@@ -47,7 +44,7 @@ class RecipeShoppingEditor():
         self.mealplan = self._kwargs.get('mealplan', None)
         if type(self.mealplan) in [int, float]:
             self.mealplan = MealPlan.objects.filter(id=self.mealplan, space=self.space)
-        if type(self.mealplan) == dict:
+        if isinstance(self.mealplan, dict):
             self.mealplan = MealPlan.objects.filter(id=self.mealplan['id'], space=self.space).first()
         self.id = self._kwargs.get('id', None)
 
@@ -69,11 +66,12 @@ class RecipeShoppingEditor():
 
     @property
     def _recipe_servings(self):
-        return getattr(self.recipe, 'servings', None) or getattr(getattr(self.mealplan, 'recipe', None), 'servings', None) or getattr(getattr(self._shopping_list_recipe, 'recipe', None), 'servings', None)
+        return getattr(self.recipe, 'servings', None) or getattr(getattr(self.mealplan, 'recipe', None), 'servings',
+                                                                 None) or getattr(getattr(self._shopping_list_recipe, 'recipe', None), 'servings', None)
 
     @property
     def _servings_factor(self):
-        return Decimal(self.servings)/Decimal(self._recipe_servings)
+        return Decimal(self.servings) / Decimal(self._recipe_servings)
 
     @property
     def _shared_users(self):
@@ -90,9 +88,10 @@ class RecipeShoppingEditor():
 
     def get_recipe_ingredients(self, id, exclude_onhand=False):
         if exclude_onhand:
-            return Ingredient.objects.filter(step__recipe__id=id,  food__ignore_shopping=False,  space=self.space).exclude(food__onhand_users__id__in=[x.id for x in self._shared_users])
+            return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space).exclude(
+                food__onhand_users__id__in=[x.id for x in self._shared_users])
         else:
-            return Ingredient.objects.filter(step__recipe__id=id,  food__ignore_shopping=False,  space=self.space)
+            return Ingredient.objects.filter(step__recipe__id=id, food__ignore_shopping=False, space=self.space)
 
     @property
     def _include_related(self):
@@ -109,7 +108,7 @@ class RecipeShoppingEditor():
             self.servings = float(servings)
 
         if mealplan := kwargs.get('mealplan', None):
-            if type(mealplan) == dict:
+            if isinstance(mealplan, dict):
                 self.mealplan = MealPlan.objects.filter(id=mealplan['id'], space=self.space).first()
             else:
                 self.mealplan = mealplan
@@ -170,13 +169,13 @@ class RecipeShoppingEditor():
         try:
             self._shopping_list_recipe.delete()
             return True
-        except:
+        except BaseException:
             return False
 
     def _add_ingredients(self, ingredients=None):
         if not ingredients:
             return
-        elif type(ingredients) == list:
+        elif isinstance(ingredients, list):
             ingredients = Ingredient.objects.filter(id__in=ingredients)
         existing = self._shopping_list_recipe.entries.filter(ingredient__in=ingredients).values_list('ingredient__pk', flat=True)
         add_ingredients = ingredients.exclude(id__in=existing)
