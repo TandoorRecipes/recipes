@@ -2,6 +2,7 @@ import re
 import traceback
 from html import unescape
 
+from django.core.cache import caches
 from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
