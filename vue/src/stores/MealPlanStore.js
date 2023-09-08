@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import {ApiApiFactory} from "@/utils/openapi/api";
 
 const _STORE_ID = 'meal_plan_store'
+const _LOCAL_STORAGE_KEY = 'MEAL_PLAN_CLIENT_SETTINGS'
 import Vue from "vue"
 import {StandardToasts} from "@/utils/utils";
 /*
@@ -12,12 +13,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
     state: () => ({
         plans: {},
         currently_updating: null,
-        client_settings: {
-            displayPeriodUom: "week",
-            displayPeriodCount: 2,
-            startingDayOfWeek: 1,
-            displayWeekNumbers: true,
-        },
+        settings: null,
     }),
     getters: {
         plan_list: function () {
@@ -41,6 +37,12 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
                 title: "",
                 title_placeholder: 'Title', // meal plan edit modal should be improved to not need this
             }
+        },
+        client_settings: function () {
+            if (this.settings === null) {
+                this.settings = this.loadClientSettings()
+            }
+            return this.settings
         }
     },
     actions: {
@@ -91,6 +93,23 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
+        },
+        updateClientSettings(settings) {
+            this.settings = settings
+            localStorage.setItem(_LOCAL_STORAGE_KEY, JSON.stringify(this.settings))
+        },
+        loadClientSettings() {
+            let s = localStorage.getItem(_LOCAL_STORAGE_KEY)
+            if (s === null || s === {}) {
+                return {
+                    displayPeriodUom: "week",
+                    displayPeriodCount: 3,
+                    startingDayOfWeek: 1,
+                    displayWeekNumbers: true,
+                }
+            } else {
+                return JSON.parse(s)
+            }
         }
     },
 })
