@@ -449,7 +449,7 @@ class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     class Meta:
         model = Keyword
         fields = (
-            'id', 'name',  'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
+            'id', 'name', 'label', 'description', 'image', 'parent', 'numchild', 'numrecipe', 'created_at',
             'updated_at', 'full_name')
         read_only_fields = ('id', 'label', 'numchild', 'parent', 'image')
 
@@ -528,7 +528,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name',  'unit', 'description', 'order', 'open_data_slug')
+        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug')
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -995,7 +995,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         model = MealPlan
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
-            'date', 'meal_type', 'created_by', 'shared', 'recipe_name',
+            'from_date', 'to_date', 'meal_type', 'created_by', 'shared', 'recipe_name',
             'meal_type_name', 'shopping'
         )
         read_only_fields = ('created_by',)

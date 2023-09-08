@@ -29,7 +29,8 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         },
         empty_meal_plan: function () {
             return {
-                date: null,
+                from_date: null,
+                to_date: null,
                 id: -1,
                 meal_type: null,
                 note: "",
