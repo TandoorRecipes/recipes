@@ -837,7 +837,7 @@
                             <div
                                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 0.5rem; grid-auto-rows: max-content; ">
                                 <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
-                                    <b-list-group >
+                                    <b-list-group>
                                         <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
@@ -850,13 +850,12 @@
                                             </div>
 
                                         </b-list-group-item>
-                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
+                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div p-0 pr-2">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="plan.recipe.image" rounded="circle" v-if="plan.recipe?.image"></b-img>
-                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image"  v-if="plan.recipe?.image"/>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder"  v-else/>
+
                                                 </div>
                                                 <div class="flex-grow-1 ml-2"
                                                      style="text-overflow: ellipsis; overflow-wrap: anywhere;">
