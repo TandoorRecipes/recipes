@@ -1102,7 +1102,7 @@ export default {
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
                         date_label: moment_date.format('ddd DD.MM'),
-                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
                     })
                 }
             }
@@ -1358,22 +1358,6 @@ export default {
             this.meal_plan_store = useMealPlanStore()
             this.meal_plan_store.refreshFromAPI(moment().format("YYYY-MM-DD"), moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"))
 
-
-            // if (this.ui.show_meal_plan) {
-            //     let params = {
-            //         options: {
-            //             query: {
-            //                 from_date: moment().format("YYYY-MM-DD"),
-            //                 to_date: moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"),
-            //             },
-            //         },
-            //     }
-            //     this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then((result) => {
-            //         this.meal_plans = result.data
-            //     })
-            // } else {
-            //     this.meal_plans = []
-            // }
         },
         genericSelectChanged: function (obj) {
             if (obj.var.includes("::")) {

@@ -662,11 +662,11 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
         from_date = self.request.query_params.get('from_date', None)
         if from_date is not None:
-            queryset = queryset.filter(date__gte=from_date)
+            queryset = queryset.filter(to_date__gte=from_date)
 
         to_date = self.request.query_params.get('to_date', None)
         if to_date is not None:
-            queryset = queryset.filter(date__lte=to_date)
+            queryset = queryset.filter(to_date__lte=to_date)
         return queryset
 
 
@@ -1673,8 +1673,11 @@ def get_plan_ical(request, from_date, to_date):
     for p in queryset:
         event = Event()
         event['uid'] = p.id
-        event.add('dtstart', p.date)
-        event.add('dtend', p.date)
+        event.add('dtstart', p.from_date)
+        if p.to_date:
+            event.add('dtend', p.to_date)
+        else:
+            event.add('dtend', p.from_date)
         event['summary'] = f'{p.meal_type.name}: {p.get_label()}'
         event['description'] = p.note
         cal.add_component(event)

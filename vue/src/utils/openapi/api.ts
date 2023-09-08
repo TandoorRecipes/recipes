@@ -1812,7 +1812,13 @@ export interface MealPlan {
      * @type {string}
      * @memberof MealPlan
      */
-    date: string;
+    from_date: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlan
+     */
+    to_date?: string | null;
     /**
      * 
      * @type {MealPlanMealType}

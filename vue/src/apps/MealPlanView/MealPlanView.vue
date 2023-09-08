@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class=" d-none d-lg-block">
-            <div class="row">
+        <div class="d-none d-lg-block">
+            <div class="row ">
                 <div class="col col-2">
                     <h4>{{ $t('Meal_Types') }}</h4>
 
@@ -79,9 +79,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row d-block d-lg-none">
             <div class="row">
                 <div class="col">
-                    <div class="row d-block d-lg-none">
+                    <div class="">
                         <div>
                             <div class="col-12">
                                 <div class="col-12 d-flex justify-content-center mt-2">
@@ -370,7 +372,7 @@ export default {
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
                         date_label: moment_date.format('ddd DD.MM'),
-                        plan_entries: this.plan_items.filter((m) => moment(m.startDate).isSame(moment_date, 'day'))
+                        plan_entries: this.plan_items.filter((m) => moment_date.isBetween(moment(m.startDate), moment(m.endDate), 'day', '[]'))
                     })
                 }
             }
@@ -496,12 +498,16 @@ export default {
         moveEntry(null_object, target_date, drag_event) {
             useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === this.dragged_item.id) {
+                    let fromToDiff = Math.abs(moment(entry.to_date).diff(moment(entry.from_date), 'days'))
+
                     if (drag_event.ctrlKey) {
                         let new_entry = Object.assign({}, entry)
-                        new_entry.date = target_date
+                        new_entry.from_date = target_date
+                        new_entry.to_date = moment(target_date).add(fromToDiff, 'd')
                         this.createEntry(new_entry)
                     } else {
-                        entry.date = target_date
+                        entry.from_date = target_date
+                        entry.to_date = moment(target_date).add(fromToDiff, 'd')
                         this.saveEntry(entry)
                     }
                 }
@@ -510,7 +516,8 @@ export default {
         moveEntryLeft(data) {
             useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
-                    entry.date = moment(entry.date).subtract(1, "d")
+                    entry.from_date = moment(entry.from_date).subtract(1, "d")
+                    entry.to_date = moment(entry.to_date).subtract(1, "d")
                     this.saveEntry(entry)
                 }
             })
@@ -518,7 +525,8 @@ export default {
         moveEntryRight(data) {
             useMealPlanStore().plan_list.forEach((entry) => {
                 if (entry.id === data.id) {
-                    entry.date = moment(entry.date).add(1, "d")
+                    entry.from_date = moment(entry.from_date).add(1, "d")
+                    entry.to_date = moment(entry.to_date).add(1, "d")
                     this.saveEntry(entry)
                 }
             })
@@ -536,7 +544,8 @@ export default {
         openEntryEdit(entry) {
             this.$bvModal.show(`id_meal_plan_edit_modal`)
             this.entryEditing = entry
-            this.entryEditing.date = moment(entry.date).format("YYYY-MM-DD")
+            this.entryEditing.from_date = moment(entry.from_date).format("YYYY-MM-DD")
+            this.entryEditing.to_date = moment(entry.to_date).format("YYYY-MM-DD")
             if (this.entryEditing.recipe != null) {
                 this.entryEditing.title_placeholder = this.entryEditing.recipe.name
             }
@@ -559,21 +568,32 @@ export default {
             })
         },
         saveEntry(entry) {
-            entry.date = moment(entry.date).format("YYYY-MM-DD")
+            entry.from_date = moment(entry.from_date).format("YYYY-MM-DD")
+            entry.to_date = moment(entry.to_date).format("YYYY-MM-DD")
 
-            useMealPlanStore().updateObject(entry)
+            if (entry.from_date > entry.to_date) {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
+                entry.to_date = entry.from_date
+            } else {
+                useMealPlanStore().updateObject(entry)
+            }
+
+
         },
         createEntry(entry) {
-            entry.date = moment(entry.date).format("YYYY-MM-DD")
+            entry.from_date = moment(entry.from_date).format("YYYY-MM-DD")
+            entry.to_date = moment(entry.to_date).format("YYYY-MM-DD")
+
             useMealPlanStore().createObject(entry)
         },
         buildItem(plan_entry) {
             //dirty hack to order items within a day
-            let date = moment(plan_entry.date).add(plan_entry.meal_type.order, "m")
+            let from_date = moment(plan_entry.from_date).add(plan_entry.meal_type.order, "m")
+            let to_date = moment(plan_entry.to_date).add(plan_entry.meal_type.order, "m")
             return {
                 id: plan_entry.id,
-                startDate: date,
-                endDate: date,
+                startDate: from_date,
+                endDate: to_date,
                 entry: plan_entry,
             }
         },
