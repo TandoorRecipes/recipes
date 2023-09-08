@@ -642,7 +642,7 @@ export default {
 }
 
 .calender-row {
-    height: calc(100vh - 240px);
+    height: calc(100vh - 140px);
 }
 
 .calender-parent {
