@@ -14,24 +14,24 @@
 
         <hr/>
 
-        <b-form v-if="meal_plan_store">
+        <b-form v-if="settings">
             <b-form-group id="UomInput" :label="$t('Period')" :description="$t('Plan_Period_To_Show')"
                           label-for="UomInput">
-                <b-form-select id="UomInput" v-model="meal_plan_store.client_settings.displayPeriodUom"
+                <b-form-select id="UomInput" v-model="settings.displayPeriodUom"
                                :options="calendar_options.displayPeriodUom"></b-form-select>
             </b-form-group>
             <b-form-group id="PeriodInput" :label="$t('Periods')"
                           :description="$t('Plan_Show_How_Many_Periods')" label-for="PeriodInput">
-                <b-form-select id="PeriodInput" v-model="meal_plan_store.client_settings.displayPeriodCount"
+                <b-form-select id="PeriodInput" v-model="settings.displayPeriodCount"
                                :options="calendar_options.displayPeriodCount"></b-form-select>
             </b-form-group>
             <b-form-group id="DaysInput" :label="$t('Starting_Day')" :description="$t('Starting_Day')"
                           label-for="DaysInput">
-                <b-form-select id="DaysInput" v-model="meal_plan_store.client_settings.startingDayOfWeek"
+                <b-form-select id="DaysInput" v-model="settings.startingDayOfWeek"
                                :options="dayNames()"></b-form-select>
             </b-form-group>
             <b-form-group id="WeekNumInput" :label="$t('Week_Numbers')">
-                <b-form-checkbox v-model="meal_plan_store.client_settings.displayWeekNumbers" name="week_num">
+                <b-form-checkbox v-model="settings.displayWeekNumbers" name="week_num">
                     {{ $t("Show_Week_Numbers") }}
                 </b-form-checkbox>
             </b-form-group>
@@ -96,7 +96,7 @@ export default {
         return {
             user_preferences: undefined,
             languages: [],
-            meal_plan_store: undefined,
+            settings: undefined,
             calendar_options: {
                 displayPeriodUom: [
                     {text: this.$t("Week"), value: "week"},
@@ -108,14 +108,24 @@ export default {
             meal_types: [],
             generic_action: null,
             editing_meal_type: null,
+
         }
+    },
+    watch: {
+        settings: {
+            handler() {
+                useMealPlanStore().updateClientSettings(this.settings)
+            },
+            deep: true,
+        },
     },
     mounted() {
         this.user_preferences = this.preferences
         this.languages = window.AVAILABLE_LANGUAGES
         this.loadSettings()
 
-        this.meal_plan_store = useMealPlanStore()
+        this.settings = useMealPlanStore().client_settings
+        
 
         this.loadMealTypes()
     },

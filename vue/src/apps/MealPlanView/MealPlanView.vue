@@ -380,18 +380,14 @@ export default {
         }
     },
     mounted() {
-        this.$nextTick(function () {
-            if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-                this.settings = Object.assign({}, this.settings, this.$cookies.get(SETTINGS_COOKIE_NAME))
-            }
-        })
+        this.settings = useMealPlanStore().client_settings
         this.$i18n.locale = window.CUSTOM_LOCALE
         moment.locale(window.CUSTOM_LOCALE)
     },
     watch: {
         settings: {
             handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, this.settings, "360d")
+                useMealPlanStore().updateClientSettings(this.settings)
             },
             deep: true,
         },
