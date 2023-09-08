@@ -703,7 +703,7 @@ class AutoPlanViewSet(viewsets.ViewSet):
                 args = {'recipe_id': recipe['id'], 'servings': servings,
                         'created_by': request.user,
                         'meal_type_id': serializer.validated_data['meal_type_id'],
-                        'note': '', 'date': day, 'space': request.space}
+                        'note': '', 'from_date': day, 'to_date': day, 'space': request.space}
 
                 m = MealPlan(**args)
                 meal_plans.append(m)
