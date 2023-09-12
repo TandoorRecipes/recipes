@@ -168,7 +168,10 @@ export enum AutomationTypeEnum {
     DescriptionReplace = 'DESCRIPTION_REPLACE',
     InstructionReplace = 'INSTRUCTION_REPLACE',
     NeverUnit = 'NEVER_UNIT',
-    TransposeWords = 'TRANSPOSE_WORDS'
+    TransposeWords = 'TRANSPOSE_WORDS',
+    FoodReplace = 'FOOD_REPLACE',
+    UnitReplace = 'UNIT_REPLACE',
+    NameReplace = 'NAME_REPLACE'
 }
 
 /**
@@ -1818,7 +1821,7 @@ export interface MealPlan {
      * @type {string}
      * @memberof MealPlan
      */
-    to_date?: string | null;
+    to_date: string;
     /**
      * 
      * @type {MealPlanMealType}
