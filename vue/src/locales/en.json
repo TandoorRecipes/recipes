@@ -17,7 +17,6 @@
     "recipe_property_info": "You can also add properties to foods to calculate them automatically based on your recipe!",
     "warning_space_delete": "You can delete your space including all recipes, shopping lists, meal plans and whatever else you have created. This cannot be undone! Are you sure you want to do this ?",
     "food_inherit_info": "Fields on food that should be inherited by default.",
-    "facet_count_info": "Show recipe counts on search filters.",
     "step_time_minutes": "Step time in minutes",
     "confirm_delete": "Are you sure you want to delete this {object}?",
     "import_running": "Import running, please wait!",

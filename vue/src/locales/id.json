@@ -16,7 +16,6 @@
     "file_upload_disabled": "Unggahan file tidak diaktifkan untuk ruang Anda.",
     "warning_space_delete": "Anda dapat menghapus ruang Anda termasuk semua resep, daftar belanja, rencana makan, dan apa pun yang telah Anda buat. Ini tidak dapat dibatalkan! Apakah Anda yakin ingin melakukan ini?",
     "food_inherit_info": "Bidang pada makanan yang harus diwarisi secara default.",
-    "facet_count_info": "Tampilkan jumlah resep pada filter pencarian.",
     "step_time_minutes": "Langkah waktu dalam menit",
     "confirm_delete": "Anda yakin ingin menghapus {object} ini?",
     "import_running": "Impor berjalan, harap tunggu!",
