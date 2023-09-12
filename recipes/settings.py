@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'corsheaders',
     'crispy_forms',
+    'crispy_bootstrap4',
     'rest_framework',
     'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
