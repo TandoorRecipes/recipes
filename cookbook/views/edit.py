@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
-from cookbook.forms import CommentForm, ExternalRecipeForm, MealPlanForm, StorageForm, SyncForm
+from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required, above_space_limit
 from cookbook.models import (Comment, MealPlan, MealType, Recipe, RecipeImport, Storage, Sync,
                              UserPreference)
@@ -189,26 +189,6 @@ class ImportUpdate(GroupRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ImportUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Import")
-        return context
-
-
-class MealPlanUpdate(OwnerRequiredMixin, UpdateView, SpaceFormMixing):
-    template_name = "generic/edit_template.html"
-    model = MealPlan
-    form_class = MealPlanForm
-
-    def get_success_url(self):
-        return reverse('view_plan_entry', kwargs={'pk': self.object.pk})
-
-    def get_form(self, form_class=None):
-        form = self.form_class(**self.get_form_kwargs())
-        form.fields['meal_type'].queryset = MealType.objects \
-            .filter(created_by=self.request.user).all()
-        return form
-
-    def get_context_data(self, **kwargs):
-        context = super(MealPlanUpdate, self).get_context_data(**kwargs)
-        context['title'] = _("Meal-Plan")
         return context
 
 

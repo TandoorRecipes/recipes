@@ -6,14 +6,13 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div class="row">
-                                <div class="col-6 col-lg-9">
+                                <div class="col-12">
                                     <b-input-group>
                                         <b-form-input id="TitleInput" v-model="entryEditing.title"
                                                       :placeholder="entryEditing.title_placeholder"
                                                       @change="missing_recipe = false"></b-form-input>
                                         <b-input-group-append class="d-none d-lg-block">
-                                            <b-button variant="primary" @click="entryEditing.title = ''"><i
-                                                class="fa fa-eraser"></i></b-button>
+                                            <b-button variant="primary" @click="entryEditing.title = ''"><i class="fa fa-eraser"></i></b-button>
                                         </b-input-group-append>
                                     </b-input-group>
                                     <span class="text-danger" v-if="missing_recipe">{{
@@ -23,13 +22,30 @@
                                             $t("Title")
                                         }}</small>
                                 </div>
-                                <div class="col-6 col-lg-3">
-                                    <input type="date" id="DateInput" class="form-control" v-model="entryEditing.date"/>
-                                    <small tabindex="-1" class="form-text text-muted">{{ $t("Date") }}</small>
+                                <div class="col-12 col-lg-6">
+                                    <b-input-group>
+                                        <b-form-input type="date" v-model="entryEditing.from_date"></b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="secondary" @click="entryEditing.from_date = changeDate(entryEditing.from_date, -1)"><i class="fas fa-minus"></i></b-button>
+                                            <b-button variant="primary"  @click="entryEditing.from_date = changeDate(entryEditing.from_date, 1)"><i class="fas fa-plus"></i></b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("StartDate") }}</small>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <b-input-group>
+                                        <b-form-input type="date" v-model="entryEditing.to_date"></b-form-input>
+                                        <b-input-group-append>
+                                            <b-button variant="secondary" @click="entryEditing.to_date = changeDate(entryEditing.to_date, -1)"><i class="fas fa-minus"></i></b-button>
+                                            <b-button variant="primary"  @click="entryEditing.to_date = changeDate(entryEditing.to_date, 1)"><i class="fas fa-plus"></i></b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+                                    <small tabindex="-1" class="form-text text-muted">{{ $t("EndDate") }}</small>
                                 </div>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-12 col-lg-6 col-xl-6">
+                            <div class="row">
+                                <div class="col-12">
                                     <b-form-group>
                                         <generic-multiselect
                                             @change="selectRecipe"
@@ -43,7 +59,11 @@
                                         ></generic-multiselect>
                                         <small tabindex="-1" class="form-text text-muted">{{ $t("Recipe") }}</small>
                                     </b-form-group>
-                                    <b-form-group class="mt-3">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-lg-6 col-xl-6">
+                                    <b-form-group class="">
                                         <generic-multiselect
                                             required
                                             @change="selectMealType"
@@ -142,6 +162,7 @@ const {ApiApiFactory} = require("@/utils/openapi/api")
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ShoppingModal from "@/components/Modals/ShoppingModal.vue";
+import moment from "moment";
 
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
@@ -221,7 +242,8 @@ export default {
             }
 
             if (this.create_date) {
-                this.entryEditing.date = this.create_date
+                this.entryEditing.from_date = this.create_date
+                this.entryEditing.to_date = this.create_date
             }
 
             useUserPreferenceStore().getData().then(userPreference => {
@@ -290,6 +312,9 @@ export default {
                 this.entryEditing.servings = 1
             }
         },
+        changeDate(date, change){
+            return moment(date).add(change, 'd').format("YYYY-MM-DD")
+        }
     },
 }
 </script>

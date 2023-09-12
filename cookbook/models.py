@@ -991,7 +991,8 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
-    date = models.DateField()
+    from_date = models.DateField()
+    to_date = models.DateField()
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -1005,7 +1006,7 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
         return self.meal_type.name
 
     def __str__(self):
-        return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
+        return f'{self.get_label()} - {self.from_date} - {self.meal_type.name}'
 
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):

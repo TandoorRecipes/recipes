@@ -166,7 +166,7 @@ urlpatterns = [
 ]
 
 generic_models = (
-    Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
+    Recipe, RecipeImport, Storage, RecipeBook, SyncLog, Sync,
     Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
 )
 

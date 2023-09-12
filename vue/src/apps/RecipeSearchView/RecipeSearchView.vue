@@ -723,9 +723,9 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem; row-gap: 0.5rem; grid-auto-rows: max-content"
-                            >
-                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{ 'd-none d-sm-block': day.plan_entries.length === 0 }">
+
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 0.5rem; grid-auto-rows: max-content; ">
+                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
                                     <b-list-group>
                                         <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
@@ -739,16 +739,13 @@
                                                 </div>
                                             </div>
                                         </b-list-group-item>
-                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
+                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div p-0 pr-2">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <b-img
-                                                        style="height: 50px; width: 50px; object-fit: cover"
-                                                        :src="plan.recipe.image"
-                                                        rounded="circle"
-                                                        v-if="plan.recipe?.image"
-                                                    ></b-img>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" rounded="circle" v-else></b-img>
+
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image"  v-if="plan.recipe?.image"/>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder"  v-else/>
+
                                                 </div>
                                                 <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere">
                                                     <span class="two-row-text">
@@ -986,8 +983,8 @@ export default {
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format("ddd DD.MM"),
-                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, "day")),
+                        date_label: moment_date.format('ddd DD.MM'),
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
                     })
                 }
             }
@@ -1204,22 +1201,6 @@ export default {
             console.log("loadMealpLan")
             this.meal_plan_store = useMealPlanStore()
             this.meal_plan_store.refreshFromAPI(moment().format("YYYY-MM-DD"), moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"))
-
-            // if (this.ui.show_meal_plan) {
-            //     let params = {
-            //         options: {
-            //             query: {
-            //                 from_date: moment().format("YYYY-MM-DD"),
-            //                 to_date: moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"),
-            //             },
-            //         },
-            //     }
-            //     this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then((result) => {
-            //         this.meal_plans = result.data
-            //     })
-            // } else {
-            //     this.meal_plans = []
-            // }
         },
         genericSelectChanged: function (obj) {
             if (obj.var.includes("::")) {
