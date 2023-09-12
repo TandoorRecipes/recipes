@@ -323,49 +323,6 @@ class ImportRecipeForm(forms.ModelForm):
         }
 
 
-# TODO deprecate
-class MealPlanForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['recipe'].queryset = Recipe.objects.filter(space=space).all()
-        self.fields['meal_type'].queryset = MealType.objects.filter(space=space).all()
-        self.fields['shared'].queryset = User.objects.filter(userpreference__space=space).all()
-
-    def clean(self):
-        cleaned_data = super(MealPlanForm, self).clean()
-
-        if cleaned_data['title'] == '' and cleaned_data['recipe'] is None:
-            raise forms.ValidationError(
-                _('You must provide at least a recipe or a title.')
-            )
-
-        return cleaned_data
-
-    class Meta:
-        model = MealPlan
-        fields = (
-            'recipe', 'title', 'meal_type', 'note',
-            'servings', 'date', 'shared'
-        )
-
-        help_texts = {
-            'shared': _('You can list default users to share recipes with in the settings.'),
-            'note': _('You can use markdown to format this field. See the <a href="/docs/markdown/">docs here</a>')
-        }
-
-        widgets = {
-            'recipe': SelectWidget,
-            'date': DateWidget,
-            'shared': MultiSelectWidget
-        }
-        field_classes = {
-            'recipe': SafeModelChoiceField,
-            'meal_type': SafeModelChoiceField,
-            'shared': SafeModelMultipleChoiceField,
-        }
-
-
 class InviteLinkForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')

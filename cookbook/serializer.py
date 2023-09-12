@@ -993,7 +993,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         model = MealPlan
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
-            'date', 'meal_type', 'created_by', 'shared', 'recipe_name',
+            'from_date', 'to_date', 'meal_type', 'created_by', 'shared', 'recipe_name',
             'meal_type_name', 'shopping'
         )
         read_only_fields = ('created_by',)
