@@ -1,20 +1,15 @@
-import base64
-import gzip
-import json
 import re
-from gettext import gettext as _
 from io import BytesIO
 
 import requests
 import validators
-import yaml
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import (get_from_scraper, get_images_from_soup,
                                                iso_duration_to_minutes)
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class CookBookApp(Integration):
@@ -47,7 +42,8 @@ class CookBookApp(Integration):
             pass
 
         # assuming import files only contain single step
-        step = Step.objects.create(instruction=recipe_json['steps'][0]['instruction'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
+        step = Step.objects.create(instruction=recipe_json['steps'][0]['instruction'], space=self.request.space,
+                                   show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
 
         if 'nutrition' in recipe_json:
             step.instruction = step.instruction + '\n\n' + recipe_json['nutrition']
@@ -62,7 +58,7 @@ class CookBookApp(Integration):
             if unit := ingredient.get('unit', None):
                 u = ingredient_parser.get_unit(unit.get('name', None))
             step.ingredients.add(Ingredient.objects.create(
-                food=f, unit=u, amount=ingredient.get('amount', None), note=ingredient.get('note', None),  original_text=ingredient.get('original_text', None), space=self.request.space,
+                food=f, unit=u, amount=ingredient.get('amount', None), note=ingredient.get('note', None), original_text=ingredient.get('original_text', None), space=self.request.space,
             ))
 
         if len(images) > 0:

@@ -185,7 +185,6 @@ class TreeModel(MP_Node):
         :param filter: Filter (include) the descendants nodes with the provided Q filter
         """
         descendants = Q()
-        # TODO filter the queryset nodes to exclude descendants of objects in the queryset
         nodes = queryset.values('path', 'depth')
         for node in nodes:
             descendants |= Q(path__startswith=node['path'], depth__gt=node['depth'])
@@ -265,7 +264,6 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
-    show_facet_count = models.BooleanField(default=False)
 
     internal_note = models.TextField(blank=True, null=True)
 

@@ -1,4 +1,3 @@
-import random
 import traceback
 import uuid
 from datetime import datetime, timedelta
@@ -7,34 +6,34 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
-from django.contrib.auth.models import Group, User, AnonymousUser
+from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
-from django.db.models import Avg, Q, QuerySet, Sum
+from django.db.models import Q, QuerySet, Sum
 from django.http import BadHeaderError
 from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
-from PIL import Image
 from oauth2_provider.models import AccessToken
+from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.permission_helper import above_space_limit
+from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
 from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
-                             Keyword, MealPlan, MealType, NutritionInformation, Recipe, RecipeBook,
-                             RecipeBookEntry, RecipeImport, ShareLink, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
-                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UserFile, UserPreference, UserSpace, ViewLog, UnitConversion, Property,
-                             PropertyType, Property)
+                             Keyword, MealPlan, MealType, NutritionInformation, Property,
+                             PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
+                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
+                             Step, Storage, Supermarket, SupermarketCategory,
+                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
+                             UserFile, UserPreference, UserSpace, ViewLog)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -60,7 +59,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             if str2bool(
                     self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
                 return fields
-        except (AttributeError, KeyError) as e:
+        except (AttributeError, KeyError):
             pass
         try:
             del fields['image']
@@ -104,9 +103,9 @@ class CustomDecimalField(serializers.Field):
         return round(value, 2).normalize()
 
     def to_internal_value(self, data):
-        if type(data) == int or type(data) == float:
+        if isinstance(data, int) or isinstance(data, float):
             return data
-        elif type(data) == str:
+        elif isinstance(data, str):
             if data == '':
                 return 0
             try:
@@ -146,11 +145,11 @@ class SpaceFilterSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if self.context.get('request', None) is None:
             return
-        if (type(data) == QuerySet and data.query.is_sliced):
+        if (isinstance(data, QuerySet) and data.query.is_sliced):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
         if self.child.Meta.model == User:
-            if type(self.context['request'].user) == AnonymousUser:
+            if isinstance(self.context['request'].user, AnonymousUser):
                 data = []
             else:
                 data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
@@ -302,7 +301,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         model = Space
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
-            'allow_sharing', 'demo', 'food_inherit', 'show_facet_count', 'user_count', 'recipe_count', 'file_size_mb',
+            'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'use_plural',)
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
@@ -636,7 +635,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             validated_data['recipe'] = Recipe.objects.get(**recipe)
 
         # assuming if on hand for user also onhand for shopping_share users
-        if not onhand is None:
+        if onhand is not None:
             shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
             if self.instance:
                 onhand_users = self.instance.onhand_users.all()
@@ -669,7 +668,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         # assuming if on hand for user also onhand for shopping_share users
         onhand = validated_data.get('food_onhand', None)
         reset_inherit = self.initial_data.get('reset_inherit', False)
-        if not onhand is None:
+        if onhand is not None:
             shared_users = [user := self.context['request'].user] + list(user.userpreference.shopping_share.all())
             if onhand:
                 validated_data['onhand_users'] = list(self.instance.onhand_users.all()) + shared_users
@@ -764,7 +763,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     def get_step_recipe_data(self, obj):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
-        if obj.step_recipe and type(self.parent.root) == RecipeSerializer:
+        if obj.step_recipe and isinstance(self.parent.root, RecipeSerializer):
             return StepRecipeSerializer(obj.step_recipe, context={'request': self.context['request']}).data
 
     class Meta:
@@ -956,8 +955,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context[
-                                                                            'request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
@@ -1023,10 +1021,10 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                obj.name
-                or getattr(obj.mealplan, 'title', None)
-                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                or obj.recipe.name
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
         ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
