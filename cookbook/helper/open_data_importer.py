@@ -167,14 +167,20 @@ class OpenDataImporter:
 
         food_property_list = []
         alias_list = []
+
         for k in list(self.data[datatype].keys()):
             for fp in self.data[datatype][k]['properties']['type_values']:
-                food_property_list.append(Property(
-                    property_type_id=self.slug_id_cache['property'][fp['property_type']],
-                    property_amount=fp['property_value'],
-                    import_food_id=self.slug_id_cache['food'][k],
-                    space=self.request.space,
-                ))
+                # try catch here because somettimes key "k" is not set for he food cache
+                try:
+                    food_property_list.append(Property(
+                        property_type_id=self.slug_id_cache['property'][fp['property_type']],
+                        property_amount=fp['property_value'],
+                        import_food_id=self.slug_id_cache['food'][k],
+                        space=self.request.space,
+                    ))
+                except KeyError:
+                    print(str(k) + ' is not in self.slug_id_cache["food"]')
+                
 
             # for a in self.data[datatype][k]['alias']:
             #     alias_list.append(Automation(
@@ -200,15 +206,19 @@ class OpenDataImporter:
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
-            insert_list.append(UnitConversion(
-                base_amount=self.data[datatype][k]['base_amount'],
-                base_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['base_unit']],
-                converted_amount=self.data[datatype][k]['converted_amount'],
-                converted_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['converted_unit']],
-                food_id=self.slug_id_cache['food'][self.data[datatype][k]['food']],
-                open_data_slug=k,
-                space=self.request.space,
-                created_by=self.request.user,
-            ))
+            # try catch here because somettimes key "k" is not set for he food cache
+            try:
+                insert_list.append(UnitConversion(
+                    base_amount=self.data[datatype][k]['base_amount'],
+                    base_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['base_unit']],
+                    converted_amount=self.data[datatype][k]['converted_amount'],
+                    converted_unit_id=self.slug_id_cache['unit'][self.data[datatype][k]['converted_unit']],
+                    food_id=self.slug_id_cache['food'][self.data[datatype][k]['food']],
+                    open_data_slug=k,
+                    space=self.request.space,
+                    created_by=self.request.user,
+                ))
+            except KeyError:
+                print(str(k) + ' is not in self.slug_id_cache["food"]')
 
         return UnitConversion.objects.bulk_create(insert_list, ignore_conflicts=True, unique_fields=('space', 'base_unit', 'converted_unit', 'food', 'open_data_slug'))
