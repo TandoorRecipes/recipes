@@ -58,7 +58,7 @@ class Default(Integration):
 
                 try:
                     recipe_zip_obj.writestr(f'image{get_filetype(r.image.file.name)}', r.image.file.read())
-                except ValueError:
+                except (ValueError, FileNotFoundError):
                     pass
 
                 recipe_zip_obj.close()
@@ -71,4 +71,4 @@ class Default(Integration):
 
         export_zip_obj.close()
 
-        return [[ self.get_export_file_name(), export_zip_stream.getvalue() ]]
+        return [[self.get_export_file_name(), export_zip_stream.getvalue()]]

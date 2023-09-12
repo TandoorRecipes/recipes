@@ -37,7 +37,6 @@ class Integration:
         self.ignored_recipes = []
 
         description = f'Imported by {request.user.get_user_display_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
-        icon = '📥'
 
         try:
             last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
@@ -50,14 +49,12 @@ class Integration:
             self.keyword = parent.add_child(
                 name=name,
                 description=description,
-                icon=icon,
                 space=request.space
             )
         except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
             self.keyword = parent.add_child(
                 name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
-                icon=icon,
                 space=request.space
             )
 
