@@ -723,9 +723,9 @@
                     <div class="row">
                         <div class="col col-md-12">
                             <div
-
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 0.5rem; grid-auto-rows: max-content; ">
-                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem; row-gap: 0.5rem; grid-auto-rows: max-content"
+                            >
+                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{ 'd-none d-sm-block': day.plan_entries.length === 0 }">
                                     <b-list-group>
                                         <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
@@ -742,10 +742,8 @@
                                         <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div p-0 pr-2">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-
-                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image"  v-if="plan.recipe?.image"/>
-                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder"  v-else/>
-
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" v-if="plan.recipe?.image" />
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" v-else />
                                                 </div>
                                                 <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere">
                                                     <span class="two-row-text">
@@ -977,14 +975,16 @@ export default {
     computed: {
         meal_plan_grid: function () {
             let grid = []
+
             if (this.meal_plan_store !== null && this.meal_plan_store.plan_list.length > 0) {
                 for (const x of Array(this.ui.meal_plan_days).keys()) {
                     let moment_date = moment().add(x, "d")
+                    let date_label = moment_date.format("L").split("/")
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format('ddd DD.MM'),
-                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
+                        date_label: moment_date.format("ddd") + " " + date_label[0] + "." + date_label[1],
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, "day")),
                     })
                 }
             }
