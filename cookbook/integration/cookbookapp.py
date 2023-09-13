@@ -20,7 +20,6 @@ class CookBookApp(Integration):
     def get_recipe_from_file(self, file):
         recipe_html = file.getvalue().decode("utf-8")
 
-        # recipe_json, recipe_tree, html_data, images = get_recipe_from_source(recipe_html, 'CookBookApp', self.request)
         scrape = text_scraper(text=recipe_html)
         recipe_json = get_from_scraper(scrape, self.request)
         images = list(dict.fromkeys(get_images_from_soup(scrape.soup, None)))
@@ -32,7 +31,7 @@ class CookBookApp(Integration):
 
         try:
             recipe.servings = re.findall('([0-9])+', recipe_json['recipeYield'])[0]
-        except Exception as e:
+        except Exception:
             pass
 
         try:

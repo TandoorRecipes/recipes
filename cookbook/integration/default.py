@@ -22,7 +22,7 @@ class Default(Integration):
         if images:
             try:
                 self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
-            except AttributeError as e:
+            except AttributeError:
                 traceback.print_exc()
         return recipe
 
