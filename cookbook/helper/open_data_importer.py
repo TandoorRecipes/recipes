@@ -116,12 +116,6 @@ class OpenDataImporter:
         self._update_slug_cache(Unit, 'unit')
         self._update_slug_cache(PropertyType, 'property')
 
-        # pref_unit_key = 'preferred_unit_metric'
-        # pref_shopping_unit_key = 'preferred_packaging_unit_metric'
-        # if not self.use_metric:
-        #     pref_unit_key = 'preferred_unit_imperial'
-        #     pref_shopping_unit_key = 'preferred_packaging_unit_imperial'
-
         insert_list = []
         update_list = []
         update_field_list = []
@@ -130,8 +124,6 @@ class OpenDataImporter:
                 insert_list.append({'data': {
                     'name': self.data[datatype][k]['name'],
                     'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
-                    # 'preferred_unit_id': self.slug_id_cache['unit'][self.data[datatype][k][pref_unit_key]],
-                    # 'preferred_shopping_unit_id': self.slug_id_cache['unit'][self.data[datatype][k][pref_shopping_unit_key]],
                     'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
                     'fdc_id': self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
                     'open_data_slug': k,
@@ -149,8 +141,6 @@ class OpenDataImporter:
                         id=existing_food_id,
                         name=self.data[datatype][k]['name'],
                         plural_name=self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
-                        # preferred_unit_id=self.slug_id_cache['unit'][self.data[datatype][k][pref_unit_key]],
-                        # preferred_shopping_unit_id=self.slug_id_cache['unit'][self.data[datatype][k][pref_shopping_unit_key]],
                         supermarket_category_id=self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
                         fdc_id=self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
                         open_data_slug=k,
@@ -189,7 +179,6 @@ class OpenDataImporter:
 
         FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
 
-        # Automation.objects.bulk_create(alias_list, ignore_conflicts=True, unique_fields=('space', 'param_1', 'param_2',))
         return insert_list + update_list
 
     def import_conversion(self):
@@ -197,7 +186,7 @@ class OpenDataImporter:
 
         insert_list = []
         for k in list(self.data[datatype].keys()):
-            # try catch here because somettimes key "k" is not set for he food cache
+            # try catch here because sometimes key "k" is not set for he food cache
             try:
                 insert_list.append(UnitConversion(
                     base_amount=self.data[datatype][k]['base_amount'],

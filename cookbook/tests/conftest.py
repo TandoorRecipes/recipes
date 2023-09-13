@@ -36,18 +36,6 @@ def enable_db_access_for_all_tests(db):
     pass
 
 
-# @pytest.fixture()
-# def space_1():
-#     with scopes_disabled():
-#         return Space.objects.get_or_create(name='space_1')[0]
-
-
-# @pytest.fixture()
-# def space_2():
-#     with scopes_disabled():
-#         return Space.objects.get_or_create(name='space_2')[0]
-
-
 # ---------------------- OBJECT FIXTURES ---------------------
 
 def get_random_recipe(space_1, u1_s1):
@@ -124,7 +112,7 @@ def validate_recipe(expected, recipe):
     # file and url are metadata not related to the recipe
     [expected.pop(k) for k in ['file', 'url'] if k in expected]
     # if a key is a list remove it to deal with later
-    lists = [k for k, v in expected.items() if type(v) == list]
+    lists = [k for k, v in expected.items() if isinstance(v, list)]
     for k in lists:
         expected_lists[k] = expected.pop(k)
         target_lists[k] = recipe.pop(k)
@@ -157,7 +145,7 @@ def dict_compare(d1, d2, details=False):
     d1_keys = set(d1.keys())
     d2_keys = set(d2.keys())
     shared = d1_keys.intersection(d2_keys)
-    sub_dicts = [i for i, j in d1.items() if type(j) == dict]
+    sub_dicts = [i for i, j in d1.items() if isinstance(j, dict)]
     not_dicts = shared - set(sub_dicts)
     added = d1_keys - d2_keys
     removed = d2_keys - d1_keys

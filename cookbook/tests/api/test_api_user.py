@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from django.contrib import auth
 from django.urls import reverse
 
@@ -77,7 +76,7 @@ def test_user_retrieve(arg, request, u1_s1):
     assert r.status_code == arg[1]
 
 
-def test_user_update(u1_s1, u2_s1,u1_s2):
+def test_user_update(u1_s1, u2_s1, u1_s2):
     # can update own user
     r = u1_s1.patch(
         reverse(

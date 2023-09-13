@@ -35,11 +35,6 @@ register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
 register(SupermarketCategoryFactory, 'cat_1', space=LazyFixture('space_1'))
 
 
-# @pytest.fixture
-# def true():
-#     return True
-
-
 @pytest.fixture
 def false():
     return False

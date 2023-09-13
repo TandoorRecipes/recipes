@@ -208,7 +208,7 @@ class UserFileSerializer(serializers.ModelSerializer):
 
     def get_preview_link(self, obj):
         try:
-            img = Image.open(obj.file.file.file)
+            Image.open(obj.file.file.file)
             return self.context['request'].build_absolute_uri(obj.file.url)
         except Exception:
             traceback.print_exc()
@@ -256,7 +256,7 @@ class UserFileViewSerializer(serializers.ModelSerializer):
 
     def get_preview_link(self, obj):
         try:
-            img = Image.open(obj.file.file.file)
+            Image.open(obj.file.file.file)
             return self.context['request'].build_absolute_uri(obj.file.url)
         except Exception:
             traceback.print_exc()

@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, MealType, UnitConversion
+from cookbook.models import MealType, UnitConversion
 from cookbook.tests.conftest import get_random_food, get_random_unit
 
 LIST_URL = 'api:unitconversion-list'
