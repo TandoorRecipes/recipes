@@ -570,7 +570,6 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
-    # shopping = serializers.SerializerMethodField('get_shopping_status')
     shopping = serializers.ReadOnlyField(source='shopping_status')
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     child_inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
@@ -608,9 +607,6 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if obj.substitute_children:
             filter |= Q(path__startswith=obj.path, depth__gt=obj.depth)
         return Food.objects.filter(filter).filter(onhand_users__id__in=shared_users).exists()
-
-    # def get_shopping_status(self, obj):
-    #     return ShoppingListEntry.objects.filter(space=obj.space, food=obj, checked=False).count() > 0
 
     def create(self, validated_data):
         name = validated_data['name'].strip()
