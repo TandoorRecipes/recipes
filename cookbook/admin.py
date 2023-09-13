@@ -10,13 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (Automation, BookmarkletImport, Comment, CookLog, Food, FoodInheritField,
-                     ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
-                     NutritionInformation, Property, PropertyType, Recipe, RecipeBook,
-                     RecipeBookEntry, RecipeImport, SearchPreference, ShareLink, ShoppingList,
-                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
-                     SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, TelegramBot,
-                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog)
+from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+                     Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
+                     TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                     ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):

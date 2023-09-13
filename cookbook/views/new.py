@@ -1,22 +1,14 @@
-import re
-from datetime import datetime, timedelta
-from html import escape
-from smtplib import SMTPException
 
 from django.contrib import messages
-from django.contrib.auth.models import Group
-from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, InviteLinkForm,  Storage, StorageForm
-from cookbook.helper.permission_helper import GroupRequiredMixin, group_required, above_space_limit
-from cookbook.models import (InviteLink, MealPlan, MealType, Recipe, RecipeBook, RecipeImport,
-                             ShareLink, Step, UserPreference, UserSpace)
-from cookbook.views.edit import SpaceFormMixing
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm
+from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step
 from recipes import settings
 
 
@@ -54,24 +46,6 @@ def share_link(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
     link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
     return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid}))
-
-
-# class KeywordCreate(GroupRequiredMixin, CreateView):
-#     groups_required = ['user']
-#     template_name = "generic/new_template.html"
-#     model = Keyword
-#     form_class = KeywordForm
-#     success_url = reverse_lazy('list_keyword')
-
-#     def form_valid(self, form):
-#         form.cleaned_data['space'] = self.request.space
-#         form.save()
-#         return HttpResponseRedirect(reverse('list_keyword'))
-
-#     def get_context_data(self, **kwargs):
-#         context = super(KeywordCreate, self).get_context_data(**kwargs)
-#         context['title'] = _("Keyword")
-#         return context
 
 
 class StorageCreate(GroupRequiredMixin, CreateView):
@@ -133,5 +107,3 @@ def create_new_external_recipe(request, import_id):
         )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
-
-
