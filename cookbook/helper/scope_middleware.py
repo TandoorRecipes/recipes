@@ -1,8 +1,6 @@
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 
 from cookbook.views import views
