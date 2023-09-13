@@ -1,4 +1,3 @@
-import re
 from io import BytesIO
 from zipfile import ZipFile
 
@@ -26,12 +25,13 @@ class CopyMeThat(Integration):
         except AttributeError:
             source = None
 
-        recipe = Recipe.objects.create(name=file.find("div", {"id": "name"}).text.strip()[:128], source_url=source, created_by=self.request.user, internal=True, space=self.request.space, )
+        recipe = Recipe.objects.create(name=file.find("div", {"id": "name"}).text.strip(
+        )[:128], source_url=source, created_by=self.request.user, internal=True, space=self.request.space, )
 
         for category in file.find_all("span", {"class": "recipeCategory"}):
             keyword, created = Keyword.objects.get_or_create(name=category.text, space=self.request.space)
             recipe.keywords.add(keyword)
-        
+
         try:
             recipe.servings = parse_servings(file.find("a", {"id": "recipeYield"}).text.strip())
             recipe.working_time = iso_duration_to_minutes(file.find("span", {"meta": "prepTime"}).text.strip())
@@ -61,7 +61,14 @@ class CopyMeThat(Integration):
                 if not isinstance(ingredient, Tag) or not ingredient.text.strip() or "recipeIngredient_spacer" in ingredient['class']:
                     continue
                 if any(x in ingredient['class'] for x in ["recipeIngredient_subheader", "recipeIngredient_note"]):
-                    step.ingredients.add(Ingredient.objects.create(is_header=True, note=ingredient.text.strip()[:256], original_text=ingredient.text.strip(), space=self.request.space, ))
+                    step.ingredients.add(
+                        Ingredient.objects.create(
+                            is_header=True,
+                            note=ingredient.text.strip()[
+                                :256],
+                            original_text=ingredient.text.strip(),
+                            space=self.request.space,
+                        ))
                 else:
                     amount, unit, food, note = ingredient_parser.parse(ingredient.text.strip())
                     f = ingredient_parser.get_food(food)
@@ -78,7 +85,7 @@ class CopyMeThat(Integration):
                         step.save()
                         recipe.steps.add(step)
                         step = Step.objects.create(instruction='', space=self.request.space, )
-                    
+
                     step.name = instruction.text.strip()[:128]
                 else:
                     step.instruction += instruction.text.strip() + ' \n\n'
