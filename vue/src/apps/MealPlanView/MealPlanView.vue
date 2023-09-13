@@ -371,7 +371,7 @@ export default {
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format('ddd DD.MM'),
+                        date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
                         plan_entries: this.plan_items.filter((m) => moment_date.isBetween(moment(m.startDate), moment(m.endDate), 'day', '[]'))
                     })
                 }
