@@ -984,7 +984,7 @@ export default {
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
                         date_label: moment_date.format("ddd") + " " + date_label[0] + "." + date_label[1],
-                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, "day")),
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
                     })
                 }
             }
