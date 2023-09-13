@@ -1,11 +1,10 @@
 import json
 
 import pytest
-from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, MealType, PropertyType, Property
+from cookbook.models import MealType, Property, PropertyType
 
 LIST_URL = 'api:property-list'
 DETAIL_URL = 'api:property-detail'

@@ -408,16 +408,6 @@ def parse_time(recipe_time):
 def parse_keywords(keyword_json, request):
     keywords = []
     automation_engine = AutomationEngine(request)
-    # keyword_aliases = {}
-    # retrieve keyword automation cache if it exists, otherwise build from database
-    # KEYWORD_CACHE_KEY = f'automation_keyword_alias_{space.pk}'
-    # if c := caches['default'].get(KEYWORD_CACHE_KEY, None):
-    #     keyword_aliases = c
-    #     caches['default'].touch(KEYWORD_CACHE_KEY, 30)
-    # else:
-    #     for a in Automation.objects.filter(space=space, disabled=False, type=Automation.KEYWORD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-    #         keyword_aliases[a.param_1.lower()] = a.param_2
-    #     caches['default'].set(KEYWORD_CACHE_KEY, keyword_aliases, 30)
 
     # keywords as list
     for kw in keyword_json:
@@ -425,11 +415,6 @@ def parse_keywords(keyword_json, request):
         # if alias exists use that instead
 
         if len(kw) != 0:
-            # if keyword_aliases:
-            #     try:
-            #         kw = keyword_aliases[kw.lower()]
-            #     except KeyError:
-            #         pass
             automation_engine.apply_keyword_automation(kw)
             if k := Keyword.objects.filter(name=kw, space=request.space).first():
                 keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
