@@ -1,6 +1,5 @@
-from django.db.models import Q
-
-from cookbook.models import Unit, SupermarketCategory, Property, PropertyType, Supermarket, SupermarketCategoryRelation, Food, Automation, UnitConversion, FoodProperty
+from cookbook.models import (Food, FoodProperty, Property, PropertyType, Supermarket,
+                             SupermarketCategory, SupermarketCategoryRelation, Unit, UnitConversion)
 
 
 class OpenDataImporter:
@@ -33,7 +32,8 @@ class OpenDataImporter:
             ))
 
         if self.update_existing:
-            return Unit.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('name', 'plural_name', 'base_unit', 'open_data_slug'), unique_fields=('space', 'name',))
+            return Unit.objects.bulk_create(insert_list, update_conflicts=True, update_fields=(
+                'name', 'plural_name', 'base_unit', 'open_data_slug'), unique_fields=('space', 'name',))
         else:
             return Unit.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
 
@@ -166,7 +166,7 @@ class OpenDataImporter:
         self._update_slug_cache(Food, 'food')
 
         food_property_list = []
-        alias_list = []
+        # alias_list = []
 
         for k in list(self.data[datatype].keys()):
             for fp in self.data[datatype][k]['properties']['type_values']:
@@ -180,15 +180,6 @@ class OpenDataImporter:
                     ))
                 except KeyError:
                     print(str(k) + ' is not in self.slug_id_cache["food"]')
-                
-
-            # for a in self.data[datatype][k]['alias']:
-            #     alias_list.append(Automation(
-            #         param_1=a,
-            #         param_2=self.data[datatype][k]['name'],
-            #         space=self.request.space,
-            #         created_by=self.request.user,
-            #     ))
 
         Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
 
