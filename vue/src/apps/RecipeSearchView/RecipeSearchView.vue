@@ -1,6 +1,6 @@
 <template>
     <div id="app" style="padding-bottom: 60px">
-        <RecipeSwitcher ref="ref_recipe_switcher" />
+        <RecipeSwitcher ref="ref_recipe_switcher"/>
         <div class="row">
             <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
                 <div class="row">
@@ -153,7 +153,7 @@
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12" style="text-align: right">
                                                 <b-button size="sm" variant="secondary" style="margin-right: 8px" @click="$root.$emit('bv::hide::popover')"
-                                                    >{{ $t("Close") }}
+                                                >{{ $t("Close") }}
                                                 </b-button>
                                             </div>
                                         </div>
@@ -197,17 +197,17 @@
                                     <span
                                         class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.keywords_fields > 1 && hasDuplicateFilter(search.search_keywords, search.keywords_fields)"
-                                        >{{ $t("warning_duplicate_filter") }}</span
+                                    >{{ $t("warning_duplicate_filter") }}</span
                                     >
                                     <div class="row" v-if="ui.show_keywords">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
                                                 <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('keywords', k)">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4" />
+                                                        <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4"/>
                                                     </b-input-group-text>
                                                     <b-input-group-text style="width: 3em" @click="removeField('keywords', k)">
-                                                        <i class="fas fa-minus-circle text-primary" v-if="k == search.keywords_fields && k > 1" />
+                                                        <i class="fas fa-minus-circle text-primary" v-if="k == search.keywords_fields && k > 1"/>
                                                     </b-input-group-text>
                                                 </template>
                                                 <generic-multiselect
@@ -258,17 +258,17 @@
                                     <span
                                         class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.foods_fields > 1 && hasDuplicateFilter(search.search_foods, search.foods_fields)"
-                                        >{{ $t("warning_duplicate_filter") }}</span
+                                    >{{ $t("warning_duplicate_filter") }}</span
                                     >
                                     <div class="row" v-if="ui.show_foods">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(f, i) in foodFields" :key="i">
                                                 <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('foods', f)">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="f == search.foods_fields && f < 4" />
+                                                        <i class="fas fa-plus-circle text-primary" v-if="f == search.foods_fields && f < 4"/>
                                                     </b-input-group-text>
                                                     <b-input-group-text style="width: 3em" @click="removeField('foods', f)">
-                                                        <i class="fas fa-minus-circle text-primary" v-if="f == search.foods_fields && f > 1" />
+                                                        <i class="fas fa-minus-circle text-primary" v-if="f == search.foods_fields && f > 1"/>
                                                     </b-input-group-text>
                                                 </template>
                                                 <generic-multiselect
@@ -314,17 +314,17 @@
                                     <span
                                         class="text-sm-left text-warning"
                                         v-if="ui.expert_mode && search.books_fields > 1 && hasDuplicateFilter(search.search_books, search.books_fields)"
-                                        >{{ $t("warning_duplicate_filter") }}</span
+                                    >{{ $t("warning_duplicate_filter") }}</span
                                     >
                                     <div class="row" v-if="ui.show_books">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(b, i) in bookFields" :key="i">
                                                 <template #prepend v-if="ui.expert_mode">
                                                     <b-input-group-text style="width: 3em" @click="addField('books', b)">
-                                                        <i class="fas fa-plus-circle text-primary" v-if="b == search.books_fields && b < 4" />
+                                                        <i class="fas fa-plus-circle text-primary" v-if="b == search.books_fields && b < 4"/>
                                                     </b-input-group-text>
                                                     <b-input-group-text style="width: 3em" @click="removeField('books', b)">
-                                                        <i class="fas fa-minus-circle text-primary" v-if="b == search.books_fields && b > 1" />
+                                                        <i class="fas fa-minus-circle text-primary" v-if="b == search.books_fields && b > 1"/>
                                                     </b-input-group-text>
                                                 </template>
                                                 <generic-multiselect
@@ -605,11 +605,11 @@
                                                 <!-- TODO find a way to localize this that works without explaining localization to each language translator  -->
                                                 Show all recipes that are matched
                                                 <span v-if="search.search_input">
-                                                    by <i>{{ search.search_input }}</i> <br />
+                                                    by <i>{{ search.search_input }}</i> <br/>
                                                 </span>
-                                                <span v-else> without any search term <br /> </span>
+                                                <span v-else> without any search term <br/> </span>
 
-                                                <span v-if="search.search_internal"> and are <span class="text-success">internal</span> <br /></span>
+                                                <span v-if="search.search_internal"> and are <span class="text-success">internal</span> <br/></span>
 
                                                 <span v-for="k in search.search_keywords" v-bind:key="k.id">
                                                     <template v-if="k.items.length > 0">
@@ -618,7 +618,7 @@
                                                         contain
                                                         <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">keywords</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
-                                                        <br />
+                                                        <br/>
                                                     </template>
                                                 </span>
 
@@ -629,7 +629,7 @@
                                                         contain
                                                         <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">foods</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
-                                                        <br />
+                                                        <br/>
                                                     </template>
                                                 </span>
 
@@ -640,38 +640,38 @@
                                                         contain
                                                         <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">books</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
-                                                        <br />
+                                                        <br/>
                                                     </template>
                                                 </span>
 
-                                                <span v-if="search.makenow"> and you can <span class="text-success">make right now</span> (based on the on hand flag) <br /></span>
+                                                <span v-if="search.makenow"> and you can <span class="text-success">make right now</span> (based on the on hand flag) <br/></span>
 
                                                 <span v-if="search.search_units.length > 0">
                                                     and contain <b v-if="search.search_units_or">any</b><b v-else>all</b> of the following <span class="text-success">units</span>:
                                                     <i>{{ search.search_units.flatMap((x) => x.name).join(", ") }}</i
-                                                    ><br />
+                                                    ><br/>
                                                 </span>
 
                                                 <span v-if="search.search_rating !== undefined">
                                                     and have a <span class="text-success">rating</span> <template v-if="search.search_rating_gte">greater than</template
-                                                    ><template v-else> less than</template> or equal to {{ search.search_rating }}<br />
+                                                ><template v-else> less than</template> or equal to {{ search.search_rating }}<br/>
                                                 </span>
 
                                                 <span v-if="search.lastcooked !== undefined">
                                                     and have been <span class="text-success">last cooked</span> <template v-if="search.lastcooked_gte"> after</template
-                                                    ><template v-else> before</template> <i>{{ search.lastcooked }}</i
-                                                    ><br />
+                                                ><template v-else> before</template> <i>{{ search.lastcooked }}</i
+                                                ><br/>
                                                 </span>
 
                                                 <span v-if="search.timescooked !== undefined">
                                                     and have <span class="text-success">been cooked</span> <template v-if="search.timescooked_gte"> at least</template
-                                                    ><template v-else> less than</template> or equal to<i>{{ search.timescooked }}</i> times <br />
+                                                ><template v-else> less than</template> or equal to<i>{{ search.timescooked }}</i> times <br/>
                                                 </span>
 
                                                 <span v-if="search.sort_order.length > 0">
                                                     <span class="text-success">order</span> by
                                                     <i>{{ search.sort_order.flatMap((x) => x.text).join(", ") }}</i>
-                                                    <br />
+                                                    <br/>
                                                 </span>
                                             </div>
                                         </div>
@@ -707,19 +707,19 @@
                             </b-dropdown>
 
                             <b-button variant="outline-primary" size="sm" class="shadow-none ml-1" @click="resetSearch()" v-if="searchFiltered()"
-                                ><i class="fas fa-file-alt"></i> {{ search.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }}
+                            ><i class="fas fa-file-alt"></i> {{ search.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }}
                                 <i class="fas fa-times-circle"></i>
                             </b-button>
 
                             <b-button variant="outline-primary" size="sm" class="shadow-none ml-1" @click="openRandom()"
-                                ><i class="fas fa-dice-five"></i> {{ $t("Random") }}
+                            ><i class="fas fa-dice-five"></i> {{ $t("Random") }}
                             </b-button>
                         </div>
                     </div>
                 </div>
 
                 <template v-if="!searchFiltered() && ui.show_meal_plan && meal_plan_grid.length > 0">
-                    <hr />
+                    <hr/>
                     <div class="row">
                         <div class="col col-md-12">
                             <div
@@ -734,7 +734,7 @@
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
                                                     <b-button class="hover-button btn-outline-primary btn-sm" @click="showMealPlanEditModal(null, day.create_default_date)"
-                                                        ><i class="fa fa-plus"></i
+                                                    ><i class="fa fa-plus"></i
                                                     ></b-button>
                                                 </div>
                                             </div>
@@ -742,8 +742,8 @@
                                         <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div p-0 pr-2">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" v-if="plan.recipe?.image" />
-                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" v-else />
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" v-if="plan.recipe?.image"/>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" v-else/>
                                                 </div>
                                                 <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere">
                                                     <span class="two-row-text">
@@ -753,7 +753,7 @@
                                                 </div>
                                                 <div class="hover-button">
                                                     <b-button @click="showMealPlanEditModal(plan, null)" class="btn-outline-primary btn-sm"
-                                                        ><i class="fas fa-pencil-alt"></i
+                                                    ><i class="fas fa-pencil-alt"></i
                                                     ></b-button>
                                                 </div>
                                             </div>
@@ -763,7 +763,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr />
+                    <hr/>
                 </template>
 
                 <div v-if="recipes.length > 0" class="mt-4">
@@ -827,7 +827,7 @@
                                         {{ $t("search_import_help_text") }}
                                     </b-card-text>
 
-                                    <b-button variant="primary" :href="resolveDjangoUrl('data_import_url')"><i class="fas fa-file-import"></i> {{ $t("Import") }} </b-button>
+                                    <b-button variant="primary" :href="resolveDjangoUrl('data_import_url')"><i class="fas fa-file-import"></i> {{ $t("Import") }}</b-button>
                                 </b-card>
 
                                 <b-card v-bind:title="$t('Create')" class="text-center">
@@ -835,7 +835,7 @@
                                         {{ $t("search_create_help_text") }}
                                     </b-card-text>
 
-                                    <b-button variant="primary" :href="resolveDjangoUrl('new_recipe')"><i class="fas fa-plus"></i> {{ $t("Create") }} </b-button>
+                                    <b-button variant="primary" :href="resolveDjangoUrl('new_recipe')"><i class="fas fa-plus"></i> {{ $t("Create") }}</b-button>
                                 </b-card>
                             </b-card-group>
                         </div>
@@ -844,7 +844,7 @@
 
                 <meal-plan-edit-modal :entry="mealplan_entry_edit" :create_date="mealplan_default_date"></meal-plan-edit-modal>
 
-                <bottom-navigation-bar> </bottom-navigation-bar>
+                <bottom-navigation-bar></bottom-navigation-bar>
             </div>
         </div>
     </div>
@@ -852,7 +852,7 @@
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
+import {BootstrapVue} from "bootstrap-vue"
 import VueCookies from "vue-cookies"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
@@ -860,13 +860,13 @@ import moment from "moment"
 import _debounce from "lodash/debounce"
 import Multiselect from "vue-multiselect"
 
-import { ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin } from "@/utils/utils"
+import {ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils"
 import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
 import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
-import { ApiApiFactory } from "@/utils/openapi/api"
-import { useMealPlanStore } from "@/stores/MealPlanStore"
+import {ApiApiFactory} from "@/utils/openapi/api"
+import {useMealPlanStore} from "@/stores/MealPlanStore"
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue"
 import MealPlanEditModal from "@/components/MealPlanEditModal.vue"
 
@@ -879,7 +879,7 @@ let UI_COOKIE_NAME = "ui_search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
-    components: { GenericMultiselect, RecipeCard, RecipeSwitcher, Multiselect, BottomNavigationBar, MealPlanEditModal },
+    components: {GenericMultiselect, RecipeCard, RecipeSwitcher, Multiselect, BottomNavigationBar, MealPlanEditModal},
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
@@ -896,22 +896,22 @@ export default {
                 search_input: "",
                 search_internal: false,
                 search_keywords: [
-                    { items: [], operator: true, not: false },
-                    { items: [], operator: false, not: false },
-                    { items: [], operator: true, not: true },
-                    { items: [], operator: false, not: true },
+                    {items: [], operator: true, not: false},
+                    {items: [], operator: false, not: false},
+                    {items: [], operator: true, not: true},
+                    {items: [], operator: false, not: true},
                 ],
                 search_foods: [
-                    { items: [], operator: true, not: false },
-                    { items: [], operator: false, not: false },
-                    { items: [], operator: true, not: true },
-                    { items: [], operator: false, not: true },
+                    {items: [], operator: true, not: false},
+                    {items: [], operator: false, not: false},
+                    {items: [], operator: true, not: true},
+                    {items: [], operator: false, not: true},
                 ],
                 search_books: [
-                    { items: [], operator: true, not: false },
-                    { items: [], operator: false, not: false },
-                    { items: [], operator: true, not: true },
-                    { items: [], operator: false, not: true },
+                    {items: [], operator: true, not: false},
+                    {items: [], operator: false, not: false},
+                    {items: [], operator: true, not: true},
+                    {items: [], operator: false, not: true},
                 ],
                 search_units: [],
                 search_units_or: true,
@@ -979,11 +979,10 @@ export default {
             if (this.meal_plan_store !== null && this.meal_plan_store.plan_list.length > 0) {
                 for (const x of Array(this.ui.meal_plan_days).keys()) {
                     let moment_date = moment().add(x, "d")
-                    let date_label = moment_date.format("L").split("/")
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format("ddd") + " " + date_label[0] + "." + date_label[1],
+                        date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
                         plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
                     })
                 }
@@ -1030,12 +1029,12 @@ export default {
             }
 
             return [
-                { id: 5, label: "⭐⭐⭐⭐⭐ " + label(5) },
-                { id: 4, label: "⭐⭐⭐⭐ " + label() },
-                { id: 3, label: "⭐⭐⭐ " + label() },
-                { id: 2, label: "⭐⭐ " + label() },
-                { id: 1, label: "⭐ " + label(1) },
-                { id: 0, label: this.$t("Unrated") },
+                {id: 5, label: "⭐⭐⭐⭐⭐ " + label(5)},
+                {id: 4, label: "⭐⭐⭐⭐ " + label()},
+                {id: 3, label: "⭐⭐⭐ " + label()},
+                {id: 2, label: "⭐⭐ " + label()},
+                {id: 1, label: "⭐ " + label(1)},
+                {id: 0, label: this.$t("Unrated")},
             ]
         },
         keywordFields: function () {
@@ -1091,7 +1090,7 @@ export default {
         },
     },
     mounted() {
-        this.recipes = Array(this.ui.page_size).fill({ loading: true })
+        this.recipes = Array(this.ui.page_size).fill({loading: true})
 
         this.$nextTick(function () {
             if (this.$cookies.isKey(UI_COOKIE_NAME)) {
@@ -1160,13 +1159,13 @@ export default {
         "ui.expert_mode": function (newVal, oldVal) {
             if (!newVal) {
                 this.search.search_keywords = this.search.search_keywords.map((x) => {
-                    return { ...x, not: false }
+                    return {...x, not: false}
                 })
                 this.search.search_foods = this.search.search_foods.map((x) => {
-                    return { ...x, not: false }
+                    return {...x, not: false}
                 })
                 this.search.search_books = this.search.search_books.map((x) => {
-                    return { ...x, not: false }
+                    return {...x, not: false}
                 })
             }
         },
@@ -1175,7 +1174,7 @@ export default {
         // this.genericAPI inherited from ApiMixin
         refreshData: _debounce(function (random) {
             this.recipes_loading = true
-            this.recipes = Array(this.ui.page_size).fill({ loading: true })
+            this.recipes = Array(this.ui.page_size).fill({loading: true})
             let params = this.buildParams(random)
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
                 window.scrollTo(0, 0)
@@ -1218,13 +1217,13 @@ export default {
         },
         resetSearch: function (filter = undefined) {
             this.search.search_keywords = this.search.search_keywords.map((x) => {
-                return { ...x, items: [] }
+                return {...x, items: []}
             })
             this.search.search_foods = this.search.search_foods.map((x) => {
-                return { ...x, items: [] }
+                return {...x, items: []}
             })
             this.search.search_books = this.search.search_books.map((x) => {
-                return { ...x, items: [] }
+                return {...x, items: []}
             })
             this.search.search_input = filter?.query ?? ""
             this.search.search_internal = filter?.internal ?? false
@@ -1286,7 +1285,7 @@ export default {
             return
         },
         buildParams: function (random) {
-            let params = { options: { query: {} }, page: this.search.pagination_page, pageSize: this.ui.page_size }
+            let params = {options: {query: {}}, page: this.search.pagination_page, pageSize: this.ui.page_size}
             if (this.search.search_filter) {
                 params.options.query.filter = this.search.search_filter.id
                 return params
@@ -1407,7 +1406,7 @@ export default {
             ;["page", "pageSize"].forEach((key) => {
                 delete search[key]
             })
-            search = { ...search, ...search.options.query }
+            search = {...search, ...search.options.query}
             console.log("after concat", search)
             let params = {
                 name: filtername,
