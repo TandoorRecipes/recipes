@@ -334,8 +334,11 @@ class SpacedModelSerializer(serializers.ModelSerializer):
 class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
         validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
+        obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
@@ -456,17 +459,17 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin)
     recipe_filter = 'steps__ingredients__unit'
 
     def create(self, validated_data):
-        name = validated_data.pop('name').strip()
+        #  get_or_create drops any field that contains '__' when creating so values must be included in validated data
+        space = validated_data.pop('space', self.context['request'].space)
+        if x := validated_data.get('name', None):
+            validated_data['name'] = x.strip()
+        if x := validated_data.get('name', None):
+            validated_data['plural_name'] = x.strip()
 
-        if plural_name := validated_data.pop('plural_name', None):
-            plural_name = plural_name.strip()
-
-        if unit := Unit.objects.filter(Q(name=name) | Q(plural_name=name)).first():
+        if unit := Unit.objects.filter(Q(name__iexact=validated_data['name']) | Q(plural_name__iexact=validated_data['name']), space=space).first():
             return unit
 
-        space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Unit.objects.get_or_create(name=name, plural_name=plural_name, space=space,
-                                                  defaults=validated_data)
+        obj, created = Unit.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -484,9 +487,9 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin)
 class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerializer, OpenDataModelMixin):
 
     def create(self, validated_data):
-        name = validated_data.pop('name').strip()
+        validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = SupermarketCategory.objects.get_or_create(name=name, space=space)
+        obj, created = SupermarketCategory.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -508,6 +511,12 @@ class SupermarketCategoryRelationSerializer(WritableNestedModelSerializer):
 class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataModelMixin):
     category_to_supermarket = SupermarketCategoryRelationSerializer(many=True, read_only=True)
 
+    def create(self, validated_data):
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = Supermarket.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
+
     class Meta:
         model = Supermarket
         fields = ('id', 'name', 'description', 'category_to_supermarket', 'open_data_slug')
@@ -517,12 +526,10 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
     id = serializers.IntegerField(required=False)
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-
-        if property_type := PropertyType.objects.filter(Q(name=validated_data['name'])).filter(space=self.context['request'].space).first():
-            return property_type
-
-        return super().create(validated_data)
+        validated_data['name'] = validated_data['name'].strip()
+        space = validated_data.pop('space', self.context['request'].space)
+        obj, created = PropertyType.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        return obj
 
     class Meta:
         model = PropertyType
@@ -799,9 +806,17 @@ class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin
         return text + f' = {round(obj.converted_amount)} {obj.converted_unit}'
 
     def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
+        validated_data['space'] = validated_data.pop('space', self.context['request'].space)
+        try:
+            return UnitConversion.objects.get(
+                food__name__iexact=validated_data.get('food', {}).get('name', None),
+                base_unit__name__iexact=validated_data.get('base_unit', {}).get('name', None),
+                converted_unit__name__iexact=validated_data.get('converted_unit', {}).get('name', None),
+                space=validated_data['space']
+            )
+        except UnitConversion.DoesNotExist:
+            validated_data['created_by'] = self.context['request'].user
+            return super().create(validated_data)
 
     class Meta:
         model = UnitConversion
