@@ -90,24 +90,24 @@ def test_add(arg, request, u1_s2):
         r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 404
 
-# TODO make name in space unique
-# def test_add_duplicate(u1_s1, u1_s2, obj_1):
-#     r = u1_s1.post(
-#         reverse(LIST_URL),
-#         {'name': obj_1.name},
-#         content_type='application/json'
-#     )
-#     response = json.loads(r.content)
-#     assert r.status_code == 201
-#     assert response['id'] == obj_1.id
-#
-#     r = u1_s2.post(
-#         reverse(LIST_URL),
-#         {'name': obj_1.name},
-#         content_type='application/json'
-#     )
-#     response = json.loads(r.content)
-#     assert r.status_code == 201
+
+def test_add_duplicate(u1_s1, u1_s2, obj_1):
+    r = u1_s1.post(
+        reverse(LIST_URL),
+        {'name': obj_1.name},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 201
+    assert response['id'] == obj_1.id
+
+    r = u1_s2.post(
+        reverse(LIST_URL),
+        {'name': obj_1.name},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 201
 #     assert response['id'] != obj_1.id
 
 
