@@ -162,7 +162,7 @@ class RecipeSearch():
         else:
             order = []
             # TODO add userpreference for default sort order and replace '-favorite'
-            default_order = ['-name']
+            default_order = ['name']
             # recent and new_recipe are always first; they float a few recipes to the top
             if self._num_recent:
                 order += ['-recent']
