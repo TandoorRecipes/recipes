@@ -466,5 +466,9 @@
     "search_rank": "Posizione di ricerca",
     "make_now": "Fai ora",
     "Amount": "Quantità",
-    "show_step_ingredients_setting": "Mostra gli ingredienti vicino ai passaggi della ricetta"
+    "show_step_ingredients_setting": "Mostra gli ingredienti vicino ai passaggi della ricetta",
+    "substitute_siblings_help": "Tutti gli alimenti che condividono un genitore di questo alimento sono considerati sostituti",
+    "reset_children": "Reimposta l'eredità degli eredi",
+    "substitute_siblings": "Sostituire prodotti eredi",
+    "ChildInheritFields": "Gli eredi ereditano i valori"
 }
