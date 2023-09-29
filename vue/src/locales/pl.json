@@ -519,5 +519,19 @@
     "imperial_gallon": "imperialny galon [imp gal] (WB, objętość)",
     "imperial_tsp": "łyżeczka imperialna [imp tsp] (WB, objętość)",
     "Choose_Category": "Wybierz kategorię",
-    "Back": "Z powrotem"
+    "Back": "Z powrotem",
+    "StartDate": "Data początkowa",
+    "OrderInformation": "Obiekty są uporządkowane od małych do dużych liczb.",
+    "show_ingredients_table": "Wyświetl tabelę składników obok tekstu kroku",
+    "Never_Unit": "Jednostka nigdy (??)",
+    "EndDate": "Data końcowa",
+    "show_step_ingredients_setting": "Pokaż składniki obok kroków przepisu",
+    "show_step_ingredients_setting_help": "Dodaj tabelę składników obok kroków przepisu. Dotyczy w momentu tworzenia. Można zmodyfikować w widoku edycji przepisu.",
+    "show_step_ingredients": "Pokaż składniki kroku",
+    "hide_step_ingredients": "Ukryj składniki kroku",
+    "Transpose_Words": "Transponuj słowa",
+    "Name_Replace": "Zastąp nazwę",
+    "Food_Replace": "Zastąp produkt",
+    "Unit_Replace": "Zastąp jednostkę",
+    "Alignment": "Wyrównanie"
 }
