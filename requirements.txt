@@ -24,7 +24,7 @@ whitenoise==6.5.0
 icalendar==5.0.7
 pyyaml==6.0.1
 uritemplate==4.1.1
-beautifulsoup4==4.11.1
+beautifulsoup4==4.12.2
 microdata==0.8.0
 Jinja2==3.1.2
 django-webpack-loader==1.8.1
