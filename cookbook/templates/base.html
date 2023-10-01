@@ -318,6 +318,7 @@
                                 class="fas fa-plus"></i> {% trans 'Create' %}</a>
                     </div>
                 </li>
+             {% if user.is_superuser %}
                 <li class="nav-item dropdown {% if request.resolver_match.url_name in 'view_space,view_settings,view_history,view_system,docs_markdown' %}active{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false"><i
@@ -377,6 +378,7 @@
                                 class="fas fa-sign-out-alt fa-fw"></i> {% trans 'Log out' %}</a>
                     </div>
                 </li>
+              {% endif %}
             {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account_login' %}">{% trans 'Login' %} <i
