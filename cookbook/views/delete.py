@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Storage, Sync, UserSpace, Space)
+                             RecipeImport, Space, Storage, Sync, UserSpace)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -97,18 +97,6 @@ class SyncDelete(GroupRequiredMixin, DeleteView):
         context = super(SyncDelete, self).get_context_data(**kwargs)
         context['title'] = _("Monitor")
         return context
-
-
-# class KeywordDelete(GroupRequiredMixin, DeleteView):
-#     groups_required = ['user']
-#     template_name = "generic/delete_template.html"
-#     model = Keyword
-#     success_url = reverse_lazy('list_keyword')
-
-#     def get_context_data(self, **kwargs):
-#         context = super(KeywordDelete, self).get_context_data(**kwargs)
-#         context['title'] = _("Keyword")
-#         return context
 
 
 class StorageDelete(GroupRequiredMixin, DeleteView):

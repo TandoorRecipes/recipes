@@ -2,12 +2,10 @@ import base64
 from io import BytesIO
 from xml import etree
 
-from lxml import etree
-
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_time, parse_servings, parse_servings_text
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class Rezeptsuitede(Integration):
@@ -22,9 +20,12 @@ class Rezeptsuitede(Integration):
             name=recipe_xml.find('head').attrib['title'].strip(),
             created_by=self.request.user, internal=True, space=self.request.space)
 
-        if recipe_xml.find('head').attrib['servingtype']:
-            recipe.servings = parse_servings(recipe_xml.find('head').attrib['servingtype'].strip())
-            recipe.servings_text = parse_servings_text(recipe_xml.find('head').attrib['servingtype'].strip())
+        try:
+            if recipe_xml.find('head').attrib['servingtype']:
+                recipe.servings = parse_servings(recipe_xml.find('head').attrib['servingtype'].strip())
+                recipe.servings_text = parse_servings_text(recipe_xml.find('head').attrib['servingtype'].strip())
+        except KeyError:
+            pass
 
         if recipe_xml.find('remark') is not None:  # description is a list of <li>'s with text
             if recipe_xml.find('remark').find('line') is not None:
@@ -34,7 +35,7 @@ class Rezeptsuitede(Integration):
             try:
                 if prep.find('step').text:
                     step = Step.objects.create(
-                        instruction=prep.find('step').text.strip(), space=self.request.space,
+                        instruction=prep.find('step').text.strip(), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                     )
                     recipe.steps.add(step)
             except Exception:
@@ -50,20 +51,22 @@ class Rezeptsuitede(Integration):
             for ingredient in recipe_xml.find('part').findall('ingredient'):
                 f = ingredient_parser.get_food(ingredient.attrib['item'])
                 u = ingredient_parser.get_unit(ingredient.attrib['unit'])
-                amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
+                amount = 0
+                if ingredient.attrib['qty'].strip() != '':
+                    amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
                 ingredient_step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=amount, space=self.request.space, ))
 
         try:
             k, created = Keyword.objects.get_or_create(name=recipe_xml.find('head').find('cat').text.strip(), space=self.request.space)
             recipe.keywords.add(k)
-        except Exception as e:
+        except Exception:
             pass
 
         recipe.save()
 
         try:
             self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_xml.find('head').find('picbin').text)), filetype='.jpeg')
-        except:
+        except BaseException:
             pass
 
         return recipe

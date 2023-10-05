@@ -20,7 +20,7 @@ jobs:
     # Build Vue frontend
     - uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '18'
     - name: Install Vue dependencies
       working-directory: ./vue
       run: yarn install

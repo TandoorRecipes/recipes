@@ -1,6 +1,7 @@
 from io import BytesIO
 
 import requests
+import validators
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
@@ -45,7 +46,7 @@ class Plantoeat(Integration):
         recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n', space=self.request.space,
+            instruction='\n'.join(directions) + '\n\n', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
         )
 
         if tags:
@@ -67,8 +68,9 @@ class Plantoeat(Integration):
 
         if image_url:
             try:
-                response = requests.get(image_url)
-                self.import_recipe_image(recipe, BytesIO(response.content))
+                if validators.url(image_url, public=True):
+                    response = requests.get(image_url)
+                    self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
                 print('failed to import image ', str(e))
 

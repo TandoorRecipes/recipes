@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-form-group
-        v-bind:label="label"
+        v-bind:label="field_label"
         class="mb-3">
       <b-form-file
           v-model="new_value"
@@ -30,7 +30,17 @@ export default {
     value: {type: String, default: ''},
     placeholder: {type: String, default: ''},
     show_merge: {type: Boolean, default: false},
+      optional: {type: Boolean, default: false},
   },
+    computed: {
+        field_label: function () {
+            if (this.optional) {
+                return this.label
+            } else {
+                return this.label + '*'
+            }
+        }
+    },
   data() {
     return {
       new_value: undefined,

@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-13 22:40+0200\n"
-"PO-Revision-Date: 2022-11-30 19:09+0000\n"
-"Last-Translator: Alex <kovsharoff@gmail.com>\n"
+"PO-Revision-Date: 2023-05-01 07:55+0000\n"
+"Last-Translator: axeron2036 <admin@axeron2036.ru>\n"
 "Language-Team: Russian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -286,7 +286,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:497
 msgid "Search Method"
-msgstr ""
+msgstr "Способ поиска"
 
 #: .\cookbook\forms.py:498
 msgid "Fuzzy Lookups"
@@ -861,7 +861,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:220
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:224
 msgid "API Browser"
@@ -1937,7 +1937,7 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:106
 msgid "user"
-msgstr ""
+msgstr "пользователь"
 
 #: .\cookbook\templates\space.html:107
 msgid "guest"

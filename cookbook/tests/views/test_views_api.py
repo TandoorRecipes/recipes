@@ -1,7 +1,4 @@
 import pytest
-
-from cookbook.models import Recipe
-from django.contrib import auth
 from django.urls import reverse
 
 
@@ -28,7 +25,6 @@ def test_external_link_permission(arg, request, ext_recipe_1_s1):
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])
-def test_external_link_permission(arg, request, ext_recipe_1_s1):
+def test_external_file_permission(arg, request, ext_recipe_1_s1):
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse('api_get_recipe_file', args=[ext_recipe_1_s1.pk])).status_code == arg[1]
-

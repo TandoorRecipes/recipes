@@ -2,14 +2,13 @@ import json
 import traceback
 
 import requests
-from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import ShoppingList, ShoppingListEntry, TelegramBot
+from cookbook.models import ShoppingListEntry, TelegramBot
 
 
 @group_required('user')
@@ -21,7 +20,8 @@ def setup_bot(request, pk):
     create_response = requests.get(f'https://api.telegram.org/bot{bot.token}/setWebhook?url={hook_url}')
     info_response = requests.get(f'https://api.telegram.org/bot{bot.token}/getWebhookInfo')
 
-    return JsonResponse({'hook_url': hook_url, 'create_response': json.loads(create_response.content.decode()), 'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
+    return JsonResponse({'hook_url': hook_url, 'create_response': json.loads(create_response.content.decode()),
+                        'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
 
 
 @group_required('user')
@@ -31,7 +31,8 @@ def remove_bot(request, pk):
     remove_response = requests.get(f'https://api.telegram.org/bot{bot.token}/deleteWebhook')
     info_response = requests.get(f'https://api.telegram.org/bot{bot.token}/getWebhookInfo')
 
-    return JsonResponse({'remove_response': json.loads(remove_response.content.decode()), 'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
+    return JsonResponse({'remove_response': json.loads(remove_response.content.decode()),
+                        'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
 
 
 @csrf_exempt

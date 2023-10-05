@@ -1,14 +1,11 @@
 import os
 import re
-import uuid
 from datetime import datetime
 from uuid import UUID
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -18,16 +15,15 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
-from oauth2_provider.models import AccessToken
 
-from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, ShoppingPreferenceForm,
-                            SpaceCreateForm, SpaceJoinForm, User,
-                            UserCreateForm, UserNameForm, UserPreference, UserPreferenceForm)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User,
+                            UserCreateForm, UserPreference)
 from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
-from recipes.version import BUILD_REF, VERSION_NUMBER
+from cookbook.version_info import VERSION_INFO
+from recipes.settings import PLUGINS
 
 
 def index(request):
@@ -309,7 +305,6 @@ def history(request):
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
-@group_required('admin')
 def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
@@ -325,8 +320,8 @@ def system(request):
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
-        'version': VERSION_NUMBER,
-        'ref': BUILD_REF,
+        'version_info': VERSION_INFO,
+        'plugins': PLUGINS,
         'secret_key': secret_key
     })
 
@@ -375,7 +370,7 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
 
                 if request.user.userspace_set.count() == 1:
                     user_space.active = True

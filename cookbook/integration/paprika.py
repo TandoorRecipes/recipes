@@ -58,7 +58,7 @@ class Paprika(Integration):
                 pass
 
             step = Step.objects.create(
-                instruction=instructions, space=self.request.space,
+                instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
             )
 
             if 'description' in recipe_json and len(recipe_json['description'].strip()) > 500:
@@ -90,7 +90,7 @@ class Paprika(Integration):
                     if validators.url(url, public=True):
                         response = requests.get(url)
                         self.import_recipe_image(recipe, BytesIO(response.content))
-            except:
+            except Exception:
                 if recipe_json.get("photo_data", None):
                     self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
 

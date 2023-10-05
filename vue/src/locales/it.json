@@ -304,7 +304,6 @@
     "tree_select": "Usa selezione ad albero",
     "sql_debug": "Debug SQL",
     "remember_search": "Ricorda ricerca",
-    "facet_count_info": "Mostra il conteggio delle ricette nei filtri di ricerca.",
     "warning_space_delete": "Stai per eliminare la tua istanza che include tutte le ricette, liste della spesa, piani alimentari e tutto ciò che hai creato. Questa azione non può essere annullata! Sei sicuro di voler procedere?",
     "food_inherit_info": "Campi di alimenti che devono essere ereditati per impostazione predefinita.",
     "enable_expert": "Abilita modalità esperto",
@@ -466,5 +465,10 @@
     "Original_Text": "Testo originale",
     "search_rank": "Posizione di ricerca",
     "make_now": "Fai ora",
-    "Amount": "Quantità"
+    "Amount": "Quantità",
+    "show_step_ingredients_setting": "Mostra gli ingredienti vicino ai passaggi della ricetta",
+    "substitute_siblings_help": "Tutti gli alimenti che condividono un genitore di questo alimento sono considerati sostituti",
+    "reset_children": "Reimposta l'eredità degli eredi",
+    "substitute_siblings": "Sostituire prodotti eredi",
+    "ChildInheritFields": "Gli eredi ereditano i valori"
 }

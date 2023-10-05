@@ -3,8 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A
 
-from .models import (CookLog, InviteLink, Recipe, RecipeImport,
-                     Storage, Sync, SyncLog, ViewLog)
+from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog
 
 
 class StorageTable(tables.Table):

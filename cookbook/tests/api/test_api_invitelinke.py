@@ -2,13 +2,10 @@ import json
 
 import pytest
 from django.contrib import auth
-from django.contrib.auth.models import AnonymousUser
-from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.helper.permission_helper import switch_user_active_space
-from cookbook.models import Ingredient, Step, InviteLink, UserSpace
+from cookbook.models import InviteLink
 
 LIST_URL = 'api:invitelink-list'
 DETAIL_URL = 'api:invitelink-detail'

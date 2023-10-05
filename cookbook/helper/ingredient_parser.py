@@ -2,18 +2,16 @@ import re
 import string
 import unicodedata
 
-from django.core.cache import caches
-
-from cookbook.models import Unit, Food, Automation, Ingredient
+from cookbook.helper.automation_helper import AutomationEngine
+from cookbook.models import Food, Ingredient, Unit
 
 
 class IngredientParser:
     request = None
     ignore_rules = False
-    food_aliases = {}
-    unit_aliases = {}
+    automation = None
 
-    def __init__(self, request, cache_mode, ignore_automations=False):
+    def __init__(self, request, cache_mode=True, ignore_automations=False):
         """
         Initialize ingredient parser
         :param request: request context (to control caching, rule ownership, etc.)
@@ -22,65 +20,8 @@ class IngredientParser:
         """
         self.request = request
         self.ignore_rules = ignore_automations
-        if cache_mode:
-            FOOD_CACHE_KEY = f'automation_food_alias_{self.request.space.pk}'
-            if c := caches['default'].get(FOOD_CACHE_KEY, None):
-                self.food_aliases = c
-                caches['default'].touch(FOOD_CACHE_KEY, 30)
-            else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.FOOD_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.food_aliases[a.param_1] = a.param_2
-                caches['default'].set(FOOD_CACHE_KEY, self.food_aliases, 30)
-
-            UNIT_CACHE_KEY = f'automation_unit_alias_{self.request.space.pk}'
-            if c := caches['default'].get(UNIT_CACHE_KEY, None):
-                self.unit_aliases = c
-                caches['default'].touch(UNIT_CACHE_KEY, 30)
-            else:
-                for a in Automation.objects.filter(space=self.request.space, disabled=False, type=Automation.UNIT_ALIAS).only('param_1', 'param_2').order_by('order').all():
-                    self.unit_aliases[a.param_1] = a.param_2
-                caches['default'].set(UNIT_CACHE_KEY, self.unit_aliases, 30)
-        else:
-            self.food_aliases = {}
-            self.unit_aliases = {}
-
-    def apply_food_automation(self, food):
-        """
-        Apply food alias automations to passed food
-        :param food: unit as string
-        :return: food as string (possibly changed by automation)
-        """
-        if self.ignore_rules:
-            return food
-        else:
-            if self.food_aliases:
-                try:
-                    return self.food_aliases[food]
-                except KeyError:
-                    return food
-            else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1=food, disabled=False).order_by('order').first():
-                    return automation.param_2
-        return food
-
-    def apply_unit_automation(self, unit):
-        """
-        Apply unit alias automations to passed unit
-        :param unit: unit as string
-        :return: unit as string (possibly changed by automation)
-        """
-        if self.ignore_rules:
-            return unit
-        else:
-            if self.unit_aliases:
-                try:
-                    return self.unit_aliases[unit]
-                except KeyError:
-                    return unit
-            else:
-                if automation := Automation.objects.filter(space=self.request.space, type=Automation.UNIT_ALIAS, param_1=unit, disabled=False).order_by('order').first():
-                    return automation.param_2
-        return unit
+        if not self.ignore_rules:
+            self.automation = AutomationEngine(self.request, use_cache=cache_mode)
 
     def get_unit(self, unit):
         """
@@ -91,7 +32,10 @@ class IngredientParser:
         if not unit:
             return None
         if len(unit) > 0:
-            u, created = Unit.objects.get_or_create(name=self.apply_unit_automation(unit), space=self.request.space)
+            if self.ignore_rules:
+                u, created = Unit.objects.get_or_create(name=unit.strip(), space=self.request.space)
+            else:
+                u, created = Unit.objects.get_or_create(name=self.automation.apply_unit_automation(unit), space=self.request.space)
             return u
         return None
 
@@ -104,7 +48,10 @@ class IngredientParser:
         if not food:
             return None
         if len(food) > 0:
-            f, created = Food.objects.get_or_create(name=self.apply_food_automation(food), space=self.request.space)
+            if self.ignore_rules:
+                f, created = Food.objects.get_or_create(name=food.strip(), space=self.request.space)
+            else:
+                f, created = Food.objects.get_or_create(name=self.automation.apply_food_automation(food), space=self.request.space)
             return f
         return None
 
@@ -133,10 +80,10 @@ class IngredientParser:
         end = 0
         while (end < len(x) and (x[end] in string.digits
                                  or (
-                                         (x[end] == '.' or x[end] == ',' or x[end] == '/')
-                                         and end + 1 < len(x)
-                                         and x[end + 1] in string.digits
-                                 ))):
+            (x[end] == '.' or x[end] == ',' or x[end] == '/')
+            and end + 1 < len(x)
+            and x[end + 1] in string.digits
+        ))):
             end += 1
         if end > 0:
             if "/" in x[:end]:
@@ -160,7 +107,8 @@ class IngredientParser:
         if unit is not None and unit.strip() == '':
             unit = None
 
-        if unit is not None and (unit.startswith('(') or unit.startswith('-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
+        if unit is not None and (unit.startswith('(') or unit.startswith(
+                '-')):  # i dont know any unit that starts with ( or - so its likely an alternative like 1L (500ml) Water or 2-3
             unit = None
             note = x
         return amount, unit, note
@@ -230,8 +178,8 @@ class IngredientParser:
 
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
-        if re.match('(.){1,6}\s\((.[^\(\)])+\)\s', ingredient):
-            match = re.search('\((.[^\(])+\)', ingredient)
+        if re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
+            match = re.search('\\((.[^\\(])+\\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
         # leading spaces before commas result in extra tokens, clean them out
@@ -239,11 +187,14 @@ class IngredientParser:
 
         # handle "(from) - (to)" amounts by using the minimum amount and adding the range to the description
         # "10.5 - 200 g XYZ" => "100 g XYZ (10.5 - 200)"
-        ingredient = re.sub("^(\d+|\d+[\\.,]\d+) - (\d+|\d+[\\.,]\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
+        ingredient = re.sub("^(\\d+|\\d+[\\.,]\\d+) - (\\d+|\\d+[\\.,]\\d+) (.*)", "\\1 \\3 (\\1 - \\2)", ingredient)
 
         # if amount and unit are connected add space in between
-        if re.match('([0-9])+([A-z])+\s', ingredient):
+        if re.match('([0-9])+([A-z])+\\s', ingredient):
             ingredient = re.sub(r'(?<=([a-z])|\d)(?=(?(1)\d|[a-z]))', ' ', ingredient)
+
+        if not self.ignore_rules:
+            ingredient = self.automation.apply_transpose_automation(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
@@ -257,6 +208,8 @@ class IngredientParser:
                 # three arguments if it already has a unit there can't be
                 # a fraction for the amount
                 if len(tokens) > 2:
+                    if not self.ignore_rules:
+                        tokens = self.automation.apply_never_unit_automation(tokens)
                     try:
                         if unit is not None:
                             # a unit is already found, no need to try the second argument for a fraction
@@ -303,10 +256,11 @@ class IngredientParser:
         if unit_note not in note:
             note += ' ' + unit_note
 
-        if unit:
-            unit = self.apply_unit_automation(unit.strip())
+        if unit and not self.ignore_rules:
+            unit = self.automation.apply_unit_automation(unit)
 
-        food = self.apply_food_automation(food.strip())
+        if food and not self.ignore_rules:
+            food = self.automation.apply_food_automation(food)
         if len(food) > Food._meta.get_field('name').max_length:  # test if food name is to long
             # try splitting it at a space and taking only the first arg
             if len(food.split()) > 1 and len(food.split()[0]) < Food._meta.get_field('name').max_length:

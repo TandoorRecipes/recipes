@@ -1,63 +1,83 @@
 <template>
     <div>
-        <b-modal :id="'modal_' + id" @hidden="cancelAction">
-            <template v-slot:modal-title>
-                <h4 class="d-inline">{{ form.title }}</h4>
-                <help-badge v-if="form.show_help" @show="show_help = true" @hide="show_help = false" :component="`GenericModal${form.title}`" />
-            </template>
-            <div v-for="(f, i) in form.fields" v-bind:key="i">
-                <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
-                <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" />
-                <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" />
-                <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
-                <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" />
-                <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" />
-                <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
-                <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" />
-				<number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" />
-            </div>
-            <template v-slot:modal-footer>
-                <div class="row w-100">
-                    <div class="col-6 align-self-end">
-                        <b-form-checkbox v-if="advancedForm" sm switch v-model="show_advanced">{{ $t("Advanced") }}</b-form-checkbox>
-                    </div>
-                    <div class="col-auto justify-content-end">
-                        <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
-                        <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
-                    </div>
+        <template v-if="form_component !== undefined && (action === Actions.UPDATE || action === Actions.CREATE)">
+            <component :is="form_component" :id="'modal_' + id" :show="show" @hidden="cancelAction" :item1="item1"></component>
+        </template>
+        <template v-else>
+            <b-modal :id="'modal_' + id" @hidden="cancelAction" size="lg">
+                <template v-slot:modal-title>
+                    <h4 class="d-inline">{{ form.title }}</h4>
+                    <help-badge v-if="form.show_help" @show="show_help = true" @hide="show_help = false" :component="`GenericModal${form.title}`"/>
+                </template>
+                <div v-for="(f, i) in form.fields" v-bind:key="i">
+                    <p v-if="visibleCondition(f, 'instruction')">{{ f.label }}</p>
+                    <lookup-input v-if="visibleCondition(f, 'lookup')" :form="f" :model="listModel(f.list)" @change="storeValue" :help="showHelp && f.help" :optional="f.optional"/>
+                    <checkbox-input class="mb-3" v-if="visibleCondition(f, 'checkbox')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help"/>
+                    <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
+                    <text-area-input v-if="visibleCondition(f, 'textarea')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
+                    <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" :optional="f.optional"/>
+                    <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
+                    <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
+                    <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
+                    <color-input v-if="visibleCondition(f, 'color')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
+                    <number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
                 </div>
-            </template>
-        </b-modal>
+                <template v-slot:modal-footer>
+                    <div class="row w-100">
+                        <div class="col-6 align-self-end">
+                            <b-form-checkbox v-if="advancedForm" sm switch v-model="show_advanced">{{ $t("Advanced") }}</b-form-checkbox>
+                        </div>
+                        <div class="col-auto justify-content-end">
+                            <b-button class="mx-1" variant="secondary" v-on:click="cancelAction">{{ $t("Cancel") }}</b-button>
+                            <b-button class="mx-1" variant="primary" v-on:click="doAction">{{ form.ok_label }}</b-button>
+                        </div>
+                    </div>
+                </template>
+            </b-modal>
+        </template>
+
     </div>
 </template>
 
 <script>
 import Vue from "vue"
-import { BootstrapVue } from "bootstrap-vue"
-import { getForm, formFunctions } from "@/utils/utils"
+import {BootstrapVue} from "bootstrap-vue"
+import {getForm, formFunctions} from "@/utils/utils"
 
 Vue.use(BootstrapVue)
 
-import { ApiApiFactory } from "@/utils/openapi/api"
-import { ApiMixin, StandardToasts, ToastMixin, getUserPreference } from "@/utils/utils"
+import {ApiApiFactory} from "@/utils/openapi/api"
+import {ApiMixin, StandardToasts, ToastMixin, getUserPreference} from "@/utils/utils"
 import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
 import DateInput from "@/components/Modals/DateInput"
-import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
 import SmallText from "@/components/Modals/SmallText"
 import HelpBadge from "@/components/Badges/Help"
 import NumberInput from "@/components/Modals/NumberInput.vue";
+import TextAreaInput from "@/components/Modals/TextAreaInput.vue";
+import ColorInput from "@/components/Modals/ColorInput.vue";
 
 export default {
     name: "GenericModalForm",
-    components: { FileInput, CheckboxInput, LookupInput, TextInput, EmojiInput, ChoiceInput, SmallText, HelpBadge,DateInput, NumberInput },
+    components: {
+        FileInput,
+        CheckboxInput,
+        LookupInput,
+        TextInput,
+        ChoiceInput,
+        SmallText,
+        HelpBadge,
+        DateInput,
+        NumberInput,
+        TextAreaInput,
+        ColorInput
+    },
     mixins: [ApiMixin, ToastMixin],
     props: {
-        model: { required: true, type: Object },
+        model: {required: true, type: Object},
         action: {
             type: Object,
             default() {
@@ -76,7 +96,8 @@ export default {
                 return {}
             },
         },
-        show: { required: true, type: Boolean, default: false },
+        show: {required: true, type: Boolean, default: false},
+        models: {required: false, type: Function, default: null}
     },
     data() {
         return {
@@ -92,6 +113,10 @@ export default {
     mounted() {
         this.id = Math.random()
         this.$root.$on("change", this.storeValue) // bootstrap modal placed at document so have to listen at root of component
+
+        if (this.models !== null) {
+            this.Models = this.models // override models definition file with prop
+        }
     },
     computed: {
         advancedForm() {
@@ -107,6 +132,15 @@ export default {
         showHelp() {
             if (this.show_help) {
                 return true
+            } else {
+                return undefined
+            }
+        },
+        form_component() {
+            // TODO this leads webpack to create one .js file for each component in this folder because at runtime any one of them could be requested
+            // TODO this is not necessarily bad but maybe there are better options to do this
+            if (this.form.component !== undefined) {
+                return () => import(/* webpackChunkName: "header-component" */ `@/components/${this.form.component}`)
             } else {
                 return undefined
             }
@@ -153,6 +187,7 @@ export default {
             if (this.dirty) {
                 this.dirty = false
                 this.$emit("finish-action", "cancel")
+                this.$emit("hidden")
             }
         },
         storeValue: function (field, value) {
@@ -174,16 +209,16 @@ export default {
             return form
         },
         delete: function () {
-            this.genericAPI(this.model, this.Actions.DELETE, { id: this.item1.id })
+            this.genericAPI(this.model, this.Actions.DELETE, {id: this.item1.id})
                 .then((result) => {
                     this.$emit("finish-action")
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_DELETE)
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
                 })
                 .catch((err) => {
-                    if (err.response.status === 403){
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE_PROTECTED, err)
-                    }else {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_DELETE, err)
+                    if (err.response.status === 403) {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE_PROTECTED, err)
+                    } else {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
                     }
                     this.$emit("finish-action", "cancel")
                 })
@@ -193,22 +228,22 @@ export default {
                 // if there is no item id assume it's a new item
                 this.genericAPI(this.model, this.Actions.CREATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action", { item: result.data })
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_CREATE)
+                        this.$emit("finish-action", {item: result.data})
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                     })
                     .catch((err) => {
                         console.log(err)
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_CREATE)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                         this.$emit("finish-action", "cancel")
                     })
             } else {
                 this.genericAPI(this.model, this.Actions.UPDATE, this.form_data)
                     .then((result) => {
-                        this.$emit("finish-action", { item: result.data })
-                        StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_UPDATE)
+                        this.$emit("finish-action", {item: result.data})
+                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
                     .catch((err) => {
-                        StandardToasts.makeStandardToast(this,StandardToasts.FAIL_UPDATE, err)
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                         this.$emit("finish-action", "cancel")
                     })
             }
@@ -224,13 +259,13 @@ export default {
                 this.$emit("finish-action", "cancel")
                 return
             }
-            this.genericAPI(this.model, this.Actions.MOVE, { source: this.item1.id, target: this.form_data.target.id })
+            this.genericAPI(this.model, this.Actions.MOVE, {source: this.item1.id, target: this.form_data.target.id})
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id })
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MOVE)
+                    this.$emit("finish-action", {target: this.form_data.target.id})
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_MOVE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MOVE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_MOVE, err)
                     this.$emit("finish-action", "cancel")
                 })
         },
@@ -250,11 +285,14 @@ export default {
                 target: this.form_data.target.id,
             })
                 .then((result) => {
-                    this.$emit("finish-action", { target: this.form_data.target.id, target_object: this.form_data.target }) //TODO temporary workaround to not change other apis
-                    StandardToasts.makeStandardToast(this,StandardToasts.SUCCESS_MERGE)
+                    this.$emit("finish-action", {
+                        target: this.form_data.target.id,
+                        target_object: this.form_data.target
+                    }) //TODO temporary workaround to not change other apis
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_MERGE)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_MERGE, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_MERGE, err)
                     this.$emit("finish-action", "cancel")
                 })
 

@@ -418,7 +418,6 @@
     "Message": "Message",
     "Sticky_Nav_Help": "Toujours afficher le menu de navigation en haut de l’écran.",
     "Combine_All_Steps": "Combiner toutes les étapes en un seul champ.",
-    "facet_count_info": "Afficher les compteurs de recette sur les filtres de recherche.",
     "Decimals": "Décimales",
     "plan_share_desc": "Les nouvelles entrées de menu de la semaine seront partagées automatiquement avec des utilisateurs sélectionnés.",
     "Use_Kj": "Utiliser kJ au lieu de kcal",
@@ -460,5 +459,8 @@
     "Unpin": "Détacher",
     "Split_All_Steps": "Diviser toutes les lignes en étapes séparées.",
     "Warning_Delete_Supermarket_Category": "Supprimer une catégorie de supermarché supprimera également toutes les relations avec les aliments. Êtes-vous sûr ?",
-    "Instruction_Replace": "Instruction Remplacer"
+    "Instruction_Replace": "Instruction Remplacer",
+    "recipe_property_info": "Vous pouvez également ajouter des propriétés aux aliments pour les calculer automatiquement en fonction de votre recette !",
+    "per_serving": "par portions",
+    "open_data_help_text": "Le projet «Tandoor Open Data» est une base de données fournie par la communauté. Ce champ est rempli automatiquement lors de l'importation des données et permet les mises à jour dans le futur."
 }
