@@ -982,6 +982,11 @@ class MealType(models.Model, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name'], name='mt_unique_name_per_space'),
+        ]
+
 
 class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
