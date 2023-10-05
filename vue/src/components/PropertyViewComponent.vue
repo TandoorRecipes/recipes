@@ -35,8 +35,8 @@
                     <td>
                         {{ p.name }}
                     </td>
-                    <td class="text-right">{{ p.property_amount_per_serving }}</td>
-                    <td class="text-right">{{ p.property_amount_total }}</td>
+                    <td class="text-right">{{ roundDecimals(p.property_amount_per_serving) }}</td>
+                    <td class="text-right">{{ roundDecimals(p.property_amount_total) }}</td>
                     <td class=""> {{ p.unit }}</td>
 
                     <td class="align-middle text-center" v-if="!show_recipe_properties">
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, roundDecimals, StandardToasts} from "@/utils/utils";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
 
@@ -172,6 +172,7 @@ export default {
         }
     },
     methods: {
+        roundDecimals,
         openFoodEditModal: function (food) {
             console.log(food)
             let apiClient = ApiApiFactory()
