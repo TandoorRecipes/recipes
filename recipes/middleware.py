@@ -1,4 +1,3 @@
-import time
 from os import getenv
 
 from django.conf import settings
@@ -31,12 +30,12 @@ def terminal_width():
         s = struct.pack('HHHH', 0, 0, 0, 0)
         x = fcntl.ioctl(1, termios.TIOCGWINSZ, s)
         width = struct.unpack('HHHH', x)[1]
-    except:
+    except Exception:
         pass
     if width <= 0:
         try:
             width = int(getenv['COLUMNS'])
-        except:
+        except Exception:
             pass
     if width <= 0:
         width = 80

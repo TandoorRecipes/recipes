@@ -9,10 +9,10 @@ from cookbook.helper import dal
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
 
-from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan,
-                     PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList,
-                     Space, Step, Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit,
-                     UnitConversion, UserFile, UserSpace, get_model_name)
+from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
+                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
+                     UserFile, UserSpace, get_model_name)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
 

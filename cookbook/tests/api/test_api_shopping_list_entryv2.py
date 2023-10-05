@@ -1,14 +1,11 @@
 import json
 from datetime import timedelta
 
-import factory
 import pytest
 from django.contrib import auth
-from django.forms import model_to_dict
 from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
-from pytest_factoryboy import LazyFixture, register
 
 from cookbook.models import ShoppingListEntry
 from cookbook.tests.factories import ShoppingListEntryFactory
@@ -46,7 +43,7 @@ def test_list_permission(arg, request):
     assert c.get(reverse(LIST_URL)).status_code == arg[1]
 
 
-def test_list_space(sle,  u1_s1, u1_s2, space_2):
+def test_list_space(sle, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s1.get(reverse(LIST_URL)).content)) == 10
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)) == 0
 
@@ -169,7 +166,7 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     assert len(r) == count
     # count unchecked entries
     if not x.status_code == 404:
-        count = count-1
+        count = count - 1
     assert [x['checked'] for x in r].count(False) == count
     # test shared user can delete
     x = shared_client.delete(
@@ -182,13 +179,12 @@ def test_sharing(request, shared, count, sle_2, sle, u1_s1):
     assert len(r) == count
     # count unchecked entries
     if not x.status_code == 404:
-        count = count-1
+        count = count - 1
     assert [x['checked'] for x in r].count(False) == count
 
 
 def test_completed(sle, u1_s1):
     # check 1 entry
-    #
     u1_s1.patch(
         reverse(DETAIL_URL, args={sle[0].id}),
         {'checked': True},
@@ -199,7 +195,7 @@ def test_completed(sle, u1_s1):
     # count unchecked entries
     assert [x['checked'] for x in r].count(False) == 9
     # confirm completed_at is populated
-    assert [(x['completed_at'] != None) for x in r if x['checked']].count(True) == 1
+    assert [(x['completed_at'] is not None) for x in r if x['checked']].count(True) == 1
 
     assert len(json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=0').content)) == 9
     assert len(json.loads(u1_s1.get(f'{reverse(LIST_URL)}?checked=1').content)) == 1
@@ -213,7 +209,7 @@ def test_completed(sle, u1_s1):
     r = json.loads(u1_s1.get(reverse(LIST_URL)).content)
     assert [x['checked'] for x in r].count(False) == 10
     # confirm completed_at value cleared
-    assert [(x['completed_at'] != None) for x in r if x['checked']].count(True) == 0
+    assert [(x['completed_at'] is not None) for x in r if x['checked']].count(True) == 0
 
 
 def test_recent(sle, u1_s1):

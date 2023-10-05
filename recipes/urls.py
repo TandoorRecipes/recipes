@@ -52,7 +52,7 @@ for p in settings.PLUGINS:
         if settings.DEBUG:
             print(e.msg)
             print(f'ERROR failed loading plugin <{p["name"]}> urls, did you forget creating urls.py in your plugin?')
-    except Exception as e:
+    except Exception:
         if settings.DEBUG:
             print(f'ERROR failed loading urls for plugin <{p["name"]}>')
             traceback.format_exc()

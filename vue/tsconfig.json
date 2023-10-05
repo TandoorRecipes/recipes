@@ -3,6 +3,7 @@
     "target": "es5",
     "module": "esnext",
     "strict": true,
+    "allowJs": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
@@ -32,8 +33,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
-, "src/directives/OutsideClick.js"  ],
+    "tests/**/*.tsx",
+    "src/directives/OutsideClick.js"
+  ],
   "exclude": [
     "node_modules"
   ]

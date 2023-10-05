@@ -1,8 +1,6 @@
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 
 from cookbook.views import views
@@ -50,7 +48,6 @@ class ScopeMiddleware:
                 return views.no_groups(request)
 
             request.space = user_space.space
-            # with scopes_disabled():
             with scope(space=request.space):
                 return self.get_response(request)
         else:

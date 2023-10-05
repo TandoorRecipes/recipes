@@ -90,7 +90,7 @@ class Paprika(Integration):
                     if validators.url(url, public=True):
                         response = requests.get(url)
                         self.import_recipe_image(recipe, BytesIO(response.content))
-            except:
+            except Exception:
                 if recipe_json.get("photo_data", None):
                     self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
 

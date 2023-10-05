@@ -2,11 +2,10 @@ import json
 
 import pytest
 from django.contrib import auth
-from django.forms import model_to_dict
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import RecipeBook, Storage, Sync, SyncLog, ShoppingList, ShoppingListEntry, Food, ShoppingListRecipe
+from cookbook.models import ShoppingList, ShoppingListRecipe
 
 LIST_URL = 'api:shoppinglistrecipe-list'
 DETAIL_URL = 'api:shoppinglistrecipe-detail'
@@ -21,7 +20,7 @@ def obj_1(space_1, u1_s1, recipe_1_s1):
 
 
 @pytest.fixture
-def obj_2(space_1, u1_s1,recipe_1_s1):
+def obj_2(space_1, u1_s1, recipe_1_s1):
     r = ShoppingListRecipe.objects.create(recipe=recipe_1_s1, servings=1)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.recipes.add(r)
