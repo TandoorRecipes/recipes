@@ -1294,7 +1294,7 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
 
     def is_image(self):
         try:
-            img = Image.open(self.file.file.file)
+            Image.open(self.file.file.file)
             return True
         except Exception:
             return False

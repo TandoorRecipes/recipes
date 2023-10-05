@@ -7,8 +7,7 @@ from django_tables2 import RequestConfig
 
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
-from cookbook.tables import (ImportLogTable, InviteLinkTable, RecipeImportTable,
-                             StorageTable)
+from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable
 
 
 @group_required('admin')
@@ -196,7 +195,7 @@ def custom_filter(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
+            'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 

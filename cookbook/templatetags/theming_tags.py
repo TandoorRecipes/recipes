@@ -1,6 +1,7 @@
-from cookbook.models import UserPreference
 from django import template
 from django.templatetags.static import static
+
+from cookbook.models import UserPreference
 from recipes.settings import STICKY_NAV_PREF_DEFAULT
 
 register = template.Library()

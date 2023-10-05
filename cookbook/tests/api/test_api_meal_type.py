@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, MealType
+from cookbook.models import MealType
 
 LIST_URL = 'api:mealtype-list'
 DETAIL_URL = 'api:mealtype-detail'

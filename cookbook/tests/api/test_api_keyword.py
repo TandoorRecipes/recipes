@@ -25,6 +25,7 @@ if (Keyword.node_order_by):
 else:
     node_location = 'last-child'
 
+
 @pytest.fixture()
 def obj_1(space_1):
     return Keyword.objects.get_or_create(name='test_1', space=space_1)[0]

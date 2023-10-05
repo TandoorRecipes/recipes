@@ -1490,7 +1490,6 @@ class ImportOpenData(APIView):
         # TODO validate data
         print(request.data)
         selected_version = request.data['selected_version']
-        selected_datatypes = request.data['selected_datatypes']
         update_existing = str2bool(request.data['update_existing'])
         use_metric = str2bool(request.data['use_metric'])
 

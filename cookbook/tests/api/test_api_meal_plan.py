@@ -6,7 +6,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, MealPlan, MealType
+from cookbook.models import MealPlan, MealType
 from cookbook.tests.factories import RecipeFactory
 
 LIST_URL = 'api:mealplan-list'
@@ -149,7 +149,7 @@ def test_add_with_shopping(u1_s1, meal_type):
     space = meal_type.space
     with scope(space=space):
         recipe = RecipeFactory.create(space=space)
-    r = u1_s1.post(
+    u1_s1.post(
         reverse(LIST_URL),
         {'recipe': {'id': recipe.id, 'name': recipe.name, 'keywords': []}, 'meal_type': {'id': meal_type.id, 'name': meal_type.name},
          'from_date': (datetime.now()).strftime("%Y-%m-%d"), 'to_date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': [], 'addshopping': True},
