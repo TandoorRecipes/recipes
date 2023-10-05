@@ -305,7 +305,6 @@ def history(request):
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
-@group_required('admin')
 def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
