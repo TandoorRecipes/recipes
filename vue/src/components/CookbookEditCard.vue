@@ -2,7 +2,7 @@
     <b-card no-body v-hover>
         <b-card-header class="p-4">
             <h5>
-                {{ book_copy.icon }}&nbsp;{{ book_copy.name }}
+                {{ book_copy.name }}
                 <span class="float-right text-primary" @click="editOrSave"><i class="fa" v-bind:class="{ 'fa-pen': !editing, 'fa-save': editing }" aria-hidden="true"></i></span>
             </h5>
             <b-badge class="font-weight-normal mr-1" v-for="u in book_copy.shared" v-bind:key="u.id" variant="primary" pill>{{ u.display_name }}</b-badge>
@@ -11,9 +11,6 @@
             <div class="form-group" v-if="editing">
                 <label for="inputName1">{{ $t("Name") }}</label>
                 <input class="form-control" id="inputName1" placeholder="Name" v-model="book_copy.name" />
-            </div>
-            <div class="form-group" v-if="editing">
-                <emoji-input :field="'icon'" :label="$t('Icon')" :value="book_copy.icon"></emoji-input>
             </div>
             <div class="form-group" v-if="editing">
                 <label for="inputDesc1">{{ $t("Description") }}</label>
@@ -58,12 +55,11 @@
 <script>
 import { ApiApiFactory } from "@/utils/openapi/api"
 import { ApiMixin, StandardToasts } from "@/utils/utils"
-import EmojiInput from "./Modals/EmojiInput"
 import GenericMultiselect from "@/components/GenericMultiselect"
 
 export default {
     name: "CookbookEditCard",
-    components: { EmojiInput, GenericMultiselect },
+    components: { GenericMultiselect },
     mixins: [ApiMixin],
     props: {
         book: Object,
@@ -77,7 +73,6 @@ export default {
     },
     mounted() {
         this.book_copy = this.book
-        this.$root.$on("change", this.updateEmoji)
     },
     directives: {
         hover: {
@@ -101,11 +96,6 @@ export default {
                 this.saveData()
                 this.$emit("editing", false)
                 this.$emit("reload")
-            }
-        },
-        updateEmoji: function (item, value) {
-            if (item === "icon") {
-                this.book_copy.icon = value
             }
         },
         saveData: function () {

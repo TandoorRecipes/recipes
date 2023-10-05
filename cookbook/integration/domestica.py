@@ -28,7 +28,7 @@ class Domestica(Integration):
         recipe.save()
 
         step = Step.objects.create(
-            instruction=file['directions'], space=self.request.space,
+            instruction=file['directions'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
         )
 
         if file['source'] != '':

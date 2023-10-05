@@ -48,7 +48,7 @@ def recipe(request, space_1, u1_s1):
 
 
 @pytest.mark.parametrize("arg", [
-    ['g1_s1', 204],
+    ['g1_s1', 403],
     ['u1_s1', 204],
     ['u1_s2', 404],
     ['a1_s1', 204],
@@ -246,8 +246,6 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1, space_1):
 
 @pytest.mark.parametrize("recipe", [{'steps__ingredients__header': 1}], indirect=['recipe'])
 def test_shopping_with_header_ingredient(u1_s1, recipe):
-    # with scope(space=recipe.space):
-    #     recipe.step_set.first().ingredient_set.add(IngredientFactory(ingredients__header=1))
     u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
     assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 10
     assert len(json.loads(

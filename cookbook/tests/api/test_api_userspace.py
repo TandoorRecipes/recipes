@@ -2,11 +2,8 @@ import json
 
 import pytest
 from django.contrib import auth
-from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
-
-from cookbook.models import Ingredient, Step
 
 LIST_URL = 'api:userspace-list'
 DETAIL_URL = 'api:userspace-detail'
@@ -27,7 +24,7 @@ def test_list_permission(arg, request, space_1, g1_s1, u1_s1, a1_s1):
     result = c.get(reverse(LIST_URL))
     assert result.status_code == arg[1]
     if arg[1] == 200:
-        assert len(json.loads(result.content)) == arg[2]
+        assert len(json.loads(result.content)['results']) == arg[2]
 
 
 @pytest.mark.parametrize("arg", [

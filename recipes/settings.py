@@ -46,7 +46,11 @@ INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
 
-REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+if os.getenv('REVERSE_PROXY_AUTH') is not None:
+    print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
+    REMOTE_USER_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+else:
+    REMOTE_USER_AUTH = bool(int(os.getenv('REMOTE_USER_AUTH', False)))
 
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
@@ -64,7 +68,11 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(
 if os.getenv('CSRF_TRUSTED_ORIGINS'):
     CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
-CORS_ORIGIN_ALLOW_ALL = True
+if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
+    print('DEPRECATION WARNING: Environment var "CORS_ORIGIN_ALLOW_ALL" is deprecated. Please use "CORS_ALLOW_ALL_ORIGINS."')
+    CORS_ALLOW_ALL_ORIGINS = CORS_ORIGIN_ALLOW_ALL
+else:
+    CORS_ALLOW_ALL_ORIGINS = bool(int(os.getenv("CORS_ALLOW_ALL_ORIGINS", True)))
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
@@ -115,6 +123,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'corsheaders',
     'crispy_forms',
+    'crispy_bootstrap4',
     'rest_framework',
     'rest_framework.authtoken',
     'django_cleanup.apps.CleanupConfig',
@@ -128,34 +137,43 @@ INSTALLED_APPS = [
     'treebeard',
 ]
 
+PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 PLUGINS = []
 try:
-    for d in os.listdir(os.path.join(BASE_DIR, 'recipes', 'plugins')):
-        if d != '__pycache__':
-            try:
-                apps_path = f'recipes.plugins.{d}.apps'
-                __import__(apps_path)
-                app_config_classname = dir(sys.modules[apps_path])[1]
-                plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
-                if plugin_module not in INSTALLED_APPS:
-                    INSTALLED_APPS.append(plugin_module)
-                    plugin_class = getattr(
-                        sys.modules[apps_path], app_config_classname)
-                    plugin_config = {
-                        'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
-                        'module': f'recipes.plugins.{d}',
-                        'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
-                        'base_url': plugin_class.base_url,
-                        'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
-                        'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
-                        'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
-                        'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
-                    }
-                    PLUGINS.append(plugin_config)
-            except Exception:
-                if DEBUG:
-                    traceback.print_exc()
-                    print(f'ERROR failed to initialize plugin {d}')
+    if os.path.isdir(PLUGINS_DIRECTORY):
+        for d in os.listdir(PLUGINS_DIRECTORY):
+            if d != '__pycache__':
+                try:
+                    apps_path = f'recipes.plugins.{d}.apps'
+                    __import__(apps_path)
+                    app_config_classname = dir(sys.modules[apps_path])[1]
+                    plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
+                    plugin_class = getattr(sys.modules[apps_path], app_config_classname)
+                    plugin_disabled = False
+                    if hasattr(plugin_class, 'disabled'):
+                        plugin_disabled = plugin_class.disabled
+                    if plugin_module not in INSTALLED_APPS and not plugin_disabled:
+                        INSTALLED_APPS.append(plugin_module)
+
+                        plugin_config = {
+                            'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                            'version': plugin_class.VERSION if hasattr(plugin_class, 'VERSION') else 'unknown',
+                            'website': plugin_class.website if hasattr(plugin_class, 'website') else '',
+                            'github': plugin_class.github if hasattr(plugin_class, 'github') else '',
+                            'module': f'recipes.plugins.{d}',
+                            'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
+                            'base_url': plugin_class.base_url,
+                            'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                            'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                            'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
+                            'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
+                        }
+                        PLUGINS.append(plugin_config)
+                        print(f'PLUGIN {d} loaded')
+                except Exception:
+                    if DEBUG:
+                        traceback.print_exc()
+                        print(f'ERROR failed to initialize plugin {d}')
 except Exception:
     if DEBUG:
         print('ERROR failed to initialize plugins')
@@ -264,7 +282,7 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
-if REVERSE_PROXY_AUTH:
+if REMOTE_USER_AUTH:
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append(
         'django.contrib.auth.backends.RemoteUserBackend')

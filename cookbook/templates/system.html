@@ -11,29 +11,39 @@
 {% block content %}
 
     <h1>{% trans 'System' %}</h1>
-    
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-
-    <h3>{% trans 'System Information' %}</h3>
-
     {% blocktrans %}
         Django Recipes is an open source free software application. It can be found on
         <a href="https://github.com/vabene1111/recipes">GitHub</a>.
         Changelogs can be found <a href="https://github.com/vabene1111/recipes/releases">here</a>.
     {% endblocktrans %}
-    <br/>
-    <br/>
-    Current Version: {% if version and version != '' %}
-    <a href="https://github.com/vabene1111/recipes/releases/tag/{{ version }}">{{ version }}</a>{% else %}
-    {{ version }}{% endif %}<br/>
-    Ref: <a href="https://github.com/vabene1111/recipes/commit/{{ ref }}">{{ ref }}</a>
-    <br/>
-    <br/>
-    <br/>
-    <h4>{% trans 'Media Serving' %} <span class="badge badge-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
+
+    <h3 class="mt-5">{% trans 'System Information' %}</h3>
+    {% if version_info %}
+        <div class="row">
+            <div class="col">
+                <div class="list-group">
+                    {% for v in version_info %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ v.name }} ({{ v.branch }}) {% if v.tag %}- {{ v.tag }}{% endif %}</h5>
+                            </div>
+                            <pre class="card-text p-2" style="border: 1px solid lightgrey; border-radius: 5px" target="_blank">{{ v.version }}</pre>
+                            <a href="{{ v.website }}">Website</a>
+                            {% if v.commit_link %}
+                                - <a href="{{ v.commit_link }}" target="_blank">Commit</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        {% blocktrans %}
+            You need to execute <code>version.py</code> in your update script to generate version information (done automatically in docker).
+        {% endblocktrans %}
+    {% endif %}
+
+    <h4 class="mt-3">{% trans 'Media Serving' %} <span class="badge badge-{% if gunicorn_media %}danger{% else %}success{% endif %}">{% if gunicorn_media %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if gunicorn_media %}
         {% blocktrans %}Serving media files directly using gunicorn/python is <b>not recommend</b>!
@@ -44,10 +54,9 @@
     {% else %}
         {% trans 'Everything is fine!' %}
     {% endif %}
-    <br/>
-    <br/>
 
-    <h4>{% trans 'Secret Key' %} <span
+
+    <h4 class="mt-3">{% trans 'Secret Key' %} <span
             class="badge badge-{% if secret_key %}danger{% else %}success{% endif %}">{% if secret_key %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if secret_key %}
@@ -60,10 +69,8 @@
     {% else %}
         {% trans 'Everything is fine!' %}
     {% endif %}
-    <br/>
-    <br/>
 
-    <h4>{% trans 'Debug Mode' %} <span
+    <h4 class="mt-3">{% trans 'Debug Mode' %} <span
             class="badge badge-{% if debug %}danger{% else %}success{% endif %}">{% if debug %}
         {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if debug %}
@@ -75,10 +82,8 @@
     {% else %}
         {% trans 'Everything is fine!' %}
     {% endif %}
-    <br/>
-    <br/>
 
-    <h4>{% trans 'Database' %} <span
+    <h4 class="mt-3">{% trans 'Database' %} <span
             class="badge badge-{% if postgres %}warning{% else %}success{% endif %}">{% if postgres %}
         {% trans 'Info' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
     {% if postgres %}
@@ -89,9 +94,8 @@
     {% else %}
         {% trans 'Everything is fine!' %}
     {% endif %}
-    <br/>
-    <br/>
-    <h4>Debug</h4>
+
+    <h4 class="mt-3">Debug</h4>
     <textarea class="form-control" rows="20">
 Gunicorn Media: {{ gunicorn_media }}
 Sqlite: {{ postgres }}
@@ -99,9 +103,9 @@ Debug: {{ debug }}
 
 {% for key,value in request.META.items %}{% if key in 'SERVER_PORT,REMOTE_HOST,REMOTE_ADDR,SERVER_PROTOCOL' %}{{ key }}:{{ value }}
 {% endif %}{% endfor %}
-{% for key,value in request.META.items %}{% if 'HTTP_' in key  %}{{ key }}:{{ value }}
+{% for key,value in request.META.items %}{% if 'HTTP_' in key %}{{ key }}:{{ value }}
 {% endif %}{% endfor %}
-{% for key,value in request.META.items %}{% if 'wsgi.' in key  %}{{ key }}:{{ value }}
+{% for key,value in request.META.items %}{% if 'wsgi.' in key %}{{ key }}:{{ value }}
 {% endif %}{% endfor %}
     </textarea>
     <br/>

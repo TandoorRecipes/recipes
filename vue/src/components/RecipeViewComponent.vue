@@ -149,7 +149,8 @@
         <div class="row text-center d-print-none" style="margin-top: 3vh; margin-bottom: 3vh"
              v-if="share_uid !== 'None' && !loading">
             <div class="col col-md-12">
-                <import-tandoor></import-tandoor> <br/>
+                <import-tandoor></import-tandoor>
+                <br/>
                 <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)" class="mt-3">{{ $t("Report Abuse") }}</a>
             </div>
         </div>
@@ -236,6 +237,7 @@ export default {
     },
     props: {
         recipe_id: Number,
+        recipe_obj: {type: Object, default: null},
         show_context_menu: {type: Boolean, default: true},
         enable_keyword_links: {type: Boolean, default: true},
         show_recipe_switcher: {type: Boolean, default: true},
@@ -247,7 +249,14 @@ export default {
         },
     },
     mounted() {
-        this.loadRecipe(this.recipe_id)
+        if (this.recipe_obj !== null) {
+            this.recipe = this.rootrecipe = this.recipe_obj
+            this.prepareView()
+        } else {
+            this.loadRecipe(this.recipe_id)
+        }
+
+
         this.$i18n.locale = window.CUSTOM_LOCALE
         this.requestWakeLock()
         window.addEventListener('resize', this.handleResize);
@@ -291,32 +300,35 @@ export default {
         },
         loadRecipe: function (recipe_id) {
             apiLoadRecipe(recipe_id).then((recipe) => {
-                let total_time = 0
-                for (let step of recipe.steps) {
-                    for (let ingredient of step.ingredients) {
-                        this.$set(ingredient, "checked", false)
-                    }
-
-                    step.time_offset = total_time
-                    total_time += step.time
-                }
-
-                // set start time only if there are any steps with timers (otherwise no timers are rendered)
-                if (total_time > 0) {
-                    this.start_time = moment().format("yyyy-MM-DDTHH:mm")
-                }
-
-
-                if (recipe.image === null) this.printReady()
-
                 this.recipe = this.rootrecipe = recipe
-                this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
-                this.loading = false
-
-                setTimeout(() => {
-                    this.handleResize()
-                }, 100)
+                this.prepareView()
             })
+        },
+        prepareView: function () {
+            let total_time = 0
+            for (let step of this.recipe.steps) {
+                for (let ingredient of step.ingredients) {
+                    this.$set(ingredient, "checked", false)
+                }
+
+                step.time_offset = total_time
+                total_time += step.time
+            }
+
+            // set start time only if there are any steps with timers (otherwise no timers are rendered)
+            if (total_time > 0) {
+                this.start_time = moment().format("yyyy-MM-DDTHH:mm")
+            }
+
+
+            if (this.recipe.image === null) this.printReady()
+
+            this.servings = this.servings_cache[this.rootrecipe.id] = this.recipe.servings
+            this.loading = false
+
+            setTimeout(() => {
+                this.handleResize()
+            }, 100)
         },
         updateStartTime: function (e) {
             this.start_time = e

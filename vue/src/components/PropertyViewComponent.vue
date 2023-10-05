@@ -8,13 +8,6 @@
                     <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
                 </b-col>
                 <b-col class="text-right">
-                    <span v-if="!show_total">{{ $t('per_serving') }} </span>
-                    <span v-if="show_total">{{ $t('total') }} </span>
-
-                    <a href="#" @click="show_total = !show_total">
-                        <i class="fas fa-toggle-on" v-if="!show_total"></i>
-                        <i class="fas fa-toggle-off" v-if="show_total"></i>
-                    </a>
 
                     <div v-if="hasRecipeProperties && hasFoodProperties">
                         <span v-if="!show_recipe_properties">{{ $t('Food') }} </span>
@@ -31,13 +24,19 @@
 
 
             <table class="table table-bordered table-sm">
+                <tr >
+                    <td style="border-top: none"></td>
+                    <td class="text-right" style="border-top: none">{{ $t('per_serving') }}</td>
+                    <td class="text-right" style="border-top: none">{{ $t('total') }}</td>
+                    <td style="border-top: none"></td>
+                </tr>
 
                 <tr v-for="p in property_list" v-bind:key="`id_${p.id}`">
                     <td>
-
-                        {{ p.icon }} {{ p.name }}
+                        {{ p.name }}
                     </td>
-                    <td class="text-right">{{ get_amount(p.property_amount) }}</td>
+                    <td class="text-right">{{ roundDecimals(p.property_amount_per_serving) }}</td>
+                    <td class="text-right">{{ roundDecimals(p.property_amount_total) }}</td>
                     <td class=""> {{ p.unit }}</td>
 
                     <td class="align-middle text-center" v-if="!show_recipe_properties">
@@ -80,7 +79,7 @@
 </template>
 
 <script>
-import {ApiMixin, StandardToasts} from "@/utils/utils";
+import {ApiMixin, roundDecimals, StandardToasts} from "@/utils/utils";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
 
@@ -97,7 +96,6 @@ export default {
             selected_property: undefined,
             selected_food: undefined,
             show_food_edit_modal: false,
-            show_total: false,
             show_recipe_properties: false,
         }
     },
@@ -128,9 +126,11 @@ export default {
                             'description': rp.property_type.description,
                             'icon': rp.property_type.icon,
                             'food_values': [],
-                            'property_amount': rp.property_amount,
+                            'property_amount_per_serving': rp.property_amount,
+                            'property_amount_total': rp.property_amount * this.recipe.servings * (this.servings / this.recipe.servings),
                             'missing_value': false,
                             'unit': rp.property_type.unit,
+                            'type': rp.property_type,
                         }
                     )
                 })
@@ -143,14 +143,27 @@ export default {
                             'description': fp.description,
                             'icon': fp.icon,
                             'food_values': fp.food_values,
-                            'property_amount': fp.total_value,
+                            'property_amount_per_serving': fp.total_value / this.recipe.servings,
+                            'property_amount_total': fp.total_value * (this.servings / this.recipe.servings),
                             'missing_value': fp.missing_value,
                             'unit': fp.unit,
+                            'type': fp,
                         }
                     )
                 }
             }
-            return pt_list
+
+            function compare(a,b){
+                if(a.type.order > b.type.order){
+                    return 1
+                }
+                if(a.type.order < b.type.order){
+                    return -1
+                }
+                return 0
+            }
+
+            return pt_list.sort(compare)
         }
     },
     mounted() {
@@ -159,19 +172,7 @@ export default {
         }
     },
     methods: {
-        get_amount: function (amount) {
-            if (this.show_total) {
-                return (amount * (this.servings / this.recipe.servings)).toLocaleString(window.CUSTOM_LOCALE, {
-                    'maximumFractionDigits': 2,
-                    'minimumFractionDigits': 2
-                })
-            } else {
-                return (amount / this.recipe.servings).toLocaleString(window.CUSTOM_LOCALE, {
-                    'maximumFractionDigits': 2,
-                    'minimumFractionDigits': 2
-                })
-            }
-        },
+        roundDecimals,
         openFoodEditModal: function (food) {
             console.log(food)
             let apiClient = ApiApiFactory()

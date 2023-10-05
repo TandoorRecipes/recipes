@@ -17,6 +17,8 @@ They basically explain everything in their documentation, but the following is a
 Choose a provider from the [list](https://django-allauth.readthedocs.io/en/latest/providers.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
 in the example below.
 
+When at least one social provider is set up, the social login sign in buttons should appear on the login page.
+
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud
 ```
@@ -100,15 +102,17 @@ AUTH_LDAP_START_TLS=1
 AUTH_LDAP_TLS_CACERTFILE=/etc/ssl/certs/own-ca.pem
 ```
 
-## Reverse Proxy Authentication
+## External Authentication
+
+!!! warning "Security Impact"
+    If you just set `REMOTE_USER_AUTH=1` without any additional configuration, _anybody_ can authenticate with _any_ username!
 
 !!! Info "Community Contributed Tutorial"
-     This tutorial was provided by a community member. Since I do not use reverse proxy authentication, I cannot provide any
-     assistance should you choose to use this authentication method.
+    This tutorial was provided by a community member. We are not able to provide any support! Please only use, if you know what you are doing! 
 
-In order use proxy authentication you will need to:
+In order use external authentication (i.e. using a proxy auth like Authelia, Authentik, etc.) you will need to:
 
-1. Set `REVERSE_PROXY_AUTH=1` in the `.env` file
+1. Set `REMOTE_USER_AUTH=1` in the `.env` file
 2. Update your nginx configuration file
 
 Using any of the examples above will automatically generate a configuration file inside a docker volume.
@@ -116,10 +120,10 @@ Use `docker volume inspect recipes_nginx` to find out where your volume is store
 
 !!! warning "Configuration File Volume"
     The nginx config volume is generated when the container is first run. You can change the volume to a bind mount in the
-    warning `docker-compose.yml`, but then you will need to manually create it. See section `Volumes vs Bind Mounts` below
+    `docker-compose.yml`, but then you will need to manually create it. See section `Volumes vs Bind Mounts` below
     for more information.
 
-The following example shows a configuration for Authelia:
+### Configuration Example for Authelia
 
 ```
 server {
@@ -161,7 +165,7 @@ server {
 }
 ```
 
-Please refer to the appropriate documentation on how to setup the reverse proxy, authentication, and networks.
+Please refer to the appropriate documentation on how to set up the reverse proxy, authentication, and networks.
 
 Ensure users have been configured for Authelia, and that the endpoint recipes is pointed to is protected but
 available.

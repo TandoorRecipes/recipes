@@ -1,5 +1,5 @@
 {
-  "name": "vue",
+  "name": "tandoor",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,7 @@
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.21.3",
-    "@emoji-mart/data": "^1.1.1",
     "@popperjs/core": "^2.11.7",
-    "@riophae/vue-treeselect": "^0.4.0",
     "@vue/cli": "^5.0.8",
     "@vue/composition-api": "1.7.1",
     "axios": "^1.2.0",
@@ -20,8 +18,6 @@
     "babel-loader": "^9.1.0",
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.29.1",
-    "emoji-mart": "^5.4.0",
-    "emoji-mart-vue-fast": "^12.0.1",
     "html2pdf.js": "^0.10.1",
     "lodash": "^4.17.21",
     "mavon-editor": "^2.10.4",
@@ -59,9 +55,9 @@
     "@vue/compiler-sfc": "^3.2.45",
     "@vue/eslint-config-typescript": "^10.0.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.28.0",
+    "eslint": "^8.46.0",
     "eslint-plugin-vue": "^8.7.1",
-    "typescript": "~4.9.3",
+    "typescript": "~5.1.6",
     "vue-cli-plugin-i18n": "^2.3.2",
     "webpack-bundle-tracker": "1.8.1",
     "workbox-background-sync": "^6.5.4",

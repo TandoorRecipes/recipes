@@ -120,7 +120,6 @@ def test_default_inherit_fields(u1_s1, u1_s2, space_1, space_2):
     r = u1_s1.get(
         reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}),
     )
-    #assert len([x['field'] for x in json.loads(r.content)['food_inherit_default']]) == 0
 
     # inherit all possible fields
     with scope(space=space_1):

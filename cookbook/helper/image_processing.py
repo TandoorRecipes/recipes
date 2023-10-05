@@ -1,8 +1,7 @@
 import os
-import sys
+from io import BytesIO
 
 from PIL import Image
-from io import BytesIO
 
 
 def rescale_image_jpeg(image_object, base_width=1020):

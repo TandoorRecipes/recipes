@@ -22,7 +22,8 @@ from cookbook.helper.permission_helper import group_required, has_group_permissi
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
                              Space, ViewLog, UserSpace)
 from cookbook.tables import (CookLogTable, ViewLogTable)
-from recipes.version import BUILD_REF, VERSION_NUMBER
+from cookbook.version_info import VERSION_INFO
+from recipes.settings import PLUGINS
 
 
 def index(request):
@@ -304,7 +305,6 @@ def history(request):
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
-@group_required('admin')
 def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
@@ -320,8 +320,8 @@ def system(request):
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
-        'version': VERSION_NUMBER,
-        'ref': BUILD_REF,
+        'version_info': VERSION_INFO,
+        'plugins': PLUGINS,
         'secret_key': secret_key
     })
 
@@ -370,7 +370,7 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
 
                 if request.user.userspace_set.count() == 1:
                     user_space.active = True

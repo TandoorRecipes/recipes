@@ -1,4 +1,3 @@
-import traceback
 import datetime
 import traceback
 import uuid
@@ -18,8 +17,7 @@ from lxml import etree
 
 from cookbook.helper.image_processing import handle_image
 from cookbook.models import Keyword, Recipe
-from recipes.settings import DEBUG
-from recipes.settings import EXPORT_FILE_CACHE_DURATION
+from recipes.settings import DEBUG, EXPORT_FILE_CACHE_DURATION
 
 
 class Integration:
@@ -39,7 +37,6 @@ class Integration:
         self.ignored_recipes = []
 
         description = f'Imported by {request.user.get_user_display_name()} at {date_format(datetime.datetime.now(), "DATETIME_FORMAT")}. Type: {export_type}'
-        icon = '📥'
 
         try:
             last_kw = Keyword.objects.filter(name__regex=r'^(Import [0-9]+)', space=request.space).latest('created_at')
@@ -52,23 +49,19 @@ class Integration:
             self.keyword = parent.add_child(
                 name=name,
                 description=description,
-                icon=icon,
                 space=request.space
             )
         except (IntegrityError, ValueError):  # in case, for whatever reason, the name does exist append UUID to it. Not nice but works for now.
             self.keyword = parent.add_child(
                 name=f'{name} {str(uuid.uuid4())[0:8]}',
                 description=description,
-                icon=icon,
                 space=request.space
             )
-
-
 
     def do_export(self, recipes, el):
 
         with scope(space=self.request.space):
-            el.total_recipes = len(recipes) 
+            el.total_recipes = len(recipes)
             el.cache_duration = EXPORT_FILE_CACHE_DURATION
             el.save()
 
@@ -80,7 +73,7 @@ class Integration:
                 export_file = file
 
             else:
-                #zip the files if there is more then one file
+                # zip the files if there is more then one file
                 export_filename = self.get_export_file_name()
                 export_stream = BytesIO()
                 export_obj = ZipFile(export_stream, 'w')
@@ -91,15 +84,13 @@ class Integration:
                 export_obj.close()
                 export_file = export_stream.getvalue()
 
-
-            cache.set('export_file_'+str(el.pk), {'filename': export_filename, 'file': export_file}, EXPORT_FILE_CACHE_DURATION)
+            cache.set('export_file_' + str(el.pk), {'filename': export_filename, 'file': export_file}, EXPORT_FILE_CACHE_DURATION)
             el.running = False
             el.save()
 
         response = HttpResponse(export_file, content_type='application/force-download')
         response['Content-Disposition'] = 'attachment; filename="' + export_filename + '"'
         return response
-
 
     def import_file_name_filter(self, zip_info_object):
         """
@@ -164,7 +155,7 @@ class Integration:
 
                         for z in file_list:
                             try:
-                                if not hasattr(z, 'filename') or type(z) == Tag:
+                                if not hasattr(z, 'filename') or isinstance(z, Tag):
                                     recipe = self.get_recipe_from_file(z)
                                 else:
                                     recipe = self.get_recipe_from_file(BytesIO(import_zip.read(z.filename)))
@@ -297,7 +288,6 @@ class Integration:
                 log.msg += exception.msg
         if DEBUG:
             traceback.print_exc()
-
 
     def get_export_file_name(self, format='zip'):
         return "export_{}.{}".format(datetime.datetime.now().strftime("%Y-%m-%d"), format)

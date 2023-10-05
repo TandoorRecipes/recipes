@@ -1,4 +1,5 @@
 
+import inspect
 from datetime import date
 from decimal import Decimal
 
@@ -11,12 +12,6 @@ from pytest_factoryboy import register
 
 from cookbook.models import UserSpace
 
-# this code will run immediately prior to creating the model object useful when you want a reverse relationship
-# log = factory.RelatedFactory(
-#     UserLogFactory,
-#     factory_related_name='user',
-#     action=models.UserLog.ACTION_CREATE,
-# )
 faker = FakerFactory.create()
 
 
@@ -96,7 +91,6 @@ class SupermarketCategoryFactory(factory.django.DjangoModelFactory):
         django_get_or_create = ('name', 'space',)
 
 
-# @factory.django.mute_signals(post_save)
 @register
 class FoodFactory(factory.django.DjangoModelFactory):
     """Food factory."""
@@ -143,7 +137,6 @@ class RecipeBookFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda x: faker.sentence(
         nb_words=3, variable_nb_words=False))
     description = factory.LazyAttribute(lambda x: faker.sentence(nb_words=10))
-    icon = None
     # shared = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
     created_by = factory.SubFactory(
         UserFactory, space=factory.SelfAttribute('..space'))
@@ -247,7 +240,8 @@ class MealPlanFactory(factory.django.DjangoModelFactory):
     meal_type = factory.SubFactory(
         MealTypeFactory, space=factory.SelfAttribute('..space'))
     note = factory.LazyAttribute(lambda x: faker.paragraph())
-    date = factory.LazyAttribute(lambda x: faker.future_date())
+    from_date = factory.LazyAttribute(lambda x: faker.future_date())
+    to_date = factory.LazyAttribute(lambda x: faker.future_date())
     space = factory.SubFactory(SpaceFactory)
 
     class Params:
@@ -334,6 +328,8 @@ class StepFactory(factory.django.DjangoModelFactory):
     order = factory.Sequence(lambda x: x)
     # file = models.ForeignKey('UserFile', on_delete=models.PROTECT, null=True, blank=True)
     show_as_header = True
+    # TODO: need to update to fetch from User's preferences
+    show_ingredients_table = True
     step_recipe__has_recipe = False
     ingredients__food_recipe_count = 0
     space = factory.SubFactory(SpaceFactory)
@@ -448,17 +444,6 @@ class RecipeFactory(factory.django.DjangoModelFactory):
         if extracted and (num_steps + num_recipe_steps == 0):
             for step in extracted:
                 self.steps.add(step)
-
-    # image = models.ImageField(upload_to='recipes/', blank=True, null=True)  #TODO test recipe image api https://factoryboy.readthedocs.io/en/stable/orms.html#factory.django.ImageField
-    # storage = models.ForeignKey(
-    #     Storage, on_delete=models.PROTECT, blank=True, null=True
-    # )
-    # file_uid = models.CharField(max_length=256, default="", blank=True)
-    # file_path = models.CharField(max_length=512, default="", blank=True)
-    # link = models.CharField(max_length=512, null=True, blank=True)
-    # cors_link = models.CharField(max_length=1024, null=True, blank=True)
-    # nutrition = models.ForeignKey(NutritionInformation, blank=True, null=True, on_delete=models.CASCADE)
-    # updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         model = 'cookbook.Recipe'

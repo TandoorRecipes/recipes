@@ -67,7 +67,8 @@ def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
         share = ShareLink.objects.filter(recipe=recipe_1_s1).first()
         assert a_u.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
         assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 200
-        assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404  # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
+        # TODO fix in https://github.com/TandoorRecipes/recipes/issues/1238
+        assert u1_s2.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk]) + f'?share={share.uuid}').status_code == 404
 
         recipe_1_s1.created_by = auth.get_user(u1_s1)
         recipe_1_s1.private = True
@@ -81,10 +82,10 @@ def test_share_permission(recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 200],
+    ['g1_s1', 403],
     ['u1_s1', 200],
     ['a1_s1', 200],
-    ['g1_s2', 404],
+    ['g1_s2', 403],
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])
@@ -100,7 +101,6 @@ def test_update(arg, request, recipe_1_s1):
             j,
             content_type='application/json'
         )
-        response = json.loads(r.content)
         assert r.status_code == arg[1]
         if r.status_code == 200:
             validate_recipe(j, json.loads(r.content))
@@ -140,7 +140,7 @@ def test_update_private_recipe(u1_s1, u2_s1, recipe_1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 201],
+    ['g1_s1', 403],
     ['u1_s1', 201],
     ['a1_s1', 201],
 ])
