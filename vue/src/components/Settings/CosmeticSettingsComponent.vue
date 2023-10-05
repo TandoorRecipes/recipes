@@ -31,6 +31,12 @@
             </b-form-checkbox>
         </b-form-group>
 
+        <b-form-group :description="$t('show_step_ingredients_setting_help')">
+            <b-form-checkbox v-model="user_preferences.show_step_ingredients" @change="updateSettings(false);">
+                {{ $t('show_step_ingredients_setting') }}
+            </b-form-checkbox>
+        </b-form-group>
+
 
         <hr/>
 
@@ -50,6 +56,7 @@
                 <b-form-select-option value="DARKLY">Darkly</b-form-select-option>
                 <b-form-select-option value="FLATLY">Flatly</b-form-select-option>
                 <b-form-select-option value="SUPERHERO">Superhero</b-form-select-option>
+                <b-form-select-option value="TANDOOR_DARK">Tandoor Dark (INCOMPLETE)</b-form-select-option>
             </b-form-select>
 
         </b-form-group>

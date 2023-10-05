@@ -184,7 +184,7 @@ export default {
             localStorage.setItem("pinned_recipes", JSON.stringify(pinnedRecipes))
         },
         saveMealPlan: function (entry) {
-            entry.date = moment(entry.date).format("YYYY-MM-DD")
+            entry.from_date = moment(entry.from_date).format("YYYY-MM-DD")
             let reviewshopping = entry.addshopping && entry.reviewshopping
             entry.addshopping = entry.addshopping && !entry.reviewshopping
 
@@ -208,7 +208,7 @@ export default {
         createMealPlan(data) {
             this.entryEditing = this.options.entryEditing
             this.entryEditing.recipe = this.recipe
-            this.entryEditing.date = moment(new Date()).format("YYYY-MM-DD")
+            this.entryEditing.from_date = moment(new Date()).format("YYYY-MM-DD")
             this.$nextTick(function () {
                 this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
             })

@@ -7,8 +7,7 @@ from django_tables2 import RequestConfig
 
 from cookbook.helper.permission_helper import group_required
 from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
-from cookbook.tables import (ImportLogTable, InviteLinkTable, RecipeImportTable,
-                             StorageTable)
+from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable
 
 
 @group_required('admin')
@@ -196,7 +195,7 @@ def custom_filter(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
+            'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 
@@ -225,6 +224,36 @@ def step(request):
             "config": {
                 'model': "STEP",  # *REQUIRED* name of the model in models.js
                 'recipe_param': 'steps',
+            }
+        }
+    )
+
+
+@group_required('user')
+def unit_conversion(request):
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Unit Conversions"),
+            "config": {
+                'model': "UNIT_CONVERSION",  # *REQUIRED* name of the model in models.js
+            }
+        }
+    )
+
+
+@group_required('user')
+def property_type(request):
+    # model-name is the models.js name of the model, probably ALL-CAPS
+    return render(
+        request,
+        'generic/model_template.html',
+        {
+            "title": _("Property Types"),
+            "config": {
+                'model': "PROPERTY_TYPE",  # *REQUIRED* name of the model in models.js
             }
         }
     )

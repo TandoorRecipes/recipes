@@ -10,12 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField, ImportLog,
-                     Ingredient, InviteLink, Keyword, MealPlan, MealType, NutritionInformation,
+from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+                     Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
+                     TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                     ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -38,6 +39,8 @@ def delete_space_action(modeladmin, request, queryset):
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
+    autocomplete_fields = ('created_by',)
+    filter_horizontal = ('food_inherit',)
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
     actions = [delete_space_action]
@@ -49,6 +52,8 @@ admin.site.register(Space, SpaceAdmin)
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
     search_fields = ('user__username', 'space__name',)
+    filter_horizontal = ('groups',)
+    autocomplete_fields = ('user', 'space',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)
@@ -59,6 +64,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page',)
     date_hierarchy = 'created_at'
+    filter_horizontal = ('plan_share', 'shopping_share',)
 
     @staticmethod
     def name(obj):
@@ -150,9 +156,16 @@ class KeywordAdmin(TreeAdmin):
 admin.site.register(Keyword, KeywordAdmin)
 
 
+@admin.action(description='Delete Steps not part of a Recipe.')
+def delete_unattached_steps(modeladmin, request, queryset):
+    with scopes_disabled():
+        Step.objects.filter(recipe=None).delete()
+
+
 class StepAdmin(admin.ModelAdmin):
     list_display = ('name', 'order',)
     search_fields = ('name',)
+    actions = [delete_unattached_steps]
 
 
 admin.site.register(Step, StepAdmin)
@@ -201,9 +214,24 @@ class FoodAdmin(TreeAdmin):
 admin.site.register(Food, FoodAdmin)
 
 
+class UnitConversionAdmin(admin.ModelAdmin):
+    list_display = ('base_amount', 'base_unit', 'food', 'converted_amount', 'converted_unit')
+    search_fields = ('food__name', 'unit__name')
+
+
+admin.site.register(UnitConversion, UnitConversionAdmin)
+
+
+@admin.action(description='Delete Ingredients not part of a Recipe.')
+def delete_unattached_ingredients(modeladmin, request, queryset):
+    with scopes_disabled():
+        Ingredient.objects.filter(step__recipe=None).delete()
+
+
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('food', 'amount', 'unit')
     search_fields = ('food__name', 'unit__name')
+    actions = [delete_unattached_ingredients]
 
 
 admin.site.register(Ingredient, IngredientAdmin)
@@ -249,7 +277,7 @@ admin.site.register(RecipeBookEntry, RecipeBookEntryAdmin)
 
 
 class MealPlanAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe', 'meal_type', 'date')
+    list_display = ('user', 'recipe', 'meal_type', 'from_date', 'to_date')
 
     @staticmethod
     def user(obj):
@@ -286,6 +314,7 @@ admin.site.register(InviteLink, InviteLinkAdmin)
 
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
+    search_fields = ('recipe__name', 'space__name',)
 
 
 admin.site.register(CookLog, CookLogAdmin)
@@ -317,6 +346,20 @@ class ShareLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShareLink, ShareLinkAdmin)
+
+
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+
+admin.site.register(PropertyType, PropertyTypeAdmin)
+
+
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = ('property_amount', 'property_type')
+
+
+admin.site.register(Property, PropertyAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):

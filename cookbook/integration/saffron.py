@@ -43,7 +43,7 @@ class Saffron(Integration):
 
         recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space, )
 
-        step = Step.objects.create(instruction='\n'.join(directions), space=self.request.space, )
+        step = Step.objects.create(instruction='\n'.join(directions), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
@@ -59,11 +59,11 @@ class Saffron(Integration):
 
     def get_file_from_recipe(self, recipe):
 
-        data = "Title: "+recipe.name if recipe.name else ""+"\n"
-        data += "Description: "+recipe.description if recipe.description else ""+"\n"
+        data = "Title: " + recipe.name if recipe.name else "" + "\n"
+        data += "Description: " + recipe.description if recipe.description else "" + "\n"
         data += "Source: \n"
         data += "Original URL: \n"
-        data += "Yield: "+str(recipe.servings)+"\n"
+        data += "Yield: " + str(recipe.servings) + "\n"
         data += "Cookbook: \n"
         data += "Section: \n"
         data += "Image: \n"
@@ -78,13 +78,13 @@ class Saffron(Integration):
 
         data += "Ingredients: \n"
         for ingredient in recipeIngredient:
-            data += ingredient+"\n"
+            data += ingredient + "\n"
 
         data += "Instructions: \n"
         for instruction in recipeInstructions:
-            data += instruction+"\n"
+            data += instruction + "\n"
 
-        return recipe.name+'.txt', data
+        return recipe.name + '.txt', data
 
     def get_files_from_recipes(self, recipes, el, cookie):
         files = []

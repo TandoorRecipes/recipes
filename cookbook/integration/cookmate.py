@@ -1,17 +1,12 @@
-import base64
-import json
 from io import BytesIO
-
-from gettext import gettext as _
 
 import requests
 import validators
-from lxml import etree
 
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_servings, parse_time, parse_servings_text
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step
+from cookbook.models import Ingredient, Recipe, Step
 
 
 class Cookmate(Integration):
@@ -50,7 +45,7 @@ class Cookmate(Integration):
             for step in recipe_text.getchildren():
                 if step.text:
                     step = Step.objects.create(
-                        instruction=step.text.strip(), space=self.request.space,
+                        instruction=step.text.strip(), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                     )
                     recipe.steps.add(step)
 

@@ -24,9 +24,6 @@
                 <div class="col-md-12">
                     <b-card class="d-flex flex-column" v-hover v-on:click="openBook(book.id)">
                         <b-row no-gutters style="height: inherit">
-                            <b-col no-gutters md="2" style="height: inherit">
-                                <h3>{{ book.icon }}</h3>
-                            </b-col>
                             <b-col no-gutters md="10" style="height: inherit">
                                 <b-card-body class="m-0 py-0" style="height: inherit">
                                     <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
@@ -142,7 +139,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient
-                .createRecipeBook({ name: this.$t("New_Cookbook"), description: "", icon: "", shared: [] })
+                .createRecipeBook({ name: this.$t("New_Cookbook"), description: "", shared: [] })
                 .then((result) => {
                     let new_book = result.data
                     this.refreshData()

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-19 19:14+0100\n"
+"POT-Creation-Date: 2023-05-18 14:28+0200\n"
 "PO-Revision-Date: 2023-01-08 17:55+0000\n"
 "Last-Translator: Joachim Weber <joachim.weber@gmx.de>\n"
 "Language-Team: Latvian <http://translate.tandoor.dev/projects/tandoor/"
@@ -68,7 +68,7 @@ msgstr "Sastāvdaļas"
 msgid "Shopping list auto sync period"
 msgstr "Iepirkumu saraksts pašlaik ir tukšs"
 
-#: .\cookbook\forms.py:62 .\cookbook\templates\recipe_view.html:21
+#: .\cookbook\forms.py:62 .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
 msgstr "Komentāri"
 
@@ -125,7 +125,7 @@ msgid "If you want to be able to create and see comments underneath recipes."
 msgstr ""
 "Ja vēlaties, lai jūs varētu izveidot un redzēt komentārus zem receptēm."
 
-#: .\cookbook\forms.py:79 .\cookbook\forms.py:491
+#: .\cookbook\forms.py:79 .\cookbook\forms.py:509
 msgid ""
 "Setting to 0 will disable auto sync. When viewing a shopping list the list "
 "is updated every set seconds to sync changes someone else might have made. "
@@ -143,7 +143,7 @@ msgstr ""
 msgid "Makes the navbar stick to the top of the page."
 msgstr ""
 
-#: .\cookbook\forms.py:83 .\cookbook\forms.py:494
+#: .\cookbook\forms.py:83 .\cookbook\forms.py:512
 msgid "Automatically add meal plan ingredients to shopping list."
 msgstr ""
 
@@ -163,11 +163,11 @@ msgstr ""
 "Abi lauki nav obligāti. Ja neviens nav norādīts, tā vietā tiks parādīts "
 "lietotājvārds"
 
-#: .\cookbook\forms.py:123 .\cookbook\forms.py:296
+#: .\cookbook\forms.py:123 .\cookbook\forms.py:314
 msgid "Name"
 msgstr "Vārds"
 
-#: .\cookbook\forms.py:124 .\cookbook\forms.py:297 .\cookbook\views\lists.py:88
+#: .\cookbook\forms.py:124 .\cookbook\forms.py:315 .\cookbook\views\lists.py:88
 msgid "Keywords"
 msgstr "Atslēgvārdi"
 
@@ -179,7 +179,7 @@ msgstr "Pagatavošanas laiks minūtēs"
 msgid "Waiting time (cooking/baking) in minutes"
 msgstr "Gaidīšanas laiks (vārīšana / cepšana) minūtēs"
 
-#: .\cookbook\forms.py:127 .\cookbook\forms.py:265 .\cookbook\forms.py:298
+#: .\cookbook\forms.py:127 .\cookbook\forms.py:283 .\cookbook\forms.py:316
 msgid "Path"
 msgstr "Ceļš"
 
@@ -187,29 +187,29 @@ msgstr "Ceļš"
 msgid "Storage UID"
 msgstr "Krātuves UID"
 
-#: .\cookbook\forms.py:160
+#: .\cookbook\forms.py:161
 msgid "Default"
 msgstr ""
 
-#: .\cookbook\forms.py:172
+#: .\cookbook\forms.py:190
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
 
-#: .\cookbook\forms.py:195
+#: .\cookbook\forms.py:213
 msgid "Add your comment: "
 msgstr "Pievienot komentāru: "
 
-#: .\cookbook\forms.py:210
+#: .\cookbook\forms.py:228
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr "Atstājiet tukšu Dropbox un ievadiet lietotnes paroli Nextcloud."
 
-#: .\cookbook\forms.py:217
+#: .\cookbook\forms.py:235
 msgid "Leave empty for nextcloud and enter api token for dropbox."
 msgstr "Atstājiet tukšu Nextcloud un ievadiet API tokenu Dropbox."
 
-#: .\cookbook\forms.py:226
+#: .\cookbook\forms.py:244
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
@@ -217,33 +217,33 @@ msgstr ""
 "Atstājiet tukšu Dropbox un ievadiet tikai Nextcloud bāzes URL (<kods> /"
 "remote.php/webdav/ </code> tiek pievienots automātiski)"
 
-#: .\cookbook\forms.py:264 .\cookbook\views\edit.py:157
+#: .\cookbook\forms.py:282 .\cookbook\views\edit.py:157
 msgid "Storage"
 msgstr "Krātuve"
 
-#: .\cookbook\forms.py:266
+#: .\cookbook\forms.py:284
 msgid "Active"
 msgstr ""
 
-#: .\cookbook\forms.py:272
+#: .\cookbook\forms.py:290
 msgid "Search String"
 msgstr "Meklēšanas virkne"
 
-#: .\cookbook\forms.py:299
+#: .\cookbook\forms.py:317
 msgid "File ID"
 msgstr "Faila ID"
 
-#: .\cookbook\forms.py:321
+#: .\cookbook\forms.py:339
 msgid "You must provide at least a recipe or a title."
 msgstr "Jums jānorāda vismaz recepte vai nosaukums."
 
-#: .\cookbook\forms.py:334
+#: .\cookbook\forms.py:352
 msgid "You can list default users to share recipes with in the settings."
 msgstr ""
 "Iestatījumos varat uzskaitīt noklusējuma lietotājus, ar kuriem koplietot "
 "receptes."
 
-#: .\cookbook\forms.py:335
+#: .\cookbook\forms.py:353
 msgid ""
 "You can use markdown to format this field. See the <a href=\"/docs/markdown/"
 "\">docs here</a>"
@@ -251,219 +251,219 @@ msgstr ""
 "Lai formatētu šo lauku, varat izmantot Markdown. Skatiet <a href=\"/docs/"
 "markdown/\"> dokumentus šeit </a>"
 
-#: .\cookbook\forms.py:361
+#: .\cookbook\forms.py:379
 msgid "Maximum number of users for this space reached."
 msgstr ""
 
-#: .\cookbook\forms.py:367
+#: .\cookbook\forms.py:385
 msgid "Email address already taken!"
 msgstr ""
 
-#: .\cookbook\forms.py:375
+#: .\cookbook\forms.py:393
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
 
-#: .\cookbook\forms.py:390
+#: .\cookbook\forms.py:408
 msgid "Name already taken."
 msgstr ""
 
-#: .\cookbook\forms.py:401
+#: .\cookbook\forms.py:419
 msgid "Accept Terms and Privacy"
 msgstr ""
 
-#: .\cookbook\forms.py:433
+#: .\cookbook\forms.py:451
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
 
-#: .\cookbook\forms.py:443
+#: .\cookbook\forms.py:461
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
 
-#: .\cookbook\forms.py:444
+#: .\cookbook\forms.py:462
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
 
-#: .\cookbook\forms.py:446
+#: .\cookbook\forms.py:464
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
 
-#: .\cookbook\forms.py:448
+#: .\cookbook\forms.py:466
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
 
-#: .\cookbook\forms.py:450
+#: .\cookbook\forms.py:468
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
 
-#: .\cookbook\forms.py:452
+#: .\cookbook\forms.py:470
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
 
-#: .\cookbook\forms.py:454
+#: .\cookbook\forms.py:472
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
 
-#: .\cookbook\forms.py:458
+#: .\cookbook\forms.py:476
 #, fuzzy
 #| msgid "Search"
 msgid "Search Method"
 msgstr "Meklēt"
 
-#: .\cookbook\forms.py:459
+#: .\cookbook\forms.py:477
 msgid "Fuzzy Lookups"
 msgstr ""
 
-#: .\cookbook\forms.py:460
+#: .\cookbook\forms.py:478
 msgid "Ignore Accent"
 msgstr ""
 
-#: .\cookbook\forms.py:461
+#: .\cookbook\forms.py:479
 msgid "Partial Match"
 msgstr ""
 
-#: .\cookbook\forms.py:462
+#: .\cookbook\forms.py:480
 msgid "Starts With"
 msgstr ""
 
-#: .\cookbook\forms.py:463
+#: .\cookbook\forms.py:481
 #, fuzzy
 #| msgid "Search"
 msgid "Fuzzy Search"
 msgstr "Meklēt"
 
-#: .\cookbook\forms.py:464
+#: .\cookbook\forms.py:482
 #, fuzzy
 #| msgid "Text"
 msgid "Full Text"
 msgstr "Teskts"
 
-#: .\cookbook\forms.py:489
+#: .\cookbook\forms.py:507
 msgid ""
 "Users will see all items you add to your shopping list.  They must add you "
 "to see items on their list."
 msgstr ""
 
-#: .\cookbook\forms.py:495
+#: .\cookbook\forms.py:513
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
 
-#: .\cookbook\forms.py:496
+#: .\cookbook\forms.py:514
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
 
-#: .\cookbook\forms.py:497
+#: .\cookbook\forms.py:515
 msgid "Default number of hours to delay a shopping list entry."
 msgstr ""
 
-#: .\cookbook\forms.py:498
+#: .\cookbook\forms.py:516
 msgid "Filter shopping list to only include supermarket categories."
 msgstr ""
 
-#: .\cookbook\forms.py:499
+#: .\cookbook\forms.py:517
 msgid "Days of recent shopping list entries to display."
 msgstr ""
 
-#: .\cookbook\forms.py:500
+#: .\cookbook\forms.py:518
 msgid "Mark food 'On Hand' when checked off shopping list."
 msgstr ""
 
-#: .\cookbook\forms.py:501
+#: .\cookbook\forms.py:519
 msgid "Delimiter to use for CSV exports."
 msgstr ""
 
-#: .\cookbook\forms.py:502
+#: .\cookbook\forms.py:520
 msgid "Prefix to add when copying list to the clipboard."
 msgstr ""
 
-#: .\cookbook\forms.py:506
+#: .\cookbook\forms.py:524
 #, fuzzy
 #| msgid "Shopping List"
 msgid "Share Shopping List"
 msgstr "Iepirkumu saraksts"
 
-#: .\cookbook\forms.py:507
+#: .\cookbook\forms.py:525
 msgid "Autosync"
 msgstr ""
 
-#: .\cookbook\forms.py:508
+#: .\cookbook\forms.py:526
 msgid "Auto Add Meal Plan"
 msgstr ""
 
-#: .\cookbook\forms.py:509
+#: .\cookbook\forms.py:527
 msgid "Exclude On Hand"
 msgstr ""
 
-#: .\cookbook\forms.py:510
+#: .\cookbook\forms.py:528
 msgid "Include Related"
 msgstr ""
 
-#: .\cookbook\forms.py:511
+#: .\cookbook\forms.py:529
 msgid "Default Delay Hours"
 msgstr ""
 
-#: .\cookbook\forms.py:512
+#: .\cookbook\forms.py:530
 msgid "Filter to Supermarket"
 msgstr ""
 
-#: .\cookbook\forms.py:513
+#: .\cookbook\forms.py:531
 msgid "Recent Days"
 msgstr ""
 
-#: .\cookbook\forms.py:514
+#: .\cookbook\forms.py:532
 msgid "CSV Delimiter"
 msgstr ""
 
-#: .\cookbook\forms.py:515
+#: .\cookbook\forms.py:533
 msgid "List Prefix"
 msgstr "Saraksta prefikss"
 
-#: .\cookbook\forms.py:516
+#: .\cookbook\forms.py:534
 msgid "Auto On Hand"
 msgstr ""
 
-#: .\cookbook\forms.py:526
+#: .\cookbook\forms.py:544
 msgid "Reset Food Inheritance"
 msgstr ""
 
-#: .\cookbook\forms.py:527
+#: .\cookbook\forms.py:545
 msgid "Reset all food to inherit the fields configured."
 msgstr ""
 
-#: .\cookbook\forms.py:539
+#: .\cookbook\forms.py:557
 #, fuzzy
 #| msgid "Food that should be replaced."
 msgid "Fields on food that should be inherited by default."
 msgstr "Ēdiens, kas būtu jāaizstāj."
 
-#: .\cookbook\forms.py:540
+#: .\cookbook\forms.py:558
 #, fuzzy
 #| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
 msgstr "Parādīt nesen skatītās receptes meklēšanas lapā."
 
-#: .\cookbook\forms.py:541
+#: .\cookbook\forms.py:559
 msgid "Use the plural form for units and food inside this space."
 msgstr ""
 
@@ -474,7 +474,7 @@ msgid ""
 msgstr ""
 
 #: .\cookbook\helper\permission_helper.py:164
-#: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:114
+#: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
 msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
 
@@ -487,7 +487,7 @@ msgstr "Jūs neesat pieteicies un tāpēc nevarat skatīt šo lapu!"
 #: .\cookbook\helper\permission_helper.py:305
 #: .\cookbook\helper\permission_helper.py:321
 #: .\cookbook\helper\permission_helper.py:342 .\cookbook\views\data.py:36
-#: .\cookbook\views\views.py:125 .\cookbook\views\views.py:132
+#: .\cookbook\views\views.py:128 .\cookbook\views\views.py:135
 msgid "You do not have the required permissions to view this page!"
 msgstr "Jums nav nepieciešamo atļauju, lai apskatītu šo lapu!"
 
@@ -506,11 +506,41 @@ msgstr ""
 msgid "You have more users than allowed in your space."
 msgstr ""
 
-#: .\cookbook\helper\recipe_search.py:570
+#: .\cookbook\helper\recipe_search.py:630
 msgid "One of queryset or hash_key must be provided"
 msgstr ""
 
-#: .\cookbook\helper\shopping_helper.py:152
+#: .\cookbook\helper\recipe_url_import.py:266
+#, fuzzy
+#| msgid "System Information"
+msgid "reverse rotation"
+msgstr "Sistēmas informācija"
+
+#: .\cookbook\helper\recipe_url_import.py:267
+msgid "careful rotation"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:268
+msgid "knead"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:269
+msgid "thicken"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:270
+msgid "warm up"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:271
+msgid "ferment"
+msgstr ""
+
+#: .\cookbook\helper\recipe_url_import.py:272
+msgid "sous-vide"
+msgstr ""
+
+#: .\cookbook\helper\shopping_helper.py:157
 #, fuzzy
 #| msgid "You must provide at least a recipe or a title."
 msgid "You must supply a servings size"
@@ -530,40 +560,46 @@ msgstr ""
 msgid "I made this"
 msgstr ""
 
-#: .\cookbook\integration\integration.py:223
+#: .\cookbook\integration\integration.py:218
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
 
-#: .\cookbook\integration\integration.py:226
+#: .\cookbook\integration\integration.py:221
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
 
-#: .\cookbook\integration\integration.py:231
+#: .\cookbook\integration\integration.py:226
 msgid "The following recipes were ignored because they already existed:"
 msgstr ""
 
-#: .\cookbook\integration\integration.py:235
+#: .\cookbook\integration\integration.py:230
 #, python-format
 msgid "Imported %s recipes."
 msgstr "Importētas %s receptes."
 
-#: .\cookbook\integration\paprika.py:46
+#: .\cookbook\integration\openeats.py:26
+#, fuzzy
+#| msgid "Recipe Home"
+msgid "Recipe source:"
+msgstr "Recepšu Sākums"
+
+#: .\cookbook\integration\paprika.py:49
 #, fuzzy
 #| msgid "Note"
 msgid "Notes"
 msgstr "Piezīme"
 
-#: .\cookbook\integration\paprika.py:49
+#: .\cookbook\integration\paprika.py:52
 #, fuzzy
 #| msgid "Information"
 msgid "Nutritional Information"
 msgstr "Informācija"
 
-#: .\cookbook\integration\paprika.py:53
+#: .\cookbook\integration\paprika.py:56
 msgid "Source"
 msgstr ""
 
@@ -630,82 +666,82 @@ msgid ""
 "upload."
 msgstr ""
 
-#: .\cookbook\models.py:364 .\cookbook\templates\search.html:7
+#: .\cookbook\models.py:365 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
 #: .\cookbook\templates\space_manage.html:7
 msgid "Search"
 msgstr "Meklēt"
 
-#: .\cookbook\models.py:365 .\cookbook\templates\base.html:110
+#: .\cookbook\models.py:366 .\cookbook\templates\base.html:110
 #: .\cookbook\templates\meal_plan.html:7 .\cookbook\views\delete.py:178
 #: .\cookbook\views\edit.py:211 .\cookbook\views\new.py:179
 msgid "Meal-Plan"
 msgstr "Maltīšu plāns"
 
-#: .\cookbook\models.py:366 .\cookbook\templates\base.html:118
+#: .\cookbook\models.py:367 .\cookbook\templates\base.html:118
 msgid "Books"
 msgstr "Grāmatas"
 
-#: .\cookbook\models.py:579
+#: .\cookbook\models.py:580
 msgid " is part of a recipe step and cannot be deleted"
 msgstr ""
 
-#: .\cookbook\models.py:1180 .\cookbook\templates\search_info.html:28
+#: .\cookbook\models.py:1181 .\cookbook\templates\search_info.html:28
 msgid "Simple"
 msgstr ""
 
-#: .\cookbook\models.py:1181 .\cookbook\templates\search_info.html:33
+#: .\cookbook\models.py:1182 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
 msgstr ""
 
-#: .\cookbook\models.py:1182 .\cookbook\templates\search_info.html:38
+#: .\cookbook\models.py:1183 .\cookbook\templates\search_info.html:38
 msgid "Web"
 msgstr ""
 
-#: .\cookbook\models.py:1183 .\cookbook\templates\search_info.html:47
+#: .\cookbook\models.py:1184 .\cookbook\templates\search_info.html:47
 msgid "Raw"
 msgstr ""
 
-#: .\cookbook\models.py:1230
+#: .\cookbook\models.py:1231
 #, fuzzy
 #| msgid "Food"
 msgid "Food Alias"
 msgstr "Ēdiens"
 
-#: .\cookbook\models.py:1230
+#: .\cookbook\models.py:1231
 #, fuzzy
 #| msgid "Units"
 msgid "Unit Alias"
 msgstr "Vienības"
 
-#: .\cookbook\models.py:1230
+#: .\cookbook\models.py:1231
 #, fuzzy
 #| msgid "Keywords"
 msgid "Keyword Alias"
 msgstr "Atslēgvārdi"
 
-#: .\cookbook\models.py:1231
+#: .\cookbook\models.py:1232
 msgid "Description Replace"
 msgstr ""
 
-#: .\cookbook\models.py:1231
+#: .\cookbook\models.py:1232
 #, fuzzy
 #| msgid "Instructions"
 msgid "Instruction Replace"
 msgstr "Instrukcijas"
 
-#: .\cookbook\models.py:1257 .\cookbook\views\delete.py:36
+#: .\cookbook\models.py:1258 .\cookbook\views\delete.py:36
 #: .\cookbook\views\edit.py:251 .\cookbook\views\new.py:48
 msgid "Recipe"
 msgstr "Recepte"
 
-#: .\cookbook\models.py:1258
+#: .\cookbook\models.py:1259
 #, fuzzy
 #| msgid "Food"
 msgid "Food"
 msgstr "Ēdiens"
 
-#: .\cookbook\models.py:1259 .\cookbook\templates\base.html:141
+#: .\cookbook\models.py:1260 .\cookbook\templates\base.html:141
 msgid "Keyword"
 msgstr "Atslēgvārds"
 
@@ -721,64 +757,64 @@ msgstr ""
 msgid "Cannot modify Space owner permission."
 msgstr ""
 
-#: .\cookbook\serializer.py:1085
+#: .\cookbook\serializer.py:1093
 msgid "Hello"
 msgstr ""
 
-#: .\cookbook\serializer.py:1085
+#: .\cookbook\serializer.py:1093
 msgid "You have been invited by "
 msgstr ""
 
-#: .\cookbook\serializer.py:1086
+#: .\cookbook\serializer.py:1094
 msgid " to join their Tandoor Recipes space "
 msgstr ""
 
-#: .\cookbook\serializer.py:1087
+#: .\cookbook\serializer.py:1095
 msgid "Click the following link to activate your account: "
 msgstr ""
 
-#: .\cookbook\serializer.py:1088
+#: .\cookbook\serializer.py:1096
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
 
-#: .\cookbook\serializer.py:1089
+#: .\cookbook\serializer.py:1097
 msgid "The invitation is valid until "
 msgstr ""
 
-#: .\cookbook\serializer.py:1090
+#: .\cookbook\serializer.py:1098
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
 
-#: .\cookbook\serializer.py:1093
+#: .\cookbook\serializer.py:1101
 msgid "Tandoor Recipes Invite"
 msgstr ""
 
-#: .\cookbook\serializer.py:1234
+#: .\cookbook\serializer.py:1242
 msgid "Existing shopping list to update"
 msgstr ""
 
-#: .\cookbook\serializer.py:1236
+#: .\cookbook\serializer.py:1244
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
 
-#: .\cookbook\serializer.py:1238
+#: .\cookbook\serializer.py:1246
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr ""
 
-#: .\cookbook\serializer.py:1247
+#: .\cookbook\serializer.py:1255
 msgid "Amount of food to add to the shopping list"
 msgstr ""
 
-#: .\cookbook\serializer.py:1249
+#: .\cookbook\serializer.py:1257
 msgid "ID of unit to use for the shopping list"
 msgstr ""
 
-#: .\cookbook\serializer.py:1251
+#: .\cookbook\serializer.py:1259
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
 
@@ -1640,11 +1676,11 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: .\cookbook\templates\recipe_view.html:26
+#: .\cookbook\templates\recipe_view.html:41
 msgid "by"
 msgstr "pēc"
 
-#: .\cookbook\templates\recipe_view.html:44 .\cookbook\views\delete.py:144
+#: .\cookbook\templates\recipe_view.html:59 .\cookbook\views\delete.py:144
 #: .\cookbook\views\edit.py:171
 msgid "Comment"
 msgstr "Komentēt"
@@ -2170,262 +2206,262 @@ msgstr ""
 msgid "URL Import"
 msgstr "URL importēšana"
 
-#: .\cookbook\views\api.py:109 .\cookbook\views\api.py:201
+#: .\cookbook\views\api.py:110 .\cookbook\views\api.py:202
 #, fuzzy
 #| msgid "Parameter filter_list incorrectly formatted"
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Parametrs filter_list ir nepareizi formatēts"
 
-#: .\cookbook\views\api.py:221 .\cookbook\views\api.py:324
+#: .\cookbook\views\api.py:222 .\cookbook\views\api.py:325
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:225
+#: .\cookbook\views\api.py:226
 msgid "Cannot merge with the same object!"
 msgstr ""
 
-#: .\cookbook\views\api.py:232
+#: .\cookbook\views\api.py:233
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:237
+#: .\cookbook\views\api.py:238
 msgid "Cannot merge with child object!"
 msgstr ""
 
-#: .\cookbook\views\api.py:270
+#: .\cookbook\views\api.py:271
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:275
+#: .\cookbook\views\api.py:276
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:333
+#: .\cookbook\views\api.py:334
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr ""
 
-#: .\cookbook\views\api.py:336 .\cookbook\views\api.py:354
+#: .\cookbook\views\api.py:337 .\cookbook\views\api.py:355
 msgid "An error occurred attempting to move "
 msgstr ""
 
-#: .\cookbook\views\api.py:339
+#: .\cookbook\views\api.py:340
 msgid "Cannot move an object to itself!"
 msgstr ""
 
-#: .\cookbook\views\api.py:345
+#: .\cookbook\views\api.py:346
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr ""
 
-#: .\cookbook\views\api.py:351
+#: .\cookbook\views\api.py:352
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr ""
 
-#: .\cookbook\views\api.py:547
+#: .\cookbook\views\api.py:553
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr ""
 
-#: .\cookbook\views\api.py:552 .\cookbook\views\api.py:882
-#: .\cookbook\views\api.py:895
+#: .\cookbook\views\api.py:558 .\cookbook\views\api.py:888
+#: .\cookbook\views\api.py:901
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr ""
 
-#: .\cookbook\views\api.py:679
+#: .\cookbook\views\api.py:685
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 
-#: .\cookbook\views\api.py:681
+#: .\cookbook\views\api.py:687
 msgid "Query string matched (fuzzy) against object name."
 msgstr ""
 
-#: .\cookbook\views\api.py:725
+#: .\cookbook\views\api.py:731
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
 
-#: .\cookbook\views\api.py:727
+#: .\cookbook\views\api.py:733
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
 
-#: .\cookbook\views\api.py:730
+#: .\cookbook\views\api.py:736
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 
-#: .\cookbook\views\api.py:733
+#: .\cookbook\views\api.py:739
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 
-#: .\cookbook\views\api.py:736
+#: .\cookbook\views\api.py:742
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 
-#: .\cookbook\views\api.py:739
+#: .\cookbook\views\api.py:745
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 
-#: .\cookbook\views\api.py:741
+#: .\cookbook\views\api.py:747
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 
-#: .\cookbook\views\api.py:744
+#: .\cookbook\views\api.py:750
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 
-#: .\cookbook\views\api.py:746
+#: .\cookbook\views\api.py:752
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 
-#: .\cookbook\views\api.py:748
+#: .\cookbook\views\api.py:754
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 
-#: .\cookbook\views\api.py:750
+#: .\cookbook\views\api.py:756
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 
-#: .\cookbook\views\api.py:751
+#: .\cookbook\views\api.py:757
 msgid "ID of unit a recipe should have."
 msgstr ""
 
-#: .\cookbook\views\api.py:753
+#: .\cookbook\views\api.py:759
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
 
-#: .\cookbook\views\api.py:754
+#: .\cookbook\views\api.py:760
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
 
-#: .\cookbook\views\api.py:756
+#: .\cookbook\views\api.py:762
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
 
-#: .\cookbook\views\api.py:758
+#: .\cookbook\views\api.py:764
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
 
-#: .\cookbook\views\api.py:760
+#: .\cookbook\views\api.py:766
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 
-#: .\cookbook\views\api.py:762
+#: .\cookbook\views\api.py:768
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
 
-#: .\cookbook\views\api.py:764
+#: .\cookbook\views\api.py:770
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
 
-#: .\cookbook\views\api.py:766
+#: .\cookbook\views\api.py:772
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr ""
 
-#: .\cookbook\views\api.py:768
+#: .\cookbook\views\api.py:774
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
 
-#: .\cookbook\views\api.py:770
+#: .\cookbook\views\api.py:776
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
 
-#: .\cookbook\views\api.py:772
+#: .\cookbook\views\api.py:778
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
 
-#: .\cookbook\views\api.py:774
+#: .\cookbook\views\api.py:780
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
 
-#: .\cookbook\views\api.py:776
+#: .\cookbook\views\api.py:782
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
 
-#: .\cookbook\views\api.py:778
+#: .\cookbook\views\api.py:784
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
 
-#: .\cookbook\views\api.py:780
+#: .\cookbook\views\api.py:786
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 
-#: .\cookbook\views\api.py:940
+#: .\cookbook\views\api.py:946
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
 
-#: .\cookbook\views\api.py:945
+#: .\cookbook\views\api.py:951
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
 "b>]<br>  - recent includes unchecked items and recently completed items."
 msgstr ""
 
-#: .\cookbook\views\api.py:948
+#: .\cookbook\views\api.py:954
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
 
-#: .\cookbook\views\api.py:1160
+#: .\cookbook\views\api.py:1166
 msgid "Nothing to do."
 msgstr ""
 
-#: .\cookbook\views\api.py:1180
+#: .\cookbook\views\api.py:1198
 msgid "Invalid Url"
 msgstr ""
 
-#: .\cookbook\views\api.py:1187
+#: .\cookbook\views\api.py:1205
 msgid "Connection Refused."
 msgstr ""
 
-#: .\cookbook\views\api.py:1192
+#: .\cookbook\views\api.py:1210
 msgid "Bad URL Schema."
 msgstr ""
 
-#: .\cookbook\views\api.py:1215
+#: .\cookbook\views\api.py:1233
 #, fuzzy
 #| msgid "The requested page could not be found."
 msgid "No usable data could be found."
 msgstr "Pieprasīto lapu nevarēja atrast."
 
-#: .\cookbook\views\api.py:1308 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1326 .\cookbook\views\import_export.py:117
 msgid "Importing is not implemented for this provider"
 msgstr ""
 
-#: .\cookbook\views\api.py:1352 .\cookbook\views\data.py:31
+#: .\cookbook\views\api.py:1372 .\cookbook\views\data.py:31
 #: .\cookbook\views\edit.py:120 .\cookbook\views\new.py:90
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr ""
 
-#: .\cookbook\views\api.py:1374
+#: .\cookbook\views\api.py:1394
 msgid "Sync successful!"
 msgstr "Sinhronizācija ir veiksmīga!"
 
-#: .\cookbook\views\api.py:1379
+#: .\cookbook\views\api.py:1399
 msgid "Error synchronizing with Storage"
 msgstr "Sinhronizējot ar krātuvi, radās kļūda"
 
@@ -2489,7 +2525,7 @@ msgstr "Izmaiņas saglabātas!"
 msgid "Error saving changes!"
 msgstr "Saglabājot izmaiņas, radās kļūda!"
 
-#: .\cookbook\views\import_export.py:101
+#: .\cookbook\views\import_export.py:104
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
@@ -2539,40 +2575,40 @@ msgstr "Importēta jauna recepte!"
 msgid "There was an error importing this recipe!"
 msgstr "Importējot šo recepti, radās kļūda!"
 
-#: .\cookbook\views\views.py:86
+#: .\cookbook\views\views.py:73 .\cookbook\views\views.py:191
+#: .\cookbook\views\views.py:213 .\cookbook\views\views.py:399
+msgid "This feature is not available in the demo version!"
+msgstr ""
+
+#: .\cookbook\views\views.py:89
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
 
-#: .\cookbook\views\views.py:140
+#: .\cookbook\views\views.py:143
 msgid "You do not have the required permissions to perform this action!"
 msgstr "Jums nav nepieciešamo atļauju, lai veiktu šo darbību!"
 
-#: .\cookbook\views\views.py:151
+#: .\cookbook\views\views.py:154
 msgid "Comment saved!"
 msgstr "Komentārs saglabāts!"
 
-#: .\cookbook\views\views.py:188 .\cookbook\views\views.py:210
-#: .\cookbook\views\views.py:396
-msgid "This feature is not available in the demo version!"
-msgstr ""
-
-#: .\cookbook\views\views.py:250
+#: .\cookbook\views\views.py:253
 msgid "You must select at least one field to search!"
 msgstr ""
 
-#: .\cookbook\views\views.py:255
+#: .\cookbook\views\views.py:258
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
 
-#: .\cookbook\views\views.py:259
+#: .\cookbook\views\views.py:262
 msgid "Fuzzy search is not compatible with this search method!"
 msgstr ""
 
-#: .\cookbook\views\views.py:335
+#: .\cookbook\views\views.py:338
 msgid ""
 "The setup page can only be used to create the first user! If you have "
 "forgotten your superuser credentials please consult the django documentation "
@@ -2582,33 +2618,33 @@ msgstr ""
 "aizmirsis sava superlietotāja informāciju, lūdzu, skatiet Django "
 "dokumentāciju par paroļu atiestatīšanu."
 
-#: .\cookbook\views\views.py:342
+#: .\cookbook\views\views.py:345
 msgid "Passwords dont match!"
 msgstr "Paroles nesakrīt!"
 
-#: .\cookbook\views\views.py:350
+#: .\cookbook\views\views.py:353
 msgid "User has been created, please login!"
 msgstr "Lietotājs ir izveidots, lūdzu, piesakieties!"
 
-#: .\cookbook\views\views.py:366
+#: .\cookbook\views\views.py:369
 msgid "Malformed Invite Link supplied!"
 msgstr "Nepareiza uzaicinājuma saite!"
 
-#: .\cookbook\views\views.py:383
+#: .\cookbook\views\views.py:386
 msgid "Successfully joined space."
 msgstr ""
 
-#: .\cookbook\views\views.py:389
+#: .\cookbook\views\views.py:392
 msgid "Invite Link not valid or already used!"
 msgstr "Uzaicinājuma saite nav derīga vai jau izmantota!"
 
-#: .\cookbook\views\views.py:406
+#: .\cookbook\views\views.py:409
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
 
-#: .\cookbook\views\views.py:412
+#: .\cookbook\views\views.py:415
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."

@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-08 16:27+0100\n"
-"PO-Revision-Date: 2022-02-02 15:31+0000\n"
-"Last-Translator: Mario Dvorsek <mario.dvorsek@gmail.com>\n"
+"PO-Revision-Date: 2023-08-13 08:19+0000\n"
+"Last-Translator: Miha Perpar <miha.perpar2@gmail.com>\n"
 "Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sl/>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
-"%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 4.10.1\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\base.html:125
 #: .\cookbook\templates\forms\ingredients.html:34
@@ -964,7 +964,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:275
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:277
 msgid "Translate Tandoor"
@@ -1961,7 +1961,7 @@ msgstr ""
 
 #: .\cookbook\templates\space.html:106
 msgid "user"
-msgstr ""
+msgstr "uporabnik"
 
 #: .\cookbook\templates\space.html:107
 msgid "guest"
@@ -2107,7 +2107,7 @@ msgstr ""
 
 #: .\cookbook\templates\url_import.html:36
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\cookbook\templates\url_import.html:38
 msgid "App"

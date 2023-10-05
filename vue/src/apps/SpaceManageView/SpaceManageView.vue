@@ -48,17 +48,17 @@
                         </tr>
                         </thead>
                         <tr v-for="us in user_spaces" :key="us.id">
-                            <td>{{ us.user.username }}</td>
+                            <td>{{ us.user.display_name }}</td>
                             <td>
                                 <generic-multiselect
-                                    class="input-group-text m-0 p-0"
-                                    @change="us.groups = $event.val; updateUserSpace(us)"
-                                    label="name"
-                                    :initial_selection="us.groups"
-                                    :model="Models.GROUP"
-                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                    :limit="10"
-                                    :multiple="true"
+                                        class="input-group-text m-0 p-0"
+                                        @change="us.groups = $event.val; updateUserSpace(us)"
+                                        label="name"
+                                        :initial_selection="us.groups"
+                                        :model="Models.GROUP"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        :limit="10"
+                                        :multiple="true"
                                 />
                             </td>
                             <td>
@@ -90,14 +90,14 @@
                             <td>{{ il.email }}</td>
                             <td>
                                 <generic-multiselect
-                                    class="input-group-text m-0 p-0"
-                                    @change="il.group = $event.val;"
-                                    label="name"
-                                    :initial_single_selection="il.group"
-                                    :model="Models.GROUP"
-                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                    :limit="10"
-                                    :multiple="false"
+                                        class="input-group-text m-0 p-0"
+                                        @change="il.group = $event.val;"
+                                        label="name"
+                                        :initial_single_selection="il.group"
+                                        :model="Models.GROUP"
+                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                        :limit="10"
+                                        :multiple="false"
                                 />
                             </td>
                             <td><input type="date" v-model="il.valid_until" class="form-control"></td>
@@ -164,6 +164,15 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <h4>{{ $t('Open_Data_Import') }}</h4>
+                <open-data-import-component></open-data-import-component>
+            </div>
+
+        </div>
+
+
         <div class="row mt-4">
             <div class="col col-12">
                 <h4 class="mt-2"><i class="fas fa-trash"></i> {{ $t('Delete') }}</h4>
@@ -198,6 +207,7 @@ import GenericMultiselect from "@/components/GenericMultiselect";
 import GenericModalForm from "@/components/Modals/GenericModalForm";
 import axios from "axios";
 import VueClipboard from 'vue-clipboard2'
+import OpenDataImportComponent from "@/components/OpenDataImportComponent.vue";
 
 Vue.use(VueClipboard)
 
@@ -206,7 +216,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "SpaceManageView",
     mixins: [ResolveUrlMixin, ToastMixin, ApiMixin],
-    components: {GenericMultiselect, GenericModalForm},
+    components: {GenericMultiselect, GenericModalForm, OpenDataImportComponent},
     data() {
         return {
             ACTIVE_SPACE_ID: window.ACTIVE_SPACE_ID,
@@ -228,8 +238,8 @@ export default {
         apiFactory.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.space = r.data
         })
-        apiFactory.listUserSpaces().then(r => {
-            this.user_spaces = r.data
+        apiFactory.listUserSpaces(1, 25).then(r => { //TODO build proper pagination
+            this.user_spaces = r.data.results
         })
         this.loadInviteLinks()
     },
@@ -239,7 +249,7 @@ export default {
             if (link) {
                 content = localStorage.BASE_PATH + this.resolveDjangoUrl('view_invite', inviteLink.uuid)
             }
-             this.$copyText(content)
+            this.$copyText(content)
         },
         loadInviteLinks: function () {
             let apiFactory = new ApiApiFactory()

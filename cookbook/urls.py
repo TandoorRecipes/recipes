@@ -6,17 +6,24 @@ from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
 from cookbook.helper import dal
-from recipes.settings import DEBUG
-from recipes.version import VERSION_NUMBER
+from cookbook.version_info import TANDOOR_VERSION
+from recipes.settings import DEBUG, PLUGINS
 
-from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, MealPlan, Recipe,
-                     RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Step, Storage,
-                     Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UserFile,
-                     get_model_name, UserSpace, Space)
+from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
+                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
+                     UserFile, UserSpace, get_model_name)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
-from .views.api import CustomAuthToken
+from .views.api import CustomAuthToken, ImportOpenData
 
-router = routers.DefaultRouter()
+
+# extend DRF default router class to allow including additional routers
+class DefaultRouter(routers.DefaultRouter):
+    def extend(self, r):
+        self.registry.extend(r.registry)
+
+
+router = DefaultRouter()
 router.register(r'automation', api.AutomationViewSet)
 router.register(r'bookmarklet-import', api.BookmarkletImportViewSet)
 router.register(r'cook-log', api.CookLogViewSet)
@@ -30,10 +37,14 @@ router.register(r'ingredient', api.IngredientViewSet)
 router.register(r'invite-link', api.InviteLinkViewSet)
 router.register(r'keyword', api.KeywordViewSet)
 router.register(r'meal-plan', api.MealPlanViewSet)
+router.register(r'auto-plan', api.AutoPlanViewSet, basename='auto-plan')
 router.register(r'meal-type', api.MealTypeViewSet)
 router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
+router.register(r'unit-conversion', api.UnitConversionViewSet)
+router.register(r'food-property-type', api.PropertyTypeViewSet)
+router.register(r'food-property', api.PropertyViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
@@ -52,6 +63,13 @@ router.register(r'user-preference', api.UserPreferenceViewSet)
 router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
+
+for p in PLUGINS:
+    if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
+        try:
+            router.extend(c)
+        except AttributeError:
+            pass
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -114,11 +132,9 @@ urlpatterns = [
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
-    path('api/get_facets/', api.get_facets, name='api_get_facets'),
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
-
 
     path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
     # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
@@ -133,12 +149,13 @@ urlpatterns = [
     path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
 
-    path('openapi/', get_schema_view(title="Django Recipes", version=VERSION_NUMBER, public=True,
+    path('openapi/', get_schema_view(title="Django Recipes", version=TANDOOR_VERSION, public=True,
                                      permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
 
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
+    path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
 
     path('offline/', views.offline, name='view_offline'),
 
@@ -149,7 +166,7 @@ urlpatterns = [
 ]
 
 generic_models = (
-    Recipe, RecipeImport, Storage, RecipeBook, MealPlan, SyncLog, Sync,
+    Recipe, RecipeImport, Storage, RecipeBook, SyncLog, Sync,
     Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
 )
 
@@ -189,7 +206,7 @@ for m in generic_models:
             )
         )
 
-vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter]
+vue_models = [Food, Keyword, Unit, Supermarket, SupermarketCategory, Automation, UserFile, Step, CustomFilter, UnitConversion, PropertyType]
 for m in vue_models:
     py_name = get_model_name(m)
     url_name = py_name.replace('_', '-')

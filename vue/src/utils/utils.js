@@ -14,6 +14,7 @@ import {BToast} from "bootstrap-vue"
 // * */
 import Vue from "vue"
 import {Actions, Models} from "./models"
+import moment from "moment";
 
 export const ToastMixin = {
     name: "ToastMixin",
@@ -50,7 +51,7 @@ export class StandardToasts {
     static FAIL_MOVE = "FAIL_MOVE"
     static FAIL_MERGE = "FAIL_MERGE"
 
-    static makeStandardToast(context, toast, err) {
+    static makeStandardToast(context, toast, err = undefined, always_show_errors = false) {
         let title = ''
         let msg = ''
         let variant = ''
@@ -124,11 +125,14 @@ export class StandardToasts {
         }
 
 
-        let DEBUG = localStorage.getItem("DEBUG") === "True" || false
+        let DEBUG = localStorage.getItem("DEBUG") === "True" || always_show_errors
+        if (DEBUG){
+            console.log('ERROR ', err, JSON.stringify(err?.response?.data))
+            console.trace();
+        }
 
         if (err !== undefined && 'response' in err && 'headers' in err.response) {
             if (DEBUG && err.response.headers['content-type'] === 'application/json' && err.response.status < 500) {
-                console.log('ERROR ', JSON.stringify(err.response.data))
                 msg = context.$createElement('div', {}, [
                     context.$createElement('span', {}, [msg]),
                     context.$createElement('br', {}, []),
@@ -311,7 +315,7 @@ export function calculateHourMinuteSplit(amount) {
         let minutes = amount - hours * 60
         let output_text = hours + " h"
 
-        if (minutes > 0){
+        if (minutes > 0) {
             output_text += " " + minutes + " min"
         }
 
@@ -368,6 +372,9 @@ export const ApiMixin = {
             let func = setup.function
             let parameters = buildParams(options, setup)
             let apiClient = new ApiApiFactory()
+            if (model.apiClient !== undefined) {
+                apiClient = model.apiClient
+            }
             return apiClient[func](...parameters)
         },
         genericGetAPI: function (url, options) {
@@ -716,6 +723,10 @@ const specialCases = {
 export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
+        return form
+    },
+    InviteLinkDefaultValid: function (form){
+        form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format('yyyy-MM-DD')
         return form
     },
     AutomationOrderDefault: function (form) {

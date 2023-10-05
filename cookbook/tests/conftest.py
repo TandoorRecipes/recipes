@@ -5,15 +5,16 @@ import uuid
 
 import pytest
 from django.contrib import auth
-from django.contrib.auth.models import Group, User
 from django_scopes import scopes_disabled
-from pytest_factoryboy import LazyFixture, register
+from pytest_factoryboy import register
 
-from cookbook.models import Food, Ingredient, Recipe, Space, Step, Unit
-from cookbook.tests.factories import FoodFactory, SpaceFactory, UserFactory
+from cookbook.models import Food, Ingredient, Recipe, Step, Unit
+from cookbook.tests.factories import SpaceFactory, UserFactory
 
 register(SpaceFactory, 'space_1')
 register(SpaceFactory, 'space_2')
+
+
 # register(FoodFactory, space=LazyFixture('space_2'))
 # TODO refactor clients to be factories
 
@@ -35,18 +36,6 @@ def enable_db_access_for_all_tests(db):
     pass
 
 
-# @pytest.fixture()
-# def space_1():
-#     with scopes_disabled():
-#         return Space.objects.get_or_create(name='space_1')[0]
-
-
-# @pytest.fixture()
-# def space_2():
-#     with scopes_disabled():
-#         return Space.objects.get_or_create(name='space_2')[0]
-
-
 # ---------------------- OBJECT FIXTURES ---------------------
 
 def get_random_recipe(space_1, u1_s1):
@@ -60,8 +49,10 @@ def get_random_recipe(space_1, u1_s1):
         internal=True,
     )
 
-    s1 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
-    s2 = Step.objects.create(name=str(uuid.uuid4()), instruction=str(uuid.uuid4()), space=space_1, )
+    s1 = Step.objects.create(name=str(uuid.uuid4()),
+                             instruction=str(uuid.uuid4()), space=space_1, )
+    s2 = Step.objects.create(name=str(uuid.uuid4()),
+                             instruction=str(uuid.uuid4()), space=space_1, )
 
     r.steps.add(s1)
     r.steps.add(s2)
@@ -70,8 +61,10 @@ def get_random_recipe(space_1, u1_s1):
         s1.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
-                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                food=Food.objects.get_or_create(
+                    name=str(uuid.uuid4()), space=space_1)[0],
+                unit=Unit.objects.create(
+                    name=str(uuid.uuid4()), space=space_1, ),
                 note=str(uuid.uuid4()),
                 space=space_1,
             )
@@ -80,8 +73,10 @@ def get_random_recipe(space_1, u1_s1):
         s2.ingredients.add(
             Ingredient.objects.create(
                 amount=1,
-                food=Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0],
-                unit=Unit.objects.create(name=str(uuid.uuid4()), space=space_1, ),
+                food=Food.objects.get_or_create(
+                    name=str(uuid.uuid4()), space=space_1)[0],
+                unit=Unit.objects.create(
+                    name=str(uuid.uuid4()), space=space_1, ),
                 note=str(uuid.uuid4()),
                 space=space_1,
             )
@@ -99,8 +94,10 @@ def get_random_json_recipe():
             {
                 "instruction": str(uuid.uuid4()),
                 "ingredients": [
-                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(uuid.uuid4())}, "amount": random.randint(0, 10)},
-                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(uuid.uuid4())}, "amount": random.randint(0, 10)},
+                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(
+                        uuid.uuid4())}, "amount": random.randint(0, 10)},
+                    {"food": {"name": str(uuid.uuid4())}, "unit": {"name": str(
+                        uuid.uuid4())}, "amount": random.randint(0, 10)},
                 ],
             }
         ],
@@ -115,7 +112,7 @@ def validate_recipe(expected, recipe):
     # file and url are metadata not related to the recipe
     [expected.pop(k) for k in ['file', 'url'] if k in expected]
     # if a key is a list remove it to deal with later
-    lists = [k for k, v in expected.items() if type(v) == list]
+    lists = [k for k, v in expected.items() if isinstance(v, list)]
     for k in lists:
         expected_lists[k] = expected.pop(k)
         target_lists[k] = recipe.pop(k)
@@ -133,7 +130,8 @@ def validate_recipe(expected, recipe):
     for key in expected_lists:
         for k in expected_lists[key]:
             try:
-                print('comparing ', any([dict_compare(k, i) for i in target_lists[key]]))
+                print('comparing ', any([dict_compare(k, i)
+                                         for i in target_lists[key]]))
                 assert any([dict_compare(k, i) for i in target_lists[key]])
             except AssertionError:
                 for result in [dict_compare(k, i, details=True) for i in target_lists[key]]:
@@ -147,12 +145,13 @@ def dict_compare(d1, d2, details=False):
     d1_keys = set(d1.keys())
     d2_keys = set(d2.keys())
     shared = d1_keys.intersection(d2_keys)
-    sub_dicts = [i for i, j in d1.items() if type(j) == dict]
+    sub_dicts = [i for i, j in d1.items() if isinstance(j, dict)]
     not_dicts = shared - set(sub_dicts)
     added = d1_keys - d2_keys
     removed = d2_keys - d1_keys
     modified = {o: (d1[o], d2[o]) for o in not_dicts if d1[o] != d2[o]}
-    modified_dicts = {o: (d1[o], d2[o]) for o in sub_dicts if not d1[o].items() <= d2[o].items()}
+    modified_dicts = {o: (d1[o], d2[o])
+                      for o in sub_dicts if not d1[o].items() <= d2[o].items()}
     if details:
         return added, removed, modified, modified_dicts
     else:
@@ -160,7 +159,6 @@ def dict_compare(d1, d2, details=False):
 
 
 def transpose(text, number=2):
-
     # select random token
     tokens = text.split()
     positions = list(i for i, e in enumerate(tokens) if len(e) > 1)
@@ -173,12 +171,12 @@ def transpose(text, number=2):
         positions = random.sample(range(len(tokens[token_pos])), number)
 
         # swap the positions
-        l = list(tokens[token_pos])
+        lt = list(tokens[token_pos])
         for first, second in zip(positions[::2], positions[1::2]):
-            l[first], l[second] = l[second], l[first]
+            lt[first], lt[second] = lt[second], lt[first]
 
         # replace original tokens with swapped
-        tokens[token_pos] = ''.join(l)
+        tokens[token_pos] = ''.join(lt)
 
     # return text with the swapped token
     return ' '.join(tokens)
@@ -201,6 +199,14 @@ def ext_recipe_1_s1(space_1, u1_s1):
     r.link = 'test'
     r.save()
     return r
+
+
+def get_random_food(space_1, u1_s1):
+    return Food.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0]
+
+
+def get_random_unit(space_1, u1_s1):
+    return Unit.objects.get_or_create(name=str(uuid.uuid4()), space=space_1)[0]
 
 
 # ---------------------- USER FIXTURES -----------------------
