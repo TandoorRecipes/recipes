@@ -16,7 +16,7 @@ lxml==4.9.3
 Markdown==3.4.3
 Pillow==10.0.1
 psycopg2-binary==2.9.5
-python-dotenv==0.21.0
+python-dotenv==1.0.0
 requests==2.31.0
 six==1.16.0
 webdavclient3==3.14.6
