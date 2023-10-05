@@ -10,13 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (Automation, BookmarkletImport, Comment, CookLog, Food, FoodInheritField,
-                     ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
-                     NutritionInformation, Property, PropertyType, Recipe, RecipeBook,
-                     RecipeBookEntry, RecipeImport, SearchPreference, ShareLink, ShoppingList,
-                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
-                     SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, TelegramBot,
-                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog)
+from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+                     Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
+                     TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                     ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -39,6 +39,8 @@ def delete_space_action(modeladmin, request, queryset):
 class SpaceAdmin(admin.ModelAdmin):
     list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
+    autocomplete_fields = ('created_by',)
+    filter_horizontal = ('food_inherit',)
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
     actions = [delete_space_action]
@@ -50,6 +52,8 @@ admin.site.register(Space, SpaceAdmin)
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
     search_fields = ('user__username', 'space__name',)
+    filter_horizontal = ('groups',)
+    autocomplete_fields = ('user', 'space',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)
@@ -60,6 +64,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page',)
     date_hierarchy = 'created_at'
+    filter_horizontal = ('plan_share', 'shopping_share',)
 
     @staticmethod
     def name(obj):
@@ -272,7 +277,7 @@ admin.site.register(RecipeBookEntry, RecipeBookEntryAdmin)
 
 
 class MealPlanAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe', 'meal_type', 'date')
+    list_display = ('user', 'recipe', 'meal_type', 'from_date', 'to_date')
 
     @staticmethod
     def user(obj):
@@ -309,6 +314,7 @@ admin.site.register(InviteLink, InviteLinkAdmin)
 
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
+    search_fields = ('recipe__name', 'space__name',)
 
 
 admin.site.register(CookLog, CookLogAdmin)

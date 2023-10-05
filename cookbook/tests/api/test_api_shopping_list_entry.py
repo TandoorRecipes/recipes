@@ -2,7 +2,6 @@ import json
 
 import pytest
 from django.contrib import auth
-from django.forms import model_to_dict
 from django.urls import reverse
 from django_scopes import scopes_disabled
 

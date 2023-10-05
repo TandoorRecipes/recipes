@@ -33,7 +33,7 @@
             <div class="row">
                 <!-- ingredients table -->
                 <div class="col col-md-4"
-                     v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
+                     v-if="step.show_ingredients_table && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
                         <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
@@ -124,10 +124,7 @@
 </template>
 
 <script>
-import {calculateAmount} from "@/utils/utils"
-
-import {GettextMixin} from "@/utils/utils"
-
+import {calculateAmount, GettextMixin, getUserPreference} from "@/utils/utils"
 import CompileComponent from "@/components/CompileComponent"
 import IngredientsCard from "@/components/IngredientsCard"
 import Vue from "vue"

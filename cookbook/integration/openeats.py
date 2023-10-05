@@ -1,9 +1,11 @@
 import json
 
+from django.utils.translation import gettext as _
+
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step, Keyword, Comment, CookLog
-from django.utils.translation import gettext as _
+from cookbook.models import Comment, CookLog, Ingredient, Keyword, Recipe, Step
+
 
 class OpenEats(Integration):
 
@@ -25,16 +27,16 @@ class OpenEats(Integration):
         if file["source"] != '':
             instructions += '\n' + _('Recipe source:') + f'[{file["source"]}]({file["source"]})'
 
-        cuisine_keyword, created = Keyword.objects.get_or_create(name="Cuisine", space=self.request.space)      
+        cuisine_keyword, created = Keyword.objects.get_or_create(name="Cuisine", space=self.request.space)
         if file["cuisine"] != '':
-            keyword, created = Keyword.objects.get_or_create(name=file["cuisine"].strip(), space=self.request.space)      
+            keyword, created = Keyword.objects.get_or_create(name=file["cuisine"].strip(), space=self.request.space)
             if created:
                 keyword.move(cuisine_keyword, pos="last-child")
             recipe.keywords.add(keyword)
 
-        course_keyword, created = Keyword.objects.get_or_create(name="Course", space=self.request.space)      
+        course_keyword, created = Keyword.objects.get_or_create(name="Course", space=self.request.space)
         if file["course"] != '':
-            keyword, created = Keyword.objects.get_or_create(name=file["course"].strip(), space=self.request.space)      
+            keyword, created = Keyword.objects.get_or_create(name=file["course"].strip(), space=self.request.space)
             if created:
                 keyword.move(course_keyword, pos="last-child")
             recipe.keywords.add(keyword)
@@ -51,7 +53,7 @@ class OpenEats(Integration):
             recipe.image = f'recipes/openeats-import/{file["photo"]}'
             recipe.save()
 
-        step = Step.objects.create(instruction=instructions, space=self.request.space,)
+        step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file['ingredients']:

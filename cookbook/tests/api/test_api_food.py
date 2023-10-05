@@ -35,11 +35,6 @@ register(FoodFactory, 'obj_3', space=LazyFixture('space_2'))
 register(SupermarketCategoryFactory, 'cat_1', space=LazyFixture('space_1'))
 
 
-# @pytest.fixture
-# def true():
-#     return True
-
-
 @pytest.fixture
 def false():
     return False
@@ -475,6 +470,7 @@ def test_root_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
         # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
         obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        obj_2 = Food.objects.get(id=obj_2.id)
         parent = obj_tree_1.get_parent()
 
     # should return root objects in the space (obj_1, obj_2), ignoring query filters
@@ -499,17 +495,16 @@ def test_tree_filter(obj_tree_1, obj_2, obj_3, u1_s1):
     with scope(space=obj_tree_1.space):
         # for some reason the 'path' attribute changes between the factory and the test when using both obj_tree and obj
         obj_tree_1 = Food.objects.get(id=obj_tree_1.id)
+        obj_2 = Food.objects.get(id=obj_2.id)
         parent = obj_tree_1.get_parent()
         obj_2.move(parent, node_location)
         obj_2 = Food.objects.get(id=obj_2.id)
-        parent = Food.objects.get(id=parent.id)
 
-    # should return full tree starting at parent (obj_tree_1, obj_2), ignoring query filters
-    response = json.loads(
-        u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
+    # should return full tree starting at, but excluding parent (obj_tree_1, obj_2), ignoring query filters
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}').content)
     assert response['count'] == 4
-    response = json.loads(u1_s1.get(
-        f'{reverse(LIST_URL)}?tree={parent.id}&query={obj_2.name[4:]}').content)
+    # filtering is ignored - should return identical results as ?tree=x
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?tree={parent.id}&query={obj_2.name[4:]}').content)
     assert response['count'] == 4
 
 

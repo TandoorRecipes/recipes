@@ -41,7 +41,7 @@ class RecipeKeeper(Integration):
         except AttributeError:
             pass
 
-        step = Step.objects.create(instruction='', space=self.request.space, )
+        step = Step.objects.create(instruction='', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients, )
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in file.find("div", {"itemprop": "recipeIngredients"}).findChildren("p"):

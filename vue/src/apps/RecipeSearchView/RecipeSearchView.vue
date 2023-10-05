@@ -10,15 +10,19 @@
                                 <b-input-group>
                                     <b-input
                                         class="form-control form-control-lg form-control-borderless form-control-search"
-                                        v-model="search.search_input" v-bind:placeholder="$t('Search')"></b-input>
+                                        v-model="search.search_input"
+                                        v-bind:placeholder="$t('Search')"
+                                    ></b-input>
                                     <b-input-group-append>
-                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()"
-                                                  v-if="debug && ui.sql_debug">
+                                        <b-button v-b-tooltip.hover :title="$t('show_sql')" @click="showSQL()" v-if="debug && ui.sql_debug">
                                             <i class="fas fa-bug" style="font-size: 1.5em"></i>
                                         </b-button>
-                                        <b-button v-b-toggle.collapse_advanced_search v-b-tooltip.hover
-                                                  :title="$t('advanced_search_settings')"
-                                                  v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'">
+                                        <b-button
+                                            v-b-toggle.collapse_advanced_search
+                                            v-b-tooltip.hover
+                                            :title="$t('advanced_search_settings')"
+                                            v-bind:variant="searchFiltered(true) ? 'danger' : 'primary'"
+                                        >
                                             <i class="fas fa-sliders-h"></i>
                                         </b-button>
                                     </b-input-group-append>
@@ -26,18 +30,15 @@
                             </div>
                         </div>
 
-                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm"
-                                    v-model="search.advanced_search_visible">
+                        <b-collapse id="collapse_advanced_search" class="mt-2 shadow-sm" v-model="search.advanced_search_visible">
                             <div class="card">
                                 <div class="card-body p-4">
                                     <div class="row">
                                         <div class="col-md-3 col-6 mb-1 mb-md-0">
-                                            <a class="btn btn-primary btn-block text-uppercase"
-                                               :href="resolveDjangoUrl('new_recipe')">{{ $t("New_Recipe") }}</a>
+                                            <a class="btn btn-primary btn-block text-uppercase" :href="resolveDjangoUrl('new_recipe')">{{ $t("New_Recipe") }}</a>
                                         </div>
                                         <div class="col-md-3 col-6 mb-1 mb-md-0">
-                                            <a class="btn btn-primary btn-block text-uppercase"
-                                               :href="resolveDjangoUrl('data_import_url')">{{ $t("Import") }}</a>
+                                            <a class="btn btn-primary btn-block text-uppercase" :href="resolveDjangoUrl('data_import_url')">{{ $t("Import") }}</a>
                                         </div>
                                         <div class="col-md-3 col-6 mb-1 mb-md-0">
                                             <button
@@ -56,190 +57,103 @@
                                         </div>
 
                                         <div class="col-md-3 col-6 mb-1 mb-md-0">
-                                            <button id="id_settings_button"
-                                                    class="btn btn-primary btn-block text-uppercase"><i
-                                                class="fas fa-cog fa-lg m-1"></i></button>
+                                            <button id="id_settings_button" class="btn btn-primary btn-block text-uppercase"><i class="fas fa-cog fa-lg m-1"></i></button>
                                         </div>
                                     </div>
 
                                     <b-popover target="id_settings_button" triggers="click" placement="bottom">
                                         <b-tabs content-class="mt-1 text-nowrap" small>
                                             <b-tab :title="$t('Settings')" active :title-link-class="['mx-0']">
-                                                <b-form-group v-bind:label="$t('Recently_Viewed')"
-                                                              label-for="popover-input-1" label-cols="8" class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.recently_viewed"
-                                                                  id="popover-input-1" size="sm"
-                                                                  class="mt-1"></b-form-input>
+                                                <b-form-group v-bind:label="$t('Recently_Viewed')" label-for="popover-input-1" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model="ui.recently_viewed" id="popover-input-1" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Recipes_per_page')"
-                                                              label-for="popover-input-page-count" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.page_size"
-                                                                  id="popover-input-page-count" size="sm"
-                                                                  class="mt-1"></b-form-input>
+                                                <b-form-group v-bind:label="$t('Recipes_per_page')" label-for="popover-input-page-count" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model="ui.page_size" id="popover-input-page-count" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-2"
-                                                              label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_meal_plan"
-                                                                     id="popover-input-2" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-2" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_meal_plan" id="popover-input-2" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
 
-                                                <b-form-group v-if="ui.show_meal_plan"
-                                                              v-bind:label="$t('Meal_Plan_Days')"
-                                                              label-for="popover-input-5" label-cols="8" class="mb-1">
-                                                    <b-form-input type="number" v-model.number="ui.meal_plan_days"
-                                                                  id="popover-input-5" size="sm"
-                                                                  class="mt-1"></b-form-input>
+                                                <b-form-group v-if="ui.show_meal_plan" v-bind:label="$t('Meal_Plan_Days')" label-for="popover-input-5" label-cols="8" class="mb-1">
+                                                    <b-form-input type="number" v-model.number="ui.meal_plan_days" id="popover-input-5" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
 
-                                                <b-form-group v-bind:label="$t('Sort_by_new')"
-                                                              label-for="popover-input-3" label-cols="8" class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.sort_by_new"
-                                                                     id="popover-input-3" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('Sort_by_new')" label-for="popover-input-3" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.sort_by_new" id="popover-input-3" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                                 <div class="row" style="margin-top: 1vh">
                                                     <div class="col-12">
-                                                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{
-                                                                $t("Search Settings")
-                                                            }}</a>
+                                                        <a :href="resolveDjangoUrl('view_settings') + '#search'">{{ $t("Search Settings") }}</a>
                                                     </div>
                                                 </div>
                                             </b-tab>
                                             <b-tab :title="$t('fields')" :title-link-class="['mx-0']">
-                                                <b-form-group v-bind:label="$t('show_keywords')"
-                                                              label-for="popover-show_keywords" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_keywords"
-                                                                     id="popover-show_keywords" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_keywords')" label-for="popover-show_keywords" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_keywords" id="popover-show_keywords" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_foods')"
-                                                              label-for="popover-show_foods" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_foods"
-                                                                     id="popover-show_foods" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_foods')" label-for="popover-show_foods" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_foods" id="popover-show_foods" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_books')"
-                                                              label-for="popover-input-show_books" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_books"
-                                                                     id="popover-input-show_books" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_books')" label-for="popover-input-show_books" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_books" id="popover-input-show_books" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_rating')"
-                                                              label-for="popover-show_rating" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_rating"
-                                                                     id="popover-show_rating" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_rating')" label-for="popover-show_rating" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_rating" id="popover-show_rating" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_units')"
-                                                              label-for="popover-show_units" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_units"
-                                                                     id="popover-show_units" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_units')" label-for="popover-show_units" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_units" id="popover-show_units" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_filters')"
-                                                              label-for="popover-show_filters" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_filters"
-                                                                     id="popover-show_filters" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_filters')" label-for="popover-show_filters" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_filters" id="popover-show_filters" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('show_sortby')"
-                                                              label-for="popover-show_sortby" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_sortby"
-                                                                     id="popover-show_sortby" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('show_sortby')" label-for="popover-show_sortby" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_sortby" id="popover-show_sortby" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('times_cooked')"
-                                                              label-for="popover-show_timescooked" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_timescooked"
-                                                                     id="popover-show_cooked" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('times_cooked')" label-for="popover-show_timescooked" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_timescooked" id="popover-show_cooked" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('make_now')"
-                                                              label-for="popover-show_makenow" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_makenow"
-                                                                     id="popover-show_makenow" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('make_now')" label-for="popover-show_makenow" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_makenow" id="popover-show_makenow" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('last_cooked')"
-                                                              label-for="popover-show_cookedon" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_cookedon"
-                                                                     id="popover-show_cookedon" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('last_cooked')" label-for="popover-show_cookedon" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_cookedon" id="popover-show_cookedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('last_viewed')"
-                                                              label-for="popover-show_viewedon" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_viewedon"
-                                                                     id="popover-show_viewedon" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('last_viewed')" label-for="popover-show_viewedon" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_viewedon" id="popover-show_viewedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('created_on')"
-                                                              label-for="popover-show_createdon" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_createdon"
-                                                                     id="popover-show_createdon" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('created_on')" label-for="popover-show_createdon" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_createdon" id="popover-show_createdon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('updatedon')"
-                                                              label-for="popover-show_updatedon" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.show_updatedon"
-                                                                     id="popover-show_updatedon" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('updatedon')" label-for="popover-show_updatedon" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.show_updatedon" id="popover-show_updatedon" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
 
                                             <b-tab :title="$t('advanced')" :title-link-class="['mx-0']">
-                                                <b-form-group v-bind:label="$t('remember_search')"
-                                                              label-for="popover-rem-search" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.remember_search"
-                                                                     id="popover-rem-search" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-bind:label="$t('remember_search')" label-for="popover-rem-search" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.remember_search" id="popover-rem-search" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
-                                                <b-form-group v-if="ui.remember_search"
-                                                              v-bind:label="$t('remember_hours')"
-                                                              label-for="popover-input-rem-hours" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-input type="number" v-model="ui.remember_hours"
-                                                                  id="popover-rem-hours" size="sm"
-                                                                  class="mt-1"></b-form-input>
+                                                <b-form-group
+                                                    v-if="ui.remember_search"
+                                                    v-bind:label="$t('remember_hours')"
+                                                    label-for="popover-input-rem-hours"
+                                                    label-cols="8"
+                                                    class="mb-1"
+                                                >
+                                                    <b-form-input type="number" v-model="ui.remember_hours" id="popover-rem-hours" size="sm" class="mt-1"></b-form-input>
                                                 </b-form-group>
-                                                <b-form-group v-bind:label="$t('tree_select')"
-                                                              label-for="popover-input-treeselect" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.tree_select"
-                                                                     id="popover-input-treeselect" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
-                                                </b-form-group>
-                                                <b-form-group v-if="debug" v-bind:label="$t('sql_debug')"
-                                                              label-for="popover-input-sqldebug" label-cols="8"
-                                                              class="mb-1">
-                                                    <b-form-checkbox switch v-model="ui.sql_debug"
-                                                                     id="popover-input-sqldebug" size="sm"
-                                                                     class="mt-2"></b-form-checkbox>
+                                                <b-form-group v-if="debug" v-bind:label="$t('sql_debug')" label-for="popover-input-sqldebug" label-cols="8" class="mb-1">
+                                                    <b-form-checkbox switch v-model="ui.sql_debug" id="popover-input-sqldebug" size="sm" class="mt-2"></b-form-checkbox>
                                                 </b-form-group>
                                             </b-tab>
                                         </b-tabs>
 
                                         <div class="row" style="margin-top: 1vh">
                                             <div class="col-12" style="text-align: right">
-                                                <b-button size="sm" variant="secondary" style="margin-right: 8px"
-                                                          @click="$root.$emit('bv::hide::popover')">{{ $t("Close") }}
+                                                <b-button size="sm" variant="secondary" style="margin-right: 8px" @click="$root.$emit('bv::hide::popover')"
+                                                >{{ $t("Close") }}
                                                 </b-button>
                                             </div>
                                         </div>
@@ -280,39 +194,22 @@
                                     <h6 class="mb-0" v-if="ui.expert_mode && search.keywords_fields > 1">
                                         {{ $t("Keywords") }}
                                     </h6>
-                                    <span class="text-sm-left text-warning"
-                                          v-if="ui.expert_mode && search.keywords_fields > 1 && hasDuplicateFilter(search.search_keywords, search.keywords_fields)">{{
-                                            $t("warning_duplicate_filter")
-                                        }}</span>
+                                    <span
+                                        class="text-sm-left text-warning"
+                                        v-if="ui.expert_mode && search.keywords_fields > 1 && hasDuplicateFilter(search.search_keywords, search.keywords_fields)"
+                                    >{{ $t("warning_duplicate_filter") }}</span
+                                    >
                                     <div class="row" v-if="ui.show_keywords">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(k, a) in keywordFields" :key="a">
                                                 <template #prepend v-if="ui.expert_mode">
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="addField('keywords', k)">
-                                                        <i class="fas fa-plus-circle text-primary"
-                                                           v-if="k == search.keywords_fields && k < 4"/>
+                                                    <b-input-group-text style="width: 3em" @click="addField('keywords', k)">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="k == search.keywords_fields && k < 4"/>
                                                     </b-input-group-text>
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="removeField('keywords', k)">
-                                                        <i class="fas fa-minus-circle text-primary"
-                                                           v-if="k == search.keywords_fields && k > 1"/>
+                                                    <b-input-group-text style="width: 3em" @click="removeField('keywords', k)">
+                                                        <i class="fas fa-minus-circle text-primary" v-if="k == search.keywords_fields && k > 1"/>
                                                     </b-input-group-text>
                                                 </template>
-                                                <treeselect
-                                                    v-if="ui.tree_select"
-                                                    v-model="search.search_keywords[a].items"
-                                                    :options="facets.Keywords"
-                                                    :load-options="loadKeywordChildren"
-                                                    :multiple="true"
-                                                    :flat="true"
-                                                    :auto-load-root-options="false"
-                                                    searchNested
-                                                    :placeholder="$t('Keywords')"
-                                                    :normalizer="normalizer"
-                                                    @input="refreshData(false)"
-                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                />
                                                 <generic-multiselect
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
@@ -333,20 +230,19 @@
                                                             switch
                                                             style="width: 5em"
                                                         >
-                                                            <span class="text-uppercase"
-                                                                  v-if="search.search_keywords[a].operator">{{
-                                                                    $t("or")
-                                                                }}</span>
+                                                            <span class="text-uppercase" v-if="search.search_keywords[a].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_keywords[a].not"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none">
+                                                        <b-form-checkbox
+                                                            v-model="search.search_keywords[a].not"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                        >
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -359,39 +255,22 @@
                                     <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.foods_fields > 1">
                                         {{ $t("Foods") }}
                                     </h6>
-                                    <span class="text-sm-left text-warning"
-                                          v-if="ui.expert_mode && search.foods_fields > 1 && hasDuplicateFilter(search.search_foods, search.foods_fields)">{{
-                                            $t("warning_duplicate_filter")
-                                        }}</span>
+                                    <span
+                                        class="text-sm-left text-warning"
+                                        v-if="ui.expert_mode && search.foods_fields > 1 && hasDuplicateFilter(search.search_foods, search.foods_fields)"
+                                    >{{ $t("warning_duplicate_filter") }}</span
+                                    >
                                     <div class="row" v-if="ui.show_foods">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(f, i) in foodFields" :key="i">
                                                 <template #prepend v-if="ui.expert_mode">
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="addField('foods', f)">
-                                                        <i class="fas fa-plus-circle text-primary"
-                                                           v-if="f == search.foods_fields && f < 4"/>
+                                                    <b-input-group-text style="width: 3em" @click="addField('foods', f)">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="f == search.foods_fields && f < 4"/>
                                                     </b-input-group-text>
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="removeField('foods', f)">
-                                                        <i class="fas fa-minus-circle text-primary"
-                                                           v-if="f == search.foods_fields && f > 1"/>
+                                                    <b-input-group-text style="width: 3em" @click="removeField('foods', f)">
+                                                        <i class="fas fa-minus-circle text-primary" v-if="f == search.foods_fields && f > 1"/>
                                                     </b-input-group-text>
                                                 </template>
-                                                <treeselect
-                                                    v-if="ui.tree_select"
-                                                    v-model="search.search_foods[i].items"
-                                                    :options="facets.Foods"
-                                                    :load-options="loadFoodChildren"
-                                                    :multiple="true"
-                                                    :flat="true"
-                                                    :auto-load-root-options="false"
-                                                    searchNested
-                                                    :placeholder="$t('Foods')"
-                                                    :normalizer="normalizer"
-                                                    @input="refreshData(false)"
-                                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                />
                                                 <generic-multiselect
                                                     v-if="!ui.tree_select"
                                                     @change="genericSelectChanged"
@@ -404,24 +283,22 @@
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_foods[i].operator"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 5em">
-                                                            <span class="text-uppercase"
-                                                                  v-if="search.search_foods[i].operator">{{
-                                                                    $t("or")
-                                                                }}</span>
+                                                        <b-form-checkbox
+                                                            v-model="search.search_foods[i].operator"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 5em"
+                                                        >
+                                                            <span class="text-uppercase" v-if="search.search_foods[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_foods[i].not"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none">
+                                                        <b-form-checkbox v-model="search.search_foods[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -434,23 +311,20 @@
                                     <h6 class="mt-2 mb-0" v-if="ui.expert_mode && search.books_fields > 1">
                                         {{ $t("Books") }}
                                     </h6>
-                                    <span class="text-sm-left text-warning"
-                                          v-if="ui.expert_mode && search.books_fields > 1 && hasDuplicateFilter(search.search_books, search.books_fields)">{{
-                                            $t("warning_duplicate_filter")
-                                        }}</span>
+                                    <span
+                                        class="text-sm-left text-warning"
+                                        v-if="ui.expert_mode && search.books_fields > 1 && hasDuplicateFilter(search.search_books, search.books_fields)"
+                                    >{{ $t("warning_duplicate_filter") }}</span
+                                    >
                                     <div class="row" v-if="ui.show_books">
                                         <div class="col-12">
                                             <b-input-group class="mt-2" v-for="(b, i) in bookFields" :key="i">
                                                 <template #prepend v-if="ui.expert_mode">
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="addField('books', b)">
-                                                        <i class="fas fa-plus-circle text-primary"
-                                                           v-if="b == search.books_fields && b < 4"/>
+                                                    <b-input-group-text style="width: 3em" @click="addField('books', b)">
+                                                        <i class="fas fa-plus-circle text-primary" v-if="b == search.books_fields && b < 4"/>
                                                     </b-input-group-text>
-                                                    <b-input-group-text style="width: 3em"
-                                                                        @click="removeField('books', b)">
-                                                        <i class="fas fa-minus-circle text-primary"
-                                                           v-if="b == search.books_fields && b > 1"/>
+                                                    <b-input-group-text style="width: 3em" @click="removeField('books', b)">
+                                                        <i class="fas fa-minus-circle text-primary" v-if="b == search.books_fields && b > 1"/>
                                                     </b-input-group-text>
                                                 </template>
                                                 <generic-multiselect
@@ -464,24 +338,22 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_books[i].operator"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" style="width: 5em" switch>
-                                                            <span class="text-uppercase"
-                                                                  v-if="search.search_books[i].operator">{{
-                                                                    $t("or")
-                                                                }}</span>
+                                                        <b-form-checkbox
+                                                            v-model="search.search_books[i].operator"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            style="width: 5em"
+                                                            switch
+                                                        >
+                                                            <span class="text-uppercase" v-if="search.search_books[i].operator">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                                 <b-input-group-append v-if="ui.expert_mode">
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_books[i].not"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none">
+                                                        <b-form-checkbox v-model="search.search_books[i].not" name="check-button" @change="refreshData(false)" class="shadow-none">
                                                             <span class="text-uppercase">{{ $t("not") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -494,23 +366,29 @@
                                     <div class="row g-0" v-if="ui.show_rating">
                                         <div class="col-12" v-if="ui.show_rating">
                                             <b-input-group class="mt-2">
-                                                <treeselect
+                                                <multiselect
+                                                    label="label"
+                                                    track-by="id"
                                                     v-model="search.search_rating"
                                                     :options="ratingOptions"
-                                                    :flat="true"
                                                     :placeholder="$t('Ratings')"
-                                                    :searchable="false"
+                                                    :internal-search="false"
+                                                    :multiple="false"
+                                                    :taggable="false"
                                                     @input="refreshData(false)"
                                                     style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
                                                 />
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_rating_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 5em">
-                                                            <span class="text-uppercase"
-                                                                  v-if="search.search_rating_gte">&gt;=</span>
+                                                        <b-form-checkbox
+                                                            v-model="search.search_rating_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 5em"
+                                                        >
+                                                            <span class="text-uppercase" v-if="search.search_rating_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -533,13 +411,15 @@
                                                 ></generic-multiselect>
                                                 <b-input-group-append>
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.search_units_or"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" style="width: 4em" switch>
-                                                            <span class="text-uppercase" v-if="search.search_units_or">{{
-                                                                    $t("or")
-                                                                }}</span>
+                                                        <b-form-checkbox
+                                                            v-model="search.search_units_or"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            style="width: 4em"
+                                                            switch
+                                                        >
+                                                            <span class="text-uppercase" v-if="search.search_units_or">{{ $t("or") }}</span>
                                                             <span class="text-uppercase" v-else>{{ $t("and") }}</span>
                                                         </b-form-checkbox>
                                                     </b-input-group-text>
@@ -549,23 +429,24 @@
                                     </div>
 
                                     <!-- special switches -->
-                                    <div class="row g-0"
-                                         v-if="ui.show_timescooked || ui.show_makenow || ui.show_cookedon">
+                                    <div class="row g-0" v-if="ui.show_timescooked || ui.show_makenow || ui.show_cookedon">
                                         <div class="col-12">
                                             <b-input-group class="mt-2">
                                                 <!-- times cooked -->
                                                 <b-input-group-prepend is-text v-if="ui.show_timescooked">
                                                     {{ $t("times_cooked") }}
                                                 </b-input-group-prepend>
-                                                <b-form-input id="timescooked" type="number" min="0"
-                                                              v-model="search.timescooked"
-                                                              v-if="ui.show_timescooked"></b-form-input>
+                                                <b-form-input id="timescooked" type="number" min="0" v-model="search.timescooked" v-if="ui.show_timescooked"></b-form-input>
                                                 <b-input-group-append v-if="ui.show_timescooked">
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.timescooked_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox
+                                                            v-model="search.timescooked_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 4em"
+                                                        >
                                                             <span class="text-uppercase" v-if="search.timescooked_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
@@ -584,10 +465,14 @@
                                                         @input="refreshData(false)"
                                                     />
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.cookedon_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox
+                                                            v-model="search.cookedon_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 4em"
+                                                        >
                                                             <span class="text-uppercase" v-if="search.cookedon_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
@@ -607,10 +492,14 @@
                                                         @input="refreshData(false)"
                                                     />
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.createdon_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox
+                                                            v-model="search.createdon_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 4em"
+                                                        >
                                                             <span class="text-uppercase" v-if="search.createdon_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
@@ -628,10 +517,14 @@
                                                         @input="refreshData(false)"
                                                     />
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.viewedon_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox
+                                                            v-model="search.viewedon_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 4em"
+                                                        >
                                                             <span class="text-uppercase" v-if="search.viewedon_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
@@ -649,10 +542,14 @@
                                                         @input="refreshData(false)"
                                                     />
                                                     <b-input-group-text>
-                                                        <b-form-checkbox v-model="search.updatedon_gte"
-                                                                         name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em">
+                                                        <b-form-checkbox
+                                                            v-model="search.updatedon_gte"
+                                                            name="check-button"
+                                                            @change="refreshData(false)"
+                                                            class="shadow-none"
+                                                            switch
+                                                            style="width: 4em"
+                                                        >
                                                             <span class="text-uppercase" v-if="search.updatedon_gte">&gt;=</span>
                                                             <span class="text-uppercase" v-else>&lt;=</span>
                                                         </b-form-checkbox>
@@ -662,8 +559,15 @@
                                                     <b-input-group-text>
                                                         {{ $t("make_now") }}
                                                         <b-form-checkbox v-model="search.makenow" name="check-button"
-                                                                         @change="refreshData(false)"
-                                                                         class="shadow-none" switch style="width: 4em"/>
+                                                                        @change="refreshData(false)"
+                                                                        class="shadow-none" switch style="width: 4em"/>
+                                                    </b-input-group-text>
+                                                    <b-input-group-text>
+                                                        <span>{{ $t("make_now_count") }}</span>
+                                                        <b-form-input type="number" min="0" max="20" v-model="search.makenow_count"
+                                                                        @change="refreshData(false)"
+                                                                        size="sm" class="mt-1"></b-form-input>
+
                                                     </b-input-group-text>
                                                 </b-input-group-append>
                                             </b-input-group>
@@ -673,16 +577,14 @@
                                     <!-- Buttons -->
                                     <div class="row justify-content-end small">
                                         <div class="col-auto">
-                                            <b-button class="my-0" variant="link" size="sm"
-                                                      @click="search.explain_visible = !search.explain_visible">
+                                            <b-button class="my-0" variant="link" size="sm" @click="search.explain_visible = !search.explain_visible">
                                                 <div v-if="!search.explain_visible">
                                                     <i class="far fa-eye"></i>
                                                     {{ $t("explain") }}
                                                 </div>
                                                 <div v-else><i class="far fa-eye-slash"></i> {{ $t("explain") }}</div>
                                             </b-button>
-                                            <b-button class="my-0" variant="link" size="sm"
-                                                      @click="ui.expert_mode = !ui.expert_mode">
+                                            <b-button class="my-0" variant="link" size="sm" @click="ui.expert_mode = !ui.expert_mode">
                                                 <div v-if="!ui.expert_mode">
                                                     <i class="fas fa-circle"></i>
                                                     {{ $t("expert_mode") }}
@@ -716,8 +618,7 @@
                                                         and
                                                         <b v-if="k.not">don't</b>
                                                         contain
-                                                        <b v-if="k.operator">any</b><b
-                                                        v-else>all</b> of the following <span class="text-success">keywords</span>:
+                                                        <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">keywords</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
                                                         <br/>
                                                     </template>
@@ -728,9 +629,7 @@
                                                         and
                                                         <b v-if="k.not">don't</b>
                                                         contain
-                                                        <b v-if="k.operator">any</b><b
-                                                        v-else>all</b> of the following <span
-                                                        class="text-success">foods</span>:
+                                                        <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">foods</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
                                                         <br/>
                                                     </template>
@@ -741,9 +640,7 @@
                                                         and
                                                         <b v-if="k.not">don't</b>
                                                         contain
-                                                        <b v-if="k.operator">any</b><b
-                                                        v-else>all</b> of the following <span
-                                                        class="text-success">books</span>:
+                                                        <b v-if="k.operator">any</b><b v-else>all</b> of the following <span class="text-success">books</span>:
                                                         <i>{{ k.items.flatMap((x) => x.name).join(", ") }}</i>
                                                         <br/>
                                                     </template>
@@ -752,31 +649,25 @@
                                                 <span v-if="search.makenow"> and you can <span class="text-success">make right now</span> (based on the on hand flag) <br/></span>
 
                                                 <span v-if="search.search_units.length > 0">
-                                                    and contain <b v-if="search.search_units_or">any</b><b
-                                                    v-else>all</b> of the following <span
-                                                    class="text-success">units</span>:
+                                                    and contain <b v-if="search.search_units_or">any</b><b v-else>all</b> of the following <span class="text-success">units</span>:
                                                     <i>{{ search.search_units.flatMap((x) => x.name).join(", ") }}</i
                                                     ><br/>
                                                 </span>
 
                                                 <span v-if="search.search_rating !== undefined">
-                                                    and have a <span class="text-success">rating</span> <template
-                                                    v-if="search.search_rating_gte">greater than</template><template
-                                                    v-else> less than</template> or
-                                                    equal to {{ search.search_rating }}<br/>
+                                                    and have a <span class="text-success">rating</span> <template v-if="search.search_rating_gte">greater than</template
+                                                ><template v-else> less than</template> or equal to {{ search.search_rating }}<br/>
                                                 </span>
 
                                                 <span v-if="search.lastcooked !== undefined">
-                                                    and have been <span class="text-success">last cooked</span> <template
-                                                    v-if="search.lastcooked_gte"> after</template><template v-else> before</template>
-                                                    <i>{{ search.lastcooked }}</i
-                                                    ><br/>
+                                                    and have been <span class="text-success">last cooked</span> <template v-if="search.lastcooked_gte"> after</template
+                                                ><template v-else> before</template> <i>{{ search.lastcooked }}</i
+                                                ><br/>
                                                 </span>
 
                                                 <span v-if="search.timescooked !== undefined">
-                                                    and have <span class="text-success">been cooked</span> <template
-                                                    v-if="search.timescooked_gte"> at least</template><template v-else> less than</template> or
-                                                    equal to<i>{{ search.timescooked }}</i> times <br/>
+                                                    and have <span class="text-success">been cooked</span> <template v-if="search.timescooked_gte"> at least</template
+                                                ><template v-else> less than</template> or equal to<i>{{ search.timescooked }}</i> times <br/>
                                                 </span>
 
                                                 <span v-if="search.sort_order.length > 0">
@@ -795,11 +686,16 @@
 
                 <div class="row mt-2">
                     <div class="col-12 col-xl-10 col-lg-10 offset-xl-1 offset-lg-1">
-                        <div style="overflow-x:visible;  overflow-y: hidden;white-space: nowrap;">
-
-                            <b-dropdown id="sortby" :text="sortByLabel" variant="outline-primary" size="sm"
-                                        style="overflow-y: visible; overflow-x: visible; position: static"
-                                        class="shadow-none" toggle-class="text-decoration-none">
+                        <div style="overflow-x: visible; overflow-y: hidden; white-space: nowrap">
+                            <b-dropdown
+                                id="sortby"
+                                :text="sortByLabel"
+                                variant="outline-primary"
+                                size="sm"
+                                style="overflow-y: visible; overflow-x: visible; position: static"
+                                class="shadow-none"
+                                toggle-class="text-decoration-none"
+                            >
                                 <div v-for="o in sortOptions" :key="o.id">
                                     <b-dropdown-item
                                         v-on:click="
@@ -812,83 +708,70 @@
                                 </div>
                             </b-dropdown>
 
-                            <b-button variant="outline-primary" size="sm" class="shadow-none  ml-1"
-                                      @click="resetSearch()" v-if="searchFiltered()"><i class="fas fa-file-alt"></i> {{
-                                    search.pagination_page
-                                }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }} <i
-                                    class="fas fa-times-circle"></i>
+                            <b-button variant="outline-primary" size="sm" class="shadow-none ml-1" @click="resetSearch()" v-if="searchFiltered()"
+                            ><i class="fas fa-file-alt"></i> {{ search.pagination_page }}/{{ Math.ceil(pagination_count / ui.page_size) }} {{ $t("Reset") }}
+                                <i class="fas fa-times-circle"></i>
                             </b-button>
 
-                            <b-button variant="outline-primary" size="sm" class="shadow-none  ml-1"
-                                      @click="openRandom()"><i class="fas fa-dice-five"></i> {{ $t("Random") }}
+                            <b-button variant="outline-primary" size="sm" class="shadow-none ml-1" @click="openRandom()"
+                            ><i class="fas fa-dice-five"></i> {{ $t("Random") }}
                             </b-button>
-
                         </div>
-
-
                     </div>
                 </div>
 
                 <template v-if="!searchFiltered() && ui.show_meal_plan && meal_plan_grid.length > 0">
                     <hr/>
                     <div class="row">
-
                         <div class="col col-md-12">
                             <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem;row-gap: 0.5rem; grid-auto-rows: max-content; ">
-                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{'d-none d-sm-block': day.plan_entries.length === 0}">
-                                    <b-list-group >
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); column-gap: 0.5rem; row-gap: 0.5rem; grid-auto-rows: max-content"
+                            >
+                                <div v-for="day in meal_plan_grid" v-bind:key="day.day" :class="{ 'd-none d-sm-block': day.plan_entries.length === 0 }">
+                                    <b-list-group>
                                         <b-list-group-item class="hover-div pb-0">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
                                                     <h6>{{ day.date_label }}</h6>
                                                 </div>
                                                 <div class="flex-grow-1 text-right">
-                                                    <b-button class="hover-button btn-outline-primary btn-sm" @click="showMealPlanEditModal(null, day.create_default_date)"><i
-                                                        class="fa fa-plus"></i></b-button>
+                                                    <b-button class="hover-button btn-outline-primary btn-sm" @click="showMealPlanEditModal(null, day.create_default_date)"
+                                                    ><i class="fa fa-plus"></i
+                                                    ></b-button>
                                                 </div>
                                             </div>
-
                                         </b-list-group-item>
-                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div">
+                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.id" class="hover-div p-0 pr-2">
                                             <div class="d-flex flex-row align-items-center">
                                                 <div>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="plan.recipe.image" rounded="circle" v-if="plan.recipe?.image"></b-img>
-                                                <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                       :src="image_placeholder" rounded="circle" v-else></b-img>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="plan.recipe.image" v-if="plan.recipe?.image"/>
+                                                    <img style="height: 50px; width: 50px; object-fit: cover" :src="image_placeholder" v-else/>
                                                 </div>
-                                                <div class="flex-grow-1 ml-2"
-                                                     style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                                                <div class="flex-grow-1 ml-2" style="text-overflow: ellipsis; overflow-wrap: anywhere">
                                                     <span class="two-row-text">
                                                         <a :href="resolveDjangoUrl('view_recipe', plan.recipe.id)" v-if="plan.recipe">{{ plan.recipe.name }}</a>
                                                         <span v-else>{{ plan.title }}</span>
                                                     </span>
                                                 </div>
                                                 <div class="hover-button">
-                                                    <b-button @click="showMealPlanEditModal(plan,null)" class="btn-outline-primary btn-sm"><i class="fas fa-pencil-alt"></i></b-button>
+                                                    <b-button @click="showMealPlanEditModal(plan, null)" class="btn-outline-primary btn-sm"
+                                                    ><i class="fas fa-pencil-alt"></i
+                                                    ></b-button>
                                                 </div>
                                             </div>
                                         </b-list-group-item>
-
                                     </b-list-group>
                                 </div>
-
-
                             </div>
                         </div>
-
                     </div>
                     <hr/>
                 </template>
 
-
                 <div v-if="recipes.length > 0" class="mt-4">
                     <div class="row">
                         <div class="col col-md-12">
-                            <div
-                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem;row-gap: 1rem; grid-auto-rows: max-content; ">
-
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); column-gap: 0.5rem; row-gap: 1rem; grid-auto-rows: max-content">
                                 <!-- TODO remove once new meal plan view has proven to be good -->
                                 <!--                                <template v-if="!searchFiltered()">-->
                                 <!--                                    <recipe-card-->
@@ -902,10 +785,14 @@
                                 <!--                                    ></recipe-card>-->
                                 <!--                                </template>-->
 
-                                <recipe-card v-for="r in recipes" v-bind:key="r.id" :recipe="r"
-                                             :footer_text="isRecentOrNew(r)[0]"
-                                             :footer_icon="isRecentOrNew(r)[1]"
-                                             :use_plural="use_plural">
+                                <recipe-card
+                                    v-for="r in recipes"
+                                    v-bind:key="r.id"
+                                    :recipe="r"
+                                    :footer_text="isRecentOrNew(r)[0]"
+                                    :footer_icon="isRecentOrNew(r)[1]"
+                                    :use_plural="use_plural"
+                                >
                                 </recipe-card>
                             </div>
                         </div>
@@ -913,9 +800,16 @@
 
                     <div class="row" style="margin-top: 2vh" v-if="!random_search">
                         <div class="col col-md-12">
-                            <b-pagination v-model="search.pagination_page" :total-rows="pagination_count" first-number
-                                          last-number size="lg"
-                                          :per-page="ui.page_size" @change="pageChange" align="center"></b-pagination>
+                            <b-pagination
+                                v-model="search.pagination_page"
+                                :total-rows="pagination_count"
+                                first-number
+                                last-number
+                                size="lg"
+                                :per-page="ui.page_size"
+                                @change="pageChange"
+                                align="center"
+                            ></b-pagination>
                         </div>
                     </div>
                     <div class="col-md-2 d-none d-md-block"></div>
@@ -935,9 +829,7 @@
                                         {{ $t("search_import_help_text") }}
                                     </b-card-text>
 
-                                    <b-button variant="primary" :href="resolveDjangoUrl('data_import_url')"><i
-                                        class="fas fa-file-import"></i> {{ $t("Import") }}
-                                    </b-button>
+                                    <b-button variant="primary" :href="resolveDjangoUrl('data_import_url')"><i class="fas fa-file-import"></i> {{ $t("Import") }}</b-button>
                                 </b-card>
 
                                 <b-card v-bind:title="$t('Create')" class="text-center">
@@ -945,23 +837,16 @@
                                         {{ $t("search_create_help_text") }}
                                     </b-card-text>
 
-                                    <b-button variant="primary" :href="resolveDjangoUrl('new_recipe')"><i
-                                        class="fas fa-plus"></i> {{ $t("Create") }}
-                                    </b-button>
+                                    <b-button variant="primary" :href="resolveDjangoUrl('new_recipe')"><i class="fas fa-plus"></i> {{ $t("Create") }}</b-button>
                                 </b-card>
                             </b-card-group>
                         </div>
                     </div>
                 </div>
 
-                <meal-plan-edit-modal
-                    :entry="mealplan_entry_edit"
-                    :create_date="mealplan_default_date"
-                ></meal-plan-edit-modal>
+                <meal-plan-edit-modal :entry="mealplan_entry_edit" :create_date="mealplan_default_date"></meal-plan-edit-modal>
 
-                <bottom-navigation-bar>
-
-                </bottom-navigation-bar>
+                <bottom-navigation-bar></bottom-navigation-bar>
             </div>
         </div>
     </div>
@@ -976,8 +861,6 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import moment from "moment"
 import _debounce from "lodash/debounce"
 import Multiselect from "vue-multiselect"
-import {Treeselect, LOAD_CHILDREN_OPTIONS} from "@riophae/vue-treeselect"
-import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 
 import {ApiMixin, ResolveUrlMixin, StandardToasts, ToastMixin} from "@/utils/utils"
 import LoadingSpinner from "@/components/LoadingSpinner" // TODO: is this deprecated?
@@ -985,9 +868,9 @@ import RecipeCard from "@/components/RecipeCard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
 import {ApiApiFactory} from "@/utils/openapi/api"
-import {useMealPlanStore} from "@/stores/MealPlanStore";
-import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
-import MealPlanEditModal from "@/components/MealPlanEditModal.vue";
+import {useMealPlanStore} from "@/stores/MealPlanStore"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue"
+import MealPlanEditModal from "@/components/MealPlanEditModal.vue"
 
 Vue.use(VueCookies)
 Vue.use(BootstrapVue)
@@ -998,13 +881,12 @@ let UI_COOKIE_NAME = "ui_search_settings"
 export default {
     name: "RecipeSearchView",
     mixins: [ResolveUrlMixin, ApiMixin, ToastMixin],
-    components: {GenericMultiselect, RecipeCard, Treeselect, RecipeSwitcher, Multiselect, BottomNavigationBar, MealPlanEditModal},
+    components: {GenericMultiselect, RecipeCard, RecipeSwitcher, Multiselect, BottomNavigationBar, MealPlanEditModal},
     data() {
         return {
             // this.Models and this.Actions inherited from ApiMixin
             recipes: [],
             recipes_loading: true,
-            facets: {Books: [], Foods: [], Keywords: []},
             meal_plans: [],
             meal_plan_store: null,
             last_viewed_recipes: [],
@@ -1041,6 +923,7 @@ export default {
                 timescooked: undefined,
                 timescooked_gte: true,
                 makenow: false,
+                makenow_count: 0,
                 cookedon: undefined,
                 cookedon_gte: true,
                 createdon: undefined,
@@ -1095,14 +978,15 @@ export default {
     computed: {
         meal_plan_grid: function () {
             let grid = []
+
             if (this.meal_plan_store !== null && this.meal_plan_store.plan_list.length > 0) {
                 for (const x of Array(this.ui.meal_plan_days).keys()) {
                     let moment_date = moment().add(x, "d")
                     grid.push({
                         date: moment_date,
                         create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format('ddd DD.MM'),
-                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment(m.date).isSame(moment_date, 'day'))
+                        date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
+                        plan_entries: this.meal_plan_store.plan_list.filter((m) => moment_date.isBetween(moment(m.from_date), moment(m.to_date), 'day', '[]'))
                     })
                 }
             }
@@ -1127,17 +1011,7 @@ export default {
             return new Date(now.getFullYear(), now.getMonth(), now.getDate())
         },
         ratingOptions: function () {
-            let ratingCount = undefined
             let label = undefined
-            if (Object.keys(this.facets?.Ratings ?? {}).length === 0) {
-                ratingCount = (x) => {
-                    return ""
-                }
-            } else {
-                ratingCount = (x) => {
-                    return ` (${x}) `
-                }
-            }
 
             if (this.search.search_rating_gte) {
                 label = (x) => {
@@ -1158,12 +1032,12 @@ export default {
             }
 
             return [
-                {id: 5, label: "⭐⭐⭐⭐⭐" + ratingCount(this.facets.Ratings?.["5.0"] ?? 0) + label(5)},
-                {id: 4, label: "⭐⭐⭐⭐ " + ratingCount(this.facets.Ratings?.["4.0"] ?? 0) + label()},
-                {id: 3, label: "⭐⭐⭐ " + ratingCount(this.facets.Ratings?.["3.0"] ?? 0) + label()},
-                {id: 2, label: "⭐⭐ " + ratingCount(this.facets.Ratings?.["2.0"] ?? 0) + label()},
-                {id: 1, label: "⭐ " + ratingCount(this.facets.Ratings?.["1.0"] ?? 0) + label(1)},
-                {id: 0, label: this.$t("Unrated") + ratingCount(this.facets.Ratings?.["0.0"] ?? 0)},
+                {id: 5, label: "⭐⭐⭐⭐⭐ " + label(5)},
+                {id: 4, label: "⭐⭐⭐⭐ " + label()},
+                {id: 3, label: "⭐⭐⭐ " + label()},
+                {id: 2, label: "⭐⭐ " + label()},
+                {id: 1, label: "⭐ " + label(1)},
+                {id: 0, label: this.$t("Unrated")},
             ]
         },
         keywordFields: function () {
@@ -1210,15 +1084,15 @@ export default {
             })
             return sort_order
         },
-        isMobile: function () { //TODO move to central helper
+        isMobile: function () {
+            //TODO move to central helper
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         },
         isTouch: function () {
             return window.matchMedia("(pointer: coarse)").matches
-        }
+        },
     },
     mounted() {
-
         this.recipes = Array(this.ui.page_size).fill({loading: true})
 
         this.$nextTick(function () {
@@ -1232,36 +1106,20 @@ export default {
 
             if (urlParams.has("keyword")) {
                 this.search.search_keywords[0].items = []
-                this.facets.Keywords = []
                 for (let x of urlParams.getAll("keyword")) {
                     this.search.search_keywords[0].items.push(Number.parseInt(x))
-                    this.facets.Keywords.push({id: x, name: "loading..."})
                 }
             }
 
             if (urlParams.has("query")) {
-                this.search.search_input = urlParams.get('query')
-            }
-
-            // TODO: figure out how to find nested items and load keyword/food children for that branch
-            // probably a backend change in facets to pre-load children of nested items
-            for (let x of this.search.search_foods.map((x) => x.items).flat()) {
-                this.facets.Foods.push({id: x, name: "loading..."})
-            }
-
-            for (let x of this.search.search_keywords.map((x) => x.items).flat()) {
-                this.facets.Keywords.push({id: x, name: "loading..."})
-            }
-
-            for (let x of this.search.search_books.map((x) => x.items).flat()) {
-                this.facets.Books.push({id: x, name: "loading..."})
+                this.search.search_input = urlParams.get("query")
             }
 
             this.loadMealPlan()
             this.refreshData(false)
         })
         let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then((r) => {
             this.use_plural = r.data.use_plural
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
@@ -1277,7 +1135,7 @@ export default {
         },
         ui: {
             handler() {
-                this.$cookies.set(UI_COOKIE_NAME, this.ui, '100y')
+                this.$cookies.set(UI_COOKIE_NAME, this.ui, "100y")
             },
             deep: true,
         },
@@ -1297,11 +1155,6 @@ export default {
         },
         "ui.recently_viewed": function () {
             this.refreshData(false)
-        },
-        "ui.tree_select": function () {
-            if (this.ui.tree_select && (this.facets?.Keywords.length == 0 || this.facets?.Foods.length == 0) && this.facets?.cache_key) {
-                this.getFacets(this.facets?.cache_key)
-            }
         },
         "ui.page_size": _debounce(function () {
             this.refreshData(false)
@@ -1326,26 +1179,19 @@ export default {
             this.recipes_loading = true
             this.recipes = Array(this.ui.page_size).fill({loading: true})
             let params = this.buildParams(random)
-            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params)
-                .then((result) => {
-                    window.scrollTo(0, 0)
-                    this.pagination_count = result.data.count
+            this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
+                window.scrollTo(0, 0)
+                this.pagination_count = result.data.count
 
-                    this.facets = result.data.facets
-                    this.recipes = [...this.removeDuplicates(result.data.results, (recipe) => recipe.id)]
-                    if (!this.searchFiltered()) {
-                        // if meal plans are being shown (and only when search is unfiltered) - filter out any meal plan recipes from the recipe list
-                        let mealPlans = []
-                        this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
-                        this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
-                    }
-                    this.recipes_loading = false
-                })
-                .then(() => {
-                    this.$nextTick(function () {
-                        this.getFacets(this.facets?.cache_key)
-                    })
-                })
+                this.recipes = [...this.removeDuplicates(result.data.results, (recipe) => recipe.id)]
+                if (!this.searchFiltered()) {
+                    // if meal plans are being shown (and only when search is unfiltered) - filter out any meal plan recipes from the recipe list
+                    let mealPlans = []
+                    this.meal_plans.forEach((x) => mealPlans.push(x.recipe.id))
+                    this.recipes = this.recipes.filter((recipe) => !mealPlans.includes(recipe.id))
+                }
+                this.recipes_loading = false
+            })
         }, 300),
         openRandom: function () {
             this.refreshData(true)
@@ -1354,26 +1200,9 @@ export default {
             return [...new Map(data.map((item) => [key(item), item])).values()]
         },
         loadMealPlan: function () {
-            console.log('loadMealpLan')
+            console.log("loadMealpLan")
             this.meal_plan_store = useMealPlanStore()
             this.meal_plan_store.refreshFromAPI(moment().format("YYYY-MM-DD"), moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"))
-
-
-            // if (this.ui.show_meal_plan) {
-            //     let params = {
-            //         options: {
-            //             query: {
-            //                 from_date: moment().format("YYYY-MM-DD"),
-            //                 to_date: moment().add(this.ui.meal_plan_days, "days").format("YYYY-MM-DD"),
-            //             },
-            //         },
-            //     }
-            //     this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, params).then((result) => {
-            //         this.meal_plans = result.data
-            //     })
-            // } else {
-            //     this.meal_plans = []
-            // }
         },
         genericSelectChanged: function (obj) {
             if (obj.var.includes("::")) {
@@ -1407,6 +1236,7 @@ export default {
             this.search.pagination_page = 1
             this.search.timescooked = undefined
             this.search.makenow = false
+            this.search.make_now_count = 0
             this.search.cookedon = undefined
             this.search.viewedon = undefined
             this.search.createdon = undefined
@@ -1448,39 +1278,12 @@ export default {
                 return [undefined, undefined]
             }
         },
-        getFacets: function (hash, facet, id) {
-            if (!this.ui.tree_select) {
-                return
-            }
-            let params = {hash: hash}
-            if (facet) {
-                params[facet] = id
-            }
-            return this.genericGetAPI("api_get_facets", params).then((response) => {
-                this.facets = {...this.facets, ...response.data.facets}
-            })
-        },
         showSQL: function () {
             let params = this.buildParams()
             params.options.query.debug = true
             this.genericAPI(this.Models.RECIPE, this.Actions.LIST, params).then((result) => {
                 console.log(result.data)
             })
-        },
-        // TODO refactor to combine with load KeywordChildren
-        loadFoodChildren({action, parentNode, callback}) {
-            if (action === LOAD_CHILDREN_OPTIONS) {
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key, "food", parentNode.id).then(callback())
-                }
-            }
-        },
-        loadKeywordChildren({action, parentNode, callback}) {
-            if (action === LOAD_CHILDREN_OPTIONS) {
-                if (this.facets?.cache_key) {
-                    this.getFacets(this.facets.cache_key, "keyword", parentNode.id).then(callback())
-                }
-            }
         },
         applyFilter() {
             return
@@ -1518,6 +1321,10 @@ export default {
             } else if (!this.search.timescooked_gte) {
                 timescooked = timescooked * -1
             }
+            let makenow = this.search.makenow || undefined
+            if (makenow !== undefined) {
+                makenow = parseInt(this.search.makenow_count)
+            }
             // when a filter is selected - added search params will be added to the filter
             params = {
                 ...params,
@@ -1526,11 +1333,11 @@ export default {
                 ...this.addFields("books"),
                 units: this.search.search_units.flatMap((x) => x.id),
                 query: this.search.search_input,
-                rating: rating,
+                rating: rating?.["id"] ?? undefined,
                 internal: this.search.search_internal,
                 random: this.random_search,
                 timescooked: timescooked,
-                makenow: this.search.makenow || undefined,
+                makenow: makenow,
                 cookedon: cookedon,
                 createdon: createdon,
                 updatedon: updatedon,
@@ -1653,8 +1460,7 @@ export default {
             this.$nextTick(function () {
                 this.$bvModal.show(`id_meal_plan_edit_modal`)
             })
-
-        }
+        },
     },
 }
 </script>
@@ -1662,7 +1468,6 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
-.vue-treeselect__control,
 #timescooked,
 #makenow {
     border-radius: 0px !important;
@@ -1675,21 +1480,6 @@ export default {
     line-height: 22px;
 }
 
-/* copied from vue-multiselect */
-.vue-treeselect__placeholder {
-    font-weight: 400;
-    font-family: inherit;
-    text-align: left;
-    font-size: 14px;
-    margin-bottom: 10px;
-    padding-top: 2px;
-}
-
-/* copied from vue-multiselect */
-.vue-treeselect__control-arrow-container {
-    width: 30px;
-}
-
 .hover-button {
     display: none;
 }
@@ -1697,5 +1487,4 @@ export default {
 .hover-div:hover .hover-button {
     display: inline-block;
 }
-
 </style>

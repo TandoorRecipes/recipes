@@ -240,6 +240,16 @@
                                                 v-if="step_index !== recipe.steps.length - 1">
                                             <i class="fa fa-arrow-down fa-fw"></i> {{ $t("Move_Down") }}
                                         </button>
+                                        <!-- Show "Hide step ingredients if state is currently set to shown"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, false)"
+                                                v-if="step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye-slash"></i> {{ $t("hide_step_ingredients") }}
+                                        </button>
+                                        <!-- Show "Show step ingredients if state is currently set to hidden"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, true)"
+                                                v-if="! step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye"></i> {{ $t("show_step_ingredients") }}
+                                        </button>                                        
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +280,6 @@
                                               @click="step.time_visible = true" v-if="!step.time_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Time") }}
                                     </b-button>
-
                                     <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.ingredients_visible = true" v-if="!step.ingredients_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Ingredients") }}
@@ -770,7 +779,8 @@ import {
     ResolveUrlMixin,
     StandardToasts,
     convertEnergyToCalories,
-    energyHeading
+    energyHeading,
+    getUserPreference
 } from "@/utils/utils"
 import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
@@ -813,6 +823,7 @@ export default {
             show_file_create: false,
             step_for_file_create: undefined,
             use_plural: false,
+            user_preferences: undefined,
             additional_visible: false,
             create_food: undefined,
             md_editor_toolbars: {
@@ -858,9 +869,9 @@ export default {
         this.searchKeywords("")
         this.searchFiles("")
         this.searchRecipes("")
-
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
+        this.user_preferences = getUserPreference()
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
@@ -925,7 +936,10 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
+                        // ingredients_visible determines whether or not the ingredients UI is shown in the edit view
+                        // show_ingredients_table determine whether the ingredients table is shown in the read view
+                        // these are seperate as one might want to add ingredients but not want the step-level view
+                        this.$set(s, "ingredients_visible", s.show_ingredients_table && (s.ingredients.length > 0 || this.recipe.steps.length === 1))
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
@@ -1028,6 +1042,7 @@ export default {
                 show_as_header: false,
                 time_visible: false,
                 ingredients_visible: true,
+                show_ingredients_table: this.user_preferences.show_step_ingredients,
                 instruction_visible: true,
                 step_recipe_visible: false,
                 file_visible: false,
@@ -1082,6 +1097,9 @@ export default {
             this.recipe.steps.splice(this.recipe.steps.indexOf(step), 1)
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
+        },
+        setStepShowIngredientsTable: function (step, show_state) {
+            step.show_ingredients_table = show_state
         },
         moveIngredient: function (step, ingredient, new_index) {
             step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
@@ -1281,6 +1299,7 @@ export default {
         },
         duplicateIngredient: function (step, ingredient, new_index) {
             delete ingredient.id
+            ingredient = JSON.parse(JSON.stringify(ingredient))
             step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
         }
     },

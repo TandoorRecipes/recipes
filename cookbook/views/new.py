@@ -1,22 +1,14 @@
-import re
-from datetime import datetime, timedelta
-from html import escape
-from smtplib import SMTPException
 
 from django.contrib import messages
-from django.contrib.auth.models import Group
-from django.core.mail import BadHeaderError, send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, InviteLinkForm, MealPlanForm, Storage, StorageForm
-from cookbook.helper.permission_helper import GroupRequiredMixin, group_required, above_space_limit
-from cookbook.models import (InviteLink, MealPlan, MealType, Recipe, RecipeBook, RecipeImport,
-                             ShareLink, Step, UserPreference, UserSpace)
-from cookbook.views.edit import SpaceFormMixing
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm
+from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step
 from recipes import settings
 
 
@@ -37,7 +29,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
         obj.space = self.request.space
         obj.internal = True
         obj.save()
-        obj.steps.add(Step.objects.create(space=self.request.space, show_as_header=False))
+        obj.steps.add(Step.objects.create(space=self.request.space, show_as_header=False, show_ingredients_table=self.request.user.userpreference.show_step_ingredients))
         return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
 
     def get_success_url(self):
@@ -54,24 +46,6 @@ def share_link(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
     link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
     return HttpResponseRedirect(reverse('view_recipe', kwargs={'pk': pk, 'share': link.uuid}))
-
-
-# class KeywordCreate(GroupRequiredMixin, CreateView):
-#     groups_required = ['user']
-#     template_name = "generic/new_template.html"
-#     model = Keyword
-#     form_class = KeywordForm
-#     success_url = reverse_lazy('list_keyword')
-
-#     def form_valid(self, form):
-#         form.cleaned_data['space'] = self.request.space
-#         form.save()
-#         return HttpResponseRedirect(reverse('list_keyword'))
-
-#     def get_context_data(self, **kwargs):
-#         context = super(KeywordCreate, self).get_context_data(**kwargs)
-#         context['title'] = _("Keyword")
-#         return context
 
 
 class StorageCreate(GroupRequiredMixin, CreateView):
@@ -133,57 +107,3 @@ def create_new_external_recipe(request, import_id):
         )
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
-
-
-class MealPlanCreate(GroupRequiredMixin, CreateView, SpaceFormMixing):
-    groups_required = ['user']
-    template_name = "generic/new_template.html"
-    model = MealPlan
-    form_class = MealPlanForm
-    success_url = reverse_lazy('view_plan')
-
-    def get_form(self, form_class=None):
-        form = self.form_class(**self.get_form_kwargs())
-        form.fields['meal_type'].queryset = MealType.objects.filter(created_by=self.request.user,
-                                                                    space=self.request.space).all()
-        return form
-
-    def get_initial(self):
-        return dict(
-            meal_type=(
-                self.request.GET['meal']
-                if 'meal' in self.request.GET
-                else None
-            ),
-            date=(
-                datetime.strptime(self.request.GET['date'], '%Y-%m-%d')
-                if 'date' in self.request.GET
-                else None
-            ),
-            shared=(
-                self.request.user.userpreference.plan_share.all()
-                if self.request.user.userpreference.plan_share
-                else None
-            )
-        )
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.created_by = self.request.user
-        obj.space = self.request.space
-        obj.save()
-        return HttpResponseRedirect(reverse('view_plan'))
-
-    def get_context_data(self, **kwargs):
-        context = super(MealPlanCreate, self).get_context_data(**kwargs)
-        context['title'] = _("Meal-Plan")
-
-        recipe = self.request.GET.get('recipe')
-        if recipe:
-            if re.match(r'^([0-9])+$', recipe):
-                if Recipe.objects.filter(pk=int(recipe), space=self.request.space).exists():
-                    context['default_recipe'] = Recipe.objects.get(pk=int(recipe), space=self.request.space)
-
-        return context
-
-
