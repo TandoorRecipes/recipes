@@ -11,9 +11,9 @@
                     </h6>
 
                     <b-card-text>
-                        <b-skeleton height="12px" :width="(45 + Math.random() * 45).toString() + '%'"></b-skeleton>
-                        <b-skeleton height="12px" :width="(20 + Math.random() * 25).toString() + '%'"></b-skeleton>
-                        <b-skeleton height="12px" :width="(30 + Math.random() * 35).toString() + '%'"></b-skeleton>
+                        <b-skeleton height="12px" width="65%"></b-skeleton>
+                        <b-skeleton height="12px" width="45%"></b-skeleton>
+                        <b-skeleton height="12px" width="55%"></b-skeleton>
                     </b-card-text>
                 </b-card-body>
             </b-card>
