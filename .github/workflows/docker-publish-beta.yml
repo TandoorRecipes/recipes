@@ -1,40 +1,79 @@
 name: publish docker image
 on:
-    push:
-        branches:
-            - "working"
+  push:
+    branches:
+      - "working"
+
 jobs:
-    build:
-        if: github.repository_owner == 'smilerz'
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
-            # Update Version number
-            - name: Update version file
-              uses: DamianReeves/write-file-action@v1.0
-              with:
-                  path: recipes/version.py
-                  contents: |
-                      VERSION_NUMBER = 'beta'
-                      BUILD_REF = '${{ github.sha }}'
-                  write-mode: overwrite
-            # Build Vue frontend
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: "18"
-            - name: Install dependencies
-              working-directory: ./vue
-              run: yarn install
-            - name: Build dependencies
-              working-directory: ./vue
-              run: yarn build
-            # Build container
-            - name: Build and publish image
-              uses: ilteoood/docker_buildx@master
-              with:
-                  publish: true
-                  imageName: smilerz/recipes
-                  tag: beta
-                  platform: linux/amd64
-                  dockerHubUser: ${{ secrets.USERNAME }}
-                  dockerHubPassword: ${{ secrets.PASSWORD }}
+  build-container:
+    if: github.repository_owner == 'smilerz'
+    name: Build Tandoor Container
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.continue-on-error }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          # Standard build config
+          - name: Standard
+            dockerfile: Dockerfile
+            platforms: linux/amd64
+            suffix: "beta"
+            continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get version number
+        id: get_version
+        run: |
+          if [[ "$GITHUB_REF" = refs/tags/* ]]; then
+            echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+          elif [[ "$GITHUB_REF" = refs/heads/beta ]]; then
+            echo VERSION=beta >> $GITHUB_OUTPUT
+          else
+            echo VERSION=develop >> $GITHUB_OUTPUT
+          fi
+
+      # Build Vue frontend
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: yarn
+          cache-dependency-path: vue/yarn.lock
+      - name: Install dependencies
+        working-directory: ./vue
+        run: yarn install --frozen-lockfile
+      - name: Build dependencies
+        working-directory: ./vue
+        run: yarn build
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            smilerz/recipes
+      - name: Build and Push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          pull: true
+          push: ${{ github.secret_source == 'Repository' }}
+          platforms: ${{ matrix.platforms }}
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
