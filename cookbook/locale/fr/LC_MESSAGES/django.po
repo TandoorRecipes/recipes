@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-09-02 20:25+0000\n"
-"Last-Translator: AJ <alexandre.jacquin@hotmail.fr>\n"
+"PO-Revision-Date: 2023-10-12 20:19+0000\n"
+"Last-Translator: pharok <pharok@free.fr>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -310,7 +310,7 @@ msgid ""
 msgstr ""
 "Champs à rechercher en ignorant les accents. La sélection de cette option "
 "peut améliorer ou dégrader la qualité de la recherche en fonction de la "
-"langue."
+"langue"
 
 #: .\cookbook\forms.py:466
 msgid ""
@@ -326,8 +326,8 @@ msgid ""
 "will return 'salad' and 'sandwich')"
 msgstr ""
 "Champs permettant de rechercher les correspondances de début de mot (par "
-"exemple, si vous recherchez « sa », vous obtiendrez « salade » et "
-"« sandwich»)."
+"exemple, si vous recherchez « sa », vous obtiendrez « salade » et « "
+"sandwich»)"
 
 #: .\cookbook\forms.py:470
 msgid ""
@@ -559,7 +559,7 @@ msgstr "pétrir"
 
 #: .\cookbook\helper\recipe_url_import.py:269
 msgid "thicken"
-msgstr ""
+msgstr "épaissir"
 
 #: .\cookbook\helper\recipe_url_import.py:270
 msgid "warm up"
@@ -571,11 +571,11 @@ msgstr "fermenter"
 
 #: .\cookbook\helper\recipe_url_import.py:272
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:157
 msgid "You must supply a servings size"
-msgstr "Vous devez fournir une information de portion"
+msgstr "Vous devez fournir un nombre de portions"
 
 #: .\cookbook\helper\template_helper.py:79
 #: .\cookbook\helper\template_helper.py:81
@@ -846,7 +846,6 @@ msgid "ID of unit to use for the shopping list"
 msgstr "ID de l’unité à utiliser pour la liste de courses"
 
 #: .\cookbook\serializer.py:1259
-#, fuzzy
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
 "Lorsqu'il est défini sur \"true\", tous les aliments des listes de courses "
@@ -962,8 +961,9 @@ msgid ""
 "            ."
 msgstr ""
 "Confirmez SVP que\n"
-"                <a href=\"mailto:%(email)s\"></a> est une adresse mail de "
-"l’utilisateur %(user_display)s."
+"            <a href=\"mailto:%(email)s\"></a> est une adresse mail de l’"
+"utilisateur %(user_display)s\n"
+"            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
@@ -1366,9 +1366,8 @@ msgid "Are you sure you want to delete the %(title)s: <b>%(object)s</b> "
 msgstr "Êtes-vous sûr(e) de vouloir supprimer %(title)s : <b>%(object)s</b> "
 
 #: .\cookbook\templates\generic\delete_template.html:22
-#, fuzzy
 msgid "This cannot be undone!"
-msgstr "Cela ne peut pas être annulé !"
+msgstr "L'opération ne peut pas être annulée !"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1451,12 +1450,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Les champs <b>Mot de passe et Token</b> sont stockés <b>en texte "
-"brut</b>dans la base de données.\n"
+"        Les champs <b>Mot de passe et Token</b> sont stockés <b>en clair</"
+"b>dans la base de données.\n"
 "        C'est nécessaire car ils sont utilisés pour faire des requêtes API, "
 "mais cela accroît le risque que quelqu'un les vole.<br/>\n"
-"        Pour limiter les risques, des tokens ou comptes avec un accès limité "
-"devraient être utilisés.\n"
+"        Pour limiter les risques, il est possible d'utiliser des tokens ou "
+"des comptes avec un accès limité.\n"
 "    "
 
 #: .\cookbook\templates\index.html:29
@@ -1766,15 +1765,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:29
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Simple searches ignore punctuation and common words such as "
-#| "'the', 'a', 'and'. And will treat seperate words as required.\n"
-#| "            Searching for 'apple or flour' will return any recipe that "
-#| "includes both 'apple' and 'flour' anywhere in the fields that have been "
-#| "selected for a full text search.\n"
-#| "            "
 msgid ""
 " \n"
 "            Simple searches ignore punctuation and common words such as "
@@ -1786,7 +1776,7 @@ msgid ""
 msgstr ""
 " \n"
 "            Les recherches simples ignorent la ponctuation et les mots "
-"courants tels que \"le\", \"a\", \"et\", et traiteront les mots séparés "
+"courants tels que \"le\", \"et\", \"a\", et traiteront les mots séparés "
 "comme il se doit.\n"
 "            Si vous recherchez \"pomme ou farine\", vous obtiendrez toutes "
 "les recettes qui contiennent à la fois \"pomme\" et \"farine\" dans les "
@@ -2214,7 +2204,7 @@ msgstr "Gérer l’abonnement"
 
 #: .\cookbook\templates\space_overview.html:13 .\cookbook\views\delete.py:216
 msgid "Space"
-msgstr "Groupe :"
+msgstr "Groupe"
 
 #: .\cookbook\templates\space_overview.html:17
 msgid ""
@@ -2727,6 +2717,8 @@ msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"L'export PDF n'est pas activé sur cette instance car il est toujours au "
+"statut expérimental."
 
 #: .\cookbook\views\lists.py:24
 msgid "Import Log"
