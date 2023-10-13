@@ -533,5 +533,6 @@
     "Name_Replace": "Zastąp nazwę",
     "Food_Replace": "Zastąp produkt",
     "Unit_Replace": "Zastąp jednostkę",
-    "Alignment": "Wyrównanie"
+    "Alignment": "Wyrównanie",
+    "make_now_count": "Najbardziej brakujące składniki"
 }
