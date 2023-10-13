@@ -355,7 +355,7 @@
     "nothing_planned_today": "Você não tem nada planejado para hoje!",
     "no_pinned_recipes": "",
     "Planned": "Planejado",
-    "Pinned": "",
+    "Pinned": "Marcado",
     "Quick actions": "Ações rápidas",
     "Ratings": "Classificações",
     "Internal": "Interno",
@@ -499,5 +499,7 @@
     "Unit_Replace": "Substituir Unidade",
     "Welcome": "Bem vindo",
     "Alignment": "Alinhamento",
-    "Auto_Sort_Help": "Mover todos os ingredientes para o passo mais indicado."
+    "Auto_Sort_Help": "Mover todos os ingredientes para o passo mais indicado.",
+    "Ingredient Overview": "Ingredientes - Visão Geral",
+    "Cosmetic": "Aparência"
 }
