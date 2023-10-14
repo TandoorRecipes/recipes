@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-10-10 11:19+0000\n"
+"PO-Revision-Date: 2023-10-15 14:19+0000\n"
 "Last-Translator: Ferenc <ugyes@freemail.hu>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -360,10 +360,8 @@ msgid "Partial Match"
 msgstr "Részleges találat"
 
 #: .\cookbook\forms.py:480
-#, fuzzy
-#| msgid "Starts Wtih"
 msgid "Starts With"
-msgstr "Kezdődik a következővel"
+msgstr "Ezzel kezdődik"
 
 #: .\cookbook\forms.py:481
 msgid "Fuzzy Search"
