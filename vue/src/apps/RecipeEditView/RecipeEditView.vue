@@ -1089,7 +1089,8 @@ export default {
             }
         },
         removeStep: function (step) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Step")}))) {
+            const step_index = this.recipe.steps.indexOf(step)
+            if (confirm(this.$t("delete_confirmation", {source: `${this.$t("Step")} "${step.name || step_index}"`}))) {
                 this.recipe.steps = this.recipe.steps.filter((item) => item !== step)
             }
         },
