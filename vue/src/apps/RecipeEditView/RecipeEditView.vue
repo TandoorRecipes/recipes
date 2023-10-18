@@ -1084,7 +1084,7 @@ export default {
             this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
         },
         removeIngredient: function (step, ingredient) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Ingredient")}))) {
+            if (confirm(this.$t("delete_confirmation", {source: `"${ingredient.food.name}"`}))) {
                 step.ingredients = step.ingredients.filter((item) => item !== ingredient)
             }
         },
