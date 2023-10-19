@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-10-15 14:19+0000\n"
+"PO-Revision-Date: 2023-10-20 14:05+0000\n"
 "Last-Translator: Ferenc <ugyes@freemail.hu>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -99,7 +99,7 @@ msgstr ""
 #: .\cookbook\forms.py:74
 msgid "Users with whom newly created meal plans should be shared by default."
 msgstr ""
-"Azok a felhasználók, akikkel az újonnan létrehozott étkezési terveket "
+"Azok a felhasználók, akikkel az újonnan létrehozott menüterveket "
 "alapértelmezés szerint meg kell osztani."
 
 #: .\cookbook\forms.py:75
@@ -135,8 +135,7 @@ msgstr "A navigációs sávot az oldal tetejére rögzíti."
 
 #: .\cookbook\forms.py:83 .\cookbook\forms.py:512
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
-"Automatikusan hozzáadja az étkezési terv hozzávalóit a bevásárlólistához."
+msgstr "Automatikusan hozzáadja a menüterv hozzávalóit a bevásárlólistához."
 
 #: .\cookbook\forms.py:84
 msgid "Exclude ingredients that are on hand."
@@ -385,16 +384,16 @@ msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "include all related recipes."
 msgstr ""
-"Amikor étkezési tervet ad hozzá a bevásárlólistához (kézzel vagy "
-"automatikusan), vegye fel az összes kapcsolódó receptet."
+"Amikor menütervet ad hozzá a bevásárlólistához (kézzel vagy automatikusan), "
+"vegye fel az összes kapcsolódó receptet."
 
 #: .\cookbook\forms.py:514
 msgid ""
 "When adding a meal plan to the shopping list (manually or automatically), "
 "exclude ingredients that are on hand."
 msgstr ""
-"Amikor étkezési tervet ad hozzá a bevásárlólistához (kézzel vagy "
-"automatikusan), zárja ki a kéznél lévő összetevőket."
+"Amikor menütervet ad hozzá a bevásárlólistához (kézzel vagy automatikusan), "
+"zárja ki a kéznél lévő összetevőket."
 
 #: .\cookbook\forms.py:515
 msgid "Default number of hours to delay a shopping list entry."
@@ -434,7 +433,7 @@ msgstr "Automatikus szinkronizálás"
 
 #: .\cookbook\forms.py:526
 msgid "Auto Add Meal Plan"
-msgstr "Automatikus étkezési terv hozzáadása"
+msgstr "Menüterv automatikus hozzáadása"
 
 #: .\cookbook\forms.py:527
 msgid "Exclude On Hand"
@@ -702,7 +701,7 @@ msgstr "Keresés"
 #: .\cookbook\templates\meal_plan.html:7 .\cookbook\views\delete.py:178
 #: .\cookbook\views\edit.py:211 .\cookbook\views\new.py:179
 msgid "Meal-Plan"
-msgstr "Étkezési terv"
+msgstr "Menüterv"
 
 #: .\cookbook\models.py:367 .\cookbook\templates\base.html:118
 msgid "Books"
