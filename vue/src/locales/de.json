@@ -510,5 +510,14 @@
     "ml": "Milliliter",
     "l": "Liter",
     "tbsp": "Esslöffel",
-    "tsp": "Teelöffel"
+    "tsp": "Teelöffel",
+    "StartDate": "Startdatum",
+    "EndDate": "Enddatum",
+    "Alignment": "Zuordnung",
+    "show_step_ingredients_setting": "Zutaten neben den Rezeptschritten anzeigen",
+    "show_step_ingredients_setting_help": "Fügen Sie neben den Rezeptschritten eine Zutatentabelle hinzu. Gilt zum Zeitpunkt der Erstellung. Kann in der Ansicht „Rezept bearbeiten“ überschrieben werden.",
+    "show_step_ingredients": "Schritt \"Zutaten\" anzeigen",
+    "hide_step_ingredients": "Schritt Zutaten ausblenden",
+    "OrderInformation": "Die Objekte sind von kleinen zu großen Zahlen geordnet.",
+    "show_ingredients_table": "Zeige eine Tabelle der Zutaten neben der Schrittbeschreibung"
 }
