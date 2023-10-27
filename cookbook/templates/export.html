@@ -4,16 +4,13 @@
 {% load i18n %}
 {% load l10n %}
 
-
 {% block title %}{% trans 'Export Recipes' %}{% endblock %}
-
 
 {% block content %}
     <div id="app">
         <export-view></export-view>
     </div>
 {% endblock %}
-
 
 {% block script %}
     {% if debug %}
@@ -23,11 +20,13 @@
     {% endif %}
 
     <script type="application/javascript">
-        window.EXPORT_ID = {{pk}};
+    {% if pk %}
+        window.EXPORT_ID = {{ pk }}
+    {% else %}
+        window.EXPORT_ID = null
+    {% endif %}
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}';
     </script>
 
     {% render_bundle 'export_view' %}
 {% endblock %}
-
-
