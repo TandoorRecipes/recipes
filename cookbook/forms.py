@@ -9,8 +9,8 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import (Comment, Food, InviteLink, Keyword, MealPlan, MealType, Recipe, RecipeBook,
-                     RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference)
+from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
+                     SearchPreference, Space, Storage, Sync, User, UserPreference)
 
 
 class SelectWidget(widgets.Select):
