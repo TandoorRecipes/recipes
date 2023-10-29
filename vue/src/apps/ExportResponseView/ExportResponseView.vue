@@ -19,7 +19,8 @@
 
                     {{ $t("If download did not start automatically: ") }}
 
-                    <template v-if="export_info.expired">
+                    <template v-if="false">
+                    <!--template v-if="export_info.expired"  temporary disabling this to get around immediate expiration-->
                         <a disabled ref="downloadAnchor">
                             <del>{{ $t("Download") }}</del>
                         </a>
