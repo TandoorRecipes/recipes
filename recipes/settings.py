@@ -358,6 +358,8 @@ if os.getenv('DATABASE_URL'):
     if schema.startswith('postgres'):
         engine = 'django.db.backends.postgresql'
     elif schema == 'sqlite':
+        if not os.path.exists(db_path := os.path.dirname(settings['database'])):
+            os.makedirs(db_path)
         engine = 'django.db.backends.sqlite3'
     else:
         raise Exception("Unsupported database schema: '%s'" % schema)
