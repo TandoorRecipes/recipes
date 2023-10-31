@@ -35,7 +35,7 @@ echo "Waiting for database to be ready..."
 attempt=0
 max_attempts=20
 
-if [ "${DB_ENGINE}" != 'django.db.backends.sqlite3' ]; then
+if [ "${DB_ENGINE}" == 'django.db.backends.postgresql' ]; then
 
   # POSTGRES_PASSWORD (or a valid file at POSTGRES_PASSWORD_FILE) must be set in .env file
 
