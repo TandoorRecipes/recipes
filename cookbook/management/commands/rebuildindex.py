@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from django.core.management.base import BaseCommand
-from django_scopes import scopes_disabled
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
+from django_scopes import scopes_disabled
 
 from cookbook.managers import DICTIONARY
 from cookbook.models import Recipe, Step
@@ -14,7 +14,7 @@ class Command(BaseCommand):
     help = _('Rebuilds full text search index on Recipe')
 
     def handle(self, *args, **options):
-        if settings.DATABASES['default']['ENGINE'] not in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+        if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
             self.stdout.write(self.style.WARNING(_('Only Postgresql databases use full text search, no index to rebuild')))
 
         try:

@@ -10,8 +10,7 @@ from django_scopes import scopes_disabled
 from cookbook.models import Food, Ingredient
 from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
-if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                               'django.db.backends.postgresql']:
+if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     from django.db.backends.postgresql.features import DatabaseFeatures
     DatabaseFeatures.can_defer_constraint_checks = False
 

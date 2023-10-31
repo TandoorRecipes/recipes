@@ -74,6 +74,7 @@ mediafiles/
 \.env
 staticfiles/
 postgresql/
+data/
 
 
 /docker-compose.override.yml
