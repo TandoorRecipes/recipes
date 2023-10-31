@@ -23,8 +23,7 @@ from cookbook.tests.factories import (CookLogFactory, FoodFactory, IngredientFac
 # TODO makenow with above filters
 # TODO test search food/keywords including/excluding children
 LIST_URL = 'api:recipe-list'
-sqlite = settings.DATABASES['default']['ENGINE'] not in [
-    'django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']
+sqlite = settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql'
 
 
 @pytest.fixture
