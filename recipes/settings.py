@@ -218,6 +218,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 if DEBUG_TOOLBAR:
