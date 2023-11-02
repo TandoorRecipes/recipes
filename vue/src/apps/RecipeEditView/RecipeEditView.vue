@@ -939,7 +939,7 @@ export default {
                         // ingredients_visible determines whether or not the ingredients UI is shown in the edit view
                         // show_ingredients_table determine whether the ingredients table is shown in the read view
                         // these are seperate as one might want to add ingredients but not want the step-level view
-                        this.$set(s, "ingredients_visible", s.show_ingredients_table && (s.ingredients.length > 0 || this.recipe.steps.length === 1))
+                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
