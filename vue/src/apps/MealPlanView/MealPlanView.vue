@@ -796,4 +796,8 @@ having to override as much.
         font-size: 18px !important;
     }
 }
+
+.b-calendar-grid-help {
+    padding: 0.25rem;
+}
 </style>
