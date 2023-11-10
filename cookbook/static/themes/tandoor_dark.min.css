@@ -2776,7 +2776,7 @@ a.btn.disabled, fieldset:disabled a.btn {
 }
 
 .btn-link:hover {
-    color: #000;
+    color: #fff;
     text-decoration: underline
 }
 
@@ -3379,15 +3379,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .dropdown-item:focus, .dropdown-item:hover {
-    color: #16181b;
+    color: #fff !important;
     text-decoration: none;
-    background-color: #f8f9fa
+    background-color: #4E4E4E !important;
 }
 
 .dropdown-item.active, .dropdown-item:active {
     color: #fff;
     text-decoration: none;
-    background-color: #b98766
+    background-color: #b98766 !important;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -3676,7 +3676,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .custom-control-input:focus ~ .custom-control-label:before {
-    box-shadow: 0 0 0 .2rem rgba(0, 6, 55, .25)
+    box-shadow: 0 0 0 .2rem var(--primary)
 }
 
 .custom-control-input:focus:not(:checked) ~ .custom-control-label:before {
@@ -5612,13 +5612,13 @@ a.badge-dark.focus, a.badge-dark:focus {
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
-    color: #000;
+    color: #fff;
     text-shadow: 0 1px 0 #fff;
     opacity: .5
 }
 
 .close:hover {
-    color: #000;
+    color: #fff;
     text-decoration: none
 }
 
@@ -10467,6 +10467,10 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 
 .b-calendar-grid-help,
 .v-note-op, 
+.v-note-show,
+.v-show-content,
+.op-icon.dropdown-item,
+.popup-dropdown,
 .content-input-wrapper, 
 .auto-textarea-input, 
 .bottom-action-bar,
@@ -10480,6 +10484,11 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 .multiselect__option--selected:after, 
 .vue-treeselect__multi-value-item {
     background-color: rgb(20, 20, 20) !important;
+    color: #fff !important;
+}
+
+.op-icon:hover, .op-icon.selected {
+    background-color: #303030 !important;
     color: #fff !important;
 }
 
@@ -10562,7 +10571,6 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
     background-color: #4E4E4E !important;
 }
 
-.dropdown-item {
-    color: #fff !important;
+.b-sidebar-body {
+    background-color: #303030 !important;
 }
-
