@@ -3,12 +3,14 @@ import re
 from datetime import datetime
 from uuid import UUID
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
@@ -18,6 +20,7 @@ from django_scopes import scopes_disabled
 
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
                             SpaceJoinForm, User, UserCreateForm, UserPreference)
+from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import (group_required, has_group_permission,
                                                share_link_valid, switch_user_active_space)
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference,
@@ -318,13 +321,20 @@ def system(request):
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
+    if request.method == "POST":
+        del_orphans = request.POST.get('delete_orphans')
+        orphans = get_orphan_files(delete_orphans=str2bool(del_orphans))
+    else:
+        orphans = get_orphan_files()
+
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
         'version_info': VERSION_INFO,
         'plugins': PLUGINS,
-        'secret_key': secret_key
+        'secret_key': secret_key,
+        'orphans': orphans
     })
 
 
@@ -448,3 +458,47 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+
+
+def get_orphan_files(delete_orphans=False):
+    # Get list of all image files in media folder
+    media_dir = settings.MEDIA_ROOT
+
+    def find_orphans():
+        image_files = []
+        for root, dirs, files in os.walk(media_dir):
+            for file in files:
+
+                if not file.lower().endswith(('.db')) and not root.lower().endswith(('@eadir')):
+                    full_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(full_path, media_dir)
+                    image_files.append((relative_path, full_path))
+
+        # Get list of all image fields in models
+        image_fields = []
+        for model in apps.get_models():
+            for field in model._meta.get_fields():
+                if isinstance(field, models.ImageField) or isinstance(field, models.FileField):
+                    image_fields.append((model, field.name))
+
+        # get all images in the database
+        # TODO I don't know why, but this completely bypasses scope limitations
+        image_paths = []
+        for model, field in image_fields:
+            image_field_paths = model.objects.values_list(field, flat=True)
+            image_paths.extend(image_field_paths)
+
+        # Check each image file against model image fields
+        return [img for img in image_files if img[0] not in image_paths]
+    orphans = find_orphans()
+    if delete_orphans:
+        for f in [img[1] for img in orphans]:
+            try:
+                os.remove(f)
+            except FileNotFoundError:
+                print(f"File not found: {f}")
+            except Exception as e:
+                print(f"Error deleting file {f}: {e}")
+        orphans = find_orphans()
+
+    return [img[1] for img in orphans]
