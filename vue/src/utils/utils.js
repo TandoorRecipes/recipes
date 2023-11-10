@@ -50,6 +50,7 @@ export class StandardToasts {
     static FAIL_DELETE_PROTECTED = "FAIL_DELETE_PROTECTED"
     static FAIL_MOVE = "FAIL_MOVE"
     static FAIL_MERGE = "FAIL_MERGE"
+    static FAIL_IMPORT = "FAIL_IMPORT"
 
     static makeStandardToast(context, toast, err = undefined, always_show_errors = false) {
         let title = ''
@@ -122,6 +123,11 @@ export class StandardToasts {
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_merging_resource")
                 break
+            case StandardToasts.FAIL_IMPORT:
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_importing_recipe")
+                break
         }
 
 
@@ -131,12 +137,19 @@ export class StandardToasts {
             console.trace();
         }
 
-        if (err !== undefined && 'response' in err && 'headers' in err.response) {
-            if (DEBUG && err.response.headers['content-type'] === 'application/json' && err.response.status < 500) {
+        if (err !== undefined 
+            && 'response' in err 
+            && 'headers' in err.response 
+            && err.response.headers['content-type'] === 'application/json' 
+            && err.response.status < 500 
+            && err.response.data) {
+            // If the backend provides us with a nice error message, we print it, regardless of DEBUG mode
+            if (DEBUG || err.response.data.msg) {
+                const errMsg = err.response.data.msg ? err.response.data.msg : JSON.stringify(err.response.data) 
                 msg = context.$createElement('div', {}, [
                     context.$createElement('span', {}, [msg]),
                     context.$createElement('br', {}, []),
-                    context.$createElement('code', {'class': 'mt-2'}, [JSON.stringify(err.response.data)])
+                    context.$createElement('code', {'class': 'mt-2'}, [errMsg])
                 ])
             }
         }
