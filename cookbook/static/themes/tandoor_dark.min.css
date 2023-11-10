@@ -10500,23 +10500,11 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
     color: rgb(20, 20, 20) !important
 }
 
+.multiselect__input::placeholder
+.multiselect__input::-ms-input-placeholder
+.multiselect__input:-ms-input-placeholder
+.multiselect__input::-moz-placeholder,
 .multiselect__input::-webkit-input-placeholder {
-    color: #fff !important;
-}
-
-.multiselect__input::-moz-placeholder {
-    color: #fff !important;
-}
-
-.multiselect__input:-ms-input-placeholder {
-    color: #fff !important;
-}
-
-.multiselect__input::-ms-input-placeholder {
-    color: #fff !important;
-}
-
-.multiselect__input::placeholder {
     color: #fff !important;
 }
 
@@ -10529,8 +10517,6 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 }
 
 .custom-select {
-    background-color: rgb(20, 20, 20) !important;
-    color: #fff !important;
     /* add the arrow on the right */
     background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center/8px 10px;
 }
