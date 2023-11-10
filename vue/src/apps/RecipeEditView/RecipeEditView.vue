@@ -689,7 +689,7 @@
             <br/>
 
             <!-- bottom buttons save/close/view -->
-            <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
+            <div class="row fixed-bottom p-2 b-2 border-top text-center bg-white bottom-action-bar"
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
