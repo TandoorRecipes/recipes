@@ -7,6 +7,7 @@
     "err_deleting_protected_resource": "The object you are trying to delete is still used and can't be deleted.",
     "err_moving_resource": "There was an error moving a resource!",
     "err_merging_resource": "There was an error merging a resource!",
+    "err_importing_recipe": "There was an error importing the recipe!",
     "success_fetching_resource": "Successfully fetched a resource!",
     "success_creating_resource": "Successfully created a resource!",
     "success_updating_resource": "Successfully updated a resource!",

@@ -669,8 +669,7 @@ export default {
                 if (url !== '') {
                     this.failed_imports.push(url)
                 }
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-                throw "Load Recipe Error"
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_IMPORT, err)
             })
         },
         /**
@@ -713,8 +712,7 @@ export default {
             axios.post(resolveDjangoUrl('view_import'), formData, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                 window.location.href = resolveDjangoUrl('view_import_response', response.data['import_id'])
             }).catch((err) => {
-                console.log(err)
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_IMPORT, err)
             })
         },
         /**
