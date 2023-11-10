@@ -10560,3 +10560,11 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 .b-sidebar-body {
     background-color: #303030 !important;
 }
+
+.bottom-nav-link {
+    color: #898989 !important;
+}
+
+.bottom-nav-link-active {
+    color: var(--primary) !important;
+}

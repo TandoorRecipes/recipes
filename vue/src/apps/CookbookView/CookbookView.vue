@@ -56,7 +56,7 @@
         </div>
 
 
-        <bottom-navigation-bar>
+        <bottom-navigation-bar active-view="view_books">
             <template #custom_create_functions>
                 <div class="dropdown-divider" ></div>
                 <h6 class="dropdown-header">{{ $t('Books')}}</h6>
