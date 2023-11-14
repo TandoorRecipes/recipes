@@ -8,31 +8,33 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-08-29 13:09+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2023-11-15 08:20+0000\n"
+"Last-Translator: avi meyer <avmeyer@gmail.com>\n"
+"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:53
 msgid "Default unit"
-msgstr ""
+msgstr "יחידות ברירת מחדל"
 
 #: .\cookbook\forms.py:54
 msgid "Use fractions"
-msgstr ""
+msgstr "שימוש בשברים"
 
 #: .\cookbook\forms.py:55
 msgid "Use KJ"
-msgstr ""
+msgstr "שימוש ב KJ"
 
 #: .\cookbook\forms.py:56
 msgid "Theme"
-msgstr ""
+msgstr "נושא"
 
 #: .\cookbook\forms.py:57
 msgid "Navbar color"
@@ -149,7 +151,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:127 .\cookbook\forms.py:318 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr ""
+msgstr "מילות מפתח"
 
 #: .\cookbook\forms.py:128
 msgid "Preparation time in minutes"
