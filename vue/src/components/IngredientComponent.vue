@@ -106,9 +106,22 @@ export default {
 <style scoped>
 /* increase size of hover/touchable space without changing spacing */
 .touchable {
-    /* padding-right: 2em;
-    padding-left: 2em; */
-    margin-right: -1em;
-    margin-left: -1em;
+    --target-increase: 1em;
+    display: flex;
 }
+
+.touchable::after {
+    content: "";
+    display: inline-block;
+    width: var(--target-increase);
+    margin-right: calc(var(--target-increase) * -1);
+}
+
+.touchable::before {
+    content: "";
+    display: inline-block;
+    width: var(--target-increase);
+    margin-left: calc(var(--target-increase) * -1);
+}
+
 </style>
