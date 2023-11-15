@@ -4637,13 +4637,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-img-top {
     width: 100%;
     border-top-left-radius: calc(.25rem - 1px);
-    border-top-right-radius: calc(.25rem - 1px)
+    border-top-right-radius: calc(.25rem - 1px);
+    background-color: #141414;
 }
 
 .card-img-bottom {
     width: 100%;
     border-bottom-right-radius: calc(.25rem - 1px);
-    border-bottom-left-radius: calc(.25rem - 1px)
+    border-bottom-left-radius: calc(.25rem - 1px);
+    background-color: #141414;
 }
 
 .card-deck {
@@ -10500,11 +10502,7 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
     color: rgb(20, 20, 20) !important
 }
 
-.multiselect__input::placeholder
-.multiselect__input::-ms-input-placeholder
-.multiselect__input:-ms-input-placeholder
-.multiselect__input::-moz-placeholder,
-.multiselect__input::-webkit-input-placeholder {
+.multiselect__input::placeholder {
     color: #fff !important;
 }
 
@@ -10562,9 +10560,5 @@ textarea, input:not([type="submit"]):not([class="multiselect__input"]):not([clas
 }
 
 .bottom-nav-link {
-    color: #898989 !important;
-}
-
-.bottom-nav-link-active {
-    color: var(--primary) !important;
+    color: #898989;
 }
