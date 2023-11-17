@@ -350,7 +350,7 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 # Load settings from env files
 if os.getenv('DATABASE_URL'):
     match = re.match(
-        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d\/\._-]+))?',
+        r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?:(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
         os.getenv('DATABASE_URL')
     )
     settings = match.groupdict()
@@ -358,6 +358,8 @@ if os.getenv('DATABASE_URL'):
     if schema.startswith('postgres'):
         engine = 'django.db.backends.postgresql'
     elif schema == 'sqlite':
+        if not os.path.exists(db_path := os.path.dirname(settings['database'])):
+            os.makedirs(db_path)
         engine = 'django.db.backends.sqlite3'
     else:
         raise Exception("Unsupported database schema: '%s'" % schema)
