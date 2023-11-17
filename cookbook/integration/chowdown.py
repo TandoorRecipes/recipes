@@ -4,6 +4,7 @@ from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -26,6 +27,12 @@ class Chowdown(Integration):
             line = fl.decode("utf-8")
             if 'title:' in line:
                 title = line.replace('title:', '').replace('"', '').strip()
+            if 'description:' in line:
+                description = line.replace('description:', '').replace('"', '').strip()
+            if 'prep_time:' in line:
+                prep_time = line.replace('prep_time:', '').replace('"', '').strip()
+            if 'yield:' in line:
+                serving = line.replace('yield:', '').replace('"', '').strip()
             if 'image:' in line:
                 image = line.replace('image:', '').strip()
             if 'tags:' in line:
@@ -47,16 +54,43 @@ class Chowdown(Integration):
             if description_mode and len(line) > 3 and '---' not in line:
                 descriptions.append(line)
 
-        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
+        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space)
 
         for k in tags.split(','):
             print(f'adding keyword {k.strip()}')
             keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
-        step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
-        )
+        ingredients_added = False
+        for direction in directions:
+            if len(direction.strip()) > 0:
+                step = Step.objects.create(
+                    instruction=direction, name='', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                )
+            else:
+                step = Step.objects.create(
+                    instruction=direction, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                )
+            if not ingredients_added:
+                ingredients_added = True
+
+                ingredient_parser = IngredientParser(self.request, True)
+                for ingredient in ingredients:
+                    if len(ingredient.strip()) > 0:
+                        amount, unit, food, note = ingredient_parser.parse(ingredient)
+                        f = ingredient_parser.get_food(food)
+                        u = ingredient_parser.get_unit(unit)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                        ))
+            recipe.steps.add(step)
+        
+        if 'recipe_yield':
+            recipe.servings = parse_servings(serving)
+            recipe.servings_text = 'servings'
+
+        if 'total_time' and prep_time is not None:
+            recipe.working_time = parse_time(prep_time)
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
