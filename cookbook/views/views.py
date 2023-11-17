@@ -16,12 +16,13 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 
-from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User,
-                            UserCreateForm, UserPreference)
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
-                             Space, ViewLog, UserSpace)
-from cookbook.tables import (CookLogTable, ViewLogTable)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
+                            SpaceJoinForm, User, UserCreateForm, UserPreference)
+from cookbook.helper.permission_helper import (group_required, has_group_permission,
+                                               share_link_valid, switch_user_active_space)
+from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference,
+                             ShareLink, Space, UserSpace, ViewLog)
+from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS
 
@@ -219,10 +220,10 @@ def shopping_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                        len(search_form.cleaned_data['icontains'])
-                        + len(search_form.cleaned_data['istartswith'])
-                        + len(search_form.cleaned_data['trigram'])
-                        + len(search_form.cleaned_data['fulltext'])
+                    len(search_form.cleaned_data['icontains'])
+                    + len(search_form.cleaned_data['istartswith'])
+                    + len(search_form.cleaned_data['trigram'])
+                    + len(search_form.cleaned_data['fulltext'])
                 )
                 if search_form.cleaned_data['preset'] == 'fuzzy':
                     sp.search = SearchPreference.SIMPLE
@@ -278,8 +279,7 @@ def shopping_settings(request):
         search_form = SearchPreferenceForm()
 
     # these fields require postgresql - just disable them if postgresql isn't available
-    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                                       'django.db.backends.postgresql']:
+    if not settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         sp.search = SearchPreference.SIMPLE
         sp.trigram.clear()
         sp.fulltext.clear()
@@ -309,10 +309,7 @@ def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
 
-    postgres = False if (
-            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
-            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
-    ) else True
+    postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 

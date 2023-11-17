@@ -16,7 +16,7 @@ from recipes import settings
 
 # TODO consider creating a simpleListRecipe API that only includes minimum of recipe info and minimal filtering
 class RecipeSearch():
-    _postgres = settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']
+    _postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
 
     def __init__(self, request, **params):
         self._request = request
