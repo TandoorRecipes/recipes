@@ -95,7 +95,8 @@ class TreeManager(MP_NodeManager):
                 if defaults:
                     kwargs = {**kwargs, **defaults}
                 # ManyToMany fields can't be set this way, so pop them out to save for later
-                fields = [field.name for field in self.model._meta.get_fields() if issubclass(type(field), ManyToManyField)]
+                fields = [field.name for field in self.model._meta.get_fields() if
+                          issubclass(type(field), ManyToManyField)]
                 many_to_many = {field: kwargs.pop(field) for field in list(kwargs) if field in fields}
                 obj = self.model.add_root(**kwargs)
                 for field in many_to_many:
@@ -253,11 +254,13 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
+    favicon = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_favicon')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
-    max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
+    max_file_storage_mb = models.IntegerField(default=0, help_text=_(
+        'Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
     use_plural = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
@@ -471,7 +474,8 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='smc_unique_name_per_space'),
-            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_category_unique_open_data_slug_per_space')
+            models.UniqueConstraint(fields=['space', 'open_data_slug'],
+                                    name='supermarket_category_unique_open_data_slug_per_space')
         ]
 
 
@@ -490,7 +494,8 @@ class Supermarket(models.Model, PermissionModelMixin):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='sm_unique_name_per_space'),
-            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='supermarket_unique_open_data_slug_per_space')
+            models.UniqueConstraint(fields=['space', 'open_data_slug'],
+                                    name='supermarket_unique_open_data_slug_per_space')
         ]
 
 
@@ -575,7 +580,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     recipe = models.ForeignKey('Recipe', null=True, blank=True, on_delete=models.SET_NULL)
     url = models.CharField(max_length=1024, blank=True, null=True, default='')
-    supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True, on_delete=models.SET_NULL)  # inherited field
+    supermarket_category = models.ForeignKey(SupermarketCategory, null=True, blank=True,
+                                             on_delete=models.SET_NULL)  # inherited field
     ignore_shopping = models.BooleanField(default=False)  # inherited field
     onhand_users = models.ManyToManyField(User, blank=True)
     description = models.TextField(default='', blank=True)
@@ -589,8 +595,10 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     properties_food_amount = models.DecimalField(default=100, max_digits=16, decimal_places=2, blank=True)
     properties_food_unit = models.ForeignKey(Unit, on_delete=models.PROTECT, blank=True, null=True)
 
-    preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
-    preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
+    preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None,
+                                       related_name='preferred_unit')
+    preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None,
+                                                related_name='preferred_shopping_unit')
     fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
@@ -602,7 +610,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     def delete(self):
         if self.ingredient_set.all().exclude(step=None).count() > 0:
-            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
+            raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"),
+                                 self.ingredient_set.all().exclude(step=None))
         else:
             return super().delete()
 
@@ -652,8 +661,12 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                         food.get_descendants().update(**{f"{field}": False})
                     else:
                         # get food at root that have children that need updated
-                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": True}, space=space)).update(**{f"{field}": True})
-                        Food.include_descendants(queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": False}, space=space)).update(**{f"{field}": False})
+                        Food.include_descendants(
+                            queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": True},
+                                                         space=space)).update(**{f"{field}": True})
+                        Food.include_descendants(
+                            queryset=Food.objects.filter(depth=1, numchild__gt=0, **{f"{field}": False},
+                                                         space=space)).update(**{f"{field}": False})
 
             if 'supermarket_category' in inherit:
                 # when supermarket_category is null or blank assuming it is not set and not intended to be blank for all descedants
@@ -661,7 +674,8 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
                     food.get_descendants().update(supermarket_category=food.supermarket_category)
                 elif food is None:
                     # find top node that has category set
-                    category_roots = Food.exclude_descendants(queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
+                    category_roots = Food.exclude_descendants(
+                        queryset=Food.objects.filter(supermarket_category__isnull=False, numchild__gt=0, space=space))
                     for root in category_roots:
                         root.get_descendants().update(supermarket_category=root.supermarket_category)
 
@@ -680,7 +694,8 @@ class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model
     base_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
     base_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_base_relation')
     converted_amount = models.DecimalField(default=0, decimal_places=16, max_digits=32)
-    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE, related_name='unit_conversion_converted_relation')
+    converted_unit = models.ForeignKey('Unit', on_delete=models.CASCADE,
+                                       related_name='unit_conversion_converted_relation')
 
     food = models.ForeignKey('Food', on_delete=models.CASCADE, null=True, blank=True)
 
@@ -697,8 +712,10 @@ class UnitConversion(ExportModelOperationsMixin('unit_conversion'), models.Model
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'], name='f_unique_conversion_per_space'),
-            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='unit_conversion_unique_open_data_slug_per_space')
+            models.UniqueConstraint(fields=['space', 'base_unit', 'converted_unit', 'food'],
+                                    name='f_unique_conversion_per_space'),
+            models.UniqueConstraint(fields=['space', 'open_data_slug'],
+                                    name='unit_conversion_unique_open_data_slug_per_space')
         ]
 
 
@@ -764,7 +781,8 @@ class PropertyType(models.Model, PermissionModelMixin):
     order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
     category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
-                                                        (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+                                                        (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))),
+                                null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     # TODO show if empty property?
@@ -779,7 +797,8 @@ class PropertyType(models.Model, PermissionModelMixin):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
-            models.UniqueConstraint(fields=['space', 'open_data_slug'], name='property_type_unique_open_data_slug_per_space')
+            models.UniqueConstraint(fields=['space', 'open_data_slug'],
+                                    name='property_type_unique_open_data_slug_per_space')
         ]
         ordering = ('order',)
 
@@ -788,7 +807,8 @@ class Property(models.Model, PermissionModelMixin):
     property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
     property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
 
-    import_food_id = models.IntegerField(null=True, blank=True)  # field to hold food id when importing properties from the open data project
+    import_food_id = models.IntegerField(null=True,
+                                         blank=True)  # field to hold food id when importing properties from the open data project
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -798,7 +818,8 @@ class Property(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'property_type', 'import_food_id'], name='property_unique_import_food_per_space')
+            models.UniqueConstraint(fields=['space', 'property_type', 'import_food_id'],
+                                    name='property_unique_import_food_per_space')
         ]
 
 
@@ -830,7 +851,8 @@ class NutritionInformation(models.Model, PermissionModelMixin):
 
 class RecipeManager(models.Manager.from_queryset(models.QuerySet)):
     def get_queryset(self):
-        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(last_cooked=Max('cooklog__created_at'))
+        return super(RecipeManager, self).get_queryset().annotate(rating=Avg('cooklog__rating')).annotate(
+            last_cooked=Max('cooklog__created_at'))
 
 
 class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModelMixin):
@@ -873,15 +895,19 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
         # recipes for step recipe
         step_recipes = Q(id__in=self.steps.exclude(step_recipe=None).values_list('step_recipe'))
         # recipes for foods
-        food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe=self).exclude(recipe=None).values_list('recipe'))
+        food_recipes = Q(
+            id__in=Food.objects.filter(ingredient__step__recipe=self).exclude(recipe=None).values_list('recipe'))
         related_recipes = Recipe.objects.filter(step_recipes | food_recipes)
         if levels == 1:
             return related_recipes
 
         # this can loop over multiple levels if you update the value of related_recipes at each step (maybe an array?)
         # for now keeping it at 2 levels max, should be sufficient in 99.9% of scenarios
-        sub_step_recipes = Q(id__in=Step.objects.filter(recipe__in=related_recipes.values_list('steps')).exclude(step_recipe=None).values_list('step_recipe'))
-        sub_food_recipes = Q(id__in=Food.objects.filter(ingredient__step__recipe__in=related_recipes).exclude(recipe=None).values_list('recipe'))
+        sub_step_recipes = Q(id__in=Step.objects.filter(recipe__in=related_recipes.values_list('steps')).exclude(
+            step_recipe=None).values_list('step_recipe'))
+        sub_food_recipes = Q(
+            id__in=Food.objects.filter(ingredient__step__recipe__in=related_recipes).exclude(recipe=None).values_list(
+                'recipe'))
         return Recipe.objects.filter(Q(id__in=related_recipes.values_list('id')) | sub_step_recipes | sub_food_recipes)
 
     class Meta():
@@ -1016,7 +1042,8 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=32, blank=True, default='')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True, blank=True)  # TODO make required after old shoppinglist deprecated
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null=True,
+                               blank=True)  # TODO make required after old shoppinglist deprecated
     servings = models.DecimalField(default=1, max_digits=8, decimal_places=4)
     mealplan = models.ForeignKey(MealPlan, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -1034,13 +1061,15 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
+            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(),
+                                                                                'created_by', None)
         except AttributeError:
             return None
 
 
 class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), models.Model, PermissionModelMixin):
-    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True, related_name='entries')
+    list_recipe = models.ForeignKey(ShoppingListRecipe, on_delete=models.CASCADE, null=True, blank=True,
+                                    related_name='entries')
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='shopping_entries')
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, null=True, blank=True)
@@ -1305,7 +1334,8 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
             return False
 
     def save(self, *args, **kwargs):
-        if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file, InMemoryUploadedFile):
+        if hasattr(self.file, 'file') and isinstance(self.file.file, UploadedFile) or isinstance(self.file.file,
+                                                                                                 InMemoryUploadedFile):
             self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
             self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)
