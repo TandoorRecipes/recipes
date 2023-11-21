@@ -292,7 +292,7 @@
     "remember_search": "Suchbegriff merken",
     "remember_hours": "Stunden zu erinnern",
     "tree_select": "Baum-Auswahl verwenden",
-    "CountMore": "...+{count} mehr",
+    "CountMore": "...+{count} weitere",
     "ignore_shopping_help": "Zutat nie auf Einkaufsliste setzen (z.B. Wasser)",
     "OnHand_help": "Lebensmittel ist \"Vorrätig\" und wird nicht automatisch zur Einkaufsliste hinzugefügt. Der Status \"Vorrätig\" wird mit den Benutzern der Einkaufsliste geteilt.",
     "shopping_category_help": "Einkaufsläden können nach Produktkategorie entsprechend der Anordnung der Regalreihen sortiert werden.",
