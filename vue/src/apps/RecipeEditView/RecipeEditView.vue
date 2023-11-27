@@ -1084,12 +1084,17 @@ export default {
             this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
         },
         removeIngredient: function (step, ingredient) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Ingredient")}))) {
+            let message = this.$t("confirm_delete", {object: this.$t("Ingredient")})
+            if (ingredient.food?.name) {
+                message = this.$t("delete_confirmation", {source: `"${ingredient.food.name}"`})
+            }
+            if (confirm(message)) {
                 step.ingredients = step.ingredients.filter((item) => item !== ingredient)
             }
         },
         removeStep: function (step) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Step")}))) {
+            const step_index = this.recipe.steps.indexOf(step)
+            if (confirm(this.$t("delete_confirmation", {source: `${this.$t("Step")} "${step.name || step_index}"`}))) {
                 this.recipe.steps = this.recipe.steps.filter((item) => item !== step)
             }
         },
