@@ -56,8 +56,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
         try:
-            if str2bool(
-                    self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
+            if str2bool(self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
                 return fields
         except (AttributeError, KeyError):
             pass
@@ -81,14 +80,12 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 class OpenDataModelMixin(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data[
-            'open_data_slug'].strip() == '':
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
             validated_data['open_data_slug'] = None
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data[
-            'open_data_slug'].strip() == '':
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
             validated_data['open_data_slug'] = None
         return super().update(instance, validated_data)
 
@@ -124,8 +121,7 @@ class CustomOnHandField(serializers.Field):
         if not self.context["request"].user.is_authenticated:
             return []
         shared_users = []
-        if c := caches['default'].get(
-                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
             shared_users = c
         else:
             try:
@@ -284,7 +280,6 @@ class SpaceSerializer(WritableNestedModelSerializer):
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     food_inherit = FoodInheritFieldSerializer(many=True)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
-    favicon = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
@@ -306,7 +301,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'favicon', 'use_plural',)
+            'image', 'use_plural',)
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo',)
@@ -326,8 +321,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = (
-        'id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -343,8 +337,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
         validated_data['created_by'] = self.context['request'].user
-        obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                      defaults=validated_data)
+        obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     class Meta:
@@ -384,8 +377,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
             'csv_delim', 'csv_prefix',
-            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
-            'food_children_exist'
+            'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients', 'food_children_exist'
         )
 
 
@@ -474,13 +466,10 @@ class UnitSerializer(UniqueFieldsMixin, ExtendedRecipeMixin, OpenDataModelMixin)
         if x := validated_data.get('name', None):
             validated_data['plural_name'] = x.strip()
 
-        if unit := Unit.objects.filter(
-                Q(name__iexact=validated_data['name']) | Q(plural_name__iexact=validated_data['name']),
-                space=space).first():
+        if unit := Unit.objects.filter(Q(name__iexact=validated_data['name']) | Q(plural_name__iexact=validated_data['name']), space=space).first():
             return unit
 
-        obj, created = Unit.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                  defaults=validated_data)
+        obj, created = Unit.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -500,8 +489,7 @@ class SupermarketCategorySerializer(UniqueFieldsMixin, WritableNestedModelSerial
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = SupermarketCategory.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                                 defaults=validated_data)
+        obj, created = SupermarketCategory.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     def update(self, instance, validated_data):
@@ -526,8 +514,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = Supermarket.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                         defaults=validated_data)
+        obj, created = Supermarket.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     class Meta:
@@ -541,8 +528,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
-        obj, created = PropertyType.objects.get_or_create(name__iexact=validated_data['name'], space=space,
-                                                          defaults=validated_data)
+        obj, created = PropertyType.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
 
     class Meta:
@@ -667,14 +653,12 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
         properties = validated_data.pop('properties', None)
 
-        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space,
-                                                  properties_food_unit=properties_food_unit,
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
                                                   defaults=validated_data)
 
         if properties and len(properties) > 0:
             for p in properties:
-                obj.properties.add(Property.objects.create(property_type_id=p['property_type']['id'],
-                                                           property_amount=p['property_amount'], space=space))
+                obj.properties.add(Property.objects.create(property_type_id=p['property_type']['id'], property_amount=p['property_amount'], space=space))
 
         return obj
 
@@ -706,8 +690,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
             'properties', 'properties_food_amount', 'properties_food_unit',
             'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields',
-            'open_data_slug',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -731,8 +714,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
             uch = UnitConversionHelper(self.context['request'].space)
             conversions = []
             for c in uch.get_conversions(obj):
-                conversions.append(
-                    {'food': c.food.name, 'unit': c.unit.name, 'amount': c.amount})  # TODO do formatting in helper
+                conversions.append({'food': c.food.name, 'unit': c.unit.name, 'amount': c.amount})  # TODO do formatting in helper
             return conversions
         else:
             return []
@@ -834,8 +816,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin
 
     class Meta:
         model = UnitConversion
-        fields = (
-        'id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
+        fields = ('id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
@@ -905,8 +886,7 @@ class RecipeSerializer(RecipeBaseSerializer):
         fields = (
             'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
             'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings',
-            'file_path', 'servings_text', 'rating',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
             'last_cooked',
             'private', 'shared',
         )
@@ -985,8 +965,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context[
-                                                                            'request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
@@ -1052,10 +1031,10 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-                obj.name
-                or getattr(obj.mealplan, 'title', None)
-                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-                or obj.recipe.name
+            obj.name
+            or getattr(obj.mealplan, 'title', None)
+            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+            or obj.recipe.name
         ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
@@ -1286,8 +1265,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
     class Meta:
         model = InviteLink
         fields = (
-            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by',
-            'created_at',)
+            'id', 'uuid', 'email', 'group', 'valid_until', 'used_by', 'reusable', 'internal_note', 'created_by', 'created_at',)
         read_only_fields = ('id', 'uuid', 'created_by', 'created_at',)
 
 

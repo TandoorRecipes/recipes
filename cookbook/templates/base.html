@@ -11,20 +11,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
 
-    {% if request.space.favicon %}
-        
-        <link rel="shortcut icon" href="{{ request.space.favicon }}">
-        <link rel="icon" type="image/png" href="{{ request.space.favicon }}" sizes="16x16">
 
-    {% else %}
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
-        <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
-        <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
-        <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
+    <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
 
-        <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
-        <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
-    {% endif %}
+    <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
+    <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
+
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/mstile-144x144.png">
@@ -87,7 +82,7 @@
         {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
-                <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
+                <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="Logo">
             </a>
         {% endif %}
     {% endif %}
