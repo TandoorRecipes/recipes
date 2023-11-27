@@ -20,6 +20,10 @@ class Chowdown(Integration):
         direction_mode = False
         description_mode = False
 
+        description = None
+        prep_time = None
+        serving = None
+
         ingredients = []
         directions = []
         descriptions = []
@@ -54,10 +58,11 @@ class Chowdown(Integration):
             if description_mode and len(line) > 3 and '---' not in line:
                 descriptions.append(line)
 
-        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space)
+        recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
+        if description:
+            recipe.description = description
 
         for k in tags.split(','):
-            print(f'adding keyword {k.strip()}')
             keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
@@ -84,12 +89,12 @@ class Chowdown(Integration):
                             food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
                         ))
             recipe.steps.add(step)
-        
-        if 'recipe_yield':
+
+        if serving:
             recipe.servings = parse_servings(serving)
             recipe.servings_text = 'servings'
 
-        if 'total_time' and prep_time is not None:
+        if prep_time:
             recipe.working_time = parse_time(prep_time)
 
         ingredient_parser = IngredientParser(self.request, True)
@@ -110,6 +115,7 @@ class Chowdown(Integration):
                     if re.match(f'^images/{image}$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
+        recipe.save()
         return recipe
 
     def get_file_from_recipe(self, recipe):
