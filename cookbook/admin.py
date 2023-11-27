@@ -10,13 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (Automation, BookmarkletImport, Comment, CookLog, Food, FoodInheritField,
-                     ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
-                     NutritionInformation, Property, PropertyType, Recipe, RecipeBook,
-                     RecipeBookEntry, RecipeImport, SearchPreference, ShareLink, ShoppingList,
-                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
-                     SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, TelegramBot,
-                     Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog)
+from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+                     Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
+                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
+                     TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                     ViewLog)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -192,7 +192,7 @@ class RecipeAdmin(admin.ModelAdmin):
     def created_by(obj):
         return obj.created_by.get_user_display_name()
 
-    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         actions = [rebuild_index]
 
 
@@ -277,7 +277,7 @@ admin.site.register(RecipeBookEntry, RecipeBookEntryAdmin)
 
 
 class MealPlanAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe', 'meal_type', 'date')
+    list_display = ('user', 'recipe', 'meal_type', 'from_date', 'to_date')
 
     @staticmethod
     def user(obj):

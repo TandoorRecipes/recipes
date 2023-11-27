@@ -3,7 +3,6 @@ from django.contrib import auth
 from django.urls import reverse
 
 from cookbook.forms import ImportExportBase
-from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.models import ExportLog
 
 

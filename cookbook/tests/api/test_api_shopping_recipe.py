@@ -10,8 +10,7 @@ from django_scopes import scopes_disabled
 from cookbook.models import Food, Ingredient
 from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
-if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                               'django.db.backends.postgresql']:
+if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     from django.db.backends.postgresql.features import DatabaseFeatures
     DatabaseFeatures.can_defer_constraint_checks = False
 
@@ -246,8 +245,6 @@ def test_shopping_recipe_mixed_authors(u1_s1, u2_s1, space_1):
 
 @pytest.mark.parametrize("recipe", [{'steps__ingredients__header': 1}], indirect=['recipe'])
 def test_shopping_with_header_ingredient(u1_s1, recipe):
-    # with scope(space=recipe.space):
-    #     recipe.step_set.first().ingredient_set.add(IngredientFactory(ingredients__header=1))
     u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
     assert len(json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)) == 10
     assert len(json.loads(

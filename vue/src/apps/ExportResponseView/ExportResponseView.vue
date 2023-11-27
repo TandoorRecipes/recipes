@@ -19,10 +19,11 @@
 
                     {{ $t("If download did not start automatically: ") }}
 
-                    <template v-if="export_info.expired">
-                        <a disabled
-                            ><del>{{ $t("Download") }}</del></a
-                        >
+                    <template v-if="false">
+                    <!--template v-if="export_info.expired"  temporary disabling this to get around immediate expiration-->
+                        <a disabled ref="downloadAnchor">
+                            <del>{{ $t("Download") }}</del>
+                        </a>
                         ({{ $t("Expired") }})
                     </template>
                     <a v-else :href="`${resolveDjangoUrl('view_export_file', export_id)}`" ref="downloadAnchor">{{ $t("Download") }}</a>
@@ -53,20 +54,20 @@
 </template>
 
 <script>
-import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
+import Vue from "vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import { ResolveUrlMixin, makeToast, ToastMixin } from "@/utils/utils"
+import { ResolveUrlMixin, ToastMixin, makeToast } from "@/utils/utils"
 
 import LoadingSpinner from "@/components/LoadingSpinner"
 
 import { ApiApiFactory } from "@/utils/openapi/api.ts"
+import VueSanitize from "vue-sanitize"
 
 Vue.use(BootstrapVue)
-import VueSanitize from "vue-sanitize";
-Vue.use(VueSanitize);
+Vue.use(VueSanitize)
 export default {
     name: "ExportResponseView",
     mixins: [ResolveUrlMixin, ToastMixin],

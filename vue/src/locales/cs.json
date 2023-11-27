@@ -16,7 +16,6 @@
     "file_upload_disabled": "Nahrávání souborů není povoleno pro Váš prostor.",
     "warning_space_delete": "Můžete smazat váš prostor včetně všech receptů, nákupních seznamů, jídelníčků a všeho ostatního, co jste vytvořili. Tuto akci nemůžete vzít zpět! Jste si jisti, že chcete pokračovat?",
     "food_inherit_info": "Pole potravin, která budou standardně zděděna.",
-    "facet_count_info": "Zobraz počet receptů u filtrů vyhledávání.",
     "step_time_minutes": "Nastavte čas v minutách",
     "confirm_delete": "Jste si jisti že chcete odstranit tento {objekt}?",
     "import_running": "Probíhá import, čekejte prosím!",
