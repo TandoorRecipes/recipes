@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name='mealtype',
-            constraint=models.UniqueConstraint(fields=('space', 'name'), name='mt_unique_name_per_space'),
+            constraint=models.UniqueConstraint(fields=('space', 'name', 'created_by'), name='mt_unique_name_per_space'),
         ),
     ]
