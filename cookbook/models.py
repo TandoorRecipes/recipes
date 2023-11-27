@@ -985,7 +985,7 @@ class MealType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='mt_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
         ]
 
 
