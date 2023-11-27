@@ -425,6 +425,7 @@
                                                                      v-if="!ingredient.is_header">
                                                                     <input
                                                                             class="form-control"
+                                                                            style="height: 100%;"
                                                                             v-model="ingredient.amount"
                                                                             type="number"
                                                                             step="any"
@@ -506,6 +507,7 @@
                                                                     <input
                                                                             class="form-control"
                                                                             maxlength="256"
+                                                                            style="height: 100%;"
                                                                             v-model="ingredient.note"
                                                                             v-bind:placeholder="$t('Note')"
                                                                             v-on:keydown.tab="
@@ -689,7 +691,7 @@
             <br/>
 
             <!-- bottom buttons save/close/view -->
-            <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
+            <div class="row fixed-bottom p-2 b-2 border-top text-center bg-white bottom-action-bar"
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
