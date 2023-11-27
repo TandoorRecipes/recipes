@@ -1,16 +1,13 @@
 import re
 import threading
-from io import BytesIO
 
-from django.contrib import messages
 from django.core.cache import cache
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from cookbook.forms import ExportForm, ImportExportBase, ImportForm
-from cookbook.helper.permission_helper import group_required, above_space_limit
+from cookbook.forms import ExportForm, ImportExportBase
+from cookbook.helper.permission_helper import group_required
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
@@ -34,7 +31,7 @@ from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezeptsuitede import Rezeptsuitede
 from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.saffron import Saffron
-from cookbook.models import ExportLog, ImportLog, Recipe, UserPreference
+from cookbook.models import ExportLog, Recipe
 from recipes import settings
 
 

@@ -2,11 +2,8 @@ import json
 
 import pytest
 from django.contrib import auth
-from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
-
-from cookbook.models import Ingredient, Step
 
 LIST_URL = 'api:space-list'
 DETAIL_URL = 'api:space-detail'

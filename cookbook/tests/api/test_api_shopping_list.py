@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import RecipeBook, ShoppingList, Storage, Sync, SyncLog
+from cookbook.models import ShoppingList
 
 LIST_URL = 'api:shoppinglist-list'
 DETAIL_URL = 'api:shoppinglist-detail'

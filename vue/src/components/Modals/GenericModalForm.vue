@@ -16,10 +16,10 @@
                     <text-input v-if="visibleCondition(f, 'text')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
                     <text-area-input v-if="visibleCondition(f, 'textarea')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :disabled="f.disabled" :optional="f.optional"/>
                     <choice-input v-if="visibleCondition(f, 'choice')" :label="f.label" :value="f.value" :field="f.field" :options="f.options" :placeholder="f.placeholder" :optional="f.optional"/>
-                    <emoji-input v-if="visibleCondition(f, 'emoji')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
                     <file-input v-if="visibleCondition(f, 'file')" :label="f.label" :value="f.value" :field="f.field" @change="storeValue" :optional="f.optional"/>
                     <small-text v-if="visibleCondition(f, 'smalltext')" :value="f.value" />
                     <date-input v-if="visibleCondition(f, 'date')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
+                    <color-input v-if="visibleCondition(f, 'color')" :label="f.label" :value="f.value" :field="f.field" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
                     <number-input v-if="visibleCondition(f, 'number')" :label="f.label" :value="f.value" :field="f.field" :placeholder="f.placeholder" :help="showHelp && f.help" :subtitle="f.subtitle" :optional="f.optional"/>
                 </div>
                 <template v-slot:modal-footer>
@@ -52,13 +52,13 @@ import CheckboxInput from "@/components/Modals/CheckboxInput"
 import LookupInput from "@/components/Modals/LookupInput"
 import TextInput from "@/components/Modals/TextInput"
 import DateInput from "@/components/Modals/DateInput"
-import EmojiInput from "@/components/Modals/EmojiInput"
 import ChoiceInput from "@/components/Modals/ChoiceInput"
 import FileInput from "@/components/Modals/FileInput"
 import SmallText from "@/components/Modals/SmallText"
 import HelpBadge from "@/components/Badges/Help"
 import NumberInput from "@/components/Modals/NumberInput.vue";
 import TextAreaInput from "@/components/Modals/TextAreaInput.vue";
+import ColorInput from "@/components/Modals/ColorInput.vue";
 
 export default {
     name: "GenericModalForm",
@@ -67,13 +67,13 @@ export default {
         CheckboxInput,
         LookupInput,
         TextInput,
-        EmojiInput,
         ChoiceInput,
         SmallText,
         HelpBadge,
         DateInput,
         NumberInput,
-        TextAreaInput
+        TextAreaInput,
+        ColorInput
     },
     mixins: [ApiMixin, ToastMixin],
     props: {

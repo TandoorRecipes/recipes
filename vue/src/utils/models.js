@@ -243,7 +243,7 @@ export class Models {
         },
         create: {
             // if not defined partialUpdate will use the same parameters, prepending 'id'
-            params: [["name", "description", "icon"]],
+            params: [["name", "description"]],
             form: {
                 name: {
                     form_field: true,
@@ -258,13 +258,6 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
-                    optional: true,
-                },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
                     optional: true,
                 },
                 full_name: {
@@ -382,7 +375,7 @@ export class Models {
         name: "Recipe_Book",
         apiName: "RecipeBook",
         create: {
-            params: [["name", "description", "icon", "filter"]],
+            params: [["name", "description", "filter"]],
             form: {
                 name: {
                     form_field: true,
@@ -399,13 +392,7 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    optional: true,
-                },
+
                 filter: {
                     form_field: true,
                     type: "lookup",
@@ -556,8 +543,11 @@ export class Models {
                         { value: "FOOD_ALIAS", text: "Food_Alias" },
                         { value: "UNIT_ALIAS", text: "Unit_Alias" },
                         { value: "KEYWORD_ALIAS", text: "Keyword_Alias" },
+                        { value: "NAME_REPLACE", text: "Name_Replace" },
                         { value: "DESCRIPTION_REPLACE", text: "Description_Replace" },
                         { value: "INSTRUCTION_REPLACE", text: "Instruction_Replace" },
+                        { value: "FOOD_REPLACE", text: "Food_Replace" },
+                        { value: "UNIT_REPLACE", text: "Unit_Replace" },
                         { value: "NEVER_UNIT", text: "Never_Unit" },
                         { value: "TRANSPOSE_WORDS", text: "Transpose_Words" },
                     ],
@@ -710,7 +700,7 @@ export class Models {
             },
         },
         create: {
-            params: [["name", "icon", "unit", "description", "order"]],
+            params: [["name", "unit", "description", "order"]],
             form: {
                 show_help: true,
                 name: {
@@ -720,14 +710,7 @@ export class Models {
                     label: "Name",
                     placeholder: "",
                 },
-                icon: {
-                    form_field: true,
-                    type: "emoji",
-                    field: "icon",
-                    label: "Icon",
-                    placeholder: "",
-                    optional: true,
-                },
+
                 unit: {
                     form_field: true,
                     type: "text",
@@ -750,8 +733,16 @@ export class Models {
                     field: "order",
                     label: "Order",
                     placeholder: "",
+                    optional: false,
+                    help_text: "OrderInformation",
+                },
+                fdc_id: {
+                    form_field: true,
+                    type: "text",
+                    field: "fdc_id",
+                    label: "FDC_ID",
+                    help_text: "FDC_ID_help",
                     optional: true,
-                    helpt_text: "OrderInformation",
                 },
                 open_data_slug: {
                     form_field: true,
@@ -850,13 +841,27 @@ export class Models {
             params: ["filter_list"],
         },
         create: {
-            params: [["name"]],
+            params: [["name", "color", "default"]],
             form: {
                 name: {
                     form_field: true,
                     type: "text",
                     field: "name",
                     label: "Name",
+                    placeholder: "",
+                },
+                color: {
+                    form_field: true,
+                    type: "color",
+                    field: "color",
+                    label: "Color",
+                    placeholder: "",
+                },
+                default: {
+                    form_field: true,
+                    type: "checkbox",
+                    field: "default",
+                    label: "Default",
                     placeholder: "",
                 },
             },

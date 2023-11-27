@@ -382,7 +382,6 @@
     "err_deleting_protected_resource": "O objeto que você está tentando deletar ainda está sendo utilizado, portanto não pode ser deletado.",
     "food_inherit_info": "Campos no alimento que devem ser herdados por padrão.",
     "warning_space_delete": "Pode eliminar o seu espaço incluindo todas as receitas, listas de compras, planos de refeição e tudo o que tenha criado. Isto não pode ser desfeito! Tem a certeza que quer fazer isto?",
-    "facet_count_info": "Mostrar quantidade de receitas nos filtros de busca.",
     "Plural": "",
     "plural_short": "",
     "Use_Plural_Unit_Always": "",

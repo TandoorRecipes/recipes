@@ -1,8 +1,7 @@
 import os
-import sys
+from io import BytesIO
 
 from PIL import Image
-from io import BytesIO
 
 
 def rescale_image_jpeg(image_object, base_width=1020):
@@ -11,7 +10,7 @@ def rescale_image_jpeg(image_object, base_width=1020):
     width_percent = (base_width / float(img.size[0]))
     height = int((float(img.size[1]) * float(width_percent)))
 
-    img = img.resize((base_width, height), Image.ANTIALIAS)
+    img = img.resize((base_width, height), Image.LANCZOS)
     img_bytes = BytesIO()
     img.save(img_bytes, 'JPEG', quality=90, optimize=True, icc_profile=icc_profile)
 
@@ -22,7 +21,7 @@ def rescale_image_png(image_object, base_width=1020):
     image_object = Image.open(image_object)
     wpercent = (base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
-    img = image_object.resize((base_width, hsize), Image.ANTIALIAS)
+    img = image_object.resize((base_width, hsize), Image.LANCZOS)
 
     im_io = BytesIO()
     img.save(im_io, 'PNG', quality=90)

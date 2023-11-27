@@ -1,6 +1,7 @@
-from cookbook.models import UserPreference
 from django import template
 from django.templatetags.static import static
+
+from cookbook.models import UserPreference
 from recipes.settings import STICKY_NAV_PREF_DEFAULT
 
 register = template.Library()
@@ -22,6 +23,14 @@ def theme_url(request):
         return static(themes[request.user.userpreference.theme])
     else:
         raise AttributeError
+
+
+@register.simple_tag
+def logo_url(request):
+    if request.user.is_authenticated and request.space.image:
+        return request.space.image.file.url
+    else:
+        return static('assets/brand_logo.png')
 
 
 @register.simple_tag

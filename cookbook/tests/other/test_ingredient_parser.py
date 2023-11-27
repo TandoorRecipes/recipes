@@ -1,7 +1,11 @@
+from django.contrib import auth
+from django.test import RequestFactory
+from django_scopes import scope
+
 from cookbook.helper.ingredient_parser import IngredientParser
 
 
-def test_ingredient_parser():
+def test_ingredient_parser(u1_s1):
     expectations = {
         "2¼ l Wasser": (2.25, "l", "Wasser", ""),
         "3¼l Wasser": (3.25, "l", "Wasser", ""),
@@ -77,11 +81,17 @@ def test_ingredient_parser():
 
     # TODO maybe add/improve support for weired stuff like this https://www.rainbownourishments.com/vegan-lemon-tart/#recipe
 
-    ingredient_parser = IngredientParser(None, False, ignore_automations=True)
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    ingredient_parser = IngredientParser(request, False, ignore_automations=True)
 
     count = 0
-    for key, val in expectations.items():
-        count += 1
-        parsed = ingredient_parser.parse(key)
-        print(f'testing if {key} becomes {val}')
-        assert parsed == val
+    with scope(space=space):
+        for key, val in expectations.items():
+            count += 1
+            parsed = ingredient_parser.parse(key)
+            print(f'testing if {key} becomes {val}')
+            assert parsed == val
