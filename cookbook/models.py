@@ -767,6 +767,7 @@ class PropertyType(models.Model, PermissionModelMixin):
                                                         (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
+    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
     # TODO show if empty property?
     # TODO formatting property?
 
