@@ -58,8 +58,9 @@ class Mealie(Integration):
 
         if 'tags' in recipe_json and len(recipe_json['tags']) > 0:
             for k in recipe_json['tags']:
-                keyword, created = Keyword.objects.get_or_create(name=k["name"].strip(), space=self.request.space)
-                recipe.keywords.add(keyword)
+                if 'name' in k:
+                    keyword, created = Keyword.objects.get_or_create(name=k['name'].strip(), space=self.request.space)
+                    recipe.keywords.add(keyword)
 
         if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
             notes_text = "#### Notes  \n\n"
