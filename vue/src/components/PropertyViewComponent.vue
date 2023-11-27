@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="hasRecipeProperties || hasFoodProperties">
 
 
         <div class="card p-4 pb-2" v-if="recipe !== undefined && property_list.length > 0">

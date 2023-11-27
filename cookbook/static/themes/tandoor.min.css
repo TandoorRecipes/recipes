@@ -4634,13 +4634,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-img-top {
     width: 100%;
     border-top-left-radius: calc(.25rem - 1px);
-    border-top-right-radius: calc(.25rem - 1px)
+    border-top-right-radius: calc(.25rem - 1px);
+    background-color: #f5f5f6;
 }
 
 .card-img-bottom {
     width: 100%;
     border-bottom-right-radius: calc(.25rem - 1px);
-    border-bottom-left-radius: calc(.25rem - 1px)
+    border-bottom-left-radius: calc(.25rem - 1px);
+    background-color: #f5f5f6;
 }
 
 .card-deck {

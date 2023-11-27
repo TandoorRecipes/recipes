@@ -117,18 +117,24 @@ class OpenDataImporter:
         self._update_slug_cache(PropertyType, 'property')
 
         insert_list = []
+        insert_list_flat = []
         update_list = []
         update_field_list = []
         for k in list(self.data[datatype].keys()):
             if not (self.data[datatype][k]['name'] in existing_objects_flat or self.data[datatype][k]['plural_name'] in existing_objects_flat):
-                insert_list.append({'data': {
-                    'name': self.data[datatype][k]['name'],
-                    'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
-                    'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
-                    'fdc_id': self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
-                    'open_data_slug': k,
-                    'space': self.request.space.id,
-                }})
+                if not (self.data[datatype][k]['name'] in insert_list_flat or self.data[datatype][k]['plural_name'] in insert_list_flat):
+                    insert_list.append({'data': {
+                        'name': self.data[datatype][k]['name'],
+                        'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
+                        'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
+                        'fdc_id': self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
+                        'open_data_slug': k,
+                        'space': self.request.space.id,
+                    }})
+                    # build a fake second flat array to prevent duplicate foods from being inserted.
+                    # trying to insert a duplicate would throw a db error :(
+                    insert_list_flat.append(self.data[datatype][k]['name'])
+                    insert_list_flat.append(self.data[datatype][k]['plural_name'])
             else:
                 if self.data[datatype][k]['name'] in existing_objects:
                     existing_food_id = existing_objects[self.data[datatype][k]['name']][0]

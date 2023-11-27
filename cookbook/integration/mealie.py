@@ -7,7 +7,7 @@ from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class Mealie(Integration):
@@ -55,6 +55,12 @@ class Mealie(Integration):
                 ))
             except Exception:
                 pass
+
+        if 'tags' in recipe_json and len(recipe_json['tags']) > 0:
+            for k in recipe_json['tags']:
+                if 'name' in k:
+                    keyword, created = Keyword.objects.get_or_create(name=k['name'].strip(), space=self.request.space)
+                    recipe.keywords.add(keyword)
 
         if 'notes' in recipe_json and len(recipe_json['notes']) > 0:
             notes_text = "#### Notes  \n\n"

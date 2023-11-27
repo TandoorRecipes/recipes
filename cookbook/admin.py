@@ -192,7 +192,7 @@ class RecipeAdmin(admin.ModelAdmin):
     def created_by(obj):
         return obj.created_by.get_user_display_name()
 
-    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         actions = [rebuild_index]
 
 

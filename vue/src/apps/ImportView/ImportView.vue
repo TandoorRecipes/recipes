@@ -267,10 +267,10 @@
                         <b-tab v-bind:title="$t('App')">
                             <b-container>
                                 <h4>{{ $t('Select_App_To_Import') }}:</h4>
-                                <b-row class="mt-4">
-                                    <b-col cols="4" offset="0" offset-md="4" v-for="i in INTEGRATIONS_TD" :value="i.id"
+                                <b-row align-h="center" class="mt-4">
+                                    <b-col cols="12" md="6" v-for="i in INTEGRATIONS_TD" :value="i.id"
                                            v-bind:key="i.id">
-                                        <b-list-group style="max-width: 300px;">
+                                        <b-list-group>
                                             <b-list-group-item class="d-flex align-items-center" v-hover
                                                                style="cursor: pointer"
                                                                v-bind:class="{ 'bg-success': recipe_app === i.id }"
@@ -297,9 +297,9 @@
                                     </b-col>
                                 </b-row>
                                 <b-row class="mt-4">
-                                    <b-col cols="3" v-for="i in INTEGRATIONS_WO" :value="i.id" v-bind:key="i.id"
+                                    <b-col cols="12" md="6" lg="4" xl="3" v-for="i in INTEGRATIONS_WO" :value="i.id" v-bind:key="i.id"
                                            class="mt-1">
-                                        <b-list-group style="max-width: 300px;">
+                                        <b-list-group>
                                             <b-list-group-item class="d-flex align-items-center" v-hover
                                                                style="cursor: pointer"
                                                                v-bind:class="{ 'bg-success': recipe_app === i.id }"
