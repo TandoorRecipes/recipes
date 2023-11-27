@@ -733,8 +733,16 @@ export class Models {
                     field: "order",
                     label: "Order",
                     placeholder: "",
+                    optional: false,
+                    help_text: "OrderInformation",
+                },
+                fdc_id: {
+                    form_field: true,
+                    type: "text",
+                    field: "fdc_id",
+                    label: "FDC_ID",
+                    help_text: "FDC_ID_help",
                     optional: true,
-                    helpt_text: "OrderInformation",
                 },
                 open_data_slug: {
                     form_field: true,

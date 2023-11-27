@@ -533,7 +533,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug')
+        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug', 'fdc_id',)
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -687,7 +687,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url',
-            'properties', 'properties_food_amount', 'properties_food_unit',
+            'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
             'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
@@ -1031,10 +1031,10 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
+                obj.name
+                or getattr(obj.mealplan, 'title', None)
+                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                or obj.recipe.name
         ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):
