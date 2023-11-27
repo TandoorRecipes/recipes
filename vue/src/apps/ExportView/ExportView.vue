@@ -45,14 +45,12 @@
 </template>
 
 <script>
-import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
+import Vue from "vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import LoadingSpinner from "@/components/LoadingSpinner"
-
-import { StandardToasts, makeToast, resolveDjangoUrl, ApiMixin } from "@/utils/utils"
+import { ApiMixin, StandardToasts, makeToast, resolveDjangoUrl } from "@/utils/utils"
 // import Multiselect from "vue-multiselect"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import { ApiApiFactory } from "@/utils/openapi/api.ts"
@@ -108,7 +106,7 @@ export default {
             let formData = new FormData()
             formData.append("type", this.recipe_app)
             formData.append("all", this.export_all)
-            formData.append("custom_filter", this.filter?.id ?? null)
+            formData.append("custom_filter", this.filter?.id ?? "")
 
             for (var i = 0; i < this.recipe_list.length; i++) {
                 formData.append("recipes", this.recipe_list[i].id)

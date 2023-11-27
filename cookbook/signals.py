@@ -16,8 +16,7 @@ from cookbook.models import (Food, MealPlan, PropertyType, Recipe, SearchFields,
                              Step, Unit, UserPreference)
 
 SQLITE = True
-if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                               'django.db.backends.postgresql']:
+if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     SQLITE = False
 
 

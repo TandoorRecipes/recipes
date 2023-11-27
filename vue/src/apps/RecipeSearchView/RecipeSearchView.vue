@@ -846,7 +846,7 @@
 
                 <meal-plan-edit-modal :entry="mealplan_entry_edit" :create_date="mealplan_default_date"></meal-plan-edit-modal>
 
-                <bottom-navigation-bar></bottom-navigation-bar>
+                <bottom-navigation-bar active-view="view_search"></bottom-navigation-bar>
             </div>
         </div>
     </div>

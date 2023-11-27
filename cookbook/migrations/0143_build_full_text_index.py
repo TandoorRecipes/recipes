@@ -9,7 +9,7 @@ from django.utils import translation
 from django_scopes import scopes_disabled
 
 from cookbook.managers import DICTIONARY
-from cookbook.models import (Index, PermissionModelMixin, Recipe, Step, SearchFields)
+from cookbook.models import Index, PermissionModelMixin, Recipe, SearchFields, Step
 
 
 def allSearchFields():
@@ -21,7 +21,7 @@ def nameSearchField():
 
 
 def set_default_search_vector(apps, schema_editor):
-    if settings.DATABASES['default']['ENGINE'] not in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if settings.DATABASES['default']['ENGINE'] != 'django.db.backends.postgresql':
         return
     language = DICTIONARY.get(translation.get_language(), 'simple')
     with scopes_disabled():

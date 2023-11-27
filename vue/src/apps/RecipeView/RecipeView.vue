@@ -2,7 +2,7 @@
     <div id="app" v-if="recipe_id !== undefined">
         <recipe-view-component :recipe_id="recipe_id"></recipe-view-component>
 
-        <bottom-navigation-bar></bottom-navigation-bar>
+        <bottom-navigation-bar active-view="view_search"></bottom-navigation-bar>
     </div>
 </template>
 
