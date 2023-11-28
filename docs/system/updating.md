@@ -39,10 +39,6 @@ grep -E 'POSTGRES|DATABASE' ~/.docker/compose/.env
 docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk 'NR == 1 || /postgres/ || /recipes/'
 ```
 
-- Database Container
-- Tandoor Container
-- Database User
-
 2. Export the tandoor database
 
 ``` bash
