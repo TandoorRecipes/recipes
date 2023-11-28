@@ -41,7 +41,7 @@ docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk
 [ ] Database Container
 [ ] Tandoor Container
 [ ] Database User
-  
+
 2. Export the tandoor database
 ``` bash
 docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
