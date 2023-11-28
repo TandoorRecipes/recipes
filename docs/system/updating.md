@@ -37,43 +37,50 @@ A full list of options to upgrade a database provide in the [official PostgreSQL
 grep -E 'POSTGRES|DATABASE' ~/.docker/compose/.env
 docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk 'NR == 1 || /postgres/ || /recipes/'
 ```
+
 [ ] Database Container
 [ ] Tandoor Container
 [ ] Database User
   
 2. Export the tandoor database
-  ``` bash
-  docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
-  ```
+``` bash
+docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
+```
 
 3. Stop the postgres container
-  ``` bash
-  docker stop {{database_container}} {{tandoor_container}}
-  ```
+``` bash
+docker stop {{database_container}} {{tandoor_container}}
+```
 
 4. Rename the tandoor volume
 
-  ``` bash
-  sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
-  ```
+``` bash
+sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
+```
+
 5. Update image tag on postgres container.
-   ``` yaml
-   db_recipes:
-     restart: always
-     image: postgres:16-alpine
-     volumes:
-       - ./postgresql:/var/lib/postgresql/data
-     env_file:
-       - ./.env
-   ```
+
+ ``` yaml
+ db_recipes:
+   restart: always
+   image: postgres:16-alpine
+   volumes:
+     - ./postgresql:/var/lib/postgresql/data
+   env_file:
+     - ./.env
+ ```
+
 6. Pull and rebuild container.
-    ``` bash
-    docker-compose pull && docker-compose up -d
-    ```
+
+  ``` bash
+  docker-compose pull && docker-compose up -d
+  ```
+
 7. Import the database export
-    ``` bash
-    cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
-    ```
+
+  ``` bash
+  cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
+  ```
 
 If anything fails, go back to the old postgres version and data directory and try again.
 
