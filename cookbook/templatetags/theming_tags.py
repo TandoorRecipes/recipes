@@ -27,7 +27,7 @@ def theme_url(request):
 
 @register.simple_tag
 def logo_url(request):
-    if request.user.is_authenticated and request.space.image:
+    if request.user.is_authenticated and getattr(getattr(request, "space", {}), 'image', None):
         return request.space.image.file.url
     else:
         return static('assets/brand_logo.png')
