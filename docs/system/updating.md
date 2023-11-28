@@ -33,26 +33,29 @@ One option is to manually [backup/restore](https://docs.tandoor.dev/system/updat
 A full list of options to upgrade a database provide in the [official PostgreSQL documentation](https://www.postgresql.org/docs/current/upgrading.html).
 
 1.  Collect information about your environment.
-  ``` bash
-  grep -E 'POSTGRES|DATABASE' ~/.docker/compose/.env
-  docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk 'NR == 1 || /postgres/ || /recipes/'
-  ```
-  [ ] Database Container
-  [ ] Tandoor Container
-  [ ] Database User
+``` bash
+grep -E 'POSTGRES|DATABASE' ~/.docker/compose/.env
+docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Status}}' | awk 'NR == 1 || /postgres/ || /recipes/'
+```
+[ ] Database Container
+[ ] Tandoor Container
+[ ] Database User
   
 2. Export the tandoor database
-    ``` bash
-    docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
-    ```
+  ``` bash
+  docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
+  ```
+
 3. Stop the postgres container
-    ``` bash
-    docker stop {{database_container}} {{tandoor_container}}
-    ```
+  ``` bash
+  docker stop {{database_container}} {{tandoor_container}}
+  ```
+
 4. Rename the tandoor volume
-    ``` bash
-    sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
-    ```
+
+  ``` bash
+  sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
+  ```
 5. Update image tag on postgres container.
    ``` yaml
    db_recipes:
