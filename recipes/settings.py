@@ -450,7 +450,11 @@ for p in PLUGINS:
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
+if os.getenv('TIMEZONE') is not None:
+    print('DEPRECATION WARNING: Environment var "TIMEZONE" is deprecated. Please use "TZ" instead.')
+    TIME_ZONE = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+else:
+    TIME_ZONE = os.getenv('TZ') if os.getenv('TZ') else 'Europe/Berlin'
 
 USE_I18N = True
 
