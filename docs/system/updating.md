@@ -40,6 +40,7 @@ A full list of options to upgrade a database provide in the [official PostgreSQL
   [ ] Database Container
   [ ] Tandoor Container
   [ ] Database User
+  
 2. Export the tandoor database
     ``` bash
     docker exec -t {{database_container}} pg_dumpall -U {{djangouser}} > ~/tandoor.sql
