@@ -79,6 +79,15 @@ sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
   ``` bash
   cat ~/tandoor.sql | sudo docker exec -i {{database_container}} psql postgres -U {{djangouser}}
   ```
+  8. Install postgres extensions
+  ``` bash
+  docker exec -it {{database_container}} psql
+  ```
+  then
+  ``` psql
+  CREATE EXTENSION IF NOT EXISTS unaccent;
+  CREATE EXTENSION IF NOT EXISTS pg_trgm;
+  ```
 
 If anything fails, go back to the old postgres version and data directory and try again.
 
