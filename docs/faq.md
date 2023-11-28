@@ -36,7 +36,7 @@ If that doesn't fix it, you can also refer to the appropriate sub section in the
 Navigate to `/system` and review the headers listed in the DEBUG section.  At a minimum, if you are using a reverse proxy the headers must match the below conditions.
 
 | Header      | Requirement |
-| :---        |    ----:   |
+| :---        |    :----   |
 | HTTP_HOST:mydomain.tld      | The host domain must match the url that you are using to open Tandoor.  |
 | HTTP_X_FORWARDED_HOST:mydomain.tld      | The host domain must match the url that you are using to open Tandoor.  |
 | HTTP_X_FORWARDED_PROTO:http(s)      | The protocol must match the url you are using to open Tandoor.  There must be exactly one protocol listed.  |
