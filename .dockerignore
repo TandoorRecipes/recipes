@@ -29,4 +29,3 @@ vue/babel.config*
 vue/package.json
 vue/tsconfig.json
 vue/src/utils/openapi
-venv/
