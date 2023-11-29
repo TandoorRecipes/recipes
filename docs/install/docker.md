@@ -6,6 +6,12 @@ It is possible to install this application using many different Docker configura
 
 Please read the instructions on each example carefully and decide if this is the way for you.
 
+## **DockSTARTer**
+
+The main goal of [DockSTARTer](https://dockstarter.com/) is to make it quick and easy to get up and running with Docker.
+You may choose to rely on DockSTARTer for various changes to your Docker system or use DockSTARTer as a stepping stone and learn to do more advanced configurations.
+Follow the guide for installing DockSTARTer and then run `ds` then select 'Configuration' and 'Select Apps' to get Tandoor up and running quickly and easily.
+
 ## **Docker**
 
 The docker image (`vabene1111/recipes`) simply exposes the application on the container's port `8080`.
@@ -110,7 +116,7 @@ in combination with [jrcs's letsencrypt companion](https://hub.docker.com/r/jrcs
 Please refer to the appropriate documentation on how to setup the reverse proxy and networks.
 
 !!! warning "Adjust client_max_body_size"
-    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration. 
+    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration.
 
 Remember to add the appropriate environment variables to the `.env` file:
 
@@ -360,11 +366,11 @@ follow these instructions:
 ### Sub Path nginx config
 
 If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
-with the following config. 
+with the following config.
 
 ```nginx
 location /my_app { # change to subfolder name
-    include /config/nginx/proxy.conf; 
+    include /config/nginx/proxy.conf;
     proxy_pass https://mywebapp.com/; # change to your host name:port
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
