@@ -209,6 +209,7 @@ export default {
             this.entryEditing = this.options.entryEditing
             this.entryEditing.recipe = this.recipe
             this.entryEditing.from_date = moment(new Date()).format("YYYY-MM-DD")
+            this.entryEditing.to_date = moment(new Date()).format("YYYY-MM-DD")
             this.$nextTick(function () {
                 this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
             })
