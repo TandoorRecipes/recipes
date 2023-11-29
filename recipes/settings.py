@@ -452,7 +452,7 @@ LANGUAGE_CODE = 'en'
 
 if os.getenv('TIMEZONE') is not None:
     print('DEPRECATION WARNING: Environment var "TIMEZONE" is deprecated. Please use "TZ" instead.')
-    TIME_ZONE = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+    TIME_ZONE = bool(int(os.getenv('TIMEZONE')))
 else:
     TIME_ZONE = os.getenv('TZ') if os.getenv('TZ') else 'Europe/Berlin'
 
