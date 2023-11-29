@@ -1454,7 +1454,7 @@ def import_files(request):
     """
     limit, msg = above_space_limit(request.space)
     if limit:
-        return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': True, 'msg': _('File is above space limit')}, status=status.HTTP_400_BAD_REQUEST)
 
     form = ImportForm(request.POST, request.FILES)
     if form.is_valid() and request.FILES != {}:
