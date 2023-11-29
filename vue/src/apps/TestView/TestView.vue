@@ -2,31 +2,33 @@
 
     <div id="app">
         <div>
-            <h2 v-if="recipe">{{ recipe.name}}</h2>
+            <h2 v-if="recipe">{{ recipe.name }}</h2>
 
             <table class="table table-sm table-bordered">
                 <thead>
                 <tr>
                     <td>{{ $t('Name') }}</td>
                     <td v-for="pt in property_types" v-bind:key="pt.id">{{ pt.name }}
-                        <input type="text" v-model="pt.unit" @change="updatePropertyType(pt)">
-                        <input v-model="pt.fdc_id" type="number" placeholder="FDC ID" @change="updatePropertyType(pt)"></td>
+                        <input class="form-control form-control-sm" type="text" v-model="pt.unit" @change="updatePropertyType(pt)">
+                        <input class="form-control form-control-sm" v-model="pt.fdc_id" type="number" placeholder="FDC ID" @change="updatePropertyType(pt)"></td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="f in this.foods" v-bind:key="f.food.id">
                     <td>
-                        {{ f.food.name }}
-                        {{ $t('Property') }} / <input type="number" v-model="f.food.properties_food_amount" @change="updateFood(f.food)">
+                        {{ f.food.name }} #{{ f.food.id }}
+                        {{ $t('Property') }} / <input class="form-control form-control-sm" type="number" v-model="f.food.properties_food_amount" @change="updateFood(f.food)">
                         <generic-multiselect
                             @change="f.food.properties_food_unit = $event.val; updateFood(f.food)"
                             :initial_selection="f.food.properties_food_unit"
                             label="name" :model="Models.UNIT"
                             :multiple="false"/>
-                        <input v-model="f.food.fdc_id" placeholder="FDC ID">
-                        <button>Load FDC</button>
+                        <input class="form-control form-control-sm" v-model="f.food.fdc_id" placeholder="FDC ID" @change="updateFood(f.food)">
+                        <button @click="updateFoodFromFDC(f.food)">Load FDC</button>
                     </td>
-                    <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`"><input type="number" v-model="p.property_amount"> {{ p.property_type.unit }}</td>
+                    <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`">
+                        <input class="form-control form-control-sm" type="number" v-model="p.property_amount"> {{ p.property_type.unit }} ({{ p.property_type.name }})
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -84,17 +86,20 @@ export default {
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
-        let apiClient = new ApiApiFactory()
-
-        apiClient.retrieveRecipe("112").then(result => {
-            this.recipe = result.data
-        })
-
-        apiClient.listPropertyTypes().then(result => {
-            this.property_types = result.data
-        })
+        this.loadData();
     },
     methods: {
+        loadData: function () {
+            let apiClient = new ApiApiFactory()
+
+            apiClient.retrieveRecipe("112").then(result => {
+                this.recipe = result.data
+            })
+
+            apiClient.listPropertyTypes().then(result => {
+                this.property_types = result.data
+            })
+        },
         updateFood: function (food) {
             let apiClient = new ApiApiFactory()
             apiClient.partialUpdateFood(food.id, food).then(result => {
@@ -108,6 +113,16 @@ export default {
             let apiClient = new ApiApiFactory()
             apiClient.partialUpdatePropertyType(pt.id, pt).then(result => {
                 //TODO handle properly
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        },
+        updateFoodFromFDC: function (food) {
+            let apiClient = new ApiApiFactory()
+
+            apiClient.fdcFood(food.id).then(result => {
+                this.loadData()
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
