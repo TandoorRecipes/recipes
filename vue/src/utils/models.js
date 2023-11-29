@@ -738,7 +738,13 @@ export class Models {
                 },
                 fdc_id: {
                     form_field: true,
-                    type: "text",
+                    type: "choice",
+                    options: [
+                        { value: 1008, text: "Calories (1008)" },
+                        { value: 1005, text: "Carbohydrates (1005)" },
+                        { value: 1003, text: "Protein (1003)" },
+                        { value: 1004, text: "Fat (1004)" },
+                    ],
                     field: "fdc_id",
                     label: "FDC_ID",
                     help_text: "FDC_ID_help",

@@ -81,6 +81,8 @@
     "open_data_help_text": "The Tandoor Open Data project provides community contributed data for Tandoor. This field is filled automatically when importing it and allows updates in the future.",
     "Open_Data_Slug": "Open Data Slug",
     "Open_Data_Import": "Open Data Import",
+    "Properties_Food_Amount": "Properties Food Amount",
+    "Properties_Food_Unit": "Properties Food Unit",
     "FDC_ID": "FDC ID",
     "FDC_ID_help": "FDC database ID",
     "Data_Import_Info": "Enhance your Space by importing a community curated list of foods, units and more to improve your recipe collection.",
