@@ -26,7 +26,7 @@ from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, S
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
-from django.http import FileResponse, HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -75,7 +75,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog)
+                             UserFile, UserPreference, UserSpace, ViewLog, FoodProperty)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -104,6 +104,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
+from recipes.settings import FDC_API_KEY
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -594,6 +595,49 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space,
                                          created_by=request.user)
         return Response(content, status=status.HTTP_204_NO_CONTENT)
+
+    @decorators.action(detail=True, methods=['POST'], )
+    def fdc(self, request, pk):
+        """
+        updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+        """
+        food = self.get_object()
+
+        response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
+        if response.status_code == 429:
+            return JsonResponse({'msg', 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
+                                json_dumps_params={'indent': 4})
+
+        try:
+            data = json.loads(response.content)
+
+            food_property_list = []
+            food_property_types = food.foodproperty_set.values_list('property__property_type_id', flat=True)
+
+            for pt in PropertyType.objects.filter(space=request.space).all():
+                if pt.fdc_id and pt.id not in food_property_types:
+                    for fn in data['foodNutrients']:
+                        if fn['nutrient']['id'] == pt.fdc_id:
+                            food_property_list.append(Property(
+                                property_type_id=pt.id,
+                                property_amount=round(fn['amount'], 2),
+                                import_food_id=food.id,
+                                space=self.request.space,
+                            ))
+
+            Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
+
+            property_food_relation_list = []
+            for p in Property.objects.filter(space=self.request.space, import_food_id=food.id).values_list('import_food_id', 'id', ):
+                property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
+
+            FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
+            Property.objects.filter(space=self.request.space, import_food_id=food.id).update(import_food_id=None)
+
+            return self.retrieve(request, pk)
+        except Exception as e:
+            traceback.print_exc()
+            return JsonResponse({'error': f'{e} - check server log'}, status=500, json_dumps_params={'indent': 4})
 
     def destroy(self, *args, **kwargs):
         try:
