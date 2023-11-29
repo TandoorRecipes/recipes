@@ -744,8 +744,12 @@ having to override as much.
 
 .theme-default .cv-item.continued::before,
 .theme-default .cv-item.toBeContinued::after {
+    /*
+    removed because it breaks a line and would increase item size https://github.com/TandoorRecipes/recipes/issues/2678
+
     content: " \21e2 ";
     color: #999;
+     */
 }
 
 .theme-default .cv-item.toBeContinued {
