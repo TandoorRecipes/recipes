@@ -163,10 +163,9 @@ def get_from_scraper(scrape, request):
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
+    recipe_json['description'] = recipe_json['description'][:512]
     if len(recipe_json['description']) > 256:  # split at 256 as long descriptions don't look good on recipe cards
         recipe_json['steps'][0]['instruction'] = f"*{recipe_json['description']}*  \n\n" + recipe_json['steps'][0]['instruction']
-    else:
-        recipe_json['description'] = recipe_json['description'][:512]
 
     try:
         for x in scrape.ingredients():
