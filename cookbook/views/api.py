@@ -612,10 +612,14 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             data = json.loads(response.content)
 
             food_property_list = []
-            food_property_types = food.foodproperty_set.values_list('property__property_type_id', flat=True)
 
-            for pt in PropertyType.objects.filter(space=request.space).all():
-                if pt.fdc_id and pt.id not in food_property_types:
+            # delete all properties where the property type has a fdc_id as these should be overridden
+            for fp in food.properties.all():
+                if fp.property_type.fdc_id:
+                    fp.delete()
+
+            for pt in PropertyType.objects.filter(space=request.space, fdc_id__gte=0).all():
+                if pt.fdc_id:
                     for fn in data['foodNutrients']:
                         if fn['nutrient']['id'] == pt.fdc_id:
                             food_property_list.append(Property(
