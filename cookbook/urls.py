@@ -43,7 +43,7 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'unit-conversion', api.UnitConversionViewSet)
-router.register(r'food-property-type', api.PropertyTypeViewSet)
+router.register(r'food-property-type', api.PropertyTypeViewSet)  # TODO rename + regenerate
 router.register(r'food-property', api.PropertyViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
@@ -91,6 +91,7 @@ urlpatterns = [
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
+    path('property-editor/<int:pk>', views.property_editor, name='view_property_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
 
     path('api/import/', api.import_files, name='view_import'),

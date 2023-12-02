@@ -89,7 +89,7 @@ DJANGO_TABLES2_PAGE_RANGE = 8
 HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
-FDA_API_KEY = os.getenv('FDA_API_KEY', 'DEMO_KEY')
+FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
 
 SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
@@ -350,7 +350,7 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 # Load settings from env files
 if os.getenv('DATABASE_URL'):
     match = re.match(
-        r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?:(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
+        r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
         os.getenv('DATABASE_URL')
     )
     settings = match.groupdict()
@@ -450,7 +450,11 @@ for p in PLUGINS:
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
+if os.getenv('TIMEZONE') is not None:
+    print('DEPRECATION WARNING: Environment var "TIMEZONE" is deprecated. Please use "TZ" instead.')
+    TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
+else:
+    TIME_ZONE = os.getenv('TZ') if os.getenv('TZ') else 'Europe/Berlin'
 
 USE_I18N = True
 

@@ -19,6 +19,7 @@ from oauth2_provider.models import AccessToken
 from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.fields import IntegerField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
@@ -524,6 +525,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
 
 class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
     id = serializers.IntegerField(required=False)
+    order = IntegerField(default=0, required=False)
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
@@ -533,7 +535,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug')
+        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug', 'fdc_id',)
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -687,7 +689,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         model = Food
         fields = (
             'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url',
-            'properties', 'properties_food_amount', 'properties_food_unit',
+            'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
             'food_onhand', 'supermarket_category',
             'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
             'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
@@ -985,6 +987,8 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
 
+    to_date = serializers.DateField(required=False)
+
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
@@ -993,6 +997,10 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
+
+        if 'to_date' not in validated_data or validated_data['to_date'] is None:
+            validated_data['to_date'] = validated_data['from_date']
+
         mealplan = super().create(validated_data)
         if self.context['request'].data.get('addshopping', False) and self.context['request'].data.get('recipe', None):
             SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
@@ -1031,10 +1039,10 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         value = value.quantize(
             Decimal(1)) if value == value.to_integral() else value.normalize()  # strips trailing zero
         return (
-            obj.name
-            or getattr(obj.mealplan, 'title', None)
-            or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
-            or obj.recipe.name
+                obj.name
+                or getattr(obj.mealplan, 'title', None)
+                or (d := getattr(obj.mealplan, 'date', None)) and ': '.join([obj.mealplan.recipe.name, str(d)])
+                or obj.recipe.name
         ) + f' ({value:.2g})'
 
     def update(self, instance, validated_data):

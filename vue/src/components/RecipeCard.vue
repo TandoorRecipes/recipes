@@ -250,6 +250,10 @@ export default {
     opacity: 1;
 }
 
+.content:hover .card-img-overlay {
+    opacity: 0;
+}
+
 .content-details {
     position: absolute;
     text-align: center;
