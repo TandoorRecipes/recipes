@@ -985,14 +985,26 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
 
+    to_date = serializers.DateField(required=False)
+
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
     def in_shopping(self, obj):
         return ShoppingListRecipe.objects.filter(mealplan=obj.id).exists()
 
+    def update(self, instance, validated_data):
+        if 'to_date' not in validated_data or validated_data['to_date'] is None:
+            validated_data['to_date'] = validated_data['from_date']
+
+        return super().update(instance, validated_data)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
+
+        if 'to_date' not in validated_data or validated_data['to_date'] is None:
+            validated_data['to_date'] = validated_data['from_date']
+
         mealplan = super().create(validated_data)
         if self.context['request'].data.get('addshopping', False) and self.context['request'].data.get('recipe', None):
             SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
