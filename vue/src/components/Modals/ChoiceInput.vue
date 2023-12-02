@@ -25,6 +25,12 @@ export default {
     },
     mounted() {
         this.new_value = this.value
+
+        if (this.new_value === "") { // if the selection is empty but the options are of type number, set to 0 instead of ""
+            if (typeof this.options[0]['value'] === 'number') {
+                this.new_value = 0
+            }
+        }
     },
     watch: {
         new_value: function () {
