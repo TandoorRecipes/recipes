@@ -43,7 +43,7 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'unit-conversion', api.UnitConversionViewSet)
-router.register(r'food-property-type', api.PropertyTypeViewSet)
+router.register(r'food-property-type', api.PropertyTypeViewSet)  # TODO rename + regenerate
 router.register(r'food-property', api.PropertyViewSet)
 router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
