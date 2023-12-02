@@ -12,13 +12,9 @@
                     <td>{{ $t('Properties_Food_Amount') }}</td>
                     <td>{{ $t('Properties_Food_Unit') }}</td>
                     <td v-for="pt in properties" v-bind:key="pt.id">
-                        <b-input-group>
-                            <b-form-input v-model="pt.name" ></b-form-input> <!-- TODO handle manual input -->
-                            <b-input-group-append>
-                                <b-input-group-text>{{ pt.unit }}</b-input-group-text>
-                                <b-button variant="primary" @click="editing_property_type = pt"><i class="fas fa-pencil-alt"></i></b-button>
-                            </b-input-group-append>
-                        </b-input-group>
+
+
+                        <b-button variant="primary" @click="editing_property_type = pt" class="btn-block">{{ pt.name }} <span v-if="pt.unit !== ''">({{ pt.unit }})</span></b-button>
                     </td>
                 </tr>
                 </thead>
@@ -29,26 +25,27 @@
                     </td>
                     <td>
                         <b-input-group>
-                            <b-form-input v-model="f.food.fdc_id" type="number" @change="updateFood(f.food)"></b-form-input>
+                            <b-form-input v-model="f.food.fdc_id" type="number" @change="updateFood(f.food)" :disabled="loading"></b-form-input>
                             <b-input-group-append>
-                                <b-button variant="success" @click="updateFoodFromFDC(f.food)"><i class="fas fa-sync-alt"></i></b-button>
+                                <b-button variant="success" @click="updateFoodFromFDC(f.food)" :disabled="loading"><i class="fas fa-sync-alt" :class="{'fa-spin': loading}"></i></b-button>
                             </b-input-group-append>
                         </b-input-group>
 
                     </td>
                     <td>
-                        <b-input v-model="f.food.properties_food_amount" type="number" @change="updateFood(f.food)"></b-input>
+                        <b-input v-model="f.food.properties_food_amount" type="number" @change="updateFood(f.food)" :disabled="loading"></b-input>
                     </td>
                     <td>
                         <generic-multiselect
                             @change="f.food.properties_food_unit = $event.val; updateFood(f.food)"
                             :initial_selection="f.food.properties_food_unit"
                             label="name" :model="Models.UNIT"
-                            :multiple="false"/>
+                            :multiple="false"
+                            :disabled="loading"/>
                     </td>
                     <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`">
                         <b-input-group>
-                            <b-form-input v-model="p.property_amount" type="number"></b-form-input> <!-- TODO handle manual input -->
+                            <b-form-input v-model="p.property_amount" type="number" :disabled="loading" ></b-form-input> <!-- TODO handle manual input -->
                         </b-input-group>
                     </td>
                 </tr>
@@ -94,7 +91,7 @@ export default {
             if (this.recipe !== null && this.property_types !== []) {
                 this.recipe.steps.forEach(s => {
                     s.ingredients.forEach(i => {
-                        let food = {food: i.food, properties: {}}
+                        let food = {food: i.food, properties: {}, loading: false}
 
                         this.property_types.forEach(pt => {
                             food.properties[pt.id] = {changed: false, property_amount: 0, property_type: pt}
@@ -121,6 +118,7 @@ export default {
             recipe: null,
             property_types: [],
             editing_property_type: null,
+            loading: false,
         }
     },
     mounted() {
@@ -135,6 +133,17 @@ export default {
 
             apiClient.retrieveRecipe("112").then(result => {
                 this.recipe = result.data
+                this.loading = false;
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+            })
+        },
+        loadPropertyTypes: function () {
+            let apiClient = new ApiApiFactory()
+            apiClient.listPropertyTypes().then(result => {
+                this.property_types = result.data
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
         },
         updateFood: function (food) {
@@ -145,23 +154,16 @@ export default {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
-        loadPropertyTypes: function () {
-            let apiClient = new ApiApiFactory()
-            apiClient.listPropertyTypes().then(result => {
-                this.property_types = result.data
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-            }).catch((err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
-        },
         updateFoodFromFDC: function (food) {
+            this.loading = true;
             let apiClient = new ApiApiFactory()
 
             apiClient.fdcFood(food.id).then(result => {
-                this.loadRecipe()
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                this.loadRecipe()
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                this.loading = false;
             })
         }
     },
