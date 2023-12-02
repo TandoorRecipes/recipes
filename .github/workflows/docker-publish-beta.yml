@@ -21,7 +21,7 @@ jobs:
           - name: Standard
             dockerfile: Dockerfile
             platforms: linux/amd64
-            suffix: "latest"
+            suffix: ""
             continue-on-error: false
     steps:
       - uses: actions/checkout@v3
@@ -29,13 +29,7 @@ jobs:
       - name: Get version number
         id: get_version
         run: |
-          if [[ "$GITHUB_REF" = refs/tags/* ]]; then
-            echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
-          elif [[ "$GITHUB_REF" = refs/heads/beta ]]; then
-            echo VERSION=beta >> $GITHUB_OUTPUT
-          else
-            echo VERSION=develop >> $GITHUB_OUTPUT
-          fi
+          echo VERSION=latest >> $GITHUB_OUTPUT
 
       # Build Vue frontend
       - uses: actions/setup-node@v3
@@ -59,20 +53,22 @@ jobs:
         with:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-      - name: Docker meta
+      - name: Docker Metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             smilerz/recipes
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
       - name: Build and Push
         uses: docker/build-push-action@v5
         with:
           context: .
           file: ${{ matrix.dockerfile }}
           pull: true
-          push: ${{ github.secret_source == 'Repository' }}
+          push: true
           platforms: ${{ matrix.platforms }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: '${{ steps.meta.outputs.tags }}'
           cache-from: type=gha
           cache-to: type=gha,mode=max
