@@ -642,7 +642,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             return self.retrieve(request, pk)
         except Exception as e:
             traceback.print_exc()
-            return JsonResponse({'error': f'{e} - check server log'}, status=500, json_dumps_params={'indent': 4})
+            return JsonResponse({'msg': f'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
 
     def destroy(self, *args, **kwargs):
         try:
