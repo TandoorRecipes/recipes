@@ -19,7 +19,7 @@
                 <div class="col col-12">
                     <b-button variant="success" href="https://fdc.nal.usda.gov/index.html" target="_blank"><i class="fas fa-external-link-alt"></i> {{$t('FDC_Search')}}</b-button>
 
-                    <table class="table table-sm table-bordered table-responsive mt-2">
+                    <table class="table table-sm table-bordered table-responsive mt-2 pb-5">
                         <thead>
                         <tr>
                             <td>{{ $t('Name') }}</td>
@@ -29,9 +29,13 @@
                             <td v-for="pt in property_types" v-bind:key="pt.id">
                                 <b-button variant="primary" @click="editing_property_type = pt" class="btn-block">{{ pt.name }}
                                     <span v-if="pt.unit !== ''">({{ pt.unit }}) </span> <br/>
+                                    <b-badge variant="light" ><i class="fas fa-sort-amount-down-alt"></i> {{ pt.order}}</b-badge> 
                                     <b-badge variant="success" v-if="pt.fdc_id > 0" class="mt-2" v-b-tooltip.hover :title="$t('property_type_fdc_hint')"><i class="fas fa-check"></i> FDC</b-badge>
                                     <b-badge variant="warning" v-if="pt.fdc_id < 1" class="mt-2" v-b-tooltip.hover :title="$t('property_type_fdc_hint')"><i class="fas fa-times"></i> FDC</b-badge>
                                 </b-button>
+                            </td>
+                            <td>
+                                <b-button variant="success" @click="new_property_type = true"><i class="fas fa-plus"></i></b-button>
                             </td>
                         </tr>
                         </thead>
@@ -40,11 +44,12 @@
                             <td>
                                 {{ f.name }}
                             </td>
-                            <td style="width: 11em;">
+                            <td style="width: 15em;">
                                 <b-input-group>
                                     <b-form-input v-model="f.fdc_id" type="number" @change="updateFood(f)" :disabled="f.loading"></b-form-input>
                                     <b-input-group-append>
                                         <b-button variant="success" @click="updateFoodFromFDC(f)" :disabled="f.loading"><i class="fas fa-sync-alt" :class="{'fa-spin': loading}"></i></b-button>
+                                        <b-button variant="info" :href="`https://fdc.nal.usda.gov/fdc-app.html#/food-details/${f.fdc_id}`" :disabled="f.fdc_id < 1" target="_blank"><i class="fas fa-external-link-alt"></i></b-button>
                                     </b-input-group-append>
                                 </b-input-group>
 
@@ -52,7 +57,7 @@
                             <td style="width: 5em; ">
                                 <b-input v-model="f.properties_food_amount" type="number" @change="updateFood(f)" :disabled="f.loading"></b-input>
                             </td>
-                            <td style="width: 8em;">
+                            <td style="width: 11em;">
                                 <generic-multiselect
                                     @change="f.properties_food_unit = $event.val; updateFood(f)"
                                     :initial_single_selection="f.properties_food_unit"
@@ -78,6 +83,13 @@
                 :action="Actions.UPDATE"
                 :item1="editing_property_type"
                 @finish-action="editing_property_type = null; loadData()">
+            </generic-modal-form>
+
+            <generic-modal-form
+                :show="new_property_type"
+                :model="Models.PROPERTY_TYPE"
+                :action="Actions.CREATE"
+                @finish-action="new_property_type = false; loadData()">
             </generic-modal-form>
 
         </div>
@@ -112,6 +124,7 @@ export default {
             recipe: null,
             property_types: [],
             editing_property_type: null,
+            new_property_type: false,
             loading: false,
             foods: [],
         }
