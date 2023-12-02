@@ -10,6 +10,9 @@
                 <a class="dropdown-item" :href="resolveDjangoUrl('edit_recipe', recipe.id)" v-if="!disabled_options.edit"><i
                     class="fas fa-pencil-alt fa-fw"></i> {{ $t("Edit") }}</a>
 
+                <a class="dropdown-item" :href="resolveDjangoUrl('view_property_editor', recipe.id)" v-if="!disabled_options.edit">
+                    <i class="fas fa-table"></i> {{ $t("Property_Editor") }}</a>
+
                 <a class="dropdown-item" :href="resolveDjangoUrl('edit_convert_recipe', recipe.id)"
                    v-if="!recipe.internal && !disabled_options.convert"><i class="fas fa-exchange-alt fa-fw"></i> {{ $t("convert_internal") }}</a>
 
@@ -209,6 +212,7 @@ export default {
             this.entryEditing = this.options.entryEditing
             this.entryEditing.recipe = this.recipe
             this.entryEditing.from_date = moment(new Date()).format("YYYY-MM-DD")
+            this.entryEditing.to_date = moment(new Date()).format("YYYY-MM-DD")
             this.$nextTick(function () {
                 this.$bvModal.show(`modal-meal-plan_${this.modal_id}`)
             })
@@ -259,9 +263,11 @@ export default {
                         },
                     }
                 })
-                if (recipe.nutrition !== null) {
-                    delete recipe.nutrition.id
-                }
+
+                recipe.properties = recipe.properties.map(p => {
+                    return { ...p, ...{ id: undefined, } }
+                })
+
                 apiClient
                     .createRecipe(recipe)
                     .then((new_recipe) => {

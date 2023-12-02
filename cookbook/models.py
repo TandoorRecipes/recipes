@@ -591,7 +591,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
     preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
-    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
+    fdc_id = models.IntegerField(null=True, default=None, blank=True)
 
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -767,6 +767,7 @@ class PropertyType(models.Model, PermissionModelMixin):
                                                         (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
+    fdc_id = models.IntegerField(null=True, default=None, blank=True)
     # TODO show if empty property?
     # TODO formatting property?
 
@@ -808,7 +809,7 @@ class FoodProperty(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food')
+            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food'),
         ]
 
 
@@ -984,7 +985,7 @@ class MealType(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'name'], name='mt_unique_name_per_space'),
+            models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
         ]
 
 

@@ -1,39 +1,62 @@
 <template>
 
     <div id="app">
+        <div>
+            <h2 v-if="recipe">{{ recipe.name }}</h2>
 
-        <beta-warning></beta-warning>
+            <table class="table table-sm table-bordered table-responsive">
+                <thead>
+                <tr>
+                    <td>{{ $t('Name') }}</td>
+                    <td>FDC</td>
+                    <td>{{ $t('Properties_Food_Amount') }}</td>
+                    <td>{{ $t('Properties_Food_Unit') }}</td>
+                    <td v-for="pt in property_types" v-bind:key="pt.id">
+                        <b-button variant="primary" @click="editing_property_type = pt" class="btn-block">{{ pt.name }} <span v-if="pt.unit !== ''">({{ pt.unit }})</span></b-button>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="f in this.foods" v-bind:key="f.id">
+                    <td>
+                        {{ f.name }}
+                    </td>
+                    <td style="width: 11em;">
+                        <b-input-group>
+                            <b-form-input v-model="f.fdc_id" type="number" @change="updateFood(f)" :disabled="f.loading"></b-form-input>
+                            <b-input-group-append>
+                                <b-button variant="success" @click="updateFoodFromFDC(f)" :disabled="f.loading"><i class="fas fa-sync-alt" :class="{'fa-spin': loading}"></i></b-button>
+                            </b-input-group-append>
+                        </b-input-group>
 
-        <div v-if="metadata !== undefined">
-            {{ $t('Data_Import_Info') }}
+                    </td>
+                    <td style="width: 5em; ">
+                        <b-input v-model="f.properties_food_amount" type="number" @change="updateFood(f)" :disabled="f.loading"></b-input>
+                    </td>
+                    <td style="width: 8em;">
+                        <generic-multiselect
+                            @change="f.properties_food_unit = $event.val; updateFood(f)"
+                            :initial_single_selection="f.properties_food_unit"
+                            label="name" :model="Models.UNIT"
+                            :multiple="false"
+                            :disabled="f.loading"/>
+                    </td>
+                    <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`">
+                        <b-input-group>
+                            <b-form-input v-model="p.property_amount" type="number" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name" @change="updateFood(f)"></b-form-input>
+                        </b-input-group>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-
-            <select class="form-control" v-model="selected_version">
-                <option v-for="v in metadata.versions" v-bind:key="v">{{ v }}</option>
-            </select>
-
-            <b-checkbox v-model="update_existing" class="mt-1">{{ $t('Update_Existing_Data') }}</b-checkbox>
-            <b-checkbox v-model="use_metric" class="mt-1">{{ $t('Use_Metric') }}</b-checkbox>
-
-
-            <div v-if="selected_version !== undefined" class="mt-3">
-                <table class="table">
-                    <tr>
-                        <th>{{ $t('Datatype') }}</th>
-                        <th>{{ $t('Number of Objects') }}</th>
-                        <th>{{ $t('Imported') }}</th>
-                    </tr>
-                    <tr v-for="d in metadata.datatypes" v-bind:key="d">
-                        <td>{{ $t(d.charAt(0).toUpperCase() + d.slice(1)) }}</td>
-                        <td>{{ metadata[selected_version][d] }}</td>
-                        <td>
-                            <template v-if="import_count !== undefined">{{ import_count[d] }}</template>
-                        </td>
-                    </tr>
-                </table>
-
-                <button class="btn btn-success" @click="doImport">{{ $t('Import') }}</button>
-            </div>
+            <generic-modal-form
+                :show="editing_property_type !== null"
+                :model="Models.PROPERTY_TYPE"
+                :action="Actions.UPDATE"
+                :item1="editing_property_type"
+                @finish-action="editing_property_type = null; loadData()">
+            </generic-modal-form>
 
         </div>
     </div>
@@ -48,6 +71,9 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils";
 import axios from "axios";
 import BetaWarning from "@/components/BetaWarning.vue";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
+import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 
 
 Vue.use(BootstrapVue)
@@ -56,39 +82,107 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {BetaWarning},
+    components: {GenericModalForm, GenericMultiselect},
+    computed: {
+
+    },
     data() {
         return {
-            metadata: undefined,
-            selected_version: undefined,
-            update_existing: true,
-            use_metric: true,
-            import_count: undefined,
+            recipe: null,
+            property_types: [],
+            editing_property_type: null,
+            loading: false,
+            foods: [],
         }
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
-        axios.get(resolveDjangoUrl('api_import_open_data')).then(r => {
-            this.metadata = r.data
-        }).catch(err => {
-            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-        })
+        this.loadData();
     },
     methods: {
-        doImport: function () {
-            axios.post(resolveDjangoUrl('api_import_open_data'), {
-                'selected_version': this.selected_version,
-                'selected_datatypes': this.metadata.datatypes,
-                'update_existing': this.update_existing,
-                'use_metric': this.use_metric,
-            }).then(r => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                this.import_count = r.data
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
+        loadData: function () {
+            let apiClient = new ApiApiFactory()
+
+            apiClient.listPropertyTypes().then(result => {
+                this.property_types = result.data
+
+                apiClient.retrieveRecipe("112").then(result => { //TODO get recipe id
+                    this.recipe = result.data
+
+                    this.foods = []
+
+                    this.recipe.steps.forEach(s => {
+                        s.ingredients.forEach(i => {
+                            if (this.foods.filter(x => (x.id === i.food.id)).length === 0) {
+                                this.foods.push(this.buildFood(i.food))
+                            }
+                        })
+                    })
+                    this.loading = false;
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+                })
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
         },
+        buildFood: function (food) {
+            /**
+             * Prepare food for display in grid by making sure the food properties are in the same order as property_types and that no types are missing
+             * */
+
+            let existing_properties = {}
+            food.properties.forEach(fp => {
+                existing_properties[fp.property_type.id] = fp
+            })
+
+            let food_properties = []
+            this.property_types.forEach(pt => {
+                let new_food_property = {
+                    property_type: pt,
+                    property_amount: 0,
+                }
+                if (pt.id in existing_properties) {
+                    new_food_property = existing_properties[pt.id]
+                }
+                food_properties.push(new_food_property)
+            })
+
+            this.$set(food, 'loading', false)
+
+            food.properties = food_properties
+
+            return food
+        },
+        spliceInFood: function (food){
+            /**
+             * replace food in foods list, for example after updates from the server
+             */
+            this.foods = this.foods.map(f => (f.id === food.id) ? food : f)
+
+        },
+        updateFood: function (food) {
+            let apiClient = new ApiApiFactory()
+            apiClient.partialUpdateFood(food.id, food).then(result => {
+                this.spliceInFood(this.buildFood(result.data))
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        },
+        updateFoodFromFDC: function (food) {
+            food.loading = true;
+            let apiClient = new ApiApiFactory()
+
+            apiClient.fdcFood(food.id).then(result => {
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                this.spliceInFood(this.buildFood(result.data))
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                food.loading = false;
+            })
+        }
     },
 }
 </script>

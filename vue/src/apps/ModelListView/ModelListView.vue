@@ -186,10 +186,10 @@ export default {
                 case "ingredient-editor": {
                     let url = resolveDjangoUrl("view_ingredient_editor")
                     if (this.this_model === this.Models.FOOD) {
-                        window.location.href = url + '?food_id=' + e.source.id
+                        window.open(url + '?food_id=' + e.source.id, "_blank");
                     }
                     if (this.this_model === this.Models.UNIT) {
-                        window.location.href = url + '?unit_id=' + e.source.id
+                        window.open(url + '?unit_id=' + e.source.id, "_blank");
                     }
                     break
                 }

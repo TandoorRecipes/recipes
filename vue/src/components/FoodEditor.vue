@@ -33,11 +33,11 @@
 
                             <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
 
-                            <b-form-group :label="$t('Properties Food Amount')" description=""> <!-- TODO localize -->
+                            <b-form-group :label="$t('Properties_Food_Amount')" description="">
                                 <b-form-input v-model="food.properties_food_amount"></b-form-input>
                             </b-form-group>
 
-                            <b-form-group :label="$t('Properties Food Unit')" description=""> <!-- TODO localize -->
+                            <b-form-group :label="$t('Properties_Food_Unit')" description="">
                                 <generic-multiselect
                                     @change="food.properties_food_unit = $event.val;"
                                     :model="Models.UNIT"
