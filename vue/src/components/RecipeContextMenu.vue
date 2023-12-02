@@ -263,9 +263,11 @@ export default {
                         },
                     }
                 })
-                if (recipe.nutrition !== null) {
-                    delete recipe.nutrition.id
-                }
+
+                recipe.properties = recipe.properties.map(p => {
+                    return { ...p, ...{ id: undefined, } }
+                })
+
                 apiClient
                     .createRecipe(recipe)
                     .then((new_recipe) => {
