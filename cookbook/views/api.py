@@ -599,7 +599,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     @decorators.action(detail=True, methods=['POST'], )
     def fdc(self, request, pk):
         """
-        updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+        updates the food with all possible data from the FDC Api
+        if properties with a fdc_id already exist they will be overridden, if existing properties don't have a fdc_id they won't be changed
         """
         food = self.get_object()
 
