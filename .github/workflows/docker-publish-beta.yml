@@ -21,7 +21,7 @@ jobs:
           - name: Standard
             dockerfile: Dockerfile
             platforms: linux/amd64
-            suffix: "beta"
+            suffix: "latest"
             continue-on-error: false
     steps:
       - uses: actions/checkout@v3
