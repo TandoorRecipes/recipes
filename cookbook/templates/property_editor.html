@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+
+{% block title %}{% trans 'Property Editor' %}{% endblock %}
+
+{% block content_fluid %}
+
+    <div id="app">
+        <property-editor-view></property-editor-view>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    {% if debug %}
+        <script src="{% url 'js_reverse' %}"></script>
+    {% else %}
+        <script src="{% static 'django_js_reverse/reverse.js' %}"></script>
+    {% endif %}
+
+    <script type="application/javascript">
+        window.RECIPE_ID = {{ recipe_id }}
+    </script>
+
+    {% render_bundle 'property_editor_view' %}
+{% endblock %}
