@@ -15,10 +15,11 @@
             </div>
 
 
-            <div class="row mt-5">
+            <div class="row mt-3">
                 <div class="col col-12">
+                    <b-button variant="success" href="https://fdc.nal.usda.gov/index.html" target="_blank"><i class="fas fa-external-link-alt"></i> {{$t('FDC_Search')}}</b-button>
 
-                    <table class="table table-sm table-bordered table-responsive">
+                    <table class="table table-sm table-bordered table-responsive mt-2">
                         <thead>
                         <tr>
                             <td>{{ $t('Name') }}</td>
@@ -26,7 +27,11 @@
                             <td>{{ $t('Properties_Food_Amount') }}</td>
                             <td>{{ $t('Properties_Food_Unit') }}</td>
                             <td v-for="pt in property_types" v-bind:key="pt.id">
-                                <b-button variant="primary" @click="editing_property_type = pt" class="btn-block">{{ pt.name }} <span v-if="pt.unit !== ''">({{ pt.unit }})</span></b-button>
+                                <b-button variant="primary" @click="editing_property_type = pt" class="btn-block">{{ pt.name }}
+                                    <span v-if="pt.unit !== ''">({{ pt.unit }}) </span> <br/>
+                                    <b-badge variant="success" v-if="pt.fdc_id > 0" class="mt-2" v-b-tooltip.hover :title="$t('property_type_fdc_hint')"><i class="fas fa-check"></i> FDC</b-badge>
+                                    <b-badge variant="warning" v-if="pt.fdc_id < 1" class="mt-2" v-b-tooltip.hover :title="$t('property_type_fdc_hint')"><i class="fas fa-times"></i> FDC</b-badge>
+                                </b-button>
                             </td>
                         </tr>
                         </thead>
