@@ -204,6 +204,11 @@ def ingredient_editor(request):
     return render(request, 'ingredient_editor.html', template_vars)
 
 
+@group_required('user')
+def property_editor(request, pk):
+    return render(request, 'property_editor.html', {'recipe_id': pk})
+
+
 @group_required('guest')
 def shopping_settings(request):
     if request.space.demo:
@@ -220,10 +225,10 @@ def shopping_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext'])
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
                 )
                 if search_form.cleaned_data['preset'] == 'fuzzy':
                     sp.search = SearchPreference.SIMPLE
