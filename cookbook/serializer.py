@@ -19,6 +19,7 @@ from oauth2_provider.models import AccessToken
 from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.fields import IntegerField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
@@ -524,6 +525,7 @@ class SupermarketSerializer(UniqueFieldsMixin, SpacedModelSerializer, OpenDataMo
 
 class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, UniqueFieldsMixin):
     id = serializers.IntegerField(required=False)
+    order = IntegerField(default=0, required=False)
 
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
