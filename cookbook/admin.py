@@ -349,7 +349,9 @@ admin.site.register(ShareLink, ShareLinkAdmin)
 
 
 class PropertyTypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    search_fields = ('space',)
+
+    list_display = ('id', 'space', 'name', 'fdc_id')
 
 
 admin.site.register(PropertyType, PropertyTypeAdmin)

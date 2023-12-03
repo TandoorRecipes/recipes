@@ -163,10 +163,9 @@ def get_from_scraper(scrape, request):
     if len(recipe_json['steps']) == 0:
         recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
 
+    recipe_json['description'] = recipe_json['description'][:512]
     if len(recipe_json['description']) > 256:  # split at 256 as long descriptions don't look good on recipe cards
         recipe_json['steps'][0]['instruction'] = f"*{recipe_json['description']}*  \n\n" + recipe_json['steps'][0]['instruction']
-    else:
-        recipe_json['description'] = recipe_json['description'][:512]
 
     try:
         for x in scrape.ingredients():
@@ -259,13 +258,14 @@ def get_from_youtube_scraper(url, request):
         ]
     }
 
-    # TODO add automation here
     try:
         automation_engine = AutomationEngine(request, source=url)
-        video = YouTube(url=url)
+        video = YouTube(url)
+        video.streams.first()  # this is required to execute some kind of generator/web request that fetches the description
         default_recipe_json['name'] = automation_engine.apply_regex_replace_automation(video.title, Automation.NAME_REPLACE)
         default_recipe_json['image'] = video.thumbnail_url
-        default_recipe_json['steps'][0]['instruction'] = automation_engine.apply_regex_replace_automation(video.description, Automation.INSTRUCTION_REPLACE)
+        if video.description:
+            default_recipe_json['steps'][0]['instruction'] = automation_engine.apply_regex_replace_automation(video.description, Automation.INSTRUCTION_REPLACE)
 
     except Exception:
         pass
