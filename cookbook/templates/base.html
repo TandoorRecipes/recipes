@@ -82,7 +82,7 @@
         {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
-                <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="Logo">
+                <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
             </a>
         {% endif %}
     {% endif %}
@@ -96,7 +96,7 @@
         {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
-                <img class="brand-icon" src="{% static 'assets/brand_logo.png' %}" alt="Logo">
+                <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
             </a>
         {% endif %}
     {% endif %}
@@ -144,10 +144,10 @@
                         <i class="fas fa-fw fa-toolbox fa-lg"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-center dropdown-menu-center-large">
-                        <div class="row m-0 mt-2 mt-md-0">
+                        <div class="row m-0 mt-1 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_keyword' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-tags fa-2x"></i>
                                         </div>
@@ -159,7 +159,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'list_food' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-leaf fa-2x"></i>
                                         </div>
@@ -171,7 +171,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'list_unit' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-balance-scale fa-2x"></i>
                                         </div>
@@ -182,10 +182,10 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0 mt-2 mt-md-0">
+                        <div class="row m-0 mt-1 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_supermarket' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-store-alt fa-2x"></i>
                                         </div>
@@ -197,7 +197,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'list_supermarket_category' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card  p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-cubes fa-2x"></i>
                                         </div>
@@ -209,7 +209,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'list_automation' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-robot fa-2x"></i>
                                         </div>
@@ -220,10 +220,10 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0 mt-2 mt-md-0">
+                        <div class="row m-0 mt-1 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_user_file' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-file fa-2x"></i>
                                         </div>
@@ -235,7 +235,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'data_batch_edit' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-edit fa-2x"></i>
                                         </div>
@@ -247,7 +247,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'view_history' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-history fa-2x"></i>
                                         </div>
@@ -258,10 +258,10 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0 mt-2 mt-md-0">
+                        <div class="row m-0 mt-1 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'view_ingredient_editor' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-th-list fa-2x"></i>
                                         </div>
@@ -273,7 +273,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'view_export' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-file-export fa-2x"></i>
                                         </div>
@@ -285,7 +285,7 @@
                             </div>
                             <div class="col-4">
                                 <a href="{% url 'list_property_type' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-database fa-2x"></i>
                                         </div>
@@ -296,10 +296,10 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="row m-0 mt-2 mt-md-0">
+                        <div class="row m-0 mt-1 mt-md-0">
                             <div class="col-4">
                                 <a href="{% url 'list_unit_conversion' %}" class="p-0 p-md-1">
-                                    <div class="card p-0 no-gutters border-0">
+                                    <div class="card p-1 pt-2 no-gutters border-0">
                                         <div class="card-body text-center p-0 no-gutters">
                                             <i class="fas fa-exchange-alt fa-2x"></i>
                                         </div>

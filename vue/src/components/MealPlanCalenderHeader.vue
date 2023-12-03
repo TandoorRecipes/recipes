@@ -29,7 +29,7 @@
                 <b-form-select class="ml-1" id="UomInput" v-model="settings.displayPeriodCount" :options="options.displayPeriodCount"></b-form-select>
             </span>
             <span
-                class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex align-items-center"
+                class="delete-area text-danger p-1 mr-2 ml-1 d-none d-sm-flex align-items-center rounded"
                 @drop.prevent="onDeleteDrop($event)"
                 @dragenter.prevent="onDeleteDragEnter($event)"
                 @dragleave.prevent="onDeleteDragLeave($event)"

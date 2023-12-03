@@ -16,12 +16,13 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 
-from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User,
-                            UserCreateForm, UserPreference)
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink,
-                             Space, ViewLog, UserSpace)
-from cookbook.tables import (CookLogTable, ViewLogTable)
+from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
+                            SpaceJoinForm, User, UserCreateForm, UserPreference)
+from cookbook.helper.permission_helper import (group_required, has_group_permission,
+                                               share_link_valid, switch_user_active_space)
+from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference,
+                             ShareLink, Space, UserSpace, ViewLog)
+from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS
 
@@ -203,6 +204,11 @@ def ingredient_editor(request):
     return render(request, 'ingredient_editor.html', template_vars)
 
 
+@group_required('user')
+def property_editor(request, pk):
+    return render(request, 'property_editor.html', {'recipe_id': pk})
+
+
 @group_required('guest')
 def shopping_settings(request):
     if request.space.demo:
@@ -278,8 +284,7 @@ def shopping_settings(request):
         search_form = SearchPreferenceForm()
 
     # these fields require postgresql - just disable them if postgresql isn't available
-    if not settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                                       'django.db.backends.postgresql']:
+    if not settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         sp.search = SearchPreference.SIMPLE
         sp.trigram.clear()
         sp.fulltext.clear()
@@ -305,15 +310,11 @@ def history(request):
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
-@group_required('admin')
 def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
 
-    postgres = False if (
-            settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2'  # noqa: E501
-            or settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'  # noqa: E501
-    ) else True
+    postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 

@@ -566,7 +566,7 @@
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
                         :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
 
-        <bottom-navigation-bar>
+        <bottom-navigation-bar active-view="view_shopping">
             <template #custom_create_functions>
 
                 <div class="dropdown-divider"></div>

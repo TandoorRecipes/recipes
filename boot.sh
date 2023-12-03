@@ -19,9 +19,14 @@ if [ ! -f "$NGINX_CONF_FILE" ] && [ $GUNICORN_MEDIA -eq 0 ]; then
     display_warning "Nginx configuration file could not be found at the default location!\nPath: ${NGINX_CONF_FILE}"
 fi
 
-# SECRET_KEY must be set in .env file
+# SECRET_KEY (or a valid file at SECRET_KEY_FILE) must be set in .env file
+
+if [ -f "${SECRET_KEY_FILE}" ]; then
+    export SECRET_KEY=$(cat "$SECRET_KEY_FILE")
+fi
+
 if [ -z "${SECRET_KEY}" ]; then
-    display_warning "The environment variable 'SECRET_KEY' is not set but REQUIRED for running Tandoor!"
+    display_warning "The environment variable 'SECRET_KEY' (or 'SECRET_KEY_FILE' that points to an existing file) is not set but REQUIRED for running Tandoor!"
 fi
 
 
@@ -30,11 +35,16 @@ echo "Waiting for database to be ready..."
 attempt=0
 max_attempts=20
 
-if [ "${DB_ENGINE}" != 'django.db.backends.sqlite3' ]; then
+if [ "${DB_ENGINE}" == 'django.db.backends.postgresql' ] || [ "${DATABASE_URL}" == 'postgres'* ]; then
 
-  # POSTGRES_PASSWORD must be set in .env file
+  # POSTGRES_PASSWORD (or a valid file at POSTGRES_PASSWORD_FILE) must be set in .env file
+
+  if [ -f "${POSTGRES_PASSWORD_FILE}" ]; then
+    export POSTGRES_PASSWORD=$(cat "$POSTGRES_PASSWORD_FILE")
+  fi
+
   if [ -z "${POSTGRES_PASSWORD}" ]; then
-      display_warning "The environment variable 'POSTGRES_PASSWORD' is not set but REQUIRED for running Tandoor!"
+      display_warning "The environment variable 'POSTGRES_PASSWORD' (or 'POSTGRES_PASSWORD_FILE' that points to an existing file) is not set but REQUIRED for running Tandoor!"
   fi
 
   while pg_isready --host=${POSTGRES_HOST} --port=${POSTGRES_PORT} --user=${POSTGRES_USER} -q; status=$?; attempt=$((attempt+1)); [ $status -ne 0 ] && [ $attempt -le $max_attempts ]; do
