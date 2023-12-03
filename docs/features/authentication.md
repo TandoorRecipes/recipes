@@ -14,8 +14,10 @@ They basically explain everything in their documentation, but the following is a
     A new account does not have any permission but it is still **not recommended** to give public access to 
     your installation. 
 
-Choose a provider from the [list](https://django-allauth.readthedocs.io/en/latest/providers.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
+Choose a provider from the [list](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
 in the example below.
+
+When at least one social provider is set up, the social login sign in buttons should appear on the login page.
 
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.github,allauth.socialaccount.providers.nextcloud

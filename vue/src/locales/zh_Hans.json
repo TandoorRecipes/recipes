@@ -414,7 +414,6 @@
     "Warning_Delete_Supermarket_Category": "删除超市类别也会删除与食品的所有关系。 你确定吗？",
     "New_Supermarket": "创建新超市",
     "warning_space_delete": "您可以删除您的空间，包括所有食谱、购物清单、膳食计划以及您创建的任何其他内容。 这不能被撤消！ 你确定要这么做吗 ？",
-    "facet_count_info": "在搜索筛选器上显示食谱计数。",
     "Hide_as_header": "隐藏标题",
     "food_inherit_info": "默认情况下应继承的食物上的字段。",
     "Custom Filter": "自定义筛选器",
@@ -479,5 +478,7 @@
     "Auto_Sort": "自动分类",
     "Auto_Sort_Help": "将所有食材移动到最恰当的步骤。",
     "Create Recipe": "创建食谱",
-    "Import Recipe": "导入食谱"
+    "Import Recipe": "导入食谱",
+    "recipe_property_info": "您也可以为食物添加属性，以便根据食谱自动计算！",
+    "per_serving": "每份"
 }

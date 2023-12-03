@@ -277,9 +277,7 @@ export default {
             }
         },
         handleResize: function () {
-            if (document.getElementById('nutrition_container') !== null) {
-                this.ingredient_height = document.getElementById('ingredient_container').clientHeight - document.getElementById('nutrition_container').clientHeight
-            } else {
+            if (document.getElementById('ingredient_container') !== null) {
                 this.ingredient_height = document.getElementById('ingredient_container').clientHeight
             }
         },
