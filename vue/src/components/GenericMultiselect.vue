@@ -20,6 +20,7 @@
         @input="selectionChanged"
         @tag="addNew"
         @open="selectOpened()"
+        :disabled="disabled"
     >
     </multiselect>
 </template>
@@ -74,6 +75,7 @@ export default {
         allow_create: { type: Boolean, default: false },
         create_placeholder: { type: String, default: "You Forgot to Add a Tag Placeholder" },
         clear: { type: Number },
+        disabled: {type: Boolean, default: false, },
     },
     watch: {
         initial_selection: function (newVal, oldVal) {

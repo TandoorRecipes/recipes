@@ -24,7 +24,7 @@
 
 
             <table class="table table-bordered table-sm">
-                <tr >
+                <tr>
                     <td style="border-top: none"></td>
                     <td class="text-right" style="border-top: none">{{ $t('per_serving') }}</td>
                     <td class="text-right" style="border-top: none">{{ $t('total') }}</td>
@@ -41,14 +41,18 @@
 
                     <td class="align-middle text-center" v-if="!show_recipe_properties">
                         <a href="#" @click="selected_property = p">
-                            <i v-if="p.missing_value" class="text-warning fas fa-exclamation-triangle"></i>
-                            <i v-if="!p.missing_value" class="text-muted fas fa-info-circle"></i>
+                            <!--                            <i v-if="p.missing_value" class="text-warning fas fa-exclamation-triangle"></i>-->
+                            <!--                            <i v-if="!p.missing_value" class="text-muted fas fa-info-circle"></i>-->
+                            <i class="text-muted fas fa-info-circle"></i>
+                            <!-- TODO find solution for missing values as 0 can either be missing or actually correct for any given property -->
                         </a>
                     </td>
                 </tr>
-
-
             </table>
+
+            <div class="text-center">
+                <b-button variant="success" :href="resolveDjangoUrl('view_property_editor', recipe.id)"><i class="fas fa-table"></i> {{ $t('Property_Editor') }}</b-button>
+            </div>
         </div>
 
 
@@ -79,7 +83,7 @@
 </template>
 
 <script>
-import {ApiMixin, roundDecimals, StandardToasts} from "@/utils/utils";
+import {ApiMixin, resolveDjangoUrl, roundDecimals, StandardToasts} from "@/utils/utils";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
 
@@ -153,11 +157,11 @@ export default {
                 }
             }
 
-            function compare(a,b){
-                if(a.type.order > b.type.order){
+            function compare(a, b) {
+                if (a.type.order > b.type.order) {
                     return 1
                 }
-                if(a.type.order < b.type.order){
+                if (a.type.order < b.type.order) {
                     return -1
                 }
                 return 0
@@ -172,6 +176,7 @@ export default {
         }
     },
     methods: {
+        resolveDjangoUrl,
         roundDecimals,
         openFoodEditModal: function (food) {
             console.log(food)
