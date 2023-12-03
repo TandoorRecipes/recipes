@@ -14,7 +14,7 @@ export default {
     props: {
         field: { type: String, default: "You Forgot To Set Field Name" },
         label: { type: String, default: "Text Field" },
-        value: { type: String, default: "" },
+        value: { type: Number, default: 0 },
         placeholder: { type: Number, default: 0 },
         help: { type: String, default: undefined },
         subtitle: { type: String, default: undefined },

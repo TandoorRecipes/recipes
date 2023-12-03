@@ -1,11 +1,9 @@
 import json
 
-import factory
 import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
-from pytest_factoryboy import LazyFixture, register
 
 from cookbook.tests.factories import RecipeFactory
 
@@ -18,7 +16,7 @@ def recipe(request, space_1, u1_s1):
         params = request.param  # request.param is a magic variable
     except AttributeError:
         params = {}
-    step_recipe = params.get('steps__count', 1)
+    # step_recipe = params.get('steps__count', 1)   #  TODO add tests for step recipes
     steps__recipe_count = params.get('steps__recipe_count', 0)
     steps__food_recipe_count = params.get('steps__food_recipe_count', {})
     created_by = params.get('created_by', auth.get_user(u1_s1))
@@ -26,6 +24,7 @@ def recipe(request, space_1, u1_s1):
     return RecipeFactory.create(
         steps__recipe_count=steps__recipe_count,
         steps__food_recipe_count=steps__food_recipe_count,
+        # steps__step_recipe=step_recipe,  #  TODO add tests for step recipes
         created_by=created_by,
         space=space_1,
     )
@@ -56,7 +55,7 @@ def test_get_related_recipes(request, arg, recipe, related_count, u1_s1, space_2
     ({'steps__food_recipe_count': {'step': 0, 'count': 1}}),  # shopping list from recipe with food recipe
     ({'steps__food_recipe_count': {'step': 0, 'count': 1}, 'steps__recipe_count': 1}),  # shopping list from recipe with StepRecipe and food recipe
 ], indirect=['recipe'])
-def test_related_mixed_space(request, recipe,  u1_s2, space_2):
+def test_related_mixed_space(request, recipe, u1_s2, space_2):
     with scopes_disabled():
         recipe.space = space_2
         recipe.save()

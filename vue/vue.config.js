@@ -53,6 +53,10 @@ const pages = {
         entry: "./src/apps/IngredientEditorView/main.js",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
+    property_editor_view: {
+        entry: "./src/apps/PropertyEditorView/main.js",
+        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
+    },
     shopping_list_view: {
         entry: "./src/apps/ShoppingListView/main.js",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
@@ -137,7 +141,7 @@ module.exports = {
 
         config.optimization.minimize(true)
 
-        //TODO somehow remov them as they are also added to the manifest config of the service worker
+        //TODO somehow remove them as they are also added to the manifest config of the service worker
         /*
         Object.keys(pages).forEach(page => {
             config.plugins.delete(`html-${page}`);

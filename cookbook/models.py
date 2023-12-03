@@ -116,10 +116,7 @@ class TreeModel(MP_Node):
     _full_name_separator = ' > '
 
     def __str__(self):
-        if self.icon:
-            return f"{self.icon} {self.name}"
-        else:
-            return f"{self.name}"
+        return f"{self.name}"
 
     @property
     def parent(self):
@@ -188,7 +185,6 @@ class TreeModel(MP_Node):
         :param filter: Filter (include) the descendants nodes with the provided Q filter
         """
         descendants = Q()
-        # TODO filter the queryset nodes to exclude descendants of objects in the queryset
         nodes = queryset.values('path', 'depth')
         for node in nodes:
             descendants |= Q(path__startswith=node['path'], depth__gt=node['depth'])
@@ -268,7 +264,6 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
     food_inherit = models.ManyToManyField(FoodInheritField, blank=True)
-    show_facet_count = models.BooleanField(default=False)
 
     internal_note = models.TextField(blank=True, null=True)
 
@@ -533,7 +528,6 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
     if SORT_TREE_BY_NAME:
         node_order_by = ['name']
     name = models.CharField(max_length=64)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     description = models.TextField(default="", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # TODO deprecate
     updated_at = models.DateTimeField(auto_now=True)  # TODO deprecate
@@ -597,7 +591,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
     preferred_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_unit')
     preferred_shopping_unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name='preferred_shopping_unit')
-    fdc_id = models.CharField(max_length=128, null=True, blank=True, default=None)
+    fdc_id = models.IntegerField(null=True, default=None, blank=True)
 
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
@@ -767,13 +761,13 @@ class PropertyType(models.Model, PermissionModelMixin):
 
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
     category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
-                                (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+                                                        (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
+    fdc_id = models.IntegerField(null=True, default=None, blank=True)
     # TODO show if empty property?
     # TODO formatting property?
 
@@ -815,7 +809,7 @@ class FoodProperty(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food')
+            models.UniqueConstraint(fields=['food', 'property'], name='property_unique_food'),
         ]
 
 
@@ -937,7 +931,6 @@ class RecipeImport(models.Model, PermissionModelMixin):
 class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     description = models.TextField(blank=True)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     shared = models.ManyToManyField(User, blank=True, related_name='shared_with')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
@@ -980,7 +973,6 @@ class RecipeBookEntry(ExportModelOperationsMixin('book_entry'), models.Model, Pe
 class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
-    icon = models.CharField(max_length=16, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
     default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -991,6 +983,11 @@ class MealType(models.Model, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['space', 'name', 'created_by'], name='mt_unique_name_per_space'),
+        ]
+
 
 class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, blank=True, null=True)
@@ -1000,7 +997,8 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
-    date = models.DateField()
+    from_date = models.DateField()
+    to_date = models.DateField()
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -1014,7 +1012,7 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
         return self.meal_type.name
 
     def __str__(self):
-        return f'{self.get_label()} - {self.date} - {self.meal_type.name}'
+        return f'{self.get_label()} - {self.from_date} - {self.meal_type.name}'
 
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):
@@ -1302,7 +1300,7 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
 
     def is_image(self):
         try:
-            img = Image.open(self.file.file.file)
+            Image.open(self.file.file.file)
             return True
         except Exception:
             return False
@@ -1322,11 +1320,23 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     INSTRUCTION_REPLACE = 'INSTRUCTION_REPLACE'
     NEVER_UNIT = 'NEVER_UNIT'
     TRANSPOSE_WORDS = 'TRANSPOSE_WORDS'
+    FOOD_REPLACE = 'FOOD_REPLACE'
+    UNIT_REPLACE = 'UNIT_REPLACE'
+    NAME_REPLACE = 'NAME_REPLACE'
 
     type = models.CharField(max_length=128,
-                            choices=((FOOD_ALIAS, _('Food Alias')), (UNIT_ALIAS, _('Unit Alias')), (KEYWORD_ALIAS, _('Keyword Alias')),
-                                     (DESCRIPTION_REPLACE, _('Description Replace')), (INSTRUCTION_REPLACE, _('Instruction Replace')),
-                                     (NEVER_UNIT, _('Never Unit')), (TRANSPOSE_WORDS, _('Transpose Words')),))
+                            choices=(
+                                (FOOD_ALIAS, _('Food Alias')),
+                                (UNIT_ALIAS, _('Unit Alias')),
+                                (KEYWORD_ALIAS, _('Keyword Alias')),
+                                (DESCRIPTION_REPLACE, _('Description Replace')),
+                                (INSTRUCTION_REPLACE, _('Instruction Replace')),
+                                (NEVER_UNIT, _('Never Unit')),
+                                (TRANSPOSE_WORDS, _('Transpose Words')),
+                                (FOOD_REPLACE, _('Food Replace')),
+                                (UNIT_REPLACE, _('Unit Replace')),
+                                (NAME_REPLACE, _('Name Replace')),
+                            ))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 
