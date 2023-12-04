@@ -228,10 +228,10 @@ def shopping_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                        len(search_form.cleaned_data['icontains'])
-                        + len(search_form.cleaned_data['istartswith'])
-                        + len(search_form.cleaned_data['trigram'])
-                        + len(search_form.cleaned_data['fulltext'])
+                    len(search_form.cleaned_data['icontains'])
+                    + len(search_form.cleaned_data['istartswith'])
+                    + len(search_form.cleaned_data['trigram'])
+                    + len(search_form.cleaned_data['fulltext'])
                 )
                 if search_form.cleaned_data['preset'] == 'fuzzy':
                     sp.search = SearchPreference.SIMPLE
@@ -317,7 +317,28 @@ def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
 
+    postgres_ver = None
     postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
+
+    if postgres:
+        postgres_current = 16  # will need to be updated as PostgreSQL releases new major versions
+        from decimal import Decimal
+
+        from django.db import connection
+
+        postgres_ver = Decimal(str(connection.pg_version).replace('00', '.'))
+        if postgres_ver >= postgres_current:
+            database_status = 'success'
+            database_message = _('Everything is fine!')
+        elif postgres_ver < postgres_current - 2:
+            database_status = 'danger'
+            database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {'v': postgres_ver}
+        else:
+            database_status = 'info'
+            database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {'v1': postgres_ver, 'v2': postgres_current}
+    else:
+        database_status = 'info'
+        database_message = _('This application is not running with a Postgres database backend. This is ok but not recommended as some features only work with postgres databases.')
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
@@ -331,6 +352,9 @@ def system(request):
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
+        'postgres_version': postgres_ver,
+        'postgres_status': database_status,
+        'postgres_message': database_message,
         'version_info': VERSION_INFO,
         'plugins': PLUGINS,
         'secret_key': secret_key,
