@@ -425,7 +425,6 @@
                                                                      v-if="!ingredient.is_header">
                                                                     <input
                                                                             class="form-control"
-                                                                            style="height: 100%;"
                                                                             v-model="ingredient.amount"
                                                                             type="number"
                                                                             step="any"
