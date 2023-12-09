@@ -1,5 +1,6 @@
 <template>
     <div>
+        <link rel="stylesheet" type="text/css" href="print.css" media="print">
         <div class="dropdown d-print-none">
             <a class="btn shadow-none pr-0 pl-0" href="javascript:void(0);" role="button" id="dropdownMenuLink"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
