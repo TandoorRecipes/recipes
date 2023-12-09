@@ -4501,16 +4501,48 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     color: hsla(0, 0%, 18%, .5)
 }
 
+.bg-dark .navbar-nav .nav-link {
+    color: hsla(0, 0%, 81%, 0.5)
+}
+
+:is(.bg-danger, .bg-info) .navbar-nav .nav-link {
+    color: hsla(0, 0%, 0%, 0.5)
+}
+
 .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
     color: hsla(0, 0%, 18%, .75)
+}
+
+.bg-dark .navbar-nav .nav-link:focus, .bg-dark .navbar-nav .nav-link:hover {
+    color: hsla(0, 0%, 81%, 0.75)
+}
+
+:is(.bg-danger, .bg-info) .navbar-nav .nav-link:focus, :is(.bg-danger, .bg-info) .navbar-nav .nav-link:hover {
+    color: hsla(0, 0%, 0%, 0.75)
 }
 
 .navbar-dark .navbar-nav .nav-link.disabled {
     color: hsla(0, 0%, 18%, .25)
 }
 
+.bg-dark .navbar-nav .nav-link.disabled {
+    color: hsla(0, 0%, 81%, 0.25)
+}
+
+:is(.bg-danger, .bg-info) .navbar-nav .nav-link.disabled {
+    color: hsla(0, 0%, 0%, 0.25)
+}
+
 .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show > .nav-link {
     color: #2e2e2e
+}
+
+.bg-dark .navbar-nav .active > .nav-link, .bg-dark .navbar-nav .nav-link.active, .bg-dark .navbar-nav .nav-link.show, .bg-dark .navbar-nav .show > .nav-link {
+    color: #c8c8c8
+}
+
+:is(.bg-danger, .bg-info) .navbar-nav .active > .nav-link, :is(.bg-danger, .bg-info) .navbar-nav .nav-link.active, :is(.bg-danger, .bg-info) .navbar-nav .nav-link.show, *:is(.bg-danger, .bg-info) .navbar-nav .show > .nav-link {
+    color: #000
 }
 
 .navbar-dark .navbar-toggler {
