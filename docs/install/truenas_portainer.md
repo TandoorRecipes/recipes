@@ -76,7 +76,8 @@ Basic guide to setup Docker and Portainer TrueNAS Core.
 ![Screenshot of Stack List](https://2914113074-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FiZWHJxqQsgWYd9sI88sO%2Fuploads%2FnBx62EIPhmUy1L0S1iKI%2F2.15-docker_add_stack_web_editor.gif?alt=media&token=c45c0151-9c15-4d79-b229-1a90a7a86b84)
 -Use the below code and input it into the Web Editor:
 
-`version: "3"
+```yaml
+version: "3"
 services:
   db_recipes:
     restart: always
@@ -87,13 +88,13 @@ services:
       - stack.env
 
   web_recipes:
-#    image: vabene1111/recipes:latest
+    # image: vabene1111/recipes:latest
     image: vabene1111/recipes:beta
     env_file:
       - stack.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
-	  # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
       - nginx_config:/opt/recipes/nginx/conf.d 
       - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
@@ -116,7 +117,8 @@ services:
 
 volumes:
   nginx_config:
-  staticfiles:`
+  staticfiles:
+```
 
 -Download the .env template from [HERE](https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template) and load this file by pressing the "Load Variables from .env File" button:
 ![Screenshot of Add Stack screen](https://www.portainer.io/hubfs/image-png-Feb-21-2022-06-21-15-88-PM.png)
