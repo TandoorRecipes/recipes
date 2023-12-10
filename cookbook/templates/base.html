@@ -86,12 +86,10 @@
             </a>
         {% endif %}
     {% endif %}
-    
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-    </button>
-    
+    </button>    
 
     {% if request.user.userpreference.left_handed %}
         {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
