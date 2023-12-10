@@ -12,11 +12,39 @@
 <script>
 
 import {EditorState} from "@codemirror/state"
-import {keymap, EditorView} from "@codemirror/view"
+import {keymap, EditorView, MatchDecorator, Decoration, WidgetType, ViewPlugin} from "@codemirror/view"
 import {defaultKeymap} from "@codemirror/commands"
 
 import {markdown} from "@codemirror/lang-markdown"
 import {autocompletion} from "@codemirror/autocomplete"
+
+class PlaceholderWidget extends WidgetType { //TODO this is not working for some javascript magic reason
+    name = undefined
+    constructor(name) {
+        console.log(name)
+        super()
+    }
+
+    eq(other) {
+        return this.name == other.name
+    }
+
+    toDOM() {
+        let elt = document.createElement("span")
+        elt.style.cssText = `
+      border: 1px solid blue;
+      border-radius: 4px;
+      padding: 0 3px;
+      background: lightblue;`
+
+        elt.textContent = "Food"
+        return elt
+    }
+
+    ignoreEvent() {
+        return false
+    }
+}
 
 export default {
     name: "MarkdownEditorComponent",
@@ -24,14 +52,36 @@ export default {
     computed: {},
     mounted() {
 
+        const placeholderMatcher = new MatchDecorator({
+            regexp: /\{\{\singredients\[\d\]\s\}\}/g,
+            decoration: match => Decoration.replace({
+                widget: new PlaceholderWidget(match[0]),
+            })
+        })
+
+        const placeholders = ViewPlugin.fromClass(class {
+            placeholders
+
+            constructor(view) {
+                this.placeholders = placeholderMatcher.createDeco(view)
+            }
+
+            update(update) {
+                this.placeholders = placeholderMatcher.updateDeco(update, this.placeholders)
+            }
+        }, {
+            decorations: instance => instance.placeholders,
+            provide: plugin => EditorView.atomicRanges.of(view => {
+                return view.plugin(plugin)?.placeholders || Decoration.none
+            })
+        })
 
         let startState = EditorState.create({
             doc: "Das ist eine Beschreibung \nPacke {{ ingredients[1] }} in das Fass mit {{ ingredients[3] }}\nTest Bla Bla",
-            extensions: [keymap.of(defaultKeymap), markdown(), autocompletion({override: [this.foodTemplateAutoComplete]})]
+            extensions: [keymap.of(defaultKeymap), placeholders, markdown(), autocompletion({override: [this.foodTemplateAutoComplete]})]
         })
 
         let view = new EditorView({
-
             state: startState,
             extensions: [],
             parent: document.getElementById("editor")
