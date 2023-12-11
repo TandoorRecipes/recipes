@@ -1,0 +1,14 @@
+{
+  "scripts": {
+  
+  "test:unit": "jest"
+},
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.5",
+    "@vue/test-utils": "^2.4.3",
+    "@vue/vue3-jest": "^29.2.6",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
