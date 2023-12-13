@@ -11,6 +11,12 @@
                                     <b-button variant="primary" v-b-tooltip.hover :title="$t('Create')" @click="createNew">
                                         <i class="fas fa-plus"></i>
                                     </b-button>
+                                    <b-dropdown variant="primary" id="sortDropDown" :text= dropdown_text class="border-left">
+                                        <b-dropdown-item @click = "sortOldest" v-show="showOtN">oldest to newest</b-dropdown-item>
+                                        <b-dropdown-item @click = "sortNewest" v-show="showNtO">newest to oldest</b-dropdown-item>
+                                        <b-dropdown-item @click = "sortAlphabetical" v-show="showAlp">alphabetical order</b-dropdown-item>
+                                        <b-dropdown-item @click = " enableSortManually" v-show="showMan">manually</b-dropdown-item>
+                                    </b-dropdown>
                                 </b-input-group-append>
                             </b-input-group>
                         </div>
@@ -19,21 +25,33 @@
             </div>
         </div>
         <div style="padding-bottom: 55px">
-            <div class="mb-3" v-for="book in filteredBooks" :key="book.id">
+            <div class="mb-3" v-for="(book, index) in filteredBooks" :key="book.id">
             <div class="row">
-                <div class="col-md-12">
-                    <b-card class="d-flex flex-column" v-hover v-on:click="openBook(book.id)">
-                        <b-row no-gutters style="height: inherit">
-                            <b-col no-gutters md="10" style="height: inherit">
+                <div class="col-md-12"> 
+                    <b-card class="d-flex flex-column" v-hover  > 
+                        <b-row no-gutters style="height: inherit" class="d-flex align-items-center">
+                            <b-col no-gutters :md="md" style="height: inherit">
                                 <b-card-body class="m-0 py-0" style="height: inherit">
                                     <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                                        <h5 class="m-0 mt-1 text-truncate">
+                                        <b-button variant="primary" v-on:click="openBook(book.id)">                                        
+                                            <h5 class="m-0 mt-1 text-truncate" >
                                             {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
-                                        </h5>
+                                        </h5></b-button>
                                         <div class="m-0 text-truncate">{{ book.description }}</div>
                                         <div class="mt-auto mb-1 d-flex flex-row justify-content-end"></div>
                                     </b-card-text>
                                 </b-card-body>
+                            </b-col>
+                            <b-col>
+                                <b-button-group vertical md = "1" >
+                                    <b-button  v-if="!showMan && index != 0"  variant="primary" style="border-radius:28px!important;"  @click= "swapUpBooks(index)">&uarr;</b-button>
+                                    <b-button  v-if="!showMan && index != cookbooks.length-1"  variant="primary" style="border-radius:28px!important;"  @click= "swapDownBooks(index)">&darr;</b-button>
+                                </b-button-group>
+                                 <b-button-group vertical md = "1" class="ml-2">
+                                    <input v-model.lazy="inputValue" v-if="!showMan" placeholder="enter swap position">                      
+                                    <b-button v-if="!showMan" variant="primary"  style="border-radius:28px!important;"  @click= "swapWithPos(index)">swap</b-button>
+                                </b-button-group>
+
                             </b-col>
                         </b-row>
                     </b-card>
@@ -94,6 +112,13 @@ export default {
             current_book: undefined,
             loading: false,
             search: "",
+            dropdown_text: "Sort by: oldest to newest",
+            showOtN: false,
+            showNtO: true,
+            showAlp: true,
+            showMan: true,
+            md: 12,
+            inputValue: ""
         }
     },
     computed: {
@@ -168,7 +193,76 @@ export default {
                 }
             })
         },
-    },
+        sortAlphabetical: function(){
+            this.dropdown_text = "Sort by: alphabetical order"
+            this.cookbooks = this.cookbooks.sort((a, b) => a.name.localeCompare(b.name))
+            this.showAlp=  false
+            this.showNtO = true
+            this.showOtN = true
+            this.showMan = true
+            this.md = 12
+
+        },
+        sortNewest: function(){
+            this.dropdown_text = "Sort by: newest to oldest"
+            this.cookbooks = this.cookbooks.sort((a, b) => b.id - a.id);
+            this.showNtO = false
+            this.showAlp=  true
+            this.showOtN = true
+            this.showMan = true
+            this.md = 12
+        },
+        sortOldest: function(){
+            this.dropdown_text = "Sort by: oldest to newest"
+            this.cookbooks = this.cookbooks.sort((a, b) => a.id - b.id)
+            this.showOtN=  false
+            this.showAlp= true
+            this.showNtO = true
+            this.showMan = true
+            this.md = 12
+        },
+        enableSortManually: function(){
+            this.showOtN=  true
+            this.showAlp= true
+            this.showNtO = true
+            this.showMan =  false
+            this.md = 8
+            this.dropdown_text = "Sort by: manually"
+        
+        },
+        swapUpBooks: function(index){
+            const tempArray = this.cookbooks
+            const temp = tempArray[index - 1]
+            tempArray[index-1] = tempArray[index]
+            tempArray[index] = temp
+            this.cookbooks = []
+            this.cookbooks = tempArray
+        },
+        swapDownBooks: function(index){
+            const tempArray = this.cookbooks
+            const temp = tempArray[index + 1]
+            tempArray[index+1] = tempArray[index]
+            tempArray[index] = temp
+            this.cookbooks = []
+            this.cookbooks = tempArray
+        },
+        swapWithPos: function(index){
+            const position =  parseInt(this.inputValue)
+            this.inputValue = ""
+            if (!(/^\d+$/.test(position)) || position >= this.cookbooks.length || position < 0){
+                    console.log("catch")
+                    this.inputValue = ""
+            } else {
+                const tempArray = this.cookbooks
+                const temp = tempArray[position]
+                tempArray[position] = tempArray[index]
+                tempArray[index] = temp
+                this.cookbooks = []
+                this.cookbooks = tempArray
+            }
+                
+        }
+    }, 
     directives: {
         hover: {
             inserted: function (el) {
