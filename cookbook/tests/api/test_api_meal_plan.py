@@ -61,6 +61,12 @@ def test_list_filter(obj_1, u1_s1):
     response = json.loads(r.content)
     assert len(response) == 1
 
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?meal_type={response[0]["meal_type"]["id"]}').content)
+    assert len(response) == 1
+
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?meal_type=0').content)
+    assert len(response) == 0
+
     response = json.loads(
         u1_s1.get(f'{reverse(LIST_URL)}?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
     assert len(response) == 0

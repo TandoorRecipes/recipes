@@ -26,7 +26,7 @@ from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, S
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
-from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -70,12 +70,13 @@ from cookbook.helper.recipe_url_import import (clean_dict, get_from_youtube_scra
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, InviteLink, Keyword, MealPlan,
-                             MealType, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry,
-                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
-                             Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, FoodProperty)
+                             FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
+                             Keyword, MealPlan, MealType, Property, PropertyType, Recipe,
+                             RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
+                             SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                             ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -640,9 +641,9 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             Property.objects.filter(space=self.request.space, import_food_id=food.id).update(import_food_id=None)
 
             return self.retrieve(request, pk)
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
-            return JsonResponse({'msg': f'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
+            return JsonResponse({'msg': 'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
 
     def destroy(self, *args, **kwargs):
         try:
@@ -698,11 +699,18 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     - **from_date**: filter from (inclusive) a certain date onward
     - **to_date**: filter upward to (inclusive) certain date
+    - **meal_type**: filter meal plans based on meal_type ID
 
     """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    query_params = [
+        QueryParam(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
+        QueryParam(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
+        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID.'), qtype='int'),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -717,6 +725,11 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         to_date = self.request.query_params.get('to_date', None)
         if to_date is not None:
             queryset = queryset.filter(to_date__lte=to_date)
+
+        meal_type = self.request.query_params.get('meal_type', None)
+        if meal_type is not None:
+            queryset = queryset.filter(meal_type__id=meal_type)
+
         return queryset
 
 
