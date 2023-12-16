@@ -27,7 +27,7 @@
                                         <b-form-input type="date" v-model="entryEditing.from_date"></b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="secondary" @click="entryEditing.from_date = changeDate(entryEditing.from_date, -1)"><i class="fas fa-minus"></i></b-button>
-                                            <b-button variant="primary"  @click="entryEditing.from_date = changeDate(entryEditing.from_date, 1)"><i class="fas fa-plus"></i></b-button>
+                                            <b-button variant="primary" @click="entryEditing.from_date = changeDate(entryEditing.from_date, 1)"><i class="fas fa-plus"></i></b-button>
                                         </b-input-group-append>
                                     </b-input-group>
 
@@ -38,7 +38,7 @@
                                         <b-form-input type="date" v-model="entryEditing.to_date"></b-form-input>
                                         <b-input-group-append>
                                             <b-button variant="secondary" @click="entryEditing.to_date = changeDate(entryEditing.to_date, -1)"><i class="fas fa-minus"></i></b-button>
-                                            <b-button variant="primary"  @click="entryEditing.to_date = changeDate(entryEditing.to_date, 1)"><i class="fas fa-plus"></i></b-button>
+                                            <b-button variant="primary" @click="entryEditing.to_date = changeDate(entryEditing.to_date, 1)"><i class="fas fa-plus"></i></b-button>
                                         </b-input-group-append>
                                     </b-input-group>
                                     <small tabindex="-1" class="form-text text-muted">{{ $t("EndDate") }}</small>
@@ -209,8 +209,14 @@ export default {
             },
             deep: true,
         },
-        entryEditing: {
-            handler(newVal) {
+        'entryEditing.from_date': {
+            handler(newVal, oldVal) {
+                if (newVal !== undefined && oldVal !== undefined) {
+                    if (newVal !== oldVal) {
+                        let change = Math.abs(moment(oldVal).diff(moment(this.entryEditing.to_date), 'days')) // even though negative numbers might be correct, they would be illogical as to needs to always be larger than from
+                        this.entryEditing.to_date = moment(newVal).add(change, 'd').format("YYYY-MM-DD")
+                    }
+                }
             },
             deep: true,
         },
@@ -312,7 +318,7 @@ export default {
                 this.entryEditing.servings = 1
             }
         },
-        changeDate(date, change){
+        changeDate(date, change) {
             return moment(date).add(change, 'd').format("YYYY-MM-DD")
         }
     },
