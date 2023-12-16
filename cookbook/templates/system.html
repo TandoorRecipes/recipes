@@ -96,16 +96,16 @@
     </h4>
     {{postgres_message}}
 
-    <h4 class="mt-3">
-    {% trans 'Orphaned Files' %}
-
-    <span class="badge badge-{% if orphans|length == 0 %}success{% elif orphans|length <= 25 %}warning{% else %}danger{% endif %}">
-        {% if orphans|length == 0 %}{% trans 'Success' %}
-        {% elif orphans|length <= 25 %}{% trans 'Warning' %}
-        {% else %}{% trans 'Danger' %}
-        {% endif %}
-    </span>
-    </h4>
+{#    <h4 class="mt-3">#}
+{#    {% trans 'Orphaned Files' %}#}
+{##}
+{#    <span class="badge badge-{% if orphans|length == 0 %}success{% elif orphans|length <= 25 %}warning{% else %}danger{% endif %}">#}
+{#        {% if orphans|length == 0 %}{% trans 'Success' %}#}
+{#        {% elif orphans|length <= 25 %}{% trans 'Warning' %}#}
+{#        {% else %}{% trans 'Danger' %}#}
+{#        {% endif %}#}
+{#    </span>#}
+{#    </h4>#}
 
     {% if orphans|length == 0 %}
         {% trans 'Everything is fine!' %}
