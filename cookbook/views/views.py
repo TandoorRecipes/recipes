@@ -1,7 +1,9 @@
 import os
 import re
 from datetime import datetime
+from io import StringIO
 from uuid import UUID
+import subprocess
 
 from django.apps import apps
 from django.conf import settings
@@ -10,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -27,7 +30,7 @@ from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchP
                              ShareLink, Space, UserSpace, ViewLog)
 from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.version_info import VERSION_INFO
-from recipes.settings import PLUGINS
+from recipes.settings import PLUGINS, BASE_DIR
 
 
 def index(request):
@@ -228,10 +231,10 @@ def shopping_settings(request):
                 if not sp:
                     sp = SearchPreferenceForm(user=request.user)
                 fields_searched = (
-                    len(search_form.cleaned_data['icontains'])
-                    + len(search_form.cleaned_data['istartswith'])
-                    + len(search_form.cleaned_data['trigram'])
-                    + len(search_form.cleaned_data['fulltext'])
+                        len(search_form.cleaned_data['icontains'])
+                        + len(search_form.cleaned_data['istartswith'])
+                        + len(search_form.cleaned_data['trigram'])
+                        + len(search_form.cleaned_data['fulltext'])
                 )
                 if search_form.cleaned_data['preset'] == 'fuzzy':
                     sp.search = SearchPreference.SIMPLE
@@ -348,6 +351,26 @@ def system(request):
     else:
         orphans = get_orphan_files()
 
+    out = StringIO()
+    call_command('showmigrations', stdout=out)
+    missing_migration = False
+    migration_info = {}
+    current_app = None
+    for row in out.getvalue().splitlines():
+        if '[ ]' in row and current_app:
+            migration_info[current_app]['unapplied_migrations'].append(row.replace('[ ]', ''))
+            missing_migration = True
+        elif '[X]' in row and current_app:
+            migration_info[current_app]['applied_migrations'].append(row.replace('[x]', ''))
+        elif '(no migrations)' in row and current_app:
+            pass
+        else:
+            current_app = row
+            migration_info[current_app] = {'app': current_app, 'unapplied_migrations': [], 'applied_migrations': [], 'total': 0}
+
+    for key in migration_info.keys():
+        migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(migration_info[key]['applied_migrations'])
+
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
@@ -358,7 +381,9 @@ def system(request):
         'version_info': VERSION_INFO,
         'plugins': PLUGINS,
         'secret_key': secret_key,
-        'orphans': orphans
+        'orphans': orphans,
+        'migration_info': migration_info,
+        'missing_migration': missing_migration,
     })
 
 
@@ -514,6 +539,7 @@ def get_orphan_files(delete_orphans=False):
 
         # Check each image file against model image fields
         return [img for img in image_files if img[0] not in image_paths]
+
     orphans = find_orphans()
     if delete_orphans:
         for f in [img[1] for img in orphans]:
