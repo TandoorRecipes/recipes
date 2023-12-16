@@ -363,20 +363,26 @@ export default {
             }
         },
         mobileSimpleGrid() {
-            let grid = []
-
-            if (this.current_period !== null) {
-                for (const x of Array(7).keys()) {
-                    let moment_date = moment(this.current_period.periodStart).add(x, "d")
-                    grid.push({
-                        date: moment_date,
-                        create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
-                        plan_entries: this.plan_items.filter((m) => moment_date.isBetween(moment(m.startDate), moment(m.endDate), 'day', '[]'))
-                    })
-                }
+            let grid = [];
+            let currentDate = moment();
+            for (let x = 0; x < 7; x++) {
+                let moment_date = currentDate.clone().add(x, "d");
+                grid.push({
+                    date: moment_date,
+                    create_default_date: moment_date.format("YYYY-MM-DD"),
+                    date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
+                    plan_entries: this.plan_items.filter(
+                        (m) =>
+                            moment_date.isBetween(
+                                moment(m.startDate),
+                                moment(m.endDate),
+                                'day',
+                                '[]'
+                            )
+                    ),
+                });
             }
-            return grid
+            return grid;
         }
     },
     mounted() {
