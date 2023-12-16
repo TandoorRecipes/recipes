@@ -96,6 +96,8 @@ SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
 
+DRF_THROTTLE_RECIPE_URL_IMPORT = os.getenv('DRF_THROTTLE_RECIPE_URL_IMPORT', '60/hour')
+
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
