@@ -71,4 +71,6 @@ except BaseException:
 
 with open('cookbook/version_info.py', 'w+', encoding='UTF-8') as f:
     print(f"writing version info {version_info}")
+    if not tandoor_tag:
+        tandoor_tag = tandoor_hash
     f.write(f'TANDOOR_VERSION = "{tandoor_tag}"\nTANDOOR_REF = "{tandoor_hash}"\nVERSION_INFO = {version_info}')
