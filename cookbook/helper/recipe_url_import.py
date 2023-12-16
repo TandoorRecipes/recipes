@@ -415,8 +415,8 @@ def parse_keywords(keyword_json, request):
         # if alias exists use that instead
 
         if len(kw) != 0:
-            automation_engine.apply_keyword_automation(kw)
-            if k := Keyword.objects.filter(name=kw, space=request.space).first():
+            kw = automation_engine.apply_keyword_automation(kw)
+            if k := Keyword.objects.filter(name__iexact=kw, space=request.space).first():
                 keywords.append({'label': str(k), 'name': k.name, 'id': k.id})
             else:
                 keywords.append({'label': kw, 'name': kw})
