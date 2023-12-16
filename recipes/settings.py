@@ -438,7 +438,7 @@ for p in PLUGINS:
     if p['bundle_name'] != '':
         WEBPACK_LOADER[p['bundle_name']] = {
             'CACHE': not DEBUG,
-            'BUNDLE_DIR_NAME': f'vue/',  # must end with slash
+            'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
             'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
             'POLL_INTERVAL': 0.1,
             'TIMEOUT': None,
