@@ -651,15 +651,23 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             content = {'error': True, 'msg': e.args[0]}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-
+import json
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+        order_field = self.request.GET.get('order_field')
+        order_direction = self.request.GET.get('order_direction')
+
+        if not order_field:
+            order_field = 'id'
+
+        ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
+        
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct()
+        space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 

@@ -11,11 +11,11 @@
                                     <b-button variant="primary" v-b-tooltip.hover :title="$t('Create')" @click="createNew">
                                         <i class="fas fa-plus"></i>
                                     </b-button>
-                                    <b-dropdown variant="primary" id="sortDropDown" :text= dropdown_text class="border-left">
-                                        <b-dropdown-item @click = "sortOldest" v-show="showOtN">oldest to newest</b-dropdown-item>
-                                        <b-dropdown-item @click = "sortNewest" v-show="showNtO">newest to oldest</b-dropdown-item>
-                                        <b-dropdown-item @click = "sortAlphabetical" v-show="showAlp">alphabetical order</b-dropdown-item>
-                                        <b-dropdown-item @click = " enableSortManually" v-show="showMan">manually</b-dropdown-item>
+                                    <b-dropdown variant="primary" id="sortDropDown" text="Order By"  class="border-left">
+                                        <b-dropdown-item @click = "orderBy('id','asc')"   :disabled= "isActiveSort('id','asc')">oldest to newest</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('id','desc')"  :disabled= "isActiveSort('id','desc')">newest to oldest</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('name','asc')" :disabled= "isActiveSort('name','asc')">alphabetical order</b-dropdown-item>
+                                        <b-dropdown-item @click = " enableSortManually"   :disabled= "isActiveSort('name','asc')" >manually</b-dropdown-item>
                                     </b-dropdown>
                                 </b-input-group-append>
                                 <b-button class= "ml-2" variant="primary" v-show="!showMan" @click="submitManualChanging">
@@ -114,10 +114,8 @@ export default {
             current_book: undefined,
             loading: false,
             search: "",
-            dropdown_text: "Sort by: oldest to newest",
-            showOtN: false,
-            showNtO: true,
-            showAlp: true,
+            activeSortField : 'id',
+            activeSortDirection: 'asc',
             showMan: true,
             md: 12,
             inputValue: "",
@@ -139,7 +137,7 @@ export default {
     methods: {
         refreshData: function () {
             let apiClient = new ApiApiFactory()
-
+            
             apiClient.listRecipeBooks().then((result) => {
                 this.cookbooks = result.data
             })
@@ -197,41 +195,24 @@ export default {
                 }
             })
         },
-        sortAlphabetical: function(){
-            this.dropdown_text = "Sort by: alphabetical order"
-            this.cookbooks = this.cookbooks.sort((a, b) => a.name.localeCompare(b.name))
-            this.showAlp=  false
-            this.showNtO = true
-            this.showOtN = true
-            this.showMan = true
-            this.submitManual = false
-            this.md = 12
-
+        orderBy: function(order_field,order_direction){
+            let apiClient = new ApiApiFactory()
+            const options = {
+                order_field: order_field,
+                order_direction: order_direction
+            }
+            this.activeSortField = order_field
+            this.activeSortDirection = order_direction
+            apiClient.listRecipeBooks(options).then((result) => {
+                this.cookbooks = result.data
+            })
         },
-        sortNewest: function(){
-            this.dropdown_text = "Sort by: newest to oldest"
-            this.cookbooks = this.cookbooks.sort((a, b) => b.id - a.id);
-            this.showNtO = false
-            this.showAlp=  true
-            this.showOtN = true
-            this.showMan = true
-            this.submitManual = false
-            this.md = 12
-        },
-        sortOldest: function(){
-            this.dropdown_text = "Sort by: oldest to newest"
-            this.cookbooks = this.cookbooks.sort((a, b) => a.id - b.id)
-            this.showOtN=  false
-            this.showAlp= true
-            this.showNtO = true
-            this.showMan = true
-            this.submitManual = false
-            this.md = 12
+        isActiveSort: function(field, direction) {
+        // Check if the current item is the active sorting option
+        return this.activeSortField === field && this.activeSortDirection === direction;
         },
         enableSortManually: function(){
-            console.log(1)
             this.synchroniseLocalToDatabase();
-            console.log(2)
             if (localStorage.getItem('cookbooks') ){
                 this.cookbooks =  JSON.parse(localStorage.getItem('cookbooks'))
             }
