@@ -8985,6 +8985,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarQueryParameter = {} as any;
 
 
+            if (options.order_field !== undefined) {
+                localVarQueryParameter['order_field'] =  options.order_field;
+            }
+
+            if (options.order_direction!== undefined) {
+                localVarQueryParameter['order_direction'] = options.order_direction;
+            }
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
