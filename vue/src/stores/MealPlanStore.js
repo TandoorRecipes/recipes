@@ -50,13 +50,8 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
             if (this.currently_updating !== [from_date, to_date]) {
                 this.currently_updating = [from_date, to_date] // certainly no perfect check but better than nothing
 
-                let options = {
-                    from_date: from_date,
-                    to_date: to_date,
-                }
-
                 let apiClient = new ApiApiFactory()
-                apiClient.listMealPlans(options).then((r) => {
+                apiClient.listMealPlans(from_date, to_date).then((r) => {
                     r.data.forEach((p) => {
                         Vue.set(this.plans, p.id, p)
                     })
