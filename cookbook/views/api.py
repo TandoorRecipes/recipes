@@ -708,7 +708,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     query_params = [
         QueryParam(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
         QueryParam(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
-        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID.'), qtype='int'),
+        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), qtype='int'),
     ]
     schema = QueryParamAutoSchema()
 
@@ -726,9 +726,9 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         if to_date is not None:
             queryset = queryset.filter(to_date__lte=to_date)
 
-        meal_type = self.request.query_params.get('meal_type', None)
-        if meal_type is not None:
-            queryset = queryset.filter(meal_type__id=meal_type)
+        meal_type = self.request.query_params.getlist('meal_type', [])
+        if meal_type:
+            queryset = queryset.filter(meal_type__in=meal_type)
 
         return queryset
 
