@@ -198,6 +198,7 @@ def rebuild_index(modeladmin, request, queryset):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage', 'space')
     search_fields = ('name', 'created_by__username')
+    ordering = ('name', 'created_by__username', )
     list_filter = ('internal',)
     date_hierarchy = 'created_at'
 
