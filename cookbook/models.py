@@ -718,6 +718,10 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    def __str__(self):
+        recipes = self.step_set.first().recipe_set.all() if self.step_set.exists() else None
+        return f'{recipes.first().name}: {self.pk}' if recipes else f'Orphaned Ingredient: {self.pk}'
+
     class Meta:
         ordering = ['order', 'pk']
         indexes = (
@@ -745,7 +749,9 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         return render_instructions(self)
 
     def __str__(self):
-        return f'{self.pk} {self.name}'
+        if not self.recipe_set.exists():
+            return f"Orphaned Step{'':s if not obj.name else f': {self.pk} {self.name}'}"
+        return f"{self.recipe_set.first().name}: {self.name}" if self.name else self.recipe_set.first().name
 
     class Meta:
         ordering = ['order', 'pk']
