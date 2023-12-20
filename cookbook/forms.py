@@ -496,25 +496,25 @@ class ShoppingPreferenceForm(forms.ModelForm):
         }
 
 
-class SpacePreferenceForm(forms.ModelForm):
-    prefix = 'space'
-    reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
-                                            help_text=_("Reset all food to inherit the fields configured."))
+# class SpacePreferenceForm(forms.ModelForm):
+#     prefix = 'space'
+#     reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
+#                                             help_text=_("Reset all food to inherit the fields configured."))
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)  # populates the post
-        self.fields['food_inherit'].queryset = Food.inheritable_fields
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)  # populates the post
+#         self.fields['food_inherit'].queryset = Food.inheritable_fields
 
-    class Meta:
-        model = Space
+#     class Meta:
+#         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'use_plural')
+#         fields = ('food_inherit', 'reset_food_inherit', 'use_plural')
 
-        help_texts = {
-            'food_inherit': _('Fields on food that should be inherited by default.'),
-            'use_plural': _('Use the plural form for units and food inside this space.'),
-        }
+#         help_texts = {
+#             'food_inherit': _('Fields on food that should be inherited by default.'),
+#             'use_plural': _('Use the plural form for units and food inside this space.'),
+#         }
 
-        widgets = {
-            'food_inherit': MultiSelectWidget
-        }
+#         widgets = {
+#             'food_inherit': MultiSelectWidget
+#         }

@@ -138,6 +138,9 @@
             <div class="col col-12">
                 <h4 class="mt-2"><i class="fas fa-cogs"></i> {{ $t('Settings') }}</h4>
 
+                <label>{{ $t("Plural") }}</label>
+                <b-checkbox v-model="space.use_plural" class="mt-1">{{ $t("plural_usage_info") }}</b-checkbox>
+                <br />
                 <label>{{ $t('Message') }}</label>
                 <b-form-textarea v-model="space.message"></b-form-textarea>
 
@@ -158,7 +161,8 @@
                 </generic-multiselect>
                 <span class="text-muted small">{{ $t('food_inherit_info') }}</span><br/>
 
-                <a class="btn btn-success" @click="updateSpace()">{{ $t('Update') }}</a><br/>
+                <a class="btn btn-success" @click="updateSpace()">{{ $t('Save') }}</a>
+                <br/><br/>
                 <a class="btn btn-warning mt-1" @click="resetInheritance()">{{ $t('reset_food_inheritance') }}</a><br/>
                 <span class="text-muted small">{{ $t('reset_food_inheritance_info') }}</span>
             </div>
@@ -169,9 +173,7 @@
                 <h4>{{ $t('Open_Data_Import') }}</h4>
                 <open-data-import-component></open-data-import-component>
             </div>
-
         </div>
-
 
         <div class="row mt-4">
             <div class="col col-12">

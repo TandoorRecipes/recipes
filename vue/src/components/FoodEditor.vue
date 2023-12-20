@@ -22,7 +22,7 @@
                             <b-form-group :label="$t('Name')" description="">
                                 <b-form-input v-model="food.name"></b-form-input>
                             </b-form-group>
-                            <b-form-group :label="$t('Plural')" description="">
+                            <b-form-group  v-if="use_plural" :label="$t('Plural')" description="">
                                 <b-form-input v-model="food.plural_name"></b-form-input>
                             </b-form-group>
                             <b-form-group :label="$t('Description')" description="">
@@ -47,7 +47,6 @@
                                     :placeholder="$t('Unit')"
                                 ></generic-multiselect>
                             </b-form-group>
-
 
                             <table class="table table-bordered">
                                 <thead>
@@ -289,13 +288,17 @@ export default {
     data() {
         return {
             food: undefined,
-            unit_conversions: []
+            unit_conversions: [],
+            use_plural: false,
         }
     },
     mounted() {
         this.$bvModal.show(this.id)
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
+        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then((r) => {
+            this.use_plural = r.data.use_plural
+        })
         let pf
         if (this.item1.id !== undefined) {
             pf = apiClient.retrieveFood(this.item1.id).then((r) => {
