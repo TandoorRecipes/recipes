@@ -169,6 +169,9 @@ class IngredientParser:
         if len(ingredient) == 0:
             raise ValueError('string to parse cannot be empty')
 
+        if len(ingredient) > 512:
+            raise ValueError('cannot parse ingredients with more than 512 characters')
+
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
         if len(ingredient) < 1000 and re.search(r'^([^\W\d_])+(.)*[1-9](\d)*\s*([^\W\d_])+', ingredient):
