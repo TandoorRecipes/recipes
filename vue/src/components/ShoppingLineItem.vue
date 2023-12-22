@@ -18,7 +18,7 @@
 
 
             </b-button>
-            <b-button variant="success"><i class="fas fa-check"></i></b-button>
+            <b-button variant="success" @click="useShoppingListStore().toggleFoodCheckedState(food)"><i class="fas fa-check"></i></b-button>
         </b-button-group>
 
 
@@ -33,11 +33,11 @@
                 <h6 class="mt-2">Actions</h6> <!-- TODO localize -->
                 <b-input :placeholder="$t('Category')" class="mb-2"></b-input>  <!-- TODO implement -->
 
-                <b-button variant="success" block>already available</b-button>  <!-- TODO localize -->
+                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  <!-- TODO implement -->
 
-                <b-button variant="info" block>Later</b-button> <!-- TODO localize -->
+                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{$t('Delay')}}</b-button>
 
-                <b-button variant="danger" block>{{ $t('Delete') }}</b-button>
+                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete') }}</b-button>
 
                 <h6 class="mt-2">Details</h6> <!-- TODO localize -->
                 <b-row v-for="e in entries" v-bind:key="e.id">
@@ -80,6 +80,8 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiMixin, resolveDjangoUrl} from "@/utils/utils"
+import {useMealPlanStore} from "@/stores/MealPlanStore";
+import {useShoppingListStore} from "@/stores/ShoppingListStore";
 
 
 Vue.use(BootstrapVue)
@@ -174,6 +176,8 @@ export default {
 
     },
     methods: {
+        useShoppingListStore,
+        useMealPlanStore,
         resolveDjangoUrl,
 
         formatDate: function (datetime) {
