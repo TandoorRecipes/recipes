@@ -1,10 +1,9 @@
 <template>
     <div v-if="recipes !== {}">
         <div id="switcher" class="align-center">
-            <i class="btn btn-primary fas fa-receipt fa-xl fa-fw shadow-none btn-circle" v-b-toggle.related-recipes/>
+            <i class="btn btn-primary fas fa-receipt fa-xl fa-fw shadow-none btn-circle" v-b-toggle.related-recipes />
         </div>
-        <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000"
-                   @shown="updatePinnedRecipes()">
+        <b-sidebar id="related-recipes" backdrop right bottom no-header shadow="sm" style="z-index: 10000" @shown="updatePinnedRecipes()">
             <template #default="{ hide }">
                 <div class="d-flex flex-column justify-content-end h-100 p-3 align-items-end">
                     <h5>{{ $t("Planned") }} <i class="fas fa-calendar fa-fw"></i></h5>
@@ -19,7 +18,7 @@
                                             hide()
                                         "
                                         href="javascript:void(0);"
-                                    >{{ r.name }}</a
+                                        >{{ r.name }}</a
                                     >
                                 </div>
                             </div>
@@ -36,8 +35,7 @@
                             <div v-for="r in pinned_recipes" :key="`pin${r.id}`">
                                 <b-row class="pb-1 pt-1">
                                     <b-col cols="2">
-                                        <a href="javascript:void(0)" @click="unPinRecipe(r)" class="text-muted"><i
-                                            class="fas fa-times"></i></a>
+                                        <a href="javascript:void(0)" @click="unPinRecipe(r)" class="text-muted"><i class="fas fa-times"></i></a>
                                     </b-col>
                                     <b-col cols="10">
                                         <a
@@ -47,7 +45,7 @@
                                             "
                                             href="javascript:void(0);"
                                             class="align-self-end"
-                                        >{{ r.name }}
+                                            >{{ r.name }}
                                         </a>
                                     </b-col>
                                 </b-row>
@@ -69,7 +67,7 @@
                                             hide()
                                         "
                                         href="javascript:void(0);"
-                                    >{{ r.name }}</a
+                                        >{{ r.name }}</a
                                     >
                                 </div>
                             </div>
@@ -88,14 +86,14 @@
 </template>
 
 <script>
-const {ApiApiFactory} = require("@/utils/openapi/api")
-import {ResolveUrlMixin} from "@/utils/utils"
+const { ApiApiFactory } = require("@/utils/openapi/api")
+import { ResolveUrlMixin } from "@/utils/utils"
 
 export default {
     name: "RecipeSwitcher",
     mixins: [ResolveUrlMixin],
     props: {
-        recipe: {type: Number, default: undefined},
+        recipe: { type: Number, default: undefined },
     },
     data() {
         return {
@@ -160,14 +158,16 @@ export default {
             // get related recipes and save them for later
             if (this.$parent.recipe) {
                 this.related_recipes = [this.$parent.recipe]
-                return apiClient.relatedRecipe(this.$parent.recipe.id, {
-                    query: {
-                        levels: 2,
-                        format: "json"
-                    }
-                }).then((result) => {
-                    this.related_recipes = this.related_recipes.concat(result.data)
-                })
+                return apiClient
+                    .relatedRecipe(this.$parent.recipe.id, {
+                        query: {
+                            levels: 2,
+                            format: "json",
+                        },
+                    })
+                    .then((result) => {
+                        this.related_recipes = this.related_recipes.concat(result.data)
+                    })
             }
         },
         loadPinnedRecipes: function () {
@@ -179,16 +179,16 @@ export default {
             // TODO move to utility function moment is in maintenance mode https://momentjs.com/docs/
             var tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
             let today = new Date(Date.now() - tzoffset).toISOString().split("T")[0]
-            return apiClient.listMealPlans({query: {from_date: today, to_date: today}}).then((result) => {
+            return apiClient.listMealPlans(today, today).then((result) => {
                 let promises = []
                 result.data.forEach((mealplan) => {
-                    this.planned_recipes.push({...mealplan?.recipe, servings: mealplan?.servings})
+                    this.planned_recipes.push({ ...mealplan?.recipe, servings: mealplan?.servings })
                     const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
                     promises.push(
-                        apiClient.relatedRecipe(mealplan?.recipe?.id, {query: {levels: 2}}).then((r) => {
+                        apiClient.relatedRecipe(mealplan?.recipe?.id, { query: { levels: 2 } }).then((r) => {
                             // scale all recipes to mealplan servings
                             r.data = r.data.map((x) => {
-                                return {...x, factor: serving_factor}
+                                return { ...x, factor: serving_factor }
                             })
                             this.planned_recipes = [...this.planned_recipes, ...r.data]
                         })
@@ -219,7 +219,6 @@ export default {
     line-height: 1.33;
     z-index: 9000;
 }
-
 
 @media (max-width: 991.98px) {
     #switcher .btn-circle {

@@ -9,7 +9,7 @@ django-tables2==2.5.3
 djangorestframework==3.14.0
 drf-writable-nested==0.7.0
 django-oauth-toolkit==2.3.0
-django-debug-toolbar==3.8.1
+django-debug-toolbar==4.2.0
 bleach==6.0.0
 gunicorn==20.1.0
 lxml==4.9.3
@@ -29,7 +29,7 @@ microdata==0.8.0
 Jinja2==3.1.2
 django-webpack-loader==1.8.1
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
-django-allauth==0.54.0
+django-allauth==0.58.1
 recipe-scrapers==14.52.0
 django-scopes==2.0.0
 pytest==7.4.3

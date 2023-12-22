@@ -204,6 +204,12 @@
                                     }}
                                 </b-form-checkbox>
                             </b-form-group>
+                            <b-form-group :description="$t('substitute_children_help')">
+                                <b-form-checkbox v-model="food.substitute_children">{{
+                                        $t('substitute_children')
+                                    }}
+                                </b-form-checkbox>
+                            </b-form-group>
 
                             <b-form-group :label="$t('InheritFields')" :description="$t('InheritFields_help')">
                                 <generic-multiselect
