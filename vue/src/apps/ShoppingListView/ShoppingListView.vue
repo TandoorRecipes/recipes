@@ -631,6 +631,7 @@ Vue.use(VueCookies)
 let SETTINGS_COOKIE_NAME = "shopping_settings"
 import {Workbox} from 'workbox-window';
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
+import {useShoppingListStore} from "@/stores/ShoppingListStore";
 
 export default {
     name: "ShoppingListView",
@@ -920,6 +921,9 @@ export default {
             }
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
+
+        let store = useShoppingListStore()
+        store.refreshFromAPI()
     },
     methods: {
         /**
