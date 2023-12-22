@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-10-20 14:05+0000\n"
+"PO-Revision-Date: 2023-12-05 09:15+0000\n"
 "Last-Translator: Ferenc <ugyes@freemail.hu>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/hu/>\n"
@@ -282,16 +282,12 @@ msgstr ""
 "hibát figyelmen kívül hagynak)."
 
 #: .\cookbook\forms.py:461
-#, fuzzy
-#| msgid ""
-#| "Select type method of search.  Click <a href=\"/docs/search/\">here</a> "
-#| "for full desciption of choices."
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
-"Válassza ki a keresés típusát. Kattintson <a href=\"/docs/search/\">ide</a> "
-"a lehetőségek teljes leírásáért."
+"Válassza ki a keresés típusát.   Kattintson <a href=\"/docs/search/\">ide</"
+"a> a lehetőségek teljes leírásáért."
 
 #: .\cookbook\forms.py:462
 msgid ""
@@ -536,10 +532,8 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "A queryset vagy a hash_key valamelyikét meg kell adni"
 
 #: .\cookbook\helper\recipe_url_import.py:266
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "Törtek használata"
+msgstr "Ellentétes irány"
 
 #: .\cookbook\helper\recipe_url_import.py:267
 msgid "careful rotation"
@@ -770,7 +764,7 @@ msgstr "Elérte a fájlfeltöltési limitet."
 
 #: .\cookbook\serializer.py:291
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "A Hely tulajdonosi engedélye nem módosítható."
 
 #: .\cookbook\serializer.py:1093
 msgid "Hello"
@@ -1226,10 +1220,8 @@ msgstr "Admin"
 
 #: .\cookbook\templates\base.html:312
 #: .\cookbook\templates\space_overview.html:25
-#, fuzzy
-#| msgid "No Space"
 msgid "Your Spaces"
-msgstr "Nincs hely"
+msgstr "Ön Helye"
 
 #: .\cookbook\templates\base.html:323
 #: .\cookbook\templates\space_overview.html:6
@@ -2132,6 +2124,8 @@ msgstr "Csatlakozás %(provider)s"
 #, python-format
 msgid "You are about to connect a new third party account from %(provider)s."
 msgstr ""
+"Ön egy új, harmadik féltől származó fiókot készül csatlakoztatni "
+"a%(provider)-tól/től."
 
 #: .\cookbook\templates\socialaccount\login.html:13
 #, python-format
