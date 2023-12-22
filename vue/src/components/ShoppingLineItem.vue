@@ -1,83 +1,20 @@
 <template>
     <div id="shopping_line_item" class="pt-1">
-        <b-row align-h="start"
-               ref="shopping_line_item" class="invis-border">
-            <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
-                   v-if="settings.left_handed">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
-                          variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
-                                                :class="showDetails ? 'rotated' : ''"></i></div>
-                </b-button>
-            </b-col>
-            <b-col cols="1" class="align-items-center d-flex">
-                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
-                     @click.stop="$emit('open-context-menu', $event, entries)">
-                    <button
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        type="button"
-                        :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                </div>
-            </b-col>
-            <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-            </b-col>
-            <b-col cols="8">
-                <b-row class="d-flex h-100">
-                    <b-col cols="6" md="3" class="d-flex align-items-center" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           v-if="Object.entries(formatAmount).length == 1">
-                        <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong>
-                        {{ Object.entries(formatAmount)[0][0] }}
-                    </b-col>
-                    <b-col cols="6" md="3" class="d-flex flex-column" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           v-if="Object.entries(formatAmount).length != 1">
-                        <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">
-                            {{ x[1] }} &ensp;
-                            {{ x[0] }}
-                        </div>
-                    </b-col>
+        <b-row>
+            <b-col cold="12">
+                <b-button-group class="mt-1 w-100 pr-5">
+                    <b-button variant="dark" block class="btn btn-block text-left" @click="detail_modal_visible = true">
+                        <span>{{ food_row }}</span>
+                        <span v-if="info_row"><br/><small class="text-muted">{{ info_row }}</small></span>
 
-                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-                        {{ formatFood }}
-                    </b-col>
-                    <b-col cols="3" data-html2canvas-ignore="true" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           class="align-items-center d-none d-md-flex justify-content-end">
-                        <b-button size="sm" @click="showDetails = !showDetails"
-                                  class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
-                            <div class="text-nowrap">
-                                <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
-                                <span class="d-none d-md-inline-block"><span class="ml-2">{{
-                                        $t("Details")
-                                    }}</span></span>
-                            </div>
-                        </b-button>
-                    </b-col>
-                </b-row>
-            </b-col>
-            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                   v-if="!settings.left_handed">
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
-                          variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
-                                                :class="showDetails ? 'rotated' : ''"></i></div>
-                </b-button>
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
+                    </b-button>
+                    <b-button variant="success" @click="updateChecked"><i class="fas fa-check"></i></b-button>
+                </b-button-group>
+
             </b-col>
         </b-row>
-        <b-row align-h="center" class="d-none d-md-flex">
-            <b-col cols="12">
-                <div class="small text-muted text-truncate">{{ formatHint }}</div>
-            </b-col>
-        </b-row>
-        <!-- detail rows -->
+
+        <!--         detail rows -->
         <div class="card no-body mb-1 pt-2 align-content-center shadow-sm" v-if="showDetails">
             <div v-for="(e, x) in entries" :key="e.id">
                 <b-row class="small justify-content-around">
@@ -149,28 +86,52 @@
                 <div class="pb-1 pb-md-4" v-if="x === entries.length - 1"></div>
             </div>
         </div>
-        <hr class="m-1" v-if="!showDetails"/>
-        <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width: 300">
-            <template #menu="{ contextData }" v-if="recipe">
-                <ContextMenuItem>
-                    <RecipeCard :recipe="contextData" :detail="false"></RecipeCard>
-                </ContextMenuItem>
-                <ContextMenuItem @click="$refs.menu.close()">
-                    <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
-                        <template #label>
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i>
-                                {{ $t("Servings") }}</a>
-                        </template>
-                        <div @click.prevent.stop>
-                            <b-form-input class="mt-2" min="0" type="number" v-model="servings"></b-form-input>
-                        </div>
-                    </b-form-group>
-                </ContextMenuItem>
+
+        <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false">
+            <template #modal-title>
+                <h5> {{ food_row }}</h5>
+                <small class="text-muted">{{ entries[0].food.description }}</small>
+
             </template>
-        </ContextMenu>
-        <i class="fa fa-hourglass fa-lg" style="display: none; position: absolute" aria-hidden="true"
-           ref="delay_icon"></i>
-        <i class="fa fa-check fa-lg" style="display: none; position: absolute" aria-hidden="true" ref="check_icon"></i>
+
+            <template #default>
+                <h6 class="mt-2">Actions</h6> <!-- TODO localize -->
+                <b-input :placeholder="$t('Category')" class="mb-2"></b-input>  <!-- TODO implement -->
+
+                <b-button variant="success" block>already available</b-button>  <!-- TODO localize -->
+
+                <b-button variant="info" block>Later</b-button> <!-- TODO localize -->
+
+                <b-button variant="danger" block>{{$t('Delete')}}</b-button>
+
+                <h6 class="mt-2">Details</h6> <!-- TODO localize -->
+                <b-row v-for="e in entries" v-bind:key="e.id">
+                    <b-col cold="12">
+                        <b-button-group class="mt-1 w-100">
+                            <b-button variant="dark" block class="btn btn-block text-left">
+                                <span>{{formatOneAmount(e)}} {{formatOneUnit(e)}} {{formatOneFood(e)}}</span>
+                                <span ><br/><small class="text-muted">
+                                    <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
+                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{e.recipe_mealplan.recipe_name}} </a>({{e.recipe_mealplan.servings}} {{$t('Servings')}})<br/>
+                                    </span>
+                                    <span v-if="e.recipe_mealplan && e.recipe_mealplan.mealplan_type !== undefined"> {{ e.recipe_mealplan.mealplan_type}} {{formatDate(e.recipe_mealplan.mealplan_from_date)}} <br/></span>
+
+                                    {{ e.created_by.display_name}} {{ formatDate(e.created_at)}}<br/>
+                                </small></span>
+
+                            </b-button>
+                            <b-button variant="success" @click="updateChecked"><i class="fas fa-check"></i></b-button> <!-- TODO implement -->
+                        </b-button-group>
+
+                    </b-col>
+                </b-row>
+            </template>
+
+            <template #modal-footer>
+                <span></span>
+            </template>
+        </b-modal>
+
     </div>
 </template>
 
@@ -180,7 +141,7 @@ import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import ContextMenu from "@/components/ContextMenu/ContextMenu"
 import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
-import {ApiMixin} from "@/utils/utils"
+import {ApiMixin, resolveDjangoUrl} from "@/utils/utils"
 import RecipeCard from "./RecipeCard.vue"
 import Vue2TouchEvents from "vue2-touch-events"
 
@@ -192,7 +153,7 @@ export default {
     // or i'm capturing it incorrectly
     name: "ShoppingLineItem",
     mixins: [ApiMixin],
-    components: {RecipeCard, ContextMenu, ContextMenuItem},
+    components: {},
     props: {
         entries: {
             type: Array,
@@ -206,7 +167,8 @@ export default {
             recipe: undefined,
             servings: 1,
             dragStartX: 0,
-            distance_left: 0
+            distance_left: 0,
+            detail_modal_visible: false,
         }
     },
     computed: {
@@ -266,12 +228,57 @@ export default {
             }
             return ""
         },
+
+        food_row: function () {
+            let item = this.entries[0]
+            return this.formatOneAmount(item) + " " + this.formatOneUnit(item) + " " + this.formatOneFood(item)
+        },
+        info_row: function () {
+            // TODO add setting
+
+            // author
+            if (this.entries.length === 123) {
+                let authors = []
+                this.entries.forEach(e => {
+                    if (authors.indexOf(e.created_by.display_name) === -1) {
+                        authors.push(e.created_by.display_name)
+                    }
+                })
+                return authors.join(', ')
+            }
+
+            if (this.entries.length === 1123) {
+                let recipes = []
+                this.entries.forEach(e => {
+                    if (e.recipe_mealplan !== null) {
+                        let recipe_name = e.recipe_mealplan.recipe_name
+                        if (recipes.indexOf(recipe_name) === -1) {
+                            recipes.push(recipe_name)
+                        }
+                    }
+                })
+                if (recipes.length > 1) {
+                    let short_recipes = []
+                    recipes.forEach(r => {
+                        short_recipes.push(r.substring(0, 14) + (r.length > 14 ? '..' : ''))
+                    })
+                }
+                return recipes.join(', ')
+            }
+
+            if (this.entries.length === 123) {
+                return "Abendessen 31.12" // TODO implement mealplan or manual
+            }
+
+            return this.entries.length
+        }
     },
     watch: {},
     mounted() {
         this.servings = this.entries?.[0]?.recipe_mealplan?.servings ?? 0
     },
     methods: {
+        resolveDjangoUrl,
         // this.genericAPI inherited from ApiMixin
 
         formatDate: function (datetime) {

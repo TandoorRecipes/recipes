@@ -2,6 +2,24 @@
 
     <div id="app">
         <div>
+
+
+
+            <b-button-group class="w-100 mb-1" >
+                <b-button variant="dark" block class="btn btn-block btn-sm text-left " >100 g Möhren Test <br/><small class="text-muted">Info</small></b-button>
+                <b-button variant="success"><i class="fas fa-check"></i></b-button>
+            </b-button-group>
+            <br/>
+            <b-button-group class="w-100">
+                <b-button variant="dark" block class="btn btn-block text-left" >150 ml Heißwassermöhrenbrühe<br/><small class="text-muted">Info</small></b-button>
+                <b-button variant="success"><i class="fas fa-check"></i></b-button>
+            </b-button-group>
+
+            <br/>
+            <br/>
+            <br/>
+            ----
+
             <markdown-editor-component></markdown-editor-component>
 
         </div>

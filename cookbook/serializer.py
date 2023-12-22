@@ -1031,6 +1031,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')  # should this be done at the front end?
     recipe_name = serializers.ReadOnlyField(source='recipe.name')
     mealplan_note = serializers.ReadOnlyField(source='mealplan.note')
+    mealplan_from_date = serializers.ReadOnlyField(source='mealplan.from_date')
+    mealplan_type = serializers.ReadOnlyField(source='mealplan.meal_type.name')
     servings = CustomDecimalField()
 
     def get_name(self, obj):
@@ -1054,7 +1056,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note')
+        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note','mealplan_from_date', 'mealplan_type')
         read_only_fields = ('id',)
 
 
