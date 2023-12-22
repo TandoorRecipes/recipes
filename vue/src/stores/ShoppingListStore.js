@@ -106,6 +106,16 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
             return -1
         },
+        toggleFoodCheckedState(food) {
+            /**
+             * function to handle user checking or unchecking a food
+             */
+
+            this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries'].forEach(e => {
+                e.checked = !e.checked
+                this.updateObject(e)
+            })
+        },
         delayFood(food) {
             /**
              * function to handle user "delaying" shopping entry

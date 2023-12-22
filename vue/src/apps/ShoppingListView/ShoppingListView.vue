@@ -113,66 +113,22 @@
 
                                 </div>
                                 <!-- shopping list table -->
-                                <div v-if="items && items.length > 0">
-                                    <div v-for="(categories, checked_key) in Sections" :key="checked_key">
-                                        <div v-if="checked_key == 'true'"
-                                             class="bg-header w-100 text-center d-flex justify-content-center align-items-center">
-                                            <span class="h4 d-flex mt-1 mb-1">{{ $t("Completed") }}</span>
-                                        </div>
 
-                                        <div v-for="(foods_group, category_key) in categories" :key="category_key">
-                                            <div class="dropdown b-dropdown position-static inline-block"
-                                                 data-html2canvas-ignore="true"
-                                                 v-if="Object.entries(foods_group).length > 0">
-                                                <button
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false"
-                                                    type="button"
-                                                    class="btn dropdown-toggle btn-link text-decoration-none text-dark pr-2 dropdown-toggle-no-caret"
-                                                    @click.stop="openContextMenu($event, foods_group, true)"
-                                                >
-                                                    <i class="fas fa-ellipsis-v"></i>
-                                                </button>
+                                <b-row v-for="c in shopping_list_store.category_food_entries" v-bind:key="c.id" class="pr-4 pl-4">
+                                    <b-col cols="12">
+                                        <b-button-group class="w-100 mt-1">
+                                            <b-button variant="light" block class="btn btn-block text-left">
+                                                <span v-if="c.id === -1">{{$t('Undefined')}}</span>
+                                                <span v-else>{{ c.name}}</span>
+                                            </b-button>
+                                            <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->
+                                        </b-button-group>
 
-                                                <b-button
-                                                    class="btn btn-lg text-decoration-none text-dark px-1 py-0 border-0"
-                                                    variant="link"
-                                                    data-toggle="collapse"
-                                                    :href="'#section-' + sectionID(checked_key, category_key)"
-                                                    :aria-expanded="'true' ? checked_key == 'false' : 'true'"
-                                                >
-                                                    <i class="fa fa-chevron-right rotate"/>
-                                                    <span class="h6 ml-2 text-secondary">{{ category_key }}</span>
-                                                </b-button>
-                                            </div>
-
-                                            <div class="collapse"
-                                                 :id="'section-' + sectionID(checked_key, category_key)" visible
-                                                 role="tabpanel" :class="{ show: checked_key == 'false' }">
-                                                <!-- passing an array of values to the table grouped by Food -->
-                                                <transition-group name="slide-fade">
-                                                    <div class="pl-4 pr-0"
-                                                         v-for="(entries, index) in Object.entries(foods_group)"
-                                                         :key="index">
-                                                        <transition name="slide-fade" mode="out-in">
-
-
-
-                                                                                                                        <shopping-line-item
-                                                                                                                            :entries="entries[1]"
-                                                                                                                            :groupby="group_by"
-                                                                                                                            :settings="settings"
-                                                                                                                            @open-context-menu="openContextMenu"
-                                                                                                                            @update-checkbox="updateChecked"
-                                                                                                                            @update-delaythis="delayThis"
-                                                                                                                        />
-                                                        </transition>
-                                                    </div>
-                                                </transition-group>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <span v-for="f in c.foods" v-bind:key="f.id">
+                                            <shopping-line-item :entries="f['entries']" class="mt-1"/>
+                                        </span>
+                                    </b-col>
+                                </b-row>
                             </div>
                         </div>
                     </div>
@@ -704,7 +660,9 @@ export default {
                 id: undefined,
             },
             add_recipe_servings: 1,
-            shopping_list_height: '60vh'
+            shopping_list_height: '60vh',
+
+            shopping_list_store: useShoppingListStore()
         }
     },
     computed: {
@@ -926,6 +884,7 @@ export default {
         store.refreshFromAPI()
     },
     methods: {
+        useShoppingListStore,
         /**
          * failed requests to sync entry check events are automatically re-queued by the service worker for sync
          * this command allows to manually force replaying those events before re-enabling automatic sync
