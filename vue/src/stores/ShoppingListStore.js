@@ -73,7 +73,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         deleteObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.destroyShoppingListEntry(object.id).then((r) => {
-                Vue.delete(this.category_food_entries[this.getFoodCategory(object.food)]['foods'][object.food.id], object.id)
+
+                Vue.delete(this.category_food_entries[this.getFoodCategory(object.food)]['foods'][object.food.id]['entries'], object.id)
+                if (Object.keys(this.category_food_entries[this.getFoodCategory(object.food)]['foods'][object.food.id]['entries']).length === 0) {
+                    Vue.delete(this.category_food_entries[this.getFoodCategory(object.food)]['foods'], object.food.id)
+                }
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
@@ -111,10 +115,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
              * function to handle user checking or unchecking a food
              */
 
-            this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries'].forEach(e => {
-                e.checked = !e.checked
-                this.updateObject(e)
-            })
+            let entries = this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries']
+            for (let i in entries) {
+                entries[i].checked = !entries[i].checked
+                this.updateObject(entries[i])
+            }
         },
         delayFood(food) {
             /**
@@ -124,10 +129,21 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             let delay = 4 //TODO get delay from settings
             let delay_date = new Date(Date.now() + delay * (60 * 60 * 1000))
 
-            this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries'].forEach(e => {
-                e.delayed_until = delay_date
-                this.updateObject(e)
-            })
+            let entries = this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries']
+            for (let i in entries) {
+                entries[i].delayed_until = delay_date
+                this.updateObject(entries[i])
+            }
+
+        },
+        deleteFood(food) {
+            /**
+             * function to handle user deleting all entries of a certain food
+             */
+            let entries = this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries']
+            for (let i in entries) {
+                this.deleteObject(entries[i])
+            }
         },
     },
 })

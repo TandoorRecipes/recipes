@@ -342,6 +342,7 @@
     "copy_markdown_table": "Copy as Markdown Table",
     "in_shopping": "In Shopping List",
     "DelayUntil": "Delay Until",
+    "Delay": "Delay",
     "Pin": "Pin",
     "Unpin": "Unpin",
     "PinnedConfirmation": "{recipe} has been pinned.",
