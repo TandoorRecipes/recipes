@@ -1,8 +1,8 @@
 <template>
     <div id="shopping_line_item">
 
-        <b-button-group class="w-100">
-            <b-button variant="dark" block class="btn btn-block text-left" @click="detail_modal_visible = true">
+        <b-button-group class="w-100" v-if="useShoppingListStore().show_checked_entries || !is_checked">
+            <b-button :class="{'btn-dark': !is_checked, 'btn-success': is_checked}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
                 <div class="d-flex ">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
@@ -18,7 +18,7 @@
 
 
             </b-button>
-            <b-button variant="success" @click="useShoppingListStore().toggleFoodCheckedState(food)"><i class="fas fa-check"></i></b-button>
+            <b-button variant="success" @click="useShoppingListStore().toggleFoodCheckedState(food)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}"><i class="fas" :class="{'fa-check': !is_checked, 'fa-times': is_checked}"></i></b-button>
         </b-button-group>
 
 
@@ -37,7 +37,7 @@
 
                 <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{$t('Delay')}}</b-button>
 
-                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete') }}</b-button>
+                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete_All') }}</b-button>
 
                 <h6 class="mt-2">Details</h6> <!-- TODO localize -->
                 <b-row v-for="e in entries" v-bind:key="e.id">
@@ -60,7 +60,7 @@
                                 </small></span>
 
                             </b-button>
-                            <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- TODO implement -->
+                            <b-button variant="warning" @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i class="fas fa-trash"></i></b-button> <!-- TODO implement -->
                         </b-button-group>
 
                     </b-col>
@@ -99,6 +99,14 @@ export default {
         }
     },
     computed: {
+        is_checked: function (){
+            for (let i in this.entries) {
+                if(!this.entries[i].checked){
+                    return false
+                }
+            }
+            return true
+        },
         food: function () {
             return this.entries[Object.keys(this.entries)[0]]['food']
         },

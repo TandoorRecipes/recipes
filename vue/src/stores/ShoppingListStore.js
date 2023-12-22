@@ -13,6 +13,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
     state: () => ({
         category_food_entries: {},
 
+        show_checked_entries: false,
+
         currently_updating: false,
         settings: null,
     }),
@@ -31,21 +33,14 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
              * Retrieves all shopping list entries from the API and parses them into a structured object category > food > entry
              */
             this.category_food_entries = {}
-            Vue.set(this.category_food_entries, -1, {'id': -1, 'name': '', foods: {}}) //TODO use localization to get name for undefined category
+            Vue.set(this.category_food_entries, -1, {'id': -1, 'name': '', foods: {}})
 
             if (!this.currently_updating) {
                 this.currently_updating = true
                 let apiClient = new ApiApiFactory()
                 apiClient.listShoppingListEntrys().then((r) => {
                     r.data.forEach((e) => {
-                        let category = this.getFoodCategory(e.food)
-                        if (!(category in this.category_food_entries)) {
-                            Vue.set(this.category_food_entries, category, {'id': category, 'name': e.food.supermarket_category.name, foods: {}})
-                        }
-                        if (!(e.food.id in this.category_food_entries[category]['foods'])) {
-                            Vue.set(this.category_food_entries[category]['foods'], e.food.id, {'id': e.food.id, 'name': e.food.name, 'entries': {}})
-                        }
-                        Vue.set(this.category_food_entries[category]['foods'][e.food.id]['entries'], e.id, e)
+                        this.updateEntryInStructure(e)
                     })
                     this.currently_updating = false
                 })
@@ -57,7 +52,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             // TODO shared handled in backend?
 
             return apiClient.createShoppingListEntry(object).then((r) => {
-                Vue.set(this.category_food_entries[this.getFoodCategory(r.food)]['foods'][r.food.id][r.id], r.id, r)
+                this.updateEntryInStructure(r.data)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
@@ -65,7 +60,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         updateObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.updateShoppingListEntry(object.id, object).then((r) => {
-                Vue.set(this.category_food_entries[this.getFoodCategory(r.food)]['foods'][r.food.id][r.id], r.id, r)
+                this.updateEntryInStructure(r.data)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
@@ -109,6 +104,16 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 return food.supermarket_category.id
             }
             return -1
+        },
+        updateEntryInStructure(entry) {
+            let category = this.getFoodCategory(entry.food)
+            if (!(category in this.category_food_entries)) {
+                Vue.set(this.category_food_entries, category, {'id': category, 'name': entry.food.supermarket_category.name, 'foods': {}})
+            }
+            if (!(entry.food.id in this.category_food_entries[category]['foods'])) {
+                Vue.set(this.category_food_entries[category]['foods'], entry.food.id, {'id': entry.food.id, 'name': entry.food.name, 'entries': {}})
+            }
+            Vue.set(this.category_food_entries[category]['foods'][entry.food.id]['entries'], entry.id, entry)
         },
         toggleFoodCheckedState(food) {
             /**

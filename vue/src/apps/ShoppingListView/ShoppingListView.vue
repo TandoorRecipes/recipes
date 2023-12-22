@@ -4,10 +4,7 @@
 
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
-                <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
-                    <i class="btn fas fa-plus-circle fa-lg px-0" @click="entrymode = !entrymode"
-                       :class="entrymode ? 'text-success' : 'text-primary'"/>
-                </b-button>
+
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
                     <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
                        id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
@@ -37,102 +34,41 @@
                     <span
                         class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})` }}</span>
                 </template>
-                <div class="container p-0 p-md-3 pb-5" id="shoppinglist">
-                    <div class="row pb-5">
-                        <div class="col col-md-12 p-0 p-lg-3">
-                            <div role="tablist">
-                                <!-- add to shopping form -->
-                                <div class="container d-lg-block d-print-none d-none">
-                                    <b-row class="justify-content-md-center align-items-center pl-1 pr-1"
-                                           v-if="entrymode">
-                                        <b-col cols="12" md="3" v-if="!ui.entry_mode_simple"
-                                               class="d-none d-md-block mt-1">
-                                            <b-form-input
-                                                size="lg"
-                                                min="1"
-                                                type="number"
-                                                :description="$t('Amount')"
-                                                v-model="new_item.amount"
-                                                style="font-size: 16px; border-radius: 5px !important; border: 1px solid #e8e8e8 !important"
-                                                ref="amount_input_complex"
-                                            ></b-form-input>
-                                        </b-col>
-                                        <b-col cols="12" md="4" v-if="!ui.entry_mode_simple" class="mt-1">
-                                            <lookup-input :class_list="'mb-0'" :form="formUnit" :model="Models.UNIT"
-                                                          @change="new_item.unit = $event" :show_label="false"
-                                                          :clear="clear"/>
-                                        </b-col>
-                                        <b-col cols="12" md="4" v-if="!ui.entry_mode_simple" class="mt-1">
-                                            <lookup-input :class_list="'mb-0'" :form="formFood" :model="Models.FOOD"
-                                                          @change="new_item.food = $event" :show_label="false"
-                                                          :clear="clear"/>
-                                        </b-col>
-                                        <b-col cols="12" md="11" v-if="ui.entry_mode_simple" class="mt-1">
-                                            <b-form-input size="lg" type="text" :placeholder="$t('QuickEntry')"
-                                                          v-model="new_item.ingredient"
-                                                          @keyup.enter="addItem"
-                                                          ref="amount_input_simple"></b-form-input>
-                                        </b-col>
-                                        <b-col cols="12" md="1" class="d-none d-md-block mt-1">
-                                            <b-button variant="link" class="px-0" type="submit">
-                                                <i class="btn fas fa-cart-plus fa-lg px-0 text-success"
-                                                   @click="addItem"/>
-                                            </b-button>
-                                        </b-col>
-                                        <b-col cols="12" md="3" v-if="!ui.entry_mode_simple"
-                                               class="d-block d-md-none mt-1">
-                                            <b-row>
-                                                <b-col cols="9">
-                                                    <b-form-input
-                                                        size="lg"
-                                                        min="1"
-                                                        type="number"
-                                                        :description="$t('Amount')"
-                                                        v-model="new_item.amount"
-                                                        style="font-size: 16px; border-radius: 5px !important; border: 1px solid #e8e8e8 !important"
-                                                    ></b-form-input>
-                                                </b-col>
-                                                <b-col cols="3" class="flex-grow-1">
-                                                    <b-button variant="success" class="p-0 pt-1 w-100 h-100">
-                                                        <i class="btn fas fa-cart-plus fa-lg" @click="addItem"/>
-                                                    </b-button>
-                                                </b-col>
-                                            </b-row>
-                                        </b-col>
-                                    </b-row>
 
-                                    <b-row class="row justify-content-around mt-2" v-if="entrymode">
-                                        <b-form-checkbox switch v-model="ui.entry_mode_simple">
-                                            {{ $t("QuickEntry") }}
-                                        </b-form-checkbox>
-                                        <b-button variant="success" size="sm" class="d-flex d-md-none p-0"
-                                                  v-if="ui.entry_mode_simple">
-                                            <i class="btn fas fa-cart-plus" @click="addItem"/>
-                                        </b-button>
-                                    </b-row>
+                <b-row class="d-lg-block d-print-none d-none pr-4 pl-4 mb-3 mt-3">
+                    <b-col cols="12">
+                        <b-input-group>
+                            <b-form-input type="text" :placeholder="$t('Food')"
+                                          v-model="new_item.ingredient"
+                                          @keyup.enter="addItem"
+                                          ref="amount_input_simple"></b-form-input>
+                            <b-input-group-append>
+                                <b-button variant="success">
+                                    <i class="fas fa-cart-plus" @click="addItem"/>
+                                </b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                    </b-col>
+                </b-row>
 
-                                </div>
-                                <!-- shopping list table -->
+                <!-- shopping list table -->
 
-                                <b-row v-for="c in shopping_list_store.category_food_entries" v-bind:key="c.id" class="pr-4 pl-4">
-                                    <b-col cols="12">
-                                        <b-button-group class="w-100 mt-1">
-                                            <b-button variant="light" block class="btn btn-block text-left">
-                                                <span v-if="c.id === -1">{{$t('Undefined')}}</span>
-                                                <span v-else>{{ c.name}}</span>
-                                            </b-button>
-                                            <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->
-                                        </b-button-group>
+                <b-row v-for="c in shopping_list_store.category_food_entries" v-bind:key="c.id" class="pr-4 pl-4">
+                    <b-col cols="12">
+                        <b-button-group class="w-100 mt-1">
+                            <b-button variant="light" block class="btn btn-block text-left">
+                                <span v-if="c.id === -1">{{ $t('Undefined') }}</span>
+                                <span v-else>{{ c.name }}</span>
+                            </b-button>
+                            <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->
+                        </b-button-group>
 
-                                        <span v-for="f in c.foods" v-bind:key="f.id">
+                        <span v-for="f in c.foods" v-bind:key="f.id">
                                             <shopping-line-item :entries="f['entries']" class="mt-1"/>
                                         </span>
-                                    </b-col>
-                                </b-row>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    </b-col>
+                </b-row>
+
             </b-tab>
             <!-- recipe tab -->
             <b-tab :title="$t('Recipes')">
@@ -530,7 +466,7 @@
                 <div class="d-flex flex-row justify-content-around mb-3">
 
                     <b-input-group>
-                        <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"></b-form-input>
+                        <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')" @keyup.enter="addItem"></b-form-input>
                         <b-input-group-append>
                             <b-button @click="addItem" variant="success">
                                 <i class="fas fa-cart-plus "/>
@@ -597,7 +533,6 @@ export default {
         ContextMenuItem,
         ShoppingLineItem,
         GenericMultiselect,
-        LookupInput,
         DownloadPDF,
         DownloadCSV,
         CopyToClipboard,
@@ -918,43 +853,27 @@ export default {
         },
         // this.genericAPI inherited from ApiMixin
         addItem: function () {
-            if (this.ui.entry_mode_simple) {
-                if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
-                    this.genericPostAPI("api_ingredient_from_string", {text: this.new_item.ingredient}).then((result) => {
-                        let unit = null
-                        if (result.data.unit !== null) {
-                            unit = {name: result.data.unit}
-                        }
 
-                        this.new_item = {
-                            amount: result.data.amount,
-                            unit: unit,
-                            food: {name: result.data.food},
-                        }
-                        this.addEntry()
-                    })
-                }
-            } else {
-                this.addEntry()
-            }
-            this.setFocus()
-        },
-        addEntry: function (x) {
-            let api = new ApiApiFactory()
-            api.createShoppingListEntry(this.new_item)
-                .then((results) => {
-                    if (results?.data) {
-                        this.items.push(results.data)
-                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                    } else {
-                        console.log("no data returned")
+            if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
+                this.genericPostAPI("api_ingredient_from_string", {text: this.new_item.ingredient}).then((result) => {
+                    let unit = null
+                    if (result.data.unit !== null) {
+                        unit = {name: result.data.unit}
                     }
+
+                    //TODO clean up from here on
+                    this.new_item = {
+                        amount: result.data.amount,
+                        unit: unit,
+                        food: {name: result.data.food, supermarket_category: null},
+                    }
+                    this.useShoppingListStore().createObject(this.new_item)
                     this.new_item = {amount: 1, unit: undefined, food: undefined, ingredient: undefined}
                     this.clear += 1
                 })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
-                })
+            }
+
+            this.setFocus()
         },
         resetFilters: function () {
             this.ui.selected_supermarket = undefined

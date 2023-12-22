@@ -181,6 +181,7 @@
     "Unit_Alias": "Unit Alias",
     "Keyword_Alias": "Keyword Alias",
     "Delete_Food": "Delete Food",
+    "Delete_All": "Delete All",
     "No_ID": "ID not found, cannot delete.",
     "Meal_Plan_Days": "Future meal plans",
     "merge_title": "Merge {type}",
