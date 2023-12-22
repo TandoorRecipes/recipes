@@ -155,14 +155,17 @@
                                                          v-for="(entries, index) in Object.entries(foods_group)"
                                                          :key="index">
                                                         <transition name="slide-fade" mode="out-in">
-                                                            <shopping-line-item
-                                                                :entries="entries[1]"
-                                                                :groupby="group_by"
-                                                                :settings="settings"
-                                                                @open-context-menu="openContextMenu"
-                                                                @update-checkbox="updateChecked"
-                                                                @update-delaythis="delayThis"
-                                                            />
+
+
+
+                                                                                                                        <shopping-line-item
+                                                                                                                            :entries="entries[1]"
+                                                                                                                            :groupby="group_by"
+                                                                                                                            :settings="settings"
+                                                                                                                            @open-context-menu="openContextMenu"
+                                                                                                                            @update-checkbox="updateChecked"
+                                                                                                                            @update-delaythis="delayThis"
+                                                                                                                        />
                                                         </transition>
                                                     </div>
                                                 </transition-group>
