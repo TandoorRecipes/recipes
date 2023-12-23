@@ -555,7 +555,6 @@ export default {
             supermarket_categories_only: false,
             shopcat: null,
             delay: 0,
-            clear: Math.random(),
             generic_action: null,
             generic_model: null,
             ui: {
@@ -843,13 +842,7 @@ export default {
             })
         },
         setFocus() {
-            if (this.ui.entry_mode_simple) {
-                this.$refs['amount_input_simple'].focus()
-            } else {
-                if (this.$refs['amount_input_complex']) {
-                    this.$refs['amount_input_complex'].focus()
-                }
-            }
+            this.$refs['amount_input_simple'].focus()
         },
         // this.genericAPI inherited from ApiMixin
         addItem: function () {
@@ -861,19 +854,14 @@ export default {
                         unit = {name: result.data.unit}
                     }
 
-                    //TODO clean up from here on
-                    this.new_item = {
+                    this.useShoppingListStore().createObject({
                         amount: result.data.amount,
                         unit: unit,
                         food: {name: result.data.food, supermarket_category: null},
-                    }
-                    this.useShoppingListStore().createObject(this.new_item)
+                    })
                     this.new_item = {amount: 1, unit: undefined, food: undefined, ingredient: undefined}
-                    this.clear += 1
                 })
             }
-
-            this.setFocus()
         },
         resetFilters: function () {
             this.ui.selected_supermarket = undefined

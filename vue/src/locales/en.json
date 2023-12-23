@@ -346,6 +346,7 @@
     "Delay": "Delay",
     "Pin": "Pin",
     "Unpin": "Unpin",
+    "Entries": "Entries",
     "PinnedConfirmation": "{recipe} has been pinned.",
     "UnpinnedConfirmation": "{recipe} has been unpinned.",
     "mark_complete": "Mark Complete",

@@ -12,8 +12,9 @@ const _LOCAL_STORAGE_KEY = "SHOPPING_LIST_CLIENT_SETTINGS"
 export const useShoppingListStore = defineStore(_STORE_ID, {
     state: () => ({
         category_food_entries: {},
+        supermarket_categories: [],
 
-        show_checked_entries: false,
+        show_checked_entries: false, // TODO move to settings
 
         currently_updating: false,
         settings: null,
@@ -43,6 +44,14 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                         this.updateEntryInStructure(e)
                     })
                     this.currently_updating = false
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+                })
+
+                apiClient.listSupermarketCategorys().then(r => {
+                    this.supermarket_categories = r.data
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
             }
         },
