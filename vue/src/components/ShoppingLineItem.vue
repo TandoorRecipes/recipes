@@ -13,8 +13,7 @@
                 </div>
 
 
-                    <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
-
+                <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
 
 
             </b-button>
@@ -33,15 +32,24 @@
 
             <template #default>
                 <h6 class="mt-2">Actions</h6> <!-- TODO localize -->
-                <b-input :placeholder="$t('Category')" class="mb-2"></b-input>  <!-- TODO implement -->
+                <b-form-select
+                    class="form-control mb-2"
+                    :options="useShoppingListStore().supermarket_categories"
+                    text-field="name"
+                    value-field="id"
+                    v-model="food.supermarket_category"
+                    @change="detail_modal_visible = false; updateFoodCategory(food)"
+                ></b-form-select>  <!-- TODO change to lookup input or something else that works with dicts -->
 
                 <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  <!-- TODO implement -->
 
                 <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{ $t('Delay') }}</b-button>
 
+
+                <h6 class="mt-2">{{ $t('Entries') }}</h6>
+
                 <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete_All') }}</b-button>
 
-                <h6 class="mt-2">Details</h6> <!-- TODO localize -->
                 <b-row v-for="e in entries" v-bind:key="e.id">
                     <b-col cold="12">
                         <b-button-group class="mt-1 w-100">
@@ -81,9 +89,10 @@
 import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiMixin, resolveDjangoUrl} from "@/utils/utils"
+import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
+import {ApiApiFactory} from "@/utils/openapi/api";
 
 
 Vue.use(BootstrapVue)
@@ -174,11 +183,11 @@ export default {
                 return recipes.join(', ')
             }
 
-            if (Object.keys(this.entries ).length === 1) {
+            if (Object.keys(this.entries).length === 123) {
                 return "Abendessen 31.12" // TODO implement mealplan or manual
             }
 
-            return this.entries.length
+            return "IMPLEMENT INFO ROW!!"
         }
     },
     watch: {},
@@ -187,7 +196,6 @@ export default {
     },
     methods: {
         useShoppingListStore,
-        useMealPlanStore,
         resolveDjangoUrl,
 
         formatDate: function (datetime) {
@@ -199,6 +207,21 @@ export default {
                 timeStyle: "short",
             }).format(Date.parse(datetime))
         },
+
+        updateFoodCategory: function (food) {
+
+            if (typeof food.supermarket_category === "number"){
+                food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
+            }
+
+            let apiClient = new ApiApiFactory()
+            apiClient.updateFood(food.id, food).then(r => {
+
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+        }
+
 
     },
 }
