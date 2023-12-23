@@ -12,13 +12,15 @@
                     </div>
                 </div>
 
-                <div class="flex-row">
-                    <span v-if="info_row"><br/><small class="text-muted">{{ info_row }} INFO</small></span>
-                </div>
+
+                    <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
+
 
 
             </b-button>
-            <b-button variant="success" @click="useShoppingListStore().toggleFoodCheckedState(food)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}"><i class="fas" :class="{'fa-check': !is_checked, 'fa-times': is_checked}"></i></b-button>
+            <b-button variant="success" @click="useShoppingListStore().setFoodCheckedState(food, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
+                <i class="fas" :class="{'fa-check': !is_checked, 'fa-times': is_checked}"></i>
+            </b-button>
         </b-button-group>
 
 
@@ -35,7 +37,7 @@
 
                 <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  <!-- TODO implement -->
 
-                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{$t('Delay')}}</b-button>
+                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{ $t('Delay') }}</b-button>
 
                 <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete_All') }}</b-button>
 
@@ -99,9 +101,9 @@ export default {
         }
     },
     computed: {
-        is_checked: function (){
+        is_checked: function () {
             for (let i in this.entries) {
-                if(!this.entries[i].checked){
+                if (!this.entries[i].checked) {
                     return false
                 }
             }
@@ -172,7 +174,7 @@ export default {
                 return recipes.join(', ')
             }
 
-            if (this.entries.length === 123) {
+            if (Object.keys(this.entries ).length === 1) {
                 return "Abendessen 31.12" // TODO implement mealplan or manual
             }
 

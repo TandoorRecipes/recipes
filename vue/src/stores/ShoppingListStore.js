@@ -115,14 +115,14 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
             Vue.set(this.category_food_entries[category]['foods'][entry.food.id]['entries'], entry.id, entry)
         },
-        toggleFoodCheckedState(food) {
+        setFoodCheckedState(food, checked) {
             /**
              * function to handle user checking or unchecking a food
              */
 
             let entries = this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries']
             for (let i in entries) {
-                entries[i].checked = !entries[i].checked
+                entries[i].checked = checked
                 this.updateObject(entries[i])
             }
         },
