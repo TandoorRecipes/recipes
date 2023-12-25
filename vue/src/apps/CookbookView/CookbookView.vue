@@ -15,10 +15,10 @@
                                         <b-dropdown-item @click = "orderBy('id','asc')"   :disabled= "isActiveSort('id','asc')">oldest to newest</b-dropdown-item>
                                         <b-dropdown-item @click = "orderBy('id','desc')"  :disabled= "isActiveSort('id','desc')">newest to oldest</b-dropdown-item>
                                         <b-dropdown-item @click = "orderBy('name','asc')" :disabled= "isActiveSort('name','asc')">alphabetical order</b-dropdown-item>
-                                        <b-dropdown-item @click = " enableSortManually"   :disabled= "isActiveSort('name','asc')" >manually</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('order','asc')"   :disabled= "isActiveSort('order','asc')" >manually</b-dropdown-item>
                                     </b-dropdown>
                                 </b-input-group-append>
-                                <b-button class= "ml-2" variant="primary" v-show="!showMan" @click="submitManualChanging">
+                                <b-button class= "ml-2" variant="primary" v-if="isActiveSort('order','asc')" @click="handleEditButton" >
                                     {{submitText}}
                                 </b-button>
                             </b-input-group>
@@ -27,54 +27,74 @@
                 </div>
             </div>
         </div>
-        <div style="padding-bottom: 55px">
-            <div class="mb-3" v-for="(book, index) in filteredBooks" :key="book.id">
-            <div class="row">
-                <div class="col-md-12"> 
-                    <b-card class="d-flex flex-column" v-hover  > 
-                        <b-row no-gutters style="height: inherit" class="d-flex align-items-center">
-                            <b-col no-gutters :md="md" style="height: inherit">
-                                <b-card-body class="m-0 py-0" style="height: inherit">
-                                    <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                                        <b-button  v-on:click="openBook(book.id)"  style="color: #000; background-color: white" variant="primary">                                        
-                                            <h5 class="m-0 mt-1 text-truncate" >
-                                            {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
-                                            </h5></b-button>
-                                        <div class="m-0 text-truncate">{{ book.description }}</div>
-                                        <div class="mt-auto mb-1 d-flex flex-row justify-content-end"></div>
-                                    </b-card-text>
-                                </b-card-body>
-                            </b-col>
-                            <b-col>
-                                <b-button-group vertical md = "1" >
-                                    <b-button  v-if="!showMan && index != 0 && submitManual "  variant="primary" style="border-radius:28px!important;"  @click= "swapUpBooks(index)">&uarr;</b-button>
-                                    <b-button  v-if="!showMan && index != cookbooks.length-1 && submitManual"  variant="primary" style="border-radius:28px!important;"  @click= "swapDownBooks(index)">&darr;</b-button>
-                                </b-button-group>
-                                 <b-button-group vertical md = "1" class="ml-2">
-                                    <input v-model.lazy="inputValue" v-if="!showMan && submitManual" placeholder="enter swap position">                      
-                                    <b-button v-if="!showMan && submitManual" variant="primary"  style="border-radius:28px!important;"  @click= "swapWithPos(index)">swap</b-button>
-                                </b-button-group>
-                            </b-col>
-                        </b-row>
-                    </b-card>
+        <div v-if="!isActiveSort('order','asc') || !manSubmitted">
+            <div style="padding-bottom: 55px">
+                <div class="mb-3" v-for="(book) in filteredBooks" :key="book.id">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <b-card class="d-flex flex-column" v-hover  > 
+                            <b-row no-gutters style="height: inherit" class="d-flex align-items-center">
+                                <b-col no-gutters style="height: inherit">
+                                    <b-card-body class="m-0 py-0" style="height: inherit">
+                                        <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
+                                            <b-button  v-on:click="openBook(book.id)"  style="color: #000; background-color: white" variant="primary">                                        
+                                                <h5 class="m-0 mt-1 text-truncate" >
+                                                {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
+                                                </h5></b-button>
+                                            <div class="m-0 text-truncate">{{ book.description }}</div>
+                                            <div class="mt-auto mb-1 d-flex flex-row justify-content-end"></div>
+                                        </b-card-text>
+                                    </b-card-body>
+                                </b-col>
+                            </b-row>
+                        </b-card>
+                    </div>
+                </div>
+
+                <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
+                <transition name="slide-fade">
+                    <cookbook-slider
+                        :recipes="recipes"
+                        :book="book"
+                        :key="`slider_${book.id}`"
+                        v-if="current_book === book.id && !loading"
+                        v-on:refresh="refreshData"
+                        @reload="openBook(current_book, true)"
+                    ></cookbook-slider>
+                </transition>
+
                 </div>
             </div>
-
-            <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
-            <transition name="slide-fade">
-                <cookbook-slider
-                    :recipes="recipes"
-                    :book="book"
-                    :key="`slider_${book.id}`"
-                    v-if="current_book === book.id && !loading"
-                    v-on:refresh="refreshData"
-                    @reload="openBook(current_book, true)"
-                ></cookbook-slider>
-            </transition>
-
+        </div>    
+        <div v-else>
+         <draggable 
+         @change="updateManualSorting"
+         :list="cookbooks" ghost-class="ghost">     
+            <b-card no-body class="mt-1 list-group-item p-2"
+                    style="cursor: move"
+                    v-for=" (book,index) in filteredBooks"
+                    v-hover
+                    :key="book.id">
+                <b-card-header class="p-2 border-0">
+                    <div class="row">
+                        <div class="col-2">
+                            <button type="button"
+                                    class="btn btn-lg shadow-none"><i
+                                class="fas fa-arrows-alt-v"></i></button>
+                        </div>
+                        <div class="col-10">
+                            <h5 class="mt-1 mb-1">
+                                <b-badge class="float-left text-white mr-2">
+                                    #{{ index + 1 }}
+                                </b-badge>
+                                {{ book.name }}
+                            </h5>
+                        </div>
+                    </div>
+                </b-card-header>
+            </b-card>
+        </draggable>
         </div>
-        </div>
-
 
         <bottom-navigation-bar active-view="view_books">
             <template #custom_create_functions>
@@ -92,7 +112,7 @@
 <script>
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
-
+import draggable from "vuedraggable"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
@@ -105,7 +125,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "CookbookView",
     mixins: [ApiMixin],
-    components: { LoadingSpinner, CookbookSlider, BottomNavigationBar },
+    components: { LoadingSpinner, CookbookSlider, BottomNavigationBar, draggable },
     data() {
         return {
             cookbooks: [],
@@ -115,11 +135,9 @@ export default {
             loading: false,
             search: "",
             activeSortField : 'id',
-            activeSortDirection: 'asc',
-            showMan: true,
-            md: 12,
+            activeSortDirection: 'desc',
             inputValue: "",
-            submitManual: false,
+            manSubmitted : false,
             submitText: "Edit"
         }
     },
@@ -211,74 +229,27 @@ export default {
         // Check if the current item is the active sorting option
         return this.activeSortField === field && this.activeSortDirection === direction;
         },
-        enableSortManually: function(){
-            this.synchroniseLocalToDatabase();
-            if (localStorage.getItem('cookbooks') ){
-                this.cookbooks =  JSON.parse(localStorage.getItem('cookbooks'))
-            }
-            this.showOtN=  true
-            this.showAlp= true
-            this.showNtO = true
-            this.showMan =  false
-            this.dropdown_text = "Sort by: manually"
-            
-        },
-        swapUpBooks: function(index){
-            const tempArray = this.cookbooks
-            const temp = tempArray[index - 1]
-            tempArray[index-1] = tempArray[index]
-            tempArray[index] = temp
-            this.cookbooks = []
-            this.cookbooks = tempArray
-        },
-        swapDownBooks: function(index){
-            const tempArray = this.cookbooks
-            const temp = tempArray[index + 1]
-            tempArray[index+1] = tempArray[index]
-            tempArray[index] = temp
-            this.cookbooks = []
-            this.cookbooks = tempArray
-        },
-        swapWithPos: function(index){
-            const position =  parseInt(this.inputValue)
-            this.inputValue = ""
-            if (!(/^\d+$/.test(position)) || position >= this.cookbooks.length || position < 0){
-                    this.inputValue = ""
+        handleEditButton: function(){
+            if (!this.manSubmitted){
+                this.submitText = "Back"
+                this.manSubmitted = true
             } else {
-                const tempArray = this.cookbooks
-                const temp = tempArray[position]
-                tempArray[position] = tempArray[index]
-                tempArray[index] = temp
-                this.cookbooks = []
-                this.cookbooks = tempArray
-            }
-                
-        }, submitManualChanging: function(){
-            if (!this.submitManual){
-                this.submitText = "Submit"
-                this.submitManual = true
-                this.md = 8
-            } else {
-                localStorage.setItem('cookbooks',JSON.stringify(this.cookbooks))
                 this.submitText = "Edit"
-                this.submitManual = false
-                this.md = 12
+                this.manSubmitted = false
             }
-        }, synchroniseLocalToDatabase: function(){
-            const localStorageData = localStorage.getItem('cookbooks');
-            const localStorageArray = JSON.parse(localStorageData) || [];
-            const updatedLocalStorageArray = localStorageArray.filter(localStorageElement => {      
-             // Assuming there's a unique identifier in your objects, replace 'id' with the actual property
-             const isElementInTargetArray = this.cookbooks.some(targetElement => targetElement.id === localStorageElement.id);
-                return isElementInTargetArray;
-            });
-            this.cookbooks.forEach(targetElement => {
-                const isNewElement = !updatedLocalStorageArray.some(localStorageElement => localStorageElement.id === targetElement.id);
-                if (isNewElement) {
-                    updatedLocalStorageArray.push(targetElement);
-                }
-            });
-            localStorage.setItem('cookbooks', JSON.stringify(updatedLocalStorageArray));
+        },
+        updateManualSorting: function(){
+                let old_order = Object.assign({}, this.cookbooks);
+                let promises = []
+                this.cookbooks.forEach((element, index) => {
+                    let apiClient = new ApiApiFactory()
+                    promises.push(apiClient.partialUpdateManualOrderBooks(element.id, {order: index}))
+                })
+                return Promise.all(promises).then(() => {
+                }).catch((err) => {
+                    this.cookbooks = old_order
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
         }
     }, 
     directives: {
