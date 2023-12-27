@@ -57,7 +57,7 @@
                     <b-col cols="12">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
-                                <span v-if="c.id === -1">{{ $t('Undefined') }}</span>
+                                <span v-if="c.name === -1">{{ $t('Undefined') }}</span>
                                 <span v-else>{{ c.name }}</span>
                             </b-button>
                             <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->

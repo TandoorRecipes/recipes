@@ -1,7 +1,7 @@
 <template>
     <div id="shopping_line_item">
 
-        <b-button-group class="w-100" v-if="useShoppingListStore().show_checked_entries || !is_checked">
+        <b-button-group class="w-100" v-if="(useShoppingListStore().show_checked_entries || !is_checked) && !is_delayed">
             <b-button :class="{'btn-dark': (!is_checked && !is_delayed), 'btn-success': is_checked, 'btn-warning': is_delayed}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
                 <div class="d-flex ">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
@@ -31,7 +31,7 @@
             </template>
 
             <template #default>
-                <h6 class="mt-2">{{ $t('Quick actions')}}</h6>
+                <h6 class="mt-2">{{ $t('Quick actions') }}</h6>
                 <b-form-select
                     class="form-control mb-2"
                     :options="useShoppingListStore().supermarket_categories"
@@ -120,7 +120,7 @@ export default {
         },
         is_delayed: function () {
             for (let i in this.entries) {
-                if ( Date.parse(this.entries[i].delay_until) > new Date(Date.now())) {
+                if (Date.parse(this.entries[i].delay_until) > new Date(Date.now())) {
                     return true
                 }
             }
@@ -160,42 +160,61 @@ export default {
         },
         info_row: function () {
             // TODO add setting
+            let info_row = []
 
-            // author
-            if (this.entries.length === 123) {
-                let authors = []
-                this.entries.forEach(e => {
-                    if (authors.indexOf(e.created_by.display_name) === -1) {
-                        authors.push(e.created_by.display_name)
+
+            let display_authors = false
+            let display_recipes = true
+            let display_mealplans = true
+
+            let authors = []
+            let recipes = []
+            let meal_pans = []
+
+            for (let i in this.entries) {
+                let e = this.entries[i]
+
+                if (authors.indexOf(e.created_by.display_name) === -1) {
+                    authors.push(e.created_by.display_name)
+                }
+
+
+                if (e.recipe_mealplan !== null) {
+                    let recipe_name = e.recipe_mealplan.recipe_name
+                    if (recipes.indexOf(recipe_name) === -1) {
+                        recipes.push(recipe_name)
                     }
-                })
-                return authors.join(', ')
-            }
 
-            if (this.entries.length === 1123) {
-                let recipes = []
-                this.entries.forEach(e => {
-                    if (e.recipe_mealplan !== null) {
-                        let recipe_name = e.recipe_mealplan.recipe_name
-                        if (recipes.indexOf(recipe_name) === -1) {
-                            recipes.push(recipe_name)
+                    if ('mealplan_from_date' in e.recipe_mealplan) {
+                        let meal_plan_entry = (e?.recipe_mealplan?.mealplan_type || '') + ' (' + this.formatDate(e.recipe_mealplan.mealplan_from_date) + ')'
+                        if (meal_pans.indexOf(meal_plan_entry) === -1) {
+                            meal_pans.push(meal_plan_entry)
                         }
                     }
-                })
+                }
+
                 if (recipes.length > 1) {
                     let short_recipes = []
                     recipes.forEach(r => {
                         short_recipes.push(r.substring(0, 14) + (r.length > 14 ? '..' : ''))
                     })
+                    recipes = short_recipes
                 }
-                return recipes.join(', ')
             }
 
-            if (Object.keys(this.entries).length === 123) {
-                return "Abendessen 31.12" // TODO implement mealplan or manual
+
+            if (display_authors && authors.length > 0) {
+                info_row.push(authors.join(', '))
+            }
+            if (display_recipes && recipes.length > 0) {
+                info_row.push(recipes.join(', '))
+            }
+            if (display_mealplans && meal_pans.length > 0) {
+                info_row.push(meal_pans.join(', '))
             }
 
-            return "IMPLEMENT INFO ROW!!"
+
+            return info_row.join(' - ')
         }
     },
     watch: {},
@@ -212,13 +231,12 @@ export default {
             }
             return Intl.DateTimeFormat(window.navigator.language, {
                 dateStyle: "short",
-                timeStyle: "short",
             }).format(Date.parse(datetime))
         },
 
         updateFoodCategory: function (food) {
 
-            if (typeof food.supermarket_category === "number"){ // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
+            if (typeof food.supermarket_category === "number") { // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
                 food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
             }
 
