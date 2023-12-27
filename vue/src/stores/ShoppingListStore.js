@@ -67,11 +67,13 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
 
             return ordered_structure
         },
-
+        /**
+         * list of options available for grouping entry display
+         * @return {[{id: *, translatable_label: string},{id: *, translatable_label: string},{id: *, translatable_label: string}]}
+         */
         grouping_options: function () {
             return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'}, {'id': this.GROUP_RECIPE, 'translatable_label': 'Recipe'}]
-        }
-
+        },
     },
     actions: {
         // TODO implement shopping list recipes
@@ -147,6 +149,21 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
+        },
+        /**
+         * returns a distinct list of recipes associated with unchecked shopping list entries
+         */
+        getAssociatedRecipes: function () {
+            let recipes = {}
+
+            for (let i in this.entries) {
+                let e = this.entries[i]
+                if (e.recipe_mealplan !== null) {
+                    Vue.set(recipes, e.recipe_mealplan.recipe, {'shopping_list_recipe_id': e.list_recipe, 'recipe_id': e.recipe_mealplan.recipe, 'recipe_name': e.recipe_mealplan.recipe_name, 'servings': e.recipe_mealplan.servings})
+                }
+            }
+
+            return recipes
         },
         // convenience methods
         /**

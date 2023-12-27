@@ -21,7 +21,7 @@
                     </div>
                 </b-button>
                 <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
-                   />
+                />
             </div>
         </div>
 
@@ -72,84 +72,33 @@
             <b-tab :title="$t('Recipes')">
                 <template #title>
                     <i class="fas fa-book fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Recipes.length})` }}</span>
+                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})` }}</span>
                 </template>
-                <div class="container p-0">
-                    <div class="row">
-                        <div class="col col-md-12 p-0 p-lg-3">
-                            <div role="tablist">
-                                <!-- add to shopping form -->
-                                <div class="container">
-                                    <b-row class="justify-content-md-center align-items-center pl-1 pr-1">
-                                        <b-col cols="10" md="3" class="mt-1">
-                                            <b-form-input
-                                                size="lg"
-                                                min="1"
-                                                type="number"
-                                                :description="$t('Servings')"
-                                                v-model="add_recipe_servings"
-                                                style="font-size: 16px; border-radius: 5px !important; border: 1px solid #e8e8e8 !important"
-                                            ></b-form-input>
-                                        </b-col>
-                                        <b-col cols="2" md="1" class="d-block d-md-none mt-1">
-                                            <b-button variant="link" class="px-0">
-                                                <i class="btn fas fa-cart-plus fa-lg px-0 text-success"
-                                                   @click="addRecipeToShopping"
-                                                   :disabled="!new_recipe.id"/>
-                                            </b-button>
-                                        </b-col>
-                                        <b-col cols="12" md="8" class="mt-1">
-                                            <generic-multiselect
-                                                class="input-group-text m-0 p-0"
-                                                @change="new_recipe = $event.val"
-                                                :label="'name'"
-                                                :model="Models.RECIPE"
-                                                style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                v-bind:placeholder="$t('Recipe')"
-                                                :limit="20"
-                                                :multiple="false"
-                                            />
-                                        </b-col>
-                                        <b-col cols="12" md="1" class="d-none d-md-block mt-1">
-                                            <b-button variant="link" class="px-0">
-                                                <i class="btn fas fa-cart-plus fa-lg px-0 text-success"
-                                                   @click="addRecipeToShopping"
-                                                   :disabled="!new_recipe.id"/>
-                                            </b-button>
-                                        </b-col>
-                                    </b-row>
-                                    <table class="table w-100 mt-3 recipe-table">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">{{ $t("Meal_Plan") }}</th>
-                                            <th scope="col">{{ $t("Recipe") }}</th>
-                                            <th scope="col">{{ $t("Servings") }}</th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                        </thead>
-                                        <tr v-for="r in Recipes" :key="r.list_recipe">
-                                            <td>{{ r.recipe_mealplan.name }}</td>
-                                            <td><a :href="resolveDjangoUrl('view_recipe', r.recipe_mealplan.recipe)">{{
-                                                    r.recipe_mealplan.recipe_name
-                                                }}</a></td>
-                                            <td class="block-inline">
-                                                <b-form-input min="1" type="number" :debounce="300"
-                                                              :value="r.recipe_mealplan.servings"
-                                                              @input="updateServings($event, r.list_recipe)"></b-form-input>
-                                            </td>
-                                            <td>
-                                                <i class="text-primary far fa-eye fa-fw fa-lg"
-                                                   :title="$t('view_recipe')" @click="editRecipeList($event, r)"/>
-                                                <i class="text-danger fas fa-trash fa-fw fa-lg mt-3"
-                                                   :title="$t('Delete')" @click="deleteRecipe($event, r.list_recipe)"/>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
+                    <b-col cols="12">
+                        <generic-multiselect
+                            :model="Models.RECIPE"
+                            :multiple="false"
+                            @change="addRecipeToShopping($event.val)"
+                        ></generic-multiselect>
+                    </b-col>
+                </b-row>
+
+                <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id" class="pr-1 pl-1">
+                    <b-col cols="12">
+                        <b-button-group class="w-100 mt-1">
+                            <b-button variant="dark" block class="btn btn-block text-left">
+                                <span>{{ r.recipe_name }}</span> <br/>
+                                <span><small class="text-muted">{{ r.recipe_name }}</small></span> <!-- TODO show meal plan date/type -->
+                            </b-button>
+                            <b-form-input min="1" type="number" :debounce="300" v-model="r.servings" @update="updateServings(r.shopping_list_recipe_id, r.servings)"></b-form-input>
+                            <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i class="fas fa-trash fa-fw"></i></b-button>
+                        </b-button-group>
+
+
+                    </b-col>
+                </b-row>
             </b-tab>
             <!-- supermarkets tab -->
             <b-tab>
@@ -409,8 +358,7 @@
             </div>
         </b-popover>
 
-        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
-                        :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
+        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :modal_id="new_recipe.id" :servings="new_recipe.servings" :mealplan="undefined" @finish="finishShopping"/>
 
         <bottom-navigation-bar active-view="view_shopping">
             <template #custom_nav_content>
@@ -652,13 +600,6 @@ export default {
     },
     watch: {
 
-        new_recipe: {
-            handler() {
-                this.add_recipe_servings = this.new_recipe.servings
-            },
-            deep: true,
-        },
-
         "settings.shopping_auto_sync": function (newVal, oldVal) {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
@@ -744,42 +685,18 @@ export default {
                 })
             }
         },
-        deleteRecipe: function (e, recipe) {
+        /**
+         * delete shopping list recipe, associated entries are deleted automatically by database
+         * @param shopping_list_recipe_id id of shopping list recipe to delete
+         */
+        deleteRecipe: function (shopping_list_recipe_id) {
             let api = new ApiApiFactory()
-            api.destroyShoppingListRecipe(recipe)
-                .then((x) => {
-                    this.items = this.items.filter((x) => x.list_recipe !== recipe)
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
-                })
-        },
-        deleteThis: function (item) {
-            let api = new ApiApiFactory()
-            let entries = []
-            let promises = []
-            if (Array.isArray(item)) {
-                entries = item.map((x) => x.id)
-            } else {
-                entries = [item.id]
-            }
-
-            entries.forEach((x) => {
-                promises.push(
-                    api.destroyShoppingListEntry(x).catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
-                    })
-                )
+            //TODO properly integrate into store logic
+            api.destroyShoppingListRecipe(shopping_list_recipe_id).then((x) => {
+                useShoppingListStore().refreshFromAPI()
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
-
-            Promise.all(promises).then((result) => {
-                this.items = this.items.filter((x) => !entries.includes(x.id))
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
-            })
-        },
-        foodName: function (value) {
-            return value?.food?.name ?? value?.[0]?.food?.name ?? ""
         },
         getShoppingCategories: function () {
             let api = new ApiApiFactory()
@@ -836,9 +753,7 @@ export default {
                 this.supermarkets = result.data
             })
         },
-        getThis: function (id) {
-            return this.genericAPI(this.Models.SHOPPING_CATEGORY, this.Actions.FETCH, {id: id})
-        },
+
         mergeShoppingList: function (data) {
             this.items.map((x) =>
                 data.map((y) => {
@@ -899,71 +814,11 @@ export default {
                     })
                 })
         },
-        openContextMenu(e, value, section = false) {
-            if (section) {
-                value = Object.values(value).flat()
-            } else {
-                this.shopcat = value?.food?.supermarket_category?.id ?? value?.[0]?.food?.supermarket_category?.id ?? undefined
-            }
 
-            this.$refs.menu.open(e, value)
-        },
-        saveThis: function (thisItem, toast = true) {
-            let api = new ApiApiFactory()
-            if (!thisItem?.id) {
-                // if there is no item id assume it's a new item
-                return api
-                    .createShoppingListEntry(thisItem)
-                    .then((result) => {
-                        if (toast) {
-                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                        }
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
-                    })
-            } else {
-                return api
-                    .partialUpdateShoppingListEntry(thisItem.id, thisItem)
-                    .then((result) => {
-                        if (toast) {
-                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                        }
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
-            }
-        },
         sectionID: function (a, b) {
             return (a + b).replace(/\W/g, "")
         },
-        updateChecked: function (update) {
-            // when checking a sub item don't refresh the screen until all entries complete but change class to cross out
-            this.auto_sync_blocked = true
-            let promises = []
-            update.entries.forEach((x) => {
-                const id = x?.id ?? x
-                let completed_at = undefined
-                if (update.checked) {
-                    completed_at = new Date().toISOString()
-                }
-                promises.push(this.saveThis({id: id, checked: update.checked}, false))
 
-                let item = this.items.filter((entry) => entry.id == id)[0]
-                Vue.set(item, "checked", update.checked)
-                Vue.set(item, "completed_at", completed_at)
-            })
-
-            Promise.all(promises)
-                .then(() => {
-                    this.auto_sync_blocked = false
-                })
-                .catch((err) => {
-                    this.auto_sync_blocked = false
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                })
-        },
         updateFood: function (food, field) {
             let api = new ApiApiFactory()
             if (field) {
@@ -983,12 +838,20 @@ export default {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
-        updateServings(e, plan) {
-            // maybe this needs debounced?
-            let api = new ApiApiFactory()
-            api.partialUpdateShoppingListRecipe(plan, {id: plan, servings: e}).then(() => {
-                this.getShoppingList()
-            })
+        /**
+         * change number of servings of a shopping list recipe
+         * backend handles scaling of associated entries
+         * @param shopping_list_recipe_id shopping list recipe to update
+         * @param servings number of servings to set shopping list recipe to
+         */
+        updateServings(shopping_list_recipe_id, servings) {
+            if (servings !== 0 && servings !== "") {
+                console.log('NEW SERVINGS', servings)
+                let api = new ApiApiFactory()
+                api.partialUpdateShoppingListRecipe(shopping_list_recipe_id, {id: shopping_list_recipe_id, servings: servings}).then(() => {
+                    useShoppingListStore().refreshFromAPI()
+                })
+            }
         },
         deleteSupermarket(index) {
             this.$bvModal.msgBoxConfirm(this.$t('Are_You_Sure'), {
@@ -1218,9 +1081,6 @@ export default {
                 })
             }
         },
-        categoryName(item) {
-            return item?.category?.name ?? item.name
-        },
         updateOnlineStatus(e) {
             const {type} = e
             this.online = type === "online"
@@ -1229,8 +1089,15 @@ export default {
             window.removeEventListener("online", this.updateOnlineStatus)
             window.removeEventListener("offline", this.updateOnlineStatus)
         },
-        addRecipeToShopping() {
-            this.$bvModal.show(`shopping_${this.new_recipe.id}`)
+        /**
+         * open standard shopping modal to add selected recipe to shopping list
+         * @param recipe recipe object to add to shopping
+         */
+        addRecipeToShopping(recipe) {
+            this.new_recipe = recipe
+            this.$nextTick(() => {
+                this.$bvModal.show(`shopping_${this.new_recipe.id}`)
+            })
         },
         finishShopping() {
             this.add_recipe_servings = 1
