@@ -31,7 +31,8 @@
             </template>
 
             <template #default>
-                <h6 class="mt-2">{{ $t('Quick actions') }}</h6>
+                <h5 class="mt-2">{{ $t('Quick actions') }}</h5>
+                {{ $t('Category')}}
                 <b-form-select
                     class="form-control mb-2"
                     :options="useShoppingListStore().supermarket_categories"
@@ -41,9 +42,10 @@
                     @change="detail_modal_visible = false; updateFoodCategory(food)"
                 ></b-form-select>
 
-                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  <!-- TODO implement -->
+                <!-- TODO implement -->
+<!--                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  -->
 
-                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Delay') }}</b-button>
+                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Shop_later') }}</b-button>
 
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>

@@ -12,32 +12,66 @@ const _LOCAL_STORAGE_KEY = "SHOPPING_LIST_CLIENT_SETTINGS"
  * */
 export const useShoppingListStore = defineStore(_STORE_ID, {
     state: () => ({
+        // shopping data
         entries: {},
-
-        category_food_entries: {},
         supermarket_categories: [],
+        supermarkets: [],
 
+        //settings
         show_checked_entries: false, // TODO move to settings
+        show_delayed_entries: false,
+        show_selected_supermarket_only: false,
+        selected_supermarket: null,
+        selected_group: 'food.supermarket_category.name',
 
+        // internal
         currently_updating: false,
         settings: null,
 
-
+        // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
         GROUP_CREATED_BY: 'created_by.display_name',
         GROUP_RECIPE: 'recipe_mealplan.recipe_name',
         GROUP_MEALPLAN: 'recipe_mealplan.mealplan', //TODO give this some name from the API
-
-        selected_group: 'food.supermarket_category.name',
+        UNDEFINED_CATEGORY: 'shopping_undefined_category'
     }),
     getters: {
-
+        /**
+         * build a multi-level data structure ready for display from shopping list entries
+         * group by selected grouping key
+         * @return {{}}
+         */
         get_entries_by_group: function () {
             let structure = {}
+            let ordered_structure = []
             for (let i in this.entries) {
                 structure = this.updateEntryInStructure(structure, this.entries[i], this.selected_group)
             }
-            return structure
+
+            if (this.selected_group === this.GROUP_CATEGORY && this.selected_supermarket !== null) {
+                if (this.UNDEFINED_CATEGORY in structure) {
+                    ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
+                    Vue.delete(structure, this.UNDEFINED_CATEGORY)
+                }
+
+                for (let c of this.selected_supermarket.category_to_supermarket) {
+                    if (c.category.name in structure) {
+                        ordered_structure.push(structure[c.category.name])
+                        Vue.delete(structure, c.category.name)
+                    }
+                }
+                if (!this.show_selected_supermarket_only) {
+                    for (let i in structure) {
+                        ordered_structure.push(structure[i])
+                    }
+                }
+            } else {
+                for (let i in structure) {
+                    ordered_structure.push(structure[i])
+                }
+            }
+
+            return ordered_structure
         },
 
         client_settings: function () {
@@ -52,8 +86,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             /**
              * Retrieves all shopping list entries from the API and parses them into a structured object category > food > entry
              */
-            this.category_food_entries = {}
-            Vue.set(this.category_food_entries, -1, {'id': -1, 'name': '', foods: {}})
 
             if (!this.currently_updating) {
                 this.currently_updating = true
@@ -69,6 +101,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
 
                 apiClient.listSupermarketCategorys().then(r => {
                     this.supermarket_categories = r.data
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+                })
+
+                apiClient.listSupermarkets().then(r => {
+                    this.supermarkets = r.data
                 }).catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
@@ -120,15 +158,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         },
 
         // concenience methods
-        getFoodCategory(food) {
-            /**
-             * Get category id from food or return -1 if food has no category
-             */
-            if (food.supermarket_category !== null) {
-                return food.supermarket_category.id
-            }
-            return -1
-        },
         /**
          * function to set entry to its proper place in the data structure to perform grouping
          * @param {{}} structure datastructure
@@ -137,10 +166,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @returns updated datastructure including entry
          */
         updateEntryInStructure(structure, entry, group) {
-            let grouping_key = _.get(entry, group, -1)
+            let grouping_key = _.get(entry, group, this.UNDEFINED_CATEGORY)
             // todo handele parent
             if (grouping_key === undefined || grouping_key === null) {
-                grouping_key = -1
+                grouping_key = this.UNDEFINED_CATEGORY
             }
 
             if (!(grouping_key in structure)) {
