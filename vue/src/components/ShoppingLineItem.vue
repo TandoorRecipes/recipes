@@ -2,7 +2,7 @@
     <div id="shopping_line_item">
 
         <b-button-group class="w-100" v-if="useShoppingListStore().show_checked_entries || !is_checked">
-            <b-button :class="{'btn-dark': !is_checked, 'btn-success': is_checked}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
+            <b-button :class="{'btn-dark': (!is_checked && !is_delayed), 'btn-success': is_checked, 'btn-warning': is_delayed}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
                 <div class="d-flex ">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
@@ -17,7 +17,7 @@
 
 
             </b-button>
-            <b-button variant="success" @click="useShoppingListStore().setFoodCheckedState(food, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
+            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
                 <i class="fas" :class="{'fa-check': !is_checked, 'fa-times': is_checked}"></i>
             </b-button>
         </b-button-group>
@@ -31,7 +31,7 @@
             </template>
 
             <template #default>
-                <h6 class="mt-2">Actions</h6> <!-- TODO localize -->
+                <h6 class="mt-2">{{ $t('Quick actions')}}</h6>
                 <b-form-select
                     class="form-control mb-2"
                     :options="useShoppingListStore().supermarket_categories"
@@ -39,11 +39,11 @@
                     value-field="id"
                     v-model="food.supermarket_category"
                     @change="detail_modal_visible = false; updateFoodCategory(food)"
-                ></b-form-select>  <!-- TODO change to lookup input or something else that works with dicts -->
+                ></b-form-select>
 
                 <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  <!-- TODO implement -->
 
-                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayFood(food)">{{ $t('Delay') }}</b-button>
+                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Delay') }}</b-button>
 
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>
@@ -117,6 +117,14 @@ export default {
                 }
             }
             return true
+        },
+        is_delayed: function () {
+            for (let i in this.entries) {
+                if ( Date.parse(this.entries[i].delay_until) > new Date(Date.now())) {
+                    return true
+                }
+            }
+            return false
         },
         food: function () {
             return this.entries[Object.keys(this.entries)[0]]['food']
@@ -210,7 +218,7 @@ export default {
 
         updateFoodCategory: function (food) {
 
-            if (typeof food.supermarket_category === "number"){
+            if (typeof food.supermarket_category === "number"){ // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
                 food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
             }
 

@@ -53,7 +53,7 @@
 
                 <!-- shopping list table -->
 
-                <b-row v-for="c in shopping_list_store.category_food_entries" v-bind:key="c.id" class="pr-4 pl-4">
+                <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-4 pl-4">
                     <b-col cols="12">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
@@ -750,7 +750,7 @@ export default {
             handler() {
                 this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}}, "100y")
                 if (this.entrymode) {
-                    document.getElementById('shoppinglist').scrollTop = 0
+                    //document.getElementById('shoppinglist').scrollTop = 0
                     this.$nextTick(function () {
                         this.setFocus()
                     })
