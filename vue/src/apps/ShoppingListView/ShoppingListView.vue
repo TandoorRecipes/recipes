@@ -367,25 +367,25 @@
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
-                    <b-form-select v-model="group_by" :options="group_by_choices" size="sm"></b-form-select>
+                    <b-form-select v-model="user_preference_store.device_settings.shopping_selected_grouping" size="sm">
+                        <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id" v-bind:key="go.id">{{ $t(go.translatable_label)}}</b-form-select-option>
+                    </b-form-select>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
-                    <generic-multiselect :model="Models.SUPERMARKET" @change="shopping_list_store.selected_supermarket = $event.val" :multiple="false"></generic-multiselect>
-<!--                    <b-form-select v-model="shopping_list_store.selected_supermarket" :options="shopping_list_store.supermarkets" text-field="name"-->
-<!--                                   value-field="id" size="sm"></b-form-select>-->
+                    <generic-multiselect :model="Models.SUPERMARKET" :initial_single_selection="user_preference_store.device_settings.shopping_selected_supermarket"
+                                         @change="user_preference_store.device_settings.shopping_selected_supermarket = $event.val; user_preference_store.updateDeviceSettings()" :multiple="false"></generic-multiselect>
                 </b-form-group>
-                <!-- TODO: shade filters red when they are actually filtering content -->
                 <b-form-group v-bind:label="$t('ShowDelayed')" label-for="popover-input-3" content-cols="1"
                               class="mb-1">
-                    <b-form-checkbox v-model="show_delay"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_delayed_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
-                <b-form-group v-bind:label="$t('ShowUncategorizedFood')" label-for="popover-input-4" content-cols="1"
-                              class="mb-1" v-if="!ui.selected_supermarket">
-                    <b-form-checkbox v-model="show_undefined_categories"></b-form-checkbox>
+                <b-form-group v-bind:label="$t('ShowCompleted')" label-for="popover-input-3" content-cols="1"
+                              class="mb-1">
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_checked_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5"
-                              content-cols="1" class="mb-1" v-if="ui.selected_supermarket">
-                    <b-form-checkbox v-model="supermarket_categories_only"></b-form-checkbox>
+                              content-cols="1" class="mb-1" >
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_selected_supermarket_only" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
             </div>
             <div class="row" style="margin-top: 1vh; min-width: 300px">
@@ -524,6 +524,7 @@ let SETTINGS_COOKIE_NAME = "shopping_settings"
 import {Workbox} from 'workbox-window';
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 export default {
     name: "ShoppingListView",
@@ -596,7 +597,8 @@ export default {
             add_recipe_servings: 1,
             shopping_list_height: '60vh',
 
-            shopping_list_store: useShoppingListStore()
+            shopping_list_store: useShoppingListStore(),
+            user_preference_store: useUserPreferenceStore(),
         }
     },
     computed: {
@@ -676,9 +678,10 @@ export default {
             return groups
         },
         csvData() {
-            return this.items.map((x) => {
-                return {amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
-            })
+            // return this.items.map((x) => {
+            //     return {amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
+            // })
+            return []
         },
         defaultDelay() {
             return Number(getUserPreference("default_delay")) || 2
@@ -718,54 +721,17 @@ export default {
         supermarket_categories() {
             return this.shopping_categories
         },
-        notsupermarket_categories() {
-            let supercats = this.new_supermarket.value.category_to_supermarket
-                .map((x) => x.category)
-                .flat()
-                .map((x) => x.id)
 
-            return this.shopping_categories
-                .filter((x) => !supercats.includes(x.id))
-                .map((x) => {
-                    return {
-                        id: Math.random(),
-                        category: x,
-                    }
-                })
-        },
     },
     watch: {
-        ui: {
-            handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}}, "100y")
-                if (this.entrymode) {
-                    this.$nextTick(function () {
-                        this.setFocus()
-                    })
-                }
-            },
-            deep: true,
-        },
-        entrymode: {
-            handler() {
-                this.$cookies.set(SETTINGS_COOKIE_NAME, {ui: this.ui, settings: {entrymode: this.entrymode}}, "100y")
-                if (this.entrymode) {
-                    //document.getElementById('shoppinglist').scrollTop = 0
-                    this.$nextTick(function () {
-                        this.setFocus()
-                    })
-                }
-            }
-        },
+
         new_recipe: {
             handler() {
                 this.add_recipe_servings = this.new_recipe.servings
             },
             deep: true,
         },
-        "settings.filter_to_supermarket": function (newVal, oldVal) {
-            this.supermarket_categories_only = this.settings.filter_to_supermarket
-        },
+
         "settings.shopping_auto_sync": function (newVal, oldVal) {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
@@ -787,31 +753,18 @@ export default {
             }
 
         },
-        "settings.default_delay": function (newVal, oldVal) {
-            this.delay = Number(newVal)
-        },
-        "ui.selected_supermarket": function (newVal, oldVal) {
-            this.supermarket_categories_only = this.settings.filter_to_supermarket
-        },
+
     },
     mounted() {
-        this.getShoppingList()
+        //this.getShoppingList()
         this.getSupermarkets()
         this.getShoppingCategories()
 
-        this.settings = getUserPreference()
-        this.delay = Number(this.settings.default_delay || 4)
-        this.supermarket_categories_only = this.settings.filter_to_supermarket
         if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
             window.addEventListener("offline", this.updateOnlineStatus)
         }
-        this.$nextTick(function () {
-            if (this.$cookies.isKey(SETTINGS_COOKIE_NAME)) {
-                this.ui = Object.assign({}, this.ui, this.$cookies.get(SETTINGS_COOKIE_NAME).ui)
-                this.entrymode = this.$cookies.get(SETTINGS_COOKIE_NAME).settings.entrymode
-            }
-        })
+
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         this.shopping_list_store.refreshFromAPI()

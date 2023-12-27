@@ -3,9 +3,9 @@ import {StandardToasts} from "@/utils/utils"
 import {defineStore} from "pinia"
 import Vue from "vue"
 import _ from 'lodash';
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const _STORE_ID = "shopping_list_store"
-const _LOCAL_STORAGE_KEY = "SHOPPING_LIST_CLIENT_SETTINGS"
 /*
  * test store to play around with pinia and see if it can work for my use cases
  * don't trust that all shopping list entries are in store as there is no cache validation logic, its just a shared data holder
@@ -17,22 +17,15 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         supermarket_categories: [],
         supermarkets: [],
 
-        //settings
-        show_checked_entries: false, // TODO move to settings
-        show_delayed_entries: false,
-        show_selected_supermarket_only: false,
-        selected_supermarket: null,
-        selected_group: 'food.supermarket_category.name',
-
         // internal
         currently_updating: false,
-        settings: null,
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
         GROUP_CREATED_BY: 'created_by.display_name',
         GROUP_RECIPE: 'recipe_mealplan.recipe_name',
         GROUP_MEALPLAN: 'recipe_mealplan.mealplan', //TODO give this some name from the API
+
         UNDEFINED_CATEGORY: 'shopping_undefined_category'
     }),
     getters: {
@@ -44,23 +37,24 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         get_entries_by_group: function () {
             let structure = {}
             let ordered_structure = []
+
             for (let i in this.entries) {
-                structure = this.updateEntryInStructure(structure, this.entries[i], this.selected_group)
+                structure = this.updateEntryInStructure(structure, this.entries[i], useUserPreferenceStore().device_settings.shopping_selected_grouping)
             }
 
-            if (this.selected_group === this.GROUP_CATEGORY && this.selected_supermarket !== null) {
+            if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
                 if (this.UNDEFINED_CATEGORY in structure) {
                     ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
                     Vue.delete(structure, this.UNDEFINED_CATEGORY)
                 }
 
-                for (let c of this.selected_supermarket.category_to_supermarket) {
+                for (let c of useUserPreferenceStore().device_settings.shopping_selected_supermarket.category_to_supermarket) {
                     if (c.category.name in structure) {
                         ordered_structure.push(structure[c.category.name])
                         Vue.delete(structure, c.category.name)
                     }
                 }
-                if (!this.show_selected_supermarket_only) {
+                if (!useUserPreferenceStore().device_settings.shopping_show_selected_supermarket_only) {
                     for (let i in structure) {
                         ordered_structure.push(structure[i])
                     }
@@ -74,19 +68,17 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             return ordered_structure
         },
 
-        client_settings: function () {
-            if (this.settings === null) {
-                this.settings = this.loadClientSettings()
-            }
-            return this.settings
-        },
+        grouping_options: function () {
+            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'}, {'id': this.GROUP_RECIPE, 'translatable_label': 'Recipe'}]
+        }
+
     },
     actions: {
+        // TODO implement shopping list recipes
+        /**
+         * Retrieves all shopping related data (shopping list entries, supermarkets, supermarket categories and shopping list recipes) from API
+         */
         refreshFromAPI() {
-            /**
-             * Retrieves all shopping list entries from the API and parses them into a structured object category > food > entry
-             */
-
             if (!this.currently_updating) {
                 this.currently_updating = true
                 let apiClient = new ApiApiFactory()
@@ -112,6 +104,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 })
             }
         },
+        /**
+         * Create a new shopping list entry
+         * adds new entry to store
+         * @param object entry object to create
+         * @return {Promise<T | void>} promise of creation call to subscribe to
+         */
         createObject(object) {
             let apiClient = new ApiApiFactory()
 
@@ -123,6 +121,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
+        /**
+         * update existing entry object
+         * updates data in store
+         * @param object entry object to update
+         * @return {Promise<T | void>} promise of updating call to subscribe to
+         */
         updateObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.updateShoppingListEntry(object.id, object).then((r) => {
@@ -131,6 +135,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
+        /**
+         * delete shopping list entry object from DB and store
+         * @param object entry object to delete
+         * @return {Promise<T | void>} promise of delete call to subscribe to
+         */
         deleteObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.destroyShoppingListEntry(object.id).then((r) => {
@@ -139,25 +148,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
         },
-        updateClientSettings(settings) {
-            // this.settings = settings
-            // localStorage.setItem(_LOCAL_STORAGE_KEY, JSON.stringify(this.settings))
-        },
-        loadClientSettings() {
-            // let s = localStorage.getItem(_LOCAL_STORAGE_KEY)
-            // if (s === null || s === {}) {
-            //     return {
-            //         displayPeriodUom: "week",
-            //         displayPeriodCount: 3,
-            //         startingDayOfWeek: 1,
-            //         displayWeekNumbers: true,
-            //     }
-            // } else {
-            //     return JSON.parse(s)
-            // }
-        },
-
-        // concenience methods
+        // convenience methods
         /**
          * function to set entry to its proper place in the data structure to perform grouping
          * @param {{}} structure datastructure

@@ -1,7 +1,7 @@
 <template>
     <div id="shopping_line_item">
 
-        <b-button-group class="w-100" v-if="(useShoppingListStore().show_checked_entries || !is_checked) && !is_delayed">
+        <b-button-group class="w-100" v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)">
             <b-button :class="{'btn-dark': (!is_checked && !is_delayed), 'btn-success': is_checked, 'btn-warning': is_delayed}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
                 <div class="d-flex ">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
@@ -95,6 +95,7 @@ import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 
 Vue.use(BootstrapVue)
@@ -224,6 +225,7 @@ export default {
 
     },
     methods: {
+        useUserPreferenceStore,
         useShoppingListStore,
         resolveDjangoUrl,
 
