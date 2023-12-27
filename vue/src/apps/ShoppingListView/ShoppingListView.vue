@@ -52,20 +52,19 @@
                 </b-row>
 
                 <!-- shopping list table -->
-
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
                     <b-col cols="12">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
-                                <span v-if="c.name === -1">{{ $t('Undefined') }}</span>
+                                <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{ $t('Undefined') }}</span>
                                 <span v-else>{{ c.name }}</span>
                             </b-button>
                             <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->
                         </b-button-group>
 
                         <span v-for="f in c.foods" v-bind:key="f.id">
-                                            <shopping-line-item :entries="f['entries']" class="mt-1"/>
-                                        </span>
+                            <shopping-line-item :entries="f['entries']" class="mt-1"/>
+                        </span>
                     </b-col>
                 </b-row>
 
@@ -371,8 +370,9 @@
                     <b-form-select v-model="group_by" :options="group_by_choices" size="sm"></b-form-select>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
-                    <b-form-select v-model="ui.selected_supermarket" :options="supermarkets" text-field="name"
-                                   value-field="id" size="sm"></b-form-select>
+                    <generic-multiselect :model="Models.SUPERMARKET" @change="shopping_list_store.selected_supermarket = $event.val" :multiple="false"></generic-multiselect>
+<!--                    <b-form-select v-model="shopping_list_store.selected_supermarket" :options="shopping_list_store.supermarkets" text-field="name"-->
+<!--                                   value-field="id" size="sm"></b-form-select>-->
                 </b-form-group>
                 <!-- TODO: shade filters red when they are actually filtering content -->
                 <b-form-group v-bind:label="$t('ShowDelayed')" label-for="popover-input-3" content-cols="1"
@@ -814,8 +814,7 @@ export default {
         })
         this.$i18n.locale = window.CUSTOM_LOCALE
 
-        let store = useShoppingListStore()
-        store.refreshFromAPI()
+        this.shopping_list_store.refreshFromAPI()
     },
     methods: {
         useShoppingListStore,
@@ -951,32 +950,32 @@ export default {
             } else {
                 this.loading = true
             }
-            this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params).then((results) => {
-                if (!autosync) {
-                    if (results.data?.length) {
-                        this.items = results.data
-                    } else {
-                        console.log("no data returned")
-                    }
-                    this.loading = false
-                } else {
-                    if (!this.auto_sync_blocked) {
-                        this.getSyncQueueLength().then((r) => {
-                            if (r === 0) {
-                                this.mergeShoppingList(results.data)
-                            } else {
-                                this.auto_sync_running = false
-                                this.replaySyncQueue()
-                            }
-                        })
-                    }
-                }
-            })
-                .catch((err) => {
-                    if (!autosync) {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-                    }
-                })
+            // this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params).then((results) => {
+            //     if (!autosync) {
+            //         if (results.data?.length) {
+            //             this.items = results.data
+            //         } else {
+            //             console.log("no data returned")
+            //         }
+            //         this.loading = false
+            //     } else {
+            //         if (!this.auto_sync_blocked) {
+            //             this.getSyncQueueLength().then((r) => {
+            //                 if (r === 0) {
+            //                     this.mergeShoppingList(results.data)
+            //                 } else {
+            //                     this.auto_sync_running = false
+            //                     this.replaySyncQueue()
+            //                 }
+            //             })
+            //         }
+            //     }
+            // })
+            //     .catch((err) => {
+            //         if (!autosync) {
+            //             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+            //         }
+            //     })
         },
         getSupermarkets: function () {
             let api = new ApiApiFactory()
