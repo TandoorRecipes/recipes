@@ -48,7 +48,7 @@
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>
 
-                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteFood(food)">{{ $t('Delete_All') }}</b-button>
+                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">{{ $t('Delete_All') }}</b-button>
 
                 <b-row v-for="e in entries" v-bind:key="e.id">
                     <b-col cold="12">

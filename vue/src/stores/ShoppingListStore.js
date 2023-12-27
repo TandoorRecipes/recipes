@@ -96,11 +96,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         deleteObject(object) {
             let apiClient = new ApiApiFactory()
             return apiClient.destroyShoppingListEntry(object.id).then((r) => {
-
-                Vue.delete(this.category_food_entries[this.getFoodCategory(object.food)]['foods'][object.food.id]['entries'], object.id)
-                if (Object.keys(this.category_food_entries[this.getFoodCategory(object.food)]['foods'][object.food.id]['entries']).length === 0) {
-                    Vue.delete(this.category_food_entries[this.getFoodCategory(object.food)]['foods'], object.food.id)
-                }
+                Vue.delete(this.entries, object.id)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
@@ -167,11 +163,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.updateObject(this.entries[i])
             }
         },
+        /**
+         * function to handle user "delaying" shopping entries
+         * @param {{}} entries set of entries
+         */
         delayEntries(entries) {
-            /**
-             * function to handle user "delaying" shopping entry
-             * takes a food object as an argument and delays all entries associated with the food
-             */
             let delay = 4 //TODO get delay from settings
             let delay_date = new Date(Date.now() + delay * (60 * 60 * 1000))
 
@@ -181,13 +177,13 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.updateObject(this.entries[i])
             }
         },
-        deleteFood(food) {
-            /**
-             * function to handle user deleting all entries of a certain food
-             */
-            let entries = this.category_food_entries[this.getFoodCategory(food)]['foods'][food.id]['entries']
+        /**
+         * delete list of entries
+         * @param {{}} entries set of entries
+         */
+        deleteEntries(entries) {
             for (let i in entries) {
-                this.deleteObject(entries[i])
+                this.deleteObject(this.entries[i])
             }
         },
     },
