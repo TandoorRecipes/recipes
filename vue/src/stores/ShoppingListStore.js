@@ -188,7 +188,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @param {{}} entries set of entries
          */
         delayEntries(entries) {
-            let delay = 4 //TODO get delay from settings
+            let delay = 4 //TODO get delay from settings in an offline friendly way
             let delay_date = new Date(Date.now() + delay * (60 * 60 * 1000))
 
             for (let i in entries) {
