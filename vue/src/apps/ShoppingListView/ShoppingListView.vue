@@ -21,7 +21,7 @@
                     </div>
                 </b-button>
                 <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
-                   :class="filterApplied ? 'text-danger' : 'text-primary'"/>
+                   />
             </div>
         </div>
 
@@ -29,10 +29,9 @@
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title>
-                    <b-spinner v-if="loading" type="border" small class="d-inline-block"></b-spinner>
-                    <i v-if="!loading" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span
-                        class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})` }}</span>
+                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small class="d-inline-block"></b-spinner>
+                    <i v-if="!shopping_list_store.currently_updating" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
+                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})` }}</span> <!-- TODO properly count only checked -->
                 </template>
 
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -368,7 +367,7 @@
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
                     <b-form-select v-model="user_preference_store.device_settings.shopping_selected_grouping" size="sm">
-                        <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id" v-bind:key="go.id">{{ $t(go.translatable_label)}}</b-form-select-option>
+                        <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id" v-bind:key="go.id">{{ $t(go.translatable_label) }}</b-form-select-option>
                     </b-form-select>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
@@ -384,93 +383,32 @@
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_checked_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5"
-                              content-cols="1" class="mb-1" >
+                              content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_selected_supermarket_only" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
-                <span>{{ $t('Information')}}</span>
+                <span>{{ $t('Information') }}</span>
                 <b-form-group v-bind:label="$t('Recipe')" label-for="popover-input-5"
-                              content-cols="1" class="mb-1" >
+                              content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_recipe" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-5"
-                              content-cols="1" class="mb-1" >
+                              content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_mealplan" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('created_by')" label-for="popover-input-5"
-                              content-cols="1" class="mb-1" >
+                              content-cols="1" class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_created_by" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
             </div>
             <div class="row" style="margin-top: 1vh; min-width: 300px">
                 <div class="col-12" style="text-align: right">
-                    <b-button size="sm" variant="primary" class="mx-1" @click="resetFilters">{{
-                            $t("Reset")
-                        }}
-                    </b-button>
                     <b-button size="sm" variant="secondary" class="mr-3" @click="$root.$emit('bv::hide::popover')">
                         {{ $t("Close") }}
                     </b-button>
                 </div>
             </div>
         </b-popover>
-        <ContextMenu ref="menu">
-            <template #menu="{ contextData }">
-                <ContextMenuItem>
-                    <b-input-group>
-                        <template #prepend>
-                            <span class="dropdown-item p-2 text-decoration-none" style="user-select: none !important"><i
-                                class="fas fa-cubes"></i> {{ $t("MoveCategory") }}</span>
-                        </template>
-                        <b-form-select
-                            class="form-control mt-1 mr-1"
-                            :options="shopping_categories"
-                            text-field="name"
-                            value-field="id"
-                            v-model="shopcat"
-                            @change="
-                                moveEntry($event, contextData)
-                                $refs.menu.close()
-                            "
-                        ></b-form-select>
-                    </b-input-group>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        onHand(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-clipboard-check"></i> {{ $t("OnHand") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        delayThis(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-hourglass"></i>
-                        {{ $t("DelayFor", {hours: delay}) }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        updateChecked({ entries: contextData, checked: true })
-                    "
-                >
-                    <a class="dropdown-item p-2" href="#"><i class="fas fa-check-square"></i> {{ $t("mark_complete") }}</a>
-                </ContextMenuItem>
-                <ContextMenuItem
-                    @click="
-                        $refs.menu.close()
-                        deleteThis(contextData)
-                    "
-                >
-                    <a class="dropdown-item p-2 text-danger" href="#"><i class="fas fa-trash"></i> {{
-                            $t("Delete")
-                        }}</a>
-                </ContextMenuItem>
-            </template>
-        </ContextMenu>
+
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
                         :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
 
@@ -517,14 +455,12 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import VueCookies from "vue-cookies"
 import draggable from "vuedraggable"
 
-import ContextMenu from "@/components/ContextMenu/ContextMenu"
-import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
+
 import ShoppingLineItem from "@/components/ShoppingLineItem"
 import DownloadPDF from "@/components/Buttons/DownloadPDF"
 import DownloadCSV from "@/components/Buttons/DownloadCSV"
 import CopyToClipboard from "@/components/Buttons/CopyToClipboard"
 import GenericMultiselect from "@/components/GenericMultiselect"
-import LookupInput from "@/components/Modals/LookupInput"
 import ShoppingModal from "@/components/Modals/ShoppingModal"
 
 import {ApiMixin, getUserPreference, StandardToasts, makeToast, ResolveUrlMixin} from "@/utils/utils"
@@ -533,7 +469,7 @@ import ShoppingSettingsComponent from "@/components/Settings/ShoppingSettingsCom
 
 Vue.use(BootstrapVue)
 Vue.use(VueCookies)
-let SETTINGS_COOKIE_NAME = "shopping_settings"
+
 import {Workbox} from 'workbox-window';
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
@@ -543,8 +479,7 @@ export default {
     name: "ShoppingListView",
     mixins: [ApiMixin, ResolveUrlMixin],
     components: {
-        ContextMenu,
-        ContextMenuItem,
+
         ShoppingLineItem,
         GenericMultiselect,
         DownloadPDF,
@@ -561,8 +496,7 @@ export default {
             // this.Models and this.Actions inherited from ApiMixin
             items: [],
             current_tab: 0,
-            group_by: "category",
-            group_by_choices: ["created_by", "category", "recipe"],
+
             supermarkets: [],
             shopping_categories: [],
             show_undefined_categories: true,
@@ -696,9 +630,6 @@ export default {
             // })
             return []
         },
-        defaultDelay() {
-            return Number(getUserPreference("default_delay")) || 2
-        },
         editingSupermarket() {
             return this.supermarkets.filter((el) => {
                 return el.editing
@@ -711,22 +642,6 @@ export default {
                 return []
             }
         },
-        formUnit() {
-            let unit = this.Models.SHOPPING_LIST.create.form.unit
-            unit.value = this.new_item.unit
-            return unit
-        },
-        formFood() {
-            let food = this.Models.SHOPPING_LIST.create.form.food
-            food.value = this.new_item.food
-            return food
-        },
-        itemsDelayed() {
-            return this.items.filter((x) => !x.delay_until || !Date.parse(x?.delay_until) > new Date(Date.now())).length < this.items.length
-        },
-        filterApplied() {
-            return (this.itemsDelayed && !this.show_delay) || !this.show_undefined_categories || (this.supermarket_categories_only && this.ui.selected_supermarket)
-        },
         Recipes() {
             // hiding recipes associated with shopping list items that are complete
             return [...new Map(this.items.filter((x) => x.list_recipe && !x.checked).map((item) => [item["list_recipe"], item])).values()]
@@ -734,7 +649,6 @@ export default {
         supermarket_categories() {
             return this.shopping_categories
         },
-
     },
     watch: {
 
@@ -809,9 +723,11 @@ export default {
         setFocus() {
             this.$refs['amount_input_simple'].focus()
         },
-        // this.genericAPI inherited from ApiMixin
+        /**
+         * get ingredient from input string and create new shopping list entry using it
+         */
         addItem: function () {
-
+            // this.genericAPI inherited from ApiMixin
             if (this.new_item.ingredient !== "" && this.new_item.ingredient !== undefined) {
                 this.genericPostAPI("api_ingredient_from_string", {text: this.new_item.ingredient}).then((result) => {
                     let unit = null
@@ -827,38 +743,6 @@ export default {
                     this.new_item = {amount: 1, unit: undefined, food: undefined, ingredient: undefined}
                 })
             }
-        },
-        resetFilters: function () {
-            this.ui.selected_supermarket = undefined
-            this.supermarket_categories_only = this.settings.filter_to_supermarket
-            this.show_undefined_categories = true
-            this.group_by = "category"
-            this.show_delay = false
-        },
-        delayThis: function (item) {
-            let entries = []
-            let promises = []
-            let delay_date = new Date(Date.now() + this.delay * (60 * 60 * 1000))
-
-            if (Array.isArray(item)) {
-                item = item.map((x) => {
-                    return {...x, delay_until: delay_date}
-                })
-                entries = item.map((x) => x.id)
-            } else {
-                item.delay_until = delay_date
-                entries = [item.id]
-            }
-
-            entries.forEach((entry) => {
-                promises.push(this.saveThis({id: entry, delay_until: delay_date}, false))
-            })
-            Promise.all(promises).then(() => {
-                this.items = this.items.filter((x) => !entries.includes(x.id))
-                this.delay = this.defaultDelay
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
         },
         deleteRecipe: function (e, recipe) {
             let api = new ApiApiFactory()
