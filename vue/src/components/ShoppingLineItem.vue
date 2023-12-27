@@ -2,7 +2,11 @@
     <div id="shopping_line_item">
 
         <b-button-group class="w-100" v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)">
-            <b-button :class="{'btn-dark': (!is_checked && !is_delayed), 'btn-success': is_checked, 'btn-warning': is_delayed}" block class="btn btn-block text-left" @click="detail_modal_visible = true">
+            <b-button variant="primary" v-if="is_delayed">
+                <i class="fa-fw fas fa-hourglass-half"></i>
+            </b-button>
+
+            <b-button variant="dark" block class="btn btn-block text-left" @click="detail_modal_visible = true">
                 <div class="d-flex ">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
@@ -12,13 +16,10 @@
                     </div>
                 </div>
 
-
                 <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
-
-
             </b-button>
             <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
-                <i class="fas" :class="{'fa-check': !is_checked, 'fa-times': is_checked}"></i>
+                <i class="fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
             </b-button>
         </b-button-group>
 
@@ -32,7 +33,7 @@
 
             <template #default>
                 <h5 class="mt-2">{{ $t('Quick actions') }}</h5>
-                {{ $t('Category')}}
+                {{ $t('Category') }}
                 <b-form-select
                     class="form-control mb-2"
                     :options="useShoppingListStore().supermarket_categories"
@@ -43,9 +44,9 @@
                 ></b-form-select>
 
                 <!-- TODO implement -->
-<!--                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  -->
+                <!--                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  -->
 
-                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Shop_later') }}</b-button>
+                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Postpone') }}</b-button>
 
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>
@@ -162,13 +163,7 @@ export default {
             return this.food.name
         },
         info_row: function () {
-            // TODO add setting
             let info_row = []
-
-
-            let display_authors = false
-            let display_recipes = true
-            let display_mealplans = true
 
             let authors = []
             let recipes = []
@@ -205,17 +200,15 @@ export default {
                 }
             }
 
-
-            if (display_authors && authors.length > 0) {
+            if (useUserPreferenceStore().device_settings.shopping_item_info_created_by && authors.length > 0) {
                 info_row.push(authors.join(', '))
             }
-            if (display_recipes && recipes.length > 0) {
+            if (useUserPreferenceStore().device_settings.shopping_item_info_recipe && recipes.length > 0) {
                 info_row.push(recipes.join(', '))
             }
-            if (display_mealplans && meal_pans.length > 0) {
+            if (useUserPreferenceStore().device_settings.shopping_item_info_mealplan && meal_pans.length > 0) {
                 info_row.push(meal_pans.join(', '))
             }
-
 
             return info_row.join(' - ')
         }
