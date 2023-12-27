@@ -35,7 +35,7 @@
                         class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})` }}</span>
                 </template>
 
-                <b-row class="d-lg-block d-print-none d-none pr-4 pl-4 mb-3 mt-3">
+                <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
                     <b-col cols="12">
                         <b-input-group>
                             <b-form-input type="text" :placeholder="$t('Food')"
@@ -53,7 +53,7 @@
 
                 <!-- shopping list table -->
 
-                <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-4 pl-4">
+                <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
                     <b-col cols="12">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
