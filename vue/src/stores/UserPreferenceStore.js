@@ -24,6 +24,9 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
             shopping_show_selected_supermarket_only: false,
             shopping_selected_grouping: 'food.supermarket_category.name',
             shopping_selected_supermarket: null,
+            shopping_item_info_created_by: false,
+            shopping_item_info_mealplan: true,
+            shopping_item_info_recipe: true,
         },
     }),
     getters: {

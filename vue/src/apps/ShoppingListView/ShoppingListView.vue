@@ -44,7 +44,7 @@
                                           ref="amount_input_simple"></b-form-input>
                             <b-input-group-append>
                                 <b-button variant="success">
-                                    <i class="fas fa-cart-plus" @click="addItem"/>
+                                    <i class="fas fa-cart-plus fa-fw" @click="addItem"/>
                                 </b-button>
                             </b-input-group-append>
                         </b-input-group>
@@ -59,7 +59,7 @@
                                 <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{ $t('Undefined') }}</span>
                                 <span v-else>{{ c.name }}</span>
                             </b-button>
-                            <b-button variant="success"><i class="fas fa-check"></i></b-button> <!-- todo implement -->
+                            <b-button variant="success"><i class="fas fa-check fa-fw"></i></b-button> <!-- todo implement -->
                         </b-button-group>
 
                         <span v-for="f in c.foods" v-bind:key="f.id">
@@ -379,13 +379,26 @@
                               class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_delayed_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
-                <b-form-group v-bind:label="$t('ShowCompleted')" label-for="popover-input-3" content-cols="1"
+                <b-form-group v-bind:label="$t('ShowRecentlyCompleted')" label-for="popover-input-3" content-cols="1"
                               class="mb-1">
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_checked_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5"
                               content-cols="1" class="mb-1" >
                     <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_selected_supermarket_only" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                </b-form-group>
+                <span>{{ $t('Information')}}</span>
+                <b-form-group v-bind:label="$t('Recipe')" label-for="popover-input-5"
+                              content-cols="1" class="mb-1" >
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_recipe" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                </b-form-group>
+                <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-5"
+                              content-cols="1" class="mb-1" >
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_mealplan" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                </b-form-group>
+                <b-form-group v-bind:label="$t('created_by')" label-for="popover-input-5"
+                              content-cols="1" class="mb-1" >
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_created_by" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
             </div>
             <div class="row" style="margin-top: 1vh; min-width: 300px">
