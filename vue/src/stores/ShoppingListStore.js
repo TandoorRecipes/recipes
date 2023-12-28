@@ -38,10 +38,42 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             let structure = {}
             let ordered_structure = []
 
+            // build structure
             for (let i in this.entries) {
                 structure = this.updateEntryInStructure(structure, this.entries[i], useUserPreferenceStore().device_settings.shopping_selected_grouping)
             }
 
+            // statistics for UI conditions and display
+            for (let i in structure) {
+                let count_unchecked = 0
+                let count_checked = 0
+                let count_unchecked_food = 0
+                let count_checked_food = 0
+
+                for (let fi in structure[i]['foods']) {
+                    let food_checked = true
+                    for (let ei in structure[i]['foods'][fi]['entries']) {
+                        if (structure[i]['foods'][fi]['entries'][ei].checked) {
+                            count_checked++
+                        } else {
+                            food_checked = false
+                            count_unchecked++
+                        }
+                    }
+                    if (food_checked) {
+                        count_checked_food++
+                    } else {
+                        count_unchecked_food++
+                    }
+                }
+
+                Vue.set(structure[i], 'count_unchecked', count_unchecked)
+                Vue.set(structure[i], 'count_checked', count_checked)
+                Vue.set(structure[i], 'count_unchecked_food', count_unchecked_food)
+                Vue.set(structure[i], 'count_checked_food', count_checked_food)
+            }
+
+            // ordering
             if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
                 if (this.UNDEFINED_CATEGORY in structure) {
                     ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
@@ -72,7 +104,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @return {[{id: *, translatable_label: string},{id: *, translatable_label: string},{id: *, translatable_label: string}]}
          */
         grouping_options: function () {
-            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'}, {'id': this.GROUP_RECIPE, 'translatable_label': 'Recipe'}]
+            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'}, {
+                'id': this.GROUP_RECIPE,
+                'translatable_label': 'Recipe'
+            }]
         },
     },
     actions: {
@@ -159,7 +194,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             for (let i in this.entries) {
                 let e = this.entries[i]
                 if (e.recipe_mealplan !== null) {
-                    Vue.set(recipes, e.recipe_mealplan.recipe, {'shopping_list_recipe_id': e.list_recipe, 'recipe_id': e.recipe_mealplan.recipe, 'recipe_name': e.recipe_mealplan.recipe_name, 'servings': e.recipe_mealplan.servings})
+                    Vue.set(recipes, e.recipe_mealplan.recipe, {
+                        'shopping_list_recipe_id': e.list_recipe,
+                        'recipe_id': e.recipe_mealplan.recipe,
+                        'recipe_name': e.recipe_mealplan.recipe_name,
+                        'servings': e.recipe_mealplan.servings
+                    })
                 }
             }
 
@@ -171,7 +211,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @param {{}} structure datastructure
          * @param {*} entry entry to place
          * @param {*} group group to place entry into (must be of ShoppingListStore.GROUP_XXX/dot notation of entry property)
-         * @returns updated datastructure including entry
+         * @returns {{}} datastructure including entry
          */
         updateEntryInStructure(structure, entry, group) {
             let grouping_key = _.get(entry, group, this.UNDEFINED_CATEGORY)
