@@ -2927,12 +2927,6 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     color: #fff
 }
 
-.btn-dark:hover {
-    background: transparent;
-    color: #221e1e;
-    border: 1px solid #221e1e
-}
-
 .btn-opacity-primary {
     color: #b98766;
     background-color: #0012a7;
