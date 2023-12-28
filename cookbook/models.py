@@ -719,8 +719,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        recipes = self.step_set.first().recipe_set.all() if self.step_set.exists() else None
-        return f'{recipes.first().name}: {self.pk}' if recipes else f'Orphaned Ingredient: {self.pk}'
+        return f'{self.pk}: {self.amount} {self.food.name} {self.unit.name}'
 
     class Meta:
         ordering = ['order', 'pk']
@@ -749,6 +748,8 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         return render_instructions(self)
 
     def __str__(self):
+        if not self.recipe_set.exists():
+            return f"{self.pk}: {_('Orphaned Step')}"
         return f"{self.pk}: {self.name}" if self.name else f"Step: {self.pk}"
 
     class Meta:
