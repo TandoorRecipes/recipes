@@ -44,6 +44,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
 
             // statistics for UI conditions and display
+            let total_unchecked = 0
+            let total_checked = 0
+            let total_unchecked_food = 0
+            let total_checked_food = 0
             for (let i in structure) {
                 let count_unchecked = 0
                 let count_checked = 0
@@ -71,7 +75,16 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 Vue.set(structure[i], 'count_checked', count_checked)
                 Vue.set(structure[i], 'count_unchecked_food', count_unchecked_food)
                 Vue.set(structure[i], 'count_checked_food', count_checked_food)
+
+                total_unchecked += count_unchecked
+                total_checked += count_checked
+                total_unchecked_food += count_unchecked_food
+                total_checked_food += count_checked_food
             }
+            // Vue.set(structure, 'count_unchecked', total_unchecked)
+            // Vue.set(structure, 'count_checked', total_checked)
+            // Vue.set(structure, 'count_unchecked_food', total_unchecked_food)
+            // Vue.set(structure, 'count_checked_food', total_checked_food)
 
             // ordering
             if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
