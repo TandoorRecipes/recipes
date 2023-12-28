@@ -39,16 +39,16 @@ jobs:
       run: |
         pytest --cov=. --cov-report=html:docs/coverage --cov-report=xml:docs/coverage/coverage.xml --junitxml=docs/tests/pytest.xml --html=docs/tests/tests.html
     - name: Generate badges
-      if: github.repository_owner == 'smilerz'
+      if: github.ref == 'refs/heads/coverage'
       run : |
         genbadge coverage -i docs/coverage/coverage.xml -o docs/coverage/coverage-badge.svg
+        genbadge coverage -i docs/coverage/coverage.xml -o docs/coverage-badge.svg
         genbadge tests -i  docs/tests/pytest.xml -o docs/tests/pytest-badge.svg
+        git add -f docs/coverage docs/tests
     - name: Commit reports and badge
-      if: github.ref == 'refs/heads/working'
+      if: github.ref == 'refs/heads/coverage'
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: Pytest and Coverage Reports
-        add_options: -u -fA
-        file_pattern: docs/coverage/ docs/tests/
-
-
+        add_options: '--force'
+        file_pattern: 'docs/coverage/ docs/tests/'
