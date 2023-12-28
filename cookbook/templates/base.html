@@ -3,8 +3,14 @@
 {% load theming_tags %}
 {% load custom_tags %}
 
-<html>
-<head>
+{% get_current_language as LANGUAGE_CODE %}
+
+{% if LANGUAGE_CODE == 'he' %}
+<html dir="RTL">
+{% else %}
+<html dir="LTR">
+{% endif %}
+    <head>
     <title>{% block title %}
     {% endblock %}</title>
     <meta charset="utf-8">

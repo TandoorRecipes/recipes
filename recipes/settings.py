@@ -475,6 +475,7 @@ LANGUAGES = [
     ('en', _('English')),
     ('fr', _('French')),
     ('de', _('German')),
+    ('he', _('Hebrew')),
     ('hu', _('Hungarian')),
     ('it', _('Italian')),
     ('lv', _('Latvian')),
