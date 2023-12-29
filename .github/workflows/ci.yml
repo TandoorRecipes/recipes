@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    if: github.repository_owner == 'smilerz'
+    if: github.repository_owner == 'TandoorRecipes'
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -39,12 +39,12 @@ jobs:
       run: |
         pytest
     - name: Generate badges
-      if: github.ref == 'refs/heads/working'
+      if: github.ref == 'refs/heads/master'
       run : |
         genbadge coverage -i docs/reports/coverage/coverage.xml -o docs/reports/coverage/coverage-badge.svg
         genbadge tests -i  docs/reports/tests/pytest.xml -o docs/reports/tests/pytest-badge.svg
     - name: Commit reports and badge
-      if: github.ref == 'refs/heads/working'
+      if: github.ref == 'refs/heads/master'
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: Pytest and Coverage Reports

@@ -3,13 +3,13 @@ on:
   # the 1st condition
   workflow_run:
     workflows: ["Continuous Integration"]
-    branches: [working]
+    branches: [master]
     types:
       - completed
 
 jobs:
   deploy:
-    if: github.repository_owner == 'smilerz' && ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.repository_owner == 'TandoorRecipes' && ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
