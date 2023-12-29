@@ -118,15 +118,8 @@ def import_url(request):
         return HttpResponseRedirect(reverse('index'))
 
     if (api_token := AccessToken.objects.filter(user=request.user, scope='bookmarklet').first()) is None:
-        api_token = AccessToken.objects.create(
-            user=request.user,
-            scope='bookmarklet',
-            expires=(
-                timezone.now() +
-                timezone.timedelta(
-                    days=365 *
-                    10)),
-            token=f'tda_{str(uuid.uuid4()).replace("-","_")}')
+        api_token = AccessToken.objects.create(user=request.user, scope='bookmarklet', expires=(timezone.now() + timezone.timedelta(days=365 * 10)),
+                                               token=f'tda_{str(uuid.uuid4()).replace("-","_")}')
 
     bookmarklet_import_id = -1
     if 'id' in request.GET:
