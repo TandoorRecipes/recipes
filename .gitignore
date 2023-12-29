@@ -43,8 +43,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
-*/coverage/
-*/tests/
+docs/reports/**
 
 # Django stuff:
 *.log
