@@ -19,3 +19,4 @@ exclude =
 per-file-ignores=
     cookbook/apps.py:F401
 max-line-length = 179
+
