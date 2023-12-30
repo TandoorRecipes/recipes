@@ -52,7 +52,7 @@
 
                 <!-- shopping list table -->
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
-                    <b-col cols="12">
+                    <b-col cols="12" v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
                                 <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{ $t('Undefined') }}</span>
@@ -75,7 +75,6 @@
                     <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})` }}</span>
                 </template>
 
-
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
                     <b-col cols="12">
                         <generic-multiselect
@@ -85,7 +84,6 @@
                         ></generic-multiselect>
                     </b-col>
                 </b-row>
-
 
                 <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id" class="pr-1 pl-1">
                     <b-col cols="12">
@@ -517,81 +515,6 @@ export default {
         }
     },
     computed: {
-        Sections() {
-            // Sections to display in list (checked/unchecked -> category -> food group -> entries)
-            // ordering/sorting is definied by the order in which categories are added to the sections array (even trough the dev console does not show it like this)
-            function getKey(item, group_by, x) {
-                switch (group_by) {
-                    case "category":
-                        return item?.food?.supermarket_category?.name ?? x
-                    case "created_by":
-                        return item?.created_by?.display_name ?? x
-                    case "recipe":
-                        return item?.recipe_mealplan?.recipe_name ?? x
-                }
-            }
-
-            let shopping_list = this.items
-
-            // filter out list items that are delayed
-
-            if (!this.show_delay && shopping_list) {
-                shopping_list = shopping_list.filter((x) => !x.delay_until || Date.parse(x?.delay_until) < new Date(Date.now()))
-            }
-
-            // if a supermarket is selected and filtered to only supermarket categories filter out everything else
-            if (this.ui.selected_supermarket && this.supermarket_categories_only) {
-                let shopping_categories = this.supermarkets // category IDs configured on supermarket
-                    .filter((x) => x.id === this.ui.selected_supermarket)
-                    .map((x) => x.category_to_supermarket)
-                    .flat()
-                    .map((x) => x.category.id)
-                shopping_list = shopping_list.filter((x) => shopping_categories.includes(x?.food?.supermarket_category?.id))
-                // if showing undefined is off, filter undefined
-            } else if (!this.show_undefined_categories) {
-                shopping_list = shopping_list.filter((x) => x?.food?.supermarket_category)
-            }
-
-            var groups = {false: {}, true: {}} // force unchecked to always be first
-            // TODO: make nulls_first a user setting
-            // add undefined group to both the checked and non checked
-            groups.false[this.$t("Undefined")] = {}
-            groups.true[this.$t("Undefined")] = {}
-            // category order is defined by order of insertion into groups variable
-            if (this.ui.selected_supermarket) {
-                let super_cats = this.supermarkets
-                    .filter((x) => x.id === this.ui.selected_supermarket)
-                    .map((x) => x.category_to_supermarket)
-                    .flat()
-                    .map((x) => x.category.name)
-                new Set([...super_cats, ...this.shopping_categories.map((x) => x.name)]).forEach((cat) => {
-                    groups["false"][cat] = {}
-                    groups["true"][cat] = {}
-                })
-            } else {
-                this.shopping_categories.forEach((cat) => {
-                    groups.false[cat.name] = {}
-                    groups.true[cat.name] = {}
-                })
-            }
-
-            shopping_list.forEach((item) => {
-                let key = getKey(item, this.group_by, this.$t("Undefined"))
-                // first level of dict is done/not done
-                if (!groups[item.checked]) groups[item.checked] = {}
-
-                // second level of dict is this.group_by selection
-                if (!groups[item.checked][key]) groups[item.checked][key] = {}
-
-                // third level of dict is the food
-                if (groups[item.checked][key][item.food.name]) {
-                    groups[item.checked][key][item.food.name].push(item)
-                } else {
-                    groups[item.checked][key][item.food.name] = [item]
-                }
-            })
-            return groups
-        },
         csvData() {
             // return this.items.map((x) => {
             //     return {amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
@@ -610,10 +533,7 @@ export default {
                 return []
             }
         },
-        Recipes() {
-            // hiding recipes associated with shopping list items that are complete
-            return [...new Map(this.items.filter((x) => x.list_recipe && !x.checked).map((item) => [item["list_recipe"], item])).values()]
-        },
+
         supermarket_categories() {
             return this.shopping_categories
         },
@@ -793,26 +713,7 @@ export default {
                 })
             }
         },
-        moveEntry: function (e, item) {
-            if (!e) {
-                makeToast(this.$t("Warning"), this.$t("NoCategory"), "warning")
-            }
 
-            // TODO make decision - should inheritance always be set manually or give user a choice at front-end or make it a setting?
-            let food = this.items.filter((x) => x.food.id == item?.[0]?.food.id ?? item.food.id)[0].food
-            let supermarket_category = this.shopping_categories.filter((x) => x?.id === this.shopcat)?.[0]
-            food.supermarket_category = supermarket_category
-            this.updateFood(food, "supermarket_category").then((result) => {
-                this.items = this.items.map((x) => {
-                    if (x.food.id === food.id) {
-                        return {...x, food: {...x.food, supermarket_category: supermarket_category}}
-                    } else {
-                        return x
-                    }
-                })
-            })
-            this.shopcat = null
-        },
         onHand: function (item) {
             let api = new ApiApiFactory()
             let food = {
@@ -831,30 +732,6 @@ export default {
                         api.destroyShoppingListEntry(x).then((result) => {
                         })
                     })
-                })
-        },
-
-        sectionID: function (a, b) {
-            return (a + b).replace(/\W/g, "")
-        },
-
-        updateFood: function (food, field) {
-            let api = new ApiApiFactory()
-            if (field) {
-                // assume if field is changing it should no longer be inherited
-                food.inherit_fields = food.inherit_fields?.filter((x) => x.field !== field)
-            }
-
-            return api
-                .partialUpdateFood(food.id, food)
-                .then((result) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                    if (food?.numchild > 0) {
-                        this.getShoppingList() // if food has children, just get the whole list.  probably could be more efficient
-                    }
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
         },
         /**
