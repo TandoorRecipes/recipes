@@ -111,7 +111,7 @@
             <b-tab>
                 <template #title>
                     <i class="fas fa-store-alt fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${supermarkets.length})` }}</span>
+                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})` }}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
@@ -129,7 +129,7 @@
                                                 ></span></h5>
                                             <b-list-group>
                                                 <b-card no-body class="mt-1 list-group-item p-2"
-                                                        v-for="(supermarket, index) in supermarkets" v-hover
+                                                        v-for="(supermarket, index) in shopping_list_store.supermarkets" v-hover
                                                         :key="supermarket.id">
                                                     <b-card-header class="p-2 border-0">
                                                         <b-row>
@@ -188,7 +188,7 @@
                                             <div v-if="editingSupermarket.length === 0">
                                                 <b-list-group>
                                                     <b-card no-body class="mt-1 list-group-item p-2"
-                                                            v-for="(category, index) in supermarket_categories" v-hover
+                                                            v-for="(category, index) in shopping_list_store.supermarket_categories" v-hover
                                                             :key="category.id">
                                                         <b-card-header class="p-2 border-0">
                                                             <b-row>
@@ -319,6 +319,7 @@
             </b-tab>
         </b-tabs>
 
+        <!-- TODO maybe change to a modal ? -->
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
@@ -522,20 +523,16 @@ export default {
             return []
         },
         editingSupermarket() {
-            return this.supermarkets.filter((el) => {
+            return this.shopping_list_store.supermarkets.filter((el) => {
                 return el.editing
             })
         },
         unusedSupermarketCategories() {
             if (this.editingSupermarket.length > 0) {
-                return this.supermarket_categories.filter(a => !this.editing_supermarket_categories.map(b => b.id).includes(a.id))
+                return this.shopping_list_store.supermarket_categories.filter(a => !this.editing_supermarket_categories.map(b => b.id).includes(a.id))
             } else {
                 return []
             }
-        },
-
-        supermarket_categories() {
-            return this.shopping_categories
         },
     },
     watch: {
@@ -565,8 +562,6 @@ export default {
     },
     mounted() {
         //this.getShoppingList()
-        this.getSupermarkets()
-        this.getShoppingCategories()
 
         if (this.settings.shopping_auto_sync) {
             window.addEventListener("online", this.updateOnlineStatus)
@@ -637,15 +632,6 @@ export default {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
         },
-        getShoppingCategories: function () {
-            let api = new ApiApiFactory()
-            api.listSupermarketCategorys().then((result) => {
-                result.data.forEach((category) => {
-                    category.editing = false
-                })
-                this.shopping_categories = result.data
-            })
-        },
         getShoppingList: function (autosync = false) {
             let params = {}
             params.supermarket = this.ui.selected_supermarket
@@ -683,16 +669,6 @@ export default {
             //         }
             //     })
         },
-        getSupermarkets: function () {
-            let api = new ApiApiFactory()
-            api.listSupermarkets().then((result) => {
-                result.data.forEach((supermarket) => {
-                    supermarket.editing = false
-                })
-                this.supermarkets = result.data
-            })
-        },
-
         mergeShoppingList: function (data) {
             this.items.map((x) =>
                 data.map((y) => {
@@ -770,6 +746,8 @@ export default {
                 return recipe.servings
             }
         },
+
+         // TODO cleanup, review data structure, probably move to its own component --> FOR ALL SUPERMARKET FUNCTIONS
         deleteSupermarket(index) {
             this.$bvModal.msgBoxConfirm(this.$t('Are_You_Sure'), {
                 title: this.$t('Confirm'),
@@ -784,12 +762,9 @@ export default {
             }).then(value => {
                 if (value) {
                     let apiClient = new ApiApiFactory()
-                    apiClient.destroySupermarket(this.supermarkets[index].id)
+                    apiClient.destroySupermarket(this.shopping_list_store.supermarkets[index].id)
                         .then((e) => {
-                            this.getShoppingList()
-                            this.getSupermarkets()
-                            this.getShoppingCategories()
-                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
+                            this.shopping_list_store.refreshFromAPI()
                         })
                         .catch((err) => {
                             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
@@ -797,48 +772,50 @@ export default {
                 }
             })
         },
+        /**
+         * add new supermarket to list of supermarkets
+         */
         addSupermarket: function () {
+            // TODO integrate into store
             let api = new ApiApiFactory()
-            api.createSupermarket({name: this.$t('Supermarket') + Math.floor(1000 + Math.random() * 9000)})
-                .then((result) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                    this.supermarkets.push(result.data)
-                    this.new_supermarket.value = undefined
-                })
-                .catch((err) => {
-                    console.log(err, Object.keys(err))
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
-                })
+            api.createSupermarket({name: this.$t('Supermarket') + Math.floor(1000 + Math.random() * 9000)}).then((r) => {
+                this.shopping_list_store.supermarkets.push(r.data)
+                this.new_supermarket.value = undefined
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
+            })
         },
+        /**
+         * handle updating a supermarket
+         * @param index
+         */
         editOrSaveSupermarket(index) {
-            let supermarket = this.supermarkets[index]
+            let supermarket = this.shopping_list_store.supermarkets[index]
 
             if (supermarket.editing) {
-                this.$set(this.supermarkets[index], "editing", false)
-                this.$set(this.supermarkets[index], "category_to_supermarket", this.editing_supermarket_categories)
+                this.$set(this.shopping_list_store.supermarkets[index], "editing", false)
+                this.$set(this.shopping_list_store.supermarkets[index], "category_to_supermarket", this.editing_supermarket_categories)
                 this.editing_supermarket_categories = []
 
                 let apiClient = new ApiApiFactory()
 
-                apiClient
-                    .updateSupermarket(this.supermarkets[index].id, this.supermarkets[index])
-                    .then((e) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-                    })
+                apiClient.updateSupermarket(this.shopping_list_store.supermarkets[index].id, this.shopping_list_store.supermarkets[index]).then((r) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+                    this.shopping_list_store.refreshFromAPI()
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
             } else {
-                this.supermarkets.forEach((market, i) => {
+                this.shopping_list_store.supermarkets.forEach((market, i) => {
                     if (i !== index) {
-                        this.$set(this.supermarkets[i], "editing", false)
+                        this.$set(this.shopping_list_store.supermarkets[i], "editing", false)
                     }
                 })
 
-                this.$set(this.supermarkets[index], "editing", true)
+                this.$set(this.shopping_list_store.supermarkets[index], "editing", true)
 
                 this.editing_supermarket_categories = []
-                this.supermarkets[index].category_to_supermarket.forEach((cur, i) => {
+                this.shopping_list_store.supermarkets[index].category_to_supermarket.forEach((cur, i) => {
                     this.editing_supermarket_categories.push({
                         name: cur.category.name,
                         description: cur.category.description,
@@ -851,6 +828,10 @@ export default {
                 })
             }
         },
+        /**
+         * delete a supermarket category
+         * @param index
+         */
         deleteSupermarketCategory(index) {
             this.$bvModal.msgBoxConfirm(this.$t('Warning_Delete_Supermarket_Category'), {
                 title: this.$t('Confirm'),
@@ -865,48 +846,40 @@ export default {
             }).then(value => {
                 if (value) {
                     let apiClient = new ApiApiFactory()
-                    apiClient.destroySupermarketCategory(this.supermarket_categories[index].id)
-                        .then((e) => {
-                            this.getShoppingList()
-                            this.getSupermarkets()
-                            this.getShoppingCategories()
-                            StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
-                        })
-                        .catch((err) => {
-                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
-                        })
+                    apiClient.destroySupermarketCategory(this.shopping_list_store.supermarket_categories[index].id).then((e) => {
+                        this.shopping_list_store.refreshFromAPI()
+                    }).catch((err) => {
+                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
+                    })
                 }
             })
         },
         addSupermarketCategory() {
             let apiClient = new ApiApiFactory()
 
-            apiClient.createSupermarketCategory({name: this.$t("Shopping_Category") + Math.floor(1000 + Math.random() * 9000)})
-                .then((result) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                    this.shopping_categories.push(result.data)
-                })
-                .catch((err) => {
-                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
-                })
+            apiClient.createSupermarketCategory({name: this.$t("Shopping_Category") + Math.floor(1000 + Math.random() * 9000)}).then((result) => {
+                this.shopping_list_store.supermarket_categories.push(result.data)
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
+            })
         },
         editOrSaveSupermarketCategory(index) {
-            let category = this.supermarket_categories[index]
+            let category = this.shopping_list_store.supermarket_categories[index]
 
-            this.supermarkets.forEach((supermarket) => {
+            this.shopping_list_store.supermarkets.forEach((supermarket) => {
                 supermarket.category_to_supermarket.forEach((cat) => {
-                    if (cat.category.id === this.supermarket_categories[index].id) {
-                        cat.category = this.supermarket_categories[index]
+                    if (cat.category.id === this.shopping_list_store.supermarket_categories[index].id) {
+                        cat.category = this.shopping_list_store.supermarket_categories[index]
                     }
                 })
             })
             if (category.editing) {
-                this.$set(this.supermarket_categories[index], "editing", false)
+                this.$set(this.shopping_list_store.supermarket_categories[index], "editing", false)
 
                 let apiClient = new ApiApiFactory()
 
                 apiClient
-                    .updateSupermarketCategory(this.supermarket_categories[index].id, this.supermarket_categories[index])
+                    .updateSupermarketCategory(this.shopping_list_store.supermarket_categories[index].id, this.shopping_list_store.supermarket_categories[index])
                     .then((e) => {
                         StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
                     })
@@ -914,13 +887,13 @@ export default {
                         StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                     })
             } else {
-                this.supermarket_categories.forEach((market, i) => {
+                this.shopping_list_store.supermarket_categories.forEach((market, i) => {
                     if (i !== index) {
-                        this.$set(this.supermarket_categories[i], "editing", false)
+                        this.$set(this.shopping_list_store.supermarket_categories[i], "editing", false)
                     }
                 })
 
-                this.$set(this.supermarket_categories[index], "editing", true)
+                this.$set(this.shopping_list_store.supermarket_categories[index], "editing", true)
             }
         },
         addSupermarketCategoryRelation(category) {
@@ -945,41 +918,35 @@ export default {
             let apiClient = new ApiApiFactory()
 
             if ("removed" in e) {
-                apiClient
-                    .destroySupermarketCategoryRelation(e.removed.element.relation_id)
-                    .then((result) => {
+                apiClient.destroySupermarketCategoryRelation(e.removed.element.relation_id).then((result) => {
 
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
-                        this.editing_supermarket_categories.splice(e.removed.oldIndex, 0, e.removed.element);
-                    })
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                    this.editing_supermarket_categories.splice(e.removed.oldIndex, 0, e.removed.element);
+                })
             }
 
             if ("added" in e) {
                 let apiClient = new ApiApiFactory()
 
-                apiClient
-                    .createSupermarketCategoryRelation({
-                        supermarket: this.editingSupermarket[0].id,
-                        category: e.added.element,
-                        order: e.added.newIndex,
-                    })
-                    .then((results) => {
-                        this.editing_supermarket_categories.splice(e.added.newIndex, 1, {
-                            name: results.data.category.name,
-                            description: results.data.category.description,
-                            id: results.data.category.id,
-                            relation_id: results.data.id,
-                            order: results.data.order,
-                            supermarket: results.data.supermarket,
-                            category: results.data.category
-                        });
-                    })
-                    .catch((err) => {
-                        StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
-                        this.editing_supermarket_categories.splice(e.added.newIndex, 1);
-                    })
+                apiClient.createSupermarketCategoryRelation({
+                    supermarket: this.editingSupermarket[0].id,
+                    category: e.added.element,
+                    order: e.added.newIndex,
+                }).then((results) => {
+                    this.editing_supermarket_categories.splice(e.added.newIndex, 1, {
+                        name: results.data.category.name,
+                        description: results.data.category.description,
+                        id: results.data.category.id,
+                        relation_id: results.data.id,
+                        order: results.data.order,
+                        supermarket: results.data.supermarket,
+                        category: results.data.category
+                    });
+                }).catch((err) => {
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE)
+                    this.editing_supermarket_categories.splice(e.added.newIndex, 1);
+                })
             }
 
             if ("moved" in e) {
@@ -1016,23 +983,14 @@ export default {
                 this.$bvModal.show(`shopping_${this.new_recipe.id}`)
             })
         },
+        /**
+         * called after adding a new recipe trough the shopping modal
+         * cleanup and data refresh
+         */
         finishShopping() {
             this.new_recipe = {id: undefined}
             useShoppingListStore().refreshFromAPI() //TODO only do partial fetch
         },
-        editRecipeList(e, r) {
-            this.new_recipe = {
-                id: r.recipe_mealplan.recipe,
-                name: r.recipe_mealplan.recipe_name,
-                servings: r.recipe_mealplan.servings,
-                list_recipe: r.list_recipe
-            }
-            this.$nextTick(function () {
-                this.$bvModal.show(`shopping_${this.new_recipe.id}`)
-            })
-
-            // this.$bvModal.show(`shopping_${this.new_recipe.id}`)
-        }
     },
     directives: {
         hover: {
