@@ -124,7 +124,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         },
     },
     actions: {
-        // TODO implement shopping list recipes
         /**
          * Retrieves all shopping related data (shopping list entries, supermarkets, supermarket categories and shopping list recipes) from API
          */
@@ -133,6 +132,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.currently_updating = true
                 let apiClient = new ApiApiFactory()
                 apiClient.listShoppingListEntrys().then((r) => {
+                    this.entries = {}
+
                     r.data.forEach((e) => {
                         Vue.set(this.entries, e.id, e)
                     })
