@@ -148,7 +148,7 @@ body {
     font-weight: 400;
     line-height: 1.5;
     color: #212529;
-    'text-align: left;
+    text-align: start;
     background-color: rgb(247 247 247);
 }
 
@@ -634,7 +634,7 @@ pre code {
     margin-left: auto
 }
 
-.row {
+.row  {
     display: flex;
     flex-wrap: wrap;
     margin-right: -15px;

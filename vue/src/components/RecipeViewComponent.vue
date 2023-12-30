@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div :dir="recipe_direction">
         <template v-if="loading">
             <loading-spinner></loading-spinner>
         </template>
@@ -51,8 +51,9 @@
                         </div>
                         <div class="my-auto mr-1">
                             <span class="text-primary"><b>{{ $t("Waiting") }}</b></span><br/>
-                            {{ waiting_time }}
+                            {{ waiting_time }} {{recipe.language}}
                         </div>
+                          
                     </div>
                 </div>
 
@@ -220,6 +221,21 @@ export default {
         },
         waiting_time: function () {
             return calculateHourMinuteSplit(this.recipe.waiting_time)
+        },
+        recipe_direction: function () {
+            if (!this.recipe) {
+              return
+            }
+            if (!this.recipe.language) {
+              return "ltr"
+            } else {
+                // Can be expanded to arabic
+                if (this.recipe.language == "he") {
+                  return "rtl"
+                } else {
+                  return "ltr"
+                }
+              }
         },
     },
     data() {

@@ -865,6 +865,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     desc_search_vector = SearchVectorField(null=True)
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
 
+    language = models.CharField(max_length=5, blank=True, null=True)
     objects = ScopedManager(space='space', _manager_class=RecipeManager)
 
     def __str__(self):
