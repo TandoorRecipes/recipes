@@ -2850,21 +2850,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     color: #fff
 }
 
-.btn-primary:hover {
-    background: transparent;
-    color: #b98766;
-    border: 1px solid #b98766
-}
-
 .btn-secondary {
     transition: all .5s ease-in-out;
     color: #fff
-}
-
-.btn-secondary:hover {
-    background: transparent;
-    color: #b55e4f;
-    border: 1px solid #b55e4f
 }
 
 .btn-success {
@@ -2872,21 +2860,9 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     color: #fff
 }
 
-.btn-success:hover {
-    background: transparent;
-    color: #82aa8b;
-    border: 1px solid #82aa8b
-}
-
 .btn-info {
     transition: all .5s ease-in-out;
     color: #fff
-}
-
-.btn-info:hover {
-    background: transparent;
-    color: #385f84;
-    border: 1px solid #385f84
 }
 
 .btn-warning {
@@ -2894,32 +2870,14 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     color: #fff
 }
 
-.btn-warning:hover {
-    background: transparent;
-    color: #eaaa21;
-    border: 1px solid #eaaa21
-}
-
 .btn-danger {
     transition: all .5s ease-in-out;
     color: #fff
 }
 
-.btn-danger:hover {
-    background: transparent;
-    color: #a7240e;
-    border: 1px solid #a7240e
-}
-
 .btn-light {
     transition: all .5s ease-in-out;
     color: #fff
-}
-
-.btn-light:hover {
-    background-color: hsla(0, 0%, 18%, .5);
-    color: #cfd5cd;
-    border: 1px solid hsla(0, 0%, 18%, .5)
 }
 
 .btn-dark {

@@ -75,6 +75,7 @@
                     <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})` }}</span>
                 </template>
 
+
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
                     <b-col cols="12">
                         <generic-multiselect
@@ -85,17 +86,25 @@
                     </b-col>
                 </b-row>
 
+
                 <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id" class="pr-1 pl-1">
                     <b-col cols="12">
-                        <b-button-group class="w-100 mt-1">
+                        <b-button-group class="w-100 mt-2">
                             <b-button variant="dark" block class="btn btn-block text-left">
                                 <span>{{ r.recipe_name }}</span> <br/>
                                 <span><small class="text-muted">{{ r.recipe_name }}</small></span> <!-- TODO show meal plan date/type -->
                             </b-button>
-                            <b-form-input min="1" type="number" :debounce="300" v-model="r.servings" @update="updateServings(r.shopping_list_recipe_id, r.servings)"></b-form-input>
+                            <!--                            <b-form-input min="1" type="number" :debounce="300" v-model="r.servings" @update="updateServings(r.shopping_list_recipe_id, r.servings)"></b-form-input>-->
                             <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i class="fas fa-trash fa-fw"></i></b-button>
                         </b-button-group>
 
+                        <b-button-group class="w-100 mt-1">
+                            <b-button @click="r.servings = updateServings(r, 'half')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-divide"></i> 2</b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'sub')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-minus"></i></b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'prompt')">{{ r.servings }}</b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'add')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-plus"></i></b-button>
+                            <b-button @click="r.servings = updateServings(r, 'multiply')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-times"></i> 2</b-button>
+                        </b-button-group>
 
                     </b-col>
                 </b-row>
@@ -361,17 +370,28 @@
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :modal_id="new_recipe.id" :servings="new_recipe.servings" :mealplan="undefined" @finish="finishShopping"/>
 
         <bottom-navigation-bar active-view="view_shopping">
-            <template #custom_nav_content>
+            <template #custom_nav_content v-if="current_tab <= 1">
                 <div class="d-flex flex-row justify-content-around mb-3">
 
-                    <b-input-group>
-                        <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')" @keyup.enter="addItem"></b-form-input>
-                        <b-input-group-append>
-                            <b-button @click="addItem" variant="success">
-                                <i class="fas fa-cart-plus "/>
-                            </b-button>
-                        </b-input-group-append>
-                    </b-input-group>
+
+                    <template v-if="current_tab===0">
+                        <b-input-group>
+                            <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')" @keyup.enter="addItem"></b-form-input>
+                            <b-input-group-append>
+                                <b-button @click="addItem" variant="success">
+                                    <i class="fas fa-cart-plus "/>
+                                </b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                    </template>
+                    <template v-if="current_tab===1">
+                        <generic-multiselect
+                            :model="Models.RECIPE"
+                            :multiple="false"
+                            @change="addRecipeToShopping($event.val)"
+                        ></generic-multiselect>
+                    </template>
+
 
                 </div>
             </template>
@@ -691,9 +711,8 @@ export default {
          */
         deleteRecipe: function (shopping_list_recipe_id) {
             let api = new ApiApiFactory()
-            //TODO properly integrate into store logic
             api.destroyShoppingListRecipe(shopping_list_recipe_id).then((x) => {
-                useShoppingListStore().refreshFromAPI()
+                useShoppingListStore().refreshFromAPI() //TODO only do partial refresh
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
@@ -841,16 +860,37 @@ export default {
         /**
          * change number of servings of a shopping list recipe
          * backend handles scaling of associated entries
-         * @param shopping_list_recipe_id shopping list recipe to update
-         * @param servings number of servings to set shopping list recipe to
+         * @param recipe recipe to update
+         * @param mode mode to change servings
          */
-        updateServings(shopping_list_recipe_id, servings) {
-            if (servings !== 0 && servings !== "") {
-                console.log('NEW SERVINGS', servings)
+        updateServings(recipe, mode) {
+            if (mode === 'half') {
+                recipe.servings = recipe.servings / 2
+            }
+            if (mode === 'multiply') {
+                recipe.servings = recipe.servings * 2
+            }
+            if (mode === 'add') {
+                recipe.servings++
+            }
+            if (mode === 'sub') {
+                recipe.servings--
+            }
+            if (mode === 'prompt') {
+                let servings = prompt(this.$t('Servings'), recipe.servings);
+                if (servings !== null && servings !== "" && !isNaN(servings) && !isNaN(parseFloat(servings))) {
+                    recipe.servings = parseFloat(servings)
+                } else {
+                    console.log('Invalid input in servings prompt', servings)
+                }
+            }
+
+            if (recipe.servings > 0 && recipe.servings !== "") {
                 let api = new ApiApiFactory()
-                api.partialUpdateShoppingListRecipe(shopping_list_recipe_id, {id: shopping_list_recipe_id, servings: servings}).then(() => {
+                api.partialUpdateShoppingListRecipe(recipe.shopping_list_recipe_id, {id: recipe.shopping_list_recipe_id, servings: recipe.servings}).then(() => {
                     useShoppingListStore().refreshFromAPI()
                 })
+                return recipe.servings
             }
         },
         deleteSupermarket(index) {
@@ -1100,10 +1140,8 @@ export default {
             })
         },
         finishShopping() {
-            this.add_recipe_servings = 1
             this.new_recipe = {id: undefined}
-            this.edit_recipe_list = undefined
-            this.getShoppingList()
+            useShoppingListStore().refreshFromAPI() //TODO only do partial fetch
         },
         editRecipeList(e, r) {
             this.new_recipe = {
