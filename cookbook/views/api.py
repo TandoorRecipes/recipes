@@ -675,6 +675,11 @@ class AutoPlanViewSet(viewsets.ViewSet):
             end_date = serializer.validated_data['end_date']
             meal_type = MealType.objects.get(pk=serializer.validated_data['meal_type_id'])
             servings = serializer.validated_data['servings']
+            shared = serializer.get_initial().get('shared', None)
+            shared_pks = list()
+            if shared is not None:
+                for i in range(len(shared)):
+                    shared_pks.append(shared[i]['id'])
 
             days = (end_date - start_date).days + 1
             recipes = Recipe.objects.all()
@@ -683,6 +688,8 @@ class AutoPlanViewSet(viewsets.ViewSet):
             for keyword in keywords:
                 recipes = recipes.filter(keywords__name=keyword['name'])
 
+            if len(recipes) == 0:
+                return Response(serializer.data)
             recipes = recipes.order_by('?')[:days]
             recipes = list(recipes)
 
@@ -698,8 +705,11 @@ class AutoPlanViewSet(viewsets.ViewSet):
                 meal_plans.append(m)
 
             MealPlan.objects.bulk_create(meal_plans)
+
             for m in meal_plans:
-                if request.data.get('addshopping', False) and request.data.get('recipe', None):
+                m.shared.set(shared_pks)
+
+                if request.data.get('addshopping', False):
                     SLR = RecipeShoppingEditor(user=request.user, space=request.space)
                     SLR.create(mealplan=m, servings=servings)
 
