@@ -1056,7 +1056,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note','mealplan_from_date', 'mealplan_type')
+        fields = ('id', 'recipe_name', 'name', 'recipe', 'mealplan', 'servings', 'mealplan_note', 'mealplan_from_date', 'mealplan_type')
         read_only_fields = ('id',)
 
 
@@ -1074,7 +1074,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
         # autosync values are only needed for frequent 'checked' value updating
         if self.context['request'] and bool(int(self.context['request'].query_params.get('autosync', False))):
-            for f in list(set(fields) - set(['id', 'checked'])):
+            for f in list(set(fields) - set(['id', 'checked', 'updated_at', ])):
                 del fields[f]
         return fields
 
@@ -1118,7 +1118,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'list_recipe', 'food', 'unit', 'ingredient', 'ingredient_note', 'amount', 'order', 'checked',
             'recipe_mealplan',
-            'created_by', 'created_at', 'completed_at', 'delay_until'
+            'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
         read_only_fields = ('id', 'created_by', 'created_at',)
 
