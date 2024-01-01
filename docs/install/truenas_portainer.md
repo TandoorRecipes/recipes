@@ -88,8 +88,7 @@ services:
       - stack.env
 
   web_recipes:
-    # image: vabene1111/recipes:latest
-    image: vabene1111/recipes:beta
+    image: vabene1111/recipes:latest
     env_file:
       - stack.env
     volumes:
