@@ -1163,6 +1163,11 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
 
+        last_autosync = self.request.query_params.get('last_autosync', None)
+        if last_autosync:
+            last_autosync = datetime.datetime.now() # TODO implement
+            self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
+
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
         return self.queryset
 
@@ -1174,11 +1179,13 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
-        return self.queryset.filter(
+        self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
             | Q(shared=self.request.user)
             | Q(created_by__in=list(self.request.user.get_shopping_share()))
-        ).filter(space=self.request.space).distinct()
+        ).filter(space=self.request.space)
+
+        return self.queryset.distinct()
 
     def get_serializer_class(self):
         try:
