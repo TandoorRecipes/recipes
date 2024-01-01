@@ -535,5 +535,6 @@
     "Never_Unit": "Nie Einheit",
     "Unit_Replace": "Einheit Ersetzen",
     "quart": "\"Quart\" [qt] (US, Volumen)",
-    "imperial_quart": "Engl. \"Quart\" [imp qt] (UK, Volumen)"
+    "imperial_quart": "Engl. \"Quart\" [imp qt] (UK, Volumen)",
+    "err_importing_recipe": "Beim Importieren des Rezeptes ist ein Fehler aufgetreten!"
 }

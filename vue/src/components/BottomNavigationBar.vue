@@ -1,6 +1,12 @@
 <template>
     <!-- bottom button nav -->
     <div class="fixed-bottom p-1 pt-2 pl-2 pr-2 border-top text-center d-lg-none d-print-none bottom-action-bar bg-white">
+
+        <slot name="custom_nav_content">
+
+        </slot>
+
+
         <div class="d-flex flex-row justify-content-around">
             <div class="flex-column" v-if="show_button_1">
                 <slot name="button_1">
