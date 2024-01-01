@@ -33,6 +33,11 @@
 
     <!-- Bootstrap 4 -->
     <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
+    {% if request.user.is_authenticated and request.space.custom_space_theme %}
+        <link id="id_custom_css" href="{% custom_theme request %}" rel="stylesheet">
+    {% endif %}
+
+
     <link href="{% static 'css/app.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
 
@@ -74,12 +79,12 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg {% nav_color request %}"
+<nav class="navbar navbar-expand-lg {% nav_text_color request %}"
      id="id_main_nav"
-     style="{% sticky_nav request %}">
+     style="{% sticky_nav request %}; background-color: {% nav_bg_color request %}">
 
     {% if not request.user.userpreference.left_handed %}
-        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+        {% if not request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
                 <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
@@ -93,7 +98,7 @@
     </button>
 
     {% if request.user.userpreference.left_handed %}
-        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+        {% if not  request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
                 <img class="brand-icon" src="{% logo_url request %}" alt="Logo">

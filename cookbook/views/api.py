@@ -1340,7 +1340,7 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
-class RecipeUrlImportView(ObtainAuthToken):
+class RecipeUrlImportView(APIView):
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 

@@ -60,9 +60,9 @@ admin.site.register(UserSpace, UserSpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color', 'default_page')
+    list_display = ('name', 'theme', 'default_page')
     search_fields = ('user__username',)
-    list_filter = ('theme', 'nav_color', 'default_page',)
+    list_filter = ('theme', 'default_page',)
     date_hierarchy = 'created_at'
     filter_horizontal = ('plan_share', 'shopping_share',)
 
@@ -75,7 +75,7 @@ admin.site.register(UserPreference, UserPreferenceAdmin)
 
 
 class SearchPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'search', 'trigram_threshold', )
+    list_display = ('name', 'search', 'trigram_threshold',)
     search_fields = ('user__username',)
     list_filter = ('search',)
 
@@ -169,7 +169,7 @@ def delete_unattached_steps(modeladmin, request, queryset):
 
 class StepAdmin(admin.ModelAdmin):
     list_display = ('recipe_and_name', 'order', 'space')
-    ordering = ('recipe__name', 'name', 'space', )
+    ordering = ('recipe__name', 'name', 'space',)
     search_fields = ('name', 'recipe__name')
     actions = [delete_unattached_steps]
 
@@ -198,7 +198,7 @@ def rebuild_index(modeladmin, request, queryset):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('name', 'internal', 'created_by', 'storage', 'space')
     search_fields = ('name', 'created_by__username')
-    ordering = ('name', 'created_by__username', )
+    ordering = ('name', 'created_by__username',)
     list_filter = ('internal',)
     date_hierarchy = 'created_at'
 
@@ -215,7 +215,7 @@ admin.site.register(Recipe, RecipeAdmin)
 
 class UnitAdmin(admin.ModelAdmin):
     list_display = ('name', 'space')
-    ordering = ('name', 'space', )
+    ordering = ('name', 'space',)
     search_fields = ('name',)
 
 

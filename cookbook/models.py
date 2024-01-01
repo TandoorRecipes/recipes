@@ -251,8 +251,44 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
+    # TODO remove redundant theming constants
+    # Themes
+    BLANK = 'BLANK'
+    TANDOOR = 'TANDOOR'
+    TANDOOR_DARK = 'TANDOOR_DARK'
+    BOOTSTRAP = 'BOOTSTRAP'
+    DARKLY = 'DARKLY'
+    FLATLY = 'FLATLY'
+    SUPERHERO = 'SUPERHERO'
+
+    THEMES = (
+        (BLANK, '-------'),
+        (TANDOOR, 'Tandoor'),
+        (BOOTSTRAP, 'Bootstrap'),
+        (DARKLY, 'Darkly'),
+        (FLATLY, 'Flatly'),
+        (SUPERHERO, 'Superhero'),
+        (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
+    )
+
+    LIGHT = 'LIGHT'
+    DARK = 'DARK'
+
+    NAV_TEXT_COLORS = (
+        (BLANK, '-------'),
+        (LIGHT, 'Light'),
+        (DARK, 'Dark')
+    )
+
     name = models.CharField(max_length=128, default='Default')
+
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
+    space_theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
+    custom_space_theme = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_theme')
+    nav_logo = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_nav_logo')
+    nav_bg_color = models.CharField(max_length=8, default='', blank=True, )
+    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
+
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
@@ -338,22 +374,10 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     # Nav colors
-    PRIMARY = 'PRIMARY'
-    SECONDARY = 'SECONDARY'
-    SUCCESS = 'SUCCESS'
-    INFO = 'INFO'
-    WARNING = 'WARNING'
-    DANGER = 'DANGER'
     LIGHT = 'LIGHT'
     DARK = 'DARK'
 
-    COLORS = (
-        (PRIMARY, 'Primary'),
-        (SECONDARY, 'Secondary'),
-        (SUCCESS, 'Success'),
-        (INFO, 'Info'),
-        (WARNING, 'Warning'),
-        (DANGER, 'Danger'),
+    NAV_TEXT_COLORS = (
         (LIGHT, 'Light'),
         (DARK, 'Dark')
     )
@@ -371,8 +395,13 @@ class UserPreference(models.Model, PermissionModelMixin):
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
+
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
-    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
+    nav_bg_color = models.CharField(max_length=8, default='#ddbf86')
+    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
+    nav_show_logo = models.BooleanField(default=True)
+    nav_sticky = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
+
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
@@ -382,7 +411,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
-    sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
