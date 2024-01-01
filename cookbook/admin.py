@@ -60,7 +60,7 @@ admin.site.register(UserSpace, UserSpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color', 'default_page',)
+    list_display = ('name', 'theme', 'nav_color', 'default_page')
     search_fields = ('user__username',)
     list_filter = ('theme', 'nav_color', 'default_page',)
     date_hierarchy = 'created_at'
@@ -75,7 +75,7 @@ admin.site.register(UserPreference, UserPreferenceAdmin)
 
 
 class SearchPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'search', 'trigram_threshold',)
+    list_display = ('name', 'search', 'trigram_threshold', )
     search_fields = ('user__username',)
     list_filter = ('search',)
 
@@ -108,11 +108,16 @@ class SupermarketCategoryInline(admin.TabularInline):
 
 
 class SupermarketAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space',)
     inlines = (SupermarketCategoryInline,)
 
 
+class SupermarketCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space',)
+
+
 admin.site.register(Supermarket, SupermarketAdmin)
-admin.site.register(SupermarketCategory)
+admin.site.register(SupermarketCategory, SupermarketCategoryAdmin)
 
 
 class SyncLogAdmin(admin.ModelAdmin):
@@ -163,9 +168,17 @@ def delete_unattached_steps(modeladmin, request, queryset):
 
 
 class StepAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order',)
-    search_fields = ('name',)
+    list_display = ('recipe_and_name', 'order', 'space')
+    ordering = ('recipe__name', 'name', 'space', )
+    search_fields = ('name', 'recipe__name')
     actions = [delete_unattached_steps]
+
+    @staticmethod
+    @admin.display(description="Name")
+    def recipe_and_name(obj):
+        if not obj.recipe_set.exists():
+            return f"Orphaned Step{'':s if not obj.name else f': {obj.name}'}"
+        return f"{obj.recipe_set.first().name}: {obj.name}" if obj.name else obj.recipe_set.first().name
 
 
 admin.site.register(Step, StepAdmin)
@@ -183,8 +196,9 @@ def rebuild_index(modeladmin, request, queryset):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'internal', 'created_by', 'storage')
+    list_display = ('name', 'internal', 'created_by', 'storage', 'space')
     search_fields = ('name', 'created_by__username')
+    ordering = ('name', 'created_by__username', )
     list_filter = ('internal',)
     date_hierarchy = 'created_at'
 
@@ -198,7 +212,14 @@ class RecipeAdmin(admin.ModelAdmin):
 
 admin.site.register(Recipe, RecipeAdmin)
 
-admin.site.register(Unit)
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space')
+    ordering = ('name', 'space', )
+    search_fields = ('name',)
+
+
+admin.site.register(Unit, UnitAdmin)
 
 
 # admin.site.register(FoodInheritField)
@@ -229,9 +250,15 @@ def delete_unattached_ingredients(modeladmin, request, queryset):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('food', 'amount', 'unit')
-    search_fields = ('food__name', 'unit__name')
+    list_display = ('recipe_name', 'amount', 'unit', 'food', 'space')
+    search_fields = ('food__name', 'unit__name', 'step__recipe__name')
     actions = [delete_unattached_ingredients]
+
+    @staticmethod
+    @admin.display(description="Recipe")
+    def recipe_name(obj):
+        recipes = obj.step_set.first().recipe_set.all() if obj.step_set.exists() else None
+        return recipes.first().name if recipes else 'Orphaned Ingredient'
 
 
 admin.site.register(Ingredient, IngredientAdmin)
@@ -258,7 +285,7 @@ admin.site.register(RecipeImport, RecipeImportAdmin)
 
 
 class RecipeBookAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user_name')
+    list_display = ('name', 'user_name', 'space')
     search_fields = ('name', 'created_by__username')
 
     @staticmethod
@@ -334,11 +361,11 @@ class ShoppingListEntryAdmin(admin.ModelAdmin):
 admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
 
 
-class ShoppingListAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_by', 'created_at')
+# class ShoppingListAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'created_by', 'created_at')
 
 
-admin.site.register(ShoppingList, ShoppingListAdmin)
+# admin.site.register(ShoppingList, ShoppingListAdmin)
 
 
 class ShareLinkAdmin(admin.ModelAdmin):

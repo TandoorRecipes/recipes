@@ -506,7 +506,6 @@
                                                                     <input
                                                                             class="form-control"
                                                                             maxlength="256"
-                                                                            style="height: 100%;"
                                                                             v-model="ingredient.note"
                                                                             v-bind:placeholder="$t('Note')"
                                                                             v-on:keydown.tab="
