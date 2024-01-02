@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-top: 22px">
+        <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-top: 22px;">
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title>
@@ -37,12 +37,12 @@
                     <span
                         class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${items.filter(x => x.checked === false).length})` }}</span>
                 </template>
-                <div class="container p-0 p-md-3" id="shoppinglist">
-                    <div class="row">
+                <div class="container p-0 p-md-3 pb-5" id="shoppinglist">
+                    <div class="row pb-5">
                         <div class="col col-md-12 p-0 p-lg-3">
                             <div role="tablist">
                                 <!-- add to shopping form -->
-                                <div class="container">
+                                <div class="container d-lg-block d-print-none d-none">
                                     <b-row class="justify-content-md-center align-items-center pl-1 pr-1"
                                            v-if="entrymode">
                                         <b-col cols="12" md="3" v-if="!ui.entry_mode_simple"
@@ -566,15 +566,26 @@
         <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :servings="parseInt(add_recipe_servings)"
                         :modal_id="new_recipe.id" @finish="finishShopping" :list_recipe="new_recipe.list_recipe"/>
 
-        <bottom-navigation-bar>
+        <bottom-navigation-bar active-view="view_shopping">
+            <template #custom_nav_content>
+                <div class="d-flex flex-row justify-content-around mb-3">
+
+                    <b-input-group>
+                        <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"></b-form-input>
+                        <b-input-group-append>
+                            <b-button @click="addItem" variant="success">
+                                <i class="fas fa-cart-plus "/>
+                            </b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+
+                </div>
+            </template>
+
             <template #custom_create_functions>
 
                 <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header">{{ $t('Shopping_list')}}</h6>
-
-                <a class="dropdown-item" @click="entrymode = !entrymode; " ><i class="fas fa-cart-plus"></i>
-                    {{ $t("New_Entry") }}
-                </a>
+                <h6 class="dropdown-header">{{ $t('Shopping_list') }}</h6>
 
                 <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                              icon="far fa-file-pdf fa-fw"/>

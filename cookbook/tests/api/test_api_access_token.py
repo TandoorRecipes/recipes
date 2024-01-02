@@ -7,8 +7,6 @@ from django.utils import timezone
 from django_scopes import scopes_disabled
 from oauth2_provider.models import AccessToken
 
-from cookbook.models import ViewLog
-
 LIST_URL = 'api:accesstoken-list'
 DETAIL_URL = 'api:accesstoken-detail'
 

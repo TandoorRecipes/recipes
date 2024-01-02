@@ -2,12 +2,10 @@ import base64
 from io import BytesIO
 from xml import etree
 
-from lxml import etree
-
 from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.recipe_url_import import parse_time, parse_servings, parse_servings_text
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Recipe, Step, Keyword
+from cookbook.models import Ingredient, Keyword, Recipe, Step
 
 
 class Rezeptsuitede(Integration):
@@ -37,7 +35,7 @@ class Rezeptsuitede(Integration):
             try:
                 if prep.find('step').text:
                     step = Step.objects.create(
-                        instruction=prep.find('step').text.strip(), space=self.request.space,
+                        instruction=prep.find('step').text.strip(), space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                     )
                     recipe.steps.add(step)
             except Exception:
@@ -61,14 +59,14 @@ class Rezeptsuitede(Integration):
         try:
             k, created = Keyword.objects.get_or_create(name=recipe_xml.find('head').find('cat').text.strip(), space=self.request.space)
             recipe.keywords.add(k)
-        except Exception as e:
+        except Exception:
             pass
 
         recipe.save()
 
         try:
             self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_xml.find('head').find('picbin').text)), filetype='.jpeg')
-        except:
+        except BaseException:
             pass
 
         return recipe

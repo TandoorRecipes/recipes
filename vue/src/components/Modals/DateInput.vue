@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-form-group v-bind:label="label" class="mb-3">
+        <b-form-group v-bind:label="field_label" class="mb-3">
             <b-form-input v-model="new_value" type="date" ></b-form-input>
             <em v-if="help" class="small text-muted">{{ help }}</em>
             <small v-if="subtitle" class="text-muted">{{ subtitle }}</small>
@@ -17,6 +17,16 @@ export default {
         value: { type: String, default: "" },
         help: { type: String, default: undefined },
         subtitle: { type: String, default: undefined },
+        optional: {type: Boolean, default: false},
+    },
+    computed: {
+        field_label: function () {
+            if (this.optional) {
+                return this.label
+            } else {
+                return this.label + '*'
+            }
+        }
     },
     data() {
         return {

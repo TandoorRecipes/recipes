@@ -4,6 +4,7 @@ from zipfile import ZipFile
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -19,6 +20,10 @@ class Chowdown(Integration):
         direction_mode = False
         description_mode = False
 
+        description = None
+        prep_time = None
+        serving = None
+
         ingredients = []
         directions = []
         descriptions = []
@@ -26,6 +31,12 @@ class Chowdown(Integration):
             line = fl.decode("utf-8")
             if 'title:' in line:
                 title = line.replace('title:', '').replace('"', '').strip()
+            if 'description:' in line:
+                description = line.replace('description:', '').replace('"', '').strip()
+            if 'prep_time:' in line:
+                prep_time = line.replace('prep_time:', '').replace('"', '').strip()
+            if 'yield:' in line:
+                serving = line.replace('yield:', '').replace('"', '').strip()
             if 'image:' in line:
                 image = line.replace('image:', '').strip()
             if 'tags:' in line:
@@ -48,15 +59,43 @@ class Chowdown(Integration):
                 descriptions.append(line)
 
         recipe = Recipe.objects.create(name=title, created_by=self.request.user, internal=True, space=self.request.space)
+        if description:
+            recipe.description = description
 
         for k in tags.split(','):
-            print(f'adding keyword {k.strip()}')
             keyword, created = Keyword.objects.get_or_create(name=k.strip(), space=self.request.space)
             recipe.keywords.add(keyword)
 
-        step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n' + '\n'.join(descriptions), space=self.request.space,
-        )
+        ingredients_added = False
+        for direction in directions:
+            if len(direction.strip()) > 0:
+                step = Step.objects.create(
+                    instruction=direction, name='', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                )
+            else:
+                step = Step.objects.create(
+                    instruction=direction, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
+                )
+            if not ingredients_added:
+                ingredients_added = True
+
+                ingredient_parser = IngredientParser(self.request, True)
+                for ingredient in ingredients:
+                    if len(ingredient.strip()) > 0:
+                        amount, unit, food, note = ingredient_parser.parse(ingredient)
+                        f = ingredient_parser.get_food(food)
+                        u = ingredient_parser.get_unit(unit)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
+                        ))
+            recipe.steps.add(step)
+
+        if serving:
+            recipe.servings = parse_servings(serving)
+            recipe.servings_text = 'servings'
+
+        if prep_time:
+            recipe.working_time = parse_time(prep_time)
 
         ingredient_parser = IngredientParser(self.request, True)
         for ingredient in ingredients:
@@ -76,6 +115,7 @@ class Chowdown(Integration):
                     if re.match(f'^images/{image}$', z.filename):
                         self.import_recipe_image(recipe, BytesIO(import_zip.read(z.filename)), filetype=get_filetype(z.filename))
 
+        recipe.save()
         return recipe
 
     def get_file_from_recipe(self, recipe):

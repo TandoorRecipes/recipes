@@ -25,16 +25,19 @@
                             <b-form-group :label="$t('Plural')" description="">
                                 <b-form-input v-model="food.plural_name"></b-form-input>
                             </b-form-group>
+                            <b-form-group :label="$t('Description')" description="">
+                                <b-form-textarea v-model="food.description" rows="2"></b-form-textarea>
+                            </b-form-group>
 
                             <!-- Food properties -->
 
                             <h5><i class="fas fa-database"></i> {{ $t('Properties') }}</h5>
 
-                            <b-form-group :label="$t('Properties Food Amount')" description=""> <!-- TODO localize -->
+                            <b-form-group :label="$t('Properties_Food_Amount')" description="">
                                 <b-form-input v-model="food.properties_food_amount"></b-form-input>
                             </b-form-group>
 
-                            <b-form-group :label="$t('Properties Food Unit')" description=""> <!-- TODO localize -->
+                            <b-form-group :label="$t('Properties_Food_Unit')" description="">
                                 <generic-multiselect
                                     @change="food.properties_food_unit = $event.val;"
                                     :model="Models.UNIT"
@@ -71,8 +74,8 @@
                                         }}</span></span>
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
-                                            class="fas fa-trash-alt"></i></button>
+                                        <a class="btn btn-danger btn-small" @click="deleteProperty(fp)"><i
+                                            class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             </table>
@@ -167,6 +170,10 @@
                                 ></generic-multiselect>
                             </b-form-group>
 
+                            <b-form-group :label="$t('URL')" description="">
+                                <b-form-input v-model="food.url"></b-form-input>
+                            </b-form-group>
+
                             <b-form-group :description="$t('OnHand_help')">
                                 <b-form-checkbox v-model="food.food_onhand">{{ $t('OnHand') }}</b-form-checkbox>
                             </b-form-group>
@@ -194,6 +201,12 @@
                             <b-form-group :description="$t('substitute_siblings_help')">
                                 <b-form-checkbox v-model="food.substitute_siblings">{{
                                         $t('substitute_siblings')
+                                    }}
+                                </b-form-checkbox>
+                            </b-form-group>
+                            <b-form-group :description="$t('substitute_children_help')">
+                                <b-form-checkbox v-model="food.substitute_children">{{
+                                        $t('substitute_children')
                                     }}
                                 </b-form-checkbox>
                             </b-form-group>
@@ -293,7 +306,9 @@ export default {
         if (this.item1.id !== undefined) {
             pf = apiClient.retrieveFood(this.item1.id).then((r) => {
                 this.food = r.data
-                this.food.properties_food_unit = {name: 'g'}
+                if (this.food.properties_food_unit === null) {
+                    this.food.properties_food_unit = {name: 'g'}
+                }
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
             })
@@ -304,6 +319,7 @@ export default {
                 description: "",
                 shopping: false,
                 recipe: null,
+                url: '',
                 properties: [],
                 properties_food_amount: 100,
                 properties_food_unit: {name: 'g'},

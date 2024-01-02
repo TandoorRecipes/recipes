@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-29 18:42+0200\n"
-"PO-Revision-Date: 2022-07-06 14:32+0000\n"
-"Last-Translator: Nidhal Brniyah <n1a1b1@gmail.com>\n"
+"PO-Revision-Date: 2023-11-28 11:03+0000\n"
+"Last-Translator: Mahmoud Aljouhari <mapgohary@gmail.com>\n"
 "Language-Team: Arabic <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ar/>\n"
 "Language: ar\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\filters.py:23 .\cookbook\templates\forms\ingredients.html:34
 #: .\cookbook\templates\space.html:49 .\cookbook\templates\stats.html:28
@@ -2578,7 +2578,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:262
 msgid "This feature is not available in the demo version!"
-msgstr ""
+msgstr "هذه الميزة غير موجودة في النسخة التجريبية!"
 
 #: .\cookbook\views\views.py:322
 msgid "You must select at least one field to search!"

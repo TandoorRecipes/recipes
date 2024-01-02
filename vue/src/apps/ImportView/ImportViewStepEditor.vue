@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <b-modal id="ingredient_edit_modal" :title="$t('Edit')">
+            <b-modal id="ingredient_edit_modal" :title="$t('Edit')" @hidden="destroyIngredientEditModal">
                 <div v-if="current_edit_ingredient !== null">
                     <b-form-group v-bind:label="$t('Original_Text')" class="mb-3">
                         <b-form-input v-model="current_edit_ingredient.original_text" type="text" disabled></b-form-input>
@@ -88,8 +88,8 @@
                     <div class="row w-100">
 
                         <div class="col-auto justify-content-end">
-                            <b-button class="mx-1" @click="destroyIngredientEditModal()">{{ $t('Ok') }}</b-button>
-                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);destroyIngredientEditModal()" variant="danger">{{ $t('Delete') }}</b-button>
+                            <b-button class="mx-1" >{{ $t('Ok') }}</b-button>
+                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);" variant="danger">{{ $t('Delete') }}</b-button>
                         </div>
                     </div>
                 </template>
@@ -103,6 +103,7 @@
 
 import draggable from "vuedraggable";
 import stringSimilarity from "string-similarity"
+import {getUserPreference} from "@/utils/utils"
 
 export default {
     name: "ImportViewStepEditor",
@@ -117,6 +118,7 @@ export default {
             recipe_json: undefined,
             current_edit_ingredient: null,
             current_edit_step: null,
+            user_preferences: null,
         }
     },
     watch: {
@@ -126,6 +128,7 @@ export default {
     },
     mounted() {
         this.recipe_json = this.recipe
+        this.user_preferences = getUserPreference();
     },
     methods: {
         /**
@@ -138,7 +141,7 @@ export default {
             let steps = []
             step.instruction.split(split_character).forEach(part => {
                 if (part.trim() !== '') {
-                    steps.push({'instruction': part, 'ingredients': []})
+                    steps.push({'instruction': part, 'ingredients': [], 'show_ingredients_table': this.user_preferences.show_step_ingredients})
                 }
             })
             steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
@@ -249,10 +252,10 @@ export default {
          */
         destroyIngredientEditModal: function () {
             this.$bvModal.hide('ingredient_edit_modal')
-            if (this.current_edit_ingredient.unit.name === ''){
+            if (this.current_edit_ingredient.unit !== null && this.current_edit_ingredient.unit.name === '') {
                 this.current_edit_ingredient.unit = null
             }
-            if (this.current_edit_ingredient.food.name === ''){
+            if (this.current_edit_ingredient.food !== null && this.current_edit_ingredient.food.name === '') {
                 this.current_edit_ingredient.food = null
             }
             this.current_edit_ingredient = null

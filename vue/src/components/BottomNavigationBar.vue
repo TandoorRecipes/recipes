@@ -1,17 +1,23 @@
 <template>
     <!-- bottom button nav -->
-    <div class="fixed-bottom p-1 pt-2 pl-2 pr-2 border-top text-center d-lg-none d-print-none" style="background: white">
+    <div class="fixed-bottom p-1 pt-2 pl-2 pr-2 border-top text-center d-lg-none d-print-none bottom-action-bar bg-white">
+
+        <slot name="custom_nav_content">
+
+        </slot>
+
+
         <div class="d-flex flex-row justify-content-around">
             <div class="flex-column" v-if="show_button_1">
                 <slot name="button_1">
-                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_search')">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_search' }" v-bind:href="resolveDjangoUrl('view_search')">
                         <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>{{ $t('Recipes') }}</small></a> <!-- TODO localize -->
                 </slot>
 
             </div>
             <div class="flex-column" v-if="show_button_2">
                 <slot name="button_2">
-                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_plan')">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_plan' }" v-bind:href="resolveDjangoUrl('view_plan')">
                         <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>{{ $t('Meal_Plan') }}</small></a>
                 </slot>
 
@@ -20,7 +26,7 @@
                 <slot name="button_create">
                     <div class="dropup">
                         <a class="nav-link bottom-nav-link p-0" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle fa-2x bottom-nav-link"></i>
+                           aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle fa-2x bottom-nav-link bottom-nav-link-active"></i>
                         </a>
                         <div class="dropdown-menu center-dropup" aria-labelledby="navbarDropdownMenuLink">
 
@@ -46,14 +52,14 @@
             </div>
             <div class="flex-column" v-if="show_button_3">
                 <slot name="button_3">
-                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_shopping')">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_shopping' }" v-bind:href="resolveDjangoUrl('view_shopping')">
                         <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>{{ $t('Shopping_list') }}</small></a>
                 </slot>
             </div>
             <div class="flex-column">
 
                 <slot name="button_4" v-if="show_button_4">
-                    <a class="nav-link bottom-nav-link p-0" v-bind:href="resolveDjangoUrl('view_books')">
+                    <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_books' }" v-bind:href="resolveDjangoUrl('view_books')">
                         <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>{{ $t('Books') }}</small></a> <!-- TODO localize -->
                 </slot>
 
@@ -80,6 +86,7 @@ export default {
         show_button_3: {type: Boolean, default: true},
         show_button_4: {type: Boolean, default: true},
         show_button_create: {type: Boolean, default: true},
+        activeView: {type: String, default: ""}
     }
 }
 </script>
@@ -88,6 +95,10 @@ export default {
 
 .bottom-nav-link {
     color: #666666
+}
+
+.bottom-nav-link-active {
+    color: var(--primary);
 }
 
 .center-dropup {

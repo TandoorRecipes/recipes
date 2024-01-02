@@ -1,55 +1,34 @@
 <template>
-    <div
-        v-hover
-        class="card cv-item meal-plan-card p-0"
-        :key="value.id"
-        :draggable="true"
-        :style="`top:${top};max-height:${item_height}`"
-        @dragstart="onDragItemStart(value, $event)"
-        @click="onClickItem(value, $event)"
-        :aria-grabbed="value == currentDragItem"
-        :class="value.classes"
-        @contextmenu.prevent="$emit('open-context-menu', $event, value)"
-    >
-        <div class="card-header p-1 text-center text-primary border-bottom-0" v-if="detailed" :style="`background-color: ${background_color}`">
-            <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null">{{ entry.entry.meal_type.icon }}</span>
-            <span class="font-light d-none d-md-inline">{{ entry.entry.meal_type.name }}</span>
-            <span v-if="entry.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs float-left" v-b-tooltip.hover.top :title="$t('in_shopping')" /></span>
-        </div>
-        <div class="card-img-overlay h-100 d-flex flex-column justify-content-right float-right text-right p-0" v-if="detailed">
-            <a>
-                <div style="position: static">
-                    <div class="dropdown b-dropdown position-static btn-group">
-                        <button
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            type="button"
-                            class="btn btn-link text-decoration-none text-body pr-2 dropdown-toggle-no-caret"
-                            @click.stop="$emit('open-context-menu', $event, value)"
-                        >
-                            <i class="fas fa-ellipsis-v fa-lg"></i>
-                        </button>
-                    </div>
+
+    <div v-hover
+         class="card cv-item meal-plan-card p-0"
+         :key="value.id"
+         :draggable="true"
+         :style="{'top': top, 'height': item_height, 'border-color': entry.entry.meal_type.color}"
+         @dragstart="onDragItemStart(value, $event)"
+         @click="onClickItem(value, $event)"
+         :aria-grabbed="value == currentDragItem"
+         :class="value.classes"
+         @contextmenu.prevent="$emit('open-context-menu', $event, value)">
+
+        <div class="d-flex flex-row align-items-center">
+            <div class="flex-column">
+                <img class="" style="object-fit: cover" :style="{'height': item_height, 'width': item_height}" :src="entry.entry.recipe.image"
+                     v-if="hasRecipe && detailed"/>
+                <img class="" style="object-fit: cover" :style="{'height': item_height, 'width': item_height}" :src="image_placeholder"
+                     v-if="detailed && ((!hasRecipe && entry.entry.note === '') || (hasRecipe && entry.entry.recipe.image === null))"/>
+            </div>
+            <div class="flex-column flex-grow-0 align-middle justify-content-center">
+                <div class="card-body p-0 pl-1 align-middle">
+
+                    <span class="font-light" :class="{'two-line-text': detailed,'one-line-text': !detailed,}">
+                       <i class="fas fa-shopping-cart fa-xs float-left" v-b-tooltip.hover.top :title="$t('in_shopping')" v-if="entry.entry.shopping"/>
+                        {{ title }}</span>
                 </div>
-            </a>
-        </div>
-        <div class="card-header p-1 text-center" v-if="detailed" :style="`background-color: ${background_color}`">
-            <span class="font-light">{{ title }}</span>
-        </div>
-        <b-img fluid class="card-img-bottom" :src="entry.entry.recipe.image" v-if="hasRecipe && detailed"></b-img>
-        <b-img fluid class="card-img-bottom" :src="image_placeholder" v-if="detailed && ((!hasRecipe && entry.entry.note === '') || (hasRecipe && entry.entry.recipe.image === null))"></b-img>
-        <div class="card-body p-1" v-if="detailed && entry.entry.recipe == null" :style="`background-color: ${background_color}`">
-            <p>{{ entry.entry.note }}</p>
-        </div>
-        <div class="row p-1 flex-nowrap" v-if="!detailed" :style="`background-color: ${background_color}`">
-            <div class="col-2">
-                <span class="font-light text-center" v-if="entry.entry.meal_type.icon != null" v-b-tooltip.hover.left :title="entry.entry.meal_type.name">{{ entry.entry.meal_type.icon }}</span>
-                <span class="font-light text-center" v-if="entry.entry.meal_type.icon == null" v-b-tooltip.hover.left :title="entry.entry.meal_type.name">❓</span>
-            </div>
-            <div class="col-10 d-inline-block text-truncate" :style="`max-height:${item_height}`">
-                <span class="font-light">{{ title }}</span>
             </div>
         </div>
+
+
     </div>
 </template>
 
@@ -71,7 +50,8 @@ export default {
             image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
-    mounted() {},
+    mounted() {
+    },
     computed: {
         entry: function () {
             return this.value.originalItem
@@ -132,5 +112,23 @@ export default {
     .meal-plan-card {
         font-size: 13px;
     }
+}
+
+.two-line-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.one-line-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

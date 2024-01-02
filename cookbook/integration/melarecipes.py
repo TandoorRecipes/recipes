@@ -57,7 +57,7 @@ class MelaRecipes(Integration):
             recipe.source_url = recipe_json['link']
 
         step = Step.objects.create(
-            instruction=instruction, space=self.request.space,
+            instruction=instruction, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients
         )
 
         ingredient_parser = IngredientParser(self.request, True)

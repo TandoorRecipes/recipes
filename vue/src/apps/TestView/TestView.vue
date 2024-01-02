@@ -1,39 +1,8 @@
 <template>
 
     <div id="app">
-
-        <beta-warning></beta-warning>
-
-        <div v-if="metadata !== undefined">
-            {{ $t('Data_Import_Info') }}
-
-
-            <select class="form-control" v-model="selected_version">
-                <option v-for="v in metadata.versions" v-bind:key="v">{{ v }}</option>
-            </select>
-
-            <b-checkbox v-model="update_existing" class="mt-1">{{ $t('Update_Existing_Data') }}</b-checkbox>
-            <b-checkbox v-model="use_metric" class="mt-1">{{ $t('Use_Metric') }}</b-checkbox>
-
-
-            <div v-if="selected_version !== undefined" class="mt-3">
-                <table class="table">
-                    <tr>
-                        <th>{{ $t('Datatype') }}</th>
-                        <th>{{ $t('Number of Objects') }}</th>
-                        <th>{{ $t('Imported') }}</th>
-                    </tr>
-                    <tr v-for="d in metadata.datatypes" v-bind:key="d">
-                        <td>{{ $t(d.charAt(0).toUpperCase() + d.slice(1)) }}</td>
-                        <td>{{ metadata[selected_version][d] }}</td>
-                        <td>
-                            <template v-if="import_count !== undefined">{{ import_count[d] }}</template>
-                        </td>
-                    </tr>
-                </table>
-
-                <button class="btn btn-success" @click="doImport">{{ $t('Import') }}</button>
-            </div>
+        <div>
+            <markdown-editor-component></markdown-editor-component>
 
         </div>
     </div>
@@ -48,6 +17,11 @@ import "bootstrap-vue/dist/bootstrap-vue.css"
 import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils";
 import axios from "axios";
 import BetaWarning from "@/components/BetaWarning.vue";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
+import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
+import {Models} from "@/utils/models";
+import MarkdownEditorComponent from "@/components/MarkdownEditorComponent.vue";
 
 
 Vue.use(BootstrapVue)
@@ -56,39 +30,20 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {BetaWarning},
+    components: {MarkdownEditorComponent},
+    computed: {},
     data() {
-        return {
-            metadata: undefined,
-            selected_version: undefined,
-            update_existing: true,
-            use_metric: true,
-            import_count: undefined,
-        }
+        return {}
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
-        axios.get(resolveDjangoUrl('api_import_open_data')).then(r => {
-            this.metadata = r.data
-        }).catch(err => {
-            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-        })
+
     },
     methods: {
-        doImport: function () {
-            axios.post(resolveDjangoUrl('api_import_open_data'), {
-                'selected_version': this.selected_version,
-                'selected_datatypes': this.metadata.datatypes,
-                'update_existing': this.update_existing,
-                'use_metric': this.use_metric,
-            }).then(r => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                this.import_count = r.data
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
-            })
-        },
+        refreshData: function () {
+
+        }
     },
 }
 </script>

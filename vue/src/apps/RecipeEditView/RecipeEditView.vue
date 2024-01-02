@@ -240,6 +240,16 @@
                                                 v-if="step_index !== recipe.steps.length - 1">
                                             <i class="fa fa-arrow-down fa-fw"></i> {{ $t("Move_Down") }}
                                         </button>
+                                        <!-- Show "Hide step ingredients if state is currently set to shown"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, false)"
+                                                v-if="step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye-slash"></i> {{ $t("hide_step_ingredients") }}
+                                        </button>
+                                        <!-- Show "Show step ingredients if state is currently set to hidden"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, true)"
+                                                v-if="! step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye"></i> {{ $t("show_step_ingredients") }}
+                                        </button>                                        
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +280,6 @@
                                               @click="step.time_visible = true" v-if="!step.time_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Time") }}
                                     </b-button>
-
                                     <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.ingredients_visible = true" v-if="!step.ingredients_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Ingredients") }}
@@ -680,7 +689,7 @@
             <br/>
 
             <!-- bottom buttons save/close/view -->
-            <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
+            <div class="row fixed-bottom p-2 b-2 border-top text-center bg-white bottom-action-bar"
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
@@ -770,7 +779,8 @@ import {
     ResolveUrlMixin,
     StandardToasts,
     convertEnergyToCalories,
-    energyHeading
+    energyHeading,
+    getUserPreference
 } from "@/utils/utils"
 import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
@@ -813,6 +823,7 @@ export default {
             show_file_create: false,
             step_for_file_create: undefined,
             use_plural: false,
+            user_preferences: undefined,
             additional_visible: false,
             create_food: undefined,
             md_editor_toolbars: {
@@ -858,9 +869,9 @@ export default {
         this.searchKeywords("")
         this.searchFiles("")
         this.searchRecipes("")
-
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
+        this.user_preferences = getUserPreference()
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
@@ -925,7 +936,7 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
+                        this.$set(s, "ingredients_visible", (s.ingredients.length > 0 || this.recipe.steps.length === 1))
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
@@ -1028,6 +1039,7 @@ export default {
                 show_as_header: false,
                 time_visible: false,
                 ingredients_visible: true,
+                show_ingredients_table: this.user_preferences.show_step_ingredients,
                 instruction_visible: true,
                 step_recipe_visible: false,
                 file_visible: false,
@@ -1069,12 +1081,17 @@ export default {
             this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
         },
         removeIngredient: function (step, ingredient) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Ingredient")}))) {
+            let message = this.$t("confirm_delete", {object: this.$t("Ingredient")})
+            if (ingredient.food?.name) {
+                message = this.$t("delete_confirmation", {source: `"${ingredient.food.name}"`})
+            }
+            if (confirm(message)) {
                 step.ingredients = step.ingredients.filter((item) => item !== ingredient)
             }
         },
         removeStep: function (step) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Step")}))) {
+            const step_index = this.recipe.steps.indexOf(step)
+            if (confirm(this.$t("delete_confirmation", {source: `${this.$t("Step")} "${step.name || step_index}"`}))) {
                 this.recipe.steps = this.recipe.steps.filter((item) => item !== step)
             }
         },
@@ -1082,6 +1099,9 @@ export default {
             this.recipe.steps.splice(this.recipe.steps.indexOf(step), 1)
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
+        },
+        setStepShowIngredientsTable: function (step, show_state) {
+            step.show_ingredients_table = show_state
         },
         moveIngredient: function (step, ingredient, new_index) {
             step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
@@ -1254,28 +1274,34 @@ export default {
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
                     promises.push(this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
+
                         let unit = null
                         if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
-                        parsed_ing_list.push({
+                        let new_ingredient = {
                             amount: result.data.amount,
                             unit: unit,
                             food: {name: result.data.food},
                             note: result.data.note,
                             original_text: ing,
-                        })
+                        }
+                        console.log(ing, new_ingredient)
+                        parsed_ing_list.push(new_ingredient)
                     }))
                 }
             })
             Promise.allSettled(promises).then(() => {
                 ing_list.forEach(ing => {
-                    step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    if(ing.trim() !== ""){
+                        step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    }
                 })
             })
         },
         duplicateIngredient: function (step, ingredient, new_index) {
             delete ingredient.id
+            ingredient = JSON.parse(JSON.stringify(ingredient))
             step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
         }
     },

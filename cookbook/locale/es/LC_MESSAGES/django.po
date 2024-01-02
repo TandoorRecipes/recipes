@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-05-26 16:19+0000\n"
-"Last-Translator: Luis Cacho <luiscachog@gmail.com>\n"
+"PO-Revision-Date: 2023-09-25 09:59+0000\n"
+"Last-Translator: Matias Laporte <laportematias+weblate@gmail.com>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -543,19 +543,19 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:268
 msgid "knead"
-msgstr ""
+msgstr "amasar"
 
 #: .\cookbook\helper\recipe_url_import.py:269
 msgid "thicken"
-msgstr ""
+msgstr "espesar"
 
 #: .\cookbook\helper\recipe_url_import.py:270
 msgid "warm up"
-msgstr ""
+msgstr "precalentar"
 
 #: .\cookbook\helper\recipe_url_import.py:271
 msgid "ferment"
-msgstr ""
+msgstr "fermentar"
 
 #: .\cookbook\helper\recipe_url_import.py:272
 msgid "sous-vide"
@@ -573,11 +573,11 @@ msgstr ""
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Lo he preparado"
 
 #: .\cookbook\integration\integration.py:218
 msgid ""
@@ -604,7 +604,7 @@ msgstr "Se importaron %s recetas."
 
 #: .\cookbook\integration\openeats.py:26
 msgid "Recipe source:"
-msgstr "Recipe source:"
+msgstr "Fuente de la receta:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -645,19 +645,21 @@ msgstr "Sección"
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Reconstruye el índice de búsqueda por texto completo de la receta"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Solo las bases de datos Postgresql utilizan la búsqueda por texto completo, "
+"no hay índice para reconstruir"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Se reconstruyó el índice de la receta."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "No fue posible reconstruir el índice de la receta."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -699,23 +701,23 @@ msgstr "Libros"
 
 #: .\cookbook\models.py:580
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " es parte del paso de una receta y no puede ser eliminado"
 
 #: .\cookbook\models.py:1181 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Simple"
 
 #: .\cookbook\models.py:1182 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Frase"
 
 #: .\cookbook\models.py:1183 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:1184 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Crudo"
 
 #: .\cookbook\models.py:1231
 msgid "Food Alias"
@@ -762,49 +764,53 @@ msgstr "Palabra clave"
 
 #: .\cookbook\serializer.py:198
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Las cargas de archivo no están habilitadas para esta Instancia."
 
 #: .\cookbook\serializer.py:209
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Has alcanzado el límite de cargas de archivo."
 
 #: .\cookbook\serializer.py:291
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "No puedes modificar los permisos del propietario de la Instancia."
 
 #: .\cookbook\serializer.py:1093
 msgid "Hello"
-msgstr ""
+msgstr "Hola"
 
 #: .\cookbook\serializer.py:1093
 msgid "You have been invited by "
-msgstr ""
+msgstr "Has sido invitado por: "
 
 #: .\cookbook\serializer.py:1094
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " para unirte a su instancia de Tandoor Recipes "
 
 #: .\cookbook\serializer.py:1095
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Haz click en el siguiente enlace para activar tu cuenta: "
 
 #: .\cookbook\serializer.py:1096
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Si el enlace no funciona, utiliza el siguiente código para unirte "
+"manualmente a la instancia: "
 
 #: .\cookbook\serializer.py:1097
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "La invitación es válida hasta "
 
 #: .\cookbook\serializer.py:1098
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes es un administrador de recetas Open Source. Dale una ojeada "
+"en GitHub "
 
 #: .\cookbook\serializer.py:1101
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Invitación para Tandoor Recipes"
 
 #: .\cookbook\serializer.py:1242
 msgid "Existing shopping list to update"
