@@ -1,11 +1,12 @@
+from decimal import Decimal
+
 from django.contrib import auth
 from django.core.cache import caches
 from django_scopes import scopes_disabled
-from decimal import Decimal
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.property_helper import FoodPropertyHelper
-from cookbook.models import Unit, Food, PropertyType, Property, Recipe, Step, UnitConversion, Property
+from cookbook.models import Food, Property, PropertyType, Recipe, Step, Unit, UnitConversion
 
 
 def test_food_property(space_1, space_2, u1_s1):
@@ -125,5 +126,3 @@ def test_food_property(space_1, space_2, u1_s1):
         property_values = FoodPropertyHelper(space_1).calculate_recipe_properties(recipe_2)
 
         assert property_fat.id not in property_values
-
-

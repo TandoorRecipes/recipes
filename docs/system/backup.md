@@ -8,7 +8,7 @@ downloaded and restored through the web interface.
     When developing a new backup strategy, make sure to also test the restore process!
 
 ## Database
-Please use any standard way of backing up your database. For most systems this can be achieved by using a dump 
+Please use any standard way of backing up your database. For most systems this can be achieved by using a dump
 command that will create an SQL file with all the required data.
 
 Please refer to your Database System documentation.
@@ -18,7 +18,7 @@ It is **neither** well tested nor documented so use at your own risk.
 I would recommend using it only as a starting place for your own backup strategy.
 
 ## Mediafiles
-The only Data this application stores apart from the database are the media files (e.g. images) used in your 
+The only Data this application stores apart from the database are the media files (e.g. images) used in your
 recipes.
 
 They can be found in the mediafiles mounted directory (depending on your installation).
@@ -56,3 +56,23 @@ You can now export recipes from Tandoor using the export function. This method r
 Import:
 Go to Import > from app > tandoor and select the zip file you want to import from.
 
+## Backing up using the pgbackup container
+You can add [pgbackup](https://hub.docker.com/r/prodrigestivill/postgres-backup-local) to manage the scheduling and automatic backup of your postgres database.
+Modify the below to match your environment and add it to your `docker-compose.yml`
+
+``` yaml
+  pgbackup:
+    container_name: pgbackup
+    environment:
+      BACKUP_KEEP_DAYS: "8"
+      BACKUP_KEEP_MONTHS: "6"
+      BACKUP_KEEP_WEEKS: "4"
+      POSTGRES_EXTRA_OPTS: -Z6 --schema=public --blobs
+      SCHEDULE: '@daily'
+    # Note: the tag must match the version of postgres you are using
+    image: prodrigestivill/postgres-backup-local:15
+    restart: unless-stopped
+    volumes:
+      - backups/postgres:/backups
+```
+You can manually initiate a backup by running `docker exec -it pgbackup ./backup.sh`

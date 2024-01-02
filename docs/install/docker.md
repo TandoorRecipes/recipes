@@ -6,6 +6,12 @@ It is possible to install this application using many different Docker configura
 
 Please read the instructions on each example carefully and decide if this is the way for you.
 
+## **DockSTARTer**
+
+The main goal of [DockSTARTer](https://dockstarter.com/) is to make it quick and easy to get up and running with Docker.
+You may choose to rely on DockSTARTer for various changes to your Docker system or use DockSTARTer as a stepping stone and learn to do more advanced configurations.
+Follow the guide for installing DockSTARTer and then run `ds` then select 'Configuration' and 'Select Apps' to get Tandoor up and running quickly and easily.
+
 ## **Docker**
 
 The docker image (`vabene1111/recipes`) simply exposes the application on the container's port `8080`.
@@ -110,7 +116,7 @@ in combination with [jrcs's letsencrypt companion](https://hub.docker.com/r/jrcs
 Please refer to the appropriate documentation on how to setup the reverse proxy and networks.
 
 !!! warning "Adjust client_max_body_size"
-    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration. 
+    By using jwilder's Nginx-proxy, uploads will be restricted to 1 MB file size. This can be resolved by adjusting the ```client_max_body_size``` variable in the jwilder nginx configuration.
 
 Remember to add the appropriate environment variables to the `.env` file:
 
@@ -343,10 +349,9 @@ ProxyPassReverse / http://localhost:8080/ # replace port
 !!!info
     Always wait at least 2-3 minutes after the very first start, since migrations will take some time!
 
-!!!warning
-    If you want to use Tandoor on a Raspberry Pi running a 32-bit operating system you will need to use the following
-    docker image tags: `latest-raspi`, `beta-raspi` and the versioned `<x.y.z>-raspi`
-    We strongly recommend using the new 64-bit Raspian image as the 32-bit version is not tested.
+!!!info
+    In the past there was a special `*-raspi` version of the image. This no longer exists. The normal Tags all support Arm/v7 architectures which should work on all Raspberry Pi's above Version 1 and the first generation Zero. 
+    See [Wikipedia Raspberry Pi specifications](https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications).
 
 If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
 follow these instructions:
@@ -360,11 +365,11 @@ follow these instructions:
 ### Sub Path nginx config
 
 If hosting under a sub-path you might want to change the default nginx config (which gets mounted through the named volume from the application container into the nginx container)
-with the following config. 
+with the following config.
 
 ```nginx
 location /my_app { # change to subfolder name
-    include /config/nginx/proxy.conf; 
+    include /config/nginx/proxy.conf;
     proxy_pass https://mywebapp.com/; # change to your host name:port
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

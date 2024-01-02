@@ -7,14 +7,11 @@
 {% block title %}{% trans 'Export' %}{% endblock %}
 
 {% block content %}
-
     <div id="app">
         <export-response-view></export-response-view>
     </div>
 
-
 {% endblock %}
-
 
 {% block script %}
     {% if debug %}
@@ -24,7 +21,11 @@
     {% endif %}
 
     <script type="application/javascript">
-        window.EXPORT_ID = {{pk}};
+    {% if pk %}
+        window.EXPORT_ID = {{ pk }}
+    {% else %}
+        window.EXPORT_ID = null
+    {% endif %}
         window.CUSTOM_LOCALE = '{{ request.LANGUAGE_CODE }}'
     </script>
 

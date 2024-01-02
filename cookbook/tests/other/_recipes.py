@@ -2235,41 +2235,41 @@ THE_SPRUCE_EATS = {
     "image": "https://www.thespruceeats.com/thmb/X_emapo3nNw6ASJctdNpYycYFtM=/940x0/filters:no_upscale():max_bytes(150000):strip_icc()/creamy-potato-soup-with-ham-3059797-stovetop-step-12-99dc3bf1962c4e26a2d225ee3c25ecad.jpg",
     "source_url": "https://www.thespruceeats.com/creamy-potato-soup-with-ham-3059797",
     "keywords": [
-            {
-                "label": "soup",
-                "name": "soup",
-                "id": 18,
-            },
         {
-                "label": "lunch",
-                "name": "lunch",
-            },
+            "label": "soup",
+            "name": "soup",
+            "id": 18,
+        },
         {
-                "label": "entree",
-                "name": "entree",
-            },
+            "label": "lunch",
+            "name": "lunch",
+        },
         {
-                "label": "side dish",
-                "name": "side dish",
-                "id": 14,
-            },
+            "label": "entree",
+            "name": "entree",
+        },
         {
-                "label": "www.thespruceeats.com",
-                "name": "www.thespruceeats.com",
-            },
+            "label": "side dish",
+            "name": "side dish",
+            "id": 14,
+        },
         {
-                "label": "southern",
-                "name": "southern",
-                "id": 27,
-            },
+            "label": "www.thespruceeats.com",
+            "name": "www.thespruceeats.com",
+        },
         {
-                "label": "cheddar",
-                "name": "cheddar",
-            },
+            "label": "southern",
+            "name": "southern",
+            "id": 27,
+        },
         {
-                "label": "dinner",
-                "name": "dinner",
-            }
+            "label": "cheddar",
+            "name": "cheddar",
+        },
+        {
+            "label": "dinner",
+            "name": "dinner",
+        }
     ],
     "steps": [
         {

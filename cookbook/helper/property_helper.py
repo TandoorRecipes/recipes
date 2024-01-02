@@ -2,7 +2,7 @@ from django.core.cache import caches
 
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
-from cookbook.models import PropertyType, Unit, Food, Property, Recipe, Step
+from cookbook.models import PropertyType
 
 
 class FoodPropertyHelper:
@@ -31,10 +31,12 @@ class FoodPropertyHelper:
 
         if not property_types:
             property_types = PropertyType.objects.filter(space=self.space).all()
-            caches['default'].set(CacheHelper(self.space).PROPERTY_TYPE_CACHE_KEY, property_types, 60 * 60)  # cache is cleared on property type save signal so long duration is fine
+            # cache is cleared on property type save signal so long duration is fine
+            caches['default'].set(CacheHelper(self.space).PROPERTY_TYPE_CACHE_KEY, property_types, 60 * 60)
 
         for fpt in property_types:
-            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'icon': fpt.icon, 'description': fpt.description, 'unit': fpt.unit, 'food_values': {}, 'total_value': 0, 'missing_value': False}
+            computed_properties[fpt.id] = {'id': fpt.id, 'name': fpt.name, 'description': fpt.description,
+                                           'unit': fpt.unit, 'order': fpt.order, 'food_values': {}, 'total_value': 0, 'missing_value': False}
 
         uch = UnitConversionHelper(self.space)
 
@@ -53,7 +55,8 @@ class FoodPropertyHelper:
                                     if c.unit == i.food.properties_food_unit:
                                         found_property = True
                                         computed_properties[pt.id]['total_value'] += (c.amount / i.food.properties_food_amount) * p.property_amount
-                                        computed_properties[pt.id]['food_values'] = self.add_or_create(computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
+                                        computed_properties[pt.id]['food_values'] = self.add_or_create(
+                                            computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
                         computed_properties[pt.id]['missing_value'] = True
                         computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}

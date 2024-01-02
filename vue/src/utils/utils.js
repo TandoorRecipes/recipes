@@ -14,6 +14,7 @@ import {BToast} from "bootstrap-vue"
 // * */
 import Vue from "vue"
 import {Actions, Models} from "./models"
+import moment from "moment";
 
 export const ToastMixin = {
     name: "ToastMixin",
@@ -49,6 +50,7 @@ export class StandardToasts {
     static FAIL_DELETE_PROTECTED = "FAIL_DELETE_PROTECTED"
     static FAIL_MOVE = "FAIL_MOVE"
     static FAIL_MERGE = "FAIL_MERGE"
+    static FAIL_IMPORT = "FAIL_IMPORT"
 
     static makeStandardToast(context, toast, err = undefined, always_show_errors = false) {
         let title = ''
@@ -121,18 +123,33 @@ export class StandardToasts {
                 title = i18n.tc("Failure")
                 msg = i18n.tc("err_merging_resource")
                 break
+            case StandardToasts.FAIL_IMPORT:
+                variant = 'danger'
+                title = i18n.tc("Failure")
+                msg = i18n.tc("err_importing_recipe")
+                break
         }
 
 
         let DEBUG = localStorage.getItem("DEBUG") === "True" || always_show_errors
+        if (DEBUG){
+            console.log('ERROR ', err, JSON.stringify(err?.response?.data))
+            console.trace();
+        }
 
-        if (err !== undefined && 'response' in err && 'headers' in err.response) {
-            if (DEBUG && err.response.headers['content-type'] === 'application/json' && err.response.status < 500) {
-                console.log('ERROR ', JSON.stringify(err.response.data))
+        if (err !== undefined 
+            && 'response' in err 
+            && 'headers' in err.response 
+            && err.response.headers['content-type'] === 'application/json' 
+            && err.response.status < 500 
+            && err.response.data) {
+            // If the backend provides us with a nice error message, we print it, regardless of DEBUG mode
+            if (DEBUG || err.response.data.msg) {
+                const errMsg = err.response.data.msg ? err.response.data.msg : JSON.stringify(err.response.data) 
                 msg = context.$createElement('div', {}, [
                     context.$createElement('span', {}, [msg]),
                     context.$createElement('br', {}, []),
-                    context.$createElement('code', {'class': 'mt-2'}, [JSON.stringify(err.response.data)])
+                    context.$createElement('code', {'class': 'mt-2'}, [errMsg])
                 ])
             }
         }
@@ -719,6 +736,10 @@ const specialCases = {
 export const formFunctions = {
     FoodCreateDefault: function (form) {
         form.fields.filter((x) => x.field === "inherit_fields")[0].value = getUserPreference("food_inherit_default")
+        return form
+    },
+    InviteLinkDefaultValid: function (form){
+        form.fields.filter((x) => x.field === "valid_until")[0].value = moment().add(7, "days").format('yyyy-MM-DD')
         return form
     },
     AutomationOrderDefault: function (form) {

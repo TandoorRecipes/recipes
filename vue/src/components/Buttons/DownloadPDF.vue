@@ -1,7 +1,7 @@
 <template>
-    <div style="cursor:pointer">
-        <a v-if="!button" class="dropdown-item" @click="downloadFile"><i :class="icon"></i> {{ label }}</a>
-        <b-button v-if="button" @click="downloadFile">{{ label }}</b-button>
+    <div style="cursor:pointer;">
+        <a v-if="!button" class="dropdown-item" @click="downloadFile" href="#"><i :class="icon"></i> {{ label }}</a>
+        <b-button class="dropdown-item" v-if="button" @click="downloadFile">{{ label }}</b-button>
     </div>
 </template>
 

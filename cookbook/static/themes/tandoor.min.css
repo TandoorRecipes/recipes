@@ -4457,28 +4457,28 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-light .navbar-brand, .navbar-light .navbar-brand:focus, .navbar-light .navbar-brand:hover {
-    color: rgba(46, 46, 46, .9)
+    color: rgba(0, 0, 0, .9)
 }
 
 .navbar-light .navbar-nav .nav-link {
-    color: rgba(46, 46, 46, .5)
+    color: rgba(0, 0, 0, .5)
 }
 
 .navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
-    color: rgba(46, 46, 46, .7)
+    color: rgba(0, 0, 0, .7)
 }
 
 .navbar-light .navbar-nav .nav-link.disabled {
-    color: rgba(46, 46, 46, .3)
+    color: rgba(0, 0, 0, .3)
 }
 
 .navbar-light .navbar-nav .active > .nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show > .nav-link {
-    color: rgba(46, 46, 46, .9)
+    color: rgba(0, 0, 0, .9)
 }
 
 .navbar-light .navbar-toggler {
-    color: rgba(46, 46, 46, .5);
-    border-color: rgba(46, 46, 46, .1)
+    color: rgba(0, 0, 0, .5);
+    border-color: rgba(0, 0, 0, .1)
 }
 
 .navbar-light .navbar-toggler-icon {
@@ -4486,11 +4486,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-light .navbar-text {
-    color: rgba(46, 46, 46, .5)
-}
-
-.navbar-light .navbar-text a, .navbar-light .navbar-text a:focus, .navbar-light .navbar-text a:hover {
-    color: rgba(46, 46, 46, .9)
+    color: rgba(0, 0, 0, .5)
 }
 
 .navbar-dark .navbar-brand, .navbar-dark .navbar-brand:focus, .navbar-dark .navbar-brand:hover {
@@ -4498,24 +4494,24 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: hsla(0, 0%, 18%, .5)
+    color: rgba(255, 255, 255, .5)
 }
 
 .navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
-    color: hsla(0, 0%, 18%, .75)
+    color: rgba(255, 255, 255, .75)
 }
 
 .navbar-dark .navbar-nav .nav-link.disabled {
-    color: hsla(0, 0%, 18%, .25)
+     color: rgba(255, 255, 255, .25)
 }
 
 .navbar-dark .navbar-nav .active > .nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show > .nav-link {
-    color: #2e2e2e
+    color: #FFF
 }
 
 .navbar-dark .navbar-toggler {
-    color: rgba(46, 46, 46, 0.5);
-    border-color: rgba(46, 46, 46, 0.5);
+    color: rgba(255, 255, 255, .5);
+    border-color: rgba(255, 255, 255, .1)
 }
 
 .navbar-dark .navbar-toggler-icon {
@@ -4523,7 +4519,7 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 }
 
 .navbar-dark .navbar-text {
-    color: hsla(0, 0%, 18%, .5)
+    color: rgba(255, 255, 255, .5)
 }
 
 .navbar-dark .navbar-text a, .navbar-dark .navbar-text a:focus, .navbar-dark .navbar-text a:hover {
@@ -4634,13 +4630,15 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
 .card-img-top {
     width: 100%;
     border-top-left-radius: calc(.25rem - 1px);
-    border-top-right-radius: calc(.25rem - 1px)
+    border-top-right-radius: calc(.25rem - 1px);
+    background-color: #f5f5f6;
 }
 
 .card-img-bottom {
     width: 100%;
     border-bottom-right-radius: calc(.25rem - 1px);
-    border-bottom-left-radius: calc(.25rem - 1px)
+    border-bottom-left-radius: calc(.25rem - 1px);
+    background-color: #f5f5f6;
 }
 
 .card-deck {

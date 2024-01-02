@@ -1,13 +1,3 @@
-# test create
-# test create units
-# test amounts
-# test create wrong space
-# test sharing
-# test delete
-# test delete checked (nothing should happen)
-# test delete not shared (nothing happens)
-# test delete shared
-
 import json
 
 import pytest
@@ -15,7 +5,6 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, ShoppingListEntry
 from cookbook.tests.factories import FoodFactory
 
 SHOPPING_LIST_URL = 'api:shoppinglistentry-list'
@@ -80,8 +69,8 @@ def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
         user1 = auth.get_user(u1_s1)
         user2 = auth.get_user(u2_s1)
         food2 = FoodFactory(space=space_1)
-    r = u1_s1.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
-    r = u2_s1.put(reverse(SHOPPING_FOOD_URL, args={food2.id}))
+    u1_s1.put(reverse(SHOPPING_FOOD_URL, args={food.id}))
+    u2_s1.put(reverse(SHOPPING_FOOD_URL, args={food2.id}))
     sl_1 = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
     sl_2 = json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)
     assert len(sl_1) == 1

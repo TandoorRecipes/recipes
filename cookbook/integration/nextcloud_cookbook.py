@@ -2,13 +2,14 @@ import json
 import re
 from io import BytesIO, StringIO
 from zipfile import ZipFile
+
 from PIL import Image
 
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import iso_duration_to_minutes
 from cookbook.integration.integration import Integration
-from cookbook.models import Ingredient, Keyword, Recipe, Step, NutritionInformation
+from cookbook.models import Ingredient, Keyword, NutritionInformation, Recipe, Step
 
 
 class NextcloudCookbook(Integration):
@@ -51,14 +52,13 @@ class NextcloudCookbook(Integration):
 
         ingredients_added = False
         for s in recipe_json['recipeInstructions']:
-            instruction_text = ''
             if 'text' in s:
                 step = Step.objects.create(
-                    instruction=s['text'], name=s['name'], space=self.request.space,
+                    instruction=s['text'], name=s['name'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
             else:
                 step = Step.objects.create(
-                    instruction=s, space=self.request.space,
+                    instruction=s, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
             if not ingredients_added:
                 if len(recipe_json['description'].strip()) > 500:
@@ -91,7 +91,7 @@ class NextcloudCookbook(Integration):
                 if nutrition != {}:
                     recipe.nutrition = NutritionInformation.objects.create(**nutrition, space=self.request.space)
                     recipe.save()
-            except Exception as e:
+            except Exception:
                 pass
 
         for f in self.files:

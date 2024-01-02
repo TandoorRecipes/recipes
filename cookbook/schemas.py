@@ -67,17 +67,3 @@ class FilterSchema(AutoSchema):
             'schema': {'type': 'string', },
         })
         return parameters
-
-
-# class QueryOnlySchema(AutoSchema):
-#     def get_path_parameters(self, path, method):
-#         if not is_list_view(path, method, self.view):
-#             return super(QueryOnlySchema, self).get_path_parameters(path, method)
-
-#         parameters = super().get_path_parameters(path, method)
-#         parameters.append({
-#             "name": 'query', "in": "query", "required": False,
-#             "description": 'Query string matched (fuzzy) against object name.',
-#             'schema': {'type': 'string', },
-#         })
-#         return parameters

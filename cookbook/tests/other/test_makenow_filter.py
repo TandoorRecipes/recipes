@@ -1,7 +1,5 @@
-
 import pytest
 from django.contrib import auth
-from django.urls import reverse
 from django_scopes import scope
 
 from cookbook.helper.recipe_search import RecipeSearch

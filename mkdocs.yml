@@ -33,6 +33,7 @@ nav:
       - Synology: install/synology.md
       - Kubernetes: install/kubernetes.md
       - KubeSail or PiBox: install/kubesail.md
+      - TrueNAS Portainer: install/truenas_portainer.md
       - WSL: install/wsl.md
       - Manual: install/manual.md
       - Other setups: install/other.md
