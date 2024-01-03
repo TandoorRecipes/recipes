@@ -7,7 +7,7 @@
         </template>
 
         <template v-else>
-            <td class="d-print-none" v-if="detailed" @click="done">
+            <td class="d-print-none align-baseline py-2" v-if="detailed" @click="done">
                 <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
                 <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
             </td>
@@ -40,9 +40,9 @@
                     </template>
                 </template>
             </td>
-            <td v-if="detailed">
+            <td v-if="detailed" class="align-baseline">
                 <template v-if="ingredient.note">
-                    <span v-b-popover.hover="ingredient.note" class="d-print-none touchable py-0 px-2">
+                    <span class="d-print-none touchable py-0 px-2" v-b-popover.hover="ingredient.note">
                         <i class="far fa-comment"></i>
                     </span>
 
@@ -106,8 +106,8 @@ export default {
 <style scoped>
 /* increase size of hover/touchable space without changing spacing */
 .touchable {
-    --target-increase: 1em;
-    display: flex;
+    --target-increase: 2em;
+    display: inline-flex;
 }
 
 .touchable::after {
