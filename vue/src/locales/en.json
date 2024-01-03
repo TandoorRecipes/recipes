@@ -425,7 +425,7 @@
 	"Nav_Text_Mode": "Navigation Text Mode",
 	"Nav_Text_Mode_Help": "Behaves differently for every theme.",
 	"Nav_Color_Help": "Change navigation color.",
-	"Space_Cosmetic_Settings": "All cosmetic space settings override users individual settings.",
+	"Space_Cosmetic_Settings": "Some cosmetic settings can be changed by space administrators and will override client settings for that space.",
 	"Use_Kj": "Use kJ instead of kcal",
 	"Comments_setting": "Show Comments",
 	"click_image_import": "Click the image you want to import for this recipe",

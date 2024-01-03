@@ -49,6 +49,9 @@
             </b-form-select>
 
         </b-form-group>
+
+        <b-alert variant="warning" show><i class="fas fa-exclamation-triangle"></i> {{ $t('Space_Cosmetic_Settings') }}</b-alert>
+
         <b-form-group :label="$t('Theme')">
             <b-form-select v-model="user_preferences.theme" @change="updateSettings(true);">
                 <b-form-select-option value="TANDOOR">Tandoor</b-form-select-option>
