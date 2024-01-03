@@ -738,7 +738,7 @@ class AutoPlanViewSet(viewsets.ViewSet):
         serializer = AutoMealPlanSerializer(data=request.data)
 
         if serializer.is_valid():
-            keywords = serializer.validated_data['keywords']
+            keyword_ids = serializer.validated_data['keyword_ids']
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             servings = serializer.validated_data['servings']
@@ -753,8 +753,8 @@ class AutoPlanViewSet(viewsets.ViewSet):
             recipes = Recipe.objects.values('id', 'name')
             meal_plans = list()
 
-            for keyword in keywords:
-                recipes = recipes.filter(keywords__name=keyword['name'])
+            for keyword_id in keyword_ids:
+                recipes = recipes.filter(keywords__id=keyword_id)
 
             if len(recipes) == 0:
                 return Response(serializer.data)
