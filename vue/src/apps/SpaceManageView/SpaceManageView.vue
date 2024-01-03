@@ -137,7 +137,7 @@
         <b-row class="mt-4" v-if="space !== undefined">
             <b-col cols="12">
                 <h4>{{ $t('Cosmetic') }}</h4>
-                <b-alert variant="warning" show>{{ $t('Space_Cosmetic_Settings') }}</b-alert>
+                <b-alert variant="warning" show><i class="fas fa-exclamation-triangle"></i> {{ $t('Space_Cosmetic_Settings') }}</b-alert>
 
                 <b-form-group :label="$t('Image')" :description="$t('CustomImageHelp')">
                     <generic-multiselect :initial_single_selection="space.image"
