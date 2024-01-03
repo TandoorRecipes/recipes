@@ -1023,7 +1023,7 @@ class AutoMealPlanSerializer(serializers.Serializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     meal_type_id = serializers.IntegerField()
-    keywords = KeywordSerializer(many=True)
+    keyword_ids = serializers.ListField()
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
     addshopping = serializers.BooleanField()
