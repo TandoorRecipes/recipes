@@ -283,11 +283,11 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     name = models.CharField(max_length=128, default='Default')
 
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
-    space_theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
+    space_theme = models.CharField(choices=THEMES, max_length=128, default=BLANK)
     custom_space_theme = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_theme')
     nav_logo = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_nav_logo')
     nav_bg_color = models.CharField(max_length=8, default='', blank=True, )
-    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
+    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=BLANK)
 
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
