@@ -4539,6 +4539,18 @@ export interface Space {
     image?: RecipeFile | null;
     /**
      * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    nav_logo?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    space_theme?: RecipeFile | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof Space
      */
@@ -5124,7 +5136,19 @@ export interface UserPreference {
      * @type {string}
      * @memberof UserPreference
      */
-    nav_color?: UserPreferenceNavColorEnum;
+    nav_bg_color?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    nav_text_color?: UserPreferenceNavTextColorEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    nav_show_logo?: boolean;
     /**
      * 
      * @type {string}
@@ -5160,7 +5184,7 @@ export interface UserPreference {
      * @type {boolean}
      * @memberof UserPreference
      */
-    sticky_navbar?: boolean;
+    nav_sticky?: boolean;
     /**
      * 
      * @type {number}
@@ -5281,13 +5305,7 @@ export enum UserPreferenceThemeEnum {
     * @export
     * @enum {string}
     */
-export enum UserPreferenceNavColorEnum {
-    Primary = 'PRIMARY',
-    Secondary = 'SECONDARY',
-    Success = 'SUCCESS',
-    Info = 'INFO',
-    Warning = 'WARNING',
-    Danger = 'DANGER',
+export enum UserPreferenceNavTextColorEnum {
     Light = 'LIGHT',
     Dark = 'DARK'
 }
