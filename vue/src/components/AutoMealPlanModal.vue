@@ -227,11 +227,18 @@ export default {
 
         async autoPlanThread(autoPlan, mealTypeIndex) {
             let apiClient = new ApiApiFactory()
+
+            let keyword_ids = []
+            for (const index in autoPlan.keywords[mealTypeIndex]){
+              let keyword = autoPlan.keywords[mealTypeIndex][index]
+              keyword_ids.push(keyword.id)
+            }
+
             let data = {
                 "start_date": moment(autoPlan.startDay).format("YYYY-MM-DD"),
                 "end_date": moment(autoPlan.endDay).format("YYYY-MM-DD"),
                 "meal_type_id": autoPlan.meal_types[mealTypeIndex].id,
-                "keywords": autoPlan.keywords[mealTypeIndex],
+                "keyword_ids": keyword_ids,
                 "servings": autoPlan.servings,
                 "shared": autoPlan.shared,
                 "addshopping": autoPlan.addshopping
