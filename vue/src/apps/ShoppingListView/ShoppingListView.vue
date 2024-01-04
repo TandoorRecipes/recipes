@@ -29,9 +29,13 @@
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title>
-                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small class="d-inline-block"></b-spinner>
-                    <i v-if="!shopping_list_store.currently_updating" class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span class="d-none d-md-inline-block">{{ $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})` }}</span> <!-- TODO properly count only checked -->
+                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
+                               class="d-inline-block"></b-spinner>
+                    <i v-if="!shopping_list_store.currently_updating"
+                       class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
+                    <span class="d-none d-md-inline-block">{{
+                            $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})`
+                        }}</span> <!-- TODO properly count only checked -->
                 </template>
 
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -52,13 +56,17 @@
 
                 <!-- shopping list table -->
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
-                    <b-col cols="12" v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
+                    <b-col cols="12"
+                           v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
                         <b-button-group class="w-100 mt-1">
                             <b-button variant="light" block class="btn btn-block text-left">
-                                <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{ $t('Undefined') }}</span>
+                                <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{
+                                        $t('Undefined')
+                                    }}</span>
                                 <span v-else>{{ c.name }}</span>
                             </b-button>
-                            <b-button variant="success"><i class="fas fa-check fa-fw"></i></b-button> <!-- todo implement -->
+                            <b-button variant="success"><i class="fas fa-check fa-fw"></i></b-button>
+                            <!-- todo implement -->
                         </b-button-group>
 
                         <span v-for="f in c.foods" v-bind:key="f.id">
@@ -72,7 +80,9 @@
             <b-tab :title="$t('Recipes')">
                 <template #title>
                     <i class="fas fa-book fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})` }}</span>
+                    <span class="d-none d-md-block">{{
+                            $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
+                        }}</span>
                 </template>
 
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -85,23 +95,37 @@
                     </b-col>
                 </b-row>
 
-                <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id" class="pr-1 pl-1">
+                <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id"
+                       class="pr-1 pl-1">
                     <b-col cols="12">
                         <b-button-group class="w-100 mt-2">
                             <b-button variant="dark" block class="btn btn-block text-left">
                                 <span>{{ r.recipe_name }}</span> <br/>
-                                <span><small class="text-muted">{{ r.recipe_name }}</small></span> <!-- TODO show meal plan date/type -->
+                                <span><small class="text-muted">{{ r.recipe_name }}</small></span>
+                                <!-- TODO show meal plan date/type -->
                             </b-button>
                             <!--                            <b-form-input min="1" type="number" :debounce="300" v-model="r.servings" @update="updateServings(r.shopping_list_recipe_id, r.servings)"></b-form-input>-->
-                            <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i class="fas fa-trash fa-fw"></i></b-button>
+                            <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
+                                class="fas fa-trash fa-fw"></i></b-button>
                         </b-button-group>
 
                         <b-button-group class="w-100 mt-1">
-                            <b-button @click="r.servings = updateServings(r, 'half')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-divide"></i> 2</b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'sub')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-minus"></i></b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'prompt')">{{ r.servings }}</b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'add')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-plus"></i></b-button>
-                            <b-button @click="r.servings = updateServings(r, 'multiply')" :disabled="shopping_list_store.currently_updating"><i class="fas fa-times"></i> 2</b-button>
+                            <b-button @click="r.servings = updateServings(r, 'half')"
+                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-divide"></i> 2
+                            </b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'sub')"
+                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-minus"></i>
+                            </b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'prompt')">{{
+                                    r.servings
+                                }}
+                            </b-button>
+                            <b-button variant="info" @click="r.servings = updateServings(r, 'add')"
+                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-plus"></i>
+                            </b-button>
+                            <b-button @click="r.servings = updateServings(r, 'multiply')"
+                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-times"></i> 2
+                            </b-button>
                         </b-button-group>
 
                     </b-col>
@@ -111,7 +135,9 @@
             <b-tab>
                 <template #title>
                     <i class="fas fa-store-alt fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})` }}</span>
+                    <span class="d-none d-md-block">{{
+                            $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})`
+                        }}</span>
                 </template>
                 <div class="container p-0">
                     <div class="row">
@@ -129,7 +155,8 @@
                                                 ></span></h5>
                                             <b-list-group>
                                                 <b-card no-body class="mt-1 list-group-item p-2"
-                                                        v-for="(supermarket, index) in shopping_list_store.supermarkets" v-hover
+                                                        v-for="(supermarket, index) in shopping_list_store.supermarkets"
+                                                        v-hover
                                                         :key="supermarket.id">
                                                     <b-card-header class="p-2 border-0">
                                                         <b-row>
@@ -188,7 +215,8 @@
                                             <div v-if="editingSupermarket.length === 0">
                                                 <b-list-group>
                                                     <b-card no-body class="mt-1 list-group-item p-2"
-                                                            v-for="(category, index) in shopping_list_store.supermarket_categories" v-hover
+                                                            v-for="(category, index) in shopping_list_store.supermarket_categories"
+                                                            v-hover
                                                             :key="category.id">
                                                         <b-card-header class="p-2 border-0">
                                                             <b-row>
@@ -313,7 +341,8 @@
                 </template>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
-                        <shopping-settings-component @updated="settings = $event" :user_id="user_id"></shopping-settings-component>
+                        <shopping-settings-component @updated="settings = $event"
+                                                     :user_id="user_id"></shopping-settings-component>
                     </div>
                 </div>
             </b-tab>
@@ -324,37 +353,48 @@
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
                     <b-form-select v-model="user_preference_store.device_settings.shopping_selected_grouping" size="sm">
-                        <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id" v-bind:key="go.id">{{ $t(go.translatable_label) }}</b-form-select-option>
+                        <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id"
+                                              v-bind:key="go.id">{{ $t(go.translatable_label) }}
+                        </b-form-select-option>
                     </b-form-select>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
-                    <generic-multiselect :model="Models.SUPERMARKET" :initial_single_selection="user_preference_store.device_settings.shopping_selected_supermarket"
-                                         @change="user_preference_store.device_settings.shopping_selected_supermarket = $event.val; user_preference_store.updateDeviceSettings()" :multiple="false"></generic-multiselect>
+                    <generic-multiselect :model="Models.SUPERMARKET"
+                                         :initial_single_selection="user_preference_store.device_settings.shopping_selected_supermarket"
+                                         @change="user_preference_store.device_settings.shopping_selected_supermarket = $event.val; user_preference_store.updateDeviceSettings()"
+                                         :multiple="false"></generic-multiselect>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('ShowDelayed')" label-for="popover-input-3" content-cols="1"
                               class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_delayed_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_delayed_entries"
+                                     @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('ShowRecentlyCompleted')" label-for="popover-input-3" content-cols="1"
                               class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_checked_entries" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_checked_entries"
+                                     @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('SupermarketCategoriesOnly')" label-for="popover-input-5"
                               content-cols="1" class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_show_selected_supermarket_only" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox
+                        v-model="user_preference_store.device_settings.shopping_show_selected_supermarket_only"
+                        @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <span>{{ $t('Information') }}</span>
                 <b-form-group v-bind:label="$t('Recipe')" label-for="popover-input-5"
                               content-cols="1" class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_recipe" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_recipe"
+                                     @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('Meal_Plan')" label-for="popover-input-5"
                               content-cols="1" class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_mealplan" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_mealplan"
+                                     @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
                 <b-form-group v-bind:label="$t('created_by')" label-for="popover-input-5"
                               content-cols="1" class="mb-1">
-                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_created_by" @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
+                    <b-form-checkbox v-model="user_preference_store.device_settings.shopping_item_info_created_by"
+                                     @change="user_preference_store.updateDeviceSettings()"></b-form-checkbox>
                 </b-form-group>
             </div>
             <div class="row" style="margin-top: 1vh; min-width: 300px">
@@ -366,7 +406,8 @@
             </div>
         </b-popover>
 
-        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :modal_id="new_recipe.id" :servings="new_recipe.servings" :mealplan="undefined" @finish="finishShopping"/>
+        <shopping-modal v-if="new_recipe.id" :recipe="new_recipe" :modal_id="new_recipe.id"
+                        :servings="new_recipe.servings" :mealplan="undefined" @finish="finishShopping"/>
 
         <bottom-navigation-bar active-view="view_shopping">
             <template #custom_nav_content v-if="current_tab <= 1">
@@ -375,7 +416,8 @@
 
                     <template v-if="current_tab===0">
                         <b-input-group>
-                            <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')" @keyup.enter="addItem"></b-form-input>
+                            <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
+                                          @keyup.enter="addItem"></b-form-input>
                             <b-input-group-append>
                                 <b-button @click="addItem" variant="success">
                                     <i class="fas fa-cart-plus "/>
@@ -535,45 +577,33 @@ export default {
             }
         },
     },
-    watch: {
-
-        "settings.shopping_auto_sync": function (newVal, oldVal) {
-            clearInterval(this.autosync_id)
-            this.autosync_id = undefined
-            if (this.settings.shopping_auto_sync > 0) {
-                if (!newVal) {
-                    window.removeEventListener("online", this.updateOnlineStatus)
-                    window.removeEventListener("offline", this.updateOnlineStatus)
-                    return
-                } else if (oldVal === 0 && newVal > 0) {
-                    window.addEventListener("online", this.updateOnlineStatus)
-                    window.addEventListener("offline", this.updateOnlineStatus)
-                }
-                this.autosync_id = setInterval(() => {
-                    if (this.online && !this.auto_sync_running) {
-                        this.auto_sync_running = true
-                        this.getShoppingList(true)
-                    }
-                }, this.settings.shopping_auto_sync * 1000)
-            }
-
-        },
-
-    },
+    watch: {},
     mounted() {
-        //this.getShoppingList()
-
-        if (this.settings.shopping_auto_sync) {
-            window.addEventListener("online", this.updateOnlineStatus)
-            window.addEventListener("offline", this.updateOnlineStatus)
-        }
+        window.addEventListener("online", this.updateOnlineStatus)
+        window.addEventListener("offline", this.updateOnlineStatus)
 
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         this.shopping_list_store.refreshFromAPI()
+        this.setupAutoSync()
     },
     methods: {
         useShoppingListStore,
+        setupAutoSync: function () {
+            // prevent setting up multiple loops on accident
+            // TODO should this just raise an error?
+            clearInterval(this.autosync_id)
+            this.autosync_id = undefined
+
+            let timeout = Math.max(this.settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
+
+            this.autosync_id = setInterval(() => { //TODO does setInterval automatically loop (because it kind of did)
+                if (this.online && this.settings.shopping_auto_sync > 0) {
+                    this.shopping_list_store.autosync()
+                    this.setupAutoSync()
+                }
+            }, timeout)
+        },
         /**
          * failed requests to sync entry check events are automatically re-queued by the service worker for sync
          * this command allows to manually force replaying those events before re-enabling automatic sync
@@ -589,6 +619,7 @@ export default {
          * get the number of entries left in the sync queue for entry check events
          * @returns {Promise<Number>} promise resolving to the number of entries left
          */
+        //TODO maybe show this somewhere if efficient enough to run often
         getSyncQueueLength: function () {
             const wb = new Workbox('/service-worker.js');
             wb.register();
@@ -740,14 +771,17 @@ export default {
 
             if (recipe.servings > 0 && recipe.servings !== "") {
                 let api = new ApiApiFactory()
-                api.partialUpdateShoppingListRecipe(recipe.shopping_list_recipe_id, {id: recipe.shopping_list_recipe_id, servings: recipe.servings}).then(() => {
+                api.partialUpdateShoppingListRecipe(recipe.shopping_list_recipe_id, {
+                    id: recipe.shopping_list_recipe_id,
+                    servings: recipe.servings
+                }).then(() => {
                     useShoppingListStore().refreshFromAPI()
                 })
                 return recipe.servings
             }
         },
 
-         // TODO cleanup, review data structure, probably move to its own component --> FOR ALL SUPERMARKET FUNCTIONS
+        // TODO cleanup, review data structure, probably move to its own component --> FOR ALL SUPERMARKET FUNCTIONS
         deleteSupermarket(index) {
             this.$bvModal.msgBoxConfirm(this.$t('Are_You_Sure'), {
                 title: this.$t('Confirm'),

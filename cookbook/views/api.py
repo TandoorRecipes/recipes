@@ -30,6 +30,7 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
@@ -1163,10 +1164,13 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
 
-        last_autosync = self.request.query_params.get('last_autosync', None)
-        if last_autosync:
-            last_autosync = datetime.datetime.now() # TODO implement
-            self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
+        try:
+            last_autosync = self.request.query_params.get('last_autosync', None)
+            if last_autosync:
+                last_autosync = make_aware(datetime.datetime.fromtimestamp(int(last_autosync) / 1000))
+                self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
+        except:
+            traceback.print_exc()
 
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
         return self.queryset
