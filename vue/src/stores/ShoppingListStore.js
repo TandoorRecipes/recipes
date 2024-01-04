@@ -4,6 +4,7 @@ import {defineStore} from "pinia"
 import Vue from "vue"
 import _ from 'lodash';
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import moment from "moment/moment";
 
 const _STORE_ID = "shopping_list_store"
 /*
@@ -19,6 +20,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
 
         // internal
         currently_updating: false,
+        last_autosync: null,
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
@@ -117,7 +119,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @return {[{id: *, translatable_label: string},{id: *, translatable_label: string},{id: *, translatable_label: string}]}
          */
         grouping_options: function () {
-            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'}, {
+            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {
+                'id': this.GROUP_CREATED_BY,
+                'translatable_label': 'created_by'
+            }, {
                 'id': this.GROUP_RECIPE,
                 'translatable_label': 'Recipe'
             }]
@@ -139,6 +144,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                     })
                     this.currently_updating = false
                 }).catch((err) => {
+                    this.currently_updating = false
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
 
@@ -152,6 +158,32 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                     this.supermarkets = r.data
                 }).catch((err) => {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+                })
+            }
+        },
+        autosync() {
+            if (!this.currently_updating) {
+                console.log('running autosync')
+                this.currently_updating = true
+
+                let previous_autosync = this.last_autosync
+                this.last_autosync = new Date().getTime();
+
+                let apiClient = new ApiApiFactory()
+                apiClient.listShoppingListEntrys(undefined, undefined, undefined, {
+                    'query': {'last_autosync': previous_autosync}
+                }).then((r) => {
+                    r.data.forEach((e) => {
+                        // dont update stale client data
+                        if (Date.parse(this.entries[e.id].updated_at) <= Date.parse(e.updated_at)) { //TODO validate the django datetime can be parsed in all browsers
+                            console.log('updating entry ', e)
+                            Vue.set(this.entries, e.id, e)
+                        }
+                    })
+                    this.currently_updating = false
+                }).catch((err) => {
+                    console.log('auto sync failed')
+                    this.currently_updating = false
                 })
             }
         },
@@ -180,6 +212,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          */
         updateObject(object) {
             let apiClient = new ApiApiFactory()
+            // set the update_at timestamp on the client to prevent auto sync from overriding with older changes
+            // moment().format() yields locale aware datetime without ms 2024-01-04T13:39:08.607238+01:00
+            Vue.set(object, 'update_at', moment().format())
+            console.log('set local update timestamp to ', moment().format())
             return apiClient.updateShoppingListEntry(object.id, object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
             }).catch((err) => {
@@ -238,7 +274,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 Vue.set(structure, grouping_key, {'name': grouping_key, 'foods': {}})
             }
             if (!(entry.food.id in structure[grouping_key]['foods'])) {
-                Vue.set(structure[grouping_key]['foods'], entry.food.id, {'id': entry.food.id, 'name': entry.food.name, 'entries': {}})
+                Vue.set(structure[grouping_key]['foods'], entry.food.id, {
+                    'id': entry.food.id,
+                    'name': entry.food.name,
+                    'entries': {}
+                })
             }
             Vue.set(structure[grouping_key]['foods'][entry.food.id]['entries'], entry.id, entry)
             return structure
