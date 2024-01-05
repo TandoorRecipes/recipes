@@ -12,11 +12,11 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
                         <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                                      icon="far fa-file-pdf"/>
-                        <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv"
+                        <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
                                      :label="$t('download_csv')" icon="fas fa-file-csv"/>
-                        <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')"
+                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" :label="$t('copy_to_clipboard')"
                                          icon="fas fa-clipboard-list"/>
-                        <CopyToClipboard :items="csvData" :settings="settings" format="table"
+                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
                                          :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
                     </div>
                 </b-button>
@@ -341,7 +341,7 @@
                 </template>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
-                        <shopping-settings-component @updated="settings = $event"
+                        <shopping-settings-component @updated="user_preference_store.updateUserSettings()"
                                                      :user_id="user_id"></shopping-settings-component>
                     </div>
                 </div>
@@ -444,11 +444,11 @@
 
                 <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                              icon="far fa-file-pdf fa-fw"/>
-                <DownloadCSV :items="csvData" :delim="settings.csv_delim" name="shopping.csv"
+                <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
                              :label="$t('download_csv')" icon="fas fa-file-csv fa-fw"/>
-                <CopyToClipboard :items="csvData" :settings="settings" :label="$t('copy_to_clipboard')"
+                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" :label="$t('copy_to_clipboard')"
                                  icon="fas fa-clipboard-list fa-fw"/>
-                <CopyToClipboard :items="csvData" :settings="settings" format="table"
+                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
                                  :label="$t('copy_markdown_table')" icon="fab fa-markdown fa-fw"/>
 
 
@@ -518,19 +518,7 @@ export default {
                 entry_mode_simple: true,
                 selected_supermarket: undefined,
             },
-            settings: {
-                shopping_auto_sync: 0,
-                default_delay: 4,
-                mealplan_autoadd_shopping: false,
-                mealplan_autoinclude_related: false,
-                mealplan_autoexclude_onhand: true,
-                filter_to_supermarket: false,
-                shopping_recent_days: 7,
-                csv_delim: ",",
-                csv_prefix: undefined,
-                shopping_add_onhand: true,
-                left_handed: false,
-            },
+
             user_id: parseInt(localStorage.getItem('USER_ID')),
             editing_supermarket_categories: [],
             editing_supermarket: null,
@@ -585,6 +573,8 @@ export default {
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         this.shopping_list_store.refreshFromAPI()
+        useUserPreferenceStore().loadUserSettings()
+        useUserPreferenceStore().loadDeviceSettings()
         this.setupAutoSync()
     },
     methods: {
@@ -595,10 +585,10 @@ export default {
             clearInterval(this.autosync_id)
             this.autosync_id = undefined
 
-            let timeout = Math.max(this.settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
+            let timeout = Math.max(this.user_preference_store.user_settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
 
             this.autosync_id = setInterval(() => { //TODO does setInterval automatically loop (because it kind of did)
-                if (this.online && this.settings.shopping_auto_sync > 0) {
+                if (this.online && this.user_preference_store.user_settings.shopping_auto_sync > 0) {
                     this.shopping_list_store.autosync()
                     this.setupAutoSync()
                 }

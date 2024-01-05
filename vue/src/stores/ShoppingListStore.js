@@ -215,7 +215,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             // set the update_at timestamp on the client to prevent auto sync from overriding with older changes
             // moment().format() yields locale aware datetime without ms 2024-01-04T13:39:08.607238+01:00
             Vue.set(object, 'update_at', moment().format())
-            console.log('set local update timestamp to ', moment().format())
+
             return apiClient.updateShoppingListEntry(object.id, object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
             }).catch((err) => {
