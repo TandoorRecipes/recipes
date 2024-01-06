@@ -44,7 +44,7 @@ INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(
     ',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
-GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
+GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', False)))
 
 if os.getenv('REVERSE_PROXY_AUTH') is not None:
     print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
