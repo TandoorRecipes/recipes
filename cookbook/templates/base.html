@@ -3,6 +3,8 @@
 {% load theming_tags %}
 {% load custom_tags %}
 
+{% theme_values request as theme_values %}
+
 <html>
 <head>
     <title>{% block title %}
@@ -11,23 +13,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
 
-
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
-
-    <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
-    <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
+    <link rel="icon" href="{{ theme_values.logo_color_svg }}">
+    <link rel="icon" href="{{ theme_values.logo_color_32 }}" sizes="32x32">
+    <link rel="icon" href="{{ theme_values.logo_color_128 }}" sizes="128x128">
+    <link rel="icon" href="{{ theme_values.logo_color_192 }}" sizes="192x192">
+    <link rel="apple-touch-icon" href="{{ theme_values.logo_color_180 }}" sizes="180x180">
 
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
+    <meta name="msapplication-TileColor" content="{% nav_bg_color request %}">
+    <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
 
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#161616">
-    <meta name="msapplication-TileColor" content="#161616">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="{% nav_bg_color request %}">
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
