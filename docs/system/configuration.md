@@ -538,6 +538,16 @@ Usually everything is converted to the users timezone so this setting doesn't re
 TZ=Europe/Berlin
 ```
 
+#### Default Theme
+> default `0` - options `1-X` (space ID)
+
+Tandoors appearance can be changed on a user and space level but unauthenticated users always see the tandoor default style. 
+With this setting you can specify the ID of a space of which the appearance settings should be applied if a user is not logged in.
+
+```
+UNAUTHENTICATED_THEME_FROM_SPACE=
+```
+
 ### Rate Limiting / Performance
 
 #### Shopping auto sync
