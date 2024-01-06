@@ -9,6 +9,33 @@ register = template.Library()
 
 
 @register.simple_tag
+def theme_values(request):
+    # TODO move all theming values to this tag to prevent double queries
+    tv = {
+        'logo_color_32': static('assets/logo_color_32.png'),
+        'logo_color_128': static('assets/logo_color_128.png'),
+        'logo_color_144': static('assets/logo_color_144.png'),
+        'logo_color_180': static('assets/logo_color_180.png'),
+        'logo_color_192': static('assets/logo_color_192.png'),
+        'logo_color_512': static('assets/logo_color_512.png'),
+        'logo_color_svg': static('assets/logo_color_svg.svg'),
+    }
+    space = None
+    if request.space:
+        space = request.space
+    if UNAUTHENTICATED_THEME_FROM_SPACE > 0:  # TODO load unauth space setting on boot in settings.py and use them here
+        with scopes_disabled():
+            space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
+
+    for logo in list(tv.keys()):
+        print(f'looking for {logo} in {space} has logo {getattr(space, logo, None)}')
+        if logo.startswith('logo_color_') and getattr(space, logo, None):
+            tv[logo] = getattr(space, logo).file.url
+
+    return tv
+
+
+@register.simple_tag
 def theme_url(request):
     themes = {
         UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
@@ -20,7 +47,7 @@ def theme_url(request):
     }
 
     if not request.user.is_authenticated:
-        if UNAUTHENTICATED_THEME_FROM_SPACE > 0: # TODO load unauth space setting on boot in settings.py and use them here
+        if UNAUTHENTICATED_THEME_FROM_SPACE > 0:  # TODO load unauth space setting on boot in settings.py and use them here
             with scopes_disabled():
                 return static(themes[Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first().space_theme])
         else:
