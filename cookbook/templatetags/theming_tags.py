@@ -84,7 +84,7 @@ def nav_text_color(request):
                 space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
                 if space.nav_text_color:
                     return type_mapping[space.nav_text_color]
-        return 'navbar-dark'
+        return 'navbar-light'
     else:
         if request.space.nav_text_color != Space.BLANK:
             return type_mapping[request.space.nav_text_color]
