@@ -1,3 +1,4 @@
+import json
 import os
 import re
 from datetime import datetime
@@ -14,8 +15,9 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
 from django.db import models
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -335,13 +337,16 @@ def system(request):
             database_message = _('Everything is fine!')
         elif postgres_ver < postgres_current - 2:
             database_status = 'danger'
-            database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {'v': postgres_ver}
+            database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {
+                'v': postgres_ver}
         else:
             database_status = 'info'
-            database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {'v1': postgres_ver, 'v2': postgres_current}
+            database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {
+                'v1': postgres_ver, 'v2': postgres_current}
     else:
         database_status = 'info'
-        database_message = _('This application is not running with a Postgres database backend. This is ok but not recommended as some features only work with postgres databases.')
+        database_message = _(
+            'This application is not running with a Postgres database backend. This is ok but not recommended as some features only work with postgres databases.')
 
     secret_key = False if os.getenv('SECRET_KEY') else True
 
@@ -366,10 +371,12 @@ def system(request):
             pass
         else:
             current_app = row
-            migration_info[current_app] = {'app': current_app, 'unapplied_migrations': [], 'applied_migrations': [], 'total': 0}
+            migration_info[current_app] = {'app': current_app, 'unapplied_migrations': [], 'applied_migrations': [],
+                                           'total': 0}
 
     for key in migration_info.keys():
-        migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(migration_info[key]['applied_migrations'])
+        migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(
+            migration_info[key]['applied_migrations'])
 
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
@@ -431,7 +438,8 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space,
+                                                      internal_note=link.internal_note, invite_link=link, active=False)
 
                 if request.user.userspace_set.count() == 1:
                     user_space.active = True
@@ -470,6 +478,65 @@ def report_share_abuse(request, token):
             messages.add_message(request, messages.WARNING,
                                  _('Recipe sharing link has been disabled! For additional information please contact the page administrator.'))
     return HttpResponseRedirect(reverse('index'))
+
+
+def web_manifest(request):
+    icons = [
+        {"src": static("/assets/logo_color.svg"), "sizes": "any"},
+        {"src": static("/assets/logo_color144.png"), "type": "image/png", "sizes": "144x144"},
+        {"src": static("/assets/logo_color512.png"), "type": "image/png", "sizes": "512x512"}
+    ]
+
+    if request.user.is_authenticated and getattr(request.space, 'logo_color_svg') and getattr(request.space, 'logo_color_144') and getattr(request.space, 'logo_color_512'):
+        icons = [
+            {"src": request.space.logo_color_svg.file.url, "sizes": "any"},
+            {"src": request.space.logo_color_144.file.url, "type": "image/png", "sizes": "144x144"},
+            {"src": request.space.logo_color_512.file.url, "type": "image/png", "sizes": "512x512"}
+        ]
+
+    manifest_info = {
+        "name": "Tandoor Recipes",
+        "short_name": "Tandoor",
+        "description": _("Manage recipes, shopping list, meal plans and more."),
+        "icons": icons,
+        "start_url": "./search",
+        "background_color": "#ffcb76",
+        "display": "standalone",
+        "scope": ".",
+        "theme_color": "#ffcb76",
+        "shortcuts": [
+            {
+                "name": _("Plan"),
+                "short_name": _("Plan"),
+                "description": _("View your meal Plan"),
+                "url": "./plan"
+            },
+            {
+                "name": _("Books"),
+                "short_name": _("Books"),
+                "description": _("View your cookbooks"),
+                "url": "./books"
+            },
+            {
+                "name": _("Shopping"),
+                "short_name": _("Shopping"),
+                "description": _("View your shopping lists"),
+                "url": "./list/shopping-list/"
+            }
+        ],
+        "share_target": {
+            "action": "/data/import/url",
+            "method": "GET",
+            "params": {
+                "title": "title",
+                "url": "url",
+                "text": "text"
+
+            }
+        }
+    }
+
+    return JsonResponse(manifest_info, json_dumps_params={'indent': 4})
 
 
 def markdown_info(request):

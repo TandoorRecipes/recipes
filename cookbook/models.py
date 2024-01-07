@@ -289,6 +289,14 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
     nav_bg_color = models.CharField(max_length=8, default='', blank=True, )
     nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=BLANK)
 
+    logo_color_32 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_32')
+    logo_color_128 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_128')
+    logo_color_144 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_144')
+    logo_color_180 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_180')
+    logo_color_192 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_192')
+    logo_color_512 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_512')
+    logo_color_svg = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_svg')
+
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
@@ -1345,6 +1353,9 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
             self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
             self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.name} (#{self.id})'
 
 
 class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):
