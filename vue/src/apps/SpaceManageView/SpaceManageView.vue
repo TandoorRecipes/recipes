@@ -191,6 +191,37 @@
                     </b-form-select>
                 </b-form-group>
 
+                <h5>{{ $t('CustomLogos') }}</h5>
+                <p>{{$t('CustomLogoHelp')}} </p>
+                <b-form-group :label="$t('Logo')+' 32x32px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_32"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_32 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 128x128px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_128"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_128 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 144x144px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_144"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_144 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 180x180px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_180"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_180 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 192x192px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_192"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_192 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 512x512px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_512"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_512 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' SVG'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_svg"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_svg = $event.val;"></generic-multiselect>
+                </b-form-group>
+
                 <b-button variant="success" @click="updateSpace()">{{ $t('Update') }}</b-button>
             </b-col>
         </b-row>
