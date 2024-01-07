@@ -78,7 +78,7 @@
 
 <nav class="navbar navbar-expand-lg {{ theme_values.nav_text_class }}"
      id="id_main_nav"
-     style="{% sticky_nav request %}; background-color: {{ theme_values.nav_bg_color }}">
+     style="{{ theme_values.sticky_nav }}; background-color: {{ theme_values.nav_bg_color }}">
 
     {% if not request.user.userpreference.left_handed %}
         {% if not request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
