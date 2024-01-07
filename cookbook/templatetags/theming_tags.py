@@ -18,7 +18,9 @@ def theme_values(request):
         UserPreference.TANDOOR: 'themes/tandoor.min.css',
         UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
     }
-    # TODO move all theming values to this tag to prevent double queries
+    nav_text_type_mapping = {Space.DARK: 'navbar-light',
+                             Space.LIGHT: 'navbar-dark'}  # inverted since navbar-dark means the background
+
     tv = {
         'logo_color_32': static('assets/logo_color_32.png'),
         'logo_color_128': static('assets/logo_color_128.png'),
@@ -29,7 +31,9 @@ def theme_values(request):
         'logo_color_svg': static('assets/logo_color_svg.svg'),
         'custom_theme': None,
         'theme': static(themes[UserPreference.TANDOOR]),
-        'nav_logo_url': 'assets/brand_logo.png',
+        'nav_logo': static('assets/brand_logo.png'),
+        'nav_bg_color': '#ddbf86',
+        'nav_text_class': 'navbar-light',
     }
     space = None
     if request.space:
@@ -41,33 +45,26 @@ def theme_values(request):
     if request.user.is_authenticated:
         if request.user.userpreference.theme in themes:
             tv['theme'] = static(themes[request.user.userpreference.theme])
+        if request.user.userpreference.nav_bg_color:
+            tv['nav_bg_color'] = request.user.userpreference.nav_bg_color
+        if request.user.userpreference.nav_text_color and request.user.userpreference.nav_text_color in nav_text_type_mapping:
+            tv['nav_text_class'] = request.user.userpreference.nav_text_color
 
     if space:
         for logo in list(tv.keys()):
-            print(f'looking for {logo} in {space} has logo {getattr(space, logo, None)}')
             if logo.startswith('logo_color_') and getattr(space, logo, None):
                 tv[logo] = getattr(space, logo).file.url
-
             if space.custom_space_theme:
                 tv['custom_theme'] = space.custom_space_theme.file.url
             if space.space_theme in themes:
                 tv['theme'] = static(themes[space.space_theme])
-
+            if space.nav_logo:
+                tv['nav_logo'] = space.nav_logo.file.url
+            if space.nav_bg_color:
+                tv['nav_bg_color'] = space.nav_bg_color
+            if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
+                tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
     return tv
-
-
-@register.simple_tag
-def logo_url(request):
-    if not request.user.is_authenticated:
-        if UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-            with scopes_disabled():
-                space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-                if getattr(space, 'nav_logo', None):
-                    return space.nav_logo.file.url
-    if request.user.is_authenticated and getattr(getattr(request, "space", {}), 'nav_logo', None):
-        return request.space.nav_logo.file.url
-    else:
-        return static('assets/brand_logo.png')
 
 
 @register.simple_tag
