@@ -10,6 +10,17 @@ register = template.Library()
 
 @register.simple_tag
 def theme_values(request):
+    space = None
+    if request.space:
+        space = request.space
+    if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
+        with scopes_disabled():
+            space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
+
+    return get_theming_values(space, request.user)
+
+
+def get_theming_values(space, user):
     themes = {
         UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
         UserPreference.FLATLY: 'themes/flatly.min.css',
@@ -34,21 +45,19 @@ def theme_values(request):
         'nav_logo': static('assets/brand_logo.png'),
         'nav_bg_color': '#ddbf86',
         'nav_text_class': 'navbar-light',
+        'sticky_nav': 'position: sticky; top: 0; left: 0; z-index: 1000;',
     }
-    space = None
-    if request.space:
-        space = request.space
-    if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-        with scopes_disabled():
-            space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
 
-    if request.user.is_authenticated:
-        if request.user.userpreference.theme in themes:
-            tv['theme'] = static(themes[request.user.userpreference.theme])
-        if request.user.userpreference.nav_bg_color:
-            tv['nav_bg_color'] = request.user.userpreference.nav_bg_color
-        if request.user.userpreference.nav_text_color and request.user.userpreference.nav_text_color in nav_text_type_mapping:
-            tv['nav_text_class'] = request.user.userpreference.nav_text_color
+
+    if user.is_authenticated:
+        if user.userpreference.theme in themes:
+            tv['theme'] = static(themes[user.userpreference.theme])
+        if user.userpreference.nav_bg_color:
+            tv['nav_bg_color'] = user.userpreference.nav_bg_color
+        if user.userpreference.nav_text_color and user.userpreference.nav_text_color in nav_text_type_mapping:
+            tv['nav_text_class'] = nav_text_type_mapping[user.userpreference.nav_text_color]
+        if not user.userpreference.nav_sticky:
+            tv['sticky_nav'] = ''
 
     if space:
         for logo in list(tv.keys()):
@@ -65,12 +74,3 @@ def theme_values(request):
             if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
                 tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
     return tv
-
-
-@register.simple_tag
-def sticky_nav(request):
-    if (not request.user.is_authenticated and STICKY_NAV_PREF_DEFAULT) or (
-            request.user.is_authenticated and request.user.userpreference.nav_sticky):
-        return 'position: sticky; top: 0; left: 0; z-index: 1000;'
-    else:
-        return ''
