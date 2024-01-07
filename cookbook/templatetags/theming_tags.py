@@ -28,79 +28,32 @@ def theme_values(request):
         'logo_color_512': static('assets/logo_color_512.png'),
         'logo_color_svg': static('assets/logo_color_svg.svg'),
         'custom_theme': None,
-        'theme': static(themes[UserPreference.TANDOOR])
+        'theme': static(themes[UserPreference.TANDOOR]),
+        'nav_logo_url': 'assets/brand_logo.png',
     }
     space = None
     if request.space:
         space = request.space
-    if UNAUTHENTICATED_THEME_FROM_SPACE > 0:  # TODO load unauth space setting on boot in settings.py and use them here
+    if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
         with scopes_disabled():
             space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
 
-    for logo in list(tv.keys()):
-        print(f'looking for {logo} in {space} has logo {getattr(space, logo, None)}')
-        if logo.startswith('logo_color_') and getattr(space, logo, None):
-            tv[logo] = getattr(space, logo).file.url
+    if request.user.is_authenticated:
+        if request.user.userpreference.theme in themes:
+            tv['theme'] = static(themes[request.user.userpreference.theme])
 
-    with scopes_disabled():
-        if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-            with scopes_disabled():
-                space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-                if space:
-                    if space.custom_space_theme:
-                        tv['custom_theme'] = space.custom_space_theme.file.url
-                    if space.space_theme in themes:
-                        return static(themes[space.space_theme])
+    if space:
+        for logo in list(tv.keys()):
+            print(f'looking for {logo} in {space} has logo {getattr(space, logo, None)}')
+            if logo.startswith('logo_color_') and getattr(space, logo, None):
+                tv[logo] = getattr(space, logo).file.url
 
-        if request.user.is_authenticated:
-            if request.space.custom_space_theme:
-                tv['custom_theme'] = request.space.custom_space_theme.file.url
-            if request.space.space_theme in themes:
-                tv['theme'] = themes[request.space.space_theme]
-            else:
-                tv['theme'] = themes[request.user.userpreference.theme]
+            if space.custom_space_theme:
+                tv['custom_theme'] = space.custom_space_theme.file.url
+            if space.space_theme in themes:
+                tv['theme'] = static(themes[space.space_theme])
 
     return tv
-
-
-@register.simple_tag
-def theme_url(request):
-    themes = {
-        UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
-        UserPreference.FLATLY: 'themes/flatly.min.css',
-        UserPreference.DARKLY: 'themes/darkly.min.css',
-        UserPreference.SUPERHERO: 'themes/superhero.min.css',
-        UserPreference.TANDOOR: 'themes/tandoor.min.css',
-        UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
-    }
-
-    if not request.user.is_authenticated:
-        if UNAUTHENTICATED_THEME_FROM_SPACE > 0:  # TODO load unauth space setting on boot in settings.py and use them here
-            with scopes_disabled():
-                theme = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first().space_theme
-                if theme in themes:
-                    return static(themes[theme])
-        else:
-            return static('themes/tandoor.min.css')
-    else:
-        if request.space.space_theme in themes:
-            return static(themes[request.space.space_theme])
-        else:
-            if request.user.userpreference.theme in themes:
-                return static(themes[request.user.userpreference.theme])
-            else:
-                return static('themes/tandoor.min.css')
-
-
-@register.simple_tag
-def custom_theme(request):
-    if request.user.is_authenticated and request.space.custom_space_theme:
-        return request.space.custom_space_theme.file.url
-    elif UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-        with scopes_disabled():
-            space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-            if space.custom_space_theme:
-                return space.custom_space_theme.file.url
 
 
 @register.simple_tag
