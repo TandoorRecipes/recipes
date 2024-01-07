@@ -68,40 +68,6 @@ def theme_values(request):
 
 
 @register.simple_tag
-def nav_bg_color(request):
-    if not request.user.is_authenticated:
-        if UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-            with scopes_disabled():
-                space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-                if space.nav_bg_color:
-                    return space.nav_bg_color
-        return '#ddbf86'
-    else:
-        if request.space.nav_bg_color:
-            return request.space.nav_bg_color
-        else:
-            return request.user.userpreference.nav_bg_color
-
-
-@register.simple_tag
-def nav_text_color(request):
-    type_mapping = {Space.DARK: 'navbar-light',
-                    Space.LIGHT: 'navbar-dark'}  # inverted since navbar-dark means the background
-    if not request.user.is_authenticated:
-        if UNAUTHENTICATED_THEME_FROM_SPACE > 0:
-            with scopes_disabled():
-                space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-                if space.nav_text_color and space.nav_text_color in type_mapping:
-                    return type_mapping[space.nav_text_color]
-        return 'navbar-light'
-    else:
-        if request.space.nav_text_color != Space.BLANK:
-            return type_mapping[request.space.nav_text_color]
-        else:
-            return type_mapping[request.user.userpreference.nav_text_color]
-
-
-@register.simple_tag
 def sticky_nav(request):
     if (not request.user.is_authenticated and STICKY_NAV_PREF_DEFAULT) or (
             request.user.is_authenticated and request.user.userpreference.nav_sticky):

@@ -21,10 +21,10 @@
 
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
 
-    <meta name="msapplication-TileColor" content="{% nav_bg_color request %}">
+    <meta name="msapplication-TileColor" content="{{ theme_values.nav_bg_color }}">
     <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
 
-    <meta name="theme-color" content="{% nav_bg_color request %}">
+    <meta name="theme-color" content="{{ theme_values.nav_bg_color }}">
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
@@ -76,9 +76,9 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg {% nav_text_color request %}"
+<nav class="navbar navbar-expand-lg {{ theme_values.nav_text_class }}"
      id="id_main_nav"
-     style="{% sticky_nav request %}; background-color: {% nav_bg_color request %}">
+     style="{% sticky_nav request %}; background-color: {{ theme_values.nav_bg_color }}">
 
     {% if not request.user.userpreference.left_handed %}
         {% if not request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
