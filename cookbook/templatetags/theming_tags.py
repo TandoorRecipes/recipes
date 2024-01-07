@@ -10,6 +10,14 @@ register = template.Library()
 
 @register.simple_tag
 def theme_values(request):
+    themes = {
+        UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
+        UserPreference.FLATLY: 'themes/flatly.min.css',
+        UserPreference.DARKLY: 'themes/darkly.min.css',
+        UserPreference.SUPERHERO: 'themes/superhero.min.css',
+        UserPreference.TANDOOR: 'themes/tandoor.min.css',
+        UserPreference.TANDOOR_DARK: 'themes/tandoor_dark.min.css',
+    }
     # TODO move all theming values to this tag to prevent double queries
     tv = {
         'logo_color_32': static('assets/logo_color_32.png'),
@@ -19,6 +27,8 @@ def theme_values(request):
         'logo_color_192': static('assets/logo_color_192.png'),
         'logo_color_512': static('assets/logo_color_512.png'),
         'logo_color_svg': static('assets/logo_color_svg.svg'),
+        'custom_theme': None,
+        'theme': static(themes[UserPreference.TANDOOR])
     }
     space = None
     if request.space:
@@ -31,6 +41,24 @@ def theme_values(request):
         print(f'looking for {logo} in {space} has logo {getattr(space, logo, None)}')
         if logo.startswith('logo_color_') and getattr(space, logo, None):
             tv[logo] = getattr(space, logo).file.url
+
+    with scopes_disabled():
+        if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
+            with scopes_disabled():
+                space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
+                if space:
+                    if space.custom_space_theme:
+                        tv['custom_theme'] = space.custom_space_theme.file.url
+                    if space.space_theme in themes:
+                        return static(themes[space.space_theme])
+
+        if request.user.is_authenticated:
+            if request.space.custom_space_theme:
+                tv['custom_theme'] = request.space.custom_space_theme.file.url
+            if request.space.space_theme in themes:
+                tv['theme'] = themes[request.space.space_theme]
+            else:
+                tv['theme'] = themes[request.user.userpreference.theme]
 
     return tv
 
@@ -54,14 +82,14 @@ def theme_url(request):
                     return static(themes[theme])
         else:
             return static('themes/tandoor.min.css')
-
-    if request.space.space_theme in themes:
-        return static(themes[request.space.space_theme])
     else:
-        if request.user.userpreference.theme in themes:
-            return static(themes[request.user.userpreference.theme])
+        if request.space.space_theme in themes:
+            return static(themes[request.space.space_theme])
         else:
-            raise AttributeError
+            if request.user.userpreference.theme in themes:
+                return static(themes[request.user.userpreference.theme])
+            else:
+                return static('themes/tandoor.min.css')
 
 
 @register.simple_tag
