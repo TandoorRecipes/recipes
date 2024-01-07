@@ -283,6 +283,13 @@ class SpaceSerializer(WritableNestedModelSerializer):
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
     custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_32 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_128 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_144 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_180 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_192 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_512 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_svg = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
@@ -304,7 +311,8 @@ class SpaceSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color', 'use_plural',)
+            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color', 'use_plural',
+            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg',)
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo',)

@@ -45,6 +45,7 @@ nav:
       - Storages and Sync: features/external_recipes.md
       - Import/Export: features/import_export.md
   - System:
+      - Configuration: system/configuration.md
       - Updating: system/updating.md
       - Permission System: system/permissions.md
       - Backup: system/backup.md
