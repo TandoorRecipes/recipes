@@ -49,7 +49,9 @@ def theme_url(request):
     if not request.user.is_authenticated:
         if UNAUTHENTICATED_THEME_FROM_SPACE > 0:  # TODO load unauth space setting on boot in settings.py and use them here
             with scopes_disabled():
-                return static(themes[Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first().space_theme])
+                theme = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first().space_theme
+                if theme in themes:
+                    return static(themes[theme])
         else:
             return static('themes/tandoor.min.css')
 
@@ -68,7 +70,9 @@ def custom_theme(request):
         return request.space.custom_space_theme.file.url
     elif UNAUTHENTICATED_THEME_FROM_SPACE > 0:
         with scopes_disabled():
-            return Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first().custom_space_theme.file.url
+            space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
+            if space.custom_space_theme:
+                return space.custom_space_theme.file.url
 
 
 @register.simple_tag
@@ -109,7 +113,7 @@ def nav_text_color(request):
         if UNAUTHENTICATED_THEME_FROM_SPACE > 0:
             with scopes_disabled():
                 space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
-                if space.nav_text_color:
+                if space.nav_text_color and space.nav_text_color in type_mapping:
                     return type_mapping[space.nav_text_color]
         return 'navbar-light'
     else:
