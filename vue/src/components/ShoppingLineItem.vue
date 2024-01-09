@@ -76,7 +76,7 @@
                             <b-button variant="warning" @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i class="fas fa-trash"></i></b-button> <!-- TODO implement -->
                         </b-button-group>
 
-                        <number-scaler-component :number="e.amount" @change="e.amount = $event; useShoppingListStore().updateObject(e)"></number-scaler-component>
+                        <number-scaler-component :number="e.amount" @change="e.amount = $event; useShoppingListStore().updateObject(e)" v-if="e.recipe_mealplan === null"></number-scaler-component>
 
                     </b-col>
                 </b-row>
