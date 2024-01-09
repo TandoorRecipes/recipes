@@ -212,7 +212,7 @@ export default {
         'entryEditing.from_date': {
             handler(newVal, oldVal) {
                 if (newVal !== undefined && oldVal !== undefined) {
-                    if (newVal !== oldVal) {
+                    if (newVal !== oldVal && newVal !== this.entryEditing.to_date) {
                         let change = Math.abs(moment(oldVal).diff(moment(this.entryEditing.to_date), 'days')) // even though negative numbers might be correct, they would be illogical as to needs to always be larger than from
                         this.entryEditing.to_date = moment(newVal).add(change, 'd').format("YYYY-MM-DD")
                     }
