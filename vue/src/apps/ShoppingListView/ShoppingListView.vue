@@ -12,9 +12,11 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
                         <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                                      icon="far fa-file-pdf"/>
-                        <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
+                        <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim"
+                                     name="shopping.csv"
                                      :label="$t('download_csv')" icon="fas fa-file-csv"/>
-                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" :label="$t('copy_to_clipboard')"
+                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings"
+                                         :label="$t('copy_to_clipboard')"
                                          icon="fas fa-clipboard-list"/>
                         <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
                                          :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
@@ -29,13 +31,14 @@
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title>
-                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
-                               class="d-inline-block"></b-spinner>
                     <i v-if="!shopping_list_store.currently_updating"
-                       class="fas fa-shopping-cart fa-fw d-inline-block d-md-none"></i>
-                    <span class="d-none d-md-inline-block">{{
-                            $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})`
-                        }}</span> <!-- TODO properly count only checked -->
+                       class="fas fa-shopping-cart fa-fw"></i>
+                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
+                               style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
+                    <span class="d-none d-md-inline-block ml-1">
+                        {{ $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})` }}
+                    </span> <!-- TODO properly count only checked -->
+
                 </template>
 
                 <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -58,7 +61,8 @@
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
                     <b-col cols="12"
                            v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
-                        <b-button-group class="w-100 mt-1">
+                        <b-button-group class="w-100 mt-1"
+                                        :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
                             <b-button variant="light" block class="btn btn-block text-left">
                                 <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{
                                         $t('Undefined')
@@ -79,8 +83,8 @@
             <!-- recipe tab -->
             <b-tab :title="$t('Recipes')">
                 <template #title>
-                    <i class="fas fa-book fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{
+                    <i class="fas fa-book fa-fw"></i>
+                    <span class="d-none d-md-inline-block ml-1">{{
                             $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
                         }}</span>
                 </template>
@@ -134,8 +138,8 @@
             <!-- supermarkets tab -->
             <b-tab>
                 <template #title>
-                    <i class="fas fa-store-alt fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{
+                    <i class="fas fa-store-alt fa-fw"></i>
+                    <span class="d-none d-md-inline-block ml-1">{{
                             $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})`
                         }}</span>
                 </template>
@@ -336,8 +340,8 @@
             <!-- settings tab -->
             <b-tab>
                 <template #title>
-                    <i class="fas fa-user-cog fa-fw d-block d-md-none"></i>
-                    <span class="d-none d-md-block">{{ $t('Settings') }}</span>
+                    <i class="fas fa-user-cog fa-fw"></i>
+                    <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
                 </template>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
@@ -446,7 +450,8 @@
                              icon="far fa-file-pdf fa-fw"/>
                 <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
                              :label="$t('download_csv')" icon="fas fa-file-csv fa-fw"/>
-                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" :label="$t('copy_to_clipboard')"
+                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings"
+                                 :label="$t('copy_to_clipboard')"
                                  icon="fas fa-clipboard-list fa-fw"/>
                 <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
                                  :label="$t('copy_markdown_table')" icon="fab fa-markdown fa-fw"/>
@@ -578,6 +583,7 @@ export default {
         this.setupAutoSync()
     },
     methods: {
+        useUserPreferenceStore,
         useShoppingListStore,
         setupAutoSync: function () {
             // prevent setting up multiple loops on accident
