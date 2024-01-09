@@ -108,29 +108,11 @@
                                 <span><small class="text-muted">{{ r.recipe_name }}</small></span>
                                 <!-- TODO show meal plan date/type -->
                             </b-button>
-                            <!--                            <b-form-input min="1" type="number" :debounce="300" v-model="r.servings" @update="updateServings(r.shopping_list_recipe_id, r.servings)"></b-form-input>-->
                             <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
                                 class="fas fa-trash fa-fw"></i></b-button>
                         </b-button-group>
 
-                        <b-button-group class="w-100 mt-1">
-                            <b-button @click="r.servings = updateServings(r, 'half')"
-                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-divide"></i> 2
-                            </b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'sub')"
-                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-minus"></i>
-                            </b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'prompt')">{{
-                                    r.servings
-                                }}
-                            </b-button>
-                            <b-button variant="info" @click="r.servings = updateServings(r, 'add')"
-                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-plus"></i>
-                            </b-button>
-                            <b-button @click="r.servings = updateServings(r, 'multiply')"
-                                      :disabled="shopping_list_store.currently_updating"><i class="fas fa-times"></i> 2
-                            </b-button>
-                        </b-button-group>
+                        <number-scaler-component :number="r.servings" @change="updateServings(r, $event)" :disable="useShoppingListStore().currently_updating"></number-scaler-component>
 
                     </b-col>
                 </b-row>
@@ -488,11 +470,13 @@ import {Workbox} from 'workbox-window';
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
 
 export default {
     name: "ShoppingListView",
     mixins: [ApiMixin, ResolveUrlMixin],
     components: {
+        NumberScalerComponent,
 
         ShoppingLineItem,
         GenericMultiselect,
@@ -741,39 +725,22 @@ export default {
          * change number of servings of a shopping list recipe
          * backend handles scaling of associated entries
          * @param recipe recipe to update
-         * @param mode mode to change servings
+         * @param servings number of servings to set recipe to
          */
-        updateServings(recipe, mode) {
-            if (mode === 'half') {
-                recipe.servings = recipe.servings / 2
-            }
-            if (mode === 'multiply') {
-                recipe.servings = recipe.servings * 2
-            }
-            if (mode === 'add') {
-                recipe.servings++
-            }
-            if (mode === 'sub') {
-                recipe.servings--
-            }
-            if (mode === 'prompt') {
-                let servings = prompt(this.$t('Servings'), recipe.servings);
-                if (servings !== null && servings !== "" && !isNaN(servings) && !isNaN(parseFloat(servings))) {
-                    recipe.servings = parseFloat(servings)
-                } else {
-                    console.log('Invalid input in servings prompt', servings)
-                }
-            }
-
-            if (recipe.servings > 0 && recipe.servings !== "") {
+        updateServings(recipe, servings) {
+            if (servings > 0 && servings !== "") {
                 let api = new ApiApiFactory()
+                useShoppingListStore().currently_updating = true
                 api.partialUpdateShoppingListRecipe(recipe.shopping_list_recipe_id, {
                     id: recipe.shopping_list_recipe_id,
-                    servings: recipe.servings
+                    servings: servings
                 }).then(() => {
+                    useShoppingListStore().currently_updating = false
                     useShoppingListStore().refreshFromAPI()
+                }).catch((err) => {
+                    useShoppingListStore().currently_updating = false
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
-                return recipe.servings
             }
         },
 
