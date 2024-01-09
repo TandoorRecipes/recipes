@@ -57,7 +57,7 @@
                     <b-col cold="12">
                         <b-button-group class="mt-1 w-100">
                             <b-button variant="dark" block class="btn btn-block text-left">
-                                <span>{{ food.name }}</span>
+                                <span><span v-if="e.amount > 0">{{e.amount}}</span> {{e.unit?.name}} {{ food.name }}</span>
                                 <span><br/><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
                                         <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{ e.recipe_mealplan.recipe_name }} </a>({{
@@ -75,6 +75,8 @@
                             </b-button>
                             <b-button variant="warning" @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i class="fas fa-trash"></i></b-button> <!-- TODO implement -->
                         </b-button-group>
+
+                        <number-scaler-component :number="e.amount" @change="e.amount = $event; useShoppingListStore().updateObject(e)"></number-scaler-component>
 
                     </b-col>
                 </b-row>
@@ -97,6 +99,7 @@ import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
 
 
 Vue.use(BootstrapVue)
@@ -104,7 +107,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingLineItem",
     mixins: [ApiMixin],
-    components: {},
+    components: {NumberScalerComponent},
     props: {
         entries: {type: Object,},
     },
