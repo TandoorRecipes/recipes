@@ -202,6 +202,11 @@ class HomeAssistantConfigForm(forms.ModelForm):
         help_text=_('Something like http://homeassistant.local:8123/api'),
     )
 
+    enabled = forms.BooleanField(
+        help_text="Is the HomeAssistantConnector enabled",
+        required=False,
+    )
+
     on_shopping_list_entry_created_enabled = forms.BooleanField(
         help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List -- Warning: Might have negative performance impact",
         required=False,
@@ -220,7 +225,8 @@ class HomeAssistantConfigForm(forms.ModelForm):
     class Meta:
         model = HomeAssistantConfig
         fields = (
-            'name', 'url', 'token', 'todo_entity', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled', 'on_shopping_list_entry_deleted_enabled')
+            'name', 'url', 'token', 'todo_entity', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+            'on_shopping_list_entry_deleted_enabled')
 
         help_texts = {
             'url': _('http://homeassistant.local:8123/api for example'),

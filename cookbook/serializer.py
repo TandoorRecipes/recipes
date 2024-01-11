@@ -422,7 +422,7 @@ class HomeAssistantConfigSerializer(SpacedModelSerializer):
     class Meta:
         model = HomeAssistantConfig
         fields = (
-            'id', 'name', 'url', 'token', 'todo_entity',
+            'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
             'on_shopping_list_entry_deleted_enabled', 'created_by'
         )

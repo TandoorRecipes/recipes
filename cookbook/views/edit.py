@@ -146,6 +146,7 @@ def edit_home_assistant_config(request, pk):
             instance.name = form.cleaned_data['name']
             instance.url = form.cleaned_data['url']
             instance.todo_entity = form.cleaned_data['todo_entity']
+            instance.enabled = form.cleaned_data['enabled']
             instance.on_shopping_list_entry_created_enabled = form.cleaned_data['on_shopping_list_entry_created_enabled']
             instance.on_shopping_list_entry_updated_enabled = form.cleaned_data['on_shopping_list_entry_updated_enabled']
             instance.on_shopping_list_entry_deleted_enabled = form.cleaned_data['on_shopping_list_entry_deleted_enabled']

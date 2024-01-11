@@ -96,8 +96,8 @@ admin.site.register(Storage, StorageAdmin)
 
 
 class HomeAssistantConfigAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    list_display = ('id', 'name', 'enabled', 'url')
+    search_fields = ('name', 'url')
 
 
 admin.site.register(HomeAssistantConfig, HomeAssistantConfigAdmin)

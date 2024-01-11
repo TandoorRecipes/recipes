@@ -21,7 +21,7 @@ class HomeAssistantConfigTable(tables.Table):
     class Meta:
         model = HomeAssistantConfig
         template_name = 'generic/table_template.html'
-        fields = ('id', 'name', 'url')
+        fields = ('id', 'name', 'enabled', 'url')
 
 
 class ImportLogTable(tables.Table):
