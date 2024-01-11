@@ -11,7 +11,7 @@ register = template.Library()
 @register.simple_tag
 def theme_values(request):
     space = None
-    if request.space:
+    if space in request and request.space:
         space = request.space
     if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
         with scopes_disabled():
