@@ -374,6 +374,7 @@ class HomeAssistantConfig(models.Model, PermissionModelMixin):
 
     todo_entity = models.CharField(max_length=128, default='todo.shopping_list')
 
+    enabled = models.BooleanField(default=True, help_text="Is HomeAssistant Connector Enabled")
     on_shopping_list_entry_created_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List")
     on_shopping_list_entry_updated_enabled = models.BooleanField(default=False, help_text="PLACEHOLDER")
     on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry deletion to Homeassistant Todo List")

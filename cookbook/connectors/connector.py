@@ -16,4 +16,5 @@ class Connector(ABC):
     async def on_shopping_list_entry_deleted(self, space: Space, instance: ShoppingListEntry) -> None:
         pass
 
+    # TODO: Maybe add an 'IsEnabled(self) -> Bool' to here
     # TODO: Add Recipes & possibly Meal Place listeners/hooks (And maybe more?)

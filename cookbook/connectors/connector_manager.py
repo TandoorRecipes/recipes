@@ -35,7 +35,7 @@ class ConnectorManager:
             connectors: List[Connector] = self._connectors[space.name]
         else:
             with scope(space=space):
-                connectors: List[Connector] = [HomeAssistant(config) for config in space.homeassistantconfig_set.all()]
+                connectors: List[Connector] = [HomeAssistant(config) for config in space.homeassistantconfig_set.all() if config.enabled]
                 self._connectors[space.name] = connectors
 
         if len(connectors) == 0 or purge_connector_cache:
