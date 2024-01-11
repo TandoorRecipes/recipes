@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Space, Storage, Sync, UserSpace)
+                             RecipeImport, Space, Storage, Sync, UserSpace, HomeAssistantConfig)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -108,6 +108,29 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(StorageDelete, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return self.delete(request, *args, **kwargs)
+        except ProtectedError:
+            messages.add_message(
+                request,
+                messages.WARNING,
+                _('Could not delete this storage backend as it is used in at least one monitor.')  # noqa: E501
+            )
+            return HttpResponseRedirect(reverse('list_storage'))
+
+
+class HomeAssistantConfigDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['admin']
+    template_name = "generic/delete_template.html"
+    model = HomeAssistantConfig
+    success_url = reverse_lazy('list_storage')
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeAssistantConfigDelete, self).get_context_data(**kwargs)
+        context['title'] = _("HomeAssistant Config Backend")
         return context
 
     def post(self, request, *args, **kwargs):

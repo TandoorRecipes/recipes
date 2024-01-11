@@ -49,14 +49,16 @@ def get_active_space(self):
 
 def get_shopping_share(self):
     # get list of users that shared shopping list with user. Django ORM forbids this type of query, so raw is required
-    return User.objects.raw(' '.join([
-        'SELECT auth_user.id FROM auth_user',
-        'INNER JOIN cookbook_userpreference',
-        'ON (auth_user.id = cookbook_userpreference.user_id)',
-        'INNER JOIN cookbook_userpreference_shopping_share',
-        'ON (cookbook_userpreference.user_id = cookbook_userpreference_shopping_share.userpreference_id)',
-        'WHERE cookbook_userpreference_shopping_share.user_id ={}'.format(self.id)
-    ]))
+    return User.objects.raw(
+        ' '.join(
+            [
+                'SELECT auth_user.id FROM auth_user',
+                'INNER JOIN cookbook_userpreference',
+                'ON (auth_user.id = cookbook_userpreference.user_id)',
+                'INNER JOIN cookbook_userpreference_shopping_share',
+                'ON (cookbook_userpreference.user_id = cookbook_userpreference_shopping_share.userpreference_id)',
+                'WHERE cookbook_userpreference_shopping_share.user_id ={}'.format(self.id)
+            ]))
 
 
 auth.models.User.add_to_class('get_user_display_name', get_user_display_name)
@@ -339,6 +341,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SyncLog.objects.filter(sync__space=self).delete()
         Sync.objects.filter(space=self).delete()
         Storage.objects.filter(space=self).delete()
+        HomeAssistantConfig.objects.filter(space=self).delete()
 
         ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
         ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
@@ -361,6 +364,24 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
 
     def __str__(self):
         return self.name
+
+
+class HomeAssistantConfig(models.Model, PermissionModelMixin):
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+
+    url = models.URLField(blank=True)
+    token = models.CharField(max_length=512, blank=True)
+
+    todo_entity = models.CharField(max_length=128, default='todo.shopping_list')
+
+    on_shopping_list_entry_created_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List")
+    on_shopping_list_entry_updated_enabled = models.BooleanField(default=False, help_text="PLACEHOLDER")
+    on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry deletion to Homeassistant Todo List")
+
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
 
 class UserPreference(models.Model, PermissionModelMixin):
@@ -674,10 +695,11 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
         if len(inherit) > 0:
             # ManyToMany cannot be updated through an UPDATE operation
             for i in inherit:
-                trough.objects.bulk_create([
-                    trough(food_id=x, foodinheritfield_id=i['id'])
-                    for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
-                ])
+                trough.objects.bulk_create(
+                    [
+                        trough(food_id=x, foodinheritfield_id=i['id'])
+                        for x in Food.objects.filter(tree_filter).values_list('id', flat=True)
+                    ])
 
             inherit = [x['field'] for x in inherit]
             for field in ['ignore_shopping', 'substitute_children', 'substitute_siblings']:
@@ -804,8 +826,9 @@ class PropertyType(models.Model, PermissionModelMixin):
     unit = models.CharField(max_length=64, blank=True, null=True)
     order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
-    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
-                                                        (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+    category = models.CharField(
+        max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
+                                (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     fdc_id = models.IntegerField(null=True, default=None, blank=True)
@@ -1368,19 +1391,20 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     UNIT_REPLACE = 'UNIT_REPLACE'
     NAME_REPLACE = 'NAME_REPLACE'
 
-    type = models.CharField(max_length=128,
-                            choices=(
-                                (FOOD_ALIAS, _('Food Alias')),
-                                (UNIT_ALIAS, _('Unit Alias')),
-                                (KEYWORD_ALIAS, _('Keyword Alias')),
-                                (DESCRIPTION_REPLACE, _('Description Replace')),
-                                (INSTRUCTION_REPLACE, _('Instruction Replace')),
-                                (NEVER_UNIT, _('Never Unit')),
-                                (TRANSPOSE_WORDS, _('Transpose Words')),
-                                (FOOD_REPLACE, _('Food Replace')),
-                                (UNIT_REPLACE, _('Unit Replace')),
-                                (NAME_REPLACE, _('Name Replace')),
-                            ))
+    type = models.CharField(
+        max_length=128,
+        choices=(
+            (FOOD_ALIAS, _('Food Alias')),
+            (UNIT_ALIAS, _('Unit Alias')),
+            (KEYWORD_ALIAS, _('Keyword Alias')),
+            (DESCRIPTION_REPLACE, _('Description Replace')),
+            (INSTRUCTION_REPLACE, _('Instruction Replace')),
+            (NEVER_UNIT, _('Never Unit')),
+            (TRANSPOSE_WORDS, _('Transpose Words')),
+            (FOOD_REPLACE, _('Food Replace')),
+            (UNIT_REPLACE, _('Unit Replace')),
+            (NAME_REPLACE, _('Name Replace')),
+        ))
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 

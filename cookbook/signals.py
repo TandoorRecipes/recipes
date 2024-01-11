@@ -4,11 +4,12 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
 from django.core.cache import caches
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils import translation
 from django_scopes import scope, scopes_disabled
 
+from cookbook.connectors.connector_manager import ConnectorManager
 from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
@@ -161,3 +162,8 @@ def clear_unit_cache(sender, instance=None, created=False, **kwargs):
 def clear_property_type_cache(sender, instance=None, created=False, **kwargs):
     if instance:
         caches['default'].delete(CacheHelper(instance.space).PROPERTY_TYPE_CACHE_KEY)
+
+
+handler = ConnectorManager()
+post_save.connect(handler, dispatch_uid="connector_manager")
+post_delete.connect(handler, dispatch_uid="connector_manager")

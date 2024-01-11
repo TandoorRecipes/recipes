@@ -10,7 +10,7 @@ from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceFie
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
-                     SearchPreference, Space, Storage, Sync, User, UserPreference)
+                     SearchPreference, Space, Storage, Sync, User, UserPreference, HomeAssistantConfig)
 
 
 class SelectWidget(widgets.Select):
@@ -185,6 +185,45 @@ class StorageForm(forms.ModelForm):
         help_texts = {
             'url': _(
                 'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
+        }
+
+
+class HomeAssistantConfigForm(forms.ModelForm):
+    token = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'autocomplete': 'new-password', 'type': 'password'}
+        ),
+        required=True,
+        help_text=_('<a href="https://www.home-assistant.io/docs/authentication/#your-account-profile">Long Lived Access Token</a> for your HomeAssistant instance')
+    )
+
+    url = forms.URLField(
+        required=True,
+        help_text=_('Something like http://homeassistant.local:8123/api'),
+    )
+
+    on_shopping_list_entry_created_enabled = forms.BooleanField(
+        help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List -- Warning: Might have negative performance impact",
+        required=False,
+    )
+
+    on_shopping_list_entry_updated_enabled = forms.BooleanField(
+        help_text="PLACEHOLDER",
+        required=False,
+    )
+
+    on_shopping_list_entry_deleted_enabled = forms.BooleanField(
+        help_text="Enable syncing ShoppingListEntry deletion to Homeassistant Todo List -- Warning: Might have negative performance impact",
+        required=False,
+    )
+
+    class Meta:
+        model = HomeAssistantConfig
+        fields = (
+            'name', 'url', 'token', 'todo_entity', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled', 'on_shopping_list_entry_deleted_enabled')
+
+        help_texts = {
+            'url': _('http://homeassistant.local:8123/api for example'),
         }
 
 

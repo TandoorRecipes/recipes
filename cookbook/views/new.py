@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,9 +5,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, Storage, StorageForm
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm, HomeAssistantConfigForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
-from cookbook.models import Recipe, RecipeImport, ShareLink, Step
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step, HomeAssistantConfig
 from recipes import settings
 
 
@@ -68,6 +67,30 @@ class StorageCreate(GroupRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(StorageCreate, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
+        return context
+
+
+class HomeAssistantConfigCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['admin']
+    template_name = "generic/new_template.html"
+    model = HomeAssistantConfig
+    form_class = HomeAssistantConfigForm
+    success_url = reverse_lazy('list_home_assistant_config')
+
+    def form_valid(self, form):
+        if self.request.space.demo or settings.HOSTED:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
+
+        obj = form.save(commit=False)
+        obj.created_by = self.request.user
+        obj.space = self.request.space
+        obj.save()
+        return HttpResponseRedirect(reverse('edit_home_assistant_config', kwargs={'pk': obj.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeAssistantConfigCreate, self).get_context_data(**kwargs)
+        context['title'] = _("HomeAssistant Config Backend")
         return context
 
 

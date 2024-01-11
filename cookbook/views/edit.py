@@ -1,3 +1,4 @@
+import copy
 import os
 
 from django.contrib import messages
@@ -8,14 +9,16 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
-from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm
+from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm, HomeAssistantConfigForm
 from cookbook.helper.permission_helper import (GroupRequiredMixin, OwnerRequiredMixin,
                                                above_space_limit, group_required)
-from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync
+from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync, HomeAssistantConfig
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from recipes import settings
+
+VALUE_NOT_CHANGED = '__NO__CHANGE__'
 
 
 @group_required('guest')
@@ -76,7 +79,7 @@ class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
 
 @group_required('admin')
 def edit_storage(request, pk):
-    instance = get_object_or_404(Storage, pk=pk, space=request.space)
+    instance: Storage = get_object_or_404(Storage, pk=pk, space=request.space)
 
     if not (instance.created_by == request.user or request.user.is_superuser):
         messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
@@ -87,17 +90,18 @@ def edit_storage(request, pk):
         return redirect('index')
 
     if request.method == "POST":
-        form = StorageForm(request.POST, instance=instance)
+        form = StorageForm(request.POST, instance=copy.deepcopy(instance))
         if form.is_valid():
             instance.name = form.cleaned_data['name']
             instance.method = form.cleaned_data['method']
             instance.username = form.cleaned_data['username']
             instance.url = form.cleaned_data['url']
+            instance.path = form.cleaned_data['path']
 
-            if form.cleaned_data['password'] != '__NO__CHANGE__':
+            if form.cleaned_data['password'] != VALUE_NOT_CHANGED:
                 instance.password = form.cleaned_data['password']
 
-            if form.cleaned_data['token'] != '__NO__CHANGE__':
+            if form.cleaned_data['token'] != VALUE_NOT_CHANGED:
                 instance.token = form.cleaned_data['token']
 
             instance.save()
@@ -113,14 +117,55 @@ def edit_storage(request, pk):
             )
     else:
         pseudo_instance = instance
-        pseudo_instance.password = '__NO__CHANGE__'
-        pseudo_instance.token = '__NO__CHANGE__'
+        pseudo_instance.password = VALUE_NOT_CHANGED
+        pseudo_instance.token = VALUE_NOT_CHANGED
         form = StorageForm(instance=pseudo_instance)
 
     return render(
         request,
         'generic/edit_template.html',
         {'form': form, 'title': _('Storage')}
+    )
+
+
+@group_required('admin')
+def edit_home_assistant_config(request, pk):
+    instance: HomeAssistantConfig = get_object_or_404(HomeAssistantConfig, pk=pk, space=request.space)
+
+    if not (instance.created_by == request.user or request.user.is_superuser):
+        messages.add_message(request, messages.ERROR, _('You cannot edit this homeassistant config!'))
+        return HttpResponseRedirect(reverse('edit_home_assistant_config'))
+
+    if request.space.demo or settings.HOSTED:
+        messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+        return redirect('index')
+
+    if request.method == "POST":
+        form = HomeAssistantConfigForm(request.POST, instance=copy.deepcopy(instance))
+        if form.is_valid():
+            instance.name = form.cleaned_data['name']
+            instance.url = form.cleaned_data['url']
+            instance.todo_entity = form.cleaned_data['todo_entity']
+            instance.on_shopping_list_entry_created_enabled = form.cleaned_data['on_shopping_list_entry_created_enabled']
+            instance.on_shopping_list_entry_updated_enabled = form.cleaned_data['on_shopping_list_entry_updated_enabled']
+            instance.on_shopping_list_entry_deleted_enabled = form.cleaned_data['on_shopping_list_entry_deleted_enabled']
+
+            if form.cleaned_data['token'] != VALUE_NOT_CHANGED:
+                instance.token = form.cleaned_data['token']
+
+            instance.save()
+
+            messages.add_message(request, messages.SUCCESS, _('HomeAssistant config saved!'))
+        else:
+            messages.add_message(request, messages.ERROR, _('There was an error updating this config!'))
+    else:
+        instance.token = VALUE_NOT_CHANGED
+        form = HomeAssistantConfigForm(instance=instance)
+
+    return render(
+        request,
+        'generic/edit_template.html',
+        {'form': form, 'title': _('HomeAssistantConfig')}
     )
 
 

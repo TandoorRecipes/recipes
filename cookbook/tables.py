@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A
 
-from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog
+from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog, HomeAssistantConfig
 
 
 class StorageTable(tables.Table):
@@ -13,6 +13,15 @@ class StorageTable(tables.Table):
         model = Storage
         template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'method')
+
+
+class HomeAssistantConfigTable(tables.Table):
+    id = tables.LinkColumn('edit_home_assistant_config', args=[A('id')])
+
+    class Meta:
+        model = HomeAssistantConfig
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'name', 'url')
 
 
 class ImportLogTable(tables.Table):

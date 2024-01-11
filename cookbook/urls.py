@@ -12,7 +12,7 @@ from recipes.settings import DEBUG, PLUGINS
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
                      Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
-                     UserFile, UserSpace, get_model_name)
+                     UserFile, UserSpace, get_model_name, HomeAssistantConfig)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
 
@@ -51,6 +51,7 @@ router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'space', api.SpaceViewSet)
 router.register(r'step', api.StepViewSet)
 router.register(r'storage', api.StorageViewSet)
+router.register(r'home-assistant-config', api.HomeAssistantConfigViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
 router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'supermarket-category-relation', api.SupermarketCategoryRelationViewSet)
@@ -114,6 +115,7 @@ urlpatterns = [
     path('edit/recipe/convert/<int:pk>/', edit.convert_recipe, name='edit_convert_recipe'),
 
     path('edit/storage/<int:pk>/', edit.edit_storage, name='edit_storage'),
+    path('edit/home-assistant-config/<int:pk>/', edit.edit_home_assistant_config, name='edit_home_assistant_config'),
 
     path('delete/recipe-source/<int:pk>/', delete.delete_recipe_source, name='delete_recipe_source'),
 
@@ -166,7 +168,7 @@ urlpatterns = [
 ]
 
 generic_models = (
-    Recipe, RecipeImport, Storage, RecipeBook, SyncLog, Sync,
+    Recipe, RecipeImport, Storage, HomeAssistantConfig, RecipeBook, SyncLog, Sync,
     Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
 )
 

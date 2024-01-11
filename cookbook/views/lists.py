@@ -6,8 +6,8 @@ from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
-from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable
+from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile, HomeAssistantConfig
+from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable, HomeAssistantConfigTable
 
 
 @group_required('admin')
@@ -66,16 +66,30 @@ def storage(request):
 
 
 @group_required('admin')
+def home_assistant_config(request):
+    table = HomeAssistantConfigTable(HomeAssistantConfig.objects.filter(space=request.space).all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(
+        request, 'generic/list_template.html', {
+            'title': _("HomeAssistant Config Backend"),
+            'table': table,
+            'create_url': 'new_home_assistant_config'
+        })
+
+
+@group_required('admin')
 def invite_link(request):
     table = InviteLinkTable(
         InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(request, 'generic/list_template.html', {
-        'title': _("Invite Links"),
-        'table': table,
-        'create_url': 'new_invite_link'
-    })
+    return render(
+        request, 'generic/list_template.html', {
+            'title': _("Invite Links"),
+            'table': table,
+            'create_url': 'new_invite_link'
+        })
 
 
 @group_required('user')
@@ -195,7 +209,7 @@ def custom_filter(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-            'file_size_kb__sum'] / 1000
+                                   'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 

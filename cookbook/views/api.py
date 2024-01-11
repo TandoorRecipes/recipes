@@ -460,6 +460,16 @@ class StorageViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
+class HomeAssistantConfigViewSet(viewsets.ModelViewSet):
+    # TODO handle delete protect error and adjust test
+    queryset = HomeAssistantConfig.objects
+    serializer_class = HomeAssistantConfigSerializer
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
 class SyncViewSet(viewsets.ModelViewSet):
     queryset = Sync.objects
     serializer_class = SyncSerializer
