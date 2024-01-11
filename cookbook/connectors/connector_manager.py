@@ -19,7 +19,6 @@ class ActionType(Enum):
 class ConnectorManager:
     _connectors: Dict[str, List[Connector]]
     _listening_to_classes: UnionType = ShoppingListEntry | Recipe | MealPlan | Connector
-    max_concurrent_tasks = 2
 
     def __init__(self):
         self._connectors = dict()
@@ -79,20 +78,3 @@ class ConnectorManager:
             await asyncio.gather(*tasks, return_exceptions=False)
         except BaseException as e:
             print("received an exception from one of the tasks: ", e)
-        # if isinstance(instance, Recipe):
-        #     if "created" in kwargs and kwargs["created"]:
-        #         for connector in self._connectors:
-        #             connector.on_recipe_created(instance, **kwargs)
-        #         return
-        #     for connector in self._connectors:
-        #         connector.on_recipe_updated(instance, **kwargs)
-        #     return
-        #
-        # if isinstance(instance, MealPlan):
-        #     if "created" in kwargs and kwargs["created"]:
-        #         for connector in self._connectors:
-        #             connector.on_meal_plan_created(instance, **kwargs)
-        #         return
-        #     for connector in self._connectors:
-        #         connector.on_meal_plan_updated(instance, **kwargs)
-        #     return
