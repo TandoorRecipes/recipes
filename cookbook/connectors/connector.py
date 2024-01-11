@@ -16,26 +16,4 @@ class Connector(ABC):
     async def on_shopping_list_entry_deleted(self, space: Space, instance: ShoppingListEntry) -> None:
         pass
 
-    # @abstractmethod
-    # def on_recipe_created(self, instance: Recipe, **kwargs) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def on_recipe_updated(self, instance: Recipe, **kwargs) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def on_recipe_deleted(self, instance: Recipe, **kwargs) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def on_meal_plan_created(self, instance: MealPlan, **kwargs) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def on_meal_plan_updated(self, instance: MealPlan, **kwargs) -> None:
-    #     pass
-    #
-    # @abstractmethod
-    # def on_meal_plan_deleted(self, instance: MealPlan, **kwargs) -> None:
-    #     pass
+    # TODO: Add Recipes & possibly Meal Place listeners/hooks (And maybe more?)
