@@ -28,7 +28,7 @@ class ActionType(Enum):
 
 
 @dataclass
-class Payload:
+class Work:
     instance: REGISTERED_CLASSES
     actionType: ActionType
 
@@ -57,7 +57,7 @@ class ConnectorManager:
             return
 
         try:
-            self._queue.put_nowait(Payload(instance, action_type))
+            self._queue.put_nowait(Work(instance, action_type))
         except queue.Full:
             return
 
@@ -66,7 +66,7 @@ class ConnectorManager:
         self._worker.join()
 
     @staticmethod
-    def worker(queue: Queue):
+    def worker(worker_queue: Queue):
         from django.db import connections
         connections.close_all()
 
@@ -76,7 +76,7 @@ class ConnectorManager:
         _connectors: Dict[str, List[Connector]] = dict()
 
         while True:
-            item: Optional[Payload] = queue.get()
+            item: Optional[Work] = worker_queue.get()
             if item is None:
                 break
 
@@ -119,4 +119,4 @@ async def run_connectors(connectors: List[Connector], space: Space, instance: RE
     try:
         await asyncio.gather(*tasks, return_exceptions=False)
     except BaseException:
-        logging.exception("received an exception from one of the tasks")
+        logging.exception("received an exception from one of the connectors")
