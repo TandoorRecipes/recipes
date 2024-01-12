@@ -1,29 +1,41 @@
 import logging
+from collections import defaultdict
+from logging import Logger
+from typing import Dict, Any, Optional
 
-from homeassistant_api import Client, HomeassistantAPIError
+from homeassistant_api import Client, HomeassistantAPIError, Domain
 
 from cookbook.connectors.connector import Connector
 from cookbook.models import ShoppingListEntry, HomeAssistantConfig, Space
 
 
 class HomeAssistant(Connector):
+    _domains_cache: dict[str, Domain]
     _config: HomeAssistantConfig
+    _logger: Logger
+    _client: Client
 
     def __init__(self, config: HomeAssistantConfig):
+        self._domains_cache = dict()
         self._config = config
         self._logger = logging.getLogger("connector.HomeAssistant")
+        self._client = Client(self._config.url, self._config.token, async_cache_session=False, use_async=True)
 
     async def on_shopping_list_entry_created(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
         if not self._config.on_shopping_list_entry_created_enabled:
             return
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
-        async with Client(self._config.url, self._config.token, use_async=True) as client:
-            try:
-                todo_domain = await client.async_get_domain('todo')
-                await todo_domain.add_item(entity_id=self._config.todo_entity, item=item)
-            except HomeassistantAPIError as err:
-                self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
+
+        todo_domain = self._domains_cache.get('todo')
+        try:
+            if todo_domain is None:
+                todo_domain = await self._client.async_get_domain('todo')
+                self._domains_cache['todo'] = todo_domain
+
+            await todo_domain.add_item(entity_id=self._config.todo_entity, item=item)
+        except HomeassistantAPIError as err:
+            self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
 
     async def on_shopping_list_entry_updated(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
         if not self._config.on_shopping_list_entry_updated_enabled:
@@ -35,12 +47,16 @@ class HomeAssistant(Connector):
             return
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
-        async with Client(self._config.url, self._config.token, use_async=True) as client:
-            try:
-                todo_domain = await client.async_get_domain('todo')
-                await todo_domain.remove_item(entity_id=self._config.todo_entity, item=item)
-            except HomeassistantAPIError as err:
-                self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
+
+        todo_domain = self._domains_cache.get('todo')
+        try:
+            if todo_domain is None:
+                todo_domain = await self._client.async_get_domain('todo')
+                self._domains_cache['todo'] = todo_domain
+
+            await todo_domain.remove_item(entity_id=self._config.todo_entity, item=item)
+        except HomeassistantAPIError as err:
+            self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
 
 
 def _format_shopping_list_entry(shopping_list_entry: ShoppingListEntry):
