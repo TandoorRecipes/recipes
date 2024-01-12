@@ -13,12 +13,13 @@ from django_scopes import scope
 
 from cookbook.connectors.connector import Connector
 from cookbook.connectors.homeassistant import HomeAssistant
-from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space
+from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space, HomeAssistantConfig, ConnectorConfig
 
 multiprocessing.set_start_method('fork')  # https://code.djangoproject.com/ticket/31169
 
 QUEUE_MAX_SIZE = 25
-REGISTERED_CLASSES: UnionType = ShoppingListEntry | Recipe | MealPlan | Connector
+REGISTERED_CLASSES: UnionType = ShoppingListEntry | Recipe | MealPlan
+CONNECTOR_UPDATE_CLASSES: UnionType = HomeAssistantConfig | ConnectorConfig
 
 
 class ActionType(Enum):
@@ -35,7 +36,7 @@ class Work:
 
 class ConnectorManager:
     _queue: Queue
-    _listening_to_classes = REGISTERED_CLASSES
+    _listening_to_classes = REGISTERED_CLASSES | CONNECTOR_UPDATE_CLASSES
 
     def __init__(self):
         self._queue = multiprocessing.Queue(maxsize=QUEUE_MAX_SIZE)
@@ -81,10 +82,10 @@ class ConnectorManager:
                 break
 
             # If a Connector was changed/updated, refresh connector from the database for said space
-            refresh_connector_cache = isinstance(item.instance, Connector)
+            refresh_connector_cache = isinstance(item.instance, CONNECTOR_UPDATE_CLASSES)
 
             space: Space = item.instance.space
-            connectors: Optional[List[Connector]] = _connectors.get(space.name, None)
+            connectors: Optional[List[Connector]] = _connectors.get(space.name)
 
             if connectors is None or refresh_connector_cache:
                 with scope(space=space):

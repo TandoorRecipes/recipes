@@ -1,7 +1,8 @@
-from cookbook.models import Storage, HomeAssistantConfig
+import pytest
 from django.contrib import auth
 from django.urls import reverse
-import pytest
+
+from cookbook.models import HomeAssistantConfig
 
 EDIT_VIEW_NAME = 'edit_home_assistant_config'
 
@@ -19,25 +20,31 @@ def home_assistant_config_obj(a1_s1, space_1):
     )
 
 
-def test_edit_home_assistant_config(home_assistant_config_obj, a1_s1, a1_s2):
+def test_edit_home_assistant_config(home_assistant_config_obj: HomeAssistantConfig, a1_s1, a1_s2):
     new_token = '1234_token'
 
     r = a1_s1.post(
         reverse(EDIT_VIEW_NAME, args={home_assistant_config_obj.pk}),
         {
-            'name': 'HomeAssistant 1',
+            'name': home_assistant_config_obj.name,
+            'url': home_assistant_config_obj.url,
+            'todo_entity': home_assistant_config_obj.todo_entity,
             'token': new_token,
+            'enabled': home_assistant_config_obj.enabled,
         }
     )
-    home_assistant_config_obj.refresh_from_db()
     assert r.status_code == 200
+    home_assistant_config_obj.refresh_from_db()
     assert home_assistant_config_obj.token == new_token
 
     r = a1_s2.post(
         reverse(EDIT_VIEW_NAME, args={home_assistant_config_obj.pk}),
         {
-            'name': 'HomeAssistant 1',
+            'name': home_assistant_config_obj.name,
+            'url': home_assistant_config_obj.url,
+            'todo_entity': home_assistant_config_obj.todo_entity,
             'token': new_token,
+            'enabled': home_assistant_config_obj.enabled,
         }
     )
     assert r.status_code == 404
