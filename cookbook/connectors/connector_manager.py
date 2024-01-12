@@ -17,7 +17,7 @@ from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space
 
 multiprocessing.set_start_method('fork')  # https://code.djangoproject.com/ticket/31169
 
-QUEUE_MAX_SIZE = 10
+QUEUE_MAX_SIZE = 25
 REGISTERED_CLASSES: UnionType = ShoppingListEntry | Recipe | MealPlan | Connector
 
 
@@ -115,6 +115,9 @@ async def run_connectors(connectors: List[Connector], space: Space, instance: RE
             case ActionType.DELETED:
                 for connector in connectors:
                     tasks.append(asyncio.create_task(connector.on_shopping_list_entry_deleted(space, shopping_list_entry)))
+
+    if len(tasks) == 0:
+        return
 
     try:
         await asyncio.gather(*tasks, return_exceptions=False)
