@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import multiprocessing
+import queue
 from asyncio import Task
 from dataclasses import dataclass
 from enum import Enum
@@ -55,7 +56,10 @@ class ConnectorManager:
         else:
             return
 
-        self._queue.put_nowait(Payload(instance, action_type))
+        try:
+            self._queue.put_nowait(Payload(instance, action_type))
+        except queue.Full:
+            return
 
     def stop(self):
         self._queue.close()

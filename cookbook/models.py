@@ -366,23 +366,27 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         return self.name
 
 
-class HomeAssistantConfig(models.Model, PermissionModelMixin):
+class ConnectorConfig(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
 
-    url = models.URLField(blank=True)
-    token = models.CharField(max_length=512, blank=True)
-
-    todo_entity = models.CharField(max_length=128, default='todo.shopping_list')
-
-    enabled = models.BooleanField(default=True, help_text="Is HomeAssistant Connector Enabled")
-    on_shopping_list_entry_created_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List")
-    on_shopping_list_entry_updated_enabled = models.BooleanField(default=False, help_text="PLACEHOLDER")
-    on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False, help_text="Enable syncing ShoppingListEntry deletion to Homeassistant Todo List")
+    enabled = models.BooleanField(default=True, help_text="Is Connector Enabled")
+    on_shopping_list_entry_created_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_updated_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    class Meta:
+        abstract = True
+
+
+class HomeAssistantConfig(ConnectorConfig):
+    url = models.URLField(blank=True)
+    token = models.CharField(max_length=512, blank=True)
+    todo_entity = models.CharField(max_length=128, default='todo.shopping_list')
 
 
 class UserPreference(models.Model, PermissionModelMixin):
