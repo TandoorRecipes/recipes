@@ -5,9 +5,8 @@
             <b-button variant="primary" v-if="is_delayed">
                 <i class="fa-fw fas fa-hourglass-half"></i>
             </b-button>
-
-            <b-button variant="dark" block class="btn btn-block text-left" @click="detail_modal_visible = true">
-                <div class="d-flex ">
+            <div class="card flex-grow-1 btn-block p-1" @click="detail_modal_visible = true">
+                <div class="d-flex">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
                     </div>
@@ -17,7 +16,7 @@
                 </div>
 
                 <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
-            </b-button>
+            </div>
             <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
                 <i class="fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
             </b-button>
@@ -87,6 +86,8 @@
             </template>
         </b-modal>
 
+        <generic-modal-form :model="Models.FOOD" :show="editing_food !== null" @hidden="editing_food = null; useShoppingListStore().refreshFromAPI()"></generic-modal-form>
+
     </div>
 </template>
 
@@ -94,12 +95,13 @@
 import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
+import {ApiMixin, getThemeDependentDarkButton, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
+import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 
 
 Vue.use(BootstrapVue)
@@ -107,13 +109,14 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingLineItem",
     mixins: [ApiMixin],
-    components: {NumberScalerComponent},
+    components: {GenericModalForm, NumberScalerComponent},
     props: {
         entries: {type: Object,},
     },
     data() {
         return {
             detail_modal_visible: false,
+            editing_food: null,
         }
     },
     computed: {
@@ -221,6 +224,7 @@ export default {
 
     },
     methods: {
+        getThemeDependentDarkButton,
         useUserPreferenceStore,
         useShoppingListStore,
         resolveDjangoUrl,
