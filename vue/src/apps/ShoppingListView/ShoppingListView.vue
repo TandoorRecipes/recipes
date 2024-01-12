@@ -63,7 +63,7 @@
                            v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
                         <b-button-group class="w-100 mt-1"
                                         :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
-                            <b-button variant="light" block class="btn btn-block text-left">
+                            <b-button variant="info" block class="btn btn-block text-left">
                                 <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{
                                         $t('Undefined')
                                     }}</span>
