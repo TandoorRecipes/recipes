@@ -1,5 +1,7 @@
 import pytest
 from django.contrib import auth
+from django.contrib import messages
+from django.contrib.messages import get_messages
 from django.urls import reverse
 
 from cookbook.models import HomeAssistantConfig
@@ -12,7 +14,7 @@ def home_assistant_config_obj(a1_s1, space_1):
     return HomeAssistantConfig.objects.create(
         name='HomeAssistant 1',
         token='token',
-        url='url',
+        url='http://localhost:8123/api',
         todo_entity='todo.shopping_list',
         enabled=True,
         created_by=auth.get_user(a1_s1),
@@ -28,12 +30,15 @@ def test_edit_home_assistant_config(home_assistant_config_obj: HomeAssistantConf
         {
             'name': home_assistant_config_obj.name,
             'url': home_assistant_config_obj.url,
-            'todo_entity': home_assistant_config_obj.todo_entity,
             'token': new_token,
+            'todo_entity': home_assistant_config_obj.todo_entity,
             'enabled': home_assistant_config_obj.enabled,
         }
     )
     assert r.status_code == 200
+    r_messages = [m for m in get_messages(r.wsgi_request)]
+    assert not any(m.level > messages.SUCCESS for m in r_messages)
+
     home_assistant_config_obj.refresh_from_db()
     assert home_assistant_config_obj.token == new_token
 
