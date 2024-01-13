@@ -755,7 +755,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        return f'{self.pk}: {self.amount} {self.food.name} {self.unit.name}'
+        return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
 
     class Meta:
         ordering = ['order', 'pk']
