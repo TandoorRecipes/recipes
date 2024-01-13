@@ -21,6 +21,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         // internal
         currently_updating: false,
         last_autosync: null,
+        undo_stack: [],
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
@@ -200,19 +201,22 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
 
             return apiClient.createShoppingListEntry(object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
+
+                this.registerChange('CREATED', r.data, undefined, undefined)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
         /**
-         * update existing entry object
+         * update existing entry object and updated_at timestamp
          * updates data in store
+         * IMPORTANT: always use this method to update objects to keep client state consistent
          * @param object entry object to update
          * @return {Promise<T | void>} promise of updating call to subscribe to
          */
         updateObject(object) {
             let apiClient = new ApiApiFactory()
-            // set the update_at timestamp on the client to prevent auto sync from overriding with older changes
+            // sets the update_at timestamp on the client to prevent auto sync from overriding with older changes
             // moment().format() yields locale aware datetime without ms 2024-01-04T13:39:08.607238+01:00
             Vue.set(object, 'update_at', moment().format())
 
@@ -317,5 +321,37 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.deleteObject(this.entries[i])
             }
         },
+        /**
+         *
+         */
+        registerChange(type, entries, new_value, old_value) {
+            if (!(type in ['CREATED', 'CHECKED', 'UNCHECKED', 'DELAY'])) {
+                //throw Error('Tried to register unknown change type')
+            }
+
+            this.undo_stack.push({'type': type, 'new_value': new_value, 'old_value': old_value, 'entries': entries})
+        },
+        /**
+         *
+         */
+        undoChange() {
+            let last_item = this.undo_stack.pop()
+            let type = last_item['type']
+            let entries = last_item['entries']
+
+            for (let i in entries) {
+                let e = entries[i]
+                if (type === 'CREATED') {
+                    this.deleteObject(e)
+                } else if (type === 'CHECKED' || type === 'UNCHECKED') {
+                    e.checked = (type === 'UNCHECKED')
+                    this.updateObject(e)
+                } else if (type === 'DELAY'){
+                    e.delay_until = null
+                    this.updateObject(e)
+                }
+
+            }
+        }
     },
 })

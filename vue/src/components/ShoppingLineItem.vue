@@ -95,7 +95,7 @@
 import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiMixin, getThemeDependentDarkButton, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
+import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -224,7 +224,6 @@ export default {
 
     },
     methods: {
-        getThemeDependentDarkButton,
         useUserPreferenceStore,
         useShoppingListStore,
         resolveDjangoUrl,
