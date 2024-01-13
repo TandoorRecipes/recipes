@@ -5,7 +5,7 @@ import queue
 from asyncio import Task
 from dataclasses import dataclass
 from enum import Enum
-from multiprocessing import Queue
+from multiprocessing import JoinableQueue
 from types import UnionType
 from typing import List, Any, Dict, Optional
 
@@ -35,11 +35,11 @@ class Work:
 
 
 class ConnectorManager:
-    _queue: Queue
+    _queue: JoinableQueue
     _listening_to_classes = REGISTERED_CLASSES | CONNECTOR_UPDATE_CLASSES
 
     def __init__(self):
-        self._queue = multiprocessing.Queue(maxsize=QUEUE_MAX_SIZE)
+        self._queue = multiprocessing.JoinableQueue(maxsize=QUEUE_MAX_SIZE)
         self._worker = multiprocessing.Process(target=self.worker, args=(self._queue,), daemon=True)
         self._worker.start()
 
@@ -60,14 +60,16 @@ class ConnectorManager:
         try:
             self._queue.put_nowait(Work(instance, action_type))
         except queue.Full:
+            logging.info("queue was full, so skipping %s", instance)
             return
 
     def stop(self):
+        self._queue.join()
         self._queue.close()
         self._worker.join()
 
     @staticmethod
-    def worker(worker_queue: Queue):
+    def worker(worker_queue: JoinableQueue):
         from django.db import connections
         connections.close_all()
 
@@ -77,7 +79,10 @@ class ConnectorManager:
         _connectors: Dict[str, List[Connector]] = dict()
 
         while True:
-            item: Optional[Work] = worker_queue.get()
+            try:
+                item: Optional[Work] = worker_queue.get()
+            except KeyboardInterrupt:
+                break
             if item is None:
                 break
 
@@ -88,16 +93,30 @@ class ConnectorManager:
             connectors: Optional[List[Connector]] = _connectors.get(space.name)
 
             if connectors is None or refresh_connector_cache:
+                if connectors is not None:
+                    loop.run_until_complete(close_connectors(connectors))
+
                 with scope(space=space):
                     connectors: List[Connector] = [HomeAssistant(config) for config in space.homeassistantconfig_set.all() if config.enabled]
                     _connectors[space.name] = connectors
 
             if len(connectors) == 0 or refresh_connector_cache:
-                return
+                worker_queue.task_done()
+                continue
 
             loop.run_until_complete(run_connectors(connectors, space, item.instance, item.actionType))
+            worker_queue.task_done()
 
         loop.close()
+
+
+async def close_connectors(connectors: List[Connector]):
+    tasks: List[Task] = [asyncio.create_task(connector.close()) for connector in connectors]
+
+    try:
+        await asyncio.gather(*tasks, return_exceptions=False)
+    except BaseException:
+        logging.exception("received an exception while closing one of the connectors")
 
 
 async def run_connectors(connectors: List[Connector], space: Space, instance: REGISTERED_CLASSES, action_type: ActionType):
