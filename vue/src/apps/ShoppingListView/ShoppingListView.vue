@@ -2,6 +2,8 @@
     <div id="app">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
 
+        <b-button @click="useShoppingListStore().undoChange()">Undo</b-button>
+
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
 
