@@ -63,14 +63,15 @@ def get_theming_values(space, user):
         for logo in list(tv.keys()):
             if logo.startswith('logo_color_') and getattr(space, logo, None):
                 tv[logo] = getattr(space, logo).file.url
-            if space.custom_space_theme:
-                tv['custom_theme'] = space.custom_space_theme.file.url
-            if space.space_theme in themes:
-                tv['theme'] = static(themes[space.space_theme])
-            if space.nav_logo:
-                tv['nav_logo'] = space.nav_logo.file.url
-            if space.nav_bg_color:
-                tv['nav_bg_color'] = space.nav_bg_color
-            if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
-                tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
+
+        if space.custom_space_theme:
+            tv['custom_theme'] = space.custom_space_theme.file.url
+        if space.space_theme in themes:
+            tv['theme'] = static(themes[space.space_theme])
+        if space.nav_logo:
+            tv['nav_logo'] = space.nav_logo.file.url
+        if space.nav_bg_color:
+            tv['nav_bg_color'] = space.nav_bg_color
+        if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
+            tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
     return tv
