@@ -31,8 +31,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Cache StaticFiles
+      uses: actions/cache@v3
+      id: django_cache
+      with:
+        path: |
+          ./cookbook/static
+          ./vue/webpack-stats.json
+          ./staticfiles
+        key: |
+          ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
+
     # Build Vue frontend
     - name: Set up Node ${{ matrix.node-version }}
+      if: steps.django_cache.outputs.cache-hit != 'true'
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -40,24 +52,18 @@ jobs:
         cache-dependency-path: ./vue/yarn.lock
 
     - name: Install Vue dependencies
+      if: steps.django_cache.outputs.cache-hit != 'true'
       working-directory: ./vue
       run: yarn install
 
     - name: Build Vue dependencies
+      if: steps.django_cache.outputs.cache-hit != 'true'
       working-directory: ./vue
       run: yarn build
 
     # Build backend
-    - name: Cache Django collectstatic
-      uses: actions/cache@v2
-      with:
-        path: ./staticfiles
-        key: |
-          ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic
-
     - name: Compile Django StatisFiles
+      if: steps.django_cache.outputs.cache-hit != 'true'
       run: |
         python3 manage.py collectstatic --noinput
         python3 manage.py collectstatic_js_reverse
