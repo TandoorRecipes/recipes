@@ -202,7 +202,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             return apiClient.createShoppingListEntry(object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
 
-                this.registerChange('CREATED', r.data, undefined, undefined)
+                this.registerChange('CREATED', {[r.data.id]: r.data},)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
@@ -293,6 +293,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @param checked boolean to set checked state of entry to
          */
         setEntriesCheckedState(entries, checked) {
+            this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
             for (let i in entries) {
                 this.entries[i].checked = checked
                 this.updateObject(this.entries[i])
@@ -305,6 +306,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         delayEntries(entries) {
             let delay = 4 //TODO get delay from settings in an offline friendly way
             let delay_date = new Date(Date.now() + delay * (60 * 60 * 1000))
+
+            this.registerChange('DELAY', entries)
 
             for (let i in entries) {
                 console.log('DELAYING ', i, ' until ', delay_date)
@@ -322,35 +325,43 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
         },
         /**
-         *
+         * register the change to a set of entries to allow undoing it
+         * throws an Error if the operation type is not known
+         * @param type the type of change to register. This determines what undoing the change does. (CREATE->delete object,
+         *              CHECKED->uncheck entry, UNCHECKED->check entry, DELAY->remove delay)
+         * @param {{}} entries set of entries
          */
-        registerChange(type, entries, new_value, old_value) {
-            if (!(type in ['CREATED', 'CHECKED', 'UNCHECKED', 'DELAY'])) {
-                //throw Error('Tried to register unknown change type')
+        registerChange(type, entries) {
+            if (!['CREATED', 'CHECKED', 'UNCHECKED', 'DELAY'].includes(type)) {
+                throw Error('Tried to register unknown change type')
             }
-
-            this.undo_stack.push({'type': type, 'new_value': new_value, 'old_value': old_value, 'entries': entries})
+            this.undo_stack.push({'type': type, 'entries': entries})
         },
         /**
-         *
+         * takes the last item from the undo stack and reverts it
          */
         undoChange() {
             let last_item = this.undo_stack.pop()
-            let type = last_item['type']
-            let entries = last_item['entries']
+            if (last_item !== undefined) {
+                let type = last_item['type']
+                let entries = last_item['entries']
 
-            for (let i in entries) {
-                let e = entries[i]
-                if (type === 'CREATED') {
-                    this.deleteObject(e)
-                } else if (type === 'CHECKED' || type === 'UNCHECKED') {
-                    e.checked = (type === 'UNCHECKED')
-                    this.updateObject(e)
-                } else if (type === 'DELAY'){
-                    e.delay_until = null
-                    this.updateObject(e)
+                for (let i in entries) {
+                    let e = entries[i]
+                    if (type === 'CREATED') {
+                        this.deleteObject(e)
+                    } else if (type === 'CHECKED' || type === 'UNCHECKED') {
+                        e.checked = (type === 'UNCHECKED')
+                        this.updateObject(e)
+                    } else if (type === 'DELAY') {
+                        e.delay_until = null
+                        this.updateObject(e)
+                    }
+
                 }
-
+            } else {
+                // can use localization in store
+                //StandardToasts.makeStandardToast(this, this.$t('NoMoreUndo'))
             }
         }
     },
