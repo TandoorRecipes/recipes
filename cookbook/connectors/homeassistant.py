@@ -31,6 +31,7 @@ class HomeAssistant(Connector):
                 todo_domain = await self._client.async_get_domain('todo')
                 self._domains_cache['todo'] = todo_domain
 
+            logging.debug(f"pushing {item} to {self._config.name}")
             await todo_domain.add_item(entity_id=self._config.todo_entity, item=item)
         except HomeassistantAPIError as err:
             self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
@@ -52,6 +53,7 @@ class HomeAssistant(Connector):
                 todo_domain = await self._client.async_get_domain('todo')
                 self._domains_cache['todo'] = todo_domain
 
+            logging.debug(f"deleting {item} from {self._config.name}")
             await todo_domain.remove_item(entity_id=self._config.todo_entity, item=item)
         except HomeassistantAPIError as err:
             self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
