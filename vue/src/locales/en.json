@@ -97,6 +97,8 @@
 	"base_amount": "Base Amount",
 	"Datatype": "Datatype",
 	"Input": "Input",
+	"Undo": "Undo",
+	"NoMoreUndo": "No changes to be undone.",
 	"Number of Objects": "Number of Objects",
 	"Add_Step": "Add Step",
 	"Keywords": "Keywords",

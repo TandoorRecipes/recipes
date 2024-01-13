@@ -2,10 +2,11 @@
     <div id="app">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
 
-        <b-button @click="useShoppingListStore().undoChange()">Undo</b-button>
+
 
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
+                <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i></b-button>
 
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
                     <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
