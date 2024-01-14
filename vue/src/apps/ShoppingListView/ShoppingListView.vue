@@ -400,10 +400,11 @@
 
         <bottom-navigation-bar active-view="view_shopping">
             <template #custom_nav_content v-if="current_tab <= 1">
-                <div class="d-flex flex-row justify-content-around mb-3">
+                <b-row class="pr-1 pl-1 mb-3">
+                    <b-col cols="12">
+                          <template v-if="current_tab===0">
 
 
-                    <template v-if="current_tab===0">
                         <b-input-group>
                             <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
                                           @keyup.enter="addItem"></b-form-input>
@@ -422,8 +423,9 @@
                         ></generic-multiselect>
                     </template>
 
+                    </b-col>
+                </b-row>
 
-                </div>
             </template>
 
             <template #custom_create_functions>
