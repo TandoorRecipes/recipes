@@ -15,7 +15,7 @@ def theme_values(request):
 
 def get_theming_values(request):
     space = None
-    if request.space:
+    if getattr(request,'space',None):
         space = request.space
     if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
         with scopes_disabled():
@@ -46,16 +46,17 @@ def get_theming_values(request):
         'nav_bg_color': '#ddbf86',
         'nav_text_class': 'navbar-light',
         'sticky_nav': 'position: sticky; top: 0; left: 0; z-index: 1000;',
+        'app_name': 'Tandoor Recipes',
     }
 
-    if  request.user.is_authenticated:
-        if  request.user.userpreference.theme in themes:
-            tv['theme'] = static(themes[ request.user.userpreference.theme])
-        if  request.user.userpreference.nav_bg_color:
-            tv['nav_bg_color'] =  request.user.userpreference.nav_bg_color
-        if  request.user.userpreference.nav_text_color and  request.user.userpreference.nav_text_color in nav_text_type_mapping:
-            tv['nav_text_class'] = nav_text_type_mapping[ request.user.userpreference.nav_text_color]
-        if not  request.user.userpreference.nav_sticky:
+    if request.user.is_authenticated:
+        if request.user.userpreference.theme in themes:
+            tv['theme'] = static(themes[request.user.userpreference.theme])
+        if request.user.userpreference.nav_bg_color:
+            tv['nav_bg_color'] = request.user.userpreference.nav_bg_color
+        if request.user.userpreference.nav_text_color and request.user.userpreference.nav_text_color in nav_text_type_mapping:
+            tv['nav_text_class'] = nav_text_type_mapping[request.user.userpreference.nav_text_color]
+        if not request.user.userpreference.nav_sticky:
             tv['sticky_nav'] = ''
 
     if space:
@@ -73,4 +74,6 @@ def get_theming_values(request):
             tv['nav_bg_color'] = space.nav_bg_color
         if space.nav_text_color and space.nav_text_color in nav_text_type_mapping:
             tv['nav_text_class'] = nav_text_type_mapping[space.nav_text_color]
+        if space.app_name:
+            tv['app_name'] = space.app_name
     return tv
