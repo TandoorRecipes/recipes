@@ -291,27 +291,34 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * function to handle user checking or unchecking a set of entries
          * @param {{}} entries set of entries
          * @param checked boolean to set checked state of entry to
+         * @param undo if the user should be able to undo the change or not
          */
-        setEntriesCheckedState(entries, checked) {
-            this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
+        setEntriesCheckedState(entries, checked, undo) {
+            if (undo) {
+                this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
+            }
+
             for (let i in entries) {
                 this.entries[i].checked = checked
                 this.updateObject(this.entries[i])
             }
         },
         /**
-         * function to handle user "delaying" shopping entries
+         * function to handle user "delaying" and "undelaying" shopping entries
          * @param {{}} entries set of entries
+         * @param delay if entries should be delayed or if delay should be removed
+         * @param undo if the user should be able to undo the change or not
          */
-        delayEntries(entries) {
-            let delay = 4 //TODO get delay from settings in an offline friendly way
-            let delay_date = new Date(Date.now() + delay * (60 * 60 * 1000))
+        delayEntries(entries, delay, undo) {
+            let delay_hours = 4 //TODO get delay from settings in an offline friendly way
+            let delay_date = new Date(Date.now() + delay_hours * (60 * 60 * 1000))
 
-            this.registerChange('DELAY', entries)
+            if (undo) {
+                this.registerChange((delay ? 'DELAY' : 'UNDELAY'), entries)
+            }
 
             for (let i in entries) {
-                console.log('DELAYING ', i, ' until ', delay_date)
-                this.entries[i].delay_until = delay_date
+                this.entries[i].delay_until = (delay ? delay_date : null)
                 this.updateObject(this.entries[i])
             }
         },
@@ -332,7 +339,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @param {{}} entries set of entries
          */
         registerChange(type, entries) {
-            if (!['CREATED', 'CHECKED', 'UNCHECKED', 'DELAY'].includes(type)) {
+            if (!['CREATED', 'CHECKED', 'UNCHECKED', 'DELAY', 'UNDELAY'].includes(type)) {
                 throw Error('Tried to register unknown change type')
             }
             this.undo_stack.push({'type': type, 'entries': entries})
@@ -346,18 +353,15 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 let type = last_item['type']
                 let entries = last_item['entries']
 
-                for (let i in entries) {
-                    let e = entries[i]
-                    if (type === 'CREATED') {
+                if (type === 'CHECKED' || type === 'UNCHECKED') {
+                    this.setEntriesCheckedState(entries, (type === 'UNCHECKED'), false)
+                } else if (type === 'DELAY' || type === 'UNDELAY') {
+                    this.delayEntries(entries, (type === 'UNDELAY'), false)
+                } else if (type === 'CREATED') {
+                    for (let i in entries) {
+                        let e = entries[i]
                         this.deleteObject(e)
-                    } else if (type === 'CHECKED' || type === 'UNCHECKED') {
-                        e.checked = (type === 'UNCHECKED')
-                        this.updateObject(e)
-                    } else if (type === 'DELAY') {
-                        e.delay_until = null
-                        this.updateObject(e)
                     }
-
                 }
             } else {
                 // can use localization in store

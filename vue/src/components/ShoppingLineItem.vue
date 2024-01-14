@@ -1,7 +1,12 @@
 <template>
-    <div id="shopping_line_item">
+    <div id="shopping_line_item" class="swipe-container" @touchend="handleSwipe()"
+         v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)"
+    >
+        <div class="swipe-action" :class="{'bg-success': !is_checked , 'bg-warning': is_checked }">
+            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
+        </div>
 
-        <b-button-group class="w-100" v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)">
+        <b-button-group class="swipe-element">
             <b-button variant="primary" v-if="is_delayed">
                 <i class="fa-fw fas fa-hourglass-half"></i>
             </b-button>
@@ -17,11 +22,14 @@
 
                 <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
             </div>
-            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)" :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
+            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)"
+                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
                 <i class="fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
             </b-button>
         </b-button-group>
-
+        <div class="swipe-action bg-primary justify-content-end">
+            <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>
+        </div>
 
         <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false">
             <template #modal-title>
@@ -45,21 +53,29 @@
                 <!-- TODO implement -->
                 <!--                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  -->
 
-                <b-button variant="info" block @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries)">{{ $t('Postpone') }}</b-button>
+                <b-button variant="info" block
+                          @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!this.is_delayed, true)">
+                    {{ $t('Postpone') }}
+                </b-button>
 
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>
 
-                <b-button variant="danger" block @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">{{ $t('Delete_All') }}</b-button>
+                <b-button variant="danger" block
+                          @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
+                    {{ $t('Delete_All') }}
+                </b-button>
 
                 <b-row v-for="e in entries" v-bind:key="e.id">
                     <b-col cold="12">
                         <b-button-group class="mt-1 w-100">
                             <b-button variant="dark" block class="btn btn-block text-left">
-                                <span><span v-if="e.amount > 0">{{e.amount}}</span> {{e.unit?.name}} {{ food.name }}</span>
+                                <span><span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
                                 <span><br/><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
-                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{ e.recipe_mealplan.recipe_name }} </a>({{
+                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
+                                                e.recipe_mealplan.recipe_name
+                                            }} </a>({{
                                             e.recipe_mealplan.servings
                                         }} {{ $t('Servings') }})<br/>
                                     </span>
@@ -72,10 +88,14 @@
                                 </small></span>
 
                             </b-button>
-                            <b-button variant="warning" @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i class="fas fa-trash"></i></b-button> <!-- TODO implement -->
+                            <b-button variant="warning"
+                                      @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i
+                                class="fas fa-trash"></i></b-button> <!-- TODO implement -->
                         </b-button-group>
 
-                        <number-scaler-component :number="e.amount" @change="e.amount = $event; useShoppingListStore().updateObject(e)" v-if="e.recipe_mealplan === null"></number-scaler-component>
+                        <number-scaler-component :number="e.amount"
+                                                 @change="e.amount = $event; useShoppingListStore().updateObject(e)"
+                                                 v-if="e.recipe_mealplan === null"></number-scaler-component>
 
                     </b-col>
                 </b-row>
@@ -86,7 +106,8 @@
             </template>
         </b-modal>
 
-        <generic-modal-form :model="Models.FOOD" :show="editing_food !== null" @hidden="editing_food = null; useShoppingListStore().refreshFromAPI()"></generic-modal-form>
+        <generic-modal-form :model="Models.FOOD" :show="editing_food !== null"
+                            @hidden="editing_food = null; useShoppingListStore().refreshFromAPI()"></generic-modal-form>
 
     </div>
 </template>
@@ -186,7 +207,7 @@ export default {
                 if (e.recipe_mealplan !== null) {
                     let recipe_name = e.recipe_mealplan.recipe_name
                     if (recipes.indexOf(recipe_name) === -1) {
-                        recipes.push(recipe_name)
+                        recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
                     }
 
                     if ('mealplan_from_date' in e.recipe_mealplan) {
@@ -195,14 +216,6 @@ export default {
                             meal_pans.push(meal_plan_entry)
                         }
                     }
-                }
-
-                if (recipes.length > 1) {
-                    let short_recipes = []
-                    recipes.forEach(r => {
-                        short_recipes.push(r.substring(0, 14) + (r.length > 14 ? '..' : ''))
-                    })
-                    recipes = short_recipes
                 }
             }
 
@@ -236,9 +249,12 @@ export default {
                 dateStyle: "short",
             }).format(Date.parse(datetime))
         },
-
+        /**
+         * update the food after the category was changed
+         * handle changing category to category ID as a workaround
+         * @param food
+         */
         updateFoodCategory: function (food) {
-
             if (typeof food.supermarket_category === "number") { // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
                 food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
             }
@@ -249,14 +265,66 @@ export default {
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
+        },
+        /**
+         * function triggered by touchend event of swipe container
+         * check if min distance is reached and execute desired action
+         */
+        handleSwipe: function () {
+            const minDistance = 80;
+            const container = document.querySelector('.swipe-container');
+            // get the distance the user swiped
+            const swipeDistance = container.scrollLeft - container.clientWidth;
+            if (swipeDistance < minDistance * -1) {
+                useShoppingListStore().setEntriesCheckedState(this.entries, !this.is_checked)
+            } else if (swipeDistance > minDistance) {
+                useShoppingListStore().delayEntries(this.entries, !this.is_delayed, true)
+            }
         }
-
-
     },
 }
 </script>
 
 
 <style>
+/* scroll snap takes care of restoring scroll position */
+.swipe-container {
+    display: flex;
+    overflow: auto;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+
+/* scrollbar should be hidden */
+.swipe-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* main element should always snap into view */
+.swipe-element {
+    scroll-snap-align: start;
+}
+
+.swipe-icon {
+    color: white;
+    position: sticky;
+    left: 16px;
+    right: 16px;
+}
+
+/* swipe-actions and element should be 100% wide */
+.swipe-action,
+.swipe-element {
+    min-width: 100%;
+}
+
+.swipe-action {
+    display: flex;
+    align-items: center;
+}
+
+.right {
+    justify-content: flex-end;
+}
 
 </style>
