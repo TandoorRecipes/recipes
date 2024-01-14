@@ -364,7 +364,7 @@ export default {
         },
         mobileSimpleGrid() {
             let grid = [];
-            let currentDate = moment();
+            let currentDate = moment(this.showDate);
             for (let x = 0; x < 7; x++) {
                 let moment_date = currentDate.clone().add(x, "d");
                 grid.push({
@@ -483,7 +483,7 @@ export default {
             this.setShowDate(ctx.selectedDate)
         },
         setShowDate(d) {
-            this.showDate = d
+            this.showDate = d ?? new Date();
         },
         createEntryClick(data) {
             this.mealplan_default_date = moment(data).format("YYYY-MM-DD")
