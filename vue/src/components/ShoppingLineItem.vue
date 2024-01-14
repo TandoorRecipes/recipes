@@ -1,5 +1,5 @@
 <template>
-    <div id="shopping_line_item" class="swipe-container" @touchend="handleSwipe()"
+    <div class="swipe-container" :id="item_container_id" @touchend="handleSwipe()"
          v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)"
     >
         <div class="swipe-action" :class="{'bg-success': !is_checked , 'bg-warning': is_checked }">
@@ -141,6 +141,13 @@ export default {
         }
     },
     computed: {
+        item_container_id: function () {
+            let id = 'id_sli_'
+            for (let i in this.entries) {
+                id += i + '_'
+            }
+            return id
+        },
         is_checked: function () {
             for (let i in this.entries) {
                 if (!this.entries[i].checked) {
@@ -272,7 +279,7 @@ export default {
          */
         handleSwipe: function () {
             const minDistance = 80;
-            const container = document.querySelector('.swipe-container');
+            const container = document.querySelector('#' + this.item_container_id);
             // get the distance the user swiped
             const swipeDistance = container.scrollLeft - container.clientWidth;
             if (swipeDistance < minDistance * -1) {
