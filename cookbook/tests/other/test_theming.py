@@ -14,6 +14,7 @@ def test_theming_function(space_1, u1_s1):
     request.user = auth.get_user(u1_s1)
     request.space = space_1
 
+    # defaults apply without setting anything (user preference is automatically created with these defaults)
     assert get_theming_values(request)['theme'] == static('themes/tandoor.min.css')
     assert get_theming_values(request)['nav_bg_color'] == '#ddbf86'
     assert get_theming_values(request)['nav_text_class'] == 'navbar-light'
@@ -26,6 +27,7 @@ def test_theming_function(space_1, u1_s1):
     user.userpreference.nav_sticky = False
     user.userpreference.save()
 
+    # user values apply if only those are present
     assert get_theming_values(request)['theme'] == static('themes/tandoor_dark.min.css')
     assert get_theming_values(request)['nav_bg_color'] == '#ffffff'
     assert get_theming_values(request)['nav_text_class'] == 'navbar-dark'
@@ -36,6 +38,14 @@ def test_theming_function(space_1, u1_s1):
     space_1.nav_text_color = UserPreference.DARK
     space_1.save()
 
+    # space settings apply when set
     assert get_theming_values(request)['theme'] == static('themes/bootstrap.min.css')
     assert get_theming_values(request)['nav_bg_color'] == '#000000'
     assert get_theming_values(request)['nav_text_class'] == 'navbar-light'
+
+    user.userspace_set.all().delete()
+
+    # default user settings should apply when user has no space
+    assert get_theming_values(request)['nav_bg_color'] == '#ddbf86'
+    assert get_theming_values(request)['nav_text_class'] == 'navbar-light'
+    assert get_theming_values(request)['nav_logo'] == static('assets/brand_logo.png')
