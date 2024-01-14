@@ -15,7 +15,7 @@ def theme_values(request):
 
 def get_theming_values(request):
     space = None
-    if request.space:
+    if 'space' in request:
         space = request.space
     if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
         with scopes_disabled():
