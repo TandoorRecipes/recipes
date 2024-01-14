@@ -6,8 +6,8 @@ from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile, HomeAssistantConfig
-from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable, HomeAssistantConfigTable
+from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
+from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable
 
 
 @group_required('admin')
@@ -63,19 +63,6 @@ def storage(request):
             'create_url': 'new_storage'
         }
     )
-
-
-@group_required('admin')
-def home_assistant_config(request):
-    table = HomeAssistantConfigTable(HomeAssistantConfig.objects.filter(space=request.space).all())
-    RequestConfig(request, paginate={'per_page': 25}).configure(table)
-
-    return render(
-        request, 'generic/list_template.html', {
-            'title': _("HomeAssistant Config Backend"),
-            'table': table,
-            'create_url': 'new_home_assistant_config'
-        })
 
 
 @group_required('admin')
