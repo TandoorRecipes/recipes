@@ -10,7 +10,7 @@ from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceFie
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
-                     SearchPreference, Space, Storage, Sync, User, UserPreference, HomeAssistantConfig)
+                     SearchPreference, Space, Storage, Sync, User, UserPreference, HomeAssistantConfig, ExampleConfig)
 
 
 class SelectWidget(widgets.Select):
@@ -188,23 +188,41 @@ class StorageForm(forms.ModelForm):
         }
 
 
-class HomeAssistantConfigForm(forms.ModelForm):
-    token = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        ),
-        required=True,
+class ConnectorConfigForm(forms.ModelForm):
+    enabled = forms.BooleanField(
+        help_text="Is the connector enabled",
+        required=False,
+    )
+
+    on_shopping_list_entry_created_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry created events",
+        required=False,
+    )
+
+    on_shopping_list_entry_updated_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry updated events",
+        required=False,
+    )
+
+    on_shopping_list_entry_deleted_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry deleted events",
+        required=False,
+    )
+
+    class Meta:
+        fields = ('name', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled', 'on_shopping_list_entry_deleted_enabled')
+
+
+class HomeAssistantConfigForm(ConnectorConfigForm):
+    update_token = forms.CharField(
+        widget=forms.TextInput(attrs={'autocomplete': 'update-token', 'type': 'password'}),
+        required=False,
         help_text=_('<a href="https://www.home-assistant.io/docs/authentication/#your-account-profile">Long Lived Access Token</a> for your HomeAssistant instance')
     )
 
     url = forms.URLField(
         required=True,
         help_text=_('Something like http://homeassistant.local:8123/api'),
-    )
-
-    enabled = forms.BooleanField(
-        help_text="Is the HomeAssistantConnector enabled",
-        required=False,
     )
 
     on_shopping_list_entry_created_enabled = forms.BooleanField(
@@ -224,13 +242,22 @@ class HomeAssistantConfigForm(forms.ModelForm):
 
     class Meta:
         model = HomeAssistantConfig
-        fields = (
-            'name', 'url', 'token', 'todo_entity', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled')
+
+        fields = ConnectorConfigForm.Meta.fields + ('url', 'todo_entity')
 
         help_texts = {
             'url': _('http://homeassistant.local:8123/api for example'),
         }
+
+
+class ExampleConfigForm(ConnectorConfigForm):
+    feed_url = forms.URLField(
+        required=False,
+    )
+
+    class Meta:
+        model = ExampleConfig
+        fields = ConnectorConfigForm.Meta.fields + ('feed_url',)
 
 
 # TODO: Deprecate

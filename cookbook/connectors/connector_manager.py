@@ -12,14 +12,15 @@ from typing import List, Any, Dict, Optional
 from django_scopes import scope
 
 from cookbook.connectors.connector import Connector
+from cookbook.connectors.example import Example
 from cookbook.connectors.homeassistant import HomeAssistant
-from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space, HomeAssistantConfig, ConnectorConfig
+from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space, HomeAssistantConfig, ExampleConfig
 
 multiprocessing.set_start_method('fork')  # https://code.djangoproject.com/ticket/31169
 
 QUEUE_MAX_SIZE = 25
 REGISTERED_CLASSES: UnionType = ShoppingListEntry | Recipe | MealPlan
-CONNECTOR_UPDATE_CLASSES: UnionType = HomeAssistantConfig | ConnectorConfig
+CONNECTOR_UPDATE_CLASSES: UnionType = HomeAssistantConfig | ExampleConfig
 
 
 class ActionType(Enum):
@@ -97,7 +98,10 @@ class ConnectorManager:
                     loop.run_until_complete(close_connectors(connectors))
 
                 with scope(space=space):
-                    connectors: List[Connector] = [HomeAssistant(config) for config in space.homeassistantconfig_set.all() if config.enabled]
+                    connectors: List[Connector] = [
+                        *(HomeAssistant(config) for config in space.homeassistantconfig_set.all() if config.enabled),
+                        *(Example(config) for config in space.exampleconfig_set.all() if config.enabled)
+                    ]
                     _connectors[space.name] = connectors
 
             if len(connectors) == 0 or refresh_connector_cache:

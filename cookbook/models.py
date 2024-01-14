@@ -340,6 +340,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         Sync.objects.filter(space=self).delete()
         Storage.objects.filter(space=self).delete()
         HomeAssistantConfig.objects.filter(space=self).delete()
+        ExampleConfig.objects.filter(space=self).delete()
 
         ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
         ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
@@ -385,6 +386,10 @@ class HomeAssistantConfig(ConnectorConfig):
     url = models.URLField(blank=True)
     token = models.CharField(max_length=512, blank=True)
     todo_entity = models.CharField(max_length=128, default='todo.shopping_list')
+
+
+class ExampleConfig(ConnectorConfig):
+    feed_url = models.URLField(blank=True)
 
 
 class UserPreference(models.Model, PermissionModelMixin):
