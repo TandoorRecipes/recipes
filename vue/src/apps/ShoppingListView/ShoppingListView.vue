@@ -3,10 +3,10 @@
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
 
 
-
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
-                <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i></b-button>
+                <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i>
+                </b-button>
 
                 <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
                     <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
@@ -63,7 +63,7 @@
                 <!-- shopping list table -->
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
                     <b-col cols="12"
-                           v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_ecked) > 0">
+                           v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
                         <b-button-group class="w-100 mt-1"
                                         :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
                             <b-button variant="info" block class="btn btn-block text-left">
@@ -72,8 +72,12 @@
                                     }}</span>
                                 <span v-else>{{ c.name }}</span>
                             </b-button>
-                            <b-button variant="success"><i class="fas fa-check fa-fw"></i></b-button>
-                            <!-- todo implement -->
+                            <b-button
+                                :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
+                                @click="checkGroup(c, (c.count_unchecked > 0))">
+                                <i class="fas fa-fw"
+                                   :class="{'fa-check':(c.count_unchecked > 0), 'fa-cart-plus':(c.count_unchecked <= 0) }"></i>
+                            </b-button>
                         </b-button-group>
 
                         <span v-for="f in c.foods" v-bind:key="f.id">
@@ -115,7 +119,8 @@
                                 class="fas fa-trash fa-fw"></i></b-button>
                         </b-button-group>
 
-                        <number-scaler-component :number="r.servings" @change="updateServings(r, $event)" :disable="useShoppingListStore().currently_updating"></number-scaler-component>
+                        <number-scaler-component :number="r.servings" @change="updateServings(r, $event)"
+                                                 :disable="useShoppingListStore().currently_updating"></number-scaler-component>
 
                     </b-col>
                 </b-row>
@@ -402,26 +407,26 @@
             <template #custom_nav_content v-if="current_tab <= 1">
                 <b-row class="pr-1 pl-1 mb-3">
                     <b-col cols="12">
-                          <template v-if="current_tab===0">
+                        <template v-if="current_tab===0">
 
 
-                        <b-input-group>
-                            <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
-                                          @keyup.enter="addItem"></b-form-input>
-                            <b-input-group-append>
-                                <b-button @click="addItem" variant="success">
-                                    <i class="fas fa-cart-plus "/>
-                                </b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                    </template>
-                    <template v-if="current_tab===1">
-                        <generic-multiselect
-                            :model="Models.RECIPE"
-                            :multiple="false"
-                            @change="addRecipeToShopping($event.val)"
-                        ></generic-multiselect>
-                    </template>
+                            <b-input-group>
+                                <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
+                                              @keyup.enter="addItem"></b-form-input>
+                                <b-input-group-append>
+                                    <b-button @click="addItem" variant="success">
+                                        <i class="fas fa-cart-plus "/>
+                                    </b-button>
+                                </b-input-group-append>
+                            </b-input-group>
+                        </template>
+                        <template v-if="current_tab===1">
+                            <generic-multiselect
+                                :model="Models.RECIPE"
+                                :multiple="false"
+                                @change="addRecipeToShopping($event.val)"
+                            ></generic-multiselect>
+                        </template>
 
                     </b-col>
                 </b-row>
@@ -748,7 +753,16 @@ export default {
                 })
             }
         },
-
+        /**
+         * set checked state for all foods->entries of a group
+         * @param group group to set state
+         * @param checked_state checked state to set group to
+         */
+        checkGroup(group, checked_state) {
+            for (let f in group.foods) {
+                useShoppingListStore().setEntriesCheckedState(group.foods[f].entries, checked_state, false)
+            }
+        },
         // TODO cleanup, review data structure, probably move to its own component --> FOR ALL SUPERMARKET FUNCTIONS
         deleteSupermarket(index) {
             this.$bvModal.msgBoxConfirm(this.$t('Are_You_Sure'), {
