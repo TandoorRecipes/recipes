@@ -79,6 +79,11 @@ def space_overview(request):
             messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
         else:
             if create_form.is_valid():
+                if Space.objects.filter(created_by=request.user).count() >= request.user.userpreference.max_owned_spaces:
+                    messages.add_message(request, messages.ERROR,
+                                         _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({request.user.userpreference.max_owned_spaces})')
+                    return HttpResponseRedirect(reverse('view_space_overview'))
+
                 created_space = Space.objects.create(
                     name=create_form.cleaned_data['name'],
                     created_by=request.user,
@@ -491,8 +496,8 @@ def web_manifest(request):
     ]
 
     manifest_info = {
-        "name": "Tandoor Recipes",
-        "short_name": "Tandoor",
+        "name": theme_values['app_name'],
+        "short_name": theme_values['app_name'],
         "description": _("Manage recipes, shopping list, meal plans and more."),
         "icons": icons,
         "start_url": "./search",
