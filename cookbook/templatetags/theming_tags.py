@@ -10,6 +10,10 @@ register = template.Library()
 
 @register.simple_tag
 def theme_values(request):
+    return get_theming_values(request)
+
+
+def get_theming_values(request):
     space = None
     if request.space:
         space = request.space
@@ -17,10 +21,6 @@ def theme_values(request):
         with scopes_disabled():
             space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
 
-    return get_theming_values(space, request.user)
-
-
-def get_theming_values(space, user):
     themes = {
         UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
         UserPreference.FLATLY: 'themes/flatly.min.css',
@@ -48,15 +48,14 @@ def get_theming_values(space, user):
         'sticky_nav': 'position: sticky; top: 0; left: 0; z-index: 1000;',
     }
 
-
-    if user.is_authenticated:
-        if user.userpreference.theme in themes:
-            tv['theme'] = static(themes[user.userpreference.theme])
-        if user.userpreference.nav_bg_color:
-            tv['nav_bg_color'] = user.userpreference.nav_bg_color
-        if user.userpreference.nav_text_color and user.userpreference.nav_text_color in nav_text_type_mapping:
-            tv['nav_text_class'] = nav_text_type_mapping[user.userpreference.nav_text_color]
-        if not user.userpreference.nav_sticky:
+    if  request.user.is_authenticated:
+        if  request.user.userpreference.theme in themes:
+            tv['theme'] = static(themes[ request.user.userpreference.theme])
+        if  request.user.userpreference.nav_bg_color:
+            tv['nav_bg_color'] =  request.user.userpreference.nav_bg_color
+        if  request.user.userpreference.nav_text_color and  request.user.userpreference.nav_text_color in nav_text_type_mapping:
+            tv['nav_text_class'] = nav_text_type_mapping[ request.user.userpreference.nav_text_color]
+        if not  request.user.userpreference.nav_sticky:
             tv['sticky_nav'] = ''
 
     if space:
