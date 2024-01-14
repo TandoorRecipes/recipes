@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0206_rename_sticky_navbar_userpreference_nav_sticky_and_more'),
+        ('cookbook', '0208_space_app_name_userpreference_max_owned_spaces'),
     ]
 
     operations = [
