@@ -575,10 +575,20 @@ export default {
         useUserPreferenceStore().loadUserSettings()
         useUserPreferenceStore().loadDeviceSettings()
         this.setupAutoSync()
+        this.setupFocusMonitor()
+
     },
     methods: {
         useUserPreferenceStore,
         useShoppingListStore,
+
+        setupFocusMonitor: function () {
+            setInterval(() => {
+                useShoppingListStore().autosync_has_focus = document.hasFocus()
+            }, 1000);
+
+        },
+
         setupAutoSync: function () {
             // prevent setting up multiple loops on accident
             // TODO should this just raise an error?

@@ -22,6 +22,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         currently_updating: false,
         last_autosync: null,
         undo_stack: [],
+        autosync_has_focus: false,
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
@@ -163,7 +164,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
         },
         autosync() {
-            if (!this.currently_updating) {
+            if (!this.currently_updating && this.autosync_has_focus) {
                 console.log('running autosync')
                 this.currently_updating = true
 
