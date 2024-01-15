@@ -769,9 +769,11 @@ export default {
          * @param checked_state checked state to set group to
          */
         checkGroup(group, checked_state) {
+            let all_entries = {}
             for (let f in group.foods) {
-                useShoppingListStore().setEntriesCheckedState(group.foods[f].entries, checked_state, false)
+                all_entries = Object.assign({},all_entries, group.foods[f].entries)
             }
+            useShoppingListStore().setEntriesCheckedState(all_entries, checked_state, true)
         },
         // TODO cleanup, review data structure, probably move to its own component --> FOR ALL SUPERMARKET FUNCTIONS
         deleteSupermarket(index) {
