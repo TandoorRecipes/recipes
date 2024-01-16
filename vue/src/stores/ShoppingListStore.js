@@ -299,10 +299,19 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
             }
 
+            let entry_id_list = []
             for (let i in entries) {
-                this.entries[i].checked = checked
-                this.updateObject(this.entries[i])
+                Vue.set(this.entries[i], 'checked', checked)
+                Vue.set(this.entries[i], 'update_at', moment().format())
+                entry_id_list.push(i)
             }
+
+            let apiClient = new ApiApiFactory()
+            apiClient.bulkShoppingListEntry({'ids': entry_id_list, 'checked': checked}).then((r) => {
+
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
         },
         /**
          * function to handle user "delaying" and "undelaying" shopping entries

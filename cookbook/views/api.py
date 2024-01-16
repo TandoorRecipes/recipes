@@ -103,7 +103,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
-                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer)
+                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer,
+                                 ShoppingListEntryBulkSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
@@ -1175,6 +1176,22 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
         return self.queryset
 
+    @decorators.action(
+        detail=False,
+        methods=['POST'],
+        serializer_class=ShoppingListEntryBulkSerializer,
+    )
+    def bulk(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user)
+                | Q(shoppinglist__shared=self.request.user)
+                | Q(created_by__in=list(self.request.user.get_shopping_share()))
+            ).filter(space=request.space, id__in=serializer.validated_data['ids']).update(checked=serializer.validated_data['checked'])
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, 400)
 
 # TODO deprecate
 class ShoppingListViewSet(viewsets.ModelViewSet):
