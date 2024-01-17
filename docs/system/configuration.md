@@ -524,6 +524,18 @@ The default value for the user preference 'sticky navigation' (always show navba
 STICKY_NAV_PREF_DEFAULT=1
 ```
 
+#### Max owned spaces
+
+> default `100` - options: `0-X`
+
+The default for the number of spaces a user can own. By setting to 0 space creation for users will be disabled. 
+Superusers can always bypass this limit.
+
+```
+MAX_OWNED_SPACES_PREF_DEFAULT=100
+```
+
+
 ### Cosmetic / Preferences
 
 #### Timezone

@@ -31,6 +31,7 @@ from cookbook.helper.permission_helper import (group_required, has_group_permiss
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference,
                              ShareLink, Space, UserSpace, ViewLog)
 from cookbook.tables import CookLogTable, ViewLogTable
+from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS, BASE_DIR
 
@@ -78,6 +79,11 @@ def space_overview(request):
             messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
         else:
             if create_form.is_valid():
+                if Space.objects.filter(created_by=request.user).count() >= request.user.userpreference.max_owned_spaces:
+                    messages.add_message(request, messages.ERROR,
+                                         _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({request.user.userpreference.max_owned_spaces})')
+                    return HttpResponseRedirect(reverse('view_space_overview'))
+
                 created_space = Space.objects.create(
                     name=create_form.cleaned_data['name'],
                     created_by=request.user,
@@ -481,29 +487,24 @@ def report_share_abuse(request, token):
 
 
 def web_manifest(request):
+    theme_values = get_theming_values(request)
+
     icons = [
-        {"src": static("/assets/logo_color.svg"), "sizes": "any"},
-        {"src": static("/assets/logo_color144.png"), "type": "image/png", "sizes": "144x144"},
-        {"src": static("/assets/logo_color512.png"), "type": "image/png", "sizes": "512x512"}
+        {"src": theme_values['logo_color_svg'], "sizes": "any"},
+        {"src": theme_values['logo_color_144'], "type": "image/png", "sizes": "144x144"},
+        {"src": theme_values['logo_color_512'], "type": "image/png", "sizes": "512x512"}
     ]
 
-    if request.user.is_authenticated and getattr(request.space, 'logo_color_svg') and getattr(request.space, 'logo_color_144') and getattr(request.space, 'logo_color_512'):
-        icons = [
-            {"src": request.space.logo_color_svg.file.url, "sizes": "any"},
-            {"src": request.space.logo_color_144.file.url, "type": "image/png", "sizes": "144x144"},
-            {"src": request.space.logo_color_512.file.url, "type": "image/png", "sizes": "512x512"}
-        ]
-
     manifest_info = {
-        "name": "Tandoor Recipes",
-        "short_name": "Tandoor",
+        "name": theme_values['app_name'],
+        "short_name": theme_values['app_name'],
         "description": _("Manage recipes, shopping list, meal plans and more."),
         "icons": icons,
         "start_url": "./search",
-        "background_color": "#ffcb76",
+        "background_color": theme_values['nav_bg_color'],
         "display": "standalone",
         "scope": ".",
-        "theme_color": "#ffcb76",
+        "theme_color": theme_values['nav_bg_color'],
         "shortcuts": [
             {
                 "name": _("Plan"),
