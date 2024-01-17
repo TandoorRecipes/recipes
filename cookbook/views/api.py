@@ -1180,6 +1180,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         detail=False,
         methods=['POST'],
         serializer_class=ShoppingListEntryBulkSerializer,
+        permission_classes=[CustomIsUser]
     )
     def bulk(self, request):
         serializer = self.serializer_class(data=request.data)
