@@ -6,8 +6,8 @@ from django.utils.translation import gettext as _
 from django_tables2 import RequestConfig
 
 from cookbook.helper.permission_helper import group_required
-from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile
-from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable
+from cookbook.models import InviteLink, RecipeImport, Storage, SyncLog, UserFile, ConnectorConfig
+from cookbook.tables import ImportLogTable, InviteLinkTable, RecipeImportTable, StorageTable, ConnectorConfigTable
 
 
 @group_required('admin')
@@ -61,6 +61,22 @@ def storage(request):
             'title': _("Storage Backend"),
             'table': table,
             'create_url': 'new_storage'
+        }
+    )
+
+
+@group_required('admin')
+def connector_config(request):
+    table = ConnectorConfigTable(ConnectorConfig.objects.filter(space=request.space).all())
+    RequestConfig(request, paginate={'per_page': 25}).configure(table)
+
+    return render(
+        request,
+        'generic/list_template.html',
+        {
+            'title': _("Connector Config Backend"),
+            'table': table,
+            'create_url': 'new_connector_config'
         }
     )
 

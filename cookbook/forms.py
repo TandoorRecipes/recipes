@@ -10,7 +10,7 @@ from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceFie
 from hcaptcha.fields import hCaptchaField
 
 from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
-                     SearchPreference, Space, Storage, Sync, User, UserPreference, HomeAssistantConfig, ExampleConfig)
+                     SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig)
 
 
 class SelectWidget(widgets.Select):
@@ -209,11 +209,6 @@ class ConnectorConfigForm(forms.ModelForm):
         required=False,
     )
 
-    class Meta:
-        fields = ('name', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled', 'on_shopping_list_entry_deleted_enabled')
-
-
-class HomeAssistantConfigForm(ConnectorConfigForm):
     update_token = forms.CharField(
         widget=forms.TextInput(attrs={'autocomplete': 'update-token', 'type': 'password'}),
         required=False,
@@ -221,43 +216,21 @@ class HomeAssistantConfigForm(ConnectorConfigForm):
     )
 
     url = forms.URLField(
-        required=True,
+        required=False,
         help_text=_('Something like http://homeassistant.local:8123/api'),
     )
 
-    on_shopping_list_entry_created_enabled = forms.BooleanField(
-        help_text="Enable syncing ShoppingListEntry to Homeassistant Todo List -- Warning: Might have negative performance impact",
-        required=False,
-    )
-
-    on_shopping_list_entry_updated_enabled = forms.BooleanField(
-        help_text="PLACEHOLDER",
-        required=False,
-    )
-
-    on_shopping_list_entry_deleted_enabled = forms.BooleanField(
-        help_text="Enable syncing ShoppingListEntry deletion to Homeassistant Todo List -- Warning: Might have negative performance impact",
-        required=False,
-    )
-
     class Meta:
-        model = HomeAssistantConfig
+        model = ConnectorConfig
 
-        fields = ConnectorConfigForm.Meta.fields + ('url', 'todo_entity')
+        fields = (
+            'name', 'type', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+            'on_shopping_list_entry_deleted_enabled', 'url', 'todo_entity',
+        )
 
         help_texts = {
             'url': _('http://homeassistant.local:8123/api for example'),
         }
-
-
-class ExampleConfigForm(ConnectorConfigForm):
-    feed_url = forms.URLField(
-        required=False,
-    )
-
-    class Meta:
-        model = ExampleConfig
-        fields = ConnectorConfigForm.Meta.fields + ('feed_url',)
 
 
 # TODO: Deprecate

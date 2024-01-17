@@ -76,7 +76,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
                              SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                             ViewLog, HomeAssistantConfig)
+                             ViewLog, ConnectorConfig)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -102,7 +102,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
-                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer, HomeAssistantConfigSerializer)
+                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer, ConnectorConfigConfigSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
@@ -464,10 +464,9 @@ class StorageViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class HomeAssistantConfigViewSet(viewsets.ModelViewSet):
-    # TODO handle delete protect error and adjust test
-    queryset = HomeAssistantConfig.objects
-    serializer_class = HomeAssistantConfigSerializer
+class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
+    queryset = ConnectorConfig.objects
+    serializer_class = ConnectorConfigConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):

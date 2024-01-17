@@ -5,21 +5,21 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import HomeAssistantConfig
+from cookbook.models import ConnectorConfig
 
-LIST_URL = 'api:homeassistantconfig-list'
-DETAIL_URL = 'api:homeassistantconfig-detail'
+LIST_URL = 'api:connectorconfig-list'
+DETAIL_URL = 'api:connectorconfig-detail'
 
 
 @pytest.fixture()
 def obj_1(space_1, u1_s1):
-    return HomeAssistantConfig.objects.create(
+    return ConnectorConfig.objects.create(
         name='HomeAssistant 1', token='token', url='url', todo_entity='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
 
 
 @pytest.fixture
 def obj_2(space_1, u1_s1):
-    return HomeAssistantConfig.objects.create(
+    return ConnectorConfig.objects.create(
         name='HomeAssistant 2', token='token', url='url', todo_entity='todo.shopping_list', enabled=True, created_by=auth.get_user(u1_s1), space=space_1, )
 
 
@@ -123,4 +123,4 @@ def test_delete(a1_s1, a1_s2, obj_1):
 
     assert r.status_code == 204
     with scopes_disabled():
-        assert HomeAssistantConfig.objects.count() == 0
+        assert ConnectorConfig.objects.count() == 0

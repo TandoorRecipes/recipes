@@ -336,7 +336,7 @@
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
                         {% endif %}
                         {% if request.user == request.space.created_by or user.is_superuser %}
-                            <a class="dropdown-item" href="{% url 'list_connectors' %}"><i
+                            <a class="dropdown-item" href="{% url 'list_connector_config' %}"><i
                                 class="fas fa-sync-alt fa-fw"></i> {% trans 'External Connectors' %}</a>
                         {% endif %}
                         {% if user.is_superuser %}

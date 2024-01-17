@@ -16,7 +16,7 @@ from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingre
                      ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
                      TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                     ViewLog, HomeAssistantConfig, ExampleConfig)
+                     ViewLog, ConnectorConfig)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -95,20 +95,12 @@ class StorageAdmin(admin.ModelAdmin):
 admin.site.register(Storage, StorageAdmin)
 
 
-class HomeAssistantConfigAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'enabled', 'url')
+class ConnectorConfigAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type', 'enabled', 'url')
     search_fields = ('name', 'url')
 
 
-admin.site.register(HomeAssistantConfig, HomeAssistantConfigAdmin)
-
-
-class ExampleConfigAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'enabled', 'feed_url')
-    search_fields = ('name',)
-
-
-admin.site.register(ExampleConfig, ExampleConfigAdmin)
+admin.site.register(ConnectorConfig, ConnectorConfigAdmin)
 
 
 class SyncAdmin(admin.ModelAdmin):

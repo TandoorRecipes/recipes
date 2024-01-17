@@ -5,9 +5,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, Storage, StorageForm, HomeAssistantConfigForm, ExampleConfigForm
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm, ConnectorConfigForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
-from cookbook.models import Recipe, RecipeImport, ShareLink, Step, HomeAssistantConfig, ExampleConfig
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step, ConnectorConfig
 from recipes import settings
 
 
@@ -70,21 +70,12 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         return context
 
 
-class HomeAssistantConfigCreate(GroupRequiredMixin, CreateView):
+class ConnectorConfigCreate(GroupRequiredMixin, CreateView):
     groups_required = ['admin']
     template_name = "generic/new_template.html"
-    model = HomeAssistantConfig
-    form_class = HomeAssistantConfigForm
-    success_url = reverse_lazy('list_home_assistant_config')
-
-    def get_form_class(self):
-        form_class = super().get_form_class()
-
-        if self.request.method == 'GET':
-            update_token_field = form_class.base_fields['update_token']
-            update_token_field.required = True
-
-        return form_class
+    model = ConnectorConfig
+    form_class = ConnectorConfigForm
+    success_url = reverse_lazy('list_connector_config')
 
     def form_valid(self, form):
         if self.request.space.demo or settings.HOSTED:
@@ -96,35 +87,11 @@ class HomeAssistantConfigCreate(GroupRequiredMixin, CreateView):
         obj.created_by = self.request.user
         obj.space = self.request.space
         obj.save()
-        return HttpResponseRedirect(reverse('edit_home_assistant_config', kwargs={'pk': obj.pk}))
+        return HttpResponseRedirect(reverse('edit_connector_config', kwargs={'pk': obj.pk}))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = _("HomeAssistant Config Backend")
-        return context
-
-
-class ExampleConfigCreate(GroupRequiredMixin, CreateView):
-    groups_required = ['admin']
-    template_name = "generic/new_template.html"
-    model = ExampleConfig
-    form_class = ExampleConfigForm
-    success_url = reverse_lazy('list_connectors')
-
-    def form_valid(self, form):
-        if self.request.space.demo or settings.HOSTED:
-            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
-            return redirect('index')
-
-        obj = form.save(commit=False)
-        obj.created_by = self.request.user
-        obj.space = self.request.space
-        obj.save()
-        return HttpResponseRedirect(reverse('edit_example_config', kwargs={'pk': obj.pk}))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("Example Config Backend")
+        context['title'] = _("Connector Config Backend")
         return context
 
 

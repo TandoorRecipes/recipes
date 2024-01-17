@@ -9,10 +9,10 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
-from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm, HomeAssistantConfigForm, ExampleConfigForm
+from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm, ConnectorConfigForm
 from cookbook.helper.permission_helper import (GroupRequiredMixin, OwnerRequiredMixin,
                                                above_space_limit, group_required)
-from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync, HomeAssistantConfig, ExampleConfig
+from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync, ConnectorConfig
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -128,11 +128,11 @@ def edit_storage(request, pk):
     )
 
 
-class HomeAssistantConfigUpdate(GroupRequiredMixin, UpdateView):
+class ConnectorConfigUpdate(GroupRequiredMixin, UpdateView):
     groups_required = ['admin']
     template_name = "generic/edit_template.html"
-    model = HomeAssistantConfig
-    form_class = HomeAssistantConfigForm
+    model = ConnectorConfig
+    form_class = ConnectorConfigForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -143,33 +143,14 @@ class HomeAssistantConfigUpdate(GroupRequiredMixin, UpdateView):
         if form.cleaned_data['update_token'] != VALUE_NOT_CHANGED and form.cleaned_data['update_token'] != "":
             form.instance.token = form.cleaned_data['update_token']
         messages.add_message(self.request, messages.SUCCESS, _('Config saved!'))
-        return super(HomeAssistantConfigUpdate, self).form_valid(form)
+        return super(ConnectorConfigUpdate, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('edit_home_assistant_config', kwargs={'pk': self.object.pk})
+        return reverse('edit_connector_config', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = _("HomeAssistantConfig")
-        return context
-
-
-class ExampleConfigUpdate(GroupRequiredMixin, UpdateView):
-    groups_required = ['admin']
-    template_name = "generic/edit_template.html"
-    model = ExampleConfig
-    form_class = ExampleConfigForm
-
-    def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, _('Config saved!'))
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('edit_example_config', kwargs={'pk': self.object.pk})
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("ExampleConfig")
+        context['title'] = _("ConnectorConfig")
         return context
 
 
