@@ -34,7 +34,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, HomeAssistantConfig)
+                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
@@ -413,14 +413,14 @@ class StorageSerializer(SpacedModelSerializer):
         }
 
 
-class HomeAssistantConfigSerializer(SpacedModelSerializer):
+class ConnectorConfigConfigSerializer(SpacedModelSerializer):
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
     class Meta:
-        model = HomeAssistantConfig
+        model = ConnectorConfig
         fields = (
             'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',

@@ -1,14 +1,9 @@
-from typing import Any, Dict
-
 import django_tables2 as tables
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
-from django.views.generic import TemplateView
-from django_tables2 import MultiTableMixin
 from django_tables2.utils import A
 
-from .helper.permission_helper import GroupRequiredMixin
-from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog, HomeAssistantConfig, ExampleConfig
+from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog, ConnectorConfig
 
 
 class StorageTable(tables.Table):
@@ -20,47 +15,13 @@ class StorageTable(tables.Table):
         fields = ('id', 'name', 'method')
 
 
-class ExampleConfigTable(tables.Table):
-    id = tables.LinkColumn('edit_example_config', args=[A('id')])
+class ConnectorConfigTable(tables.Table):
+    id = tables.LinkColumn('edit_connector_config', args=[A('id')])
 
     class Meta:
-        model = ExampleConfig
+        model = ConnectorConfig
         template_name = 'generic/table_template.html'
-        fields = ('id', 'name', 'enabled', 'feed_url')
-        attrs = {'table_name': "Example Configs", 'create_url': 'new_example_config'}
-
-
-class HomeAssistantConfigTable(tables.Table):
-    id = tables.LinkColumn('edit_home_assistant_config', args=[A('id')])
-
-    class Meta:
-        model = HomeAssistantConfig
-        template_name = 'generic/table_template.html'
-        fields = ('id', 'name', 'enabled', 'url')
-        attrs = {'table_name': "HomeAssistant Configs", 'create_url': 'new_home_assistant_config'}
-
-
-class ConnectorConfigTable(GroupRequiredMixin, MultiTableMixin, TemplateView):
-    groups_required = ['admin']
-    template_name = "list_connectors.html"
-
-    table_pagination = {
-        "per_page": 25
-    }
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        kwargs = super().get_context_data(**kwargs)
-        kwargs['title'] = _("Connectors")
-        return kwargs
-
-    def get_tables(self):
-        example_configs = ExampleConfig.objects.filter(space=self.request.space).all()
-        home_assistant_configs = HomeAssistantConfig.objects.filter(space=self.request.space).all()
-
-        return [
-            ExampleConfigTable(example_configs),
-            HomeAssistantConfigTable(home_assistant_configs)
-        ]
+        fields = ('id', 'name', 'type', 'enabled')
 
 
 class ImportLogTable(tables.Table):

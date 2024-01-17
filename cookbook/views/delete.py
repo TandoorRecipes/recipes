@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Space, Storage, Sync, UserSpace, HomeAssistantConfig, ExampleConfig)
+                             RecipeImport, Space, Storage, Sync, UserSpace, ConnectorConfig)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -122,27 +122,15 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
             return HttpResponseRedirect(reverse('list_storage'))
 
 
-class HomeAssistantConfigDelete(GroupRequiredMixin, DeleteView):
+class ConnectorConfigDelete(GroupRequiredMixin, DeleteView):
     groups_required = ['admin']
     template_name = "generic/delete_template.html"
-    model = HomeAssistantConfig
-    success_url = reverse_lazy('list_connectors')
+    model = ConnectorConfig
+    success_url = reverse_lazy('list_connector_config')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = _("HomeAssistant Config Backend")
-        return context
-
-
-class ExampleConfigDelete(GroupRequiredMixin, DeleteView):
-    groups_required = ['admin']
-    template_name = "generic/delete_template.html"
-    model = ExampleConfig
-    success_url = reverse_lazy('list_connectors')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = _("Example Config Backend")
+        context['title'] = _("Connectors Config Backend")
         return context
 
 

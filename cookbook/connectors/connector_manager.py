@@ -12,15 +12,13 @@ from typing import List, Any, Dict, Optional
 from django_scopes import scope
 
 from cookbook.connectors.connector import Connector
-from cookbook.connectors.example import Example
 from cookbook.connectors.homeassistant import HomeAssistant
-from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space, HomeAssistantConfig, ExampleConfig
+from cookbook.models import ShoppingListEntry, Recipe, MealPlan, Space, ConnectorConfig
 
 multiprocessing.set_start_method('fork')  # https://code.djangoproject.com/ticket/31169
 
 QUEUE_MAX_SIZE = 25
 REGISTERED_CLASSES: UnionType = ShoppingListEntry | Recipe | MealPlan
-CONNECTOR_UPDATE_CLASSES: UnionType = HomeAssistantConfig | ExampleConfig
 
 
 class ActionType(Enum):
@@ -37,7 +35,7 @@ class Work:
 
 class ConnectorManager:
     _queue: JoinableQueue
-    _listening_to_classes = REGISTERED_CLASSES | CONNECTOR_UPDATE_CLASSES
+    _listening_to_classes = REGISTERED_CLASSES | ConnectorConfig
 
     def __init__(self):
         self._queue = multiprocessing.JoinableQueue(maxsize=QUEUE_MAX_SIZE)
@@ -88,7 +86,7 @@ class ConnectorManager:
                 break
 
             # If a Connector was changed/updated, refresh connector from the database for said space
-            refresh_connector_cache = isinstance(item.instance, CONNECTOR_UPDATE_CLASSES)
+            refresh_connector_cache = isinstance(item.instance, ConnectorConfig)
 
             space: Space = item.instance.space
             connectors: Optional[List[Connector]] = _connectors.get(space.name)
@@ -98,10 +96,11 @@ class ConnectorManager:
                     loop.run_until_complete(close_connectors(connectors))
 
                 with scope(space=space):
-                    connectors: List[Connector] = [
-                        *(HomeAssistant(config) for config in space.homeassistantconfig_set.all() if config.enabled),
-                        *(Example(config) for config in space.exampleconfig_set.all() if config.enabled)
-                    ]
+                    connectors: List[Connector] = list(
+                        filter(
+                            lambda x: x is not None,
+                            [ConnectorManager.get_connected_for_config(config) for config in space.connectorconfig_set.all() if config.enabled],
+                        ))
                     _connectors[space.name] = connectors
 
             if len(connectors) == 0 or refresh_connector_cache:
@@ -112,6 +111,14 @@ class ConnectorManager:
             worker_queue.task_done()
 
         loop.close()
+
+    @staticmethod
+    def get_connected_for_config(config: ConnectorConfig) -> Optional[Connector]:
+        match config.type:
+            case ConnectorConfig.HOMEASSISTANT:
+                return HomeAssistant(config)
+            case _:
+                return None
 
 
 async def close_connectors(connectors: List[Connector]):

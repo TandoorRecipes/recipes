@@ -4,16 +4,19 @@ from logging import Logger
 from homeassistant_api import Client, HomeassistantAPIError, Domain
 
 from cookbook.connectors.connector import Connector
-from cookbook.models import ShoppingListEntry, HomeAssistantConfig, Space
+from cookbook.models import ShoppingListEntry, ConnectorConfig, Space
 
 
 class HomeAssistant(Connector):
     _domains_cache: dict[str, Domain]
-    _config: HomeAssistantConfig
+    _config: ConnectorConfig
     _logger: Logger
     _client: Client
 
-    def __init__(self, config: HomeAssistantConfig):
+    def __init__(self, config: ConnectorConfig):
+        if not config.token or not config.url or not config.todo_entity:
+            raise ValueError("config for HomeAssistantConnector in incomplete")
+
         self._domains_cache = dict()
         self._config = config
         self._logger = logging.getLogger("connector.HomeAssistant")
