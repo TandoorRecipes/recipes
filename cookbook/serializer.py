@@ -686,9 +686,8 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
         properties = validated_data.pop('properties', None)
 
-        obj, created = Food.objects.get_or_create(
-            name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
-            defaults=validated_data)
+        obj, created = Food.objects.get_or_create(name=name, plural_name=plural_name, space=space, properties_food_unit=properties_food_unit,
+                                                  defaults=validated_data)
 
         if properties and len(properties) > 0:
             for p in properties:
@@ -1276,9 +1275,8 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
 
         if obj.email:
             try:
-                if InviteLink.objects.filter(
-                        space=self.context['request'].space,
-                        created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
+                if InviteLink.objects.filter(space=self.context['request'].space,
+                                             created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
                     message = _('Hello') + '!\n\n' + _('You have been invited by ') + escape(
                         self.context['request'].user.get_user_display_name())
                     message += _(' to join their Tandoor Recipes space ') + escape(
@@ -1433,15 +1431,12 @@ class RecipeExportSerializer(WritableNestedModelSerializer):
 
 
 class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
-    list_recipe = serializers.IntegerField(
-        write_only=True, allow_null=True, required=False,
-        help_text=_("Existing shopping list to update"))
-    ingredients = serializers.IntegerField(
-        write_only=True, allow_null=True, required=False, help_text=_(
-            "List of ingredient IDs from the recipe to add, if not provided all ingredients will be added."))
-    servings = serializers.IntegerField(
-        default=1, write_only=True, allow_null=True, required=False, help_text=_(
-            "Providing a list_recipe ID and servings of 0 will delete that shopping list."))
+    list_recipe = serializers.IntegerField(write_only=True, allow_null=True, required=False,
+                                           help_text=_("Existing shopping list to update"))
+    ingredients = serializers.IntegerField(write_only=True, allow_null=True, required=False, help_text=_(
+        "List of ingredient IDs from the recipe to add, if not provided all ingredients will be added."))
+    servings = serializers.IntegerField(default=1, write_only=True, allow_null=True, required=False, help_text=_(
+        "Providing a list_recipe ID and servings of 0 will delete that shopping list."))
 
     class Meta:
         model = Recipe
@@ -1449,15 +1444,12 @@ class RecipeShoppingUpdateSerializer(serializers.ModelSerializer):
 
 
 class FoodShoppingUpdateSerializer(serializers.ModelSerializer):
-    amount = serializers.IntegerField(
-        write_only=True, allow_null=True, required=False,
-        help_text=_("Amount of food to add to the shopping list"))
-    unit = serializers.IntegerField(
-        write_only=True, allow_null=True, required=False,
-        help_text=_("ID of unit to use for the shopping list"))
-    delete = serializers.ChoiceField(
-        choices=['true'], write_only=True, allow_null=True, allow_blank=True,
-        help_text=_("When set to true will delete all food from active shopping lists."))
+    amount = serializers.IntegerField(write_only=True, allow_null=True, required=False,
+                                      help_text=_("Amount of food to add to the shopping list"))
+    unit = serializers.IntegerField(write_only=True, allow_null=True, required=False,
+                                    help_text=_("ID of unit to use for the shopping list"))
+    delete = serializers.ChoiceField(choices=['true'], write_only=True, allow_null=True, allow_blank=True,
+                                     help_text=_("When set to true will delete all food from active shopping lists."))
 
     class Meta:
         model = Recipe

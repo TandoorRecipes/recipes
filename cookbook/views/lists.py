@@ -87,12 +87,11 @@ def invite_link(request):
         InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=request.space).all())
     RequestConfig(request, paginate={'per_page': 25}).configure(table)
 
-    return render(
-        request, 'generic/list_template.html', {
-            'title': _("Invite Links"),
-            'table': table,
-            'create_url': 'new_invite_link'
-        })
+    return render(request, 'generic/list_template.html', {
+        'title': _("Invite Links"),
+        'table': table,
+        'create_url': 'new_invite_link'
+    })
 
 
 @group_required('user')
@@ -212,7 +211,7 @@ def custom_filter(request):
 def user_file(request):
     try:
         current_file_size_mb = UserFile.objects.filter(space=request.space).aggregate(Sum('file_size_kb'))[
-                                   'file_size_kb__sum'] / 1000
+            'file_size_kb__sum'] / 1000
     except TypeError:
         current_file_size_mb = 0
 
