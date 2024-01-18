@@ -1,6 +1,6 @@
+# Just here as an example should be delete before merging this PR
 version: "3"
 services:
-  # Set rights for the bind-mount
   db_recipes-init:
     image: postgres:15-alpine
     volumes:
@@ -23,9 +23,8 @@ services:
     env_file:
       - ./.env
 
-  # Set rights for the bind-mounts
   web_recipes-init:
-    image: vabene1111/recipes
+    image: postgres:15-alpine
     volumes:
       - staticfiles:/staticfiles
       - ./mediafiles:/mediafiles
@@ -41,17 +40,26 @@ services:
       - web_recipes-init
       - db_recipes
     restart: always
-    image: vabene1111/recipes
+    # image: vabene1111/recipes
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - ./.env
     volumes:
       - staticfiles:/opt/recipes/staticfiles
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      # - nginx_config:/opt/recipes/nginx/conf.d
       - ./mediafiles:/opt/recipes/mediafiles
 
   nginx_recipes:
-    image: ghcr.io/TandoorRecipes/recipes-nginx
+    # image: nginx:mainline-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     restart: always
-    user: 101:101
+    # To test its non running as root:
+    # user: 101:101
     ports:
       - 8080:8080
     env_file:
@@ -59,6 +67,8 @@ services:
     depends_on:
       - web_recipes
     volumes:
+      # Do not make this a bind mount, see https://docs.tandoor.dev/install/docker/#volumes-vs-bind-mounts
+      # - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static:ro
       - ./mediafiles:/media:ro
 
