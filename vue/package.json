@@ -65,7 +65,7 @@
     "typescript": "~5.1.6",
     "vue-cli-plugin-i18n": "^2.3.2",
     "webpack-bundle-tracker": "1.8.1",
-    "workbox-background-sync": "^6.5.4",
+    "workbox-background-sync": "^7.0.0",
     "workbox-expiration": "^6.5.4",
     "workbox-navigation-preload": "^7.0.0",
     "workbox-precaching": "^6.5.4",
