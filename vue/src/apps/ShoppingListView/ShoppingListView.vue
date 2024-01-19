@@ -1,6 +1,8 @@
 <template>
     <div id="app">
-        <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
+        <b-alert :show="shopping_list_store.has_failed_items" dismissible class="float-up mt-2" variant="warning">
+            {{$t('ShoppingBackgroundSyncWarning')}}
+        </b-alert>
 
 
         <div class="row float-top w-100">
@@ -577,33 +579,6 @@ export default {
                     this.autoSyncLoop()
                 }
             }, timeout)
-        },
-        /**
-         * failed requests to sync entry check events are automatically re-queued by the service worker for sync
-         * this command allows to manually force replaying those events before re-enabling automatic sync
-         */
-        replaySyncQueue: function () {
-            const wb = new Workbox('/service-worker.js');
-            wb.register();
-            wb.messageSW({type: 'BGSYNC_REPLAY_REQUESTS'}).then((r) => {
-                console.log('Background sync queue replayed!', r);
-            })
-        },
-        /**
-         * get the number of entries left in the sync queue for entry check events
-         * @returns {Promise<Number>} promise resolving to the number of entries left
-         */
-        //TODO maybe show this somewhere if efficient enough to run often
-        getSyncQueueLength: function () {
-            const wb = new Workbox('/service-worker.js');
-            wb.register();
-            return wb.messageSW({type: 'BGSYNC_COUNT_QUEUE'}).then((r) => {
-                console.log('sync que length :', r)
-                return r
-            })
-        },
-        setFocus() {
-            this.$refs['amount_input_simple'].focus()
         },
         /**
          * get ingredient from input string and create new shopping list entry using it
