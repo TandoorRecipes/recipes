@@ -100,12 +100,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             this.total_checked_food = total_checked_food
 
             // ordering
-            if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
-                if (this.UNDEFINED_CATEGORY in structure) {
-                    ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
-                    Vue.delete(structure, this.UNDEFINED_CATEGORY)
-                }
+             if (this.UNDEFINED_CATEGORY in structure) {
+                ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
+                Vue.delete(structure, this.UNDEFINED_CATEGORY)
+            }
 
+            if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
                 for (let c of useUserPreferenceStore().device_settings.shopping_selected_supermarket.category_to_supermarket) {
                     if (c.category.name in structure) {
                         ordered_structure.push(structure[c.category.name])
@@ -130,13 +130,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @return {[{id: *, translatable_label: string},{id: *, translatable_label: string},{id: *, translatable_label: string}]}
          */
         grouping_options: function () {
-            return [{'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'}, {
-                'id': this.GROUP_CREATED_BY,
-                'translatable_label': 'created_by'
-            }, {
-                'id': this.GROUP_RECIPE,
-                'translatable_label': 'Recipe'
-            }]
+            return [
+                {'id': this.GROUP_CATEGORY, 'translatable_label': 'Category'},
+                {'id': this.GROUP_CREATED_BY, 'translatable_label': 'created_by'},
+                {'id': this.GROUP_RECIPE, 'translatable_label': 'Recipe'}
+            ]
         },
         /**
          * checks if failed items are contained in the sync queue
