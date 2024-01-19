@@ -34,8 +34,9 @@
             <!-- shopping list tab -->
             <b-tab active>
                 <template #title>
-                    <i v-if="!shopping_list_store.currently_updating"
+                    <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
                        class="fas fa-shopping-cart fa-fw"></i>
+                    <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus" class="fas fa-eye-slash"></i>
                     <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
                                style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
                     <span class="d-none d-md-inline-block ml-1">
@@ -574,7 +575,7 @@ export default {
         this.shopping_list_store.refreshFromAPI()
         useUserPreferenceStore().loadUserSettings()
         useUserPreferenceStore().loadDeviceSettings()
-        this.setupAutoSync()
+        this.autoSyncLoop()
         this.setupFocusMonitor()
 
     },
@@ -582,25 +583,29 @@ export default {
         useUserPreferenceStore,
         useShoppingListStore,
 
+        /**
+         * setup interval checking for focus every 1000ms and updating the store variable
+         */
         setupFocusMonitor: function () {
             setInterval(() => {
                 useShoppingListStore().autosync_has_focus = document.hasFocus()
             }, 1000);
 
         },
-
-        setupAutoSync: function () {
-            // prevent setting up multiple loops on accident
-            // TODO should this just raise an error?
-            clearInterval(this.autosync_id)
+        /**
+         * recursive function calling autosync after set amount of time has passed
+         */
+        autoSyncLoop: function () {
+            // this should not happen in production but sometimes in development with HMR
+            clearTimeout(this.autosync_id)
             this.autosync_id = undefined
 
             let timeout = Math.max(this.user_preference_store.user_settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
 
-            this.autosync_id = setInterval(() => { //TODO does setInterval automatically loop (because it kind of did)
+            this.autosync_id = setTimeout(() => {
                 if (this.online && this.user_preference_store.user_settings.shopping_auto_sync > 0) {
                     this.shopping_list_store.autosync()
-                    this.setupAutoSync()
+                    this.autoSyncLoop()
                 }
             }, timeout)
         },
