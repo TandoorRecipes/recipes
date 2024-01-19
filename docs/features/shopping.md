@@ -1,5 +1,5 @@
 !!! info "WIP"
-    While being around for a while there are still a lot of features that i plan on adding to the shopping list.
+    While being around for a while there are still a lot of features that I plan on adding to the shopping list.
     You can see an overview of what is still planned on [this](https://github.com/vabene1111/recipes/issues/114) issue.
 
 
