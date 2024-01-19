@@ -69,7 +69,7 @@
     "workbox-expiration": "^6.5.4",
     "workbox-navigation-preload": "^7.0.0",
     "workbox-precaching": "^6.5.4",
-    "workbox-routing": "^6.5.4",
+    "workbox-routing": "^7.0.0",
     "workbox-strategies": "^6.2.4"
   },
   "eslintConfig": {
