@@ -3,6 +3,7 @@ import {defineStore} from 'pinia'
 
 import {ApiApiFactory, UserPreference} from "@/utils/openapi/api";
 import Vue from "vue";
+import {StandardToasts} from "@/utils/utils";
 
 const _STALE_TIME_IN_MS = 1000 * 30
 const _STORE_ID = 'user_preference_store'
@@ -87,7 +88,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
             localStorage.setItem(_LS_DEVICE_SETTINGS, JSON.stringify(this.device_settings))
         },
         // ---------------- new methods for user settings
-        loadUserSettings: function () {
+        loadUserSettings: function (allow_cached_results) {
             let s = localStorage.getItem(_LS_USER_SETTINGS)
             if (!(s === null || s === {})) {
                 let settings = JSON.parse(s)
@@ -96,7 +97,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
                 }
                 //console.log(`loaded local user settings age ${((new Date().getTime()) - this.user_settings.locally_updated_at) / 1000} `)
             }
-            if (((new Date().getTime()) - this.user_settings.locally_updated_at) > _STALE_TIME_IN_MS) {
+            if (((new Date().getTime()) - this.user_settings.locally_updated_at) > _STALE_TIME_IN_MS || !allow_cached_results) {
                 //console.log('refreshing user settings from API')
                 let apiClient = new ApiApiFactory()
                 apiClient.retrieveUserPreference(localStorage.getItem('USER_ID')).then(r => {
@@ -122,8 +123,10 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
                 this.user_settings = r.data
                 Vue.set(this.user_settings, 'locally_updated_at', new Date().getTime())
                 localStorage.setItem(_LS_USER_SETTINGS, JSON.stringify(this.user_settings))
+                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch(err => {
                 this.currently_updating = false
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
         // ----------------

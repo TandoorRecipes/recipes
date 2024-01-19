@@ -191,6 +191,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          */
         autosync() {
             if (!this.currently_updating && this.autosync_has_focus) {
+                console.log('running autosync')
 
                 this.currently_updating = true
 
@@ -203,8 +204,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 }).then((r) => {
                     r.data.forEach((e) => {
                         // dont update stale client data
-                        console.log('new: ', !(Object.keys(this.entries).includes(e.id.toString())), ' updated at ', Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at))
-                        console.log('client updated at ', this.entries[e.id].updated_at,Date.parse(this.entries[e.id].updated_at), ' server updated at ', e.updated_at,Date.parse(e.updated_at))
                         if (!(Object.keys(this.entries).includes(e.id.toString())) || Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at)) {
                             console.log('auto sync updating entry ', e)
                             Vue.set(this.entries, e.id, e)
@@ -326,7 +325,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             if (undo) {
                 this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
             }
-            console.log('entry changed at ', Date.now(), ' setting to ', moment().format())
 
             let entry_id_list = []
             for (let i in entries) {
