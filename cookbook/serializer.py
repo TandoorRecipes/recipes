@@ -1152,7 +1152,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'recipe_mealplan',
             'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id', 'created_by', 'created_at',)
+        read_only_fields = ('id', 'created_by', 'created_at','updated_at',)
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
