@@ -169,6 +169,10 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 })
             }
         },
+        /**
+         * perform auto sync request to special endpoint returning only entries changed since last auto sync
+         * only updates local entries that are older than the server version
+         */
         autosync() {
             if (!this.currently_updating && this.autosync_has_focus) {
                 this.currently_updating = true
