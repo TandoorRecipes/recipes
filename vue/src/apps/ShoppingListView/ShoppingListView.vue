@@ -61,7 +61,7 @@
                     </b-col>
                 </b-row>
 
-                <!-- shopping list table -->
+                <!-- --------------------------------------- shopping list table -->
                 <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
                     <b-col cols="12"
                            v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
@@ -88,7 +88,7 @@
                 </b-row>
 
             </b-tab>
-            <!-- recipe tab -->
+            <!-- --------------------------------------- recipe tab -->
             <b-tab :title="$t('Recipes')">
                 <template #title>
                     <i class="fas fa-book fa-fw"></i>
@@ -126,7 +126,7 @@
                     </b-col>
                 </b-row>
             </b-tab>
-            <!-- supermarkets tab -->
+            <!-- --------------------------------------- supermarkets tab -->
             <b-tab>
                 <template #title>
                     <i class="fas fa-store-alt fa-fw"></i>
@@ -328,7 +328,7 @@
                     </div>
                 </div>
             </b-tab>
-            <!-- settings tab -->
+            <!-- --------------------------------------- settings tab -->
             <b-tab>
                 <template #title>
                     <i class="fas fa-user-cog fa-fw"></i>
@@ -502,22 +502,7 @@ export default {
 
     data() {
         return {
-            // this.Models and this.Actions inherited from ApiMixin
-            items: [],
             current_tab: 0,
-
-            supermarkets: [],
-            shopping_categories: [],
-            show_undefined_categories: true,
-            supermarket_categories_only: false,
-            shopcat: null,
-            delay: 0,
-            generic_action: null,
-            generic_model: null,
-            ui: {
-                entry_mode_simple: true,
-                selected_supermarket: undefined,
-            },
 
             user_id: parseInt(localStorage.getItem('USER_ID')),
             editing_supermarket_categories: [],
@@ -525,21 +510,11 @@ export default {
             new_supermarket: {entrymode: false, value: undefined, editmode: undefined},
             new_category: {entrymode: false, value: undefined},
             autosync_id: undefined,
-            auto_sync_running: false, // track to not start a new sync before old one was finished
-            auto_sync_blocked: false, // blocking auto sync while request to check item is still running
-            show_delay: false,
-            drag: false,
-            show_modal: false,
-            fields: ["checked", "amount", "category", "unit", "food", "recipe", "details"],
-            loading: true,
-            entrymode: false,
             new_item: {amount: 1, unit: undefined, food: undefined, ingredient: undefined},
             online: true,
             new_recipe: {
                 id: undefined,
             },
-            add_recipe_servings: 1,
-            shopping_list_height: '60vh',
 
             shopping_list_store: useShoppingListStore(),
             user_preference_store: useUserPreferenceStore(),
@@ -657,63 +632,6 @@ export default {
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
-        },
-        getShoppingList: function (autosync = false) {
-            let params = {}
-            params.supermarket = this.ui.selected_supermarket
-
-            params.options = {query: {recent: 1}}
-            if (autosync) {
-                params.options.query["autosync"] = 1
-            } else {
-                this.loading = true
-            }
-            // this.genericAPI(this.Models.SHOPPING_LIST, this.Actions.LIST, params).then((results) => {
-            //     if (!autosync) {
-            //         if (results.data?.length) {
-            //             this.items = results.data
-            //         } else {
-            //             console.log("no data returned")
-            //         }
-            //         this.loading = false
-            //     } else {
-            //         if (!this.auto_sync_blocked) {
-            //             this.getSyncQueueLength().then((r) => {
-            //                 if (r === 0) {
-            //                     this.mergeShoppingList(results.data)
-            //                 } else {
-            //                     this.auto_sync_running = false
-            //                     this.replaySyncQueue()
-            //                 }
-            //             })
-            //         }
-            //     }
-            // })
-            //     .catch((err) => {
-            //         if (!autosync) {
-            //             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-            //         }
-            //     })
-        },
-        mergeShoppingList: function (data) {
-            this.items.map((x) =>
-                data.map((y) => {
-                    if (y.id === x.id) {
-                        x.checked = y.checked
-                        return x
-                    }
-                })
-            )
-            this.auto_sync_running = false
-            let new_entries = data.map((x) => x.id).filter((y) => !this.items.map((z) => z.id).includes(y))
-            if (new_entries.length > 0) {
-                let api = new ApiApiFactory()
-                new_entries.forEach((new_id) => {
-                    api.retrieveShoppingListEntry(new_id).then((result) => {
-                        this.items.push(result.data)
-                    })
-                })
-            }
         },
 
         onHand: function (item) {

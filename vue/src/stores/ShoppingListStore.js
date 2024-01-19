@@ -171,7 +171,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         },
         autosync() {
             if (!this.currently_updating && this.autosync_has_focus) {
-                console.log('running autosync')
                 this.currently_updating = true
 
                 let previous_autosync = this.last_autosync
@@ -183,15 +182,14 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 }).then((r) => {
                     r.data.forEach((e) => {
                         // dont update stale client data
-                         //TODO validate the django datetime can be parsed in all browsers
-                        if (!(e.id in this.entries) || Date.parse(this.entries[e.id].updated_at) <= Date.parse(e.updated_at)) {
-                            console.log('updating entry ', e)
+                        if (!(Object.keys(this.entries).includes(e.id.toString())) || Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at)) {
+                            console.log('auto sync updating entry ', e)
                             Vue.set(this.entries, e.id, e)
                         }
                     })
                     this.currently_updating = false
                 }).catch((err) => {
-                    console.log('auto sync failed')
+                    console.warn('auto sync failed')
                     this.currently_updating = false
                 })
             }
