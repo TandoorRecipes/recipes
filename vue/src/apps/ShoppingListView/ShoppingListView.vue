@@ -40,8 +40,8 @@
                     <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
                                style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
                     <span class="d-none d-md-inline-block ml-1">
-                        {{ $t('Shopping_list') + ` (${Object.keys(shopping_list_store.entries).length})` }}
-                    </span> <!-- TODO properly count only checked -->
+                        {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
+                    </span>
 
                 </template>
 

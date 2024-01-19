@@ -18,6 +18,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         supermarket_categories: [],
         supermarkets: [],
 
+        total_unchecked:0,
+        total_checked:0,
+        total_unchecked_food:0,
+        total_checked_food:0,
+
         // internal
         currently_updating: false,
         last_autosync: null,
@@ -85,10 +90,11 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 total_unchecked_food += count_unchecked_food
                 total_checked_food += count_checked_food
             }
-            // Vue.set(structure, 'count_unchecked', total_unchecked)
-            // Vue.set(structure, 'count_checked', total_checked)
-            // Vue.set(structure, 'count_unchecked_food', total_unchecked_food)
-            // Vue.set(structure, 'count_checked_food', total_checked_food)
+
+            this.total_unchecked = total_unchecked
+            this.total_checked = total_checked
+            this.total_unchecked_food = total_unchecked_food
+            this.total_checked_food = total_checked_food
 
             // ordering
             if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
