@@ -183,7 +183,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 }).then((r) => {
                     r.data.forEach((e) => {
                         // dont update stale client data
-                        if (Date.parse(this.entries[e.id].updated_at) <= Date.parse(e.updated_at)) { //TODO validate the django datetime can be parsed in all browsers
+                         //TODO validate the django datetime can be parsed in all browsers
+                        if (!(e.id in this.entries) || Date.parse(this.entries[e.id].updated_at) <= Date.parse(e.updated_at)) {
                             console.log('updating entry ', e)
                             Vue.set(this.entries, e.id, e)
                         }
