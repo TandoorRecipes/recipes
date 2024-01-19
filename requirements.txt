@@ -42,7 +42,7 @@ django-prometheus==2.2.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.3
 django-auth-ldap==4.4.0
-pytest-factoryboy==2.5.1
+pytest-factoryboy==2.6.0
 pyppeteer==1.0.2
 validators==0.20.0
 pytube==15.0.0
