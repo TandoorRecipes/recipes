@@ -570,28 +570,18 @@ export default {
         window.addEventListener("online", this.updateOnlineStatus)
         window.addEventListener("offline", this.updateOnlineStatus)
 
+        addEventListener("visibilitychange", (event) => {useShoppingListStore().autosync_has_focus = (document.visibilityState === 'visible')});
+
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         this.shopping_list_store.refreshFromAPI()
         useUserPreferenceStore().loadUserSettings()
         useUserPreferenceStore().loadDeviceSettings()
         this.autoSyncLoop()
-        this.setupFocusMonitor()
-
     },
     methods: {
         useUserPreferenceStore,
         useShoppingListStore,
-
-        /**
-         * setup interval checking for focus every 1000ms and updating the store variable
-         */
-        setupFocusMonitor: function () {
-            setInterval(() => {
-                useShoppingListStore().autosync_has_focus = document.hasFocus()
-            }, 1000);
-
-        },
         /**
          * recursive function calling autosync after set amount of time has passed
          */
