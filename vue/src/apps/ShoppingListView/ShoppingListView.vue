@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <b-alert :show="shopping_list_store.has_failed_items" class="float-up mt-2" variant="warning">
-            {{$t('ShoppingBackgroundSyncWarning')}}
+            {{ $t('ShoppingBackgroundSyncWarning') }}
         </b-alert>
 
         <div class="row float-top w-100">
@@ -37,7 +37,8 @@
                 <template #title>
                     <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
                        class="fas fa-shopping-cart fa-fw"></i>
-                    <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus" class="fas fa-eye-slash"></i>
+                    <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
+                       class="fas fa-eye-slash"></i>
                     <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
                                style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
                     <span class="d-none d-md-inline-block ml-1">
@@ -337,8 +338,7 @@
                 </template>
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
-                        <shopping-settings-component @updated="user_preference_store.updateUserSettings()"
-                                                     :user_id="user_id"></shopping-settings-component>
+                        <shopping-settings-component></shopping-settings-component>
                     </div>
                 </div>
             </b-tab>
@@ -512,7 +512,6 @@ export default {
             new_category: {entrymode: false, value: undefined},
             autosync_id: undefined,
             new_item: {amount: 1, unit: undefined, food: undefined, ingredient: undefined},
-            online: true,
             new_recipe: {
                 id: undefined,
             },
@@ -543,15 +542,14 @@ export default {
     },
     watch: {},
     mounted() {
-        window.addEventListener("online", this.updateOnlineStatus)
-        window.addEventListener("offline", this.updateOnlineStatus)
-
-        addEventListener("visibilitychange", (event) => {useShoppingListStore().autosync_has_focus = (document.visibilityState === 'visible')});
+        addEventListener("visibilitychange", (event) => {
+            useShoppingListStore().autosync_has_focus = (document.visibilityState === 'visible')
+        });
 
         this.$i18n.locale = window.CUSTOM_LOCALE
 
         this.shopping_list_store.refreshFromAPI()
-        useUserPreferenceStore().loadUserSettings()
+        useUserPreferenceStore().loadUserSettings(true)
         useUserPreferenceStore().loadDeviceSettings()
         this.autoSyncLoop()
     },
@@ -567,12 +565,12 @@ export default {
             this.autosync_id = undefined
 
             let timeout = Math.max(this.user_preference_store.user_settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
-
+            console.log('setting', this.user_preference_store.user_settings.shopping_auto_sync, 'timeout ', timeout)
             this.autosync_id = setTimeout(() => {
-                if (this.online && this.user_preference_store.user_settings.shopping_auto_sync > 0) {
+                if (this.user_preference_store.user_settings.shopping_auto_sync > 0) {
                     this.shopping_list_store.autosync()
-                    this.autoSyncLoop()
                 }
+                this.autoSyncLoop()
             }, timeout)
         },
         /**
@@ -659,7 +657,7 @@ export default {
         checkGroup(group, checked_state) {
             let all_entries = {}
             for (let f in group.foods) {
-                all_entries = Object.assign({},all_entries, group.foods[f].entries)
+                all_entries = Object.assign({}, all_entries, group.foods[f].entries)
             }
             useShoppingListStore().setEntriesCheckedState(all_entries, checked_state, true)
         },
@@ -880,14 +878,6 @@ export default {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
                 })
             }
-        },
-        updateOnlineStatus(e) {
-            const {type} = e
-            this.online = type === "online"
-        },
-        beforeDestroy() {
-            window.removeEventListener("online", this.updateOnlineStatus)
-            window.removeEventListener("offline", this.updateOnlineStatus)
         },
         /**
          * open standard shopping modal to add selected recipe to shopping list
