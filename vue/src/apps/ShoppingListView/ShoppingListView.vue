@@ -553,6 +553,10 @@ export default {
         useUserPreferenceStore().loadUserSettings()
         useUserPreferenceStore().loadDeviceSettings()
         this.autoSyncLoop()
+
+        setInterval(() => {
+            this.getSyncQueueLength()
+        },1000)
     },
     methods: {
         useUserPreferenceStore,
@@ -594,6 +598,7 @@ export default {
             const wb = new Workbox('/service-worker.js');
             wb.register();
             return wb.messageSW({type: 'BGSYNC_COUNT_QUEUE'}).then((r) => {
+                console.log('sync que length :', r)
                 return r
             })
         },
