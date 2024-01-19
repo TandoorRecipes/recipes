@@ -157,6 +157,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         refreshFromAPI() {
             if (!this.currently_updating) {
                 this.currently_updating = true
+                this.last_autosync = new Date().getTime();
+
                 let apiClient = new ApiApiFactory()
                 apiClient.listShoppingListEntrys().then((r) => {
                     this.entries = {}
@@ -189,6 +191,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          */
         autosync() {
             if (!this.currently_updating && this.autosync_has_focus) {
+
                 this.currently_updating = true
 
                 let previous_autosync = this.last_autosync
@@ -200,6 +203,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 }).then((r) => {
                     r.data.forEach((e) => {
                         // dont update stale client data
+                        console.log('new: ', !(Object.keys(this.entries).includes(e.id.toString())), ' updated at ', Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at))
+                        console.log('client updated at ', this.entries[e.id].updated_at,Date.parse(this.entries[e.id].updated_at), ' server updated at ', e.updated_at,Date.parse(e.updated_at))
                         if (!(Object.keys(this.entries).includes(e.id.toString())) || Date.parse(this.entries[e.id].updated_at) < Date.parse(e.updated_at)) {
                             console.log('auto sync updating entry ', e)
                             Vue.set(this.entries, e.id, e)
@@ -242,7 +247,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             let apiClient = new ApiApiFactory()
             // sets the update_at timestamp on the client to prevent auto sync from overriding with older changes
             // moment().format() yields locale aware datetime without ms 2024-01-04T13:39:08.607238+01:00
-            Vue.set(object, 'update_at', moment().format())
+            Vue.set(object, 'updated_at', moment().format())
 
             return apiClient.updateShoppingListEntry(object.id, object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
@@ -321,11 +326,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             if (undo) {
                 this.registerChange((checked ? 'CHECKED' : 'UNCHECKED'), entries)
             }
+            console.log('entry changed at ', Date.now(), ' setting to ', moment().format())
 
             let entry_id_list = []
             for (let i in entries) {
                 Vue.set(this.entries[i], 'checked', checked)
-                Vue.set(this.entries[i], 'update_at', moment().format())
+                Vue.set(this.entries[i], 'updated_at', moment().format())
                 entry_id_list.push(i)
             }
 

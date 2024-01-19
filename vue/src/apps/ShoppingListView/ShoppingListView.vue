@@ -1,9 +1,8 @@
 <template>
     <div id="app">
-        <b-alert :show="shopping_list_store.has_failed_items" dismissible class="float-up mt-2" variant="warning">
+        <b-alert :show="shopping_list_store.has_failed_items" class="float-up mt-2" variant="warning">
             {{$t('ShoppingBackgroundSyncWarning')}}
         </b-alert>
-
 
         <div class="row float-top w-100">
             <div class="col-auto no-gutter ml-auto">
@@ -555,10 +554,6 @@ export default {
         useUserPreferenceStore().loadUserSettings()
         useUserPreferenceStore().loadDeviceSettings()
         this.autoSyncLoop()
-
-        setInterval(() => {
-            this.getSyncQueueLength()
-        },1000)
     },
     methods: {
         useUserPreferenceStore,

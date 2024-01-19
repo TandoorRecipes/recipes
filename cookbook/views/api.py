@@ -1168,7 +1168,8 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         try:
             last_autosync = self.request.query_params.get('last_autosync', None)
             if last_autosync:
-                last_autosync = make_aware(datetime.datetime.fromtimestamp(int(last_autosync) / 1000))
+
+                last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
                 self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
         except:
             traceback.print_exc()
@@ -1189,7 +1190,10 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
                 Q(created_by=self.request.user)
                 | Q(shoppinglist__shared=self.request.user)
                 | Q(created_by__in=list(self.request.user.get_shopping_share()))
-            ).filter(space=request.space, id__in=serializer.validated_data['ids']).update(checked=serializer.validated_data['checked'])
+            ).filter(space=request.space, id__in=serializer.validated_data['ids']).update(
+                checked=serializer.validated_data['checked'],
+                updated_at=timezone.now(),
+            )
             return Response(serializer.data)
         else:
             return Response(serializer.errors, 400)
