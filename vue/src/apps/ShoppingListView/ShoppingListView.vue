@@ -565,7 +565,6 @@ export default {
             this.autosync_id = undefined
 
             let timeout = Math.max(this.user_preference_store.user_settings.shopping_auto_sync, 1) * 1000 // if disabled (shopping_auto_sync=0) check again after 1 second if enabled
-            console.log('setting', this.user_preference_store.user_settings.shopping_auto_sync, 'timeout ', timeout)
             this.autosync_id = setTimeout(() => {
                 if (this.user_preference_store.user_settings.shopping_auto_sync > 0) {
                     this.shopping_list_store.autosync()
