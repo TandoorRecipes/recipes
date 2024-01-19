@@ -18,16 +18,19 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         supermarket_categories: [],
         supermarkets: [],
 
-        total_unchecked:0,
-        total_checked:0,
-        total_unchecked_food:0,
-        total_checked_food:0,
+        total_unchecked: 0,
+        total_checked: 0,
+        total_unchecked_food: 0,
+        total_checked_food: 0,
 
         // internal
         currently_updating: false,
         last_autosync: null,
         autosync_has_focus: true,
         undo_stack: [],
+
+        queue_timeout_id: undefined,
+        item_check_sync_queue: {},
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
@@ -135,6 +138,17 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 'translatable_label': 'Recipe'
             }]
         },
+        /**
+         * checks if failed items are contained in the sync queue
+         */
+        has_failed_items: function () {
+            for (let i in this.item_check_sync_queue) {
+                if (this.item_check_sync_queue[i]['status'] === 'syncing_failed_before' || this.item_check_sync_queue[i]['status'] === 'waiting_failed_before') {
+                    return true
+                }
+            }
+            return false
+        }
     },
     actions: {
         /**
@@ -315,12 +329,64 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 entry_id_list.push(i)
             }
 
-            let apiClient = new ApiApiFactory()
-            apiClient.bulkShoppingListEntry({'ids': entry_id_list, 'checked': checked}).then((r) => {
-
-            }).catch((err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            this.item_check_sync_queue
+            Vue.set(this.item_check_sync_queue, Math.random(), {
+                'ids': entry_id_list,
+                'checked': checked,
+                'status': 'waiting'
             })
+            this.runSyncQueue(5)
+        },
+        /**
+         * go through the list of queued requests and try to run them
+         * add request back to queue if it fails due to offline or timeout
+         * Do NOT call this method directly, always call using runSyncQueue method to prevent simultaneous runs
+         * @private
+         */
+        _replaySyncQueue() {
+            if (navigator.onLine || document.location.href.includes('localhost')) {
+                let apiClient = new ApiApiFactory()
+                let promises = []
+                //TODO merge entries with same checked state before updating?
+
+                for (let i in this.item_check_sync_queue) {
+                    let entry = this.item_check_sync_queue[i]
+                    Vue.set(entry, 'status', ((entry['status'] === 'waiting') ? 'syncing' : 'syncing_failed_before'))
+                    Vue.set(this.item_check_sync_queue, i, entry)
+
+                    let p = apiClient.bulkShoppingListEntry(entry, {timeout: 15000}).then((r) => {
+                        Vue.delete(this.item_check_sync_queue, i)
+                    }).catch((err) => {
+                        if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
+                            Vue.set(entry, 'status', 'waiting_failed_before')
+                            Vue.set(this.item_check_sync_queue, i, entry)
+                        } else {
+                            Vue.delete(this.item_check_sync_queue, i)
+                            console.error('Failed API call for entry ', entry)
+                            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                        }
+                    })
+                    promises.push(p)
+                }
+
+                Promise.allSettled(promises).finally(r => {
+                    this.runSyncQueue(500)
+                })
+            } else {
+                this.runSyncQueue(5000)
+            }
+        },
+        /**
+         * manages running the replaySyncQueue function after the given timeout
+         * calling this function might cancel a previously created timeout
+         * @param timeout time in ms after which to run the replaySyncQueue function
+         */
+        runSyncQueue(timeout) {
+            clearTimeout(this.queue_timeout_id)
+
+            this.queue_timeout_id = setTimeout(() => {
+                this._replaySyncQueue()
+            }, timeout)
         },
         /**
          * function to handle user "delaying" and "undelaying" shopping entries

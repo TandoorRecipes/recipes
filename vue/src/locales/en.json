@@ -303,6 +303,7 @@
 	"ShowRecentlyCompleted": "Show recently completed items",
 	"Completed": "Completed",
 	"OfflineAlert": "You are offline, shopping list may not syncronize.",
+	"ShoppingBackgroundSyncWarning": "Due to bad connectivity some changes could not be synchronized. Automatically retrying when connection becomes available.",
 	"shopping_share": "Share Shopping List",
 	"shopping_auto_sync": "Autosync",
 	"one_url_per_line": "One URL per line",
