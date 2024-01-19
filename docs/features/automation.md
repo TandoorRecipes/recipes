@@ -50,7 +50,7 @@ In order to prevent denial of service attacks on the RegEx engine the number of 
 and the length of the inputs that are processed are limited. Those limits should never be reached
 during normal usage.
 
-## Instructtion Replace, Title Replace, Food Replace & Unit Replace
+## Instruction Replace, Title Replace, Food Replace & Unit Replace
 
 These work just like the Description Replace automation.
 Instruction, Food and Unit Replace will run against every iteration of the object in a recipe during import.
