@@ -26,8 +26,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         // internal
         currently_updating: false,
         last_autosync: null,
+        autosync_has_focus: true,
         undo_stack: [],
-        autosync_has_focus: false,
 
         // constants
         GROUP_CATEGORY: 'food.supermarket_category.name',
