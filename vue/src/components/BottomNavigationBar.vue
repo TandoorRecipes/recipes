@@ -91,15 +91,10 @@ export default {
 }
 </script>
 
-<style>
-
-#id_base_container, .fixed-bottom {
-    padding-bottom: env(safe-area-inset-bottom) !important;
-}
-
-</style>
 
 <style scoped>
+
+
 
 .bottom-nav-link {
     color: #666666

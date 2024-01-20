@@ -481,6 +481,14 @@
             overflow-x: hidden;
         }
     }
+
+    #id_base_container {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .fixed-bottom {
+        padding-bottom: max(0.5rem, calc(env(safe-area-inset-bottom) - 0.5rem)) !important;
+    }
 </style>
 
 </body>
