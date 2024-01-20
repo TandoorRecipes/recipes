@@ -91,10 +91,7 @@ export default {
 }
 </script>
 
-
 <style scoped>
-
-
 
 .bottom-nav-link {
     color: #666666
