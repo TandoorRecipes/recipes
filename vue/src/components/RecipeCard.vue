@@ -260,6 +260,7 @@ export default {
     padding-left: 1em;
     padding-right: 1em;
     width: 100%;
+    height: 100%;
     top: 50%;
     left: 50%;
     opacity: 0;
@@ -288,6 +289,10 @@ export default {
 .content-details p {
     color: #fff;
     font-size: 0.8em;
+    height: 100%;
+    overflow-y: scroll;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
 
 .fadeIn-bottom {
