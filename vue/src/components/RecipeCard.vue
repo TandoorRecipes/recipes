@@ -257,10 +257,10 @@ export default {
 .content-details {
     position: absolute;
     text-align: center;
-    padding-left: 1em;
-    padding-right: 1em;
+    padding: 1em 1em 0 1em;
     width: 100%;
-    height: 100%;
+    max-height: 100%;
+    overflow-y: scroll;
     top: 50%;
     left: 50%;
     opacity: 0;
@@ -289,10 +289,6 @@ export default {
 .content-details p {
     color: #fff;
     font-size: 0.8em;
-    height: 100%;
-    overflow-y: scroll;
-    padding-top: 1em;
-    padding-bottom: 1em;
 }
 
 .fadeIn-bottom {
