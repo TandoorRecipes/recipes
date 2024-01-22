@@ -10,7 +10,7 @@
     <title>{% block title %}
     {% endblock %}</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta name="robots" content="noindex,nofollow"/>
 
     <link rel="icon" href="{{ theme_values.logo_color_svg }}">
@@ -480,6 +480,14 @@
             overflow-y: hidden;
             overflow-x: hidden;
         }
+    }
+
+    #id_base_container {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .fixed-bottom {
+        padding-bottom: max(0.5rem, calc(env(safe-area-inset-bottom) - 0.5rem)) !important;
     }
 </style>
 
