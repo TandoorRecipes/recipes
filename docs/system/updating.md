@@ -81,7 +81,7 @@ sudo mv -R ~/.docker/compose/postgres ~/.docker/compose/postgres.old
   ```
   8. Install postgres extensions
   ``` bash
-  docker exec -it {{database_container}} psql
+  docker exec -it {{database_container}} psql postgres -U {{djangouser}}
   ```
   then
   ``` psql
