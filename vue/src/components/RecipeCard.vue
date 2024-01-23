@@ -269,6 +269,10 @@ export default {
     transition: all 0.3s ease-in-out 0s;
 }
 
+.content-details::-webkit-scrollbar {
+    display: none;
+}
+
 .content:hover .content-details {
     top: 50%;
     left: 50%;
