@@ -247,7 +247,7 @@ export default {
         useUserPreferenceStore,
         useShoppingListStore,
         resolveDjangoUrl,
-
+        // TODO move to utils
         formatDate: function (datetime) {
             if (!datetime) {
                 return

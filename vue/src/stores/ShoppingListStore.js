@@ -294,7 +294,9 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                         'shopping_list_recipe_id': e.list_recipe,
                         'recipe_id': e.recipe_mealplan.recipe,
                         'recipe_name': e.recipe_mealplan.recipe_name,
-                        'servings': e.recipe_mealplan.servings
+                        'servings': e.recipe_mealplan.servings,
+                        'mealplan_from_date': e.recipe_mealplan.mealplan_from_date,
+                        'mealplan_type': e.recipe_mealplan.mealplan_type,
                     })
                 }
             }
