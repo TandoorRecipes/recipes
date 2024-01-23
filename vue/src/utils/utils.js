@@ -365,6 +365,23 @@ export function energyHeading() {
     }
 }
 
+export const FormatMixin = {
+    name: "FormatMixin",
+    methods: {
+        /**
+         * format short date from datetime
+         * @param datetime any string that can be parsed by Date.parse()
+         * @return {string}
+         */
+        formatDate: function (datetime) {
+            return Intl.DateTimeFormat(window.navigator.language, {
+                dateStyle: "short",
+            }).format(Date.parse(datetime))
+        },
+    },
+}
+
+
 axios.defaults.xsrfCookieName = "csrftoken"
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
