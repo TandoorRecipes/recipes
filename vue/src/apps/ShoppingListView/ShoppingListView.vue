@@ -112,20 +112,24 @@
                 <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id"
                        class="pr-1 pl-1">
                     <b-col cols="12">
-                        <b-button-group class="w-100 mt-2">
-                            <b-button variant="dark" block class="btn btn-block text-left">
-                                <span>{{ r.recipe_name }}</span> <br/>
-                                <span v-if="r.mealplan_type"><small class="text-muted">{{ r.mealplan_type }} {{ formatDate(r.mealplan_from_date) }}</small></span>
 
-                            </b-button>
+                        <b-button-group class="w-100 mt-2">
+
+                            <div class="card flex-grow-1 btn-block p-2">
+                                <span>{{ r.recipe_name }}</span>
+                                <span v-if="r.mealplan_type"><small class="text-muted">{{ r.mealplan_type }} {{ formatDate(r.mealplan_from_date) }}</small></span>
+                            </div>
+
+
                             <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
                                 class="fas fa-trash fa-fw"></i></b-button>
                         </b-button-group>
 
                         <number-scaler-component :number="r.servings" @change="updateServings(r, $event)"
                                                  :disable="useShoppingListStore().currently_updating"></number-scaler-component>
-
+                        <hr class="m-2"/>
                     </b-col>
+
                 </b-row>
             </b-tab>
             <!-- --------------------------------------- supermarkets tab -->

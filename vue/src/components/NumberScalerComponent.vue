@@ -1,20 +1,20 @@
 <template>
     <div>
         <b-button-group class="w-100 mt-1">
-            <b-button @click="updateNumber( 'half')"
+            <b-button @click="updateNumber( 'half')" variant="outline-info"
                       :disabled="disable"><i class="fas fa-divide"></i> 2
             </b-button>
-            <b-button variant="info" @click="updateNumber( 'sub')"
+            <b-button variant="outline-info" @click="updateNumber( 'sub')"
                       :disabled="disable"><i class="fas fa-minus"></i>
             </b-button>
-            <b-button variant="info" @click="updateNumber('prompt')"
+            <b-button variant="outline-info" @click="updateNumber('prompt')"
                       :disabled="disable">
                 {{ number }}
             </b-button>
-            <b-button variant="info" @click="updateNumber( 'add')"
+            <b-button variant="outline-info" @click="updateNumber( 'add')"
                       :disabled="disable"><i class="fas fa-plus"></i>
             </b-button>
-            <b-button @click="updateNumber('multiply')"
+            <b-button @click="updateNumber('multiply')" variant="outline-info"
                       :disabled="disable"><i class="fas fa-times"></i> 2
             </b-button>
         </b-button-group>
