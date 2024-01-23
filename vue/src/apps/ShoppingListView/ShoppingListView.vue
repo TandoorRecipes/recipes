@@ -115,8 +115,8 @@
                         <b-button-group class="w-100 mt-2">
                             <b-button variant="dark" block class="btn btn-block text-left">
                                 <span>{{ r.recipe_name }}</span> <br/>
-                                <span><small class="text-muted">{{ r.recipe_name }}</small></span>
-                                <!-- TODO show meal plan date/type -->
+                                <span v-if="r.mealplan_type"><small class="text-muted">{{ r.mealplan_type }} {{ formatDate(r.mealplan_from_date) }}</small></span>
+
                             </b-button>
                             <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
                                 class="fas fa-trash fa-fw"></i></b-button>
@@ -550,6 +550,15 @@ export default {
     methods: {
         useUserPreferenceStore,
         useShoppingListStore,
+        // TODO move to utils
+        formatDate: function (datetime) {
+            if (!datetime) {
+                return
+            }
+            return Intl.DateTimeFormat(window.navigator.language, {
+                dateStyle: "short",
+            }).format(Date.parse(datetime))
+        },
         /**
          * recursive function calling autosync after set amount of time has passed
          */
