@@ -100,7 +100,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             this.total_checked_food = total_checked_food
 
             // ordering
-             if (this.UNDEFINED_CATEGORY in structure) {
+            if (this.UNDEFINED_CATEGORY in structure) {
                 ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
                 Vue.delete(structure, this.UNDEFINED_CATEGORY)
             }
@@ -124,6 +124,22 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             }
 
             return ordered_structure
+        },
+        get_flat_entries: function () {
+            //{amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
+            let items = []
+            for (let i in this.get_entries_by_group) {
+                for (let f in this.get_entries_by_group[i]['foods']) {
+                    for (let e in this.get_entries_by_group[i]['foods'][f]['entries']) {
+                        items.push({
+                            amount: this.get_entries_by_group[i]['foods'][f]['entries'][e].amount,
+                            unit: this.get_entries_by_group[i]['foods'][f]['entries'][e].unit?.name ?? '',
+                            food: this.get_entries_by_group[i]['foods'][f]['entries'][e].food?.name ?? '',
+                        })
+                    }
+                }
+            }
+            return items
         },
         /**
          * list of options available for grouping entry display

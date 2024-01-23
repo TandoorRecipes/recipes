@@ -16,13 +16,13 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
                         <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                                      icon="far fa-file-pdf"/>
-                        <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim"
+                        <DownloadCSV :items="shopping_list_store.get_flat_entries" :delim="user_preference_store.user_settings.csv_delim"
                                      name="shopping.csv"
                                      :label="$t('download_csv')" icon="fas fa-file-csv"/>
-                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings"
+                        <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings"
                                          :label="$t('copy_to_clipboard')"
                                          icon="fas fa-clipboard-list"/>
-                        <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
+                        <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings" format="table"
                                          :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
                     </div>
                 </b-button>
@@ -442,12 +442,12 @@
 
                 <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                              icon="far fa-file-pdf fa-fw"/>
-                <DownloadCSV :items="csvData" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
+                <DownloadCSV :items="shopping_list_store.get_flat_entries" :delim="user_preference_store.user_settings.csv_delim" name="shopping.csv"
                              :label="$t('download_csv')" icon="fas fa-file-csv fa-fw"/>
-                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings"
+                <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings"
                                  :label="$t('copy_to_clipboard')"
                                  icon="fas fa-clipboard-list fa-fw"/>
-                <CopyToClipboard :items="csvData" :settings="user_preference_store.user_settings" format="table"
+                <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings" format="table"
                                  :label="$t('copy_markdown_table')" icon="fab fa-markdown fa-fw"/>
 
 
@@ -521,12 +521,6 @@ export default {
         }
     },
     computed: {
-        csvData() {
-            // return this.items.map((x) => {
-            //     return {amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
-            // })
-            return []
-        },
         editingSupermarket() {
             return this.shopping_list_store.supermarkets.filter((el) => {
                 return el.editing
@@ -604,27 +598,6 @@ export default {
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
             })
-        },
-
-        onHand: function (item) {
-            let api = new ApiApiFactory()
-            let food = {
-                id: item?.[0]?.food.id ?? item?.food?.id,
-                food_onhand: true,
-            }
-
-            this.updateFood(food, "food_onhand")
-                .then((result) => {
-                    let entries = this.items.filter((x) => x.food.id == food.id).map((x) => x.id)
-                    this.items = this.items.filter((x) => x.food.id !== food.id)
-                    return entries
-                })
-                .then((entries) => {
-                    entries.forEach((x) => {
-                        api.destroyShoppingListEntry(x).then((result) => {
-                        })
-                    })
-                })
         },
         /**
          * change number of servings of a shopping list recipe
