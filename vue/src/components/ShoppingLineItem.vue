@@ -10,7 +10,7 @@
             <b-button variant="primary" v-if="is_delayed">
                 <i class="fa-fw fas fa-hourglass-half"></i>
             </b-button>
-            <div class="card flex-grow-1 btn-block p-1" @click="detail_modal_visible = true">
+            <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
                 <div class="d-flex">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
@@ -61,17 +61,14 @@
 
                 <h6 class="mt-2">{{ $t('Entries') }}</h6>
 
-                <b-button variant="danger" block
-                          @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
-                    {{ $t('Delete_All') }}
-                </b-button>
 
                 <b-row v-for="e in entries" v-bind:key="e.id">
                     <b-col cold="12">
-                        <b-button-group class="mt-1 w-100">
-                            <b-button variant="dark" block class="btn btn-block text-left">
+
+                        <b-button-group class="w-100">
+                            <div class="card flex-grow-1 btn-block p-2">
                                 <span><span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
-                                <span><br/><small class="text-muted">
+                                <span><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
                                         <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
                                                 e.recipe_mealplan.recipe_name
@@ -87,7 +84,7 @@
                                     {{ e.created_by.display_name }} {{ formatDate(e.created_at) }}<br/>
                                 </small></span>
 
-                            </b-button>
+                            </div>
                             <b-button variant="warning"
                                       @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i
                                 class="fas fa-trash"></i></b-button> <!-- TODO implement -->
@@ -96,9 +93,14 @@
                         <number-scaler-component :number="e.amount"
                                                  @change="e.amount = $event; useShoppingListStore().updateObject(e)"
                                                  v-if="e.recipe_mealplan === null"></number-scaler-component>
-
+                        <hr class="m-2"/>
                     </b-col>
                 </b-row>
+
+                <b-button variant="danger" block class="mt-2"
+                          @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
+                    {{ $t('Delete_All') }}
+                </b-button>
             </template>
 
             <template #modal-footer>
