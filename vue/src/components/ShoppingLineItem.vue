@@ -116,7 +116,7 @@
 import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import {ApiMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
+import {ApiMixin, FormatMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {useShoppingListStore} from "@/stores/ShoppingListStore";
 import {ApiApiFactory} from "@/utils/openapi/api";
@@ -129,7 +129,7 @@ Vue.use(BootstrapVue)
 
 export default {
     name: "ShoppingLineItem",
-    mixins: [ApiMixin],
+    mixins: [ApiMixin, FormatMixin],
     components: {GenericModalForm, NumberScalerComponent},
     props: {
         entries: {type: Object,},
@@ -247,15 +247,6 @@ export default {
         useUserPreferenceStore,
         useShoppingListStore,
         resolveDjangoUrl,
-        // TODO move to utils
-        formatDate: function (datetime) {
-            if (!datetime) {
-                return
-            }
-            return Intl.DateTimeFormat(window.navigator.language, {
-                dateStyle: "short",
-            }).format(Date.parse(datetime))
-        },
         /**
          * update the food after the category was changed
          * handle changing category to category ID as a workaround

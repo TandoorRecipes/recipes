@@ -471,7 +471,7 @@ import CopyToClipboard from "@/components/Buttons/CopyToClipboard"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import ShoppingModal from "@/components/Modals/ShoppingModal"
 
-import {ApiMixin, getUserPreference, StandardToasts, makeToast, ResolveUrlMixin} from "@/utils/utils"
+import {ApiMixin, getUserPreference, StandardToasts, makeToast, ResolveUrlMixin, FormatMixin} from "@/utils/utils"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import ShoppingSettingsComponent from "@/components/Settings/ShoppingSettingsComponent";
 
@@ -486,7 +486,7 @@ import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
 
 export default {
     name: "ShoppingListView",
-    mixins: [ApiMixin, ResolveUrlMixin],
+    mixins: [ApiMixin, ResolveUrlMixin, FormatMixin],
     components: {
         NumberScalerComponent,
 
@@ -550,15 +550,6 @@ export default {
     methods: {
         useUserPreferenceStore,
         useShoppingListStore,
-        // TODO move to utils
-        formatDate: function (datetime) {
-            if (!datetime) {
-                return
-            }
-            return Intl.DateTimeFormat(window.navigator.language, {
-                dateStyle: "short",
-            }).format(Date.parse(datetime))
-        },
         /**
          * recursive function calling autosync after set amount of time has passed
          */
