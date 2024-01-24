@@ -59,7 +59,7 @@ class ConnectorManager:
         try:
             self._queue.put_nowait(Work(instance, action_type))
         except queue.Full:
-            logging.info("queue was full, so skipping %s", instance)
+            logging.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
             return
 
     def stop(self):
