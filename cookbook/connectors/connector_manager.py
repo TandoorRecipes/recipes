@@ -82,6 +82,7 @@ class ConnectorManager:
                 item: Optional[Work] = worker_queue.get()
             except KeyboardInterrupt:
                 break
+
             if item is None:
                 break
 
@@ -96,11 +97,20 @@ class ConnectorManager:
                     loop.run_until_complete(close_connectors(connectors))
 
                 with scope(space=space):
-                    connectors: List[Connector] = list(
-                        filter(
-                            lambda x: x is not None,
-                            [ConnectorManager.get_connected_for_config(config) for config in space.connectorconfig_set.all() if config.enabled],
-                        ))
+                    connectors: List[Connector] = list()
+                    for config in space.connectorconfig_set.all():
+                        config: ConnectorConfig = config
+                        if not config.enabled:
+                            continue
+
+                        try:
+                            connector: Optional[Connector] = ConnectorManager.get_connected_for_config(config)
+                        except BaseException:
+                            logging.exception(f"failed to initialize {config.name}")
+                            continue
+
+                        connectors.append(connector)
+
                     _connectors[space.name] = connectors
 
             if len(connectors) == 0 or refresh_connector_cache:
