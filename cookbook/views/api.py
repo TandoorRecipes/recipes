@@ -651,7 +651,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             content = {'error': True, 'msg': e.args[0]}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-import json
+
 class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
