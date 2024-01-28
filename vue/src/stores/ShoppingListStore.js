@@ -27,6 +27,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         currently_updating: false,
         last_autosync: null,
         autosync_has_focus: true,
+        autosync_timeout_id: null,
         undo_stack: [],
 
         queue_timeout_id: undefined,
