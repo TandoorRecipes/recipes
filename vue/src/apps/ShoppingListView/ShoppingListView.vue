@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12 col-xl-8 offset-xl-2">
                 <div class="row float-top w-100">
-                    <div class="col-auto no-gutter ml-auto">
+                    <div class="col-auto no-gutter ml-auto d-print-none">
                         <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i>
                         </b-button>
 
@@ -37,16 +37,17 @@
                     <!-- shopping list tab -->
                     <b-tab active>
                         <template #title>
-                            <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
-                               class="fas fa-shopping-cart fa-fw"></i>
-                            <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
-                               class="fas fa-eye-slash"></i>
-                            <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
-                                       style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
-                            <span class="d-none d-md-inline-block ml-1">
-                        {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
-                    </span>
-
+                            <div class="d-print-none">
+                                <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
+                                   class="fas fa-shopping-cart fa-fw"></i>
+                                <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
+                                   class="fas fa-eye-slash"></i>
+                                <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
+                                           style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
+                                <span class="d-none d-md-inline-block ml-1">
+                                    {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
+                                </span>
+                            </div>
                         </template>
 
                         <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -77,7 +78,7 @@
                                     }}</span>
                                         <span v-else>{{ c.name }}</span>
                                     </b-button>
-                                    <b-button
+                                    <b-button class="d-print-none "
                                         :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
                                         @click="checkGroup(c, (c.count_unchecked > 0))">
                                         <i class="fas fa-fw"
@@ -95,10 +96,13 @@
                     <!-- --------------------------------------- recipe tab -->
                     <b-tab :title="$t('Recipes')">
                         <template #title>
-                            <i class="fas fa-book fa-fw"></i>
-                            <span class="d-none d-md-inline-block ml-1">{{
-                                    $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
-                                }}</span>
+                            <div class="d-print-none">
+                                <i class="fas fa-book fa-fw"></i>
+                                <span class="d-none d-md-inline-block ml-1">{{
+                                        $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
+                                    }}</span>
+                            </div>
+
                         </template>
 
                         <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
@@ -137,10 +141,10 @@
                     <!-- --------------------------------------- supermarkets tab -->
                     <b-tab>
                         <template #title>
-                            <i class="fas fa-store-alt fa-fw"></i>
-                            <span class="d-none d-md-inline-block ml-1">{{
-                                    $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})`
-                                }}</span>
+                            <div class="d-print-none">
+                                <i class="fas fa-store-alt fa-fw"></i>
+                                <span class="d-none d-md-inline-block ml-1">{{ $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})` }}</span>
+                            </div>
                         </template>
                         <div class="container p-0">
                             <div class="row">
@@ -339,8 +343,10 @@
                     <!-- --------------------------------------- settings tab -->
                     <b-tab>
                         <template #title>
-                            <i class="fas fa-user-cog fa-fw"></i>
-                            <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
+                            <div class="d-print-none">
+                                <i class="fas fa-user-cog fa-fw"></i>
+                                <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
+                            </div>
                         </template>
                         <div class="row justify-content-center">
                             <div class="col-12 col-md-8">
