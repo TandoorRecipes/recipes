@@ -145,7 +145,6 @@ export default {
     props: {
         recipe: Object,
         meal_plan: Object,
-        use_plural: { type: Boolean, default: false },
         footer_text: String,
         footer_icon: String,
         detailed: { type: Boolean, default: true },
