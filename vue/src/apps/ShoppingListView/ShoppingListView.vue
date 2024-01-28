@@ -365,7 +365,6 @@
             </div>
         </div>
 
-        <!-- TODO maybe change to a modal ? -->
         <b-popover target="id_filters_button" triggers="click blur" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
