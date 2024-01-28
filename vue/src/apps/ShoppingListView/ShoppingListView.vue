@@ -37,13 +37,13 @@
                     <!-- shopping list tab -->
                     <b-tab active>
                         <template #title>
-                            <div class="d-print-none">
+                            <div class="d-print-none fa-fw">
                                 <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
                                    class="fas fa-shopping-cart fa-fw"></i>
                                 <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
                                    class="fas fa-eye-slash"></i>
-                                <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
-                                           style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
+                                <b-spinner v-if="shopping_list_store.currently_updating" type="border"  small
+                                           style="line-height: 1!important;"></b-spinner>
                                 <span class="d-none d-md-inline-block ml-1">
                                     {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
                                 </span>
