@@ -13,7 +13,10 @@
             <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
                 <div class="d-flex">
                     <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
-                        <span v-for="a in amounts" v-bind:key="a.id">{{ a.amount }} {{ a.unit }}<br/></span>
+                        <span v-for="a in amounts" v-bind:key="a.id">
+
+                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i> {{ a.amount }} {{ a.unit }}</span>
+                            <br/></span>
                     </div>
                     <div class="d-flex  flex-column flex-grow-1 align-self-center">
                         {{ food.name }}
@@ -22,8 +25,8 @@
 
                 <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
             </div>
-            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)"
-                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}" >
+            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked, true)"
+                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
                 <i class="d-print-none fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
             </b-button>
         </b-button-group>
@@ -50,8 +53,7 @@
                     @change="detail_modal_visible = false; updateFoodCategory(food)"
                 ></b-form-select>
 
-                <!-- TODO implement -->
-                <!--                <b-button variant="success" block @click="detail_modal_visible = false;"> {{ $t("Edit_Food") }}</b-button>  -->
+                <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
 
                 <b-button variant="info" block
                           @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!this.is_delayed, true)">
@@ -67,7 +69,7 @@
 
                         <b-button-group class="w-100">
                             <div class="card flex-grow-1 btn-block p-2">
-                                <span><span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
+                                <span><i class="fas fa-check" v-if="e.checked"></i> <span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
                                 <span><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
                                         <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
@@ -175,23 +177,27 @@ export default {
             for (let i in this.entries) {
                 let e = this.entries[i]
 
-                let unit = -1
-                if (e.unit !== undefined && e.unit !== null) {
-                    unit = e.unit.id
-                }
-                if (e.amount > 0) {
-                    if (unit in unit_amounts) {
-                        unit_amounts[unit]['amount'] += e.amount
-                    } else {
-                        if (unit === -1) {
-                            unit_amounts[unit] = {id: -1, unit: "", amount: e.amount}
-                        } else {
-                            unit_amounts[unit] = {id: e.unit.id, unit: e.unit.name, amount: e.amount}
-                        }
+                if (!e.checked && e.delay_until === null
+                    || (e.checked && useUserPreferenceStore().device_settings.shopping_show_checked_entries)
+                    || (e.delay_until !== null && useUserPreferenceStore().device_settings.shopping_show_delayed_entries)) {
 
+                    let unit = -1
+                    if (e.unit !== undefined && e.unit !== null) {
+                        unit = e.unit.id
+                    }
+                    if (e.amount > 0) {
+                        if (unit in unit_amounts) {
+                            unit_amounts[unit]['amount'] += e.amount
+                        } else {
+                            if (unit === -1) {
+                                unit_amounts[unit] = {id: -1, unit: "", amount: e.amount, checked: e.checked}
+                            } else {
+                                unit_amounts[unit] = {id: e.unit.id, unit: e.unit.name, amount: e.amount, checked: e.checked}
+                            }
+
+                        }
                     }
                 }
-
             }
             return unit_amounts
         },
@@ -267,6 +273,21 @@ export default {
             })
         },
         /**
+         * set food on_hand status to true and check all associated entries
+         * @param food
+         */
+        setFoodIgnoredAndChecked: function (food) {
+            let apiClient = new ApiApiFactory()
+
+            food.ignore_shopping = true
+            apiClient.updateFood(food.id, food).then(r => {
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+
+            useShoppingListStore().setEntriesCheckedState(this.entries, true, false)
+        },
+        /**
          * function triggered by touchend event of swipe container
          * check if min distance is reached and execute desired action
          */
@@ -276,7 +297,7 @@ export default {
             // get the distance the user swiped
             const swipeDistance = container.scrollLeft - container.clientWidth;
             if (swipeDistance < minDistance * -1) {
-                useShoppingListStore().setEntriesCheckedState(this.entries, !this.is_checked)
+                useShoppingListStore().setEntriesCheckedState(this.entries, !this.is_checked, true)
             } else if (swipeDistance > minDistance) {
                 useShoppingListStore().delayEntries(this.entries, !this.is_delayed, true)
             }
