@@ -4,349 +4,354 @@
             {{ $t('ShoppingBackgroundSyncWarning') }}
         </b-alert>
 
-        <div class="row float-top w-100">
-            <div class="col-auto no-gutter ml-auto">
-                <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i>
-                </b-button>
+        <div class="row">
+            <div class="col-12 col-xl-8 offset-xl-2">
+                <div class="row float-top w-100">
+                    <div class="col-auto no-gutter ml-auto">
+                        <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i>
+                        </b-button>
 
-                <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
-                    <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
-                       id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
+                            <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
+                               id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
-                        <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
-                                     icon="far fa-file-pdf"/>
-                        <DownloadCSV :items="shopping_list_store.get_flat_entries" :delim="user_preference_store.user_settings.csv_delim"
-                                     name="shopping.csv"
-                                     :label="$t('download_csv')" icon="fas fa-file-csv"/>
-                        <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings"
-                                         :label="$t('copy_to_clipboard')"
-                                         icon="fas fa-clipboard-list"/>
-                        <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings" format="table"
-                                         :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
+                                <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
+                                             icon="far fa-file-pdf"/>
+                                <DownloadCSV :items="shopping_list_store.get_flat_entries" :delim="user_preference_store.user_settings.csv_delim"
+                                             name="shopping.csv"
+                                             :label="$t('download_csv')" icon="fas fa-file-csv"/>
+                                <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings"
+                                                 :label="$t('copy_to_clipboard')"
+                                                 icon="fas fa-clipboard-list"/>
+                                <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings" format="table"
+                                                 :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
+                            </div>
+                        </b-button>
+                        <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
+                        />
                     </div>
-                </b-button>
-                <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
-                />
-            </div>
-        </div>
+                </div>
 
-        <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-top: 22px;">
-            <!-- shopping list tab -->
-            <b-tab active>
-                <template #title>
-                    <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
-                       class="fas fa-shopping-cart fa-fw"></i>
-                    <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
-                       class="fas fa-eye-slash"></i>
-                    <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
-                               style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
-                    <span class="d-none d-md-inline-block ml-1">
+                <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-top: 22px;">
+                    <!-- shopping list tab -->
+                    <b-tab active>
+                        <template #title>
+                            <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
+                               class="fas fa-shopping-cart fa-fw"></i>
+                            <i v-if="!shopping_list_store.currently_updating && !useShoppingListStore().autosync_has_focus"
+                               class="fas fa-eye-slash"></i>
+                            <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
+                                       style="width: 1.25em!important; height: 1.25em!important;"></b-spinner>
+                            <span class="d-none d-md-inline-block ml-1">
                         {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
                     </span>
 
-                </template>
+                        </template>
 
-                <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
-                    <b-col cols="12">
-                        <b-input-group>
-                            <b-form-input type="text" :placeholder="$t('Food')"
-                                          v-model="new_item.ingredient"
-                                          @keyup.enter="addItem"
-                                          ref="amount_input_simple"></b-form-input>
-                            <b-input-group-append>
-                                <b-button variant="success">
-                                    <i class="fas fa-cart-plus fa-fw" @click="addItem"/>
-                                </b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                    </b-col>
-                </b-row>
+                        <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
+                            <b-col cols="12">
+                                <b-input-group>
+                                    <b-form-input type="text" :placeholder="$t('Food')"
+                                                  v-model="new_item.ingredient"
+                                                  @keyup.enter="addItem"
+                                                  ref="amount_input_simple"></b-form-input>
+                                    <b-input-group-append>
+                                        <b-button variant="success">
+                                            <i class="fas fa-cart-plus fa-fw" @click="addItem"/>
+                                        </b-button>
+                                    </b-input-group-append>
+                                </b-input-group>
+                            </b-col>
+                        </b-row>
 
-                <!-- --------------------------------------- shopping list table -->
-                <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
-                    <b-col cols="12"
-                           v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
-                        <b-button-group class="w-100 mt-1"
-                                        :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
-                            <b-button variant="info" block class="btn btn-block text-left">
+                        <!-- --------------------------------------- shopping list table -->
+                        <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
+                            <b-col cols="12"
+                                   v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
+                                <b-button-group class="w-100 mt-1"
+                                                :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
+                                    <b-button variant="info" block class="btn btn-block text-left">
                                 <span v-if="c.name === shopping_list_store.UNDEFINED_CATEGORY">{{
                                         $t('Undefined')
                                     }}</span>
-                                <span v-else>{{ c.name }}</span>
-                            </b-button>
-                            <b-button
-                                :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
-                                @click="checkGroup(c, (c.count_unchecked > 0))">
-                                <i class="fas fa-fw"
-                                   :class="{'fa-check':(c.count_unchecked > 0), 'fa-cart-plus':(c.count_unchecked <= 0) }"></i>
-                            </b-button>
-                        </b-button-group>
+                                        <span v-else>{{ c.name }}</span>
+                                    </b-button>
+                                    <b-button
+                                        :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
+                                        @click="checkGroup(c, (c.count_unchecked > 0))">
+                                        <i class="fas fa-fw"
+                                           :class="{'fa-check':(c.count_unchecked > 0), 'fa-cart-plus':(c.count_unchecked <= 0) }"></i>
+                                    </b-button>
+                                </b-button-group>
 
-                        <span v-for="f in c.foods" v-bind:key="f.id">
+                                <span v-for="f in c.foods" v-bind:key="f.id">
                             <shopping-line-item :entries="f['entries']" class="mt-1"/>
                         </span>
-                    </b-col>
-                </b-row>
-
-            </b-tab>
-            <!-- --------------------------------------- recipe tab -->
-            <b-tab :title="$t('Recipes')">
-                <template #title>
-                    <i class="fas fa-book fa-fw"></i>
-                    <span class="d-none d-md-inline-block ml-1">{{
-                            $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
-                        }}</span>
-                </template>
-
-                <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
-                    <b-col cols="12">
-                        <generic-multiselect
-                            :model="Models.RECIPE"
-                            :multiple="false"
-                            @change="addRecipeToShopping($event.val)"
-                        ></generic-multiselect>
-                    </b-col>
-                </b-row>
-
-                <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id"
-                       class="pr-1 pl-1">
-                    <b-col cols="12">
-
-                        <b-button-group class="w-100 mt-2">
-
-                            <div class="card flex-grow-1 btn-block p-2">
-                                <span>{{ r.recipe_name }}</span>
-                                <span v-if="r.mealplan_type"><small class="text-muted">{{ r.mealplan_type }} {{ formatDate(r.mealplan_from_date) }}</small></span>
-                            </div>
-
-
-                            <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
-                                class="fas fa-trash fa-fw"></i></b-button>
-                        </b-button-group>
-
-                        <number-scaler-component :number="r.servings" @change="updateServings(r, $event)"
-                                                 :disable="useShoppingListStore().currently_updating"></number-scaler-component>
-                        <hr class="m-2"/>
-                    </b-col>
-
-                </b-row>
-            </b-tab>
-            <!-- --------------------------------------- supermarkets tab -->
-            <b-tab>
-                <template #title>
-                    <i class="fas fa-store-alt fa-fw"></i>
-                    <span class="d-none d-md-inline-block ml-1">{{
-                            $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})`
-                        }}</span>
-                </template>
-                <div class="container p-0">
-                    <div class="row">
-                        <div class="col col-md-12 p-0 p-lg-3">
-                            <b-col role="tablist">
-                                <!-- add to shopping form -->
-                                <div class="container">
-                                    <b-row>
-                                        <b-col cols="12" md="6">
-                                            <h5>{{ $t("Supermarkets") }}
-                                                <span class="float-right text-primary" style="cursor: pointer"><i
-                                                    class="fa fa-plus-circle" v-plus-button
-                                                    @click="addSupermarket"
-                                                    aria-hidden="true"></i
-                                                ></span></h5>
-                                            <b-list-group>
-                                                <b-card no-body class="mt-1 list-group-item p-2"
-                                                        v-for="(supermarket, index) in shopping_list_store.supermarkets"
-                                                        v-hover
-                                                        :key="supermarket.id">
-                                                    <b-card-header class="p-2 border-0">
-                                                        <b-row>
-                                                            <b-col cols="12">
-                                                                <h5 class="mt-1 mb-1">
-                                                                    {{ supermarket.name }}
-                                                                    <span class="float-right text-primary"
-                                                                          style="cursor: pointer"
-                                                                    ><i class="fa"
-                                                                        v-bind:class="{ 'fa-pen': !supermarket.editing, 'fa-save': supermarket.editing }"
-                                                                        @click="editOrSaveSupermarket(index)"
-                                                                        aria-hidden="true"></i
-                                                                    ></span>
-                                                                </h5>
-                                                                <span class="text-muted"
-                                                                      v-if="supermarket.description !== ''">{{
-                                                                        supermarket.description
-                                                                    }}</span>
-                                                            </b-col>
-                                                        </b-row>
-                                                    </b-card-header>
-                                                    <b-card-body class="p-4" v-if="supermarket.editing">
-                                                        <div class="form-group">
-                                                            <label>{{ $t("Name") }}</label>
-                                                            <input class="form-control" :placeholder="$t('Name')"
-                                                                   v-model="supermarket.name"/>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>{{ $t("Description") }}</label>
-                                                            <input class="form-control" :placeholder="$t('Description')"
-                                                                   v-model="supermarket.description"/>
-                                                        </div>
-                                                        <button class="btn btn-danger"
-                                                                @click="deleteSupermarket(index)">
-                                                            {{ $t("Delete") }}
-                                                        </button>
-                                                        <button class="btn btn-primary float-right"
-                                                                @click="editOrSaveSupermarket(index)">
-                                                            {{ $t("Save") }}
-                                                        </button>
-                                                    </b-card-body>
-                                                </b-card>
-                                            </b-list-group>
-                                        </b-col>
-                                        <b-col cols="12" md="6">
-                                            <h5 v-if="editingSupermarket.length > 0">{{ $t("Shopping_Categories") }} -
-                                                {{ editingSupermarket[0].name }}</h5>
-                                            <h5 v-else>{{ $t("Shopping_Categories") }}
-                                                <span class="float-right text-primary" v-plus-button
-                                                      style="cursor: pointer"><i
-                                                    class="fa fa-plus-circle" v-plus-button
-                                                    @click="addSupermarketCategory"
-                                                    aria-hidden="true"></i
-                                                ></span>
-                                            </h5>
-                                            <div v-if="editingSupermarket.length === 0">
-                                                <b-list-group>
-                                                    <b-card no-body class="mt-1 list-group-item p-2"
-                                                            v-for="(category, index) in shopping_list_store.supermarket_categories"
-                                                            v-hover
-                                                            :key="category.id">
-                                                        <b-card-header class="p-2 border-0">
-                                                            <b-row>
-                                                                <b-col cols="12">
-                                                                    <h5 class="mt-1 mb-1">
-                                                                        {{ category.name }}
-                                                                        <span class="float-right text-primary"
-                                                                              style="cursor: pointer"
-                                                                        ><i class="fa"
-                                                                            v-bind:class="{ 'fa-pen': !category.editing, 'fa-save': category.editing }"
-                                                                            @click="editOrSaveSupermarketCategory(index)"
-                                                                            aria-hidden="true"></i
-                                                                        ></span>
-                                                                    </h5>
-                                                                </b-col>
-                                                            </b-row>
-                                                        </b-card-header>
-                                                        <b-card-body class="p-4" v-if="category.editing">
-                                                            <div class="form-group">
-                                                                <label>{{ $t("Name") }}</label>
-                                                                <input class="form-control" :placeholder="$t('Name')"
-                                                                       v-model="category.name"/>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label>{{ $t("Description") }}</label>
-                                                                <input class="form-control"
-                                                                       :placeholder="$t('Description')"
-                                                                       v-model="category.description"/>
-                                                            </div>
-                                                            <button class="btn btn-danger"
-                                                                    @click="deleteSupermarketCategory(index)">
-                                                                {{ $t("Delete") }}
-                                                            </button>
-                                                            <button class="btn btn-primary float-right"
-                                                                    @click="editOrSaveSupermarketCategory(index)">
-                                                                {{ $t("Save") }}
-                                                            </button>
-                                                        </b-card-body>
-                                                    </b-card>
-                                                </b-list-group>
-                                            </div>
-                                            <div v-else>
-                                                <draggable :list="editing_supermarket_categories" group="categories"
-                                                           :empty-insert-threshold="10"
-                                                           @change="sortSupermarketCategories"
-                                                           ghost-class="ghost">
-                                                    <b-card no-body class="mt-1 list-group-item p-2"
-                                                            style="cursor: move"
-                                                            v-for="(category, index) in editing_supermarket_categories"
-                                                            v-hover
-                                                            :key="category.id">
-                                                        <b-card-header class="p-2 border-0">
-                                                            <div class="row">
-                                                                <div class="col-2">
-                                                                    <button type="button"
-                                                                            class="btn btn-lg shadow-none"><i
-                                                                        class="fas fa-arrows-alt-v"></i></button>
-                                                                </div>
-                                                                <div class="col-10">
-                                                                    <h5 class="mt-1 mb-1">
-                                                                        <b-badge class="float-left text-white mr-2">
-                                                                            #{{ index + 1 }}
-                                                                        </b-badge>
-                                                                        {{ category.name }}
-                                                                        <span class="float-right text-primary"
-                                                                              style="cursor: pointer"
-                                                                        ><i class="fa fa-minus-circle" v-minus-button
-                                                                            @click="removeSupermarketCategoryRelationAtIndex(index)"
-                                                                            aria-hidden="true"></i
-                                                                        ></span>
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
-                                                        </b-card-header>
-                                                    </b-card>
-                                                </draggable>
-                                                <h5>{{ $t("Available") }}</h5>
-                                                <draggable :list="unusedSupermarketCategories" group="categories"
-                                                           :empty-insert-threshold="10"
-                                                           ghost-class="ghost">
-                                                    <b-card no-body class="mt-1 list-group-item p-2"
-                                                            style="cursor: move"
-                                                            v-for="(category) in unusedSupermarketCategories"
-                                                            v-hover
-                                                            :key="category.id">
-                                                        <b-card-header class="p-2 border-0">
-                                                            <div class="row">
-                                                                <div class="col-2">
-                                                                    <button type="button"
-                                                                            class="btn btn-lg shadow-none"><i
-                                                                        class="fas fa-arrows-alt-v"></i></button>
-                                                                </div>
-                                                                <div class="col-10">
-                                                                    <h5 class="mt-1 mb-1">
-                                                                        {{ category.name }}
-                                                                        <span class="float-right text-primary"
-                                                                              style="cursor: pointer"
-                                                                        ><i class="fa fa-plus-circle" v-plus-button
-                                                                            @click="addSupermarketCategoryRelation(category)"
-                                                                            aria-hidden="true"></i
-                                                                        ></span>
-                                                                    </h5>
-                                                                </div>
-                                                            </div>
-                                                        </b-card-header>
-                                                    </b-card>
-                                                </draggable>
-                                            </div>
-                                        </b-col>
-                                    </b-row>
-                                </div>
                             </b-col>
+                        </b-row>
+
+                    </b-tab>
+                    <!-- --------------------------------------- recipe tab -->
+                    <b-tab :title="$t('Recipes')">
+                        <template #title>
+                            <i class="fas fa-book fa-fw"></i>
+                            <span class="d-none d-md-inline-block ml-1">{{
+                                    $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
+                                }}</span>
+                        </template>
+
+                        <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
+                            <b-col cols="12">
+                                <generic-multiselect
+                                    :model="Models.RECIPE"
+                                    :multiple="false"
+                                    @change="addRecipeToShopping($event.val)"
+                                ></generic-multiselect>
+                            </b-col>
+                        </b-row>
+
+                        <b-row v-for="r in shopping_list_store.getAssociatedRecipes()" :key="r.shopping_list_recipe_id"
+                               class="pr-1 pl-1">
+                            <b-col cols="12">
+
+                                <b-button-group class="w-100 mt-2">
+
+                                    <div class="card flex-grow-1 btn-block p-2">
+                                        <span>{{ r.recipe_name }}</span>
+                                        <span v-if="r.mealplan_type"><small class="text-muted">{{ r.mealplan_type }} {{ formatDate(r.mealplan_from_date) }}</small></span>
+                                    </div>
+
+
+                                    <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
+                                        class="fas fa-trash fa-fw"></i></b-button>
+                                </b-button-group>
+
+                                <number-scaler-component :number="r.servings" @change="updateServings(r, $event)"
+                                                         :disable="useShoppingListStore().currently_updating"></number-scaler-component>
+                                <hr class="m-2"/>
+                            </b-col>
+
+                        </b-row>
+                    </b-tab>
+                    <!-- --------------------------------------- supermarkets tab -->
+                    <b-tab>
+                        <template #title>
+                            <i class="fas fa-store-alt fa-fw"></i>
+                            <span class="d-none d-md-inline-block ml-1">{{
+                                    $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})`
+                                }}</span>
+                        </template>
+                        <div class="container p-0">
+                            <div class="row">
+                                <div class="col col-md-12 p-0 p-lg-3">
+                                    <b-col role="tablist">
+                                        <!-- add to shopping form -->
+                                        <div class="container">
+                                            <b-row>
+                                                <b-col cols="12" md="6">
+                                                    <h5>{{ $t("Supermarkets") }}
+                                                        <span class="float-right text-primary" style="cursor: pointer"><i
+                                                            class="fa fa-plus-circle" v-plus-button
+                                                            @click="addSupermarket"
+                                                            aria-hidden="true"></i
+                                                        ></span></h5>
+                                                    <b-list-group>
+                                                        <b-card no-body class="mt-1 list-group-item p-2"
+                                                                v-for="(supermarket, index) in shopping_list_store.supermarkets"
+                                                                v-hover
+                                                                :key="supermarket.id">
+                                                            <b-card-header class="p-2 border-0">
+                                                                <b-row>
+                                                                    <b-col cols="12">
+                                                                        <h5 class="mt-1 mb-1">
+                                                                            {{ supermarket.name }}
+                                                                            <span class="float-right text-primary"
+                                                                                  style="cursor: pointer"
+                                                                            ><i class="fa"
+                                                                                v-bind:class="{ 'fa-pen': !supermarket.editing, 'fa-save': supermarket.editing }"
+                                                                                @click="editOrSaveSupermarket(index)"
+                                                                                aria-hidden="true"></i
+                                                                            ></span>
+                                                                        </h5>
+                                                                        <span class="text-muted"
+                                                                              v-if="supermarket.description !== ''">{{
+                                                                                supermarket.description
+                                                                            }}</span>
+                                                                    </b-col>
+                                                                </b-row>
+                                                            </b-card-header>
+                                                            <b-card-body class="p-4" v-if="supermarket.editing">
+                                                                <div class="form-group">
+                                                                    <label>{{ $t("Name") }}</label>
+                                                                    <input class="form-control" :placeholder="$t('Name')"
+                                                                           v-model="supermarket.name"/>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>{{ $t("Description") }}</label>
+                                                                    <input class="form-control" :placeholder="$t('Description')"
+                                                                           v-model="supermarket.description"/>
+                                                                </div>
+                                                                <button class="btn btn-danger"
+                                                                        @click="deleteSupermarket(index)">
+                                                                    {{ $t("Delete") }}
+                                                                </button>
+                                                                <button class="btn btn-primary float-right"
+                                                                        @click="editOrSaveSupermarket(index)">
+                                                                    {{ $t("Save") }}
+                                                                </button>
+                                                            </b-card-body>
+                                                        </b-card>
+                                                    </b-list-group>
+                                                </b-col>
+                                                <b-col cols="12" md="6">
+                                                    <h5 v-if="editingSupermarket.length > 0">{{ $t("Shopping_Categories") }} -
+                                                        {{ editingSupermarket[0].name }}</h5>
+                                                    <h5 v-else>{{ $t("Shopping_Categories") }}
+                                                        <span class="float-right text-primary" v-plus-button
+                                                              style="cursor: pointer"><i
+                                                            class="fa fa-plus-circle" v-plus-button
+                                                            @click="addSupermarketCategory"
+                                                            aria-hidden="true"></i
+                                                        ></span>
+                                                    </h5>
+                                                    <div v-if="editingSupermarket.length === 0">
+                                                        <b-list-group>
+                                                            <b-card no-body class="mt-1 list-group-item p-2"
+                                                                    v-for="(category, index) in shopping_list_store.supermarket_categories"
+                                                                    v-hover
+                                                                    :key="category.id">
+                                                                <b-card-header class="p-2 border-0">
+                                                                    <b-row>
+                                                                        <b-col cols="12">
+                                                                            <h5 class="mt-1 mb-1">
+                                                                                {{ category.name }}
+                                                                                <span class="float-right text-primary"
+                                                                                      style="cursor: pointer"
+                                                                                ><i class="fa"
+                                                                                    v-bind:class="{ 'fa-pen': !category.editing, 'fa-save': category.editing }"
+                                                                                    @click="editOrSaveSupermarketCategory(index)"
+                                                                                    aria-hidden="true"></i
+                                                                                ></span>
+                                                                            </h5>
+                                                                        </b-col>
+                                                                    </b-row>
+                                                                </b-card-header>
+                                                                <b-card-body class="p-4" v-if="category.editing">
+                                                                    <div class="form-group">
+                                                                        <label>{{ $t("Name") }}</label>
+                                                                        <input class="form-control" :placeholder="$t('Name')"
+                                                                               v-model="category.name"/>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label>{{ $t("Description") }}</label>
+                                                                        <input class="form-control"
+                                                                               :placeholder="$t('Description')"
+                                                                               v-model="category.description"/>
+                                                                    </div>
+                                                                    <button class="btn btn-danger"
+                                                                            @click="deleteSupermarketCategory(index)">
+                                                                        {{ $t("Delete") }}
+                                                                    </button>
+                                                                    <button class="btn btn-primary float-right"
+                                                                            @click="editOrSaveSupermarketCategory(index)">
+                                                                        {{ $t("Save") }}
+                                                                    </button>
+                                                                </b-card-body>
+                                                            </b-card>
+                                                        </b-list-group>
+                                                    </div>
+                                                    <div v-else>
+                                                        <draggable :list="editing_supermarket_categories" group="categories"
+                                                                   :empty-insert-threshold="10"
+                                                                   @change="sortSupermarketCategories"
+                                                                   ghost-class="ghost">
+                                                            <b-card no-body class="mt-1 list-group-item p-2"
+                                                                    style="cursor: move"
+                                                                    v-for="(category, index) in editing_supermarket_categories"
+                                                                    v-hover
+                                                                    :key="category.id">
+                                                                <b-card-header class="p-2 border-0">
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <button type="button"
+                                                                                    class="btn btn-lg shadow-none"><i
+                                                                                class="fas fa-arrows-alt-v"></i></button>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            <h5 class="mt-1 mb-1">
+                                                                                <b-badge class="float-left text-white mr-2">
+                                                                                    #{{ index + 1 }}
+                                                                                </b-badge>
+                                                                                {{ category.name }}
+                                                                                <span class="float-right text-primary"
+                                                                                      style="cursor: pointer"
+                                                                                ><i class="fa fa-minus-circle" v-minus-button
+                                                                                    @click="removeSupermarketCategoryRelationAtIndex(index)"
+                                                                                    aria-hidden="true"></i
+                                                                                ></span>
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                </b-card-header>
+                                                            </b-card>
+                                                        </draggable>
+                                                        <h5>{{ $t("Available") }}</h5>
+                                                        <draggable :list="unusedSupermarketCategories" group="categories"
+                                                                   :empty-insert-threshold="10"
+                                                                   ghost-class="ghost">
+                                                            <b-card no-body class="mt-1 list-group-item p-2"
+                                                                    style="cursor: move"
+                                                                    v-for="(category) in unusedSupermarketCategories"
+                                                                    v-hover
+                                                                    :key="category.id">
+                                                                <b-card-header class="p-2 border-0">
+                                                                    <div class="row">
+                                                                        <div class="col-2">
+                                                                            <button type="button"
+                                                                                    class="btn btn-lg shadow-none"><i
+                                                                                class="fas fa-arrows-alt-v"></i></button>
+                                                                        </div>
+                                                                        <div class="col-10">
+                                                                            <h5 class="mt-1 mb-1">
+                                                                                {{ category.name }}
+                                                                                <span class="float-right text-primary"
+                                                                                      style="cursor: pointer"
+                                                                                ><i class="fa fa-plus-circle" v-plus-button
+                                                                                    @click="addSupermarketCategoryRelation(category)"
+                                                                                    aria-hidden="true"></i
+                                                                                ></span>
+                                                                            </h5>
+                                                                        </div>
+                                                                    </div>
+                                                                </b-card-header>
+                                                            </b-card>
+                                                        </draggable>
+                                                    </div>
+                                                </b-col>
+                                            </b-row>
+                                        </div>
+                                    </b-col>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </b-tab>
-            <!-- --------------------------------------- settings tab -->
-            <b-tab>
-                <template #title>
-                    <i class="fas fa-user-cog fa-fw"></i>
-                    <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
-                </template>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-8">
-                        <shopping-settings-component></shopping-settings-component>
-                    </div>
-                </div>
-            </b-tab>
-        </b-tabs>
+                    </b-tab>
+                    <!-- --------------------------------------- settings tab -->
+                    <b-tab>
+                        <template #title>
+                            <i class="fas fa-user-cog fa-fw"></i>
+                            <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
+                        </template>
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8">
+                                <shopping-settings-component></shopping-settings-component>
+                            </div>
+                        </div>
+                    </b-tab>
+                </b-tabs>
+            </div>
+        </div>
+
 
         <!-- TODO maybe change to a modal ? -->
         <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
