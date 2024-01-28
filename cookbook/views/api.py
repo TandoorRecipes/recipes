@@ -643,13 +643,12 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
                 if pt.fdc_id:
                     for fn in data['foodNutrients']:
                         if fn['nutrient']['id'] == pt.fdc_id:
-                            food_property_list.append(
-                                Property(
-                                    property_type_id=pt.id,
-                                    property_amount=round(fn['amount'], 2),
-                                    import_food_id=food.id,
-                                    space=self.request.space,
-                                ))
+                            food_property_list.append(Property(
+                                property_type_id=pt.id,
+                                property_amount=round(fn['amount'], 2),
+                                import_food_id=food.id,
+                                space=self.request.space,
+                            ))
 
             Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
 

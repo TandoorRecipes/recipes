@@ -78,8 +78,12 @@ class ConnectorConfigCreate(GroupRequiredMixin, CreateView):
     success_url = reverse_lazy('list_connector_config')
 
     def form_valid(self, form):
-        if self.request.space.demo or settings.HOSTED:
+        if self.request.space.demo:
             messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
+
+        if settings.DISABLE_EXTERNAL_CONNECTORS:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not enabled by the server admin!'))
             return redirect('index')
 
         obj = form.save(commit=False)
