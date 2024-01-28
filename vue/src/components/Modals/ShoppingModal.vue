@@ -34,7 +34,6 @@
                                 <div v-for="i in r.steps.flatMap((s) => s.ingredients)" v-bind:key="i.id">
                                     <table class="table table-sm mb-0">
                                         <ingredient-component
-                                            :use_plural="true"
                                             :key="i.id"
                                             :detailed="true"
                                             :ingredient="i"
