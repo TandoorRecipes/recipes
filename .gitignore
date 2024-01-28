@@ -54,7 +54,6 @@ docs/_build/
 target/
 
 \.idea/dataSources/
-.idea
 \.idea/dataSources\.xml
 
 \.idea/dataSources\.local\.xml

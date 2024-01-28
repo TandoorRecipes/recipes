@@ -15,7 +15,6 @@ from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
 from cookbook.models import (Food, MealPlan, PropertyType, Recipe, SearchFields, SearchPreference,
                              Step, Unit, UserPreference)
-from recipes.settings import ENABLE_EXTERNAL_CONNECTORS
 
 SQLITE = True
 if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
@@ -165,7 +164,7 @@ def clear_property_type_cache(sender, instance=None, created=False, **kwargs):
         caches['default'].delete(CacheHelper(instance.space).PROPERTY_TYPE_CACHE_KEY)
 
 
-if ENABLE_EXTERNAL_CONNECTORS:
+if not settings.DISABLE_EXTERNAL_CONNECTORS:
     handler = ConnectorManager()
     post_save.connect(handler, dispatch_uid="connector_manager")
     post_delete.connect(handler, dispatch_uid="connector_manager")
