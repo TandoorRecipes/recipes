@@ -56,7 +56,7 @@
                 <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
 
                 <b-button variant="info" block
-                          @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!this.is_delayed, true)">
+                          @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!is_delayed, true)">
                     {{ $t('Postpone') }}
                 </b-button>
 
@@ -89,7 +89,7 @@
                             </div>
                             <b-button variant="warning"
                                       @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i
-                                class="fas fa-trash"></i></b-button> <!-- TODO implement -->
+                                class="fas fa-trash"></i></b-button>
                         </b-button-group>
 
                         <number-scaler-component :number="e.amount"

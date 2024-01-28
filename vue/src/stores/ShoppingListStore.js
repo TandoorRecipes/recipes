@@ -37,7 +37,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
         GROUP_CATEGORY: 'food.supermarket_category.name',
         GROUP_CREATED_BY: 'created_by.display_name',
         GROUP_RECIPE: 'recipe_mealplan.recipe_name',
-        GROUP_MEALPLAN: 'recipe_mealplan.mealplan', //TODO give this some name from the API
 
         UNDEFINED_CATEGORY: 'shopping_undefined_category'
     }),
@@ -368,7 +367,6 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             if (navigator.onLine || document.location.href.includes('localhost')) {
                 let apiClient = new ApiApiFactory()
                 let promises = []
-                //TODO merge entries with same checked state before updating?
 
                 for (let i in this.item_check_sync_queue) {
                     let entry = this.item_check_sync_queue[i]
@@ -416,7 +414,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          * @param undo if the user should be able to undo the change or not
          */
         delayEntries(entries, delay, undo) {
-            let delay_hours = 4 //TODO get delay from settings in an offline friendly way
+            let delay_hours = useUserPreferenceStore().user_settings.default_delay
             let delay_date = new Date(Date.now() + delay_hours * (60 * 60 * 1000))
 
             if (undo) {
