@@ -23,8 +23,8 @@
                 <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
             </div>
             <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked)"
-                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
-                <i class="fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
+                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}" >
+                <i class="d-print-none fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
             </b-button>
         </b-button-group>
         <div class="swipe-action bg-primary justify-content-end">
