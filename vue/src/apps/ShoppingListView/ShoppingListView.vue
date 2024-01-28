@@ -6,15 +6,20 @@
 
         <div class="row">
             <div class="col-12 col-xl-8 offset-xl-2">
-                <div class="row float-top w-100">
-                    <div class="col-auto no-gutter ml-auto d-print-none">
-                        <i class="fas fa-undo fa-fw mr-2" @click="useShoppingListStore().undoChange()"></i>
 
-                        <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
-                            <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
-                               id="downloadShoppingLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-bottom: 20vh">
+                    <template #tabs-end>
+                        <li class="nav-item flex-grow-1" >
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadShoppingLink">
+                        </li>
+                        <li class="nav-item" >
+                            <a href="#" class="nav-link" @click="useShoppingListStore().undoChange()"> <i class="fas fa-undo fa-fw"></i>&nbsp;</a>
+                        </li>
+                        <li class="nav-item dropdown d-none d-md-inline-block" >
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-download" ></i>&nbsp;
+                            </a>
+                            <div class="dropdown-menu">
                                 <DownloadPDF dom="#shoppinglist" name="shopping.pdf" :label="$t('download_pdf')"
                                              icon="far fa-file-pdf"/>
                                 <DownloadCSV :items="shopping_list_store.get_flat_entries" :delim="user_preference_store.user_settings.csv_delim"
@@ -26,16 +31,16 @@
                                 <CopyToClipboard :items="shopping_list_store.get_flat_entries" :settings="user_preference_store.user_settings" format="table"
                                                  :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
                             </div>
-                        </b-button>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" id="id_filters_button">
+                                <i  class="fas fa-filter fa-fw"/>&nbsp;
+                            </a>
+                        </li>
+                    </template>
 
-                        <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"/>
-
-                    </div>
-                </div>
-
-                <b-tabs content-class="mt-2" v-model="current_tab" class="mt-md-1" style="margin-top: 22px;">
                     <!-- shopping list tab -->
-                    <b-tab active>
+                    <b-tab>
                         <template #title>
                             <div class="d-print-none">
                                 <i v-if="!shopping_list_store.currently_updating && useShoppingListStore().autosync_has_focus"
@@ -45,13 +50,14 @@
                                 <b-spinner v-if="shopping_list_store.currently_updating" type="border" small
                                            style="line-height: 1!important;width:1.25em!important; height: 1.25em!important;"></b-spinner>
 
-                                <span class="d-none d-md-inline-block ml-1">
+                                <span class="d-none d-lg-inline-block ml-1">
                                     {{ $t('Shopping_list') + ` (${shopping_list_store.total_unchecked_food})` }}
                                 </span>
                             </div>
                         </template>
 
-                        <b-row class="d-lg-block d-print-none d-none pr-1 pl-1 mb-3 mt-3">
+                        <!-- Entry input on large screens -->
+                        <b-row class="d-lg-block d-print-none d-none mb-3 mt-3">
                             <b-col cols="12">
                                 <b-input-group>
                                     <b-form-input type="text" :placeholder="$t('Food')"
@@ -68,7 +74,7 @@
                         </b-row>
 
                         <!-- --------------------------------------- shopping list table -->
-                        <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id" class="pr-1 pl-1">
+                        <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id">
                             <b-col cols="12"
                                    v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
                                 <b-button-group class="w-100 mt-1"
@@ -99,7 +105,7 @@
                         <template #title>
                             <div class="d-print-none">
                                 <i class="fas fa-book fa-fw"></i>
-                                <span class="d-none d-md-inline-block ml-1">{{
+                                <span class="d-none d-lg-inline-block ml-1">{{
                                         $t('Recipes') + ` (${Object.keys(shopping_list_store.getAssociatedRecipes()).length})`
                                     }}</span>
                             </div>
@@ -144,7 +150,7 @@
                         <template #title>
                             <div class="d-print-none">
                                 <i class="fas fa-store-alt fa-fw"></i>
-                                <span class="d-none d-md-inline-block ml-1">{{ $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})` }}</span>
+                                <span class="d-none d-lg-inline-block ml-1">{{ $t('Supermarkets') + ` (${shopping_list_store.supermarkets.length})` }}</span>
                             </div>
                         </template>
                         <div class="container p-0">
@@ -346,7 +352,7 @@
                         <template #title>
                             <div class="d-print-none">
                                 <i class="fas fa-user-cog fa-fw"></i>
-                                <span class="d-none d-md-inline-block ml-1">{{ $t('Settings') }}</span>
+<!--                                <span class="d-none d-lg-inline-block ml-1">{{ $t('Settings') }}</span>-->
                             </div>
                         </template>
                         <div class="row justify-content-center">
@@ -359,9 +365,8 @@
             </div>
         </div>
 
-
         <!-- TODO maybe change to a modal ? -->
-        <b-popover target="id_filters_button" triggers="click" placement="bottomleft" :title="$t('Filters')">
+        <b-popover target="id_filters_button" triggers="click blur" placement="bottomleft" :title="$t('Filters')">
             <div>
                 <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
                     <b-form-select v-model="user_preference_store.device_settings.shopping_selected_grouping" size="sm">
@@ -423,11 +428,9 @@
 
         <bottom-navigation-bar active-view="view_shopping">
             <template #custom_nav_content v-if="current_tab <= 1">
-                <b-row class="pr-1 pl-1 mb-3">
+                <b-row class="mb-2">
                     <b-col cols="12">
                         <template v-if="current_tab===0">
-
-
                             <b-input-group>
                                 <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
                                               @keyup.enter="addItem"></b-form-input>
@@ -921,99 +924,6 @@ export default {
 }
 </script>
 
-<!--style src="vue-multiselect/dist/vue-multiselect.min.css"></style-->
-
 <style>
-.rotate {
-    -moz-transition: all 0.25s linear;
-    -webkit-transition: all 0.25s linear;
-    transition: all 0.25s linear;
-}
-
-.btn[aria-expanded="true"] > .rotate {
-    -moz-transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
-}
-
-.float-top {
-    padding-bottom: -3em;
-    margin-bottom: -3em;
-}
-
-.float-up {
-    padding-top: -3em;
-    margin-top: -3em;
-}
-
-.ghost {
-    opacity: 0.5;
-    background: #c8ebfb;
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-    transition: all 0.2s ease;
-}
-
-.slide-fade-enter, .slide-fade-leave-to
-    /* .slider-fade-leave-active below version 2.1.8 */
-{
-    transform: translateX(10px);
-    opacity: 0;
-}
-
-.form-control-append {
-    font-size: 20px;
-}
-
-#shoppinglist {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: calc(100vh - 170px);
-}
-
-#id_base_container {
-    padding-right: 5px;
-    padding-left: 5px;
-}
-
-input {
-    font-size: 16px !important;
-}
-
-@media (max-width: 991.9px) {
-    #shoppinglist {
-        max-width: none;
-    }
-}
-
-@media (min-width: 992px) {
-    #shoppinglist {
-        overflow-y: auto;
-        overflow-x: auto;
-        height: auto;
-        margin: auto;
-    }
-
-    #id_base_container {
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-}
-
-.settings-checkbox {
-    font-size: 0.3rem;
-}
-
-@media (max-width: 767.9px) {
-    .recipe-table {
-        font-size: 14px;
-    }
-}
-
 
 </style>
