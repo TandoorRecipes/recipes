@@ -8,8 +8,7 @@
             <div class="col-12 col-xl-8 offset-xl-2">
                 <div class="row float-top w-100">
                     <div class="col-auto no-gutter ml-auto d-print-none">
-                        <b-button variant="link" @click="useShoppingListStore().undoChange()"><i class="fas fa-undo"></i>
-                        </b-button>
+                        <i class="fas fa-undo fa-fw mr-2" @click="useShoppingListStore().undoChange()"></i>
 
                         <b-button variant="link" class="px-1 pt-0 pb-1 d-none d-md-inline-block">
                             <i class="fas fa-download fa-lg nav-link dropdown-toggle text-primary px-1"
@@ -28,8 +27,9 @@
                                                  :label="$t('copy_markdown_table')" icon="fab fa-markdown"/>
                             </div>
                         </b-button>
-                        <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"
-                        />
+
+                        <i id="id_filters_button" class="fas fa-filter fa-fw mt-1" style="font-size: 16px; cursor: pointer"/>
+
                     </div>
                 </div>
 
@@ -79,8 +79,8 @@
                                         <span v-else>{{ c.name }}</span>
                                     </b-button>
                                     <b-button class="d-print-none "
-                                        :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
-                                        @click="checkGroup(c, (c.count_unchecked > 0))">
+                                              :class="{'btn-success':(c.count_unchecked > 0), 'btn-warning': (c.count_unchecked <= 0)}"
+                                              @click="checkGroup(c, (c.count_unchecked > 0))">
                                         <i class="fas fa-fw"
                                            :class="{'fa-check':(c.count_unchecked > 0), 'fa-cart-plus':(c.count_unchecked <= 0) }"></i>
                                     </b-button>
