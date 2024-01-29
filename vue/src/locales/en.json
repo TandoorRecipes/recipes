@@ -503,6 +503,7 @@
 	"Reset": "Reset",
 	"Disabled": "Disabled",
 	"Disable": "Disable",
+	"Enable": "Enable",
 	"Options": "Options",
 	"Create Food": "Create Food",
 	"create_food_desc": "Create a food and link it to this recipe.",

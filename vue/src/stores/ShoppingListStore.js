@@ -125,8 +125,12 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
 
             return ordered_structure
         },
+        /**
+         * flattened list of entries used for exporters
+         * kinda uncool but works for now
+         * @return {*[]}
+         */
         get_flat_entries: function () {
-            //{amount: x.amount, unit: x.unit?.name ?? "", food: x.food?.name ?? ""}
             let items = []
             for (let i in this.get_entries_by_group) {
                 for (let f in this.get_entries_by_group[i]['foods']) {
@@ -434,6 +438,21 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             for (let i in entries) {
                 this.deleteObject(this.entries[i])
             }
+        },
+        deleteShoppingListRecipe(shopping_list_recipe_id) {
+            let api = new ApiApiFactory()
+
+            for (let i in this.entries) {
+                if (this.entries[i].list_recipe === shopping_list_recipe_id) {
+                    Vue.delete(this.entries, i)
+                }
+            }
+
+            api.destroyShoppingListRecipe(shopping_list_recipe_id).then((x) => {
+                // no need to update anything, entries were already removed
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
+            })
         },
         /**
          * register the change to a set of entries to allow undoing it

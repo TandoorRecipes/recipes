@@ -134,7 +134,7 @@
                                     </div>
 
 
-                                    <b-button variant="danger" @click="deleteRecipe(r.shopping_list_recipe_id)"><i
+                                    <b-button variant="danger" @click="useShoppingListStore().deleteShoppingListRecipe(r.shopping_list_recipe_id)"><i
                                         class="fas fa-trash fa-fw"></i></b-button>
                                 </b-button-group>
 
@@ -605,18 +605,7 @@ export default {
                 })
             }
         },
-        /**
-         * delete shopping list recipe, associated entries are deleted automatically by database
-         * @param shopping_list_recipe_id id of shopping list recipe to delete
-         */
-        deleteRecipe: function (shopping_list_recipe_id) {
-            let api = new ApiApiFactory()
-            api.destroyShoppingListRecipe(shopping_list_recipe_id).then((x) => {
-                useShoppingListStore().refreshFromAPI() //TODO only do partial refresh
-            }).catch((err) => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
-            })
-        },
+
         /**
          * change number of servings of a shopping list recipe
          * backend handles scaling of associated entries
@@ -680,10 +669,9 @@ export default {
          * add new supermarket to list of supermarkets
          */
         addSupermarket: function () {
-            // TODO integrate into store
             let api = new ApiApiFactory()
             api.createSupermarket({name: this.$t('Supermarket') + Math.floor(1000 + Math.random() * 9000)}).then((r) => {
-                this.shopping_list_store.supermarkets.push(r.data)
+                useShoppingListStore().supermarkets.push(r.data)
                 this.new_supermarket.value = undefined
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
@@ -880,12 +868,12 @@ export default {
             })
         },
         /**
-         * called after adding a new recipe trough the shopping modal
+         * called after adding a new recipe through the shopping modal
          * cleanup and data refresh
          */
         finishShopping() {
             this.new_recipe = {id: undefined}
-            useShoppingListStore().refreshFromAPI() //TODO only do partial fetch
+            useShoppingListStore().autosync()
         },
     },
     directives: {
