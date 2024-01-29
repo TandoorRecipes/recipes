@@ -1321,3 +1321,9 @@ textarea:not(.form-control) {
     border: 0 !important;
 }
 </style>
+
+<style scoped>
+.row.fixed-bottom {
+    margin: 0;
+}
+</style>

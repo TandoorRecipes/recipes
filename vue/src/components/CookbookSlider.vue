@@ -20,7 +20,7 @@
                     <cookbook-toc :recipes="recipes" v-if="current_page === 1" v-on:switchRecipe="switchRecipe($event)"></cookbook-toc>
                 </transition>
                 <transition name="flip" mode="out-in">
-                    <recipe-card :recipe="display_recipes[1].recipe_content" v-if="current_page > 1 && display_recipes.length === 2" :key="display_recipes[1].recipe" :use_plural="use_plural"></recipe-card>
+                    <recipe-card :recipe="display_recipes[1].recipe_content" v-if="current_page > 1 && display_recipes.length === 2" :key="display_recipes[1].recipe" ></recipe-card>
                 </transition>
             </div>
             <div class="col-md-1" @click="swipeLeft" style="cursor: pointer"></div>
@@ -57,10 +57,7 @@ export default {
         }
     },
     mounted(){
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
-            this.use_plural = r.data.use_plural
-        })
+
     },
     data() {
         return {
@@ -69,7 +66,6 @@ export default {
             bounce_left: false,
             bounce_right: false,
             cookbook_editing: false,
-            use_plural: false,
         }
     },
     methods: {
