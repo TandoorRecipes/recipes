@@ -1165,6 +1165,10 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
 
+        today_start = timezone.now().replace(hour=0, minute=0, second=0)
+        week_ago = today_start - datetime.timedelta(days=max(self.request.user.userpreference.shopping_recent_days, 14))
+        self.queryset = self.queryset.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
+
         try:
             last_autosync = self.request.query_params.get('last_autosync', None)
             if last_autosync:
@@ -1175,7 +1179,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
 
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
-        return self.queryset
+        return self.queryset[:1000]
 
     @decorators.action(
         detail=False,
