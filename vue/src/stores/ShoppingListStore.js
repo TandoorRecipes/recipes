@@ -242,12 +242,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          */
         createObject(object) {
             let apiClient = new ApiApiFactory()
-
-            // TODO shared handled in backend?
-
             return apiClient.createShoppingListEntry(object).then((r) => {
                 Vue.set(this.entries, r.data.id, r.data)
-
                 this.registerChange('CREATED', {[r.data.id]: r.data},)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
@@ -317,7 +313,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
          */
         updateEntryInStructure(structure, entry, group) {
             let grouping_key = _.get(entry, group, this.UNDEFINED_CATEGORY)
-            // todo handele parent
+
             if (grouping_key === undefined || grouping_key === null) {
                 grouping_key = this.UNDEFINED_CATEGORY
             }
