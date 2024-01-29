@@ -321,6 +321,10 @@ export default {
     display: none;
 }
 
+.swipe-container {
+    scrollbar-width: none; /* For Firefox */
+}
+
 /* main element should always snap into view */
 .swipe-element {
     scroll-snap-align: start;
