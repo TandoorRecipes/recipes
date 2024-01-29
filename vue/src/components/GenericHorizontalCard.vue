@@ -76,8 +76,7 @@
             <div class="col-md-10 offset-md-2">
                 <generic-horizontal-card v-for="child in item[children]"
                                          v-bind:key="child.id" 
-                                         :item="child" :model="model" 
-                                         :use_plural="use_plural" 
+                                         :item="child" :model="model"
                                          @item-action="$emit('item-action', $event)"></generic-horizontal-card>
             </div>
         </div>
@@ -160,7 +159,6 @@ export default {
         recipe_count: { type: String, default: "numrecipe" },
         recipes: { type: String, default: "recipes" },
         show_context_menu: { type: Boolean, default: true },
-        use_plural: { type: Boolean, default: false},
     },
     data() {
         return {

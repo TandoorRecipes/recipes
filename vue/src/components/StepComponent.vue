@@ -90,7 +90,6 @@
                                         :index="index"
                                         :start_time="start_time"
                                         :force_ingredients="true"
-                                        :use_plural="use_plural"
                                     ></step-component>
                                 </div>
                             </div>
@@ -144,10 +143,6 @@ export default {
         recipe: Object,
         start_time: String,
         force_ingredients: {
-            type: Boolean,
-            default: false,
-        },
-        use_plural: {
             type: Boolean,
             default: false,
         },

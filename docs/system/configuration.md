@@ -524,6 +524,18 @@ The default value for the user preference 'sticky navigation' (always show navba
 STICKY_NAV_PREF_DEFAULT=1
 ```
 
+#### Max owned spaces
+
+> default `100` - options: `0-X`
+
+The default for the number of spaces a user can own. By setting to 0 space creation for users will be disabled. 
+Superusers can always bypass this limit.
+
+```
+MAX_OWNED_SPACES_PREF_DEFAULT=100
+```
+
+
 ### Cosmetic / Preferences
 
 #### Timezone
@@ -546,6 +558,15 @@ With this setting you can specify the ID of a space of which the appearance sett
 
 ```
 UNAUTHENTICATED_THEME_FROM_SPACE=
+```
+
+#### Force Theme
+> default `0` - options `1-X` (space ID)
+
+Similar to the Default theme but forces the theme upon all users (authenticated/unauthenticated) and all spaces
+
+```
+FORCE_THEME_FROM_SPACE=
 ```
 
 ### Rate Limiting / Performance
