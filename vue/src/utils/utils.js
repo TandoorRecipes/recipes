@@ -131,7 +131,7 @@ export class StandardToasts {
         }
 
 
-        let DEBUG = localStorage.getItem("DEBUG") === "True" || always_show_errors
+        let DEBUG = (localStorage.getItem("DEBUG") === "True" || always_show_errors) && variant !== 'success'
         if (DEBUG){
             console.log('ERROR ', err, JSON.stringify(err?.response?.data))
             console.trace();

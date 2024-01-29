@@ -95,10 +95,10 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
                 for (s in settings) {
                     Vue.set(this.user_settings, s, settings[s])
                 }
-                //console.log(`loaded local user settings age ${((new Date().getTime()) - this.user_settings.locally_updated_at) / 1000} `)
+                console.log(`loaded local user settings age ${((new Date().getTime()) - this.user_settings.locally_updated_at) / 1000} `)
             }
             if (((new Date().getTime()) - this.user_settings.locally_updated_at) > _STALE_TIME_IN_MS || !allow_cached_results) {
-                //console.log('refreshing user settings from API')
+                console.log('refreshing user settings from API')
                 let apiClient = new ApiApiFactory()
                 apiClient.retrieveUserPreference(localStorage.getItem('USER_ID')).then(r => {
                     for (s in r.data) {

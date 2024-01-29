@@ -13,7 +13,7 @@
 
         <b-form-group :label="$t('shopping_auto_sync')" :description="$t('shopping_auto_sync_desc')">
             <b-form-input type="range" :min="SHOPPING_MIN_AUTOSYNC_INTERVAL" max="60" step="1" v-model="useUserPreferenceStore().user_settings.shopping_auto_sync"
-                          @change="updateSettings(false)"></b-form-input>
+                          @change="updateSettings(false)" :disabled="useUserPreferenceStore().user_settings.shopping_auto_sync < 1"></b-form-input>
             <div class="text-center">
                 <span v-if="useUserPreferenceStore().user_settings.shopping_auto_sync > 0">
                     {{ Math.round(useUserPreferenceStore().user_settings.shopping_auto_sync) }}
@@ -24,7 +24,10 @@
                 <span v-if="useUserPreferenceStore().user_settings.shopping_auto_sync < 1">{{ $t('Disable') }}</span>
             </div>
             <br/>
-                <b-button class="btn btn-sm" @click="useUserPreferenceStore().user_settings.shopping_auto_sync = 0; updateSettings(false)">{{ $t('Disabled') }}</b-button>
+                <b-button class="btn btn-sm" @click="useUserPreferenceStore().user_settings.shopping_auto_sync = 0; updateSettings(false)"
+                v-if="useUserPreferenceStore().user_settings.shopping_auto_sync > 0">{{ $t('Disable') }}</b-button>
+                <b-button class="btn btn-sm btn-success" @click="useUserPreferenceStore().user_settings.shopping_auto_sync = SHOPPING_MIN_AUTOSYNC_INTERVAL; updateSettings(false)"
+                v-if="useUserPreferenceStore().user_settings.shopping_auto_sync < 1">{{ $t('Enable') }}</b-button>
         </b-form-group>
 
         <b-form-group :description="$t('mealplan_autoadd_shopping_desc')">
