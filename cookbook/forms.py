@@ -495,7 +495,7 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'use_plural')
+        fields = ('food_inherit', 'reset_food_inherit',)
 
         help_texts = {
             'food_inherit': _('Fields on food that should be inherited by default.'),

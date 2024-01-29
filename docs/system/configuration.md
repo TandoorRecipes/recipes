@@ -570,6 +570,15 @@ With this setting you can specify the ID of a space of which the appearance sett
 UNAUTHENTICATED_THEME_FROM_SPACE=
 ```
 
+#### Force Theme
+> default `0` - options `1-X` (space ID)
+
+Similar to the Default theme but forces the theme upon all users (authenticated/unauthenticated) and all spaces
+
+```
+FORCE_THEME_FROM_SPACE=
+```
+
 ### Rate Limiting / Performance
 
 #### Shopping auto sync

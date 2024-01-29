@@ -1728,10 +1728,10 @@ def get_plan_ical(request, from_date, to_date):
     ).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
 
     if from_date is not None:
-        queryset = queryset.filter(date__gte=from_date)
+        queryset = queryset.filter(from_date__gte=from_date)
 
     if to_date is not None:
-        queryset = queryset.filter(date__lte=to_date)
+        queryset = queryset.filter(to_date__lte=to_date)
 
     cal = Calendar()
 
