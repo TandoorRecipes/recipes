@@ -3,7 +3,7 @@ from django.templatetags.static import static
 from django_scopes import scopes_disabled
 
 from cookbook.models import UserPreference, UserFile, Space
-from recipes.settings import STICKY_NAV_PREF_DEFAULT, UNAUTHENTICATED_THEME_FROM_SPACE
+from recipes.settings import STICKY_NAV_PREF_DEFAULT, UNAUTHENTICATED_THEME_FROM_SPACE, FORCE_THEME_FROM_SPACE
 
 register = template.Library()
 
@@ -15,11 +15,14 @@ def theme_values(request):
 
 def get_theming_values(request):
     space = None
-    if getattr(request,'space',None):
+    if getattr(request, 'space', None):
         space = request.space
-    if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0:
+    if not request.user.is_authenticated and UNAUTHENTICATED_THEME_FROM_SPACE > 0 and FORCE_THEME_FROM_SPACE == 0:
         with scopes_disabled():
             space = Space.objects.filter(id=UNAUTHENTICATED_THEME_FROM_SPACE).first()
+    if FORCE_THEME_FROM_SPACE:
+        with scopes_disabled():
+            space = Space.objects.filter(id=FORCE_THEME_FROM_SPACE).first()
 
     themes = {
         UserPreference.BOOTSTRAP: 'themes/bootstrap.min.css',
