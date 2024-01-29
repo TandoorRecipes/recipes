@@ -257,6 +257,7 @@ export default {
     width: 100%;
     max-height: 100%;
     overflow-y: scroll;
+    z-index: 1;
     top: 50%;
     left: 50%;
     opacity: 0;
