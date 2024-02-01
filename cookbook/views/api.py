@@ -482,6 +482,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    schema = FilterSchema()
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1172,7 +1173,6 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         try:
             last_autosync = self.request.query_params.get('last_autosync', None)
             if last_autosync:
-
                 last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
                 self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
         except:
@@ -1201,6 +1201,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, 400)
+
 
 # TODO deprecate
 class ShoppingListViewSet(viewsets.ModelViewSet):
@@ -1284,6 +1285,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
 
 
 class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    schema = FilterSchema()
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
