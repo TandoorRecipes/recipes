@@ -367,14 +367,14 @@
 
         <b-popover target="id_filters_button" triggers="click blur" placement="bottomleft" :title="$t('Filters')">
             <div>
-                <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="6" class="mb-1">
+                <b-form-group v-bind:label="$t('GroupBy')" label-for="popover-input-1" label-cols="12" class="mb-1">
                     <b-form-select v-model="user_preference_store.device_settings.shopping_selected_grouping" size="sm">
                         <b-form-select-option v-for="go in shopping_list_store.grouping_options" :value="go.id"
                                               v-bind:key="go.id">{{ $t(go.translatable_label) }}
                         </b-form-select-option>
                     </b-form-select>
                 </b-form-group>
-                <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="6" class="mb-1">
+                <b-form-group v-bind:label="$t('Supermarket')" label-for="popover-input-2" label-cols="12" class="mb-1">
                     <generic-multiselect :model="Models.SUPERMARKET"
                                          :initial_single_selection="user_preference_store.device_settings.shopping_selected_supermarket"
                                          @change="user_preference_store.device_settings.shopping_selected_supermarket = $event.val; user_preference_store.updateDeviceSettings()"
