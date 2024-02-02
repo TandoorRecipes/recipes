@@ -470,5 +470,8 @@
     "substitute_siblings_help": "Tutti gli alimenti che condividono un genitore di questo alimento sono considerati sostituti",
     "reset_children": "Reimposta l'eredità degli eredi",
     "substitute_siblings": "Sostituire prodotti eredi",
-    "ChildInheritFields": "Gli eredi ereditano i valori"
+    "ChildInheritFields": "Gli eredi ereditano i valori",
+    "recipe_property_info": "Puoi anche aggiungere proprietà ai cibi per calcolarli automaticamente in base alla tua ricetta!",
+    "err_importing_recipe": "Si è verificato un errore durante l'importazione della ricetta!",
+    "per_serving": "per porzioni"
 }
