@@ -80,80 +80,73 @@
                 </div>
             </div>
         </div>
-        <div class="row d-block d-lg-none">
+        <div class="d-block d-lg-none">
             <div class="row">
-                <div class="col">
-                    <div class="">
-                        <div>
-                            <div class="col-12">
-                                <div class="col-12 d-flex justify-content-center mt-2">
-                                    <b-button-toolbar key-nav aria-label="Toolbar with button groups">
-                                        <b-button-group class="mx-1">
-                                            <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
-                                                      @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
-                                        </b-button-group>
-                                        <b-button-group class="mx-1">
-                                            <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
-                                                class="fas fa-home"></i></b-button>
-                                            <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
-                                        </b-button-group>
-                                        <b-button-group class="mx-1">
-                                            <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
-                                                      @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
-                                        </b-button-group>
-                                    </b-button-toolbar>
+                <div class="col-12">
+                    <div class="col-12 d-flex justify-content-center mt-2">
+                        <b-button-toolbar key-nav aria-label="Toolbar with button groups">
+                            <b-button-group class="mx-1">
+                                <b-button v-html="'<<'" class="p-2 pr-3 pl-3"
+                                          @click="setShowDate($refs.header.headerProps.previousPeriod)"></b-button>
+                            </b-button-group>
+                            <b-button-group class="mx-1">
+                                <b-button @click="setShowDate($refs.header.headerProps.currentPeriod)"><i
+                                    class="fas fa-home"></i></b-button>
+                                <b-form-datepicker right button-only button-variant="secondary" @context="datePickerChanged"></b-form-datepicker>
+                            </b-button-group>
+                            <b-button-group class="mx-1">
+                                <b-button v-html="'>>'" class="p-2 pr-3 pl-3"
+                                          @click="setShowDate($refs.header.headerProps.nextPeriod)"></b-button>
+                            </b-button-group>
+                        </b-button-toolbar>
+                    </div>
+                </div>
+                <div class="col-12 mt-2" style="padding-bottom: 60px">
+                    <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
+                        <b-list-group>
+                            <b-list-group-item>
+                                <div class="d-flex flex-row align-middle">
+                                    <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
+
+                                    <div class="flex-grow-1 text-right">
+                                        <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
+                                            class="fa fa-plus"></i></b-button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12 mt-2" style="padding-bottom: 60px">
-                                <div v-for="day in mobileSimpleGrid" v-bind:key="day.day">
-                                    <b-list-group>
-                                        <b-list-group-item>
-                                            <div class="d-flex flex-row align-middle">
-                                                <h6 class="mb-0 mt-1 align-middle">{{ day.date_label }}</h6>
 
-                                                <div class="flex-grow-1 text-right">
-                                                    <b-button class="btn-sm btn-outline-primary" @click="showMealPlanEditModal(null, day.create_default_date)"><i
-                                                        class="fa fa-plus"></i></b-button>
-                                                </div>
-                                            </div>
-
-                                        </b-list-group-item>
-                                        <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
-                                            <div class="d-flex flex-row align-items-center">
-                                                <div>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                           :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
-                                                    <b-img style="height: 50px; width: 50px; object-fit: cover"
-                                                           :src="image_placeholder" rounded="circle" v-else></b-img>
-                                                </div>
-                                                <div class="flex-grow-1 ml-2"
-                                                     style="text-overflow: ellipsis; overflow-wrap: anywhere;">
+                            </b-list-group-item>
+                            <b-list-group-item v-for="plan in day.plan_entries" v-bind:key="plan.entry.id">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div>
+                                        <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                               :src="plan.entry.recipe.image" rounded="circle" v-if="plan.entry.recipe?.image"></b-img>
+                                        <b-img style="height: 50px; width: 50px; object-fit: cover"
+                                               :src="image_placeholder" rounded="circle" v-else></b-img>
+                                    </div>
+                                    <div class="flex-grow-1 ml-2"
+                                         style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
                                                         <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
-                                                    <span v-if="plan.entry.note" class="two-row-text">
+                                        <span v-if="plan.entry.note" class="two-row-text">
                                                     <small>{{ plan.entry.note }}</small> <br/>
                                                 </span>
-                                                    <small class="text-muted">
-                                                        <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
-                                                        {{ plan.entry.meal_type_name }}
-                                                        <span v-if="plan.entry.recipe">
+                                        <small class="text-muted">
+                                            <span v-if="plan.entry.shopping" class="font-light"><i class="fas fa-shopping-cart fa-xs "/></span>
+                                            {{ plan.entry.meal_type_name }}
+                                            <span v-if="plan.entry.recipe">
                                                      - <i class="fa fa-clock"></i> {{ plan.entry.recipe.working_time + plan.entry.recipe.waiting_time }} {{ $t('min') }}
                                                 </span>
-                                                    </small>
-                                                </div>
-                                                <div class="hover-button">
-                                                    <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
-                                                </div>
-                                            </div>
-                                        </b-list-group-item>
-
-                                    </b-list-group>
+                                        </small>
+                                    </div>
+                                    <div class="hover-button">
+                                        <a class="pr-2" @click.stop="openContextMenu($event, {originalItem: plan})"><i class="fas fa-ellipsis-v"></i></a>
+                                    </div>
                                 </div>
-                            </div>
+                            </b-list-group-item>
 
-                        </div>
+                        </b-list-group>
                     </div>
                 </div>
             </div>
@@ -363,20 +356,26 @@ export default {
             }
         },
         mobileSimpleGrid() {
-            let grid = []
-
-            if (this.current_period !== null) {
-                for (const x of Array(7).keys()) {
-                    let moment_date = moment(this.current_period.periodStart).add(x, "d")
-                    grid.push({
-                        date: moment_date,
-                        create_default_date: moment_date.format("YYYY-MM-DD"), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
-                        plan_entries: this.plan_items.filter((m) => moment_date.isBetween(moment(m.startDate), moment(m.endDate), 'day', '[]'))
-                    })
-                }
+            let grid = [];
+            let currentDate = moment(this.showDate);
+            for (let x = 0; x < 7; x++) {
+                let moment_date = currentDate.clone().add(x, "d");
+                grid.push({
+                    date: moment_date,
+                    create_default_date: moment_date.format("YYYY-MM-DD"),
+                    date_label: moment_date.format("dd") + " " + moment_date.format("ll"),
+                    plan_entries: this.plan_items.filter(
+                        (m) =>
+                            moment_date.isBetween(
+                                moment(m.startDate),
+                                moment(m.endDate),
+                                'day',
+                                '[]'
+                            )
+                    ),
+                });
             }
-            return grid
+            return grid;
         }
     },
     mounted() {
@@ -477,7 +476,7 @@ export default {
             this.setShowDate(ctx.selectedDate)
         },
         setShowDate(d) {
-            this.showDate = d
+            this.showDate = d ?? new Date();
         },
         createEntryClick(data) {
             this.mealplan_default_date = moment(data).format("YYYY-MM-DD")

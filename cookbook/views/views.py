@@ -1,16 +1,23 @@
+import json
 import os
 import re
 from datetime import datetime
+from io import StringIO
 from uuid import UUID
+import subprocess
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.http import HttpResponseRedirect
+from django.core.management import call_command
+from django.db import models
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -18,13 +25,15 @@ from django_scopes import scopes_disabled
 
 from cookbook.forms import (CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm,
                             SpaceJoinForm, User, UserCreateForm, UserPreference)
+from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import (group_required, has_group_permission,
                                                share_link_valid, switch_user_active_space)
 from cookbook.models import (Comment, CookLog, InviteLink, SearchFields, SearchPreference,
                              ShareLink, Space, UserSpace, ViewLog)
 from cookbook.tables import CookLogTable, ViewLogTable
+from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
-from recipes.settings import PLUGINS
+from recipes.settings import PLUGINS, BASE_DIR
 
 
 def index(request):
@@ -70,6 +79,11 @@ def space_overview(request):
             messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
         else:
             if create_form.is_valid():
+                if Space.objects.filter(created_by=request.user).count() >= request.user.userpreference.max_owned_spaces:
+                    messages.add_message(request, messages.ERROR,
+                                         _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({request.user.userpreference.max_owned_spaces})')
+                    return HttpResponseRedirect(reverse('view_space_overview'))
+
                 created_space = Space.objects.create(
                     name=create_form.cleaned_data['name'],
                     created_by=request.user,
@@ -314,17 +328,75 @@ def system(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect(reverse('index'))
 
+    postgres_ver = None
     postgres = settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'
 
+    if postgres:
+        postgres_current = 16  # will need to be updated as PostgreSQL releases new major versions
+        from decimal import Decimal
+
+        from django.db import connection
+
+        postgres_ver = Decimal(str(connection.pg_version).replace('00', '.'))
+        if postgres_ver >= postgres_current:
+            database_status = 'success'
+            database_message = _('Everything is fine!')
+        elif postgres_ver < postgres_current - 2:
+            database_status = 'danger'
+            database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {
+                'v': postgres_ver}
+        else:
+            database_status = 'info'
+            database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {
+                'v1': postgres_ver, 'v2': postgres_current}
+    else:
+        database_status = 'info'
+        database_message = _(
+            'This application is not running with a Postgres database backend. This is ok but not recommended as some features only work with postgres databases.')
+
     secret_key = False if os.getenv('SECRET_KEY') else True
+
+    if request.method == "POST":
+        del_orphans = request.POST.get('delete_orphans')
+        orphans = get_orphan_files(delete_orphans=str2bool(del_orphans))
+    else:
+        orphans = get_orphan_files()
+
+    out = StringIO()
+    call_command('showmigrations', stdout=out)
+    missing_migration = False
+    migration_info = {}
+    current_app = None
+    for row in out.getvalue().splitlines():
+        if '[ ]' in row and current_app:
+            migration_info[current_app]['unapplied_migrations'].append(row.replace('[ ]', ''))
+            missing_migration = True
+        elif '[X]' in row and current_app:
+            migration_info[current_app]['applied_migrations'].append(row.replace('[x]', ''))
+        elif '(no migrations)' in row and current_app:
+            pass
+        else:
+            current_app = row
+            migration_info[current_app] = {'app': current_app, 'unapplied_migrations': [], 'applied_migrations': [],
+                                           'total': 0}
+
+    for key in migration_info.keys():
+        migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(
+            migration_info[key]['applied_migrations'])
 
     return render(request, 'system.html', {
         'gunicorn_media': settings.GUNICORN_MEDIA,
         'debug': settings.DEBUG,
         'postgres': postgres,
+        'postgres_version': postgres_ver,
+        'postgres_status': database_status,
+        'postgres_message': database_message,
         'version_info': VERSION_INFO,
         'plugins': PLUGINS,
-        'secret_key': secret_key
+        'secret_key': secret_key,
+        'orphans': orphans,
+        'migration_info': migration_info,
+        'missing_migration': missing_migration,
     })
 
 
@@ -372,7 +444,8 @@ def invite_link(request, token):
                     link.used_by = request.user
                     link.save()
 
-                user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, active=False)
+                user_space = UserSpace.objects.create(user=request.user, space=link.space,
+                                                      internal_note=link.internal_note, invite_link=link, active=False)
 
                 if request.user.userspace_set.count() == 1:
                     user_space.active = True
@@ -413,6 +486,60 @@ def report_share_abuse(request, token):
     return HttpResponseRedirect(reverse('index'))
 
 
+def web_manifest(request):
+    theme_values = get_theming_values(request)
+
+    icons = [
+        {"src": theme_values['logo_color_svg'], "sizes": "any"},
+        {"src": theme_values['logo_color_144'], "type": "image/png", "sizes": "144x144"},
+        {"src": theme_values['logo_color_512'], "type": "image/png", "sizes": "512x512"}
+    ]
+
+    manifest_info = {
+        "name": theme_values['app_name'],
+        "short_name": theme_values['app_name'],
+        "description": _("Manage recipes, shopping list, meal plans and more."),
+        "icons": icons,
+        "start_url": "./search",
+        "background_color": theme_values['nav_bg_color'],
+        "display": "standalone",
+        "scope": ".",
+        "theme_color": theme_values['nav_bg_color'],
+        "shortcuts": [
+            {
+                "name": _("Plan"),
+                "short_name": _("Plan"),
+                "description": _("View your meal Plan"),
+                "url": "./plan"
+            },
+            {
+                "name": _("Books"),
+                "short_name": _("Books"),
+                "description": _("View your cookbooks"),
+                "url": "./books"
+            },
+            {
+                "name": _("Shopping"),
+                "short_name": _("Shopping"),
+                "description": _("View your shopping lists"),
+                "url": "./list/shopping-list/"
+            }
+        ],
+        "share_target": {
+            "action": "/data/import/url",
+            "method": "GET",
+            "params": {
+                "title": "title",
+                "url": "url",
+                "text": "text"
+
+            }
+        }
+    }
+
+    return JsonResponse(manifest_info, json_dumps_params={'indent': 4})
+
+
 def markdown_info(request):
     return render(request, 'markdown_info.html', {})
 
@@ -448,3 +575,48 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+
+
+def get_orphan_files(delete_orphans=False):
+    # Get list of all image files in media folder
+    media_dir = settings.MEDIA_ROOT
+
+    def find_orphans():
+        image_files = []
+        for root, dirs, files in os.walk(media_dir):
+            for file in files:
+
+                if not file.lower().endswith(('.db')) and not root.lower().endswith(('@eadir')):
+                    full_path = os.path.join(root, file)
+                    relative_path = os.path.relpath(full_path, media_dir)
+                    image_files.append((relative_path, full_path))
+
+        # Get list of all image fields in models
+        image_fields = []
+        for model in apps.get_models():
+            for field in model._meta.get_fields():
+                if isinstance(field, models.ImageField) or isinstance(field, models.FileField):
+                    image_fields.append((model, field.name))
+
+        # get all images in the database
+        # TODO I don't know why, but this completely bypasses scope limitations
+        image_paths = []
+        for model, field in image_fields:
+            image_field_paths = model.objects.values_list(field, flat=True)
+            image_paths.extend(image_field_paths)
+
+        # Check each image file against model image fields
+        return [img for img in image_files if img[0] not in image_paths]
+
+    orphans = find_orphans()
+    if delete_orphans:
+        for f in [img[1] for img in orphans]:
+            try:
+                os.remove(f)
+            except FileNotFoundError:
+                print(f"File not found: {f}")
+            except Exception as e:
+                print(f"Error deleting file {f}: {e}")
+        orphans = find_orphans()
+
+    return [img[1] for img in orphans]

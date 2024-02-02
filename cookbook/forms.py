@@ -33,64 +33,6 @@ class DateWidget(forms.DateInput):
         super().__init__(**kwargs)
 
 
-class UserPreferenceForm(forms.ModelForm):
-    prefix = 'preference'
-
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['plan_share'].queryset = User.objects.filter(userspace__space=space).all()
-
-    class Meta:
-        model = UserPreference
-        fields = (
-            'default_unit', 'use_fractions', 'use_kj', 'theme', 'nav_color',
-            'sticky_navbar', 'default_page', 'plan_share', 'ingredient_decimals', 'comments', 'left_handed', 'show_step_ingredients',
-        )
-
-        labels = {
-            'default_unit': _('Default unit'),
-            'use_fractions': _('Use fractions'),
-            'use_kj': _('Use KJ'),
-            'theme': _('Theme'),
-            'nav_color': _('Navbar color'),
-            'sticky_navbar': _('Sticky navbar'),
-            'default_page': _('Default page'),
-            'plan_share': _('Plan sharing'),
-            'ingredient_decimals': _('Ingredient decimal places'),
-            'shopping_auto_sync': _('Shopping list auto sync period'),
-            'comments': _('Comments'),
-            'left_handed': _('Left-handed mode'),
-            'show_step_ingredients': _('Show step ingredients table')
-        }
-
-        help_texts = {
-            'nav_color': _('Color of the top navigation bar. Not all colors work with all themes, just try them out!'),
-            'default_unit': _('Default Unit to be used when inserting a new ingredient into a recipe.'),
-            'use_fractions': _(
-                'Enables support for fractions in ingredient amounts (e.g. convert decimals to fractions automatically)'),
-            'use_kj': _('Display nutritional energy amounts in joules instead of calories'),
-            'plan_share': _('Users with whom newly created meal plans should be shared by default.'),
-            'shopping_share': _('Users with whom to share shopping lists.'),
-            'ingredient_decimals': _('Number of decimals to round ingredients.'),
-            'comments': _('If you want to be able to create and see comments underneath recipes.'),
-            'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
-                'of mobile data. If lower than instance limit it is reset when saving.'
-            ),
-            'sticky_navbar': _('Makes the navbar stick to the top of the page.'),
-            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
-            'mealplan_autoexclude_onhand': _('Exclude ingredients that are on hand.'),
-            'left_handed': _('Will optimize the UI for use with your left hand.'),
-            'show_step_ingredients': _('Add ingredients table next to recipe steps. Applies at creation time for manually created and URL imported recipes. Individual steps can be overridden in the edit recipe view.')
-        }
-
-        widgets = {
-            'plan_share': MultiSelectWidget,
-            'shopping_share': MultiSelectWidget,
-        }
-
-
 class UserNameForm(forms.ModelForm):
     prefix = 'name'
 
@@ -508,7 +450,7 @@ class SpacePreferenceForm(forms.ModelForm):
     class Meta:
         model = Space
 
-        fields = ('food_inherit', 'reset_food_inherit', 'use_plural')
+        fields = ('food_inherit', 'reset_food_inherit',)
 
         help_texts = {
             'food_inherit': _('Fields on food that should be inherited by default.'),

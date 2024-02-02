@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <b-modal id="ingredient_edit_modal" :title="$t('Edit')" @hidden="destroyIngredientEditModal">
+            <b-modal id="ingredient_edit_modal" ref="ingredient_edit_modal" :title="$t('Edit')" @hidden="destroyIngredientEditModal">
                 <div v-if="current_edit_ingredient !== null">
                     <b-form-group v-bind:label="$t('Original_Text')" class="mb-3">
                         <b-form-input v-model="current_edit_ingredient.original_text" type="text" disabled></b-form-input>
@@ -88,8 +88,8 @@
                     <div class="row w-100">
 
                         <div class="col-auto justify-content-end">
-                            <b-button class="mx-1" >{{ $t('Ok') }}</b-button>
-                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);" variant="danger">{{ $t('Delete') }}</b-button>
+                            <b-button class="mx-1" @click="destroyIngredientEditModal()">{{ $t('Ok') }}</b-button>
+                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);destroyIngredientEditModal()" variant="danger">{{ $t('Delete') }}</b-button>
                         </div>
                     </div>
                 </template>

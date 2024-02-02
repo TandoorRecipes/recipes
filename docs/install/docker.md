@@ -204,6 +204,22 @@ server {
 }
 ```
 
+Tandoor does not support directly serving of images, as explained in the [Nginx vs Gunicorn"](#nginx-vs-gunicorn) section.  If you are already using nginx to serve as a reverse proxy, you can configure it to serve images as well.
+
+Add the following directly after the `location /` context:
+
+```
+        location /media/ {
+            root   /media/;
+            index  index.html index.htm;
+        }
+```
+
+Make sure you also update your `docker-compose.yml` file to mount the `mediafiles` directory.  If you are using the [Plain](#plain) deployment, you do not need to make any changes.  If you are using nginx to act as a reverse proxy for other apps, it may not be optimal to have `mediafiles` mounted to `/media`.  In that case, adjust the directory declarations as needed, utilizing nginx's [`alias`](https://nginx.org/en/docs/http/ngx_http_core_module.html#alias) if needed.
+
+!!!note
+    Use `alias` if your mount point directory is not the same as the URL request path.  Tandoor media files are requested from `$http_host/media/recipes/xxx.jpg`.  This means if you are mounting to a directory that does **NOT** end in `./media`, you will need to use `alias`.
+
 !!!note
     Don't forget to [download and configure](#docker-compose) your ```.env``` file!
 
@@ -349,10 +365,9 @@ ProxyPassReverse / http://localhost:8080/ # replace port
 !!!info
     Always wait at least 2-3 minutes after the very first start, since migrations will take some time!
 
-!!!warning
-    If you want to use Tandoor on a Raspberry Pi running a 32-bit operating system you will need to use the following
-    docker image tags: `latest-raspi`, `beta-raspi` and the versioned `<x.y.z>-raspi`
-    We strongly recommend using the new 64-bit Raspian image as the 32-bit version is not tested.
+!!!info
+    In the past there was a special `*-raspi` version of the image. This no longer exists. The normal Tags all support Arm/v7 architectures which should work on all Raspberry Pi's above Version 1 and the first generation Zero. 
+    See [Wikipedia Raspberry Pi specifications](https://en.wikipedia.org/wiki/Raspberry_Pi#Specifications).
 
 If you're having issues with installing Tandoor on your Raspberry Pi or similar device,
 follow these instructions:

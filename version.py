@@ -13,12 +13,11 @@ tandoor_hash = ''
 try:
     print('getting tandoor version')
     r = subprocess.check_output(['git', 'show', '-s'], cwd=BASE_DIR).decode()
-    tandoor_branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=BASE_DIR).decode()
+    tandoor_branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], cwd=BASE_DIR).decode().replace('\n', '')
     tandoor_hash = r.split('\n')[0].split(' ')[1]
     try:
-        tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', tandoor_hash], cwd=BASE_DIR).decode().replace('\n', '')
-    except:
-
+        tandoor_tag = subprocess.check_output(['git', 'describe', '--exact-match', '--tags', tandoor_hash], cwd=BASE_DIR).decode().replace('\n', '')
+    except BaseException:
         pass
 
     version_info.append({
@@ -47,8 +46,9 @@ try:
                     commit_hash = r.split('\n')[0].split(' ')[1]
                     try:
                         print('running describe')
-                        tag = subprocess.check_output(['git', 'describe', '--exact-match', commit_hash], cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode().replace('\n', '')
-                    except:
+                        tag = subprocess.check_output(['git', 'describe', '--exact-match', commit_hash],
+                                                      cwd=os.path.join(BASE_DIR, 'recipes', 'plugins', d)).decode().replace('\n', '')
+                    except BaseException:
                         tag = ''
 
                     version_info.append({
@@ -66,9 +66,11 @@ try:
                     traceback.print_exc()
 except subprocess.CalledProcessError as e:
     print("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
-except:
+except BaseException:
     traceback.print_exc()
 
 with open('cookbook/version_info.py', 'w+', encoding='UTF-8') as f:
     print(f"writing version info {version_info}")
+    if not tandoor_tag:
+        tandoor_tag = tandoor_hash
     f.write(f'TANDOOR_VERSION = "{tandoor_tag}"\nTANDOOR_REF = "{tandoor_hash}"\nVERSION_INFO = {version_info}')

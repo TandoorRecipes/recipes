@@ -1,8 +1,8 @@
 <template>
     <div id="app">
 
-        <div class="row  mt-2">
-            <div class="col col-12">
+        <b-row class="mt-2">
+            <b-col cols="12">
                 <div v-if="space !== undefined">
                     <h6><i class="fas fa-book"></i> {{ $t('Recipes') }}</h6>
                     <b-progress height="1.5rem" :max="space.max_recipes" variant="success" :striped="true">
@@ -32,13 +32,13 @@
                     </b-progress>
 
                 </div>
-            </div>
-        </div>
+            </b-col>
+        </b-row>
 
-        <div class="row mt-4">
-            <div class="col col-12">
+        <b-row class="mt-4">
+            <b-col cols="12">
                 <div v-if="user_spaces !== undefined">
-                    <h4 class="mt-2"><i class="fas fa-users"></i> {{ $t('Users') }}</h4>
+                    <h4><i class="fas fa-users"></i> {{ $t('Users') }}</h4>
                     <table class="table">
                         <thead>
                         <tr>
@@ -51,14 +51,14 @@
                             <td>{{ us.user.display_name }}</td>
                             <td>
                                 <generic-multiselect
-                                        class="input-group-text m-0 p-0"
-                                        @change="us.groups = $event.val; updateUserSpace(us)"
-                                        label="name"
-                                        :initial_selection="us.groups"
-                                        :model="Models.GROUP"
-                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                        :limit="10"
-                                        :multiple="true"
+                                    class="input-group-text m-0 p-0"
+                                    @change="us.groups = $event.val; updateUserSpace(us)"
+                                    label="name"
+                                    :initial_selection="us.groups"
+                                    :model="Models.GROUP"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                    :limit="10"
+                                    :multiple="true"
                                 />
                             </td>
                             <td>
@@ -67,12 +67,12 @@
                         </tr>
                     </table>
                 </div>
-            </div>
-        </div>
+            </b-col>
+        </b-row>
 
 
-        <div class="row mt-2">
-            <div class="col col-12">
+        <b-row class="mt-2">
+            <b-col cols="12">
                 <div v-if="invite_links !== undefined">
                     <h4 class="mt-2"><i class="fas fa-users"></i> {{ $t('Invites') }}</h4>
                     <table class="table">
@@ -90,14 +90,14 @@
                             <td>{{ il.email }}</td>
                             <td>
                                 <generic-multiselect
-                                        class="input-group-text m-0 p-0"
-                                        @change="il.group = $event.val;"
-                                        label="name"
-                                        :initial_single_selection="il.group"
-                                        :model="Models.GROUP"
-                                        style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                        :limit="10"
-                                        :multiple="false"
+                                    class="input-group-text m-0 p-0"
+                                    @change="il.group = $event.val;"
+                                    label="name"
+                                    :initial_single_selection="il.group"
+                                    :model="Models.GROUP"
+                                    style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                    :limit="10"
+                                    :multiple="false"
                                 />
                             </td>
                             <td><input type="date" v-model="il.valid_until" class="form-control"></td>
@@ -131,46 +131,133 @@
                     </table>
                     <b-button variant="primary" @click="show_invite_create = true">{{ $t('Create') }}</b-button>
                 </div>
-            </div>
-        </div>
+            </b-col>
+        </b-row>
 
-        <div class="row mt-4" v-if="space !== undefined">
-            <div class="col col-12">
-                <h4 class="mt-2"><i class="fas fa-cogs"></i> {{ $t('Settings') }}</h4>
+        <b-row class="mt-4" v-if="space !== undefined">
+            <b-col cols="12">
+                <h4>{{ $t('Cosmetic') }}</h4>
+                <b-alert variant="warning" show><i class="fas fa-exclamation-triangle"></i> {{ $t('Space_Cosmetic_Settings') }}</b-alert>
 
-                <label>{{ $t('Message') }}</label>
-                <b-form-textarea v-model="space.message"></b-form-textarea>
+                <b-form-group :label="$t('Image')" :description="$t('CustomImageHelp')">
+                    <generic-multiselect :initial_single_selection="space.image"
+                                         :model="Models.USERFILE"
+                                         :multiple="false"
+                                         @change="space.image = $event.val;"></generic-multiselect>
+                </b-form-group>
 
-                <label>{{ $t('Image') }}</label>
-                <generic-multiselect :initial_single_selection="space.image"
-                                     :model="Models.USERFILE"
-                                     :multiple="false"
-                                     @change="space.image = $event.val;"></generic-multiselect>
-                <br/>
+                 <b-form-group :label="$t('Logo')" :description="$t('CustomNavLogoHelp')">
+                    <generic-multiselect :initial_single_selection="space.nav_logo"
+                                         :model="Models.USERFILE"
+                                         :multiple="false"
+                                         @change="space.nav_logo = $event.val;"></generic-multiselect>
+                </b-form-group>
 
-                <b-form-checkbox v-model="space.show_facet_count"> Facet Count</b-form-checkbox>
-                <span class="text-muted small">{{ $t('facet_count_info') }}</span><br/>
+                <b-form-group :label="$t('Theme')">
+                    <b-form-select v-model="space.space_theme">
+                        <b-form-select-option value="BLANK">----</b-form-select-option>
+                        <b-form-select-option value="TANDOOR">Tandoor</b-form-select-option>
+                        <b-form-select-option value="TANDOOR_DARK">Tandoor Dark (Beta)</b-form-select-option>
+                        <b-form-select-option value="BOOTSTRAP">Bootstrap</b-form-select-option>
+                        <b-form-select-option value="DARKLY">Darkly</b-form-select-option>
+                        <b-form-select-option value="FLATLY">Flatly</b-form-select-option>
+                        <b-form-select-option value="SUPERHERO">Superhero</b-form-select-option>
+                    </b-form-select>
+                </b-form-group>
 
-                <label>{{ $t('FoodInherit') }}</label>
-                <generic-multiselect :initial_selection="space.food_inherit"
-                                     :model="Models.FOOD_INHERIT_FIELDS"
-                                     @change="space.food_inherit = $event.val;">
-                </generic-multiselect>
-                <span class="text-muted small">{{ $t('food_inherit_info') }}</span><br/>
 
-                <a class="btn btn-success" @click="updateSpace()">{{ $t('Update') }}</a><br/>
-                <a class="btn btn-warning mt-1" @click="resetInheritance()">{{ $t('reset_food_inheritance') }}</a><br/>
-                <span class="text-muted small">{{ $t('reset_food_inheritance_info') }}</span>
-            </div>
-        </div>
+                <b-form-group :label="$t('CustomTheme')" :description="$t('CustomThemeHelp')">
+                    <generic-multiselect :initial_single_selection="space.custom_space_theme"
+                                         :model="Models.USERFILE"
+                                         :multiple="false"
+                                         @change="space.custom_space_theme = $event.val;"></generic-multiselect>
 
-        <div class="row">
-            <div class="col-md-12">
+                </b-form-group>
+
+                <b-form-group :label="$t('Nav_Color')" :description="$t('Nav_Color_Help')">
+                    <b-input-group>
+                        <b-form-input type="color" v-model="space.nav_bg_color"></b-form-input>
+                        <b-input-group-append>
+                            <b-button @click="space.nav_bg_color = ''">{{ $t('Reset') }}</b-button>
+                        </b-input-group-append>
+                    </b-input-group>
+                </b-form-group>
+
+                <b-form-group :label="$t('Nav_Text_Mode')" :description="$t('Nav_Text_Mode_Help')">
+                    <b-form-select v-model="space.nav_text_color">
+                        <b-form-select-option value="BLANK">----</b-form-select-option>
+                        <b-form-select-option value="LIGHT">Light</b-form-select-option>
+                        <b-form-select-option value="DARK">Dark</b-form-select-option>
+                    </b-form-select>
+                </b-form-group>
+
+                <h5>{{ $t('CustomLogos') }}</h5>
+                <p>{{$t('CustomLogoHelp')}} </p>
+                <b-form-group :label="$t('Logo')+' 32x32px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_32"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_32 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 128x128px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_128"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_128 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 144x144px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_144"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_144 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 180x180px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_180"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_180 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 192x192px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_192"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_192 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' 512x512px'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_512"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_512 = $event.val;"></generic-multiselect>
+                </b-form-group>
+                <b-form-group :label="$t('Logo')+' SVG'">
+                    <generic-multiselect :initial_single_selection="space.logo_color_svg"
+                                         :model="Models.USERFILE" :multiple="false" @change="space.logo_color_svg = $event.val;"></generic-multiselect>
+                </b-form-group>
+
+                <b-button variant="success" @click="updateSpace()">{{ $t('Update') }}</b-button>
+            </b-col>
+        </b-row>
+
+        <b-row class="mt-4" v-if="space !== undefined">
+            <b-col cols="12">
+                <h4><i class="fas fa-cogs"></i> {{ $t('Settings') }}</h4>
+
+                <b-form-group :label="$t('Message')">
+                    <b-form-textarea v-model="space.message"></b-form-textarea>
+                </b-form-group>
+
+                <b-form-group :label="$t('FoodInherit')" :description="$t('food_inherit_info')">
+                    <generic-multiselect :initial_selection="space.food_inherit"
+                                         :model="Models.FOOD_INHERIT_FIELDS"
+                                         @change="space.food_inherit = $event.val;">
+                    </generic-multiselect>
+                </b-form-group>
+
+                <b-form-group :description="$t('reset_food_inheritance_info')">
+                    <b-button-group class="mt-2">
+                        <b-button variant="success" @click="updateSpace()">{{ $t('Update') }}</b-button>
+                        <b-button variant="warning" @click="resetInheritance()">{{ $t('reset_food_inheritance') }}</b-button>
+                    </b-button-group>
+                </b-form-group>
+
+            </b-col>
+        </b-row>
+
+        <b-row class="mt-4">
+            <b-col cols="12">
                 <h4>{{ $t('Open_Data_Import') }}</h4>
                 <open-data-import-component></open-data-import-component>
-            </div>
+            </b-col>
 
-        </div>
+        </b-row>
 
 
         <div class="row mt-4">

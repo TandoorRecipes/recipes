@@ -49,34 +49,47 @@
             </b-form-select>
 
         </b-form-group>
+
+        <b-alert variant="warning" show><i class="fas fa-exclamation-triangle"></i> {{ $t('Space_Cosmetic_Settings') }}</b-alert>
+
         <b-form-group :label="$t('Theme')">
             <b-form-select v-model="user_preferences.theme" @change="updateSettings(true);">
                 <b-form-select-option value="TANDOOR">Tandoor</b-form-select-option>
+                <b-form-select-option value="TANDOOR_DARK">Tandoor Dark (Beta)</b-form-select-option>
                 <b-form-select-option value="BOOTSTRAP">Bootstrap</b-form-select-option>
                 <b-form-select-option value="DARKLY">Darkly</b-form-select-option>
                 <b-form-select-option value="FLATLY">Flatly</b-form-select-option>
                 <b-form-select-option value="SUPERHERO">Superhero</b-form-select-option>
-                <b-form-select-option value="TANDOOR_DARK">Tandoor Dark (INCOMPLETE)</b-form-select-option>
             </b-form-select>
 
         </b-form-group>
-        <b-form-group :description="$t('Sticky_Nav_Help')">
-            <b-form-checkbox v-model="user_preferences.sticky_navbar" @change="updateSettings(true);">
-                {{ $t('Sticky_Nav') }}
-            </b-form-checkbox>
-        </b-form-group>
+
         <b-form-group :label="$t('Nav_Color')" :description="$t('Nav_Color_Help')">
-            <b-form-select v-model="user_preferences.nav_color" @change="updateSettings(true);">
-                <b-form-select-option value="PRIMARY">Primary</b-form-select-option>
-                <b-form-select-option value="SECONDARY">Secondary</b-form-select-option>
-                <b-form-select-option value="SUCCESS">Success</b-form-select-option>
-                <b-form-select-option value="INFO">Info</b-form-select-option>
-                <b-form-select-option value="WARNING">Warning</b-form-select-option>
-                <b-form-select-option value="DANGER">Danger</b-form-select-option>
+            <b-input-group>
+                <b-form-input type="color" v-model="user_preferences.nav_bg_color" @change="updateSettings(true);"></b-form-input>
+                <b-input-group-append>
+                    <b-button @click="user_preferences.nav_bg_color = '#ddbf86'; updateSettings(true);">{{ $t('Reset') }}</b-button>
+                </b-input-group-append>
+            </b-input-group>
+        </b-form-group>
+
+        <b-form-group :label="$t('Nav_Text_Mode')" :description="$t('Nav_Text_Mode_Help')">
+            <b-form-select v-model="user_preferences.nav_text_color" @change="updateSettings(true);">
                 <b-form-select-option value="LIGHT">Light</b-form-select-option>
                 <b-form-select-option value="DARK">Dark</b-form-select-option>
             </b-form-select>
+        </b-form-group>
 
+        <b-form-group :description="$t('Show_Logo_Help')">
+            <b-form-checkbox v-model="user_preferences.nav_show_logo" @change="updateSettings(true);">
+                {{ $t('Show_Logo') }}
+            </b-form-checkbox>
+        </b-form-group>
+
+        <b-form-group :description="$t('Sticky_Nav_Help')">
+            <b-form-checkbox v-model="user_preferences.nav_sticky" @change="updateSettings(true);">
+                {{ $t('Sticky_Nav') }}
+            </b-form-checkbox>
         </b-form-group>
 
 

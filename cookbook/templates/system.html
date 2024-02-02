@@ -83,23 +83,94 @@
         {% trans 'Everything is fine!' %}
     {% endif %}
 
-    <h4 class="mt-3">{% trans 'Database' %} <span
-            class="badge badge-{% if postgres %}warning{% else %}success{% endif %}">{% if postgres %}
-        {% trans 'Info' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
-    {% if postgres %}
+    <h4 class="mt-3">{% trans 'Database' %}
+        <span class="badge badge-{{ postgres_status }}">
+            {% if postgres_status == 'warning' %}
+                {% trans 'Info' %}
+            {% elif postgres_status == 'danger' %}
+                {% trans 'Warning' %}
+            {% else %}
+                {% trans 'Ok' %}
+            {% endif %}
+        </span>
+    </h4>
+    {{ postgres_message }}
+
+    <h4 class="mt-3">{% trans 'Migrations' %}
+        <span
+                class="badge badge-{% if missing_migration %}danger{% else %}success{% endif %}">{% if missing_migration %}
+            {% trans 'Warning' %}{% else %}{% trans 'Ok' %}{% endif %}</span></h4>
+
+    <p>
         {% blocktrans %}
-            This application is not running with a Postgres database backend. This is ok but not recommended as some
-            features only work with postgres databases.
+            Migrations should never fail!
+            Failed migrations will likely cause major parts of the app to not function correctly.
+            If a migration fails make sure you are on the latest version and if so please post the migration log and the overview below in a GitHub issue.
         {% endblocktrans %}
-    {% else %}
-        {% trans 'Everything is fine!' %}
-    {% endif %}
+    </p>
+
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>App</th>
+            <th class="text-right">{% trans 'Migrations' %}</th>
+        </tr>
+        </thead>
+        {% for key,value in migration_info.items %}
+            <tr>
+
+                <td>{{ value.app }}</td>
+                <td class="text-right">
+                     <span class="badge badge-{% if value.unapplied_migrations|length > 0 %}danger{% else %}success{% endif %}">
+                         {{ value.applied_migrations|length }} / {{ value.total }}
+                     </span>
+                </td>
+            </tr>
+            {% for u in value.unapplied_migrations %}
+                <tr>
+                    <td>
+                        {{ u }}
+                    </td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+
+        {% endfor %}
+    </table>
+
+
+    {#    <h4 class="mt-3">#}
+    {#    {% trans 'Orphaned Files' %}#}
+    {##}
+    {#    <span class="badge badge-{% if orphans|length == 0 %}success{% elif orphans|length <= 25 %}warning{% else %}danger{% endif %}">#}
+    {#        {% if orphans|length == 0 %}{% trans 'Success' %}#}
+    {#        {% elif orphans|length <= 25 %}{% trans 'Warning' %}#}
+    {#        {% else %}{% trans 'Danger' %}#}
+    {#        {% endif %}#}
+    {#    </span>#}
+    {#    </h4>#}
+
+    {#    {% if orphans|length == 0 %}#}
+    {#        {% trans 'Everything is fine!' %}#}
+    {#    {% else %}#}
+    {#        {% blocktrans with orphan_count=orphans|length %}#}
+    {#            There are currently {{ orphan_count }} orphaned files.#}
+    {#        {% endblocktrans %}#}
+    {#        <br>#}
+    {#        <button id="toggle-button" class="btn btn-info btn-sm" onclick="toggleOrphans()">{% trans 'Show' %}</button>#}
+    {#        <button class="btn btn-info btn-sm" onclick="deleteOrphans()">{% trans 'Delete' %}</button>#}
+    {#    {% endif %}#}
+    {#    <textarea id="orphans-list" style="display:none;" class="form-control" rows="20">#}
+    {#{% for orphan in orphans %}{{ orphan }}#}
+    {#{% endfor %}#}
+    {#    </textarea>#}
 
     <h4 class="mt-3">Debug</h4>
     <textarea class="form-control" rows="20">
 Gunicorn Media: {{ gunicorn_media }}
-Sqlite: {{ postgres }}
-Debug: {{ debug }}
+Sqlite: {% if postgres %} {% trans 'False' %} {% else %} {% trans 'True' %} {% endif %}
+        {% if postgres %}PostgreSQL: {{ postgres_version }} {% endif %}
+        Debug: {{ debug }}
 
 {% for key,value in request.META.items %}{% if key in 'SERVER_PORT,REMOTE_HOST,REMOTE_ADDR,SERVER_PROTOCOL' %}{{ key }}:{{ value }}
 {% endif %}{% endfor %}
@@ -110,4 +181,31 @@ Debug: {{ debug }}
     </textarea>
     <br/>
     <br/>
+    <form method="POST" id="delete-form">
+        {% csrf_token %}
+        <input type="hidden" name="delete_orphans" value="false">
+    </form>
+    {% block script %}
+        <script>
+            function toggleOrphans() {
+                var orphansList = document.getElementById('orphans-list');
+                var button = document.getElementById('toggle-button');
+
+                if (orphansList.style.display === 'none') {
+                    orphansList.style.display = 'block';
+                    button.innerText = "{% trans 'Hide' %}";
+                } else {
+                    orphansList.style.display = 'none';
+                    button.innerText = "{% trans 'Show' %}";
+                }
+            }
+
+            function deleteOrphans() {
+                document.getElementById('delete-form').delete_orphans.value = 'true';
+                document.getElementById('delete-form').submit();
+            }
+        </script>
+    {% endblock script %}
 {% endblock %}
+
+

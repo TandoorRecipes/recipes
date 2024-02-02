@@ -212,7 +212,7 @@ class UserFileSerializer(serializers.ModelSerializer):
             Image.open(obj.file.file.file)
             return self.context['request'].build_absolute_uri(obj.file.url)
         except Exception:
-            traceback.print_exc()
+            # traceback.print_exc()
             return ""
 
     def check_file_limit(self, validated_data):
@@ -260,7 +260,7 @@ class UserFileViewSerializer(serializers.ModelSerializer):
             Image.open(obj.file.file.file)
             return self.context['request'].build_absolute_uri(obj.file.url)
         except Exception:
-            traceback.print_exc()
+            # traceback.print_exc()
             return ""
 
     def create(self, validated_data):
@@ -281,6 +281,15 @@ class SpaceSerializer(WritableNestedModelSerializer):
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
     food_inherit = FoodInheritFieldSerializer(many=True)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    custom_space_theme = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_32 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_128 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_144 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_180 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_192 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_512 = UserFileViewSerializer(required=False, many=False, allow_null=True)
+    logo_color_svg = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
@@ -302,7 +311,8 @@ class SpaceSerializer(WritableNestedModelSerializer):
         fields = (
             'id', 'name', 'created_by', 'created_at', 'message', 'max_recipes', 'max_file_storage_mb', 'max_users',
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
-            'image', 'use_plural',)
+            'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
+            'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg',)
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo',)
@@ -372,8 +382,8 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserPreference
         fields = (
-            'user', 'image', 'theme', 'nav_color', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
-            'plan_share', 'sticky_navbar',
+            'user', 'image', 'theme', 'nav_bg_color', 'nav_text_color', 'nav_show_logo', 'default_unit', 'default_page', 'use_fractions', 'use_kj',
+            'plan_share', 'nav_sticky',
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_share', 'shopping_recent_days',
@@ -1021,7 +1031,7 @@ class AutoMealPlanSerializer(serializers.Serializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
     meal_type_id = serializers.IntegerField()
-    keywords = KeywordSerializer(many=True)
+    keyword_ids = serializers.ListField()
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
     addshopping = serializers.BooleanField()

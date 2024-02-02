@@ -45,7 +45,7 @@ To restore:
 cat pgdump.sql | sudo docker exec -i docker_db_recipes_1 psql postgres -U djangouser
 
 ```
-This connects to the postgres table instead of the actual dgangodb table, as the import function needs to delete the table, which can't be dropped off you're connected to it.
+This connects to the postgres table instead of the actual djangodb table, as the import function needs to delete the table, which can't be dropped off you're connected to it.
 
 ## Backup using export and import
 You can now export recipes from Tandoor using the export function. This method requires a working web interface.

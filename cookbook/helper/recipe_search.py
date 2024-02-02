@@ -309,7 +309,7 @@ class RecipeSearch():
 
     def _favorite_recipes(self, times_cooked=None):
         if self._sort_includes('favorite') or times_cooked:
-            less_than = '-' in (times_cooked or []) and not self._sort_includes('-favorite')
+            less_than = '-' in (str(times_cooked) or []) and not self._sort_includes('-favorite')
             if less_than:
                 default = 1000
             else:
