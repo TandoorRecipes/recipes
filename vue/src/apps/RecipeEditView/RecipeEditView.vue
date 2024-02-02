@@ -425,7 +425,6 @@
                                                                      v-if="!ingredient.is_header">
                                                                     <input
                                                                             class="form-control"
-                                                                            style="height: 100%;"
                                                                             v-model="ingredient.amount"
                                                                             type="number"
                                                                             step="any"
@@ -507,7 +506,6 @@
                                                                     <input
                                                                             class="form-control"
                                                                             maxlength="256"
-                                                                            style="height: 100%;"
                                                                             v-model="ingredient.note"
                                                                             v-bind:placeholder="$t('Note')"
                                                                             v-on:keydown.tab="
@@ -938,10 +936,7 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        // ingredients_visible determines whether or not the ingredients UI is shown in the edit view
-                        // show_ingredients_table determine whether the ingredients table is shown in the read view
-                        // these are seperate as one might want to add ingredients but not want the step-level view
-                        this.$set(s, "ingredients_visible", s.show_ingredients_table && (s.ingredients.length > 0 || this.recipe.steps.length === 1))
+                        this.$set(s, "ingredients_visible", (s.ingredients.length > 0 || this.recipe.steps.length === 1))
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
@@ -1324,5 +1319,11 @@ export default {
 
 textarea:not(.form-control) {
     border: 0 !important;
+}
+</style>
+
+<style scoped>
+.row.fixed-bottom {
+    margin: 0;
 }
 </style>

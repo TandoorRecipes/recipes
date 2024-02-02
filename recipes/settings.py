@@ -44,7 +44,7 @@ INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(
     ',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
-GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
+GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', False)))
 
 if os.getenv('REVERSE_PROXY_AUTH') is not None:
     print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
@@ -57,6 +57,9 @@ COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
 FRACTION_PREF_DEFAULT = bool(int(os.getenv('FRACTION_PREF_DEFAULT', False)))
 KJ_PREF_DEFAULT = bool(int(os.getenv('KJ_PREF_DEFAULT', False)))
 STICKY_NAV_PREF_DEFAULT = bool(int(os.getenv('STICKY_NAV_PREF_DEFAULT', True)))
+MAX_OWNED_SPACES_PREF_DEFAULT = int(os.getenv('MAX_OWNED_SPACES_PREF_DEFAULT', 100))
+UNAUTHENTICATED_THEME_FROM_SPACE = int(os.getenv('UNAUTHENTICATED_THEME_FROM_SPACE', 0))
+FORCE_THEME_FROM_SPACE = int(os.getenv('FORCE_THEME_FROM_SPACE', 0))
 
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(
@@ -69,7 +72,8 @@ if os.getenv('CSRF_TRUSTED_ORIGINS'):
     CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
 if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
-    print('DEPRECATION WARNING: Environment var "CORS_ORIGIN_ALLOW_ALL" is deprecated. Please use "CORS_ALLOW_ALL_ORIGINS."')
+    print(
+        'DEPRECATION WARNING: Environment var "CORS_ORIGIN_ALLOW_ALL" is deprecated. Please use "CORS_ALLOW_ALL_ORIGINS."')
     CORS_ALLOW_ALL_ORIGINS = CORS_ORIGIN_ALLOW_ALL
 else:
     CORS_ALLOW_ALL_ORIGINS = bool(int(os.getenv("CORS_ALLOW_ALL_ORIGINS", True)))
@@ -95,6 +99,8 @@ SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+
+DRF_THROTTLE_RECIPE_URL_IMPORT = os.getenv('DRF_THROTTLE_RECIPE_URL_IMPORT', '60/hour')
 
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
@@ -156,7 +162,8 @@ try:
                         INSTALLED_APPS.append(plugin_module)
 
                         plugin_config = {
-                            'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                            'name': plugin_class.verbose_name if hasattr(plugin_class,
+                                                                         'verbose_name') else plugin_class.name,
                             'version': plugin_class.VERSION if hasattr(plugin_class, 'VERSION') else 'unknown',
                             'website': plugin_class.website if hasattr(plugin_class, 'website') else '',
                             'github': plugin_class.github if hasattr(plugin_class, 'github') else '',
@@ -164,7 +171,8 @@ try:
                             'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
                             'base_url': plugin_class.base_url,
                             'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
-                            'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                            'api_router_name': plugin_class.api_router_name if hasattr(plugin_class,
+                                                                                       'api_router_name') else '',
                             'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
                             'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
                         }
@@ -218,6 +226,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'cookbook.helper.scope_middleware.ScopeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 if DEBUG_TOOLBAR:
@@ -253,7 +262,8 @@ if LDAP_AUTH:
         ldap.SCOPE_SUBTREE,
         os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
     )
-    AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
+    AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv(
+        'AUTH_LDAP_USER_ATTR_MAP') else {
         'first_name': 'givenName',
         'last_name': 'sn',
         'email': 'mail',
@@ -438,7 +448,7 @@ for p in PLUGINS:
     if p['bundle_name'] != '':
         WEBPACK_LOADER[p['bundle_name']] = {
             'CACHE': not DEBUG,
-            'BUNDLE_DIR_NAME': f'vue/',  # must end with slash
+            'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
             'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
             'POLL_INTERVAL': 0.1,
             'TIMEOUT': None,

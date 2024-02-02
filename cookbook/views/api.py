@@ -26,7 +26,7 @@ from django.db.models import Case, Count, Exists, OuterRef, ProtectedError, Q, S
 from django.db.models.fields.related import ForeignObjectRel
 from django.db.models.functions import Coalesce, Lower
 from django.db.models.signals import post_save
-from django.http import FileResponse, HttpResponse, JsonResponse, HttpResponseRedirect
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
@@ -46,7 +46,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSetMixin
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
@@ -70,12 +70,13 @@ from cookbook.helper.recipe_url_import import (clean_dict, get_from_youtube_scra
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
-                             FoodInheritField, ImportLog, Ingredient, InviteLink, Keyword, MealPlan,
-                             MealType, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry,
-                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
-                             Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, FoodProperty)
+                             FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
+                             Keyword, MealPlan, MealType, Property, PropertyType, Recipe,
+                             RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
+                             SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                             ViewLog)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -104,7 +105,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import FDC_API_KEY
+from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -640,9 +641,9 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             Property.objects.filter(space=self.request.space, import_food_id=food.id).update(import_food_id=None)
 
             return self.retrieve(request, pk)
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
-            return JsonResponse({'msg': f'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
+            return JsonResponse({'msg': 'there was an error parsing the FDC data, please check the server logs'}, status=500, json_dumps_params={'indent': 4})
 
     def destroy(self, *args, **kwargs):
         try:
@@ -698,11 +699,18 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     - **from_date**: filter from (inclusive) a certain date onward
     - **to_date**: filter upward to (inclusive) certain date
+    - **meal_type**: filter meal plans based on meal_type ID
 
     """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    query_params = [
+        QueryParam(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
+        QueryParam(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
+        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), qtype='int'),
+    ]
+    schema = QueryParamAutoSchema()
 
     def get_queryset(self):
         queryset = self.queryset.filter(
@@ -717,6 +725,11 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         to_date = self.request.query_params.get('to_date', None)
         if to_date is not None:
             queryset = queryset.filter(to_date__lte=to_date)
+
+        meal_type = self.request.query_params.getlist('meal_type', [])
+        if meal_type:
+            queryset = queryset.filter(meal_type__in=meal_type)
+
         return queryset
 
 
@@ -725,7 +738,7 @@ class AutoPlanViewSet(viewsets.ViewSet):
         serializer = AutoMealPlanSerializer(data=request.data)
 
         if serializer.is_valid():
-            keywords = serializer.validated_data['keywords']
+            keyword_ids = serializer.validated_data['keyword_ids']
             start_date = serializer.validated_data['start_date']
             end_date = serializer.validated_data['end_date']
             servings = serializer.validated_data['servings']
@@ -740,8 +753,8 @@ class AutoPlanViewSet(viewsets.ViewSet):
             recipes = Recipe.objects.values('id', 'name')
             meal_plans = list()
 
-            for keyword in keywords:
-                recipes = recipes.filter(keywords__name=keyword['name'])
+            for keyword_id in keyword_ids:
+                recipes = recipes.filter(keywords__id=keyword_id)
 
             if len(recipes) == 0:
                 return Response(serializer.data)
@@ -1298,6 +1311,10 @@ class AuthTokenThrottle(AnonRateThrottle):
     rate = '10/day'
 
 
+class RecipeImportThrottle(UserRateThrottle):
+    rate = DRF_THROTTLE_RECIPE_URL_IMPORT
+
+
 class CustomAuthToken(ObtainAuthToken):
     throttle_classes = [AuthTokenThrottle]
 
@@ -1323,114 +1340,114 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
-@api_view(['POST'])
-# @schema(AutoSchema()) #TODO add proper schema
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-# TODO add rate limiting
-def recipe_from_source(request):
-    """
-    function to retrieve a recipe from a given url or source string
-    :param request: standard request with additional post parameters
-            - url: url to use for importing recipe
-            - data: if no url is given recipe is imported from provided source data
-            - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
-    :return: JsonResponse containing the parsed json and images
-    """
-    scrape = None
-    serializer = RecipeFromSourceSerializer(data=request.data)
-    if serializer.is_valid():
+class RecipeUrlImportView(APIView):
+    throttle_classes = [RecipeImportThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
-        if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
-                bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
-            serializer.validated_data['url'] = bookmarklet.url
-            serializer.validated_data['data'] = bookmarklet.html
-            bookmarklet.delete()
+    def post(self, request, *args, **kwargs):
+        """
+        function to retrieve a recipe from a given url or source string
+        :param request: standard request with additional post parameters
+                - url: url to use for importing recipe
+                - data: if no url is given recipe is imported from provided source data
+                - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes
+        :return: JsonResponse containing the parsed json and images
+        """
+        scrape = None
+        serializer = RecipeFromSourceSerializer(data=request.data)
+        if serializer.is_valid():
 
-        url = serializer.validated_data.get('url', None)
-        data = unquote(serializer.validated_data.get('data', None))
-        if not url and not data:
-            return Response({
-                'error': True,
-                'msg': _('Nothing to do.')
-            }, status=status.HTTP_400_BAD_REQUEST)
+            if (b_pk := serializer.validated_data.get('bookmarklet', None)) and (
+                    bookmarklet := BookmarkletImport.objects.filter(pk=b_pk).first()):
+                serializer.validated_data['url'] = bookmarklet.url
+                serializer.validated_data['data'] = bookmarklet.html
+                bookmarklet.delete()
 
-        elif url and not data:
-            if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
-                if validators.url(url, public=True):
-                    return Response({
-                        'recipe_json': get_from_youtube_scraper(url, request),
-                        'recipe_images': [],
-                    }, status=status.HTTP_200_OK)
-            if re.match(
-                    '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
-                    url):
-                recipe_json = requests.get(
-                    url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
-                                                                         '') + '?share=' +
-                    re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
-                recipe_json = clean_dict(recipe_json, 'id')
-                serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
-                if serialized_recipe.is_valid():
-                    recipe = serialized_recipe.save()
-                    if validators.url(recipe_json['image'], public=True):
-                        recipe.image = File(handle_image(request,
-                                                         File(io.BytesIO(requests.get(recipe_json['image']).content),
-                                                              name='image'),
-                                                         filetype=pathlib.Path(recipe_json['image']).suffix),
-                                            name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
-                    recipe.save()
-                    return Response({
-                        'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
-                    }, status=status.HTTP_201_CREATED)
-            else:
-                try:
+            url = serializer.validated_data.get('url', None)
+            data = unquote(serializer.validated_data.get('data', None))
+            if not url and not data:
+                return Response({
+                    'error': True,
+                    'msg': _('Nothing to do.')
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            elif url and not data:
+                if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     if validators.url(url, public=True):
-                        scrape = scrape_me(url_path=url, wild_mode=True)
+                        return Response({
+                            'recipe_json': get_from_youtube_scraper(url, request),
+                            'recipe_images': [],
+                        }, status=status.HTTP_200_OK)
+                if re.match(
+                        '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+                        url):
+                    recipe_json = requests.get(
+                        url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
+                                                                             '') + '?share=' +
+                        re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
+                    recipe_json = clean_dict(recipe_json, 'id')
+                    serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
+                    if serialized_recipe.is_valid():
+                        recipe = serialized_recipe.save()
+                        if validators.url(recipe_json['image'], public=True):
+                            recipe.image = File(handle_image(request,
+                                                             File(io.BytesIO(requests.get(recipe_json['image']).content),
+                                                                  name='image'),
+                                                             filetype=pathlib.Path(recipe_json['image']).suffix),
+                                                name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
+                        recipe.save()
+                        return Response({
+                            'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
+                        }, status=status.HTTP_201_CREATED)
+                else:
+                    try:
+                        if validators.url(url, public=True):
+                            scrape = scrape_me(url_path=url, wild_mode=True)
 
-                    else:
+                        else:
+                            return Response({
+                                'error': True,
+                                'msg': _('Invalid Url')
+                            }, status=status.HTTP_400_BAD_REQUEST)
+                    except NoSchemaFoundInWildMode:
+                        pass
+                    except requests.exceptions.ConnectionError:
                         return Response({
                             'error': True,
-                            'msg': _('Invalid Url')
+                            'msg': _('Connection Refused.')
                         }, status=status.HTTP_400_BAD_REQUEST)
-                except NoSchemaFoundInWildMode:
+                    except requests.exceptions.MissingSchema:
+                        return Response({
+                            'error': True,
+                            'msg': _('Bad URL Schema.')
+                        }, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                try:
+                    data_json = json.loads(data)
+                    if '@context' not in data_json:
+                        data_json['@context'] = 'https://schema.org'
+                    if '@type' not in data_json:
+                        data_json['@type'] = 'Recipe'
+                    data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
+                except JSONDecodeError:
                     pass
-                except requests.exceptions.ConnectionError:
-                    return Response({
-                        'error': True,
-                        'msg': _('Connection Refused.')
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                except requests.exceptions.MissingSchema:
-                    return Response({
-                        'error': True,
-                        'msg': _('Bad URL Schema.')
-                    }, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            try:
-                data_json = json.loads(data)
-                if '@context' not in data_json:
-                    data_json['@context'] = 'https://schema.org'
-                if '@type' not in data_json:
-                    data_json['@type'] = 'Recipe'
-                data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
-            except JSONDecodeError:
-                pass
-            scrape = text_scraper(text=data, url=url)
-            if not url and (found_url := scrape.schema.data.get('url', None)):
-                scrape = text_scraper(text=data, url=found_url)
+                scrape = text_scraper(text=data, url=url)
+                if not url and (found_url := scrape.schema.data.get('url', None)):
+                    scrape = text_scraper(text=data, url=found_url)
 
-        if scrape:
-            return Response({
-                'recipe_json': helper.get_from_scraper(scrape, request),
-                'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
-            }, status=status.HTTP_200_OK)
+            if scrape:
+                return Response({
+                    'recipe_json': helper.get_from_scraper(scrape, request),
+                    'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
+                }, status=status.HTTP_200_OK)
 
+            else:
+                return Response({
+                    'error': True,
+                    'msg': _('No usable data could be found.')
+                }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({
-                'error': True,
-                'msg': _('No usable data could be found.')
-            }, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -1669,10 +1686,10 @@ def get_plan_ical(request, from_date, to_date):
     ).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
 
     if from_date is not None:
-        queryset = queryset.filter(date__gte=from_date)
+        queryset = queryset.filter(from_date__gte=from_date)
 
     if to_date is not None:
-        queryset = queryset.filter(date__lte=to_date)
+        queryset = queryset.filter(to_date__lte=to_date)
 
     cal = Calendar()
 

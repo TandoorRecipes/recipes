@@ -24,7 +24,7 @@ from PIL import Image
 from treebeard.mp_tree import MP_Node, MP_NodeManager
 
 from recipes.settings import (COMMENT_PREF_DEFAULT, FRACTION_PREF_DEFAULT, KJ_PREF_DEFAULT,
-                              SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT)
+                              SORT_TREE_BY_NAME, STICKY_NAV_PREF_DEFAULT, MAX_OWNED_SPACES_PREF_DEFAULT)
 
 
 def get_user_display_name(self):
@@ -251,15 +251,58 @@ class FoodInheritField(models.Model, PermissionModelMixin):
 
 
 class Space(ExportModelOperationsMixin('space'), models.Model):
+    # TODO remove redundant theming constants
+    # Themes
+    BLANK = 'BLANK'
+    TANDOOR = 'TANDOOR'
+    TANDOOR_DARK = 'TANDOOR_DARK'
+    BOOTSTRAP = 'BOOTSTRAP'
+    DARKLY = 'DARKLY'
+    FLATLY = 'FLATLY'
+    SUPERHERO = 'SUPERHERO'
+
+    THEMES = (
+        (BLANK, '-------'),
+        (TANDOOR, 'Tandoor'),
+        (BOOTSTRAP, 'Bootstrap'),
+        (DARKLY, 'Darkly'),
+        (FLATLY, 'Flatly'),
+        (SUPERHERO, 'Superhero'),
+        (TANDOOR_DARK, 'Tandoor Dark (INCOMPLETE)'),
+    )
+
+    LIGHT = 'LIGHT'
+    DARK = 'DARK'
+
+    NAV_TEXT_COLORS = (
+        (BLANK, '-------'),
+        (LIGHT, 'Light'),
+        (DARK, 'Dark')
+    )
+
     name = models.CharField(max_length=128, default='Default')
+
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_image')
+    space_theme = models.CharField(choices=THEMES, max_length=128, default=BLANK)
+    custom_space_theme = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_theme')
+    nav_logo = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_nav_logo')
+    nav_bg_color = models.CharField(max_length=8, default='', blank=True, )
+    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=BLANK)
+    app_name = models.CharField(max_length=40, null=True, blank=True, )
+    logo_color_32 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_32')
+    logo_color_128 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_128')
+    logo_color_144 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_144')
+    logo_color_180 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_180')
+    logo_color_192 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_192')
+    logo_color_512 = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_512')
+    logo_color_svg = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='space_logo_color_svg')
+
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=512, default='', blank=True)
     max_recipes = models.IntegerField(default=0)
     max_file_storage_mb = models.IntegerField(default=0, help_text=_('Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.'))
     max_users = models.IntegerField(default=0)
-    use_plural = models.BooleanField(default=True)
     allow_sharing = models.BooleanField(default=True)
     no_sharing_limit = models.BooleanField(default=False)
     demo = models.BooleanField(default=False)
@@ -338,22 +381,10 @@ class UserPreference(models.Model, PermissionModelMixin):
     )
 
     # Nav colors
-    PRIMARY = 'PRIMARY'
-    SECONDARY = 'SECONDARY'
-    SUCCESS = 'SUCCESS'
-    INFO = 'INFO'
-    WARNING = 'WARNING'
-    DANGER = 'DANGER'
     LIGHT = 'LIGHT'
     DARK = 'DARK'
 
-    COLORS = (
-        (PRIMARY, 'Primary'),
-        (SECONDARY, 'Secondary'),
-        (SUCCESS, 'Success'),
-        (INFO, 'Info'),
-        (WARNING, 'Warning'),
-        (DANGER, 'Danger'),
+    NAV_TEXT_COLORS = (
         (LIGHT, 'Light'),
         (DARK, 'Dark')
     )
@@ -371,8 +402,13 @@ class UserPreference(models.Model, PermissionModelMixin):
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     image = models.ForeignKey("UserFile", on_delete=models.SET_NULL, null=True, blank=True, related_name='user_image')
+
     theme = models.CharField(choices=THEMES, max_length=128, default=TANDOOR)
-    nav_color = models.CharField(choices=COLORS, max_length=128, default=PRIMARY)
+    nav_bg_color = models.CharField(max_length=8, default='#ddbf86')
+    nav_text_color = models.CharField(max_length=16, choices=NAV_TEXT_COLORS, default=DARK)
+    nav_show_logo = models.BooleanField(default=True)
+    nav_sticky = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
+    max_owned_spaces = models.IntegerField(default=MAX_OWNED_SPACES_PREF_DEFAULT)
     default_unit = models.CharField(max_length=32, default='g')
     use_fractions = models.BooleanField(default=FRACTION_PREF_DEFAULT)
     use_kj = models.BooleanField(default=KJ_PREF_DEFAULT)
@@ -382,7 +418,6 @@ class UserPreference(models.Model, PermissionModelMixin):
     ingredient_decimals = models.IntegerField(default=2)
     comments = models.BooleanField(default=COMMENT_PREF_DEFAULT)
     shopping_auto_sync = models.IntegerField(default=5)
-    sticky_navbar = models.BooleanField(default=STICKY_NAV_PREF_DEFAULT)
     mealplan_autoadd_shopping = models.BooleanField(default=False)
     mealplan_autoexclude_onhand = models.BooleanField(default=True)
     mealplan_autoinclude_related = models.BooleanField(default=True)
@@ -398,6 +433,15 @@ class UserPreference(models.Model, PermissionModelMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ScopedManager(space='space')
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.max_owned_spaces = MAX_OWNED_SPACES_PREF_DEFAULT
+            self.comments = COMMENT_PREF_DEFAULT
+            self.nav_sticky = STICKY_NAV_PREF_DEFAULT
+            self.use_kj = KJ_PREF_DEFAULT
+            self.use_fractions = FRACTION_PREF_DEFAULT
+
+        return super().save(*args, **kwargs)
     def __str__(self):
         return str(self.user)
 
@@ -718,6 +762,9 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
+    def __str__(self):
+        return f'{self.pk}: {self.amount} {self.food.name} {self.unit.name}'
+
     class Meta:
         ordering = ['order', 'pk']
         indexes = (
@@ -745,7 +792,9 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         return render_instructions(self)
 
     def __str__(self):
-        return f'{self.pk} {self.name}'
+        if not self.recipe_set.exists():
+            return f"{self.pk}: {_('Orphaned Step')}"
+        return f"{self.pk}: {self.name}" if self.name else f"Step: {self.pk}"
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1310,6 +1359,9 @@ class UserFile(ExportModelOperationsMixin('user_files'), models.Model, Permissio
             self.file.name = f'{uuid.uuid4()}' + pathlib.Path(self.file.name).suffix
             self.file_size_kb = round(self.file.size / 1000)
         super(UserFile, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.name} (#{self.id})'
 
 
 class Automation(ExportModelOperationsMixin('automations'), models.Model, PermissionModelMixin):

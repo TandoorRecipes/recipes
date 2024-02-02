@@ -2,6 +2,7 @@
 
     <div id="app">
         <div>
+            <markdown-editor-component></markdown-editor-component>
 
         </div>
     </div>
@@ -19,6 +20,8 @@ import BetaWarning from "@/components/BetaWarning.vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
 import GenericMultiselect from "@/components/GenericMultiselect.vue";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
+import {Models} from "@/utils/models";
+import MarkdownEditorComponent from "@/components/MarkdownEditorComponent.vue";
 
 
 Vue.use(BootstrapVue)
@@ -27,16 +30,20 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {},
+    components: {MarkdownEditorComponent},
     computed: {},
     data() {
         return {}
     },
     mounted() {
         this.$i18n.locale = window.CUSTOM_LOCALE
+
+
     },
     methods: {
+        refreshData: function () {
 
+        }
     },
 }
 </script>

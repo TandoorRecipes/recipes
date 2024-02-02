@@ -1839,7 +1839,7 @@ export interface MealPlan {
      * @type {string}
      * @memberof MealPlan
      */
-    to_date: string;
+    to_date?: string;
     /**
      * 
      * @type {MealPlanMealType}
@@ -4503,6 +4503,18 @@ export interface Space {
     image?: RecipeFile | null;
     /**
      * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    nav_logo?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    space_theme?: RecipeFile | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof Space
      */
@@ -5088,7 +5100,19 @@ export interface UserPreference {
      * @type {string}
      * @memberof UserPreference
      */
-    nav_color?: UserPreferenceNavColorEnum;
+    nav_bg_color?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    nav_text_color?: UserPreferenceNavTextColorEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UserPreference
+     */
+    nav_show_logo?: boolean;
     /**
      * 
      * @type {string}
@@ -5124,7 +5148,7 @@ export interface UserPreference {
      * @type {boolean}
      * @memberof UserPreference
      */
-    sticky_navbar?: boolean;
+    nav_sticky?: boolean;
     /**
      * 
      * @type {number}
@@ -5245,13 +5269,7 @@ export enum UserPreferenceThemeEnum {
     * @export
     * @enum {string}
     */
-export enum UserPreferenceNavColorEnum {
-    Primary = 'PRIMARY',
-    Secondary = 'SECONDARY',
-    Success = 'SUCCESS',
-    Info = 'INFO',
-    Warning = 'WARNING',
-    Danger = 'DANGER',
+export enum UserPreferenceNavTextColorEnum {
     Light = 'LIGHT',
     Dark = 'DARK'
 }
@@ -6223,6 +6241,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipeUrlImport: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-from-source/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * 
          * @param {ShoppingList} [shoppingList] 
          * @param {*} [options] Override http request option.
@@ -6693,39 +6744,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          */
         createimportFiles: async (body?: any, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/import/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createrecipeFromSource: async (body?: any, options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/recipe-from-source/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -8039,7 +8057,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+         * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -8590,11 +8608,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date
+         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {number} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listMealPlans: async (options: any = {}): Promise<RequestArgs> => {
+        listMealPlans: async (fromDate?: string, toDate?: string, mealType?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8606,6 +8627,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (fromDate !== undefined) {
+                localVarQueryParameter['from_date'] = fromDate;
+            }
+
+            if (toDate !== undefined) {
+                localVarQueryParameter['to_date'] = toDate;
+            }
+
+            if (mealType !== undefined) {
+                localVarQueryParameter['meal_type'] = mealType;
+            }
 
 
     
@@ -15048,6 +15081,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createRecipeUrlImport(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRecipeUrlImport(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * 
          * @param {ShoppingList} [shoppingList] 
          * @param {*} [options] Override http request option.
@@ -15190,16 +15233,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async createimportFiles(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createimportFiles(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createrecipeFromSource(body?: any, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createrecipeFromSource(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15593,7 +15626,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+         * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -15751,12 +15784,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date
+         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {number} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listMealPlans(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealPlan>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listMealPlans(options);
+        async listMealPlans(fromDate?: string, toDate?: string, mealType?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealPlan>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMealPlans(fromDate, toDate, mealType, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17822,6 +17858,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.createRecipeBookEntry(recipeBookEntry, options).then((request) => request(axios, basePath));
         },
         /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipeUrlImport(body?: any, options?: any): AxiosPromise<any> {
+            return localVarFp.createRecipeUrlImport(body, options).then((request) => request(axios, basePath));
+        },
+        /**
          * 
          * @param {ShoppingList} [shoppingList] 
          * @param {*} [options] Override http request option.
@@ -17951,15 +17996,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         createimportFiles(body?: any, options?: any): AxiosPromise<any> {
             return localVarFp.createimportFiles(body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
-         * @param {any} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createrecipeFromSource(body?: any, options?: any): AxiosPromise<any> {
-            return localVarFp.createrecipeFromSource(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18313,7 +18349,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.destroyViewLog(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+         * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {string} id A unique integer value identifying this food.
          * @param {Food} [food] 
          * @param {*} [options] Override http request option.
@@ -18456,12 +18492,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.listKeywords(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
-         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date
+         * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {number} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listMealPlans(options?: any): AxiosPromise<Array<MealPlan>> {
-            return localVarFp.listMealPlans(options).then((request) => request(axios, basePath));
+        listMealPlans(fromDate?: string, toDate?: string, mealType?: number, options?: any): AxiosPromise<Array<MealPlan>> {
+            return localVarFp.listMealPlans(fromDate, toDate, mealType, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
@@ -20408,6 +20447,17 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
+     * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
+     * @param {any} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public createRecipeUrlImport(body?: any, options?: any) {
+        return ApiApiFp(this.configuration).createRecipeUrlImport(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * 
      * @param {ShoppingList} [shoppingList] 
      * @param {*} [options] Override http request option.
@@ -20564,17 +20614,6 @@ export class ApiApi extends BaseAPI {
      */
     public createimportFiles(body?: any, options?: any) {
         return ApiApiFp(this.configuration).createimportFiles(body, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
-     * @param {any} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public createrecipeFromSource(body?: any, options?: any) {
-        return ApiApiFp(this.configuration).createrecipeFromSource(body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21007,7 +21046,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * updates the food with all possible data from the FDC Api (only adds new, does not change existing properties)
+     * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
      * @param {string} id A unique integer value identifying this food.
      * @param {Food} [food] 
      * @param {*} [options] Override http request option.
@@ -21180,13 +21219,16 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date
+     * optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+     * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+     * @param {number} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listMealPlans(options?: any) {
-        return ApiApiFp(this.configuration).listMealPlans(options).then((request) => request(this.axios, this.basePath));
+    public listMealPlans(fromDate?: string, toDate?: string, mealType?: number, options?: any) {
+        return ApiApiFp(this.configuration).listMealPlans(fromDate, toDate, mealType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

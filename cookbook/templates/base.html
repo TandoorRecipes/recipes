@@ -3,36 +3,38 @@
 {% load theming_tags %}
 {% load custom_tags %}
 
+{% theme_values request as theme_values %}
+
 <html>
 <head>
     <title>{% block title %}
     {% endblock %}</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
     <meta name="robots" content="noindex,nofollow"/>
 
-
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="shortcut icon" href="{% static 'assets/favicon.svg' %}">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon-32x32.png' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% static 'assets/favicon-16x16.png' %}" sizes="16x16">
-
-    <link rel="mask-icon" href="{% static 'assets/safari-pinned-tab.svg' %}" color="#161616">
-    <link rel="apple-touch-icon" href="{% static 'assets/apple-touch-icon.png' %}" sizes="180x180">
+    <link rel="icon" href="{{ theme_values.logo_color_svg }}">
+    <link rel="icon" href="{{ theme_values.logo_color_32 }}" sizes="32x32">
+    <link rel="icon" href="{{ theme_values.logo_color_128 }}" sizes="128x128">
+    <link rel="icon" href="{{ theme_values.logo_color_192 }}" sizes="192x192">
+    <link rel="apple-touch-icon" href="{{ theme_values.logo_color_180 }}" sizes="180x180">
 
     <link rel="manifest" crossorigin="use-credentials" href="{% url 'web_manifest' %}">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
 
+    <meta name="msapplication-TileColor" content="{{ theme_values.nav_bg_color }}">
+    <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
 
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#161616">
-    <meta name="msapplication-TileColor" content="#161616">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="{{ theme_values.nav_bg_color }}">
 
     <meta name="apple-mobile-web-app-capable" content="yes"/>
 
     <!-- Bootstrap 4 -->
-    <link id="id_main_css" href="{% theme_url request %}" rel="stylesheet">
+    <link id="id_main_css" href="{{ theme_values.theme }}" rel="stylesheet">
+    {% if theme_values.custom_theme %}
+        <link id="id_custom_css" href="{{ theme_values.custom_theme }}" rel="stylesheet">
+    {% endif %}
+
+
     <link href="{% static 'css/app.min.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
 
@@ -74,15 +76,15 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg {% nav_color request %}"
+<nav class="navbar navbar-expand-lg {{ theme_values.nav_text_class }}"
      id="id_main_nav"
-     style="{% sticky_nav request %}">
+     style="{{ theme_values.sticky_nav }}; background-color: {{ theme_values.nav_bg_color }}">
 
     {% if not request.user.userpreference.left_handed %}
-        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+        {% if not request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
-                <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
+                <img class="brand-icon" src="{{ theme_values.nav_logo }}" alt="Logo">
             </a>
         {% endif %}
     {% endif %}
@@ -93,10 +95,10 @@
     </button>
 
     {% if request.user.userpreference.left_handed %}
-        {% if not request.user.is_authenticated or request.user.userpreference.theme == request.user.userpreference.TANDOOR %}
+        {% if not  request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
             <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
                aria-label="Tandoor">
-                <img class="brand-icon" src="{% logo_url request %}" alt="Logo">
+                <img class="brand-icon" src="{{ theme_values.nav_logo }}" alt="Logo">
             </a>
         {% endif %}
     {% endif %}
@@ -473,6 +475,14 @@
             overflow-y: hidden;
             overflow-x: hidden;
         }
+    }
+
+    #id_base_container {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .fixed-bottom {
+        padding-bottom: max(0.5rem, calc(env(safe-area-inset-bottom) - 0.5rem)) !important;
     }
 </style>
 
