@@ -96,7 +96,7 @@ Share some information on how you use Tandoor to help me improve the application
 Beginning with version 0.10.0 the code in this repository is licensed under the [GNU AGPL v3](https://www.gnu.org/licenses/agpl-3.0.de.html) license with a
 [common clause](https://commonsclause.com/) selling exception. See [LICENSE.md](https://github.com/vabene1111/recipes/blob/develop/LICENSE.md) for details.
 
-> NOTE: There appears to be a whole range of legal issues with licensing anything else then the standard completely open licenses.
+> NOTE: There appears to be a whole range of legal issues with licensing anything other than the standard completely open licenses.
 > I am in the process of getting some professional legal advice to sort out these issues. 
 > Please also see [Issue 238](https://github.com/vabene1111/recipes/issues/238) for some discussion and **reasoning** regarding the topic.
 

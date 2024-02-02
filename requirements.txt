@@ -1,7 +1,7 @@
 Django==4.2.7
-cryptography===41.0.6
+cryptography===41.0.7
 django-annoying==0.10.6
-django-autocomplete-light==3.9.4
+django-autocomplete-light==3.9.7
 django-cleanup==8.0.0
 django-crispy-forms==2.0
 crispy-bootstrap4==2022.1
@@ -14,7 +14,7 @@ bleach==6.0.0
 gunicorn==20.1.0
 lxml==4.9.3
 Markdown==3.5.1
-Pillow==10.0.1
+Pillow==10.2.0
 psycopg2-binary==2.9.5
 python-dotenv==1.0.0
 requests==2.31.0
@@ -36,13 +36,13 @@ pytest==7.4.3
 pytest-django==4.6.0
 django-treebeard==4.7
 django-cors-headers==4.2.0
-django-storages==1.13.2
+django-storages==1.14.2
 boto3==1.28.75
 django-prometheus==2.2.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.3
 django-auth-ldap==4.4.0
-pytest-factoryboy==2.5.1
+pytest-factoryboy==2.6.0
 pyppeteer==1.0.2
 validators==0.20.0
 pytube==15.0.0

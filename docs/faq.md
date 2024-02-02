@@ -10,8 +10,11 @@ Tandoor can be installed as a progressive web app (PWA) on mobile and desktop de
 #### Safari (iPhone/iPad)
 Open Tandoor, click Safari's share button, select `Add to Home Screen`
 
-### Chrome/Chromium
+#### Chrome/Chromium
 Open Tandoor, click the `add Tandoor to the home screen` message that pops up at the bottom of the screen
+
+#### Firefox for Android
+Open Tandoor, click on the `⋮` menu icon, then on `Install`
 
 ### Desktop browsers
 

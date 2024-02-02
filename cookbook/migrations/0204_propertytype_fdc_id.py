@@ -4,11 +4,6 @@ from django.db import migrations, models
 from django_scopes import scopes_disabled
 
 
-def fix_fdc_ids(apps, schema_editor):
-    with scopes_disabled():
-        # in case any food had a non digit fdc ID before this migration, remove it
-        Food = apps.get_model('cookbook', 'Food')
-        Food.objects.exclude(fdc_id__regex=r'^\d+$').exclude(fdc_id=None).update(fdc_id=None)
 
 
 class Migration(migrations.Migration):
@@ -17,7 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(fix_fdc_ids),
         migrations.AddField(
             model_name='propertytype',
             name='fdc_id',
