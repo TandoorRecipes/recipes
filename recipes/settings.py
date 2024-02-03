@@ -523,10 +523,10 @@ if os.getenv('S3_ACCESS_KEY', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 else:
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
