@@ -1,12 +1,10 @@
 import asyncio
 import logging
-import multiprocessing
 import queue
-import weakref
+import threading
 from asyncio import Task
 from dataclasses import dataclass
 from enum import Enum
-from multiprocessing import JoinableQueue
 from types import UnionType
 from typing import List, Any, Dict, Optional, Type
 
@@ -16,8 +14,6 @@ from django_scopes import scope
 from cookbook.connectors.connector import Connector
 from cookbook.connectors.homeassistant import HomeAssistant
 from cookbook.models import ShoppingListEntry, Space, ConnectorConfig
-
-multiprocessing.set_start_method('fork')  # https://code.djangoproject.com/ticket/31169
 
 REGISTERED_CLASSES: UnionType | Type = ShoppingListEntry
 
@@ -43,14 +39,13 @@ class Work:
 # 4. Work is marked as consumed, and next entry of the queue is consumed.
 # Each 'Work' is processed in sequential by the worker, so the throughput is about [workers * the slowest connector]
 class ConnectorManager:
-    _queue: JoinableQueue
+    _queue: queue.Queue
     _listening_to_classes = REGISTERED_CLASSES | ConnectorConfig
 
     def __init__(self):
-        self._queue = multiprocessing.JoinableQueue(maxsize=settings.EXTERNAL_CONNECTORS_QUEUE_SIZE)
-        self._worker = multiprocessing.Process(target=self.worker, args=(0, self._queue,), daemon=True)
+        self._queue = queue.Queue(maxsize=settings.EXTERNAL_CONNECTORS_QUEUE_SIZE)
+        self._worker = threading.Thread(target=self.worker, args=(0, self._queue,), daemon=True)
         self._worker.start()
-        weakref.finalize(self, self._worker.terminate)
 
     # Called by post save & post delete signals
     def __call__(self, instance: Any, **kwargs) -> None:
@@ -75,15 +70,10 @@ class ConnectorManager:
 
     def stop(self):
         self._queue.join()
-        self._queue.close()
         self._worker.join()
 
     @staticmethod
-    def worker(worker_id: int, worker_queue: JoinableQueue):
-        # https://stackoverflow.com/a/10684672 Close open connections after starting a new process to prevent re-use of same connections
-        from django.db import connections
-        connections.close_all()
-
+    def worker(worker_id: int, worker_queue: queue.Queue):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
