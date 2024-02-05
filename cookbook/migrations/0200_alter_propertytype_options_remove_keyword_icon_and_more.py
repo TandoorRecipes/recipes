@@ -13,9 +13,24 @@ def migrate_icons(apps, schema_editor):
         PropertyType = apps.get_model('cookbook', 'PropertyType')
         RecipeBook = apps.get_model('cookbook', 'RecipeBook')
 
+        duplicate_meal_types = MealType.objects.values('space_id', 'name').annotate(name_count=Count('name')).exclude(name_count=1).all()
+        if len(duplicate_meal_types) > 0:
+            raise RuntimeError(f'Duplicate MealTypes found, please remove/rename them and run migrations again/restart the container. {duplicate_meal_types}')
         MealType.objects.update(name=Concat(F('icon'), Value(' '), F('name')))
+
+        duplicate_meal_types = Keyword.objects.values('space_id', 'name').annotate(name_count=Count('name')).exclude(name_count=1).all()
+        if len(duplicate_meal_types) > 0:
+            raise RuntimeError(f'Duplicate Keyword found, please remove/rename them and run migrations again/restart the container. {duplicate_meal_types}')
         Keyword.objects.update(name=Concat(F('icon'), Value(' '), F('name')))
+
+        duplicate_meal_types = PropertyType.objects.values('space_id', 'name').annotate(name_count=Count('name')).exclude(name_count=1).all()
+        if len(duplicate_meal_types) > 0:
+            raise RuntimeError(f'Duplicate PropertyType found, please remove/rename them and run migrations again/restart the container. {duplicate_meal_types}')
         PropertyType.objects.update(name=Concat(F('icon'), Value(' '), F('name')))
+
+        duplicate_meal_types = RecipeBook.objects.values('space_id', 'name').annotate(name_count=Count('name')).exclude(name_count=1).all()
+        if len(duplicate_meal_types) > 0:
+            raise RuntimeError(f'Duplicate RecipeBook found, please remove/rename them and run migrations again/restart the container. {duplicate_meal_types}')
         RecipeBook.objects.update(name=Concat(F('icon'), Value(' '), F('name')))
 
 
@@ -25,7 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython( migrate_icons),
+        migrations.RunPython(migrate_icons),
         migrations.AlterModelOptions(
             name='propertytype',
             options={'ordering': ('order',)},
