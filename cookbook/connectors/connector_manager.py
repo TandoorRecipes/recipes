@@ -29,13 +29,13 @@ class ActionType(Enum):
 
 @dataclass
 class Work:
-    instance: REGISTERED_CLASSES
+    instance: REGISTERED_CLASSES | ConnectorConfig
     actionType: ActionType
 
 
 # The way ConnectionManager works is as follows:
 # 1. On init, it starts a worker & creates a queue for 'Work'
-# 2. Then any time its called, it verifies the type of action (create/update/delete) and if the item is of interest, pushes the Work (non blocking) to the queue.
+# 2. Then any time its called, it verifies the type of action (create/update/delete) and if the item is of interest, pushes the Work (non-blocking) to the queue.
 # 3. The worker consumes said work from the queue.
 # 3.1 If the work is of type ConnectorConfig, it flushes its cache of known connectors (per space.id)
 # 3.2 If work is of type REGISTERED_CLASSES, it asynchronously fires of all connectors and wait for them to finish (runtime should depend on the 'slowest' connector)
@@ -50,6 +50,7 @@ class ConnectorManager:
         self._worker = multiprocessing.Process(target=self.worker, args=(self._queue,), daemon=True)
         self._worker.start()
 
+    # Called by post save & post delete signals
     def __call__(self, instance: Any, **kwargs) -> None:
         if not isinstance(instance, self._listening_to_classes) or not hasattr(instance, "space"):
             return
@@ -77,13 +78,15 @@ class ConnectorManager:
 
     @staticmethod
     def worker(worker_queue: JoinableQueue):
+        # https://stackoverflow.com/a/10684672 Close open connections after starting a new process to prevent re-use of same connections
         from django.db import connections
         connections.close_all()
 
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-        _connectors: Dict[int, List[Connector]] = dict()
+        #
+        _connectors_cache: Dict[int, List[Connector]] = dict()
 
         while True:
             try:
@@ -98,7 +101,7 @@ class ConnectorManager:
             refresh_connector_cache = isinstance(item.instance, ConnectorConfig)
 
             space: Space = item.instance.space
-            connectors: Optional[List[Connector]] = _connectors.get(space.id)
+            connectors: Optional[List[Connector]] = _connectors_cache.get(space.id)
 
             if connectors is None or refresh_connector_cache:
                 if connectors is not None:
@@ -117,9 +120,10 @@ class ConnectorManager:
                             logging.exception(f"failed to initialize {config.name}")
                             continue
 
-                        connectors.append(connector)
+                        if connector is not None:
+                            connectors.append(connector)
 
-                    _connectors[space.id] = connectors
+                    _connectors_cache[space.id] = connectors
 
             if len(connectors) == 0 or refresh_connector_cache:
                 worker_queue.task_done()

@@ -437,16 +437,6 @@ key [here](https://fdc.nal.usda.gov/api-key-signup.html).
 FDC_API_KEY=DEMO_KEY
 ```
 
-#### External Connectors
-
-`DISABLE_EXTERNAL_CONNECTORS` is a global switch to disable External Connectors entirely (e.g. HomeAssistant).
-`EXTERNAL_CONNECTORS_QUEUE_SIZE` is the amount of changes that are kept in memory if the worker cannot keep up.
-
-```env
-DISABLE_EXTERNAL_CONNECTORS=0 // 0 = connectors enabled, 1 = connectors enabled
-EXTERNAL_CONNECTORS_QUEUE_SIZE=25 
-```
-
 ### Debugging/Development settings
 
 !!! warning
