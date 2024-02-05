@@ -348,7 +348,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
         validated_data['created_by'] = self.context['request'].user
-        obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
+        obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space, created_by=self.context['request'].user, defaults=validated_data)
         return obj
 
     class Meta:
