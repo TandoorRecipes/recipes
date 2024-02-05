@@ -132,7 +132,6 @@ class ConnectorManager:
             loop.run_until_complete(run_connectors(connectors, space, item.instance, item.actionType))
             worker_queue.task_done()
 
-        loop.close()
 
     @staticmethod
     def get_connected_for_config(config: ConnectorConfig) -> Optional[Connector]:
