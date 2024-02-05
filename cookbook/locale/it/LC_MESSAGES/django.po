@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-04-29 07:55+0000\n"
-"Last-Translator: Oliver Cervera <olivercervera@yahoo.it>\n"
+"PO-Revision-Date: 2024-02-01 17:22+0000\n"
+"Last-Translator: Lorenzo <gerosa.lorenzo.gl@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
 "Language: it\n"
@@ -536,27 +536,27 @@ msgstr "rotazione inversa"
 
 #: .\cookbook\helper\recipe_url_import.py:267
 msgid "careful rotation"
-msgstr ""
+msgstr "rotazione con cura"
 
 #: .\cookbook\helper\recipe_url_import.py:268
 msgid "knead"
-msgstr ""
+msgstr "impastare"
 
 #: .\cookbook\helper\recipe_url_import.py:269
 msgid "thicken"
-msgstr ""
+msgstr "addensare"
 
 #: .\cookbook\helper\recipe_url_import.py:270
 msgid "warm up"
-msgstr ""
+msgstr "riscaldare"
 
 #: .\cookbook\helper\recipe_url_import.py:271
 msgid "ferment"
-msgstr ""
+msgstr "fermentare"
 
 #: .\cookbook\helper\recipe_url_import.py:272
 msgid "sous-vide"
-msgstr ""
+msgstr "sottovuoto"
 
 #: .\cookbook\helper\shopping_helper.py:157
 msgid "You must supply a servings size"
@@ -1760,6 +1760,13 @@ msgid ""
 "selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Ricerche semplici ignorano la puteggiatura e parole comuni come "
+"\"il\", \"un\", \"e\". E tratterà separatamente le parole come necessario.\n"
+"            Cercare \"mela o farina\" restituisce ogni ricetta che contiene "
+"sia \"mele\" che \"farina\" ovunque nei campi che sono stati selezionati per "
+"una ricerca completa di testo.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:34
 msgid ""
@@ -1771,6 +1778,13 @@ msgid ""
 "been selected for a full text search.\n"
 "            "
 msgstr ""
+" \n"
+"            Ricerche di frase ignorano la punteggiatura, ma cercano tutte "
+"parole nell'esatto ordine indicato.\n"
+"            Cercare \"mele o farina\" restituisce una ricetta che contiene "
+"l'esatta frase \"mele o farina\" in qualsiasi campo selezionato per una "
+"ricerca completa di testo.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:39
 msgid ""

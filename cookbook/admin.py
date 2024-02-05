@@ -323,8 +323,8 @@ admin.site.register(MealPlan, MealPlanAdmin)
 
 
 class MealTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'order')
-    search_fields = ('name', 'created_by__username')
+    list_display = ('name', 'space', 'created_by', 'order')
+    search_fields = ('name', 'space', 'created_by__username')
 
 
 admin.site.register(MealType, MealTypeAdmin)
