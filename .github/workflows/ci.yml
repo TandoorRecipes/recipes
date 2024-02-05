@@ -79,7 +79,7 @@ jobs:
 
     - name: Django Testing project
       timeout-minutes: 6
-      run: pytest
+      run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
