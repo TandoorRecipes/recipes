@@ -181,10 +181,9 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
         query = self.request.query_params.get('query', None)
         if self.request.user.is_authenticated:
-            fuzzy = self.request.user.searchpreference.lookup or any(
-                [self.model.__name__.lower() in x for x in
-                 self.request.user.searchpreference.trigram.values_list(
-                     'field', flat=True)])
+            fuzzy = self.request.user.searchpreference.lookup or any([self.model.__name__.lower() in x for x in
+                                                                      self.request.user.searchpreference.trigram.values_list(
+                                                                          'field', flat=True)])
         else:
             fuzzy = True
 
@@ -204,10 +203,8 @@ class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
                         filter |= Q(name__unaccent__icontains=query)
 
                 self.queryset = (
-                    self.queryset.annotate(
-                        starts=Case(
-                            When(name__istartswith=query, then=(Value(100))),
-                            default=Value(0)))  # put exact matches at the top of the result set
+                    self.queryset.annotate(starts=Case(When(name__istartswith=query, then=(Value(100))),
+                                                       default=Value(0)))  # put exact matches at the top of the result set
                     .filter(filter).order_by('-starts', Lower('name').asc())
                 )
 
@@ -329,9 +326,8 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
             return self.annotate_recipe(queryset=super().get_queryset(), request=self.request, serializer=self.serializer_class, tree=True)
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
 
-        return self.annotate_recipe(
-            queryset=self.queryset, request=self.request, serializer=self.serializer_class,
-            tree=True)
+        return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class,
+                                    tree=True)
 
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
@@ -575,9 +571,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
                 pass
 
         self.queryset = super().get_queryset()
-        shopping_status = ShoppingListEntry.objects.filter(
-            space=self.request.space, food=OuterRef('id'),
-            checked=False).values('id')
+        shopping_status = ShoppingListEntry.objects.filter(space=self.request.space, food=OuterRef('id'),
+                                                           checked=False).values('id')
         # onhand_status = self.queryset.annotate(onhand_status=Exists(onhand_users_set__in=[shared_users]))
         return self.queryset \
             .annotate(shopping_status=Exists(shopping_status)) \
@@ -598,9 +593,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         shared_users = list(self.request.user.get_shopping_share())
         shared_users.append(request.user)
         if request.data.get('_delete', False) == 'true':
-            ShoppingListEntry.objects.filter(
-                food=obj, checked=False, space=request.space,
-                created_by__in=shared_users).delete()
+            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space,
+                                             created_by__in=shared_users).delete()
             content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
             return Response(content, status=status.HTTP_204_NO_CONTENT)
 
@@ -608,9 +602,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         unit = request.data.get('unit', None)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
 
-        ShoppingListEntry.objects.create(
-            food=obj, amount=amount, unit=unit, space=request.space,
-            created_by=request.user)
+        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space,
+                                         created_by=request.user)
         return Response(content, status=status.HTTP_204_NO_CONTENT)
 
     @decorators.action(detail=True, methods=['POST'], )
@@ -623,11 +616,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 
         response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
         if response.status_code == 429:
-            return JsonResponse(
-                {'msg',
-                 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'},
-                status=429,
-                json_dumps_params={'indent': 4})
+            return JsonResponse({'msg', 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
+                                json_dumps_params={'indent': 4})
 
         try:
             data = json.loads(response.content)
@@ -883,14 +873,12 @@ class RecipePagination(PageNumberPagination):
         return super().paginate_queryset(queryset, request, view)
 
     def get_paginated_response(self, data):
-        return Response(
-            OrderedDict(
-                [
-                    ('count', self.page.paginator.count),
-                    ('next', self.get_next_link()),
-                    ('previous', self.get_previous_link()),
-                    ('results', data),
-                ]))
+        return Response(OrderedDict([
+            ('count', self.page.paginator.count),
+            ('next', self.get_next_link()),
+            ('previous', self.get_previous_link()),
+            ('results', data),
+        ]))
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -976,10 +964,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         if self.request.GET.get('debug', False):
-            return JsonResponse(
-                {
-                    'new': str(self.get_queryset().query),
-                })
+            return JsonResponse({
+                'new': str(self.get_queryset().query),
+            })
         return super().list(request, *args, **kwargs)
 
     def get_serializer_class(self):
@@ -1149,10 +1136,8 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     query_params = [
         QueryParam(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), qtype='int'),
-        QueryParam(
-            name='checked', description=_(
-                'Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
-            ),
+        QueryParam(name='checked', description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
+                   ),
         QueryParam(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), qtype='int'),
     ]
     schema = QueryParamAutoSchema()
@@ -1343,28 +1328,25 @@ class CustomAuthToken(ObtainAuthToken):
     throttle_classes = [AuthTokenThrottle]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data,
-            context={'request': request})
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(
                 scope__contains='write').first():
             access_token = token
         else:
-            access_token = AccessToken.objects.create(
-                user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}',
-                expires=(timezone.now() + timezone.timedelta(days=365 * 5)),
-                scope='read write app')
-        return Response(
-            {
-                'id': access_token.id,
-                'token': access_token.token,
-                'scope': access_token.scope,
-                'expires': access_token.expires,
-                'user_id': access_token.user.pk,
-                'test': user.pk
-            })
+            access_token = AccessToken.objects.create(user=user, token=f'tda_{str(uuid.uuid4()).replace("-", "_")}',
+                                                      expires=(timezone.now() + timezone.timedelta(days=365 * 5)),
+                                                      scope='read write app')
+        return Response({
+            'id': access_token.id,
+            'token': access_token.token,
+            'scope': access_token.scope,
+            'expires': access_token.expires,
+            'user_id': access_token.user.pk,
+            'test': user.pk
+        })
 
 
 class RecipeUrlImportView(APIView):
@@ -1393,71 +1375,61 @@ class RecipeUrlImportView(APIView):
             url = serializer.validated_data.get('url', None)
             data = unquote(serializer.validated_data.get('data', None))
             if not url and not data:
-                return Response(
-                    {
-                        'error': True,
-                        'msg': _('Nothing to do.')
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    'error': True,
+                    'msg': _('Nothing to do.')
+                }, status=status.HTTP_400_BAD_REQUEST)
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     if validators.url(url, public=True):
-                        return Response(
-                            {
-                                'recipe_json': get_from_youtube_scraper(url, request),
-                                'recipe_images': [],
-                            }, status=status.HTTP_200_OK)
+                        return Response({
+                            'recipe_json': get_from_youtube_scraper(url, request),
+                            'recipe_images': [],
+                        }, status=status.HTTP_200_OK)
                 if re.match(
                         '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
                         url):
                     recipe_json = requests.get(
-                        url.replace('/view/recipe/', '/api/recipe/').replace(
-                            re.split('/view/recipe/[0-9]+', url)[1],
-                            '') + '?share=' +
+                        url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
+                                                                             '') + '?share=' +
                         re.split('/view/recipe/[0-9]+', url)[1].replace('/', '')).json()
                     recipe_json = clean_dict(recipe_json, 'id')
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
                         recipe = serialized_recipe.save()
                         if validators.url(recipe_json['image'], public=True):
-                            recipe.image = File(
-                                handle_image(
-                                    request,
-                                    File(
-                                        io.BytesIO(requests.get(recipe_json['image']).content),
-                                        name='image'),
-                                    filetype=pathlib.Path(recipe_json['image']).suffix),
-                                name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
+                            recipe.image = File(handle_image(request,
+                                                             File(io.BytesIO(requests.get(recipe_json['image']).content),
+                                                                  name='image'),
+                                                             filetype=pathlib.Path(recipe_json['image']).suffix),
+                                                name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                         recipe.save()
-                        return Response(
-                            {
-                                'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
-                            }, status=status.HTTP_201_CREATED)
+                        return Response({
+                            'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))
+                        }, status=status.HTTP_201_CREATED)
                 else:
                     try:
                         if validators.url(url, public=True):
                             scrape = scrape_me(url_path=url, wild_mode=True)
 
                         else:
-                            return Response(
-                                {
-                                    'error': True,
-                                    'msg': _('Invalid Url')
-                                }, status=status.HTTP_400_BAD_REQUEST)
+                            return Response({
+                                'error': True,
+                                'msg': _('Invalid Url')
+                            }, status=status.HTTP_400_BAD_REQUEST)
                     except NoSchemaFoundInWildMode:
                         pass
                     except requests.exceptions.ConnectionError:
-                        return Response(
-                            {
-                                'error': True,
-                                'msg': _('Connection Refused.')
-                            }, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({
+                            'error': True,
+                            'msg': _('Connection Refused.')
+                        }, status=status.HTTP_400_BAD_REQUEST)
                     except requests.exceptions.MissingSchema:
-                        return Response(
-                            {
-                                'error': True,
-                                'msg': _('Bad URL Schema.')
-                            }, status=status.HTTP_400_BAD_REQUEST)
+                        return Response({
+                            'error': True,
+                            'msg': _('Bad URL Schema.')
+                        }, status=status.HTTP_400_BAD_REQUEST)
             else:
                 try:
                     data_json = json.loads(data)
@@ -1473,18 +1445,16 @@ class RecipeUrlImportView(APIView):
                     scrape = text_scraper(text=data, url=found_url)
 
             if scrape:
-                return Response(
-                    {
-                        'recipe_json': helper.get_from_scraper(scrape, request),
-                        'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
-                    }, status=status.HTTP_200_OK)
+                return Response({
+                    'recipe_json': helper.get_from_scraper(scrape, request),
+                    'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
+                }, status=status.HTTP_200_OK)
 
             else:
-                return Response(
-                    {
-                        'error': True,
-                        'msg': _('No usable data could be found.')
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    'error': True,
+                    'msg': _('No usable data could be found.')
+                }, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1576,9 +1546,8 @@ def import_files(request):
 
             return Response({'import_id': il.pk}, status=status.HTTP_200_OK)
         except NotImplementedError:
-            return Response(
-                {'error': True, 'msg': _('Importing is not implemented for this provider')},
-                status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': True, 'msg': _('Importing is not implemented for this provider')},
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -1654,9 +1623,8 @@ def get_recipe_file(request, recipe_id):
 @group_required('user')
 def sync_all(request):
     if request.space.demo or settings.HOSTED:
-        messages.add_message(
-            request, messages.ERROR,
-            _('This feature is not yet available in the hosted version of tandoor!'))
+        messages.add_message(request, messages.ERROR,
+                             _('This feature is not yet available in the hosted version of tandoor!'))
         return redirect('index')
 
     monitors = Sync.objects.filter(active=True).filter(space=request.user.userspace_set.filter(active=1).first().space)
@@ -1695,9 +1663,8 @@ def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-        return JsonResponse(
-            {'pk': pk, 'share': link.uuid,
-             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
+        return JsonResponse({'pk': pk, 'share': link.uuid,
+                             'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 

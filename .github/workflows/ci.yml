@@ -78,6 +78,7 @@ jobs:
           ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
 
     - name: Django Testing project
+      timeout-minutes: 15
       run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
 
     - name: Publish Test Results

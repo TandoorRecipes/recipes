@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 import pytest
 from django.contrib import auth
 from mock.mock import Mock
