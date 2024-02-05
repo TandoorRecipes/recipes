@@ -2,6 +2,7 @@ import asyncio
 import logging
 import multiprocessing
 import queue
+import weakref
 from asyncio import Task
 from dataclasses import dataclass
 from enum import Enum
@@ -49,6 +50,7 @@ class ConnectorManager:
         self._queue = multiprocessing.JoinableQueue(maxsize=settings.EXTERNAL_CONNECTORS_QUEUE_SIZE)
         self._worker = multiprocessing.Process(target=self.worker, args=(0, self._queue,), daemon=True)
         self._worker.start()
+        self._finalizer = weakref.finalize(self, self.stop)
 
     # Called by post save & post delete signals
     def __call__(self, instance: Any, **kwargs) -> None:
