@@ -15,6 +15,7 @@ def obj_1(space_1, u1_s1):
     return e
 
 
+@pytest.mark.timeout(10)
 @pytest.mark.asyncio
 async def test_run_connectors(space_1, u1_s1, obj_1) -> None:
     connector_mock = Mock(spec=Connector)
