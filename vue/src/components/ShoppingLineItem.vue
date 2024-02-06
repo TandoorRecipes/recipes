@@ -1,60 +1,38 @@
 <template>
-    <div>
-
-
-        <div class="swipe-container" :id="item_container_id" @touchend="handleSwipe()"
-             v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)">
-            <!--        <div class="swipe-action" :class="{'bg-success': !is_checked , 'bg-warning': is_checked }">-->
-            <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>-->
-            <!--        </div>-->
-
-            <!--        <div class="swipe-action bg-primary justify-content-end">-->
-            <!--            <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>-->
-            <!--        </div>-->
+    <div class="swipe-container" :id="item_container_id" @touchend="handleSwipe()"
+         v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)"
+    >
+        <div class="swipe-action" :class="{'bg-success': !is_checked , 'bg-warning': is_checked }">
+            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
         </div>
 
-        <!--            <b-col cols="1" variant="primary" v-if="is_delayed">-->
-            <!--                <i class="fa-fw fas fa-hourglass-half"></i>-->
-            <!--            </b-col>-->
-
-        <b-row >
-
-            <b-col cols="4" md="3" >
-                <div class="" v-if="Object.keys(amounts).length> 0">
+        <b-button-group class="swipe-element">
+            <b-button variant="primary" v-if="is_delayed">
+                <i class="fa-fw fas fa-hourglass-half"></i>
+            </b-button>
+            <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
+                <div class="d-flex">
+                    <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">
 
                             <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> {{ a.amount }} {{ a.unit }}</span>
-                            <br/>
-                        </span>
+                            <br/></span>
+                    </div>
+                    <div class="d-flex  flex-column flex-grow-1 align-self-center">
+                        {{ food.name }}
+                    </div>
                 </div>
-            </b-col>
-            <b-col cols="6" md="6" @click="detail_modal_visible = true">
-                <b-row >
-                    <b-col >
-                        <div class="align-middle">
-                             {{ food.name }}
-                        </div>
 
-
-                    </b-col>
-                </b-row>
-                <b-row v-if="info_row">
-                    <b-col>
-                        <small class="text-muted">{{ info_row }}</small>
-                    </b-col>
-                </b-row>
-
-
-            </b-col>
-            <b-col cols="2" md="3">
-
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                       :checked="is_checked" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked, true)"/>
-
-            </b-col>
-
-        </b-row>
-
+                <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
+            </div>
+            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked, true)"
+                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
+                <i class="d-print-none fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
+            </b-button>
+        </b-button-group>
+        <div class="swipe-action bg-primary justify-content-end">
+            <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>
+        </div>
 
         <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false">
             <template #modal-title>
@@ -91,9 +69,7 @@
 
                         <b-button-group class="w-100">
                             <div class="card flex-grow-1 btn-block p-2">
-                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i> <span v-if="e.amount > 0">{{ e.amount }}</span> {{
-                                        e.unit?.name
-                                    }} {{ food.name }}</span>
+                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i> <span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
                                 <span><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
                                         <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
@@ -332,11 +308,6 @@ export default {
 
 
 <style>
-
-.checkbox-control-mobile {
-    font-size: 1rem;
-}
-
 /* scroll snap takes care of restoring scroll position */
 .swipe-container {
     display: flex;
