@@ -4015,18 +4015,6 @@ export interface ShoppingListEntries {
     unit?: FoodPropertiesFoodUnit | null;
     /**
      * 
-     * @type {number}
-     * @memberof ShoppingListEntries
-     */
-    ingredient?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListEntries
-     */
-    ingredient_note?: string;
-    /**
-     * 
      * @type {string}
      * @memberof ShoppingListEntries
      */
@@ -4061,6 +4049,12 @@ export interface ShoppingListEntries {
      * @memberof ShoppingListEntries
      */
     created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    updated_at?: string;
     /**
      * 
      * @type {string}
@@ -4106,18 +4100,6 @@ export interface ShoppingListEntry {
     unit?: FoodPropertiesFoodUnit | null;
     /**
      * 
-     * @type {number}
-     * @memberof ShoppingListEntry
-     */
-    ingredient?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ShoppingListEntry
-     */
-    ingredient_note?: string;
-    /**
-     * 
      * @type {string}
      * @memberof ShoppingListEntry
      */
@@ -4157,6 +4139,12 @@ export interface ShoppingListEntry {
      * @type {string}
      * @memberof ShoppingListEntry
      */
+    updated_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntry
+     */
     completed_at?: string | null;
     /**
      * 
@@ -4164,6 +4152,25 @@ export interface ShoppingListEntry {
      * @memberof ShoppingListEntry
      */
     delay_until?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface ShoppingListEntryBulk
+ */
+export interface ShoppingListEntryBulk {
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof ShoppingListEntryBulk
+     */
+    ids: Array<any>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShoppingListEntryBulk
+     */
+    checked: boolean;
 }
 /**
  * 
@@ -4213,6 +4220,18 @@ export interface ShoppingListRecipe {
      * @memberof ShoppingListRecipe
      */
     mealplan_note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan_from_date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipe
+     */
+    mealplan_type?: string;
 }
 /**
  * 
@@ -4262,6 +4281,18 @@ export interface ShoppingListRecipeMealplan {
      * @memberof ShoppingListRecipeMealplan
      */
     mealplan_note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    mealplan_from_date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipeMealplan
+     */
+    mealplan_type?: string;
 }
 /**
  * 
@@ -4311,6 +4342,18 @@ export interface ShoppingListRecipes {
      * @memberof ShoppingListRecipes
      */
     mealplan_note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    mealplan_from_date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    mealplan_type?: string;
 }
 /**
  * 
@@ -5460,6 +5503,39 @@ export interface ViewLog {
  */
 export const ApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {ShoppingListEntryBulk} [shoppingListEntryBulk] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bulkShoppingListEntry: async (shoppingListEntryBulk?: ShoppingListEntryBulk, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shopping-list-entry/bulk/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryBulk, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {AccessToken} [accessToken] 
@@ -9564,10 +9640,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarkets: async (options: any = {}): Promise<RequestArgs> => {
+        listSupermarkets: async (query?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9579,6 +9656,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
 
 
     
@@ -9739,10 +9820,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [query] Query string matched against user-file name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserFiles: async (options: any = {}): Promise<RequestArgs> => {
+        listUserFiles: async (query?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9754,6 +9836,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
 
 
     
@@ -14900,6 +14986,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {ShoppingListEntryBulk} [shoppingListEntryBulk] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async bulkShoppingListEntry(shoppingListEntryBulk?: ShoppingListEntryBulk, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntryBulk>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.bulkShoppingListEntry(shoppingListEntryBulk, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16112,11 +16208,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarkets(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Supermarket>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarkets(options);
+        async listSupermarkets(query?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Supermarket>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarkets(query, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16163,11 +16260,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [query] Query string matched against user-file name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUserFiles(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserFile>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserFiles(options);
+        async listUserFiles(query?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserFile>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listUserFiles(query, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17703,6 +17801,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
     return {
         /**
          * 
+         * @param {ShoppingListEntryBulk} [shoppingListEntryBulk] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bulkShoppingListEntry(shoppingListEntryBulk?: ShoppingListEntryBulk, options?: any): AxiosPromise<ShoppingListEntryBulk> {
+            return localVarFp.bulkShoppingListEntry(shoppingListEntryBulk, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18797,11 +18904,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [query] Query string matched against supermarket name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarkets(options?: any): AxiosPromise<Array<Supermarket>> {
-            return localVarFp.listSupermarkets(options).then((request) => request(axios, basePath));
+        listSupermarkets(query?: string, options?: any): AxiosPromise<Array<Supermarket>> {
+            return localVarFp.listSupermarkets(query, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18843,11 +18951,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [query] Query string matched against user-file name.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserFiles(options?: any): AxiosPromise<Array<UserFile>> {
-            return localVarFp.listUserFiles(options).then((request) => request(axios, basePath));
+        listUserFiles(query?: string, options?: any): AxiosPromise<Array<UserFile>> {
+            return localVarFp.listUserFiles(query, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20240,6 +20349,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
 export class ApiApi extends BaseAPI {
     /**
      * 
+     * @param {ShoppingListEntryBulk} [shoppingListEntryBulk] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public bulkShoppingListEntry(shoppingListEntryBulk?: ShoppingListEntryBulk, options?: any) {
+        return ApiApiFp(this.configuration).bulkShoppingListEntry(shoppingListEntryBulk, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -21570,12 +21690,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [query] Query string matched against supermarket name.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listSupermarkets(options?: any) {
-        return ApiApiFp(this.configuration).listSupermarkets(options).then((request) => request(this.axios, this.basePath));
+    public listSupermarkets(query?: string, options?: any) {
+        return ApiApiFp(this.configuration).listSupermarkets(query, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21626,12 +21747,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [query] Query string matched against user-file name.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listUserFiles(options?: any) {
-        return ApiApiFp(this.configuration).listUserFiles(options).then((request) => request(this.axios, this.basePath));
+    public listUserFiles(query?: string, options?: any) {
+        return ApiApiFp(this.configuration).listUserFiles(query, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
