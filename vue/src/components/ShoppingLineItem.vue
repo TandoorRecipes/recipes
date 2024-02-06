@@ -12,16 +12,18 @@
             </b-button>
             <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
                 <div class="d-flex">
-                    <div class="d-flex flex-column pr-2"  v-if="Object.keys(amounts).length> 0">
+                    <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">
 
-                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>{{ a.amount }} {{ a.unit }} </b></span>
+                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>{{ a.amount }} {{
+                                    a.unit
+                                }} </b></span>
                             <br/></span>
 
                     </div>
                     <div class="d-flex  flex-column flex-grow-1 align-self-center">
                         {{ food.name }} <br/>
-                         <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
+                        <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
                     </div>
                 </div>
 
@@ -36,7 +38,7 @@
             <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>
         </div>
 
-        <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false">
+        <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false" body-class="pr-4 pl-4 pt-0">
             <template #modal-title>
                 <h5> {{ food_row }}</h5>
                 <small class="text-muted">{{ food.description }}</small>
@@ -55,8 +57,6 @@
                     @change="detail_modal_visible = false; updateFoodCategory(food)"
                 ></b-form-select>
 
-                <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
-
                 <b-button variant="info" block
                           @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!is_delayed, true)">
                     {{ $t('Postpone') }}
@@ -71,13 +71,13 @@
 
                         <b-button-group class="w-100">
                             <div class="card flex-grow-1 btn-block p-2">
-                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i> <span
-                                    v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
+                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i>
+                                     <b><span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }}</b> {{ food.name }}</span>
                                 <span><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
-                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
+                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> <b>  {{
                                                 e.recipe_mealplan.recipe_name
-                                            }} </a>({{
+                                            }} </b></a>({{
                                             e.recipe_mealplan.servings
                                         }} {{ $t('Servings') }})<br/>
                                     </span>
@@ -90,7 +90,7 @@
                                 </small></span>
 
                             </div>
-                            <b-button variant="warning"
+                            <b-button variant="outline-danger"
                                       @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i
                                 class="fas fa-trash"></i></b-button>
                         </b-button-group>
@@ -102,6 +102,7 @@
                     </b-col>
                 </b-row>
 
+                <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
                 <b-button variant="danger" block class="mt-2"
                           @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
                     {{ $t('Delete_All') }}
