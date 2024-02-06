@@ -12,18 +12,20 @@
             </b-button>
             <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
                 <div class="d-flex">
-                    <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
+                    <div class="d-flex flex-column pr-2"  v-if="Object.keys(amounts).length> 0">
                         <span v-for="a in amounts" v-bind:key="a.id">
 
-                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> {{ a.amount }} {{ a.unit }}</span>
+                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>{{ a.amount }} {{ a.unit }} </b></span>
                             <br/></span>
+
                     </div>
                     <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                        {{ food.name }}
+                        {{ food.name }} <br/>
+                         <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
                     </div>
                 </div>
 
-                <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
+
             </div>
             <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked, true)"
                       :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
@@ -69,7 +71,8 @@
 
                         <b-button-group class="w-100">
                             <div class="card flex-grow-1 btn-block p-2">
-                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i> <span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
+                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i> <span
+                                    v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }} {{ food.name }}</span>
                                 <span><small class="text-muted">
                                     <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
                                         <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> {{
