@@ -98,7 +98,7 @@ class AutomationEngine:
             try:
                 return self.food_aliases[food.lower()]
             except KeyError:
-                return food
+                return self.apply_regex_replace_automation(food, Automation.FOOD_REPLACE)
         else:
             if automation := Automation.objects.filter(space=self.request.space, type=Automation.FOOD_ALIAS, param_1__iexact=food, disabled=False).order_by('order').first():
                 return automation.param_2
