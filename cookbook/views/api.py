@@ -1163,11 +1163,11 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if pk := self.request.query_params.getlist('id', []):
             self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
 
-        if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
+        if 'checked' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
         elif not self.detail:
             today_start = timezone.now().replace(hour=0, minute=0, second=0)
-            week_ago = today_start - datetime.timedelta(days=max(self.request.user.userpreference.shopping_recent_days, 14))
+            week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
             self.queryset = self.queryset.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
 
         try:
