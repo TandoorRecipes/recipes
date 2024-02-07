@@ -108,6 +108,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
                     displayPeriodCount: 3,
                     startingDayOfWeek: 1,
                     displayWeekNumbers: true,
+                    autoLoadServings: true,
                 }
             } else {
                 return JSON.parse(s)
