@@ -237,6 +237,7 @@ export default {
     },
     props: {
         recipe_id: Number,
+        def_servings: Number,
         recipe_obj: {type: Object, default: null},
         show_context_menu: {type: Boolean, default: true},
         enable_keyword_links: {type: Boolean, default: true},
@@ -320,8 +321,12 @@ export default {
 
 
             if (this.recipe.image === null) this.printReady()
-
-            this.servings = this.servings_cache[this.rootrecipe.id] = this.recipe.servings
+            if (window.RECIPE_SERVINGS && window.RECIPE_SERVINGS !== "None") {
+                //I am not sure this is the best way. This overwrites our servings cache, which may not be intended?
+                this.servings = window.RECIPE_SERVINGS
+            } else {
+                this.servings = this.servings_cache[this.rootrecipe.id] = this.recipe.servings
+            }
             this.loading = false
 
             setTimeout(() => {
