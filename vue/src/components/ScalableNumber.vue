@@ -1,6 +1,5 @@
 <template>
-  <span v-html="calculateAmount(number)"></span>
-
+  <span class="scalable" :class="[this.factor===1 ? 'unscaled' : (this.factor > 1 ? 'scaled-up':'scaled-down')]" v-html="calculateAmount(number)"></span>
 </template>
 
 <script>
