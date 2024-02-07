@@ -126,7 +126,7 @@
                                     <div class="flex-grow-1 ml-2"
                                          style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
-                                                        <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                                                        <a :href="resolveDjangoUrl('view_recipe', `${plan.entry.recipe.id}-${plan.entry.servings}`)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
                                         <span v-if="plan.entry.note" class="two-row-text">
@@ -169,7 +169,7 @@
                     v-if="contextData && contextData.originalItem && contextData.originalItem.entry.recipe != null"
                     @click="
                         $refs.menu.close()
-                        openRecipe(contextData.originalItem.entry.recipe)
+                        openRecipe(contextData.originalItem.entry.recipe, contextData.originalItem.entry.servings)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i>
@@ -392,8 +392,10 @@ export default {
         },
     },
     methods: {
-        openRecipe: function (recipe) {
-            window.open(this.resolveDjangoUrl("view_recipe", recipe.id))
+        openRecipe: function (recipe, servings) {
+            let ur = this.resolveDjangoUrl("view_recipe", `${recipe.id}-${servings}`)
+            console.log(ur)
+            window.open(ur)
         },
         setStartingDay(days) {
             if (this.settings.startingDayOfWeek + days < 0) {
