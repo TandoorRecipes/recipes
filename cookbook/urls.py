@@ -101,6 +101,8 @@ urlpatterns = [
     path('export-file/<int:pk>/', import_export.export_file, name='view_export_file'),
 
     path('view/recipe/<int:pk>', views.recipe_view, name='view_recipe'),
+    path('view/recipe/<int:pk>-<int:servings>', views.recipe_view, name='view_recipe'),
+    path('view/recipe/<int:pk>-<int:servings>/<slug:share>', views.recipe_view, name='view_recipe'),
     path('view/recipe/<int:pk>/<slug:share>', views.recipe_view, name='view_recipe'),
 
     path('new/recipe-import/<int:import_id>/', new.create_new_external_recipe, name='new_recipe_import'),
