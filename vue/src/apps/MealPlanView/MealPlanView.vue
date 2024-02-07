@@ -126,7 +126,7 @@
                                     <div class="flex-grow-1 ml-2"
                                          style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
-                                                        <a :href="resolveDjangoUrl('view_recipe', `${plan.entry.recipe.id}-${plan.entry.servings}`)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                                                        <a :href="getRecipeURL(plan.entry.recipe, plan.entry.servings)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
                                         <span v-if="plan.entry.note" class="two-row-text">
@@ -298,6 +298,7 @@ export default {
                 displayPeriodCount: 2,
                 startingDayOfWeek: 1,
                 displayWeekNumbers: true,
+                autoLoadServings: true,
             },
             dragged_item: null,
             meal_types: [],
@@ -392,10 +393,19 @@ export default {
         },
     },
     methods: {
+
+        getRecipeURL: function (recipe, servings) {
+            let slug
+            if (this.settings.autoLoadServings) {
+                slug = `${recipe.id}-${servings}`
+            } else {
+                slug = recipe.id
+            }
+            return this.resolveDjangoUrl("view_recipe",slug)
+        },
+
         openRecipe: function (recipe, servings) {
-            let ur = this.resolveDjangoUrl("view_recipe", `${recipe.id}-${servings}`)
-            console.log(ur)
-            window.open(ur)
+            window.open(this.getRecipeURL(recipe, servings))
         },
         setStartingDay(days) {
             if (this.settings.startingDayOfWeek + days < 0) {
