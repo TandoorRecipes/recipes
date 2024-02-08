@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="step">
         <hr/>
         <!-- Step header (only shown if more than one step -->
         <div class="row mb-1" v-if="recipe.steps.length > 1">
@@ -32,7 +32,7 @@
 
             <div class="row">
                 <!-- ingredients table -->
-                <div class="col col-md-4"
+                <div class="ingredients col col-md-4"
                      v-if="step.show_ingredients_table && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
                         <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
@@ -40,7 +40,7 @@
                     </table>
                 </div>
 
-                <div class="col"
+                <div class="method col"
                      :class="{ 'col-md-8 col-12': recipe.steps.length > 1, 'col-md-12 col-12': recipe.steps.length <= 1 }">
                     <!-- step text -->
                     <div class="row">
@@ -71,7 +71,7 @@
             </div>
 
             <!-- Sub recipe (always full width own row) -->
-            <div class="row">
+            <div class="subrecipe row">
                 <div class="col col-md-12">
                     <div class="card" v-if="step.step_recipe_data !== null">
                         <b-collapse id="collapse-1" v-model="details_visible">

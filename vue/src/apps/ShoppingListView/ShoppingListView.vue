@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="shopping">
         <b-alert :show="!online" dismissible class="small float-up" variant="warning">{{ $t("OfflineAlert") }}</b-alert>
 
         <div class="row float-top w-100">

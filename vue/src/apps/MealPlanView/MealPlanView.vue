@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="app" class="mealplan">
         <div class="d-none d-lg-block">
             <div class="row ">
                 <div class="col col-2">
