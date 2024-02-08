@@ -1,38 +1,38 @@
 <template>
 
-    <div>
+    <div> 
         <template v-if="loading">
             <loading-spinner></loading-spinner>
         </template>
 
         <div v-if="!loading" style="padding-bottom: 60px">
             <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)" v-if="show_recipe_switcher"/>
-            <div class="row">
+            <div class="title row">
                 <div class="col-12" style="text-align: center">
                     <h3>{{ recipe.name }}</h3>
                 </div>
             </div>
 
-            <div class="row text-center">
+            <div class="rating row text-center">
                 <div class="col col-md-12">
                     <recipe-rating :recipe="recipe"></recipe-rating>
                     <last-cooked :recipe="recipe" class="mt-2"></last-cooked>
                 </div>
             </div>
 
-            <div class="my-auto">
+            <div class="description my-auto">
                 <div class="col-12" style="text-align: center">
                     <i>{{ recipe.description }}</i>
                 </div>
             </div>
 
-            <div style="text-align: center">
+            <div class="keywords" style="text-align: center">
                 <keywords-component :recipe="recipe" :enable_keyword_links="enable_keyword_links"></keywords-component>
             </div>
 
             <hr/>
-            <div class="row align-items-center">
-                <div class="col col-md-3">
+            <div class="prep-data row align-items-center">
+                <div class="prep-time col col-md-3">
                     <div class="d-flex">
                         <div class="my-auto mr-1">
                             <i class="fas fa-fw fa-user-clock fa-2x text-primary"></i>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <div class="col col-md-3">
+                <div class="wait-time col col-md-3">
                     <div class="row d-flex">
                         <div class="my-auto mr-1">
                             <i class="far fa-fw fa-clock fa-2x text-primary"></i>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <div class="col col-md-4 col-10 mt-2 mt-md-0">
+                <div class="servings col col-md-4 col-10 mt-2 mt-md-0">
                     <div class="d-flex">
                         <div class="my-auto mr-1">
                             <i class="fas fa-fw fa-pizza-slice fa-2x text-primary"></i>
@@ -75,14 +75,14 @@
                     </div>
                 </div>
 
-                <div class="col col-md-2 col-2 mt-2 mt-md-0 text-right">
+                <div class="context-menu col col-md-2 col-2 mt-2 mt-md-0 text-right">
                     <recipe-context-menu v-bind:recipe="recipe" :servings="servings"
                                          :disabled_options="{print:false}" v-if="show_context_menu"></recipe-context-menu>
                 </div>
             </div>
             <hr/>
 
-            <div class="row">
+            <div class="overview row">
                 <div class="col-md-6 order-md-1 col-sm-12 order-sm-2 col-12 order-2"
                      v-if="recipe && ingredient_count > 0 && (recipe.show_ingredient_overview || recipe.steps.length < 2)">
                     <ingredients-card
@@ -118,7 +118,7 @@
                 </div>
             </template>
 
-            <div v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
+            <div class="steps" v-for="(s, index) in recipe.steps" v-bind:key="s.id" style="margin-top: 1vh">
                 <step-component
                     :recipe="recipe"
                     :step="s"
@@ -130,13 +130,13 @@
                 ></step-component>
             </div>
 
-            <div v-if="recipe.source_url !== null">
+            <div class="source" v-if="recipe.source_url !== null">
                 <h6 class="d-print-none"><i class="fas fa-file-import"></i> {{ $t("Imported_From") }}</h6>
                 <span class="text-muted mt-1"><a style="overflow-wrap: break-word;"
                                                  :href="recipe.source_url">{{ recipe.source_url }}</a></span>
             </div>
 
-            <div class="row" style="margin-top: 2vh; ">
+            <div class="properties row" style="margin-top: 2vh; ">
                 <div class="col-lg-6 offset-lg-3 col-12">
                     <property-view-component :recipe="recipe" :servings="servings" @foodUpdated="loadRecipe(recipe.id)"></property-view-component>
                 </div>

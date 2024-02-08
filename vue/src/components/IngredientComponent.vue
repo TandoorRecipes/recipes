@@ -1,20 +1,20 @@
 <template>
-    <tr>
+    <tr class="ingredient">
         <template v-if="ingredient.is_header">
-            <td colspan="5" @click="done">
+            <td class="header" colspan="5" @click="done">
                 <b>{{ ingredient.note }}</b>
             </td>
         </template>
 
         <template v-else>
-            <td class="d-print-none align-baseline py-2" v-if="detailed" @click="done">
+            <td class="check d-print-none align-baseline py-2" v-if="detailed" @click="done">
                 <i class="far fa-check-circle text-success" v-if="ingredient.checked"></i>
                 <i class="far fa-check-circle text-primary" v-if="!ingredient.checked"></i>
             </td>
-            <td class="text-nowrap" @click="done">
+            <td class="amount text-nowrap" @click="done">
                 <span v-if="ingredient.amount !== 0 && !ingredient.no_amount" v-html="calculateAmount(ingredient.amount)"></span>
             </td>
-            <td @click="done">
+            <td class="unit" @click="done">
                 <template v-if="ingredient.unit !== null && !ingredient.no_amount">
                     <template>
                         <template v-if="ingredient.unit.plural_name === '' || ingredient.unit.plural_name === null">
@@ -28,7 +28,7 @@
                     </template>
                 </template>
             </td>
-            <td @click="done">
+            <td class="food" @click="done">
                 <template v-if="ingredient.food !== null">
                     <a :href="resolveDjangoUrl('view_recipe', ingredient.food.recipe.id)" v-if="ingredient.food.recipe !== null" target="_blank" rel="noopener noreferrer">
                         {{ ingredientName(ingredient) }}
@@ -40,7 +40,7 @@
                     </template>
                 </template>
             </td>
-            <td v-if="detailed" class="align-baseline">
+            <td v-if="detailed" class="note align-baseline">
                 <template v-if="ingredient.note">
                     <span class="d-print-none touchable py-0 px-2" v-b-popover.hover="ingredient.note">
                         <i class="far fa-comment"></i>

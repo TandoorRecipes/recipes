@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'card border-primary no-border': header }">
+    <div :class="{ 'ingredients card border-primary no-border': header }">
         <div :class="{ 'card-body': header, 'p-0': header }">
             <div class="card-header" v-if="header">
                 <div class="row">
