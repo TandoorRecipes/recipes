@@ -91,17 +91,29 @@
 
                             </div>
                             <b-button variant="outline-danger"
-                                      @click="detail_modal_visible = false; useShoppingListStore().deleteObject(e)"><i
+                                      @click="useShoppingListStore().deleteObject(e)"><i
                                 class="fas fa-trash"></i></b-button>
                         </b-button-group>
+
+                        <generic-multiselect
+                            class="mt-1"
+                            v-if="e.recipe_mealplan === null"
+                            :initial_single_selection="e.unit"
+                            :model="Models.UNIT"
+                            :multiple="false"
+                            @change="e.unit = $event.val; useShoppingListStore().updateObject(e)"
+                        >
+                        </generic-multiselect>
 
                         <number-scaler-component :number="e.amount"
                                                  @change="e.amount = $event; useShoppingListStore().updateObject(e)"
                                                  v-if="e.recipe_mealplan === null"></number-scaler-component>
                         <hr class="m-2"/>
                     </b-col>
+
                 </b-row>
 
+                <b-button variant="success" block @click="useShoppingListStore().createObject({ amount: 0, unit: null, food: food, })"> {{ $t("Add") }}</b-button>
                 <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
                 <b-button variant="danger" block class="mt-2"
                           @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
@@ -131,6 +143,7 @@ import {ApiApiFactory} from "@/utils/openapi/api";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
 
 
 Vue.use(BootstrapVue)
@@ -138,7 +151,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "ShoppingLineItem",
     mixins: [ApiMixin, FormatMixin],
-    components: {GenericModalForm, NumberScalerComponent},
+    components: {GenericMultiselect, GenericModalForm, NumberScalerComponent},
     props: {
         entries: {type: Object,},
     },
