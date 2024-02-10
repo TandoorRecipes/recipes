@@ -763,7 +763,7 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     objects = ScopedManager(space='space')
 
     def __str__(self):
-        return f'{self.pk}: {self.amount} {self.food.name} {self.unit.name}'
+        return f'{self.pk}: {self.amount} ' + (self.food.name if self.food else ' ') + (self.unit.name if self.unit else '')
 
     class Meta:
         ordering = ['order', 'pk']
@@ -1099,6 +1099,8 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     checked = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     completed_at = models.DateTimeField(null=True, blank=True)
     delay_until = models.DateTimeField(null=True, blank=True)
 

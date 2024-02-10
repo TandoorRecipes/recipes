@@ -13,7 +13,9 @@ DETAIL_URL = 'api:shoppinglistentry-detail'
 
 @pytest.fixture()
 def obj_1(space_1, u1_s1):
-    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1), food=Food.objects.get_or_create(name='test 1', space=space_1)[0], space=space_1)
+    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1),
+                                         food=Food.objects.get_or_create(name='test 1', space=space_1)[0],
+                                         space=space_1)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -21,7 +23,9 @@ def obj_1(space_1, u1_s1):
 
 @pytest.fixture
 def obj_2(space_1, u1_s1):
-    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1), food=Food.objects.get_or_create(name='test 2', space=space_1)[0], space=space_1)
+    e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1),
+                                         food=Food.objects.get_or_create(name='test 2', space=space_1)[0],
+                                         space=space_1)
     s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
     s.entries.add(e)
     return e
@@ -77,6 +81,29 @@ def test_update(arg, request, obj_1):
     if r.status_code == 200:
         response = json.loads(r.content)
         assert response['amount'] == 2
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+    ['g1_s2', 403],
+    ['u1_s2', 200],
+    ['a1_s2', 200],
+])
+def test_bulk_update(arg, request, obj_1, obj_2):
+    c = request.getfixturevalue(arg[0])
+    r = c.post(
+        reverse(LIST_URL, ) + 'bulk/',
+        {'ids': [obj_1.id, obj_2.id], 'checked': True},
+        content_type='application/json'
+    )
+    assert r.status_code == arg[1]
+    assert r
+    if r.status_code == 200:
+        obj_1.refresh_from_db()
+        assert obj_1.checked == (arg[0] == 'u1_s1')
 
 
 @pytest.mark.parametrize("arg", [
