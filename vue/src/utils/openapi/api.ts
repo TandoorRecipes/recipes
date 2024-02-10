@@ -10101,6 +10101,47 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {string} target 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeSupermarketCategory: async (id: string, target: string, supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('mergeSupermarketCategory', 'id', id)
+            // verify required parameter 'target' is not null or undefined
+            assertParamExists('mergeSupermarketCategory', 'target', target)
+            const localVarPath = `/api/supermarket-category/{id}/merge/{target}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"target"}}`, encodeURIComponent(String(target)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this unit.
          * @param {string} target 
          * @param {Unit} [unit] 
@@ -16343,6 +16384,18 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {string} target 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async mergeSupermarketCategory(id: string, target: string, supermarketCategory?: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.mergeSupermarketCategory(id, target, supermarketCategory, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this unit.
          * @param {string} target 
          * @param {Unit} [unit] 
@@ -19023,6 +19076,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
             return localVarFp.mergeKeyword(id, target, keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category.
+         * @param {string} target 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        mergeSupermarketCategory(id: string, target: string, supermarketCategory?: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.mergeSupermarketCategory(id, target, supermarketCategory, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -21834,6 +21898,19 @@ export class ApiApi extends BaseAPI {
      */
     public mergeKeyword(id: string, target: string, keyword?: Keyword, options?: any) {
         return ApiApiFp(this.configuration).mergeKeyword(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this supermarket category.
+     * @param {string} target 
+     * @param {SupermarketCategory} [supermarketCategory] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public mergeSupermarketCategory(id: string, target: string, supermarketCategory?: SupermarketCategory, options?: any) {
+        return ApiApiFp(this.configuration).mergeSupermarketCategory(id, target, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

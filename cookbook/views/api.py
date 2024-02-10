@@ -492,7 +492,7 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin, MergeMixin):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
