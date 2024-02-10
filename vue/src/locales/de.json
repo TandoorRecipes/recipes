@@ -158,7 +158,7 @@
     "Create_New_Unit": "Neue Einheit hinzufügen",
     "Instructions": "Anleitung",
     "Time": "Zeit",
-    "New_Keyword": "Neues Schlagwort",
+    "New_Keyword": "Neues Stichwort",
     "Delete_Keyword": "Schlagwort löschen",
     "show_split_screen": "Geteilte Ansicht",
     "Recipes_per_page": "Rezepte pro Seite",
@@ -555,5 +555,13 @@
     "FDC_ID_help": "FDC Datenbank ID",
     "CustomImageHelp": "Laden Sie ein Bild hoch, das in der Space-Übersicht angezeigt werden soll.",
     "CustomNavLogoHelp": "Laden Sie ein Bild hoch, das als Logo für die Navigationsleiste verwendet werden soll.",
-    "CustomLogos": "Individuelle Logos"
+    "CustomLogos": "Individuelle Logos",
+    "Input": "Eingabe",
+    "Undo": "Rückgängig",
+    "NoMoreUndo": "Rückgängig: Keine Änderungen",
+    "created_by": "Erstellt von",
+    "ShoppingBackgroundSyncWarning": "Schlechte Netzwerkverbindung, Warten auf Synchronisation ...",
+    "ShowRecentlyCompleted": "Zuletzt abgehakte Zutaten zeigen",
+    "Enable": "Aktivieren",
+    "Delete_All": "Alles löschen"
 }
