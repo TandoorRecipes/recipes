@@ -2,8 +2,45 @@
 
     <div id="app">
         <div>
-            <markdown-editor-component></markdown-editor-component>
 
+            <div class="swipe-container">
+                <div class="swipe-action bg-success">
+                    <i class="swipe-icon fa-fw fas fa-check"></i>
+                </div>
+
+                <b-button-group class="swipe-element">
+
+                    <div class="card flex-grow-1 btn-block p-2">
+                        <div class="d-flex">
+                            <div class="d-flex flex-column pr-2">
+                            <span>
+                            <span><i class="fas fa-check"></i> <b>100 g </b></span>
+                            <br/>
+                            </span>
+                                <span>
+                            <span><i class="fas fa-check"></i> <b>200 kg </b></span>
+                            <br/>
+                            </span>
+
+                            </div>
+                            <div class="d-flex  flex-column flex-grow-1 align-self-center">
+                                Erdbeeren <br/>
+                                <span><small class="text-muted">vabene111</small></span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <b-button variant="success">
+                        <i class="d-print-none fa-fw fas fa-check"></i>
+                    </b-button>
+                </b-button-group>
+                <div class="swipe-action bg-primary justify-content-end">
+                    <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>
+                </div>
+
+
+            </div>
         </div>
     </div>
 </template>
@@ -30,7 +67,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {MarkdownEditorComponent},
+    components: {},
     computed: {},
     data() {
         return {}
@@ -49,5 +86,46 @@ export default {
 </script>
 
 <style>
+.swipe-container {
+    display: flex;
+    overflow: auto;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
 
+/* scrollbar should be hidden */
+.swipe-container::-webkit-scrollbar {
+    display: none;
+}
+
+.swipe-container {
+    scrollbar-width: none; /* For Firefox */
+}
+
+/* main element should always snap into view */
+.swipe-element {
+    scroll-snap-align: start;
+}
+
+.swipe-icon {
+    color: white;
+    position: sticky;
+    left: 16px;
+    right: 16px;
+}
+
+/* swipe-actions and element should be 100% wide */
+.swipe-action,
+.swipe-element {
+    min-width: 100%;
+}
+
+.swipe-action {
+    display: flex;
+    align-items: center;
+}
+
+.right {
+    justify-content: flex-end;
+}
 </style>
