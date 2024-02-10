@@ -41,6 +41,9 @@
 
 
             </div>
+
+
+            <markdown-editor-component></markdown-editor-component>
         </div>
     </div>
 </template>
@@ -67,7 +70,7 @@ Vue.use(BootstrapVue)
 export default {
     name: "TestView",
     mixins: [ApiMixin],
-    components: {},
+    components: {MarkdownEditorComponent},
     computed: {},
     data() {
         return {}
