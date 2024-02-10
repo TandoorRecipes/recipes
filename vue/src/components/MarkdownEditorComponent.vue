@@ -18,15 +18,17 @@ import {defaultKeymap} from "@codemirror/commands"
 import {markdown} from "@codemirror/lang-markdown"
 import {autocompletion} from "@codemirror/autocomplete"
 
-class PlaceholderWidget extends WidgetType { //TODO this is not working for some javascript magic reason
+class PlaceholderWidget extends WidgetType {
     name = undefined
+
     constructor(name) {
-        console.log(name)
+        console.log('name:', name)
         super()
+        this.name = name
     }
 
     eq(other) {
-        return this.name == other.name
+        return this.name === other.name
     }
 
     toDOM() {
@@ -37,7 +39,7 @@ class PlaceholderWidget extends WidgetType { //TODO this is not working for some
       padding: 0 3px;
       background: lightblue;`
 
-        elt.textContent = "Food"
+        elt.textContent = this.name
         return elt
     }
 
@@ -98,6 +100,7 @@ export default {
                     {label: "Mehl", type: "text", apply: "{{ ingredients[1] }}", detail: "template"},
                     {label: "Butter", type: "text", apply: "{{ ingredients[2] }}", detail: "template"},
                     {label: "Salz", type: "text", apply: "{{ ingredients[3] }}", detail: "template"},
+                    {label: "Scale", type: "text", apply: "{{ scale(100) }}", detail: "simple scalable number"},
                 ]
             }
         }
