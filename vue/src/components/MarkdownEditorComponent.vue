@@ -21,23 +21,39 @@ import {autocompletion} from "@codemirror/autocomplete"
 
 import {defaultHighlightStyle, syntaxHighlighting} from "@codemirror/language";
 
-class CheckboxWidget extends WidgetType {
+class TemplatePreviewWidget extends WidgetType {
     name = undefined
+    ingredients = []
 
-    constructor(name) {
+    constructor(name, ingredients) {
         super()
         this.name = name
+        this.ingredients = ingredients
     }
 
+    getIngredientLabel(ingredient) {
+        // TODO all possible null combinations
+        return `${ingredient.amount} ${ingredient.unit.name} ${ingredient.food.name}`
+    }
 
     toDOM() {
         let wrap = document.createElement("span")
         wrap.innerText = this.name
         wrap.style.fontStyle = 'italic'
 
+        let display_text = 'ERROR'
+        if (this.name.includes('ingredients')) {
+            let ingredient_index = this.name.replace('{{ ingredients[', '').replace('] }}', '') // TODO support calculations ingredients[0]*0.5
+            display_text = this.getIngredientLabel(this.ingredients[ingredient_index])
+        }
+
+        if (this.name.includes('scale(')) {
+            display_text = this.name.replace('{{ scale(', '').replace(') }}', '') // TODO support calculations scale(100)*2
+        }
+
         let box = wrap.appendChild(document.createElement("b-badge"))
         box.setAttribute('variant', 'success')
-        box.innerHTML = '1 g Test'
+        box.innerHTML = display_text
         box.style.cssText = ` border: 1px solid blue; border-radius: 4px; padding: 0 3px; background: lightblue;`
         return wrap
     }
@@ -50,13 +66,36 @@ class CheckboxWidget extends WidgetType {
 export default {
     name: "MarkdownEditorComponent",
     props: {},
-    computed: {},
+    computed: {
+        autocomplete_options() {
+            let autocomplete_options = []
+
+            let index = 0
+            for (let i of this.ingredients) {
+                autocomplete_options.push({label: i.food.name, type: "text", apply: `{{ ingredients[${index}] }}`, detail: `${i.amount} ${i.unit.name} ${i.food.name}`})
+                index++
+            }
+
+            autocomplete_options.push({label: "Scale", type: "text", apply: "{{ scale(100) }}", detail: "simple scalable number"})
+            return autocomplete_options
+        }
+    },
+    data() {
+        return {
+            ingredients: [
+                {amount: 20, food: {'name': 'raspberry'}, unit: {'name': 'pcs'}},
+                {amount: 100, food: {'name': 'sugar'}, unit: {'name': 'g'}},
+                {amount: 250, food: {'name': 'water'}, unit: {'name': 'ml'}},
+                {amount: 1, food: {'name': 'salt'}, unit: {'name': 'pinch'}},
+            ]
+        }
+    },
     mounted() {
 
         const decoMatcher = new MatchDecorator({
             regexp: /\{\{ (?:scale\(\d+\)|ingredients\[\d+\]) \}\}/g,
             decoration: match => Decoration.replace({
-                widget: new CheckboxWidget(match[0]),
+                widget: new TemplatePreviewWidget(match[0], this.ingredients),
             })
         })
 
@@ -98,18 +137,13 @@ export default {
     methods: {
         foodTemplateAutoComplete: function (context) {
             let word = context.matchBefore(/\w*/)
-            if (word.from == word.to && !context.explicit)
+            if (word.from === word.to && !context.explicit)
                 return null
             return {
                 from: word.from,
-                options: [
-                    {label: "Mehl", type: "text", apply: "{{ ingredients[1] }}", detail: "template"},
-                    {label: "Butter", type: "text", apply: "{{ ingredients[2] }}", detail: "template"},
-                    {label: "Salz", type: "text", apply: "{{ ingredients[3] }}", detail: "template"},
-                    {label: "Scale", type: "text", apply: "{{ scale(100) }}", detail: "simple scalable number"},
-                ]
+                options: this.autocomplete_options
             }
-        }
+        },
     },
 }
 </script>
