@@ -13,13 +13,13 @@
 <script>
 
 import {EditorState} from "@codemirror/state"
-import {keymap, EditorView, MatchDecorator, Decoration, WidgetType, ViewPlugin} from "@codemirror/view"
+import {keymap, EditorView, MatchDecorator, Decoration, WidgetType, ViewPlugin, DecorationSet} from "@codemirror/view"
 import {defaultKeymap, history} from "@codemirror/commands"
 
 import {markdown, markdownLanguage} from "@codemirror/lang-markdown"
 import {autocompletion} from "@codemirror/autocomplete"
 
-import {defaultHighlightStyle, syntaxHighlighting} from "@codemirror/language";
+import {defaultHighlightStyle, syntaxHighlighting, syntaxTree} from "@codemirror/language";
 
 class TemplatePreviewWidget extends WidgetType {
     name = undefined
@@ -37,9 +37,7 @@ class TemplatePreviewWidget extends WidgetType {
     }
 
     toDOM() {
-        let wrap = document.createElement("span")
-        wrap.innerText = this.name
-        wrap.style.fontStyle = 'italic'
+        let preview_span = document.createElement("span")
 
         let display_text = 'ERROR'
         if (this.name.includes('ingredients')) {
@@ -51,11 +49,9 @@ class TemplatePreviewWidget extends WidgetType {
             display_text = this.name.replace('{{ scale(', '').replace(') }}', '') // TODO support calculations scale(100)*2
         }
 
-        let box = wrap.appendChild(document.createElement("b-badge"))
-        box.setAttribute('variant', 'success')
-        box.innerHTML = display_text
-        box.style.cssText = ` border: 1px solid blue; border-radius: 4px; padding: 0 3px; background: lightblue;`
-        return wrap
+        preview_span.innerHTML = display_text
+        preview_span.style.cssText = ` border: 1px solid blue; border-radius: 4px; padding: 0 3px; background: lightblue;`
+        return preview_span
     }
 
     ignoreEvent() {
@@ -94,26 +90,25 @@ export default {
 
         const decoMatcher = new MatchDecorator({
             regexp: /\{\{ (?:scale\(\d+\)|ingredients\[\d+\]) \}\}/g,
-            decoration: match => Decoration.replace({
-                widget: new TemplatePreviewWidget(match[0], this.ingredients),
-            })
+            decorate: (add, from, to, match, view) => {
+                const templatePreview = new TemplatePreviewWidget(match[0], this.ingredients);
+                add(to, to, Decoration.widget({widget: templatePreview, side: 1}));
+            },
         })
 
         const placeholders = ViewPlugin.fromClass(class {
-            placeholders
+            decorations
 
             constructor(view) {
-                this.placeholders = decoMatcher.createDeco(view)
+                this.decorations = decoMatcher.createDeco(view)
             }
 
-            update(update) {
-                this.placeholders = decoMatcher.updateDeco(update, this.placeholders)
+            update(viewUpdate) {
+                this.decorations = decoMatcher.updateDeco(viewUpdate, this.decorations)
             }
         }, {
-            decorations: instance => instance.placeholders,
-            provide: plugin => EditorView.atomicRanges.of(view => {
-                return view.plugin(plugin)?.placeholders || Decoration.none
-            })
+            decorations: instance => instance.decorations,
+
         })
 
         let startState = EditorState.create({
