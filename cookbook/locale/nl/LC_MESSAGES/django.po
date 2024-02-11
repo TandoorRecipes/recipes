@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-08-15 19:19+0000\n"
-"Last-Translator: Jochum van der Heide <jochum@famvanderheide.com>\n"
+"PO-Revision-Date: 2024-02-10 12:20+0000\n"
+"Last-Translator: Jonan B <jonanb@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
 "Language: nl\n"
@@ -159,7 +159,7 @@ msgstr "Naam"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:315 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr "Etiketten"
+msgstr "Trefwoorden"
 
 #: .\cookbook\forms.py:125
 msgid "Preparation time in minutes"
@@ -1224,7 +1224,7 @@ msgstr "Markdown gids"
 
 #: .\cookbook\templates\base.html:329
 msgid "GitHub"
-msgstr "GitHub"
+msgstr "Github"
 
 #: .\cookbook\templates\base.html:331
 msgid "Translate Tandoor"
