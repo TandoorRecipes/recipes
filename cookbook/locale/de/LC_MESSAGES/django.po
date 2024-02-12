@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2024-02-12 12:19+0000\n"
+"PO-Revision-Date: 2024-02-13 16:19+0000\n"
 "Last-Translator: Kirstin Seidel-Gebert <kirstin@trebeg.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
@@ -161,7 +161,7 @@ msgstr "Name"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:315 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr "Stichwörter"
+msgstr "Schlagwörter"
 
 #: .\cookbook\forms.py:125
 msgid "Preparation time in minutes"
