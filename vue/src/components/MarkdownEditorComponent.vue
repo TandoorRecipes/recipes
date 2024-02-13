@@ -1,6 +1,8 @@
 <template>
     <div>
         <h1>EDITOR</h1>
+
+        <b-button @click="toolbarTest()">Test</b-button>
         <div id="editor" style="background-color: #fff; border: solid 1px">
 
         </div>
@@ -12,7 +14,7 @@
 
 <script>
 
-import {EditorState} from "@codemirror/state"
+import {EditorSelection, EditorState} from "@codemirror/state"
 import {keymap, EditorView, MatchDecorator, Decoration, WidgetType, ViewPlugin, DecorationSet} from "@codemirror/view"
 import {defaultKeymap, history} from "@codemirror/commands"
 
@@ -78,6 +80,7 @@ export default {
     },
     data() {
         return {
+            editor_view: null,
             ingredients: [
                 {amount: 20, food: {'name': 'raspberry'}, unit: {'name': 'pcs'}},
                 {amount: 100, food: {'name': 'sugar'}, unit: {'name': 'g'}},
@@ -123,7 +126,7 @@ export default {
             ]
         })
 
-        let view = new EditorView({
+        this.editor_view = new EditorView({
             state: startState,
             extensions: [],
             parent: document.getElementById("editor")
@@ -139,6 +142,41 @@ export default {
                 options: this.autocomplete_options
             }
         },
+        toolbarTest() {
+            const transaction = this.editor_view.state.changeByRange((range) => {
+                const prefix = '###'
+                const docText = this.editor_view.state.doc.toString()
+                let text = this.editor_view.state.sliceDoc(range.from, range.to)
+
+                let rangeFrom = range.from
+
+                while (rangeFrom > 0) {
+                    if (docText[rangeFrom - 1] === "\n") {
+                        break
+                    }
+                    rangeFrom -= 1
+                }
+
+                text = this.editor_view.state.sliceDoc(rangeFrom, range.to)
+                const textBefore = `\n${text}`
+                const newText = textBefore.replace(/\n/g, `\n${prefix}`)
+
+                const changes = {
+                    from: rangeFrom,
+                    to: range.to,
+                    insert: newText,
+                    anchor: rangeFrom + prefix.length + 1,
+                    textBefore: textBefore
+                }
+
+                return {
+                    changes,
+                    range: EditorSelection.range(changes.anchor, changes.anchor)
+                }
+            })
+
+            this.editor_view.dispatch(transaction)
+        }
     },
 }
 </script>
