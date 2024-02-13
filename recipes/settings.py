@@ -475,6 +475,12 @@ ACCOUNT_RATE_LIMITS = {"change_password": "1/m/user", "reset_password": "1/m/ip,
 DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
 
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {
+    'signup': 'cookbook.forms.AllAuthSignupForm',
+    'reset_password': 'cookbook.forms.CustomPasswordResetForm'
+}
+
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
