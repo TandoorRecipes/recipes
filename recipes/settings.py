@@ -556,4 +556,13 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv(
     'ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
 
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
+
 mimetypes.add_type("text/javascript", ".js", True)
