@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from allauth.account.forms import ResetPasswordForm, SignupForm
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -8,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
+
+
 
 from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
                      SearchPreference, Space, Storage, Sync, User, UserPreference)
@@ -313,12 +316,12 @@ class SpaceJoinForm(forms.Form):
     token = forms.CharField()
 
 
-class AllAuthSignupForm(forms.Form):
+class AllAuthSignupForm(SignupForm):
     captcha = hCaptchaField()
     terms = forms.BooleanField(label=_('Accept Terms and Privacy'))
 
     def __init__(self, **kwargs):
-        super(AllAuthSignupForm, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
             self.fields.pop('terms')
         if settings.HCAPTCHA_SECRET == '':
@@ -326,6 +329,15 @@ class AllAuthSignupForm(forms.Form):
 
     def signup(self, request, user):
         pass
+
+
+class CustomPasswordResetForm(ResetPasswordForm):
+    captcha = hCaptchaField()
+
+    def __init__(self, **kwargs):
+        super(CustomPasswordResetForm, self).__init__(**kwargs)
+        if settings.HCAPTCHA_SECRET == '':
+            self.fields.pop('captcha')
 
 
 class UserCreateForm(forms.Form):
