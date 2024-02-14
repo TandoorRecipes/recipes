@@ -1,5 +1,5 @@
 <template>
-    <div :class="{ 'card border-primary no-border': header }">
+    <div class="ingredients" :class="{ 'card border-primary no-border': header }">
         <div :class="{ 'card-body': header, 'p-0': header }">
             <div class="card-header" v-if="header">
                 <div class="row">
@@ -15,7 +15,7 @@
                         <table class="table table-sm mb-0">
                             <!-- eslint-disable vue/no-v-for-template-key-on-child -->
                             <template v-for="s in steps">
-                                <tr v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && steps.length > 1">
+                                <tr class="ingredients__header-step-name" v-bind:key="s.id" v-if="s.show_as_header && s.name !== '' && steps.length > 1">
                                     <td colspan="5">
                                         <b>{{ s.name }}</b>
                                     </td>
