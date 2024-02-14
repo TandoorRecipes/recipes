@@ -35,11 +35,6 @@
                     {{ $t("Show_Week_Numbers") }}
                 </b-form-checkbox>
             </b-form-group>
-            <b-form-group id="AutoServingsInput" :label="$t('Auto_Servings')">
-                <b-form-checkbox v-model="settings.autoLoadServings" name="auto_servings">
-                    {{ $t("Auto_Link_servings") }}
-                </b-form-checkbox>
-            </b-form-group>
         </b-form>
 
         <hr/>
