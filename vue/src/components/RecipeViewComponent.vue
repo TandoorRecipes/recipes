@@ -321,7 +321,8 @@ export default {
 
 
             if (this.recipe.image === null) this.printReady()
-            if (window.RECIPE_SERVINGS && window.RECIPE_SERVINGS !== "None") {
+            window.RECIPE_SERVINGS = Number(window.RECIPE_SERVINGS)
+            if (window.RECIPE_SERVINGS && ! isNaN(window.RECIPE_SERVINGS)) {
                 //I am not sure this is the best way. This overwrites our servings cache, which may not be intended?
                 this.servings = window.RECIPE_SERVINGS
             } else {
