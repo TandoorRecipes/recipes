@@ -298,7 +298,6 @@ export default {
                 displayPeriodCount: 2,
                 startingDayOfWeek: 1,
                 displayWeekNumbers: true,
-                autoLoadServings: true,
             },
             dragged_item: null,
             meal_types: [],
@@ -395,13 +394,7 @@ export default {
     methods: {
 
         getRecipeURL: function (recipe, servings) {
-            let slug
-            if (this.settings.autoLoadServings) {
-                slug = `${recipe.id}-${servings}`
-            } else {
-                slug = recipe.id
-            }
-            return this.resolveDjangoUrl("view_recipe",slug)
+            return this.resolveDjangoUrl("view_recipe",`${recipe.id}-${servings}`)
         },
 
         openRecipe: function (recipe, servings) {

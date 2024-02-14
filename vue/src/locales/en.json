@@ -264,8 +264,6 @@
 	"Add_Servings_to_Shopping": "Add {servings} Servings to Shopping",
 	"Week_Numbers": "Week numbers",
 	"Show_Week_Numbers": "Show week numbers ?",
-	"Auto_Servings": "Servings Link",
-	"Auto_Link_servings": "Open Recipes with number of servings specified in plan ?",
 	"Export_As_ICal": "Export current period to iCal format",
 	"Export_To_ICal": "Export .ics",
 	"Cannot_Add_Notes_To_Shopping": "Notes cannot be added to the shopping list",
