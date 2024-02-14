@@ -317,6 +317,10 @@ export function calculateAmount(amount, factor) {
     }
 }
 
+export function escapeCSS(classname) {
+    return classname.replace(/\s+/g, "-").toLowerCase()
+}
+
 export function roundDecimals(num) {
     let decimals = getUserPreference("user_fractions") ? getUserPreference("user_fractions") : 2
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`)
