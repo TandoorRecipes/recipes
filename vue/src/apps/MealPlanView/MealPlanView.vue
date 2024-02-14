@@ -394,7 +394,7 @@ export default {
     methods: {
 
         getRecipeURL: function (recipe, servings) {
-            return this.resolveDjangoUrl("view_recipe",`${recipe.id}-${servings}`)
+            return this.resolveDjangoUrl("view_recipe",`${recipe.id}?servings=${servings}`)
         },
 
         openRecipe: function (recipe, servings) {
