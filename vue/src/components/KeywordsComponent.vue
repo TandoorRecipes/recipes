@@ -17,11 +17,6 @@
 
 import {ResolveUrlMixin, escapeCSS} from "@/utils/utils";
 
-import Vue from "vue"
-import VueSanitize from "vue-sanitize"
-
-Vue.use(VueSanitize)
-
 export default {
     name: 'KeywordsComponent',
     mixins: [ResolveUrlMixin],
@@ -43,7 +38,7 @@ export default {
             return this.escapeCSS('_keywordname-' + k.label)
         },
         escapeCSS: function (classname) {
-            return CSS.escape(this.$sanitize(escapeCSS(classname)))
+            return CSS.escape(escapeCSS(classname))
         }
     }
 }
