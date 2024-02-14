@@ -127,7 +127,7 @@ export default {
             this.$emit("checked-state-changed", this.ingredient)
         },
         escapeCSS: function (classname) {
-            return CSS.escape(this.$sanitize(escapeCSS(classname)))
+            return CSS.escape(escapeCSS(classname))
         }
     },
 }

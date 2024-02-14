@@ -128,9 +128,7 @@ import IngredientsCard from "@/components/IngredientsCard"
 import Vue from "vue"
 import moment from "moment"
 import {ResolveUrlMixin, calculateHourMinuteSplit} from "@/utils/utils"
-import VueSanitize from "vue-sanitize"
 
-Vue.use(VueSanitize)
 Vue.prototype.moment = moment
 
 export default {
@@ -200,7 +198,7 @@ export default {
             this.$refs[`id_reactive_popover_${this.step.id}`].$emit("open")
         },
         escapeCSS: function (classname) {
-            return CSS.escape(this.$sanitize(escapeCSS(classname)))
+            return CSS.escape(escapeCSS(classname))
         }
     },
 }
