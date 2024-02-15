@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import {calculateAmount, ResolveUrlMixin, escapeCSS} from "@/utils/utils"
+import {calculateAmount, ResolveUrlMixin, EscapeCSSMixin} from "@/utils/utils"
 
 import Vue from "vue"
 import VueSanitize from "vue-sanitize"
@@ -57,7 +57,7 @@ export default {
         ingredient_factor: {type: Number, default: 1},
         detailed: {type: Boolean, default: true},
     },
-    mixins: [ResolveUrlMixin],
+    mixins: [ResolveUrlMixin, EscapeCSSMixin],
     data() {
         return {
             checked: false,
@@ -125,9 +125,6 @@ export default {
         // sends parent recipe ingredient to notify complete has been toggled
         done: function () {
             this.$emit("checked-state-changed", this.ingredient)
-        },
-        escapeCSS: function (classname) {
-            return CSS.escape(escapeCSS(classname))
         }
     },
 }

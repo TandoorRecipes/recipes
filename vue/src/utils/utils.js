@@ -317,8 +317,13 @@ export function calculateAmount(amount, factor) {
     }
 }
 
-export function escapeCSS(classname) {
-    return classname.replace(/\s+/g, "-").toLowerCase()
+/* Replace spaces by dashes, then use DOM method to escape special characters. Use for dynamically generated CSS classes*/
+export const EscapeCSSMixin = {
+    methods: {
+        escapeCSS: function(classname) {
+            return CSS.escape(classname.replace(/\s+/g, "-").toLowerCase())
+        }
+    }
 }
 
 export function roundDecimals(num) {

@@ -15,11 +15,11 @@
 
 <script>
 
-import {ResolveUrlMixin, escapeCSS} from "@/utils/utils";
+import {ResolveUrlMixin, EscapeCSSMixin} from "@/utils/utils";
 
 export default {
     name: 'KeywordsComponent',
-    mixins: [ResolveUrlMixin],
+    mixins: [ResolveUrlMixin, EscapeCSSMixin],
     props: {
         recipe: Object,
         limit: Number,
@@ -36,9 +36,6 @@ export default {
     methods: {
         keywordClass: function(k) {
             return this.escapeCSS('_keywordname-' + k.label)
-        },
-        escapeCSS: function (classname) {
-            return CSS.escape(escapeCSS(classname))
         }
     }
 }
