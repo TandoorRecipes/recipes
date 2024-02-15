@@ -65,8 +65,9 @@ At Keycloak, create a new client and assign a `Client-ID`, this client comes wit
 
 To enable Keycloak as a sign in option, set those variables to define the social provider and specify its configuration:
 ```ini
-SOCIAL_PROVIDERS=allauth.socialaccount.providers.keycloak
-SOCIALACCOUNT_PROVIDERS='{ "keycloak": { "KEYCLOAK_URL": "https://auth.example.com/", "KEYCLOAK_REALM": "master" } }'
+SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
+SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","name":"Keycloak","client_id":"KEYCLOAK_CLIENT_ID","secret":"KEYCLOAK_CLIENT_SECRET","settings":{"server_url":"https://auth.example.org/realms/KEYCLOAK_REALM/.well-known/openid-configuration"}}]}}
+'
 ```
 
 1. Restart the service, login as superuser and open the `Admin` page.
