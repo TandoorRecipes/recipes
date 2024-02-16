@@ -102,7 +102,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         },
         loadClientSettings() {
             let s = localStorage.getItem(_LOCAL_STORAGE_KEY)
-            if (s === null || s === {}) {
+            if (s === null) {
                 return {
                     displayPeriodUom: "week",
                     displayPeriodCount: 3,
