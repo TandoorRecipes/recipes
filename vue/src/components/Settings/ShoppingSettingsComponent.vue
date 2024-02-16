@@ -1,10 +1,10 @@
 <template>
-    <div v-if="user_preferences !== undefined">
+    <div v-if="useUserPreferenceStore().user_settings !== undefined">
         <b-form-group :label="$t('shopping_share')" :description="$t('shopping_share_desc')">
             <generic-multiselect
-                @change="user_preferences.shopping_share = $event.val; updateSettings(false)"
+                @change="useUserPreferenceStore().user_settings.shopping_share = $event.val; updateSettings(false)"
                 :model="Models.USER"
-                :initial_selection="user_preferences.shopping_share"
+                :initial_selection="useUserPreferenceStore().user_settings.shopping_share"
                 label="display_name"
                 :multiple="true"
                 :placeholder="$t('User')"
@@ -12,101 +12,98 @@
         </b-form-group>
 
         <b-form-group :label="$t('shopping_auto_sync')" :description="$t('shopping_auto_sync_desc')">
-            <b-form-input type="range" :min="SHOPPING_MIN_AUTOSYNC_INTERVAL" max="60" step="1" v-model="user_preferences.shopping_auto_sync"
-                          @change="updateSettings(false)"></b-form-input>
+            <b-form-input type="range" :min="SHOPPING_MIN_AUTOSYNC_INTERVAL" max="60" step="1" v-model="useUserPreferenceStore().user_settings.shopping_auto_sync"
+                          @change="updateSettings(false)" :disabled="useUserPreferenceStore().user_settings.shopping_auto_sync < 1"></b-form-input>
             <div class="text-center">
-                <span v-if="user_preferences.shopping_auto_sync > 0">
-                    {{ Math.round(user_preferences.shopping_auto_sync) }}
-                    <span v-if="user_preferences.shopping_auto_sync === 1">{{ $t('Second') }}</span>
+                <span v-if="useUserPreferenceStore().user_settings.shopping_auto_sync > 0">
+                    {{ Math.round(useUserPreferenceStore().user_settings.shopping_auto_sync) }}
+                    <span v-if="useUserPreferenceStore().user_settings.shopping_auto_sync === 1">{{ $t('Second') }}</span>
                     <span v-else> {{ $t('Seconds') }}</span>
                 </span>
 
-                <span v-if="user_preferences.shopping_auto_sync < 1">{{ $t('Disable') }}</span>
+                <span v-if="useUserPreferenceStore().user_settings.shopping_auto_sync < 1">{{ $t('Disable') }}</span>
             </div>
             <br/>
-                <b-button class="btn btn-sm" @click="user_preferences.shopping_auto_sync = 0; updateSettings(false)">{{ $t('Disabled') }}</b-button>
+                <b-button class="btn btn-sm" @click="useUserPreferenceStore().user_settings.shopping_auto_sync = 0; updateSettings(false)"
+                v-if="useUserPreferenceStore().user_settings.shopping_auto_sync > 0">{{ $t('Disable') }}</b-button>
+                <b-button class="btn btn-sm btn-success" @click="useUserPreferenceStore().user_settings.shopping_auto_sync = SHOPPING_MIN_AUTOSYNC_INTERVAL; updateSettings(false)"
+                v-if="useUserPreferenceStore().user_settings.shopping_auto_sync < 1">{{ $t('Enable') }}</b-button>
         </b-form-group>
 
         <b-form-group :description="$t('mealplan_autoadd_shopping_desc')">
-            <b-form-checkbox v-model="user_preferences.mealplan_autoadd_shopping"
+            <b-form-checkbox v-model="useUserPreferenceStore().user_settings.mealplan_autoadd_shopping"
                              @change="updateSettings(false)">{{ $t('mealplan_autoadd_shopping') }}
             </b-form-checkbox>
         </b-form-group>
 
         <b-form-group :description="$t('mealplan_autoexclude_onhand_desc')">
-            <b-form-checkbox v-model="user_preferences.mealplan_autoexclude_onhand"
+            <b-form-checkbox v-model="useUserPreferenceStore().user_settings.mealplan_autoexclude_onhand"
                              @change="updateSettings(false)">{{ $t('mealplan_autoexclude_onhand') }}
             </b-form-checkbox>
         </b-form-group>
 
         <b-form-group :description="$t('mealplan_autoinclude_related_desc')">
-            <b-form-checkbox v-model="user_preferences.mealplan_autoinclude_related"
+            <b-form-checkbox v-model="useUserPreferenceStore().user_settings.mealplan_autoinclude_related"
                              @change="updateSettings(false)">{{ $t('mealplan_autoinclude_related') }}
             </b-form-checkbox>
         </b-form-group>
 
         <b-form-group :description="$t('shopping_add_onhand_desc')">
-            <b-form-checkbox v-model="user_preferences.shopping_add_onhand"
+            <b-form-checkbox v-model="useUserPreferenceStore().user_settings.shopping_add_onhand"
                              @change="updateSettings(false)">{{ $t('shopping_add_onhand') }}
             </b-form-checkbox>
         </b-form-group>
 
         <b-form-group :label="$t('default_delay')" :description="$t('default_delay_desc')">
-            <b-form-input type="range" min="1" max="72" step="1" v-model="user_preferences.default_delay"
+            <b-form-input type="range" min="1" max="72" step="1" v-model="useUserPreferenceStore().user_settings.default_delay"
                           @change="updateSettings(false)"></b-form-input>
             <div class="text-center">
-                <span>{{ Math.round(user_preferences.default_delay) }}
-                    <span v-if="user_preferences.default_delay === 1">{{ $t('Hour') }}</span>
+                <span>{{ Math.round(useUserPreferenceStore().user_settings.default_delay) }}
+                    <span v-if="useUserPreferenceStore().user_settings.default_delay === 1">{{ $t('Hour') }}</span>
                     <span v-else> {{ $t('Hours') }}</span>
                 </span>
             </div>
         </b-form-group>
 
         <b-form-group :description="$t('filter_to_supermarket_desc')">
-            <b-form-checkbox v-model="user_preferences.filter_to_supermarket"
+            <b-form-checkbox v-model="useUserPreferenceStore().user_settings.filter_to_supermarket"
                              @change="updateSettings(false)">{{ $t('filter_to_supermarket') }}
             </b-form-checkbox>
         </b-form-group>
 
         <b-form-group :label="$t('shopping_recent_days')" :description="$t('shopping_recent_days_desc')">
-            <b-form-input type="range" min="0" max="14" step="1" v-model="user_preferences.shopping_recent_days"
+            <b-form-input type="range" min="0" max="14" step="1" v-model="useUserPreferenceStore().user_settings.shopping_recent_days"
                           @change="updateSettings(false)"></b-form-input>
             <div class="text-center">
-                <span>{{ Math.round(user_preferences.shopping_recent_days) }}
-                    <span v-if="user_preferences.shopping_recent_days === 1">{{ $t('Day') }}</span>
+                <span>{{ Math.round(useUserPreferenceStore().user_settings.shopping_recent_days) }}
+                    <span v-if="useUserPreferenceStore().user_settings.shopping_recent_days === 1">{{ $t('Day') }}</span>
                     <span v-else> {{ $t('Days') }}</span>
                 </span>
             </div>
         </b-form-group>
 
         <b-form-group :label="$t('csv_delim_label')" :description="$t('csv_delim_help')">
-            <b-form-input v-model="user_preferences.csv_delim" @change="updateSettings(false)"></b-form-input>
+            <b-form-input v-model="useUserPreferenceStore().user_settings.csv_delim" @change="updateSettings(false)"></b-form-input>
         </b-form-group>
 
         <b-form-group :label="$t('csv_prefix_label')" :description="$t('csv_prefix_help')">
-            <b-form-input v-model="user_preferences.csv_prefix" @change="updateSettings(false)"></b-form-input>
+            <b-form-input v-model="useUserPreferenceStore().user_settings.csv_prefix" @change="updateSettings(false)"></b-form-input>
         </b-form-group>
 
     </div>
 </template>
 
 <script>
-import {ApiApiFactory} from "@/utils/openapi/api";
 import {ApiMixin, StandardToasts} from "@/utils/utils";
 
-import axios from "axios";
 import GenericMultiselect from "@/components/GenericMultiselect";
-
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 export default {
     name: "ShoppingSettingsComponent",
     mixins: [ApiMixin],
     components: {GenericMultiselect},
-    props: {
-        user_id: Number,
-    },
+    props: { },
     data() {
         return {
             user_preferences: undefined,
@@ -115,30 +112,15 @@ export default {
         }
     },
     mounted() {
-        this.user_preferences = this.preferences
         this.languages = window.AVAILABLE_LANGUAGES
-        this.loadSettings()
+
+        useUserPreferenceStore().loadUserSettings(false)
     },
     methods: {
-        loadSettings: function () {
-            let apiFactory = new ApiApiFactory()
-            apiFactory.retrieveUserPreference(this.user_id.toString()).then(result => {
-                this.user_preferences = result.data
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-            })
-        },
+        useUserPreferenceStore,
         updateSettings: function (reload) {
-            let apiFactory = new ApiApiFactory()
             this.$emit('updated', this.user_preferences)
-            apiFactory.partialUpdateUserPreference(this.user_id.toString(), this.user_preferences).then(result => {
-                StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
-                if (reload) {
-                    location.reload()
-                }
-            }).catch(err => {
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-            })
+            useUserPreferenceStore().updateUserSettings()
         },
     }
 }

@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient
+from cookbook.models import Food, Ingredient, ShoppingListRecipe, ShoppingListEntry
 from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
 if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
@@ -126,7 +126,7 @@ def test_shopping_recipe_edit(request, recipe, sle_count, use_mealplan, u1_s1, u
             u1_s1.put(reverse(SHOPPING_RECIPE_URL, args={recipe.id}))
         r = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)
         assert [x['created_by']['id'] for x in r].count(user.id) == sle_count
-        all_ing = [x['ingredient'] for x in r]
+        all_ing = list(ShoppingListEntry.objects.filter(list_recipe__recipe=recipe).all().values_list('ingredient', flat=True))
         keep_ing = all_ing[1:-1]  # remove first and last element
         del keep_ing[int(len(keep_ing) / 2)]  # remove a middle element
         list_recipe = r[0]['list_recipe']
