@@ -9172,6 +9172,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarQueryParameter = {} as any;
 
 
+            if (options.order_field !== undefined) {
+                localVarQueryParameter['order_field'] =  options.order_field;
+            }
+
+            if (options.order_direction!== undefined) {
+                localVarQueryParameter['order_direction'] = options.order_direction;
+            }
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -10258,6 +10265,40 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
 
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying the book.
+         * @param {RecipeBook} [recipeBook] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateManualOrderBooks: async (id: string, recipeBook?: RecipeBook , options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-book/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBook , localVarRequestOptions, configuration)
             return {
                 url: toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
@@ -16432,6 +16473,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id A unique integer value identifying this supermarket category relation.
+         * @param {RecipeBook} [recipeBook] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async partialUpdateManualOrderBooks(id: string, recipeBook?: RecipeBook, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.partialUpdateManualOrderBooks(id, recipeBook, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @param {string} id A unique integer value identifying this access token.
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
@@ -19121,6 +19173,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         moveKeyword(id: string, parent: string, keyword?: Keyword, options?: any): AxiosPromise<Keyword> {
             return localVarFp.moveKeyword(id, parent, keyword, options).then((request) => request(axios, basePath));
         },
+       /**
+         * 
+         * @param {string} id A unique integer value identifying this supermarket category relation.
+         * @param {RecipeBook} [recipeBook] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        partialUpdateManualOrderBooks(id: string, recipeBook?: RecipeBook, options?: any): AxiosPromise<SupermarketCategoryRelation> {
+            return localVarFp.partialUpdateManualOrderBooks(id, recipeBook, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @param {string} id A unique integer value identifying this access token.
@@ -20707,7 +20769,6 @@ export class ApiApi extends BaseAPI {
     public createRecipeBookEntry(recipeBookEntry?: RecipeBookEntry, options?: any) {
         return ApiApiFp(this.configuration).createRecipeBookEntry(recipeBookEntry, options).then((request) => request(this.axios, this.basePath));
     }
-
     /**
      * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
      * @param {any} [body] 
@@ -21951,7 +22012,16 @@ export class ApiApi extends BaseAPI {
     public moveKeyword(id: string, parent: string, keyword?: Keyword, options?: any) {
         return ApiApiFp(this.configuration).moveKeyword(id, parent, keyword, options).then((request) => request(this.axios, this.basePath));
     }
-
+    /**
+     * 
+     * @param {string} id A unique integer value identifying this supermarket category relation.
+     * @param {RecipeBook} [recipeBook] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public partialUpdateManualOrderBooks(id: string, recipeBook?: RecipeBook, options?: any) {
+        return ApiApiFp(this.configuration).partialUpdateManualOrderBooks(id, recipeBook, options).then((request) => request(this.axios, this.basePath));
+    }
     /**
      * 
      * @param {string} id A unique integer value identifying this access token.

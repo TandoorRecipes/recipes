@@ -5,7 +5,7 @@ django-autocomplete-light==3.9.7
 django-cleanup==8.0.0
 django-crispy-forms==2.0
 crispy-bootstrap4==2022.1
-django-tables2==2.5.3
+django-tables2==2.7.0
 djangorestframework==3.14.0
 drf-writable-nested==0.7.0
 django-oauth-toolkit==2.3.0
@@ -40,8 +40,8 @@ django-storages==1.14.2
 boto3==1.28.75
 django-prometheus==2.2.0
 django-hCaptcha==0.2.0
-python-ldap==3.4.3
-django-auth-ldap==4.4.0
+python-ldap==3.4.4
+django-auth-ldap==4.6.0
 pytest-factoryboy==2.6.0
 pyppeteer==1.0.2
 validators==0.20.0

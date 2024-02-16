@@ -2,7 +2,8 @@
     <div>
         <h1>EDITOR</h1>
 
-        <b-button @click="toolbarTest()">Test</b-button>
+        <b-button @click="toolbarTest()">Heading</b-button>
+        <b-button @click="bold()">B</b-button>
         <div id="editor" style="background-color: #fff; border: solid 1px">
 
         </div>
@@ -176,6 +177,33 @@ export default {
             })
 
             this.editor_view.dispatch(transaction)
+        },
+        bold() {
+            const transaction = this.editor_view.state.changeByRange((range) => {
+
+                if (range.anchor === range.head) {
+                    console.log('nothing selected --> nothing bold')
+                } else {
+                    let selected_text = this.editor_view.state.sliceDoc(range.from, range.to)
+
+                    let new_text = `**${selected_text}**`
+
+                    const changes = {
+                        from: range.from,
+                        to: range.to,
+                        insert: new_text,
+                    }
+
+                    return {changes, range: EditorSelection.range(range.anchor + 2, range.head + 2)}
+                }
+
+
+            })
+
+            this.editor_view.dispatch(transaction)
+        },
+        heading(editor, heading_size) {
+
         }
     },
 }
