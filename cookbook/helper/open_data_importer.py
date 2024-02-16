@@ -1,5 +1,6 @@
 from cookbook.models import (Food, FoodProperty, Property, PropertyType, Supermarket,
                              SupermarketCategory, SupermarketCategoryRelation, Unit, UnitConversion)
+import re
 
 
 class OpenDataImporter:
@@ -21,21 +22,38 @@ class OpenDataImporter:
     def import_units(self):
         datatype = 'unit'
 
+        existing_data = {}
+        for u in Unit.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
+            existing_data[u['open_data_slug']] = u
+
+        update_list = []
+        create_list = []
+
         insert_list = []
         for u in list(self.data[datatype].keys()):
-            insert_list.append(Unit(
+            unit = Unit(
                 name=self.data[datatype][u]['name'],
                 plural_name=self.data[datatype][u]['plural_name'],
                 base_unit=self.data[datatype][u]['base_unit'] if self.data[datatype][u]['base_unit'] != '' else None,
                 open_data_slug=u,
                 space=self.request.space
-            ))
+            )
+            if unit.open_data_slug in existing_data:
+                unit.pk = existing_data[unit.open_data_slug]['pk']
+                update_list.append(unit)
+            else:
+                create_list.append(unit)
 
-        if self.update_existing:
-            return Unit.objects.bulk_create(insert_list, update_conflicts=True, update_fields=(
-                'name', 'plural_name', 'base_unit', 'open_data_slug'), unique_fields=('space', 'name',))
-        else:
-            return Unit.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+        total_count = 0
+        if self.update_existing and len(update_list) > 0:
+            Unit.objects.bulk_update(update_list, ('name', 'plural_name', 'base_unit', 'open_data_slug'))
+            total_count += len(update_list)
+
+        if len(create_list) > 0:
+            Unit.objects.bulk_create(create_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            total_count += len(create_list)
+
+        return total_count
 
     def import_category(self):
         datatype = 'category'
@@ -127,7 +145,7 @@ class OpenDataImporter:
                         'name': self.data[datatype][k]['name'],
                         'plural_name': self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
                         'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
-                        'fdc_id': self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
+                        'fdc_id': re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
                         'open_data_slug': k,
                         'space': self.request.space.id,
                     }})
@@ -148,7 +166,7 @@ class OpenDataImporter:
                         name=self.data[datatype][k]['name'],
                         plural_name=self.data[datatype][k]['plural_name'] if self.data[datatype][k]['plural_name'] != '' else None,
                         supermarket_category_id=self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
-                        fdc_id=self.data[datatype][k]['fdc_id'] if self.data[datatype][k]['fdc_id'] != '' else None,
+                        fdc_id=re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
                         open_data_slug=k,
                     ))
                 else:
