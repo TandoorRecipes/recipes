@@ -10,20 +10,19 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-
-
-from .models import (Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry,
-                     SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig)
+from .models import Comment, Food, InviteLink, Keyword, Recipe, RecipeBook, RecipeBookEntry, SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig
 
 
 class SelectWidget(widgets.Select):
+
     class Media:
-        js = ('custom/js/form_select.js',)
+        js = ('custom/js/form_select.js', )
 
 
 class MultiSelectWidget(widgets.SelectMultiple):
+
     class Media:
-        js = ('custom/js/form_multiselect.js',)
+        js = ('custom/js/form_multiselect.js', )
 
 
 # Yes there are some stupid browsers that still dont support this but
@@ -43,9 +42,7 @@ class UserNameForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name')
 
-        help_texts = {
-            'first_name': _('Both fields are optional. If none are given the username will be displayed instead')
-        }
+        help_texts = {'first_name': _('Both fields are optional. If none are given the username will be displayed instead')}
 
 
 class ExternalRecipeForm(forms.ModelForm):
@@ -59,23 +56,14 @@ class ExternalRecipeForm(forms.ModelForm):
 
     class Meta:
         model = Recipe
-        fields = (
-            'name', 'description', 'servings', 'working_time', 'waiting_time',
-            'file_path', 'file_uid', 'keywords'
-        )
+        fields = ('name', 'description', 'servings', 'working_time', 'waiting_time', 'file_path', 'file_uid', 'keywords')
 
         labels = {
-            'name': _('Name'),
-            'keywords': _('Keywords'),
-            'working_time': _('Preparation time in minutes'),
-            'waiting_time': _('Waiting time (cooking/baking) in minutes'),
-            'file_path': _('Path'),
-            'file_uid': _('Storage UID'),
+            'name': _('Name'), 'keywords': _('Keywords'), 'working_time': _('Preparation time in minutes'), 'waiting_time': _('Waiting time (cooking/baking) in minutes'),
+            'file_path': _('Path'), 'file_uid': _('Storage UID'),
         }
         widgets = {'keywords': MultiSelectWidget}
-        field_classes = {
-            'keywords': SafeModelMultipleChoiceField,
-        }
+        field_classes = {'keywords': SafeModelMultipleChoiceField, }
 
 
 class ImportExportBase(forms.Form):
@@ -102,14 +90,11 @@ class ImportExportBase(forms.Form):
     REZEPTSUITEDE = 'REZEPTSUITEDE'
     PDF = 'PDF'
 
-    type = forms.ChoiceField(choices=(
-        (DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'),
-        (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'), (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'),
-        (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'), (DOMESTICA, 'Domestica'),
-        (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
-        (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
-        (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de')
-    ))
+    type = forms.ChoiceField(choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (CHOWDOWN, 'Chowdown'),
+                                      (SAFFRON, 'Saffron'), (CHEFTAP, 'ChefTap'), (PEPPERPLATE, 'Pepperplate'), (RECETTETEK, 'RecetteTek'), (RECIPESAGE, 'Recipe Sage'),
+                                      (DOMESTICA, 'Domestica'), (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'),
+                                      (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'),
+                                      (COOKMATE, 'Cookmate'), (REZEPTSUITEDE, 'Recipesuite.de')))
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -117,6 +102,7 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 
 class MultipleFileField(forms.FileField):
+
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
@@ -132,9 +118,8 @@ class MultipleFileField(forms.FileField):
 
 class ImportForm(ImportExportBase):
     files = MultipleFileField(required=True)
-    duplicates = forms.BooleanField(help_text=_(
-        'To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'),
-        required=False)
+    duplicates = forms.BooleanField(help_text=_('To prevent duplicates recipes with the same name as existing ones are ignored. Check this box to import everything.'),
+                                    required=False)
 
 
 class ExportForm(ImportExportBase):
@@ -153,42 +138,26 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('text',)
+        fields = ('text', )
 
-        labels = {
-            'text': _('Add your comment: '),
-        }
-        widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': 15}),
-        }
+        labels = {'text': _('Add your comment: '), }
+        widgets = {'text': forms.Textarea(attrs={'rows': 2, 'cols': 15}), }
 
 
 class StorageForm(forms.ModelForm):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'autocomplete': 'new-password'}),
-        required=False
-    )
-    password = forms.CharField(
-        widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
-        required=False,
-        help_text=_('Leave empty for dropbox and enter app password for nextcloud.')
-    )
-    token = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        ),
-        required=False,
-        help_text=_('Leave empty for nextcloud and enter api token for dropbox.')
-    )
+    username = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password'}), required=False)
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
+                               required=False,
+                               help_text=_('Leave empty for dropbox and enter app password for nextcloud.'))
+    token = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}),
+                            required=False,
+                            help_text=_('Leave empty for nextcloud and enter api token for dropbox.'))
 
     class Meta:
         model = Storage
         fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
-        help_texts = {
-            'url': _(
-                'Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'),
-        }
+        help_texts = {'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'), }
 
 
 class ConnectorConfigForm(forms.ModelForm):
@@ -237,21 +206,21 @@ class ConnectorConfigForm(forms.ModelForm):
 
 
 # TODO: Deprecate
-class RecipeBookEntryForm(forms.ModelForm):
-    prefix = 'bookmark'
+# class RecipeBookEntryForm(forms.ModelForm):
+#     prefix = 'bookmark'
 
-    def __init__(self, *args, **kwargs):
-        space = kwargs.pop('space')
-        super().__init__(*args, **kwargs)
-        self.fields['book'].queryset = RecipeBook.objects.filter(space=space).all()
+#     def __init__(self, *args, **kwargs):
+#         space = kwargs.pop('space')
+#         super().__init__(*args, **kwargs)
+#         self.fields['book'].queryset = RecipeBook.objects.filter(space=space).all()
 
-    class Meta:
-        model = RecipeBookEntry
-        fields = ('book',)
+#     class Meta:
+#         model = RecipeBookEntry
+#         fields = ('book',)
 
-        field_classes = {
-            'book': SafeModelChoiceField,
-        }
+#         field_classes = {
+#             'book': SafeModelChoiceField,
+#         }
 
 
 class SyncForm(forms.ModelForm):
@@ -265,25 +234,15 @@ class SyncForm(forms.ModelForm):
         model = Sync
         fields = ('storage', 'path', 'active')
 
-        field_classes = {
-            'storage': SafeModelChoiceField,
-        }
+        field_classes = {'storage': SafeModelChoiceField, }
 
-        labels = {
-            'storage': _('Storage'),
-            'path': _('Path'),
-            'active': _('Active')
-        }
+        labels = {'storage': _('Storage'), 'path': _('Path'), 'active': _('Active')}
 
 
 # TODO deprecate
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
-    keywords = forms.ModelMultipleChoiceField(
-        queryset=Keyword.objects.none(),
-        required=False,
-        widget=MultiSelectWidget
-    )
+    keywords = forms.ModelMultipleChoiceField(queryset=Keyword.objects.none(), required=False, widget=MultiSelectWidget)
 
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
@@ -292,6 +251,7 @@ class BatchEditForm(forms.Form):
 
 
 class ImportRecipeForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         space = kwargs.pop('space')
         super().__init__(*args, **kwargs)
@@ -301,19 +261,13 @@ class ImportRecipeForm(forms.ModelForm):
         model = Recipe
         fields = ('name', 'keywords', 'file_path', 'file_uid')
 
-        labels = {
-            'name': _('Name'),
-            'keywords': _('Keywords'),
-            'file_path': _('Path'),
-            'file_uid': _('File ID'),
-        }
+        labels = {'name': _('Name'), 'keywords': _('Keywords'), 'file_path': _('Path'), 'file_uid': _('File ID'), }
         widgets = {'keywords': MultiSelectWidget}
-        field_classes = {
-            'keywords': SafeModelChoiceField,
-        }
+        field_classes = {'keywords': SafeModelChoiceField, }
 
 
 class InviteLinkForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
@@ -321,8 +275,8 @@ class InviteLinkForm(forms.ModelForm):
 
     def clean(self):
         space = self.cleaned_data['space']
-        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count() +
-                                     InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()) >= space.max_users:
+        if space.max_users != 0 and (UserPreference.objects.filter(space=space).count()
+                                     + InviteLink.objects.filter(valid_until__gte=datetime.today(), used_by=None, space=space).count()) >= space.max_users:
             raise ValidationError(_('Maximum number of users for this space reached.'))
 
     def clean_email(self):
@@ -336,12 +290,8 @@ class InviteLinkForm(forms.ModelForm):
     class Meta:
         model = InviteLink
         fields = ('email', 'group', 'valid_until', 'space')
-        help_texts = {
-            'email': _('An email address is not required but if present the invite link will be sent to the user.'),
-        }
-        field_classes = {
-            'space': SafeModelChoiceField,
-        }
+        help_texts = {'email': _('An email address is not required but if present the invite link will be sent to the user.'), }
+        field_classes = {'space': SafeModelChoiceField, }
 
 
 class SpaceCreateForm(forms.Form):
@@ -387,133 +337,109 @@ class CustomPasswordResetForm(ResetPasswordForm):
 
 class UserCreateForm(forms.Form):
     name = forms.CharField(label='Username')
-    password = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        )
-    )
-    password_confirm = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'autocomplete': 'new-password', 'type': 'password'}
-        )
-    )
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
+    password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
 
 
 class SearchPreferenceForm(forms.ModelForm):
     prefix = 'search'
-    trigram_threshold = forms.DecimalField(min_value=0.01, max_value=1, decimal_places=2,
+    trigram_threshold = forms.DecimalField(min_value=0.01,
+                                           max_value=1,
+                                           decimal_places=2,
                                            widget=NumberInput(attrs={'class': "form-control-range", 'type': 'range'}),
-                                           help_text=_(
-                                               'Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
+                                           help_text=_('Determines how fuzzy a search is if it uses trigram similarity matching (e.g. low values mean more typos are ignored).'))
     preset = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = SearchPreference
-        fields = (
-            'search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
+        fields = ('search', 'lookup', 'unaccent', 'icontains', 'istartswith', 'trigram', 'fulltext', 'trigram_threshold')
 
         help_texts = {
-            'search': _(
-                'Select type method of search.  Click <a href="/docs/search/">here</a> for full description of choices.'),
-            'lookup': _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'),
-            'unaccent': _(
-                'Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'),
-            'icontains': _(
-                "Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"),
-            'istartswith': _(
-                "Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"),
-            'trigram': _(
-                "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."),
-            'fulltext': _(
-                "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
+            'search': _('Select type method of search.  Click <a href="/docs/search/">here</a> for full description of choices.'), 'lookup':
+            _('Use fuzzy matching on units, keywords and ingredients when editing and importing recipes.'), 'unaccent':
+            _('Fields to search ignoring accents.  Selecting this option can improve or degrade search quality depending on language'), 'icontains':
+            _("Fields to search for partial matches.  (e.g. searching for 'Pie' will return 'pie' and 'piece' and 'soapie')"), 'istartswith':
+            _("Fields to search for beginning of word matches. (e.g. searching for 'sa' will return 'salad' and 'sandwich')"), 'trigram':
+            _("Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  Note: this option will conflict with 'web' and 'raw' methods of search."), 'fulltext':
+            _("Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields."),
         }
 
         labels = {
-            'search': _('Search Method'),
-            'lookup': _('Fuzzy Lookups'),
-            'unaccent': _('Ignore Accent'),
-            'icontains': _("Partial Match"),
-            'istartswith': _("Starts With"),
-            'trigram': _("Fuzzy Search"),
-            'fulltext': _("Full Text")
+            'search': _('Search Method'), 'lookup': _('Fuzzy Lookups'), 'unaccent': _('Ignore Accent'), 'icontains': _("Partial Match"), 'istartswith': _("Starts With"),
+            'trigram': _("Fuzzy Search"), 'fulltext': _("Full Text")
         }
 
         widgets = {
-            'search': SelectWidget,
-            'unaccent': MultiSelectWidget,
-            'icontains': MultiSelectWidget,
-            'istartswith': MultiSelectWidget,
-            'trigram': MultiSelectWidget,
-            'fulltext': MultiSelectWidget,
+            'search': SelectWidget, 'unaccent': MultiSelectWidget, 'icontains': MultiSelectWidget, 'istartswith': MultiSelectWidget, 'trigram': MultiSelectWidget, 'fulltext':
+            MultiSelectWidget,
         }
 
 
-class ShoppingPreferenceForm(forms.ModelForm):
-    prefix = 'shopping'
+# class ShoppingPreferenceForm(forms.ModelForm):
+#     prefix = 'shopping'
 
-    class Meta:
-        model = UserPreference
+#     class Meta:
+#         model = UserPreference
 
-        fields = (
-            'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-            'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
-        )
+#         fields = (
+#             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
+#             'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
+#         )
 
-        help_texts = {
-            'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
-            'shopping_auto_sync': _(
-                'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
-                'of mobile data. If lower than instance limit it is reset when saving.'
-            ),
-            'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
-            'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
-            'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
-            'default_delay': _('Default number of hours to delay a shopping list entry.'),
-            'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
-            'shopping_recent_days': _('Days of recent shopping list entries to display.'),
-            'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
-            'csv_delim': _('Delimiter to use for CSV exports.'),
-            'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
+#         help_texts = {
+#             'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
+#             'shopping_auto_sync': _(
+#                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
+#                 'of mobile data. If lower than instance limit it is reset when saving.'
+#             ),
+#             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
+#             'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
+#             'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
+#             'default_delay': _('Default number of hours to delay a shopping list entry.'),
+#             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
+#             'shopping_recent_days': _('Days of recent shopping list entries to display.'),
+#             'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
+#             'csv_delim': _('Delimiter to use for CSV exports.'),
+#             'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
 
-        }
-        labels = {
-            'shopping_share': _('Share Shopping List'),
-            'shopping_auto_sync': _('Autosync'),
-            'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
-            'mealplan_autoexclude_onhand': _('Exclude On Hand'),
-            'mealplan_autoinclude_related': _('Include Related'),
-            'default_delay': _('Default Delay Hours'),
-            'filter_to_supermarket': _('Filter to Supermarket'),
-            'shopping_recent_days': _('Recent Days'),
-            'csv_delim': _('CSV Delimiter'),
-            "csv_prefix_label": _("List Prefix"),
-            'shopping_add_onhand': _("Auto On Hand"),
-        }
+#         }
+#         labels = {
+#             'shopping_share': _('Share Shopping List'),
+#             'shopping_auto_sync': _('Autosync'),
+#             'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
+#             'mealplan_autoexclude_onhand': _('Exclude On Hand'),
+#             'mealplan_autoinclude_related': _('Include Related'),
+#             'default_delay': _('Default Delay Hours'),
+#             'filter_to_supermarket': _('Filter to Supermarket'),
+#             'shopping_recent_days': _('Recent Days'),
+#             'csv_delim': _('CSV Delimiter'),
+#             "csv_prefix_label": _("List Prefix"),
+#             'shopping_add_onhand': _("Auto On Hand"),
+#         }
 
-        widgets = {
-            'shopping_share': MultiSelectWidget
-        }
+#         widgets = {
+#             'shopping_share': MultiSelectWidget
+#         }
 
+# class SpacePreferenceForm(forms.ModelForm):
+#     prefix = 'space'
+#     reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
+#                                             help_text=_("Reset all food to inherit the fields configured."))
 
-class SpacePreferenceForm(forms.ModelForm):
-    prefix = 'space'
-    reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
-                                            help_text=_("Reset all food to inherit the fields configured."))
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)  # populates the post
+#         self.fields['food_inherit'].queryset = Food.inheritable_fields
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)  # populates the post
-        self.fields['food_inherit'].queryset = Food.inheritable_fields
+#     class Meta:
+#         model = Space
 
-    class Meta:
-        model = Space
+#         fields = ('food_inherit', 'reset_food_inherit',)
 
-        fields = ('food_inherit', 'reset_food_inherit',)
+#         help_texts = {
+#             'food_inherit': _('Fields on food that should be inherited by default.'),
+#             'use_plural': _('Use the plural form for units and food inside this space.'),
+#         }
 
-        help_texts = {
-            'food_inherit': _('Fields on food that should be inherited by default.'),
-            'use_plural': _('Use the plural form for units and food inside this space.'),
-        }
-
-        widgets = {
-            'food_inherit': MultiSelectWidget
-        }
+#         widgets = {
+#             'food_inherit': MultiSelectWidget
+#         }
