@@ -408,6 +408,7 @@ export class Models {
     static SHOPPING_CATEGORY = {
         name: "Shopping_Category",
         apiName: "SupermarketCategory",
+        merge: true,
         create: {
             params: [["name", "description"]],
             form: {

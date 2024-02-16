@@ -171,9 +171,10 @@ def recipe_view(request, pk, share=None):
                                           created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)),
                                           space=request.space).exists():
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
-
+        if request.method == "GET":
+            servings = request.GET.get("servings")
         return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, })
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings })
 
 
 @group_required('user')

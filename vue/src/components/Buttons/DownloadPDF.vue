@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import html2pdf from "html2pdf.js"
 
 export default {
     name: "DownloadPDF",
@@ -20,12 +19,7 @@ export default {
     },
     methods: {
         downloadFile() {
-            const doc = document.querySelector(this.dom)
-            var options = {
-                margin: 1,
-                filename: this.name,
-            }
-            html2pdf().from(doc).set(options).save()
+            window.print()
         },
     },
 }
