@@ -320,10 +320,18 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         BookmarkletImport.objects.filter(space=self).delete()
         CustomFilter.objects.filter(space=self).delete()
 
+        Property.objects.filter(space=self).delete()
+        PropertyType.objects.filter(space=self).delete()
+
         Comment.objects.filter(recipe__space=self).delete()
-        Keyword.objects.filter(space=self).delete()
         Ingredient.objects.filter(space=self).delete()
-        Food.objects.filter(space=self).delete()
+        Keyword.objects.filter(space=self).delete()
+
+        # delete food in batches because treabeard might fail to delete otherwise
+        while Food.objects.filter(space=self).count() > 0:
+            pks = Food.objects.filter(space=self).values_list('pk')[:200]
+            Food.objects.filter(pk__in=pks).delete()
+
         Unit.objects.filter(space=self).delete()
         Step.objects.filter(space=self).delete()
         NutritionInformation.objects.filter(space=self).delete()
@@ -347,9 +355,11 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SupermarketCategory.objects.filter(space=self).delete()
         Supermarket.objects.filter(space=self).delete()
 
-        InviteLink.objects.filter(space=self).delete()
         UserFile.objects.filter(space=self).delete()
+        UserSpace.objects.filter(space=self).delete()
         Automation.objects.filter(space=self).delete()
+        InviteLink.objects.filter(space=self).delete()
+        TelegramBot.objects.filter(space=self).delete()
         self.delete()
 
     def get_owner(self):
@@ -442,6 +452,7 @@ class UserPreference(models.Model, PermissionModelMixin):
             self.use_fractions = FRACTION_PREF_DEFAULT
 
         return super().save(*args, **kwargs)
+
     def __str__(self):
         return str(self.user)
 
@@ -984,7 +995,6 @@ class RecipeBook(ExportModelOperationsMixin('book'), models.Model, PermissionMod
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     filter = models.ForeignKey('cookbook.CustomFilter', null=True, blank=True, on_delete=models.SET_NULL)
     order = models.IntegerField(default=0)
-
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
