@@ -447,16 +447,24 @@ VUE_DIR = os.path.join(BASE_DIR, 'vue')
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'CACHE': not DEBUG, 'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
-        'STATS_FILE': os.path.join(VUE_DIR, 'webpack-stats.json'), 'POLL_INTERVAL': 0.1, 'TIMEOUT': None, 'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
+        'STATS_FILE': os.path.join(VUE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
     },
 }
 
 for p in PLUGINS:
     if p['bundle_name'] != '':
         WEBPACK_LOADER[p['bundle_name']] = {
-            'CACHE': not DEBUG, 'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
-            'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'), 'POLL_INTERVAL': 0.1, 'TIMEOUT': None, 'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+            'CACHE': not DEBUG,
+            'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
+            'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
+            'POLL_INTERVAL': 0.1,
+            'TIMEOUT': None,
+            'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
         }
 
 # Internationalization
