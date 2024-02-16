@@ -10,8 +10,7 @@ from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
 from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm, ConnectorConfigForm
-from cookbook.helper.permission_helper import (GroupRequiredMixin, OwnerRequiredMixin,
-                                               above_space_limit, group_required)
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, above_space_limit, group_required
 from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync, ConnectorConfig
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -106,26 +105,16 @@ def edit_storage(request, pk):
 
             instance.save()
 
-            messages.add_message(
-                request, messages.SUCCESS, _('Storage saved!')
-            )
+            messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
         else:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('There was an error updating this storage backend!')
-            )
+            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend!'))
     else:
         pseudo_instance = instance
         pseudo_instance.password = VALUE_NOT_CHANGED
         pseudo_instance.token = VALUE_NOT_CHANGED
         form = StorageForm(instance=pseudo_instance)
 
-    return render(
-        request,
-        'generic/edit_template.html',
-        {'form': form, 'title': _('Storage')}
-    )
+    return render(request, 'generic/edit_template.html', {'form': form, 'title': _('Storage')})
 
 
 class ConnectorConfigUpdate(GroupRequiredMixin, UpdateView):
@@ -165,9 +154,7 @@ class CommentUpdate(OwnerRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CommentUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Comment")
-        context['view_url'] = reverse(
-            'view_recipe', args=[self.object.recipe.pk]
-        )
+        context['view_url'] = reverse('view_recipe', args=[self.object.recipe.pk])
         return context
 
 
@@ -206,11 +193,7 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
             if self.object.storage.method == Storage.LOCAL:
                 Local.rename_file(old_recipe, self.object.name)
 
-            self.object.file_path = "%s/%s%s" % (
-                os.path.dirname(self.object.file_path),
-                self.object.name,
-                os.path.splitext(self.object.file_path)[1]
-            )
+            self.object.file_path = "%s/%s%s" % (os.path.dirname(self.object.file_path), self.object.name, os.path.splitext(self.object.file_path)[1])
 
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(ExternalRecipeUpdate, self).form_valid(form)
@@ -227,7 +210,5 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         if self.object.storage:
-            context['delete_external_url'] = reverse(
-                'delete_recipe_source', args=[self.object.pk]
-            )
+            context['delete_external_url'] = reverse('delete_recipe_source', args=[self.object.pk])
         return context
