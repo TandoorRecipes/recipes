@@ -662,8 +662,16 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+        order_field = self.request.GET.get('order_field')
+        order_direction = self.request.GET.get('order_direction')
+
+        if not order_field:
+            order_field = 'id'
+
+        ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
+        
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct()
+        space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 

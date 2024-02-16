@@ -979,7 +979,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter')
+        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter', 'order')
         read_only_fields = ('created_by',)
 
 
