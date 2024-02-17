@@ -1605,6 +1605,7 @@ class ImportOpenData(APIView):
         # TODO validate data
         print(request.data)
         selected_version = request.data['selected_version']
+        selected_datatypes = request.data['selected_datatypes']
         update_existing = str2bool(request.data['update_existing'])
         use_metric = str2bool(request.data['use_metric'])
 
@@ -1614,12 +1615,20 @@ class ImportOpenData(APIView):
         response_obj = {}
 
         data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
-        response_obj['unit'] = len(data_importer.import_units())
-        response_obj['category'] = len(data_importer.import_category())
-        response_obj['property'] = len(data_importer.import_property())
-        response_obj['store'] = len(data_importer.import_supermarket())
-        response_obj['food'] = len(data_importer.import_food())
-        response_obj['conversion'] = len(data_importer.import_conversion())
+
+        if selected_datatypes['unit']['selected']:
+            response_obj['unit'] = data_importer.import_units()
+        if selected_datatypes['category']['selected']:
+            response_obj['category'] = data_importer.import_category()
+        if selected_datatypes['property']['selected']:
+            print('importin properties')
+            response_obj['property'] = data_importer.import_property()
+        if selected_datatypes['store']['selected']:
+            response_obj['store'] = len(data_importer.import_supermarket())
+        if selected_datatypes['food']['selected']:
+            response_obj['food'] = len(data_importer.import_food())
+        if selected_datatypes['conversion']['selected']:
+            response_obj['conversion'] = len(data_importer.import_conversion())
 
         return Response(response_obj)
 

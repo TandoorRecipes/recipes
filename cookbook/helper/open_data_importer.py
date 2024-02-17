@@ -23,26 +23,25 @@ class OpenDataImporter:
         datatype = 'unit'
 
         existing_data = {}
-        for u in Unit.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
-            existing_data[u['open_data_slug']] = u
+        for obj in Unit.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
+            existing_data[obj['open_data_slug']] = obj
 
         update_list = []
         create_list = []
 
-        insert_list = []
         for u in list(self.data[datatype].keys()):
-            unit = Unit(
+            obj = Unit(
                 name=self.data[datatype][u]['name'],
                 plural_name=self.data[datatype][u]['plural_name'],
                 base_unit=self.data[datatype][u]['base_unit'] if self.data[datatype][u]['base_unit'] != '' else None,
                 open_data_slug=u,
                 space=self.request.space
             )
-            if unit.open_data_slug in existing_data:
-                unit.pk = existing_data[unit.open_data_slug]['pk']
-                update_list.append(unit)
+            if obj.open_data_slug in existing_data:
+                obj.pk = existing_data[obj.open_data_slug]['pk']
+                update_list.append(obj)
             else:
-                create_list.append(unit)
+                create_list.append(obj)
 
         total_count = 0
         if self.update_existing and len(update_list) > 0:
@@ -58,29 +57,70 @@ class OpenDataImporter:
     def import_category(self):
         datatype = 'category'
 
-        insert_list = []
+        existing_data = {}
+        for obj in SupermarketCategory.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
+            existing_data[obj['open_data_slug']] = obj
+
+        update_list = []
+        create_list = []
+
         for k in list(self.data[datatype].keys()):
-            insert_list.append(SupermarketCategory(
+            obj = SupermarketCategory(
                 name=self.data[datatype][k]['name'],
                 open_data_slug=k,
                 space=self.request.space
-            ))
+            )
 
-        return SupermarketCategory.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            if obj.open_data_slug in existing_data:
+                obj.pk = existing_data[obj.open_data_slug]['pk']
+                update_list.append(obj)
+            else:
+                create_list.append(obj)
+
+        total_count = 0
+        if self.update_existing and len(update_list) > 0:
+            SupermarketCategory.objects.bulk_update(update_list, ('name', 'open_data_slug'))
+            total_count += len(update_list)
+
+        if len(create_list) > 0:
+            SupermarketCategory.objects.bulk_create(create_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            total_count += len(create_list)
+
+        return total_count
 
     def import_property(self):
         datatype = 'property'
 
-        insert_list = []
+        existing_data = {}
+        for obj in PropertyType.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
+            existing_data[obj['open_data_slug']] = obj
+
+        update_list = []
+        create_list = []
+
         for k in list(self.data[datatype].keys()):
-            insert_list.append(PropertyType(
+            obj = PropertyType(
                 name=self.data[datatype][k]['name'],
                 unit=self.data[datatype][k]['unit'],
                 open_data_slug=k,
                 space=self.request.space
-            ))
+            )
+            if obj.open_data_slug in existing_data:
+                obj.pk = existing_data[obj.open_data_slug]['pk']
+                update_list.append(obj)
+            else:
+                create_list.append(obj)
 
-        return PropertyType.objects.bulk_create(insert_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+        total_count = 0
+        if self.update_existing and len(update_list) > 0:
+            PropertyType.objects.bulk_update(update_list, ('name', 'open_data_slug'))
+            total_count += len(update_list)
+
+        if len(create_list) > 0:
+            PropertyType.objects.bulk_create(create_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            total_count += len(create_list)
+
+        return total_count
 
     def import_supermarket(self):
         datatype = 'store'
