@@ -231,7 +231,7 @@ def get_recipe_properties(space, property_data):
                             'id': pt.id,
                             'name': pt.name,
                         },
-                        'property_amount': parse_servings(property_data[properties[p]]) / float(property_data['servingSize']),
+                        'property_amount': parse_servings(property_data[properties[p]]) / parse_servings(property_data['servingSize']),
                     })
 
     return recipe_properties
