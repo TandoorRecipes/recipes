@@ -1621,14 +1621,13 @@ class ImportOpenData(APIView):
         if selected_datatypes['category']['selected']:
             response_obj['category'] = data_importer.import_category()
         if selected_datatypes['property']['selected']:
-            print('importin properties')
             response_obj['property'] = data_importer.import_property()
         if selected_datatypes['store']['selected']:
-            response_obj['store'] = len(data_importer.import_supermarket())
+            response_obj['store'] = data_importer.import_supermarket()
         if selected_datatypes['food']['selected']:
-            response_obj['food'] = len(data_importer.import_food())
+            response_obj['food'] = data_importer.import_food()
         if selected_datatypes['conversion']['selected']:
-            response_obj['conversion'] = len(data_importer.import_conversion())
+            response_obj['conversion'] = data_importer.import_conversion()
 
         return Response(response_obj)
 
