@@ -4,7 +4,7 @@
 
         <div v-if="metadata !== undefined">
             {{ $t('Data_Import_Info') }}
-            <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{$t('Learn_More')}}</a>
+            <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{ $t('Learn_More') }}</a>
 
 
             <select class="form-control" v-model="selected_version">
@@ -18,13 +18,17 @@
             <div v-if="selected_version !== undefined" class="mt-3">
                 <table class="table">
                     <tr>
+                        <th>{{ $t('Import') }}</th>
                         <th>{{ $t('Datatype') }}</th>
                         <th>{{ $t('Number of Objects') }}</th>
                         <th>{{ $t('Imported') }}</th>
                     </tr>
-                    <tr v-for="d in metadata.datatypes" v-bind:key="d">
-                        <td>{{ $t(d.charAt(0).toUpperCase() + d.slice(1)) }}</td>
-                        <td>{{ metadata[selected_version][d] }}</td>
+                    <tr v-for="d in datatypes" v-bind:key="d.name">
+                        <td>
+                            <b-checkbox v-model="d.selected"></b-checkbox>
+                        </td>
+                        <td>{{ $t(d.name.charAt(0).toUpperCase() + d.name.slice(1)) }}</td>
+                        <td>{{ metadata[selected_version][d.name] }}</td>
                         <td>
                             <template v-if="import_count !== undefined">{{ import_count[d] }}</template>
                         </td>
@@ -59,6 +63,7 @@ export default {
     data() {
         return {
             metadata: undefined,
+            datatypes: {},
             selected_version: undefined,
             update_existing: true,
             use_metric: true,
@@ -70,6 +75,12 @@ export default {
 
         axios.get(resolveDjangoUrl('api_import_open_data')).then(r => {
             this.metadata = r.data
+            for (let i in this.metadata.datatypes) {
+                this.datatypes[this.metadata.datatypes[i]] = {
+                    name: this.metadata.datatypes[i],
+                    selected: false,
+                }
+            }
         }).catch(err => {
             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
         })
@@ -78,7 +89,7 @@ export default {
         doImport: function () {
             axios.post(resolveDjangoUrl('api_import_open_data'), {
                 'selected_version': this.selected_version,
-                'selected_datatypes': this.metadata.datatypes,
+                'selected_datatypes': this.datatypes,
                 'update_existing': this.update_existing,
                 'use_metric': this.use_metric,
             }).then(r => {
