@@ -11,14 +11,14 @@
             <div class="flex-column" v-if="show_button_1">
                 <slot name="button_1">
                     <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_search' }" v-bind:href="resolveDjangoUrl('view_search')">
-                        <i class="fas fa-fw fa-book " style="font-size: 1.5em"></i><br/><small>{{ $t('Recipes') }}</small></a> <!-- TODO localize -->
+                        <i class="fas fa-fw fa-book " style="font-size: 1.4em"></i><br/><small>{{ $t('Recipes') }}</small></a> <!-- TODO localize -->
                 </slot>
 
             </div>
             <div class="flex-column" v-if="show_button_2">
                 <slot name="button_2">
                     <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_plan' }" v-bind:href="resolveDjangoUrl('view_plan')">
-                        <i class="fas fa-calendar-alt" style="font-size: 1.5em"></i><br/><small>{{ $t('Meal_Plan') }}</small></a>
+                        <i class="fas fa-calendar-alt" style="font-size: 1.4em"></i><br/><small>{{ $t('Meal_Plan') }}</small></a>
                 </slot>
 
             </div>
@@ -53,14 +53,14 @@
             <div class="flex-column" v-if="show_button_3">
                 <slot name="button_3">
                     <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_shopping' }" v-bind:href="resolveDjangoUrl('view_shopping')">
-                        <i class="fas fa-shopping-cart" style="font-size: 1.5em"></i><br/><small>{{ $t('Shopping_list') }}</small></a>
+                        <i class="fas fa-shopping-cart" style="font-size: 1.4em"></i><br/><small>{{ $t('Shopping_list') }}</small></a>
                 </slot>
             </div>
             <div class="flex-column">
 
                 <slot name="button_4" v-if="show_button_4">
                     <a class="nav-link bottom-nav-link p-0" v-bind:class="{'bottom-nav-link-active': activeView === 'view_books' }" v-bind:href="resolveDjangoUrl('view_books')">
-                        <i class="fas fa-book-open" style="font-size: 1.5em"></i><br/><small>{{ $t('Books') }}</small></a> <!-- TODO localize -->
+                        <i class="fas fa-book-open" style="font-size: 1.4em"></i><br/><small>{{ $t('Books') }}</small></a> <!-- TODO localize -->
                 </slot>
 
             </div>

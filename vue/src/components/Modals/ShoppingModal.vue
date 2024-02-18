@@ -186,8 +186,5 @@ export default {
 }
 </script>
 <style>
-.b-form-spinbutton.form-control {
-    background-color: #e9ecef;
-    border: 1px solid #ced4da;
-}
+
 </style>

@@ -98,8 +98,6 @@ FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
 SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
 
-ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
-
 DRF_THROTTLE_RECIPE_URL_IMPORT = os.getenv('DRF_THROTTLE_RECIPE_URL_IMPORT', '60/hour')
 
 TERMS_URL = os.getenv('TERMS_URL', '')
@@ -555,5 +553,20 @@ EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv(
     'ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {
+    'signup': 'cookbook.forms.AllAuthSignupForm',
+    'reset_password': 'cookbook.forms.CustomPasswordResetForm'
+}
+
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
 
 mimetypes.add_type("text/javascript", ".js", True)
