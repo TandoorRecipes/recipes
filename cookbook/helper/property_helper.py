@@ -46,7 +46,7 @@ class FoodPropertyHelper:
                 for pt in property_types:
                     found_property = False
                     if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:
-                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
                         computed_properties[pt.id]['missing_value'] = i.food.properties_food_unit is None
                     else:
                         for p in i.food.properties.all():
@@ -59,7 +59,7 @@ class FoodPropertyHelper:
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
                         computed_properties[pt.id]['missing_value'] = True
-                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
 
         return computed_properties
 

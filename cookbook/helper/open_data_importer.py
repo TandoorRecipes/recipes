@@ -182,6 +182,8 @@ class OpenDataImporter:
         self._update_slug_cache(PropertyType, 'property')
         self._update_slug_cache(SupermarketCategory, 'category')
 
+        unit_g = Unit.objects.filter(space=self.request.space, base_unit__iexact='g').first()
+
         existing_data = {}
         for obj in Food.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
             existing_data[obj['open_data_slug']] = obj
@@ -197,6 +199,7 @@ class OpenDataImporter:
                 'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
                 'fdc_id': re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
                 'open_data_slug': k,
+                'properties_food_unit': unit_g,
                 'space': self.request.space.id,
             }
 
@@ -210,7 +213,7 @@ class OpenDataImporter:
 
         total_count = 0
         if self.update_existing and len(update_list) > 0:
-            Food.objects.bulk_update(update_list, ['name', 'plural_name', 'preferred_unit_id', 'preferred_shopping_unit_id', 'supermarket_category_id', 'fdc_id', 'open_data_slug', ])
+            Food.objects.bulk_update(update_list, ['name', 'plural_name', 'properties_food_unit', 'supermarket_category_id', 'fdc_id', 'open_data_slug', ])
             total_count += len(update_list)
 
         if len(create_list) > 0:
