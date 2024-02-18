@@ -207,6 +207,12 @@ class OpenDataImporter:
             }
 
             if obj['open_data_slug'] in existing_data or obj['name'] in existing_data_names:
+                # rather rare edge cases object A has the slug and object B has the name which would lead to uniqueness errors
+                if obj['open_data_slug'] in existing_data and obj['name'] in existing_data_names and existing_data[obj['open_data_slug']]['pk'] != existing_data_names[obj['name']]['pk']:
+                    source_obj = Food.objects.get(pk=existing_data[obj['open_data_slug']]['pk'])
+                    del existing_data[obj['open_data_slug']]
+                    source_obj.merge_into(Food.objects.get(pk=existing_data_names[obj['name']]['pk']))
+
                 if obj['open_data_slug'] in existing_data:
                     obj['pk'] = existing_data[obj['open_data_slug']]['pk']
                 elif obj['name'] in existing_data_names:
@@ -228,14 +234,19 @@ class OpenDataImporter:
             total_count += len(create_list)
 
         self._update_slug_cache(Food, 'food')
+        valid_food_ids = []
+        for f in self.slug_id_cache['food'].values():
+            valid_food_ids.append(f)
 
         food_property_list = []
         # alias_list = []
 
         for k in list(self.data[datatype].keys()):
             for fp in self.data[datatype][k]['properties']['type_values']:
-                # try catch here because somettimes key "k" is not set for he food cache
+                # try catch here because sometimes key "k" is not set for the food cache
                 try:
+                    if self.slug_id_cache['food'][k] == 2652:
+                        pass
                     food_property_list.append(Property(
                         property_type_id=self.slug_id_cache['property'][fp['property_type']],
                         property_amount=fp['property_value'],
@@ -249,7 +260,12 @@ class OpenDataImporter:
 
         property_food_relation_list = []
         for p in Property.objects.filter(space=self.request.space, import_food_id__isnull=False).values_list('import_food_id', 'id', ):
-            property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
+            # temporary fix to delete old, unlinked properties that were previously imported
+            # TODO find better solution (clearing import_food_id, not doing that in the first place?
+            if p[0] not in valid_food_ids:
+                Property.objects.filter(import_food_id=p[0]).delete()
+            else:
+                property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
 
         FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
 

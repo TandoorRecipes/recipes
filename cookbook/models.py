@@ -655,6 +655,32 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
     def __str__(self):
         return self.name
 
+    def merge_into(self, target):
+        """
+        very simple merge function that replaces the current food with the target food
+        also replaces a few attributes on the target field if they were empty before
+        :param target: target food object
+        :return: target with data merged
+        """
+        if self == target:
+            raise ValueError('Cannot merge an object with itself')
+
+        if self.space != target.space:
+            raise RuntimeError('Cannot merge objects from different spaces')
+
+        try:
+            if target in self.get_descendants_and_self():
+                raise RuntimeError('Cannot merge parent (source) with child (target) object')
+        except AttributeError:
+            pass  # AttributeError is raised when the object is not a tree and thus does not have the get_descendants_and_self() function
+
+        self.properties.all().delete()
+        self.properties.clear()
+        Ingredient.objects.filter(food=self).update(food=target)
+        ShoppingListEntry.objects.filter(food=self).update(food=target)
+        self.delete()
+        return target
+
     def delete(self):
         if self.ingredient_set.all().exclude(step=None).count() > 0:
             raise ProtectedError(self.name + _(" is part of a recipe step and cannot be deleted"), self.ingredient_set.all().exclude(step=None))
