@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-02-26 13:15+0000\n"
-"Last-Translator: 吕楪 <thy@irithys.com>\n"
+"PO-Revision-Date: 2024-02-15 03:19+0000\n"
+"Last-Translator: dalan <xzdlj@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -480,34 +480,32 @@ msgid "One of queryset or hash_key must be provided"
 msgstr "必须提供 queryset 或 hash_key 之一"
 
 #: .\cookbook\helper\recipe_url_import.py:266
-#, fuzzy
-#| msgid "Use fractions"
 msgid "reverse rotation"
-msgstr "使用分数"
+msgstr "反向旋转"
 
 #: .\cookbook\helper\recipe_url_import.py:267
 msgid "careful rotation"
-msgstr ""
+msgstr "小心旋转"
 
 #: .\cookbook\helper\recipe_url_import.py:268
 msgid "knead"
-msgstr ""
+msgstr "揉"
 
 #: .\cookbook\helper\recipe_url_import.py:269
 msgid "thicken"
-msgstr ""
+msgstr "增稠"
 
 #: .\cookbook\helper\recipe_url_import.py:270
 msgid "warm up"
-msgstr ""
+msgstr "预热"
 
 #: .\cookbook\helper\recipe_url_import.py:271
 msgid "ferment"
-msgstr ""
+msgstr "发酵"
 
 #: .\cookbook\helper\recipe_url_import.py:272
 msgid "sous-vide"
-msgstr ""
+msgstr "真空烹调法"
 
 #: .\cookbook\helper\shopping_helper.py:157
 msgid "You must supply a servings size"
@@ -549,10 +547,8 @@ msgid "Imported %s recipes."
 msgstr "导入了%s菜谱。"
 
 #: .\cookbook\integration\openeats.py:26
-#, fuzzy
-#| msgid "Recipe Home"
 msgid "Recipe source:"
-msgstr "菜谱主页"
+msgstr "菜谱来源："
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"

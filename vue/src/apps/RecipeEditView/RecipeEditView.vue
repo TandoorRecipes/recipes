@@ -38,11 +38,11 @@
                            @change="uploadImage($event.target.files[0])"/>
 
                     <div
-                            class="h-100 w-100 border border-primary rounded"
-                            style="border-width: 2px !important; border-style: dashed !important"
-                            @drop.prevent="uploadImage($event.dataTransfer.files[0])"
-                            @dragover.prevent
-                            @click="$refs.file_upload.click()"
+                        class="h-100 w-100 border border-primary rounded"
+                        style="border-width: 2px !important; border-style: dashed !important"
+                        @drop.prevent="uploadImage($event.dataTransfer.files[0])"
+                        @dragover.prevent
+                        @click="$refs.file_upload.click()"
                     >
                         <i class="far fa-image fa-10x text-primary"
                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"
@@ -71,27 +71,27 @@
                     <br/>
                     <label for="id_name"> {{ $t("Keywords") }}</label>
                     <multiselect
-                            v-model="recipe.keywords"
-                            :options="keywords"
-                            :close-on-select="false"
-                            :clear-on-select="true"
-                            :hide-selected="true"
-                            :preserve-search="true"
-                            :internal-search="false"
-                            :limit="options_limit"
-                            :placeholder="$t('select_keyword')"
-                            :tag-placeholder="$t('add_keyword')"
-                            :select-label="$t('Select')"
-                            :selected-label="$t('Selected')"
-                            :deselect-label="$t('remove_selection')"
-                            :taggable="true"
-                            @tag="addKeyword"
-                            label="label"
-                            track-by="id"
-                            id="id_keywords"
-                            :multiple="true"
-                            :loading="keywords_loading"
-                            @search-change="searchKeywords"
+                        v-model="recipe.keywords"
+                        :options="keywords"
+                        :close-on-select="false"
+                        :clear-on-select="true"
+                        :hide-selected="true"
+                        :preserve-search="true"
+                        :internal-search="false"
+                        :limit="options_limit"
+                        :placeholder="$t('select_keyword')"
+                        :tag-placeholder="$t('add_keyword')"
+                        :select-label="$t('Select')"
+                        :selected-label="$t('Selected')"
+                        :deselect-label="$t('remove_selection')"
+                        :taggable="true"
+                        @tag="addKeyword"
+                        label="label"
+                        track-by="id"
+                        id="id_keywords"
+                        :multiple="true"
+                        :loading="keywords_loading"
+                        @search-change="searchKeywords"
                     >
                         <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                     </multiselect>
@@ -103,21 +103,21 @@
                 <div class="col-md-12">
                     <div class="card mt-2 mb-2">
                         <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5 pt-3 pb-3">
-                            <h6>{{ $t('Properties') }} <small class="text-muted"> {{$t('per_serving')}}</small></h6>
+                            <h6>{{ $t('Properties') }} <small class="text-muted"> {{ $t('per_serving') }}</small></h6>
 
                             <div class="alert alert-info" role="alert">
-                                {{ $t('recipe_property_info')}}
+                                {{ $t('recipe_property_info') }}
                             </div>
 
                             <div class="d-flex mt-2" v-for="p in recipe.properties" v-bind:key="p.id">
                                 <div class="flex-fill w-50">
                                     <generic-multiselect
-                                            @change="p.property_type = $event.val"
-                                            :initial_single_selection="p.property_type"
-                                            :label="'name'"
-                                            :model="Models.PROPERTY_TYPE"
-                                            :limit="25"
-                                            :multiple="false"
+                                        @change="p.property_type = $event.val"
+                                        :initial_single_selection="p.property_type"
+                                        :label="'name'"
+                                        :model="Models.PROPERTY_TYPE"
+                                        :limit="25"
+                                        :multiple="false"
                                     ></generic-multiselect>
                                 </div>
                                 <div class="flex-fill w-50">
@@ -190,14 +190,14 @@
                         <br/>
                         <label> {{ $t("Share") }}</label>
                         <generic-multiselect
-                                @change="recipe.shared = $event.val"
-                                parent_variable="recipe.shared"
-                                :initial_selection="recipe.shared"
-                                :label="'display_name'"
-                                :model="Models.USER_NAME"
-                                style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                v-bind:placeholder="$t('Share')"
-                                :limit="25"
+                            @change="recipe.shared = $event.val"
+                            parent_variable="recipe.shared"
+                            :initial_selection="recipe.shared"
+                            :label="'display_name'"
+                            :model="Models.USER_NAME"
+                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                            v-bind:placeholder="$t('Share')"
+                            :limit="25"
                         ></generic-multiselect>
 
 
@@ -228,7 +228,7 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                         <button class="dropdown-item" @click="removeStep(step)"><i
-                                                class="fa fa-trash fa-fw"></i> {{ $t("Delete") }}
+                                            class="fa fa-trash fa-fw"></i> {{ $t("Delete") }}
                                         </button>
 
                                         <button class="dropdown-item" @click="moveStep(step, step_index - 1)"
@@ -249,7 +249,7 @@
                                         <button class="dropdown-item" @click="setStepShowIngredientsTable(step, true)"
                                                 v-if="! step.show_ingredients_table">
                                             <i class="op-icon fa fa-mavon-eye"></i> {{ $t("show_step_ingredients") }}
-                                        </button>                                        
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -300,11 +300,11 @@
                                         <i class="fas fa-plus-circle"></i> {{ $t("File") }}
                                     </b-button>
                                     <b-button
-                                            pill
-                                            variant="primary"
-                                            size="sm"
-                                            class="ml-1 mb-1 mb-md-0"
-                                            @click="
+                                        pill
+                                        variant="primary"
+                                        size="sm"
+                                        class="ml-1 mb-1 mb-md-0"
+                                        @click="
                                             paste_step = step
                                             $bvModal.show('id_modal_paste_ingredients')
                                         "
@@ -327,31 +327,31 @@
                                     <label :for="'id_step_' + step.id + '_file'">{{ $t("File") }}</label>
                                     <b-input-group>
                                         <multiselect
-                                                ref="file"
-                                                v-model="step.file"
-                                                :options="files"
-                                                :close-on-select="true"
-                                                :clear-on-select="true"
-                                                :allow-empty="true"
-                                                :preserve-search="true"
-                                                :placeholder="$t('select_file')"
-                                                :select-label="$t('Select')"
-                                                :selected-label="$t('Selected')"
-                                                :deselect-label="$t('remove_selection')"
-                                                :id="'id_step_' + step.id + '_file'"
-                                                label="name"
-                                                track-by="name"
-                                                :multiple="false"
-                                                :loading="files_loading"
-                                                style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
-                                                @search-change="searchFiles"
+                                            ref="file"
+                                            v-model="step.file"
+                                            :options="files"
+                                            :close-on-select="true"
+                                            :clear-on-select="true"
+                                            :allow-empty="true"
+                                            :preserve-search="true"
+                                            :placeholder="$t('select_file')"
+                                            :select-label="$t('Select')"
+                                            :selected-label="$t('Selected')"
+                                            :deselect-label="$t('remove_selection')"
+                                            :id="'id_step_' + step.id + '_file'"
+                                            label="name"
+                                            track-by="name"
+                                            :multiple="false"
+                                            :loading="files_loading"
+                                            style="flex-grow: 1; flex-shrink: 1; flex-basis: 0"
+                                            @search-change="searchFiles"
                                         >
                                             <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                         </multiselect>
                                         <b-input-group-append>
                                             <b-button
-                                                    variant="primary"
-                                                    @click="
+                                                variant="primary"
+                                                @click="
                                                     step_for_file_create = step
                                                     show_file_create = true
                                                 "
@@ -367,24 +367,24 @@
                                 <div class="col-md-12">
                                     <label :for="'id_step_' + step.id + '_recipe'">{{ $t("Recipe") }}</label>
                                     <multiselect
-                                            ref="step_recipe"
-                                            v-model="step.step_recipe"
-                                            :options="recipes.map((recipe) => recipe.id)"
-                                            :close-on-select="true"
-                                            :clear-on-select="true"
-                                            :allow-empty="true"
-                                            :preserve-search="true"
-                                            :internal-search="false"
-                                            :limit="options_limit"
-                                            :placeholder="$t('select_recipe')"
-                                            :select-label="$t('Select')"
-                                            :selected-label="$t('Selected')"
-                                            :deselect-label="$t('remove_selection')"
-                                            :id="'id_step_' + step.id + '_recipe'"
-                                            :custom-label="(opt) => recipes.find((x) => x.id === opt).name"
-                                            :multiple="false"
-                                            :loading="recipes_loading"
-                                            @search-change="searchRecipes"
+                                        ref="step_recipe"
+                                        v-model="step.step_recipe"
+                                        :options="recipes.map((recipe) => recipe.id)"
+                                        :close-on-select="true"
+                                        :clear-on-select="true"
+                                        :allow-empty="true"
+                                        :preserve-search="true"
+                                        :internal-search="false"
+                                        :limit="options_limit"
+                                        :placeholder="$t('select_recipe')"
+                                        :select-label="$t('Select')"
+                                        :selected-label="$t('Selected')"
+                                        :deselect-label="$t('remove_selection')"
+                                        :id="'id_step_' + step.id + '_recipe'"
+                                        :custom-label="(opt) => recipes.find((x) => x.id === opt).name"
+                                        :multiple="false"
+                                        :loading="recipes_loading"
+                                        @search-change="searchRecipes"
                                     >
                                         <template v-slot:noOptions>{{ $t("empty_list") }}</template>
                                     </multiselect>
@@ -424,12 +424,12 @@
                                                                 <div class="col-lg-2 col-md-6 small-padding"
                                                                      v-if="!ingredient.is_header">
                                                                     <input
-                                                                            class="form-control"
-                                                                            v-model="ingredient.amount"
-                                                                            type="number"
-                                                                            step="any"
-                                                                            v-if="!ingredient.no_amount"
-                                                                            :id="`amount_${step_index}_${index}`"
+                                                                        class="form-control"
+                                                                        v-model="ingredient.amount"
+                                                                        type="number"
+                                                                        step="any"
+                                                                        v-if="!ingredient.no_amount"
+                                                                        :id="`amount_${step_index}_${index}`"
                                                                     />
                                                                 </div>
 
@@ -437,29 +437,29 @@
                                                                      v-if="!ingredient.is_header">
                                                                     <!-- search set to false to allow API to drive results & order -->
                                                                     <multiselect
-                                                                            v-if="!ingredient.no_amount"
-                                                                            ref="unit"
-                                                                            v-model="ingredient.unit"
-                                                                            :options="units"
-                                                                            :close-on-select="true"
-                                                                            :clear-on-select="true"
-                                                                            :allow-empty="true"
-                                                                            :preserve-search="true"
-                                                                            :internal-search="false"
-                                                                            :limit="options_limit"
-                                                                            :placeholder="$t('select_unit')"
-                                                                            :tag-placeholder="$t('Create')"
-                                                                            :select-label="$t('Select')"
-                                                                            :selected-label="$t('Selected')"
-                                                                            :deselect-label="$t('remove_selection')"
-                                                                            :taggable="true"
-                                                                            @tag="addUnitType"
-                                                                            :id="`unit_${step_index}_${index}`"
-                                                                            label="name"
-                                                                            track-by="name"
-                                                                            :multiple="false"
-                                                                            :loading="units_loading"
-                                                                            @search-change="searchUnits"
+                                                                        v-if="!ingredient.no_amount"
+                                                                        ref="unit"
+                                                                        v-model="ingredient.unit"
+                                                                        :options="units"
+                                                                        :close-on-select="true"
+                                                                        :clear-on-select="true"
+                                                                        :allow-empty="true"
+                                                                        :preserve-search="true"
+                                                                        :internal-search="false"
+                                                                        :limit="options_limit"
+                                                                        :placeholder="$t('select_unit')"
+                                                                        :tag-placeholder="$t('Create')"
+                                                                        :select-label="$t('Select')"
+                                                                        :selected-label="$t('Selected')"
+                                                                        :deselect-label="$t('remove_selection')"
+                                                                        :taggable="true"
+                                                                        @tag="addUnitType"
+                                                                        :id="`unit_${step_index}_${index}`"
+                                                                        label="name"
+                                                                        track-by="name"
+                                                                        :multiple="false"
+                                                                        :loading="units_loading"
+                                                                        @search-change="searchUnits"
                                                                     >
                                                                         <template v-slot:noOptions>{{
                                                                                 $t("empty_list")
@@ -472,28 +472,28 @@
                                                                     <!-- search set to false to allow API to drive results & order -->
 
                                                                     <multiselect
-                                                                            ref="food"
-                                                                            v-model="ingredient.food"
-                                                                            :options="foods"
-                                                                            :close-on-select="true"
-                                                                            :clear-on-select="true"
-                                                                            :allow-empty="true"
-                                                                            :preserve-search="true"
-                                                                            :internal-search="false"
-                                                                            :limit="options_limit"
-                                                                            :placeholder="$t('select_food')"
-                                                                            :tag-placeholder="$t('Create')"
-                                                                            :select-label="$t('Select')"
-                                                                            :selected-label="$t('Selected')"
-                                                                            :deselect-label="$t('remove_selection')"
-                                                                            :taggable="true"
-                                                                            @tag="addFoodType"
-                                                                            :id="`ingredient_${step_index}_${index}`"
-                                                                            label="name"
-                                                                            track-by="name"
-                                                                            :multiple="false"
-                                                                            :loading="foods_loading"
-                                                                            @search-change="searchFoods"
+                                                                        ref="food"
+                                                                        v-model="ingredient.food"
+                                                                        :options="foods"
+                                                                        :close-on-select="true"
+                                                                        :clear-on-select="true"
+                                                                        :allow-empty="true"
+                                                                        :preserve-search="true"
+                                                                        :internal-search="false"
+                                                                        :limit="options_limit"
+                                                                        :placeholder="$t('select_food')"
+                                                                        :tag-placeholder="$t('Create')"
+                                                                        :select-label="$t('Select')"
+                                                                        :selected-label="$t('Selected')"
+                                                                        :deselect-label="$t('remove_selection')"
+                                                                        :taggable="true"
+                                                                        @tag="addFoodType"
+                                                                        :id="`ingredient_${step_index}_${index}`"
+                                                                        label="name"
+                                                                        track-by="name"
+                                                                        :multiple="false"
+                                                                        :loading="foods_loading"
+                                                                        @search-change="searchFoods"
                                                                     >
                                                                         <template v-slot:noOptions>{{
                                                                                 $t("empty_list")
@@ -504,11 +504,11 @@
                                                                 <div class="small-padding"
                                                                      v-bind:class="{ 'col-lg-4 col-md-6': !ingredient.is_header, 'col-lg-12 col-md-12': ingredient.is_header }">
                                                                     <input
-                                                                            class="form-control"
-                                                                            maxlength="256"
-                                                                            v-model="ingredient.note"
-                                                                            v-bind:placeholder="$t('Note')"
-                                                                            v-on:keydown.tab="
+                                                                        class="form-control"
+                                                                        maxlength="256"
+                                                                        v-model="ingredient.note"
+                                                                        v-bind:placeholder="$t('Note')"
+                                                                        v-on:keydown.tab="
                                                                             (event) => {
                                                                                 if (step.ingredients.indexOf(ingredient) === step.ingredients.length - 1) {
                                                                                     event.preventDefault()
@@ -522,13 +522,13 @@
 
                                                             <div class="flex-grow-0 small-padding">
                                                                 <a
-                                                                        class="btn shadow-none btn-lg pr-1 pl-0 pr-md-2 pl-md-2"
-                                                                        href="#"
-                                                                        role="button"
-                                                                        id="dropdownMenuLink2"
-                                                                        data-toggle="dropdown"
-                                                                        aria-haspopup="true"
-                                                                        aria-expanded="false"
+                                                                    class="btn shadow-none btn-lg pr-1 pl-0 pr-md-2 pl-md-2"
+                                                                    href="#"
+                                                                    role="button"
+                                                                    id="dropdownMenuLink2"
+                                                                    data-toggle="dropdown"
+                                                                    aria-haspopup="true"
+                                                                    aria-expanded="false"
                                                                 >
                                                                     <i class="fas fa-ellipsis-v text-muted"></i>
                                                                 </a>
@@ -645,7 +645,18 @@
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
                                                   style="z-index: auto" :id="'id_instruction_' + step.id"
                                                   :language="'en'"
-                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'"/>
+                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'">
+                                        <template #left-toolbar-after>
+                                            <span class="op-icon-divider"></span>
+                                            <button
+                                                type="button"
+                                                @click="step.instruction+= ' {{ scale(100) }}'"
+                                                class="op-icon fas fa-times"
+                                                aria-hidden="true"
+                                                title="Scalable Number"
+                                            ></button>
+                                        </template>
+                                    </mavon-editor>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -662,7 +673,7 @@
                                 </button>
 
                                 <button type="button" v-b-modal:id_modal_sort class="btn btn-warning shadow-none"><i
-                                        class="fas fa-sort-amount-down-alt fa-lg"></i></button>
+                                    class="fas fa-sort-amount-down-alt fa-lg"></i></button>
                             </b-button-group>
                         </div>
                     </div>
@@ -694,7 +705,7 @@
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-block d-md-none btn btn-block btn-danger shadow-none btn-sm"><i
-                            class="fa fa-trash fa-lg"></i></a>
+                        class="fa fa-trash fa-lg"></i></a>
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
                        class="d-none d-md-block btn btn-block btn-danger shadow-none btn-sm">{{ $t("Delete") }}</a>
                 </div>
@@ -749,11 +760,11 @@
 
             <!-- modal for pasting list of ingredients -->
             <b-modal
-                    id="id_modal_paste_ingredients"
-                    v-bind:title="$t('ingredient_list')"
-                    @ok="appendIngredients(paste_step)"
-                    @cancel="paste_ingredients = paste_step = undefined"
-                    @close="paste_ingredients = paste_step = undefined"
+                id="id_modal_paste_ingredients"
+                v-bind:title="$t('ingredient_list')"
+                @ok="appendIngredients(paste_step)"
+                @cancel="paste_ingredients = paste_step = undefined"
+                @close="paste_ingredients = paste_step = undefined"
             >
                 <b-form-textarea id="paste_ingredients" v-model="paste_ingredients"
                                  :placeholder="$t('paste_ingredients_placeholder')" rows="10"></b-form-textarea>
@@ -832,7 +843,7 @@ export default {
                 header: true,
                 underline: true,
                 strikethrough: true,
-                mark: true,
+                mark: false,
                 superscript: true,
                 subscript: true,
                 quote: true,
@@ -1293,7 +1304,7 @@ export default {
             })
             Promise.allSettled(promises).then(() => {
                 ing_list.forEach(ing => {
-                    if(ing.trim() !== ""){
+                    if (ing.trim() !== "") {
                         step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
                     }
                 })

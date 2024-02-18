@@ -214,6 +214,9 @@ def test_completed(sle, u1_s1):
 
 def test_recent(sle, u1_s1):
     user = auth.get_user(u1_s1)
+    user.userpreference.shopping_recent_days = 7 # hardcoded API limit 14 days
+    user.userpreference.save()
+
     today_start = timezone.now().replace(hour=0, minute=0, second=0)
 
     # past_date within recent_days threshold

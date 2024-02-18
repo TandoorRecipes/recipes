@@ -30,6 +30,7 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
@@ -102,7 +103,8 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SupermarketCategorySerializer, SupermarketSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
-                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer)
+                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer,
+                                 ShoppingListEntryBulkSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
@@ -480,6 +482,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    schema = FilterSchema()
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -489,7 +492,7 @@ class SupermarketViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin):
+class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin, MergeMixin):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
@@ -659,8 +662,16 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
+        order_field = self.request.GET.get('order_field')
+        order_direction = self.request.GET.get('order_direction')
+
+        if not order_field:
+            order_field = 'id'
+
+        ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
+        
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-            space=self.request.space).distinct()
+        space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 
@@ -1160,11 +1171,47 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
         if pk := self.request.query_params.getlist('id', []):
             self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
 
-        if 'checked' in self.request.query_params or 'recent' in self.request.query_params:
+        if 'checked' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
+        elif not self.detail:
+            today_start = timezone.now().replace(hour=0, minute=0, second=0)
+            week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
+            self.queryset = self.queryset.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
+
+        try:
+            last_autosync = self.request.query_params.get('last_autosync', None)
+            if last_autosync:
+                last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
+                self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
+        except:
+            traceback.print_exc()
 
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
-        return self.queryset
+        if self.detail:
+            return self.queryset
+        else:
+            return self.queryset[:1000]
+
+    @decorators.action(
+        detail=False,
+        methods=['POST'],
+        serializer_class=ShoppingListEntryBulkSerializer,
+        permission_classes=[CustomIsUser]
+    )
+    def bulk(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user)
+                | Q(shoppinglist__shared=self.request.user)
+                | Q(created_by__in=list(self.request.user.get_shopping_share()))
+            ).filter(space=request.space, id__in=serializer.validated_data['ids']).update(
+                checked=serializer.validated_data['checked'],
+                updated_at=timezone.now(),
+            )
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, 400)
 
 
 # TODO deprecate
@@ -1174,11 +1221,13 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
-        return self.queryset.filter(
+        self.queryset = self.queryset.filter(
             Q(created_by=self.request.user)
             | Q(shared=self.request.user)
             | Q(created_by__in=list(self.request.user.get_shopping_share()))
-        ).filter(space=self.request.space).distinct()
+        ).filter(space=self.request.space)
+
+        return self.queryset.distinct()
 
     def get_serializer_class(self):
         try:
@@ -1247,6 +1296,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
 
 
 class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    schema = FilterSchema()
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1555,6 +1605,7 @@ class ImportOpenData(APIView):
         # TODO validate data
         print(request.data)
         selected_version = request.data['selected_version']
+        selected_datatypes = request.data['selected_datatypes']
         update_existing = str2bool(request.data['update_existing'])
         use_metric = str2bool(request.data['use_metric'])
 
@@ -1564,12 +1615,19 @@ class ImportOpenData(APIView):
         response_obj = {}
 
         data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
-        response_obj['unit'] = len(data_importer.import_units())
-        response_obj['category'] = len(data_importer.import_category())
-        response_obj['property'] = len(data_importer.import_property())
-        response_obj['store'] = len(data_importer.import_supermarket())
-        response_obj['food'] = len(data_importer.import_food())
-        response_obj['conversion'] = len(data_importer.import_conversion())
+
+        if selected_datatypes['unit']['selected']:
+            response_obj['unit'] = data_importer.import_units()
+        if selected_datatypes['category']['selected']:
+            response_obj['category'] = data_importer.import_category()
+        if selected_datatypes['property']['selected']:
+            response_obj['property'] = data_importer.import_property()
+        if selected_datatypes['store']['selected']:
+            response_obj['store'] = data_importer.import_supermarket()
+        if selected_datatypes['food']['selected']:
+            response_obj['food'] = data_importer.import_food()
+        if selected_datatypes['conversion']['selected']:
+            response_obj['conversion'] = data_importer.import_conversion()
 
         return Response(response_obj)
 
