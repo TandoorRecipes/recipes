@@ -45,12 +45,12 @@ class FoodPropertyHelper:
                 conversions = uch.get_conversions(i)
                 for pt in property_types:
                     found_property = False
-                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:
+                    if i.food.properties_food_amount == 0 or i.food.properties_food_unit is None:  # if food is configured incorrectly
                         computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
-                        computed_properties[pt.id]['missing_value'] = i.food.properties_food_unit is None
+                        computed_properties[pt.id]['missing_value'] = True
                     else:
                         for p in i.food.properties.all():
-                            if p.property_type == pt:
+                            if p.property_type == pt and p.property_amount is not None:
                                 for c in conversions:
                                     if c.unit == i.food.properties_food_unit:
                                         found_property = True
@@ -58,13 +58,17 @@ class FoodPropertyHelper:
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
                                             computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
                     if not found_property:
-                        computed_properties[pt.id]['missing_value'] = True
-                        computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
+                        if i.amount == 0:  # don't count ingredients without an amount as missing
+                            computed_properties[pt.id]['missing_value'] = computed_properties[pt.id]['missing_value'] or False  # don't override if another food was already missing
+                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': 0}
+                        else:
+                            computed_properties[pt.id]['missing_value'] = True
+                            computed_properties[pt.id]['food_values'][i.food.id] = {'id': i.food.id, 'food': i.food.name, 'value': None}
 
         return computed_properties
 
     # small dict helper to add to existing key or create new, probably a better way of doing this
-    # TODO move to central helper ?
+    # TODO move to central helper ? --> use defaultdict
     @staticmethod
     def add_or_create(d, key, value, food):
         if key in d:
