@@ -846,7 +846,7 @@ class PropertyType(models.Model, PermissionModelMixin):
 
 
 class Property(models.Model, PermissionModelMixin):
-    property_amount = models.DecimalField(default=0, decimal_places=4, max_digits=32)
+    property_amount = models.DecimalField(default=None, null=True, decimal_places=4, max_digits=32)
     property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
 
     import_food_id = models.IntegerField(null=True, blank=True)  # field to hold food id when importing properties from the open data project

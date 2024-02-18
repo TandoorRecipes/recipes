@@ -607,11 +607,21 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         if properties with a fdc_id already exist they will be overridden, if existing properties don't have a fdc_id they won't be changed
         """
         food = self.get_object()
+        if not food.fdc_id:
+            return JsonResponse({'msg': 'Food has no FDC ID associated.'}, status=400,
+                                json_dumps_params={'indent': 4})
 
         response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
         if response.status_code == 429:
-            return JsonResponse({'msg', 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
+            return JsonResponse({'msg': 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
                                 json_dumps_params={'indent': 4})
+        if response.status_code != 200:
+            return JsonResponse({'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key=****'}, status=response.status_code,
+                                json_dumps_params={'indent': 4})
+
+        food.properties_food_amount = 100
+        food.properties_food_unit = Unit.objects.get_or_create(base_unit__iexact='g', space=self.request.space, defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space})[0]
+        food.save()
 
         try:
             data = json.loads(response.content)
@@ -625,14 +635,23 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 
             for pt in PropertyType.objects.filter(space=request.space, fdc_id__gte=0).all():
                 if pt.fdc_id:
+                    property_found = False
                     for fn in data['foodNutrients']:
                         if fn['nutrient']['id'] == pt.fdc_id:
+                            property_found = True
                             food_property_list.append(Property(
                                 property_type_id=pt.id,
                                 property_amount=max(0, round(fn['amount'], 2)),  # sometimes FDC might return negative values which make no sense, set to 0
                                 import_food_id=food.id,
                                 space=self.request.space,
                             ))
+                    if not property_found:
+                        food_property_list.append(Property(
+                            property_type_id=pt.id,
+                            property_amount=0,  # if field not in FDC data the food does not have that property
+                            import_food_id=food.id,
+                            space=self.request.space,
+                        ))
 
             Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
 

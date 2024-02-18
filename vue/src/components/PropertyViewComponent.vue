@@ -41,10 +41,8 @@
 
                     <td class="align-middle text-center" v-if="!show_recipe_properties">
                         <a href="#" @click="selected_property = p">
-                            <!--                            <i v-if="p.missing_value" class="text-warning fas fa-exclamation-triangle"></i>-->
-                            <!--                            <i v-if="!p.missing_value" class="text-muted fas fa-info-circle"></i>-->
-                            <i class="text-muted fas fa-info-circle"></i>
-                            <!-- TODO find solution for missing values as 0 can either be missing or actually correct for any given property -->
+                            <i v-if="p.missing_value" class="text-warning fas fa-exclamation-triangle"></i>
+                            <i v-if="!p.missing_value" class="text-muted fas fa-info-circle"></i>
                         </a>
                     </td>
                 </tr>
@@ -117,6 +115,7 @@ export default {
                     has_food_properties = true
                 }
             }
+            console.log('has food propers', has_food_properties)
             return has_food_properties
         },
         property_list: function () {
