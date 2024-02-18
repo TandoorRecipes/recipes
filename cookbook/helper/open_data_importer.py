@@ -185,8 +185,11 @@ class OpenDataImporter:
         unit_g = Unit.objects.filter(space=self.request.space, base_unit__iexact='g').first()
 
         existing_data = {}
-        for obj in Food.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
-            existing_data[obj['open_data_slug']] = obj
+        existing_data_names = {}
+        for obj in Food.objects.filter(space=self.request.space).values('pk', 'name', 'open_data_slug'):
+            if obj.open_data_slug:
+                existing_data[obj['open_data_slug']] = obj
+            existing_data_names[obj['name']] = obj
 
         update_list = []
         create_list = []
@@ -203,9 +206,13 @@ class OpenDataImporter:
                 'space': self.request.space.id,
             }
 
-            if obj['open_data_slug'] in existing_data:
+            if obj['open_data_slug'] in existing_data or obj['name'] in existing_data_names:
+                if obj['open_data_slug'] in existing_data:
+                    obj['pk'] = existing_data[obj['open_data_slug']]['pk']
+                elif obj['name'] in existing_data_names:
+                    obj['pk'] = existing_data_names[obj['name']]['pk']
+
                 obj['space'] = self.request.space
-                obj['pk'] = existing_data[obj['open_data_slug']]['pk']
                 obj = Food(**obj)
                 update_list.append(obj)
             else:
