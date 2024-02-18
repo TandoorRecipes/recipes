@@ -187,7 +187,7 @@ class OpenDataImporter:
         existing_data = {}
         existing_data_names = {}
         for obj in Food.objects.filter(space=self.request.space).values('pk', 'name', 'open_data_slug'):
-            if obj.open_data_slug:
+            if 'open_data_slug' in obj:
                 existing_data[obj['open_data_slug']] = obj
             existing_data_names[obj['name']] = obj
 
