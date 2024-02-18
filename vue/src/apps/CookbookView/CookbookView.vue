@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1 offset">
+    <div id="app" class="books col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1 offset">
         <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
             <div class="row">
                 <div class="col col-md-12">
