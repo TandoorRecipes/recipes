@@ -209,6 +209,8 @@ class OpenDataImporter:
             if obj['open_data_slug'] in existing_data or obj['name'] in existing_data_names:
                 # rather rare edge cases object A has the slug and object B has the name which would lead to uniqueness errors
                 if obj['open_data_slug'] in existing_data and obj['name'] in existing_data_names and existing_data[obj['open_data_slug']]['pk'] != existing_data_names[obj['name']]['pk']:
+                    # TODO this fails if objects are parent/children of a tree
+                    # TODO this does not merge nicely (with data), write better merge method (or use generalized one if available when reading this)
                     source_obj = Food.objects.get(pk=existing_data[obj['open_data_slug']]['pk'])
                     del existing_data[obj['open_data_slug']]
                     source_obj.merge_into(Food.objects.get(pk=existing_data_names[obj['name']]['pk']))

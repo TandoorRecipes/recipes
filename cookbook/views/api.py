@@ -262,7 +262,9 @@ class MergeMixin(ViewSetMixin):
 
             try:
                 if isinstance(source, Food):
-                    source.properties.remove()
+                    source.properties.all().delete()
+                    source.properties.clear()
+                    UnitConversion.objects.filter(food=source).delete()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
