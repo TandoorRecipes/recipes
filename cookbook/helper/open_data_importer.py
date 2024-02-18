@@ -203,7 +203,7 @@ class OpenDataImporter:
                 'space': self.request.space.id,
             }
 
-            if self.update_existing:
+            if obj['open_data_slug'] in existing_data:
                 obj['space'] = self.request.space
                 obj['pk'] = existing_data[obj['open_data_slug']]['pk']
                 obj = Food(**obj)
