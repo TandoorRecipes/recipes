@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-if="recipe_id !== undefined">
+    <div id="app" class="recipe" v-if="recipe_id !== undefined">
         <recipe-view-component :recipe_id="recipe_id"></recipe-view-component>
 
         <bottom-navigation-bar active-view="view_search"></bottom-navigation-bar>

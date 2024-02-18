@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" class="shopping">
         <b-alert :show="shopping_list_store.has_failed_items" class="float-up mt-2" variant="warning">
             {{ $t('ShoppingBackgroundSyncWarning') }}
         </b-alert>
@@ -55,7 +55,6 @@
                                 </span>
                             </div>
                         </template>
-
                         <!-- Entry input on large screens -->
                         <b-row class="d-lg-block d-print-none d-none mb-3 mt-3">
                             <b-col cols="12">
