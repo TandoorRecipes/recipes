@@ -242,10 +242,8 @@
                                 </b-form-checkbox>
                             </b-form-group>
 
-                            <b-form-group :description="$t('substitute_children_help')">
-                                <b-form-input v-model="food.open_data_slug" disabled>{{
-                                        $t('Open_Data_Slug')
-                                    }}
+                            <b-form-group :label="$t('Open_Data_Slug')" :description="$t('open_data_help_text')">
+                                <b-form-input v-model="food.open_data_slug" disabled>
                                 </b-form-input>
                             </b-form-group>
 
