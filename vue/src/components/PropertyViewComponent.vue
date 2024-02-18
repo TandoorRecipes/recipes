@@ -62,7 +62,14 @@
                     <tr v-for="f in selected_property.food_values"
                         v-bind:key="`id_${selected_property.id}_food_${f.id}`">
                         <td><a href="#" @click="openFoodEditModal(f)">{{ f.food }}</a></td>
-                        <td>{{ f.value }} {{ selected_property.unit }}</td>
+                        <td>
+                            <template v-if="f.value == null">
+                                <i class="text-warning fas fa-exclamation-triangle"></i>
+                            </template>
+                            <template v-else>
+                                {{ f.value }} {{ selected_property.unit }}
+                            </template>
+                        </td>
                     </tr>
                 </table>
             </template>
