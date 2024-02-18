@@ -629,7 +629,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
                         if fn['nutrient']['id'] == pt.fdc_id:
                             food_property_list.append(Property(
                                 property_type_id=pt.id,
-                                property_amount=round(fn['amount'], 2),
+                                property_amount=max(0, round(fn['amount'], 2)),  # sometimes FDC might return negative values which make no sense, set to 0
                                 import_food_id=food.id,
                                 space=self.request.space,
                             ))
@@ -669,9 +669,9 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
             order_field = 'id'
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
-        
+
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-        space=self.request.space).distinct().order_by(ordering)
+            space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 

@@ -33,7 +33,7 @@ class OpenDataImporter:
             obj = Unit(
                 name=self.data[datatype][u]['name'],
                 plural_name=self.data[datatype][u]['plural_name'],
-                base_unit=self.data[datatype][u]['base_unit'] if self.data[datatype][u]['base_unit'] != '' else None,
+                base_unit=self.data[datatype][u]['base_unit'].lower() if self.data[datatype][u]['base_unit'] != '' else None,
                 open_data_slug=u,
                 space=self.request.space
             )
@@ -102,6 +102,7 @@ class OpenDataImporter:
             obj = PropertyType(
                 name=self.data[datatype][k]['name'],
                 unit=self.data[datatype][k]['unit'],
+                fdc_id=self.data[datatype][k]['fdc_id'],
                 open_data_slug=k,
                 space=self.request.space
             )
@@ -113,7 +114,7 @@ class OpenDataImporter:
 
         total_count = 0
         if self.update_existing and len(update_list) > 0:
-            PropertyType.objects.bulk_update(update_list, ('name', 'open_data_slug'))
+            PropertyType.objects.bulk_update(update_list, ('name', 'fdc_id', 'unit', 'open_data_slug'))
             total_count += len(update_list)
 
         if len(create_list) > 0:
