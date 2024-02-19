@@ -30,7 +30,7 @@
                         <td>{{ $t(d.name.charAt(0).toUpperCase() + d.name.slice(1)) }}</td>
                         <td>{{ metadata[selected_version][d.name] }}</td>
                         <td>
-                            <template v-if="import_count !== undefined">{{ import_count[d] }}</template>
+                            <template v-if="d.name in import_count">{{ import_count[d.name] }} </template>
                         </td>
                     </tr>
                 </table>
@@ -67,7 +67,7 @@ export default {
             selected_version: undefined,
             update_existing: true,
             use_metric: true,
-            import_count: undefined,
+            import_count: {},
         }
     },
     mounted() {
