@@ -1638,17 +1638,17 @@ class ImportOpenData(APIView):
         data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
 
         if selected_datatypes['unit']['selected']:
-            response_obj['unit'] = data_importer.import_units()
+            response_obj['unit'] = data_importer.import_units().to_dict()
         if selected_datatypes['category']['selected']:
-            response_obj['category'] = data_importer.import_category()
+            response_obj['category'] = data_importer.import_category().to_dict()
         if selected_datatypes['property']['selected']:
-            response_obj['property'] = data_importer.import_property()
+            response_obj['property'] = data_importer.import_property().to_dict()
         if selected_datatypes['store']['selected']:
-            response_obj['store'] = data_importer.import_supermarket()
+            response_obj['store'] = data_importer.import_supermarket().to_dict()
         if selected_datatypes['food']['selected']:
-            response_obj['food'] = data_importer.import_food()
+            response_obj['food'] = data_importer.import_food().to_dict()
         if selected_datatypes['conversion']['selected']:
-            response_obj['conversion'] = data_importer.import_conversion()
+            response_obj['conversion'] = data_importer.import_conversion().to_dict()
 
         return Response(response_obj)
 

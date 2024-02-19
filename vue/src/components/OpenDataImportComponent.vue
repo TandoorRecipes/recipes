@@ -30,7 +30,12 @@
                         <td>{{ $t(d.name.charAt(0).toUpperCase() + d.name.slice(1)) }}</td>
                         <td>{{ metadata[selected_version][d.name] }}</td>
                         <td>
-                            <template v-if="d.name in import_count">{{ import_count[d.name] }} </template>
+                            <template v-if="d.name in import_count">
+                                <i class="fas fa-plus-circle"></i> {{ import_count[d.name]['total_created'] }} {{ $t('Created')}} <br/>
+                                <i class="fas fa-pencil-alt"></i> {{ import_count[d.name]['total_updated'] }} {{ $t('Updated')}} <br/>
+                                <i class="fas fa-forward"></i> {{ import_count[d.name]['total_untouched'] }} {{ $t('Unchanged')}} <br/>
+                                <i class="fas fa-exclamation-circle"></i> {{ import_count[d.name]['total_errored'] }} {{ $t('Error')}}
+                            </template>
                         </td>
                     </tr>
                 </table>
@@ -94,7 +99,7 @@ export default {
                 'use_metric': this.use_metric,
             }).then(r => {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
-                this.import_count = r.data
+                this.import_count = Object.assign({}, this.import_count, r.data);
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
             })
