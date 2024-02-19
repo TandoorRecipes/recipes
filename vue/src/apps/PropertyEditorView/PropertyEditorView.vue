@@ -72,8 +72,14 @@
                                         <b-btn class="btn-sm btn-block btn-success" @click="enableProperty(p,f)">Add</b-btn>
                                     </template>
                                     <template v-else>
-                                        <b-form-input v-model="p.property_amount" type="number" :ref="`id_input_${f.id}_${p.property_type.id}`" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name"
-                                                      @change="updateFood(f)"></b-form-input>
+                                        <b-input-group>
+
+                                            <b-form-input v-model="p.property_amount" type="number" :ref="`id_input_${f.id}_${p.property_type.id}`" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name"
+                                                          @change="updateFood(f)"></b-form-input>
+                                            <b-input-group-append>
+                                                <b-btn @click="p.property_amount = null; updateFood(f)"><i class="fas fa-trash-alt"></i></b-btn>
+                                            </b-input-group-append>
+                                        </b-input-group>
                                     </template>
                                 </b-input-group>
                             </td>
