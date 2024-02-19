@@ -878,7 +878,7 @@ class Step(ExportModelOperationsMixin('step'), models.Model, PermissionModelMixi
         indexes = (GinIndex(fields=["search_vector"]),)
 
 
-class PropertyType(models.Model, PermissionModelMixin):
+class PropertyType(models.Model, PermissionModelMixin, MergeModelMixin):
     NUTRITION = 'NUTRITION'
     ALLERGEN = 'ALLERGEN'
     PRICE = 'PRICE'
@@ -903,6 +903,13 @@ class PropertyType(models.Model, PermissionModelMixin):
     def __str__(self):
         return f'{self.name}'
 
+    def merge_into(self, target):
+        super().merge_into(target)
+
+        Property.objects.filter(property_type=self).update(property_type=target)
+        self.delete()
+        return target
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['space', 'name'], name='property_type_unique_name_per_space'),
@@ -915,7 +922,7 @@ class Property(models.Model, PermissionModelMixin):
     property_amount = models.DecimalField(default=None, null=True, decimal_places=4, max_digits=32)
     property_type = models.ForeignKey(PropertyType, on_delete=models.PROTECT)
 
-    import_food_id = models.IntegerField(null=True, blank=True)  # field to hold food id when importing properties from the open data project
+    open_data_food_slug = models.CharField(max_length=128, null=True, blank=True, default=None)  # field to hold food id when importing properties from the open data project
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -925,7 +932,7 @@ class Property(models.Model, PermissionModelMixin):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['space', 'property_type', 'import_food_id'], name='property_unique_import_food_per_space')
+            models.UniqueConstraint(fields=['space', 'property_type', 'open_data_food_slug'], name='property_unique_import_food_per_space')
         ]
 
 
