@@ -19,71 +19,157 @@ class OpenDataImporter:
     def _update_slug_cache(self, object_class, datatype):
         self.slug_id_cache[datatype] = dict(object_class.objects.filter(space=self.request.space, open_data_slug__isnull=False).values_list('open_data_slug', 'id', ))
 
+    @staticmethod
+    def _is_obj_identical(field_list, obj, existing_obj):
+        """
+        checks if the obj meant for import is identical to an already existing one
+        :param field_list: list of field names to check
+        :type field_list: list[str]
+        :param obj: object meant for import
+        :type obj: Object
+        :param existing_obj: object already in DB
+        :type existing_obj: Object
+        :return: if objects are identical
+        :rtype: bool
+        """
+        for field in field_list:
+            if getattr(obj, field) != existing_obj[field]:
+                return False
+        return True
+
+    @staticmethod
+    def _merge_if_conflicting(model_type, obj, existing_data_slugs, existing_data_names):
+        """
+        sometimes there might be two objects conflicting for open data import (one has the slug, the other the name)
+        this function checks if that is the case and merges the two objects if possible
+        :param model_type: type of model to check/merge
+        :type model_type: Model
+        :param obj: object that should be created/updated
+        :type obj: Model
+        :param existing_data_slugs: dict of open data slugs mapped to objects
+        :type existing_data_slugs: dict
+        :param existing_data_names: dict of names mapped to objects
+        :type existing_data_names: dict
+        :return: true if merge was successful or not necessary else false
+        :rtype: bool
+        """
+        if obj.open_data_slug in existing_data_slugs and obj.name in existing_data_names and existing_data_slugs[obj.open_data_slug]['pk'] != existing_data_names[obj.name]['pk']:
+            try:
+                source_obj = model_type.objects.get(pk=existing_data_slugs[obj.open_data_slug]['pk'])
+                del existing_data_slugs[obj.open_data_slug]
+                source_obj.merge_into(model_type.objects.get(pk=existing_data_names[obj.name]['pk']))
+                return True
+            except RuntimeError:
+                return False  # in the edge case (e.g. parent/child) that an object cannot be merged don't update it for now
+        else:
+            return True
+
+    @staticmethod
+    def _get_existing_obj(obj, existing_data_slugs, existing_data_names):
+        """
+        gets the existing object from slug or name cache
+        :param obj: object that should be found
+        :type obj: Model
+        :param existing_data_slugs: dict of open data slugs mapped to objects
+        :type existing_data_slugs: dict
+        :param existing_data_names: dict of names mapped to objects
+        :type existing_data_names: dict
+        :return: existing object
+        :rtype: dict
+        """
+        existing_obj = None
+        if obj.open_data_slug in existing_data_slugs:
+            existing_obj = existing_data_slugs[obj.open_data_slug]
+        elif obj.name in existing_data_names:
+            existing_obj = existing_data_names[obj.name]
+
+        return existing_obj
+
     def import_units(self):
         datatype = 'unit'
+        model_type = Unit
+        field_list = ['name', 'plural_name', 'base_unit', 'open_data_slug']
 
-        existing_data = {}
-        for obj in Unit.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
-            existing_data[obj['open_data_slug']] = obj
+        existing_data_slugs = {}
+        existing_data_names = {}
+        for obj in model_type.objects.filter(space=self.request.space).values('pk', *field_list):
+            existing_data_slugs[obj['open_data_slug']] = obj
+            existing_data_names[obj['name']] = obj
 
         update_list = []
         create_list = []
 
         for u in list(self.data[datatype].keys()):
-            obj = Unit(
+            obj = model_type(
                 name=self.data[datatype][u]['name'],
                 plural_name=self.data[datatype][u]['plural_name'],
                 base_unit=self.data[datatype][u]['base_unit'].lower() if self.data[datatype][u]['base_unit'] != '' else None,
                 open_data_slug=u,
                 space=self.request.space
             )
-            if obj.open_data_slug in existing_data:
-                obj.pk = existing_data[obj.open_data_slug]['pk']
-                update_list.append(obj)
+            if obj.open_data_slug in existing_data_slugs or obj.name in existing_data_names:
+                if not self._merge_if_conflicting(model_type, obj, existing_data_slugs, existing_data_names):
+                    continue  # if conflicting objects exist and cannot be merged skip object
+
+                existing_obj = self._get_existing_obj(obj, existing_data_slugs, existing_data_names)
+
+                if not self._is_obj_identical(field_list, obj, existing_obj):
+                    obj.pk = existing_obj['pk']
+                    update_list.append(obj)
             else:
                 create_list.append(obj)
 
         total_count = 0
         if self.update_existing and len(update_list) > 0:
-            Unit.objects.bulk_update(update_list, ('name', 'plural_name', 'base_unit', 'open_data_slug'))
+            model_type.objects.bulk_update(update_list, field_list)
             total_count += len(update_list)
 
         if len(create_list) > 0:
-            Unit.objects.bulk_create(create_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            model_type.objects.bulk_create(create_list, update_conflicts=True, update_fields=field_list, unique_fields=('space', 'name',))
             total_count += len(create_list)
 
         return total_count
 
     def import_category(self):
         datatype = 'category'
+        model_type = SupermarketCategory
+        field_list = ['name', 'open_data_slug']
 
-        existing_data = {}
-        for obj in SupermarketCategory.objects.filter(space=self.request.space, open_data_slug__isnull=False).values('pk', 'name', 'open_data_slug'):
-            existing_data[obj['open_data_slug']] = obj
+        existing_data_slugs = {}
+        existing_data_names = {}
+        for obj in model_type.objects.filter(space=self.request.space).values('pk', *field_list):
+            existing_data_slugs[obj['open_data_slug']] = obj
+            existing_data_names[obj['name']] = obj
 
         update_list = []
         create_list = []
 
         for k in list(self.data[datatype].keys()):
-            obj = SupermarketCategory(
+            obj = model_type(
                 name=self.data[datatype][k]['name'],
                 open_data_slug=k,
                 space=self.request.space
             )
 
-            if obj.open_data_slug in existing_data:
-                obj.pk = existing_data[obj.open_data_slug]['pk']
-                update_list.append(obj)
+            if obj.open_data_slug in existing_data_slugs or obj.name in existing_data_names:
+                if not self._merge_if_conflicting(model_type, obj, existing_data_slugs, existing_data_names):
+                    continue  # if conflicting objects exist and cannot be merged skip object
+
+                existing_obj = self._get_existing_obj(obj, existing_data_slugs, existing_data_names)
+
+                if not self._is_obj_identical(field_list, obj, existing_obj):
+                    obj.pk = existing_obj['pk']
+                    update_list.append(obj)
             else:
                 create_list.append(obj)
 
         total_count = 0
         if self.update_existing and len(update_list) > 0:
-            SupermarketCategory.objects.bulk_update(update_list, ('name', 'open_data_slug'))
+            model_type.objects.bulk_update(update_list, field_list)
             total_count += len(update_list)
 
         if len(create_list) > 0:
-            SupermarketCategory.objects.bulk_create(create_list, update_conflicts=True, update_fields=('open_data_slug',), unique_fields=('space', 'name',))
+            model_type.objects.bulk_create(create_list, update_conflicts=True, update_fields=field_list, unique_fields=('space', 'name',))
             total_count += len(create_list)
 
         return total_count
@@ -202,9 +288,12 @@ class OpenDataImporter:
                 'supermarket_category_id': self.slug_id_cache['category'][self.data[datatype][k]['store_category']],
                 'fdc_id': re.sub(r'\D', '', self.data[datatype][k]['fdc_id']) if self.data[datatype][k]['fdc_id'] != '' else None,
                 'open_data_slug': k,
-                'properties_food_unit_id': unit_g.id,
+                'properties_food_unit_id': None,
                 'space': self.request.space.id,
             }
+
+            if unit_g:
+                obj['properties_food_unit_id'] = unit_g.id
 
             if obj['open_data_slug'] in existing_data or obj['name'] in existing_data_names:
                 # rather rare edge cases object A has the slug and object B has the name which would lead to uniqueness errors

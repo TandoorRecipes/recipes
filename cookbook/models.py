@@ -209,6 +209,27 @@ class TreeModel(MP_Node):
         abstract = True
 
 
+class MergeModelMixin:
+
+    def merge_into(self, target):
+        """
+        very simple merge function that replaces the current instance with the target instance
+        :param target: target object
+        :return: target with data merged
+        """
+
+        if self == target:
+            raise ValueError('Cannot merge an object with itself')
+
+        if getattr(self, 'space', 0) != getattr(target, 'space', 0):
+            raise RuntimeError('Cannot merge objects from different spaces')
+
+        if hasattr(self, 'get_descendants_and_self') and target in callable(getattr(self, 'get_descendants_and_self')):
+            raise RuntimeError('Cannot merge parent (source) with child (target) object')
+
+        # TODO copy field values
+
+
 class PermissionModelMixin:
     @staticmethod
     def get_space_key():
@@ -512,7 +533,7 @@ class Sync(models.Model, PermissionModelMixin):
         return self.path
 
 
-class SupermarketCategory(models.Model, PermissionModelMixin):
+class SupermarketCategory(models.Model, PermissionModelMixin, MergeModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     description = models.TextField(blank=True, null=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
@@ -522,6 +543,14 @@ class SupermarketCategory(models.Model, PermissionModelMixin):
 
     def __str__(self):
         return self.name
+
+    def merge_into(self, target):
+        super().merge_into(target)
+
+        Food.objects.filter(supermarket_category=self).update(supermarket_category=target)
+        SupermarketCategoryRelation.objects.filter(category=self).update(category=target)
+        self.delete()
+        return target
 
     class Meta:
         constraints = [
@@ -597,7 +626,7 @@ class Keyword(ExportModelOperationsMixin('keyword'), TreeModel, PermissionModelM
         indexes = (Index(fields=['id', 'name']),)
 
 
-class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin):
+class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixin, MergeModelMixin):
     name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
     plural_name = models.CharField(max_length=128, null=True, blank=True, default=None)
     description = models.TextField(blank=True, null=True)
@@ -606,6 +635,17 @@ class Unit(ExportModelOperationsMixin('unit'), models.Model, PermissionModelMixi
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
+
+    def merge_into(self, target):
+        super().merge_into(target)
+
+        Ingredient.objects.filter(unit=self).update(unit=target)
+        ShoppingListEntry.objects.filter(unit=self).update(unit=target)
+        Food.objects.filter(properties_food_unit=self).update(properties_food_unit=target)
+        Food.objects.filter(preferred_unit=self).update(preferred_unit=target)
+        Food.objects.filter(preferred_shopping_unit=self).update(preferred_shopping_unit=target)
+        self.delete()
+        return target
 
     def __str__(self):
         return self.name
