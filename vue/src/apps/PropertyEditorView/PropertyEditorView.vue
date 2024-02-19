@@ -69,10 +69,11 @@
                             <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`">
                                 <b-input-group>
                                     <template v-if="p.property_amount == null">
-                                        <b-btn class="btn-sm btn-block btn-success" :id="`id_add_btn_${f.id}_${p.property_type.id}`" @click="enableProperty(p,f)">Add</b-btn>
+                                        <b-btn class="btn-sm btn-block btn-success" @click="enableProperty(p,f)">Add</b-btn>
                                     </template>
                                     <template v-else>
-                                        <b-form-input v-model="p.property_amount" type="number" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name" @change="updateFood(f)"></b-form-input>
+                                        <b-form-input v-model="p.property_amount" type="number" :ref="`id_input_${f.id}_${p.property_type.id}`" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name"
+                                                      @change="updateFood(f)"></b-form-input>
                                     </template>
                                 </b-input-group>
                             </td>
@@ -248,7 +249,8 @@ export default {
         updateFood: function (food) {
             let apiClient = new ApiApiFactory()
             apiClient.partialUpdateFood(food.id, food).then(result => {
-                this.spliceInFood(this.buildFood(result.data))
+                // don't use result to prevent flickering
+                //this.spliceInFood(this.buildFood(result.data))
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
@@ -269,10 +271,12 @@ export default {
         copyCalculatedResult: function () {
             this.$copyText(this.calculator_to_amount)
         },
-        enableProperty: function (property, food) {
+        enableProperty: async function (property, food) {
             property.property_amount = 0;
             this.updateFood(food)
-            document.getElementById(`id_add_btn_${food.id}_${property.property_type.id}`).focus()
+            await this.$nextTick();
+            this.$refs[`id_input_${food.id}_${property.property_type.id}`][0].focus()
+            this.$refs[`id_input_${food.id}_${property.property_type.id}`][0].select()
         },
     },
 }
