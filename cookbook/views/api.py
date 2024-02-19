@@ -644,25 +644,22 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
                             food_property_list.append(Property(
                                 property_type_id=pt.id,
                                 property_amount=max(0, round(fn['amount'], 2)),  # sometimes FDC might return negative values which make no sense, set to 0
-                                import_food_id=food.id,
                                 space=self.request.space,
                             ))
                     if not property_found:
                         food_property_list.append(Property(
                             property_type_id=pt.id,
                             property_amount=0,  # if field not in FDC data the food does not have that property
-                            import_food_id=food.id,
                             space=self.request.space,
                         ))
 
-            Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
+            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type',))
 
             property_food_relation_list = []
-            for p in Property.objects.filter(space=self.request.space, import_food_id=food.id).values_list('import_food_id', 'id', ):
-                property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
+            for p in properties:
+                property_food_relation_list.append(Food.properties.through(food_id=food.id, property_id=p.pk))
 
             FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
-            Property.objects.filter(space=self.request.space, import_food_id=food.id).update(import_food_id=None)
 
             return self.retrieve(request, pk)
         except Exception:
