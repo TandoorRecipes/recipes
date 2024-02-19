@@ -364,14 +364,14 @@ class OpenDataImporter:
                 else:
                     od_response.total_untouched += 1
             else:
-                create_list.append(obj_dict)
+                create_list.append({'data': obj_dict})
 
         if self.update_existing and len(update_list) > 0:
             model_type.objects.bulk_update(update_list, field_list)
             od_response.total_updated += len(update_list)
 
         if len(create_list) > 0:
-            model_type.objects.bulk_create(create_list, update_conflicts=True, update_fields=field_list, unique_fields=('space', 'name',))
+            Food.load_bulk(create_list, None)
             od_response.total_created += len(create_list)
 
         # --------------- PROPERTY STUFF -----------------------
