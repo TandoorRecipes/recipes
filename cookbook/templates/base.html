@@ -114,7 +114,7 @@
                         class="fas fa-fw fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
+                <a class="nav-link" href="{% url 'view_shopping' %}"><i
                         class="fas fa-fw fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">

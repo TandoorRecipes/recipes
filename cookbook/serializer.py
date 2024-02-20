@@ -1,4 +1,3 @@
-import traceback
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -31,7 +30,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Property,
                              PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space,
+                             ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog)
@@ -82,14 +81,12 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
 class OpenDataModelMixin(serializers.ModelSerializer):
 
     def create(self, validated_data):
-        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data[
-            'open_data_slug'].strip() == '':
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
             validated_data['open_data_slug'] = None
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data[
-            'open_data_slug'].strip() == '':
+        if 'open_data_slug' in validated_data and validated_data['open_data_slug'] is not None and validated_data['open_data_slug'].strip() == '':
             validated_data['open_data_slug'] = None
         return super().update(instance, validated_data)
 
@@ -336,8 +333,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = (
-        'id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -845,8 +841,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin
 
     class Meta:
         model = UnitConversion
-        fields = (
-        'id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
+        fields = ('id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
@@ -1150,7 +1145,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'recipe_mealplan',
             'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id', 'created_by', 'created_at','updated_at',)
+        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at',)
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
@@ -1163,37 +1158,6 @@ class ShoppingListEntryCheckedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShoppingListEntry
         fields = ('id', 'checked')
-
-
-# TODO deprecate
-class ShoppingListSerializer(WritableNestedModelSerializer):
-    recipes = ShoppingListRecipeSerializer(many=True, allow_null=True)
-    entries = ShoppingListEntrySerializer(many=True, allow_null=True)
-    shared = UserSerializer(many=True)
-    supermarket = SupermarketSerializer(allow_null=True)
-
-    def create(self, validated_data):
-        validated_data['space'] = self.context['request'].space
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
-
-    class Meta:
-        model = ShoppingList
-        fields = (
-            'id', 'uuid', 'note', 'recipes', 'entries',
-            'shared', 'finished', 'supermarket', 'created_by', 'created_at'
-        )
-        read_only_fields = ('id', 'created_by',)
-
-
-# TODO deprecate
-class ShoppingListAutoSyncSerializer(WritableNestedModelSerializer):
-    entries = ShoppingListEntryCheckedSerializer(many=True, allow_null=True)
-
-    class Meta:
-        model = ShoppingList
-        fields = ('id', 'entries',)
-        read_only_fields = ('id',)
 
 
 class ShareLinkSerializer(SpacedModelSerializer):

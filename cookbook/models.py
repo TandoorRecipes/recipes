@@ -368,9 +368,8 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         Sync.objects.filter(space=self).delete()
         Storage.objects.filter(space=self).delete()
 
-        ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
-        ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
-        ShoppingList.objects.filter(space=self).delete()
+        ShoppingListEntry.objects.filter(space=self).delete()
+        ShoppingListRecipe.objects.filter(recipe__space=self).delete()
 
         SupermarketCategoryRelation.objects.filter(supermarket__space=self).delete()
         SupermarketCategory.objects.filter(space=self).delete()
@@ -1169,7 +1168,10 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
+            if not self.entries.exists():
+                return 'orphan'
+            else:
+                return getattr(self.entries.first(), 'created_by', None)
         except AttributeError:
             return None
 
@@ -1192,51 +1194,17 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    @staticmethod
-    def get_space_key():
-        return 'shoppinglist', 'space'
-
-    def get_space(self):
-        return self.shoppinglist_set.first().space
-
     def __str__(self):
         return f'Shopping list entry {self.id}'
 
     def get_shared(self):
-        try:
-            return self.shoppinglist_set.first().shared.all()
-        except AttributeError:
-            return self.created_by.userpreference.shopping_share.all()
+        return self.created_by.userpreference.shopping_share.all()
 
     def get_owner(self):
         try:
-            return self.created_by or self.shoppinglist_set.first().created_by
+            return self.created_by
         except AttributeError:
             return None
-
-
-class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, PermissionModelMixin):
-    uuid = models.UUIDField(default=uuid.uuid4)
-    note = models.TextField(blank=True, null=True)
-    recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
-    entries = models.ManyToManyField(ShoppingListEntry, blank=True)
-    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
-    supermarket = models.ForeignKey(Supermarket, null=True, blank=True, on_delete=models.SET_NULL)
-    finished = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
-
-    def __str__(self):
-        return f'Shopping list {self.id}'
-
-    def get_shared(self):
-        try:
-            return self.shared.all() or self.created_by.userpreference.shopping_share.all()
-        except AttributeError:
-            return []
 
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):

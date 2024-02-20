@@ -10,7 +10,7 @@ from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
-                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step,
                      Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
                      UserFile, UserSpace, get_model_name)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
@@ -45,7 +45,6 @@ router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'unit-conversion', api.UnitConversionViewSet)
 router.register(r'food-property-type', api.PropertyTypeViewSet)  # TODO rename + regenerate
 router.register(r'food-property', api.PropertyViewSet)
-router.register(r'shopping-list', api.ShoppingListViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'space', api.SpaceViewSet)
@@ -87,7 +86,7 @@ urlpatterns = [
     path('plan/', views.meal_plan, name='view_plan'),
     path('shopping/', lists.shopping_list, name='view_shopping'),
     path('settings/', views.user_settings, name='view_settings'),
-    path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),
+    path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
     path('history/', views.history, name='view_history'),
     path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
@@ -167,7 +166,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, RecipeBook, SyncLog, Sync,
-    Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
+    Comment, RecipeBookEntry, InviteLink, UserSpace, Space
 )
 
 for m in generic_models:
