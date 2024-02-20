@@ -47,7 +47,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
     },
     actions: {
         refreshFromAPI(from_date, to_date) {
-            if (this.currently_updating !== [from_date, to_date]) {
+            if (this.currently_updating == null || (this.currently_updating[0] !== from_date || this.currently_updating[1] !== to_date)) {
                 this.currently_updating = [from_date, to_date] // certainly no perfect check but better than nothing
 
                 let apiClient = new ApiApiFactory()
@@ -102,7 +102,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
         },
         loadClientSettings() {
             let s = localStorage.getItem(_LOCAL_STORAGE_KEY)
-            if (s === null || s === {}) {
+            if (s === null) {
                 return {
                     displayPeriodUom: "week",
                     displayPeriodCount: 3,

@@ -584,7 +584,7 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
     property_type = PropertyTypeSerializer()
-    property_amount = CustomDecimalField()
+    property_amount = CustomDecimalField(allow_null=True)
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space

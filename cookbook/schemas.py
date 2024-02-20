@@ -44,12 +44,12 @@ class TreeSchema(AutoSchema):
             "name": 'root', "in": "query", "required": False,
             "description": 'Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.'.format(
                 obj=api_name),
-            'schema': {'type': 'int', },
+            'schema': {'type': 'integer', },
         })
         parameters.append({
             "name": 'tree', "in": "query", "required": False,
             "description": 'Return all self and children of {} with ID [int].'.format(api_name),
-            'schema': {'type': 'int', },
+            'schema': {'type': 'integer', },
         })
         return parameters
 
