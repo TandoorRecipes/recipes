@@ -117,6 +117,7 @@ def page_help(page_name):
         'edit_connector_config': 'https://docs.tandoor.dev/features/connectors/',
         'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
         'view_import': 'https://docs.tandoor.dev/features/import_export/',
+        'data_import_url': 'https://docs.tandoor.dev/features/import_export/',
         'view_export': 'https://docs.tandoor.dev/features/import_export/',
         'list_automation': 'https://docs.tandoor.dev/features/automation/',
     }

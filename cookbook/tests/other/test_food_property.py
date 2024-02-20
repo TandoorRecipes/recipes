@@ -67,7 +67,7 @@ def test_food_property(space_1, space_2, u1_s1):
 
         assert property_values[property_fat.id]['name'] == property_fat.name
         assert abs(property_values[property_fat.id]['total_value']) < 0.0001
-        assert abs(property_values[property_fat.id]['food_values'][food_1.id]['value']) < 0.0001
+        assert property_values[property_fat.id]['food_values'][food_1.id]['value'] is None
 
         print('\n----------- TEST PROPERTY - PROPERTY CALCULATION UNIT CONVERSION ---------------')
         uc1 = UnitConversion.objects.create(

@@ -73,7 +73,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
          */
         loadDeviceSettings() {
             let s = localStorage.getItem(_LS_DEVICE_SETTINGS)
-            if (!(s === null || s === {})) {
+            if (s !== null) {
                 let settings = JSON.parse(s)
                 for (s in settings) {
                     Vue.set(this.device_settings, s, settings[s])
@@ -90,7 +90,7 @@ export const useUserPreferenceStore = defineStore(_STORE_ID, {
         // ---------------- new methods for user settings
         loadUserSettings: function (allow_cached_results) {
             let s = localStorage.getItem(_LS_USER_SETTINGS)
-            if (!(s === null || s === {})) {
+            if (s !== null) {
                 let settings = JSON.parse(s)
                 for (s in settings) {
                     Vue.set(this.user_settings, s, settings[s])

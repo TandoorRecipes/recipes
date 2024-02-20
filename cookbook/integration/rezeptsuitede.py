@@ -1,6 +1,6 @@
 import base64
 from io import BytesIO
-from xml import etree
+from lxml import etree
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text
@@ -53,7 +53,10 @@ class Rezeptsuitede(Integration):
                 u = ingredient_parser.get_unit(ingredient.attrib['unit'])
                 amount = 0
                 if ingredient.attrib['qty'].strip() != '':
-                    amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
+                    try:
+                        amount, unit, note = ingredient_parser.parse_amount(ingredient.attrib['qty'])
+                    except ValueError:  # sometimes quantities contain words which cant be parsed
+                        pass
                 ingredient_step.ingredients.add(Ingredient.objects.create(food=f, unit=u, amount=amount, space=self.request.space, ))
 
         try:

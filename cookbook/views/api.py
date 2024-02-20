@@ -262,7 +262,9 @@ class MergeMixin(ViewSetMixin):
 
             try:
                 if isinstance(source, Food):
-                    source.properties.remove()
+                    source.properties.all().delete()
+                    source.properties.clear()
+                    UnitConversion.objects.filter(food=source).delete()
 
                 for link in [field for field in source._meta.get_fields() if issubclass(type(field), ForeignObjectRel)]:
                     linkManager = getattr(source, link.get_accessor_name())
@@ -564,11 +566,8 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             shared_users = c
         else:
             try:
-                shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [
-                    self.request.user.id]
-                caches['default'].set(
-                    f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}',
-                    shared_users, timeout=5 * 60)
+                shared_users = [x.id for x in list(self.request.user.get_shopping_share())] + [self.request.user.id]
+                caches['default'].set(f'shopping_shared_users_{self.request.space.id}_{self.request.user.id}', shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 pass
@@ -616,11 +615,21 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         if properties with a fdc_id already exist they will be overridden, if existing properties don't have a fdc_id they won't be changed
         """
         food = self.get_object()
+        if not food.fdc_id:
+            return JsonResponse({'msg': 'Food has no FDC ID associated.'}, status=400,
+                                json_dumps_params={'indent': 4})
 
         response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
         if response.status_code == 429:
-            return JsonResponse({'msg', 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
+            return JsonResponse({'msg': 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
                                 json_dumps_params={'indent': 4})
+        if response.status_code != 200:
+            return JsonResponse({'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key=****'}, status=response.status_code,
+                                json_dumps_params={'indent': 4})
+
+        food.properties_food_amount = 100
+        food.properties_food_unit = Unit.objects.get_or_create(base_unit__iexact='g', space=self.request.space, defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space})[0]
+        food.save()
 
         try:
             data = json.loads(response.content)
@@ -634,23 +643,29 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 
             for pt in PropertyType.objects.filter(space=request.space, fdc_id__gte=0).all():
                 if pt.fdc_id:
+                    property_found = False
                     for fn in data['foodNutrients']:
                         if fn['nutrient']['id'] == pt.fdc_id:
+                            property_found = True
                             food_property_list.append(Property(
                                 property_type_id=pt.id,
-                                property_amount=round(fn['amount'], 2),
-                                import_food_id=food.id,
+                                property_amount=max(0, round(fn['amount'], 2)),  # sometimes FDC might return negative values which make no sense, set to 0
                                 space=self.request.space,
                             ))
+                    if not property_found:
+                        food_property_list.append(Property(
+                            property_type_id=pt.id,
+                            property_amount=0,  # if field not in FDC data the food does not have that property
+                            space=self.request.space,
+                        ))
 
-            Property.objects.bulk_create(food_property_list, ignore_conflicts=True, unique_fields=('space', 'import_food_id', 'property_type',))
+            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type',))
 
             property_food_relation_list = []
-            for p in Property.objects.filter(space=self.request.space, import_food_id=food.id).values_list('import_food_id', 'id', ):
-                property_food_relation_list.append(Food.properties.through(food_id=p[0], property_id=p[1]))
+            for p in properties:
+                property_food_relation_list.append(Food.properties.through(food_id=food.id, property_id=p.pk))
 
             FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
-            Property.objects.filter(space=self.request.space, import_food_id=food.id).update(import_food_id=None)
 
             return self.retrieve(request, pk)
         except Exception:
@@ -680,7 +695,7 @@ class RecipeBookViewSet(viewsets.ModelViewSet, StandardFilterMixin):
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
 
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
-        space=self.request.space).distinct().order_by(ordering)
+            space=self.request.space).distinct().order_by(ordering)
         return super().get_queryset()
 
 
@@ -728,7 +743,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     query_params = [
         QueryParam(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
         QueryParam(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
-        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), qtype='integer'),
     ]
     schema = QueryParamAutoSchema()
 
@@ -858,7 +873,7 @@ class StepViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     query_params = [
-        QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), qtype='int'),
+        QueryParam(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), qtype='integer'),
         QueryParam(name='query', description=_('Query string matched (fuzzy) against object name.'), qtype='string'),
     ]
     schema = QueryParamAutoSchema()
@@ -901,27 +916,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     query_params = [
         QueryParam(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
-        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), qtype='int'),
-        QueryParam(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), qtype='int'),
-        QueryParam(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), qtype='int'),
-        QueryParam(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), qtype='int'),
-        QueryParam(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), qtype='int'),
-        QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), qtype='int'),
-        QueryParam(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), qtype='int'),
-        QueryParam(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), qtype='int'),
-        QueryParam(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), qtype='int'),
-        QueryParam(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), qtype='int'),
-        QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='int'),
-        QueryParam(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), qtype='int'),
+        QueryParam(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), qtype='integer'),
+        QueryParam(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), qtype='integer'),
+        QueryParam(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), qtype='integer'),
+        QueryParam(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), qtype='integer'),
+        QueryParam(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), qtype='integer'),
+        QueryParam(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), qtype='integer'),
+        QueryParam(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), qtype='integer'),
+        QueryParam(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), qtype='integer'),
+        QueryParam(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), qtype='integer'),
+        QueryParam(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), qtype='integer'),
+        QueryParam(name='units', description=_('ID of unit a recipe should have.'), qtype='integer'),
+        QueryParam(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), qtype='integer'),
         QueryParam(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
-        QueryParam(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), qtype='int'),
-        QueryParam(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), qtype='int'),
-        QueryParam(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), qtype='int'),
-        QueryParam(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), qtype='int'),
+        QueryParam(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), qtype='integer'),
+        QueryParam(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), qtype='integer'),
+        QueryParam(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), qtype='integer'),
+        QueryParam(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), qtype='integer'),
         QueryParam(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
         QueryParam(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
         QueryParam(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
-        QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='int'),
+        QueryParam(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), qtype='integer'),
         QueryParam(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
         QueryParam(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
@@ -1095,7 +1110,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
     serializer_class = UnitConversionSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     query_params = [
-        QueryParam(name='food_id', description='ID of food to filter for', qtype='int'),
+        QueryParam(name='food_id', description='ID of food to filter for', qtype='integer'),
     ]
     schema = QueryParamAutoSchema()
 
@@ -1146,10 +1161,10 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     query_params = [
-        QueryParam(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), qtype='int'),
+        QueryParam(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), qtype='integer'),
         QueryParam(name='checked', description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
                    ),
-        QueryParam(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), qtype='int'),
+        QueryParam(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), qtype='integer'),
     ]
     schema = QueryParamAutoSchema()
 
@@ -1614,6 +1629,7 @@ class ImportOpenData(APIView):
         # TODO validate data
         print(request.data)
         selected_version = request.data['selected_version']
+        selected_datatypes = request.data['selected_datatypes']
         update_existing = str2bool(request.data['update_existing'])
         use_metric = str2bool(request.data['use_metric'])
 
@@ -1623,12 +1639,19 @@ class ImportOpenData(APIView):
         response_obj = {}
 
         data_importer = OpenDataImporter(request, data, update_existing=update_existing, use_metric=use_metric)
-        response_obj['unit'] = len(data_importer.import_units())
-        response_obj['category'] = len(data_importer.import_category())
-        response_obj['property'] = len(data_importer.import_property())
-        response_obj['store'] = len(data_importer.import_supermarket())
-        response_obj['food'] = len(data_importer.import_food())
-        response_obj['conversion'] = len(data_importer.import_conversion())
+
+        if selected_datatypes['unit']['selected']:
+            response_obj['unit'] = data_importer.import_units().to_dict()
+        if selected_datatypes['category']['selected']:
+            response_obj['category'] = data_importer.import_category().to_dict()
+        if selected_datatypes['property']['selected']:
+            response_obj['property'] = data_importer.import_property().to_dict()
+        if selected_datatypes['store']['selected']:
+            response_obj['store'] = data_importer.import_supermarket().to_dict()
+        if selected_datatypes['food']['selected']:
+            response_obj['food'] = data_importer.import_food().to_dict()
+        if selected_datatypes['conversion']['selected']:
+            response_obj['conversion'] = data_importer.import_conversion().to_dict()
 
         return Response(response_obj)
 
