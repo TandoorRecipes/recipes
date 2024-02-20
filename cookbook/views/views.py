@@ -50,7 +50,7 @@ def index(request):
 
 # TODO need to deprecate
 def search(request):
-    if has_group_permission(request.user, ('guest', )):
+    if has_group_permission(request.user, ('guest',)):
         return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
@@ -130,7 +130,7 @@ def recipe_view(request, pk, share=None):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-        if not (has_group_permission(request.user, ('guest', )) and recipe.space == request.space) and not share_link_valid(recipe, share):
+        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('index'))
 
@@ -160,8 +160,7 @@ def recipe_view(request, pk, share=None):
         if request.method == "GET":
             servings = request.GET.get("servings")
         return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings })
-
+                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
 
 
 @group_required('user')
@@ -451,19 +450,19 @@ def web_manifest(request):
 
     manifest_info = {
         "name":
-        theme_values['app_name'], "short_name":
-        theme_values['app_name'], "description":
-        _("Manage recipes, shopping list, meal plans and more."), "icons":
-        icons, "start_url":
-        "./search", "background_color":
-        theme_values['nav_bg_color'], "display":
-        "standalone", "scope":
-        ".", "theme_color":
-        theme_values['nav_bg_color'], "shortcuts":
-        [{"name": _("Plan"), "short_name": _("Plan"), "description": _("View your meal Plan"), "url":
-          "./plan"}, {"name": _("Books"), "short_name": _("Books"), "description": _("View your cookbooks"), "url": "./books"},
-         {"name": _("Shopping"), "short_name": _("Shopping"), "description": _("View your shopping lists"), "url":
-          "./list/shopping-list/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
+            theme_values['app_name'], "short_name":
+            theme_values['app_name'], "description":
+            _("Manage recipes, shopping list, meal plans and more."), "icons":
+            icons, "start_url":
+            "./search", "background_color":
+            theme_values['nav_bg_color'], "display":
+            "standalone", "scope":
+            ".", "theme_color":
+            theme_values['nav_bg_color'], "shortcuts":
+            [{"name": _("Plan"), "short_name": _("Plan"), "description": _("View your meal Plan"), "url":
+                "./plan"}, {"name": _("Books"), "short_name": _("Books"), "description": _("View your cookbooks"), "url": "./books"},
+             {"name": _("Shopping"), "short_name": _("Shopping"), "description": _("View your shopping lists"), "url":
+                 "./list/shopping-list/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
     }
 
     return JsonResponse(manifest_info, json_dumps_params={'indent': 4})
@@ -502,6 +501,11 @@ def test(request):
 def test2(request):
     if not settings.DEBUG:
         return HttpResponseRedirect(reverse('index'))
+
+
+@group_required('admin')
+def vue3(request):
+    return render(request, 'frontend/tandoor.html', {})
 
 
 def get_orphan_files(delete_orphans=False):
