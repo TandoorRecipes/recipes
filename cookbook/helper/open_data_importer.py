@@ -413,15 +413,17 @@ class OpenDataImporter:
         if len(create_list) > 0:
             model_type.objects.bulk_create(create_list, ignore_conflicts=True, unique_fields=('space', 'open_data_food_slug', 'property_type',))
 
-        linked_properties = list(model_type.objects.filter(space=self.request.space).values_list('id', flat=True).all())
+        linked_properties = list(FoodProperty.objects.filter(food__space=self.request.space).values_list('property_id', flat=True).all())
 
         property_food_relation_list = []
         for p in model_type.objects.filter(space=self.request.space, open_data_food_slug__isnull=False).values_list('open_data_food_slug', 'id', ):
+            if p[1] == 147:
+                pass
             # slug_id_cache should always exist, don't create relations for already linked properties (ignore_conflicts would do that as well but this is more performant)
             if p[0] in self.slug_id_cache['food'] and p[1] not in linked_properties:
                 property_food_relation_list.append(Food.properties.through(food_id=self.slug_id_cache['food'][p[0]], property_id=p[1]))
 
-        FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
+        FoodProperty.objects.bulk_create(property_food_relation_list, unique_fields=('food_id', 'property_id',))
 
         return od_response
 
