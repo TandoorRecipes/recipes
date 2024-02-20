@@ -170,11 +170,6 @@ def meal_plan(request):
 
 
 @group_required('user')
-def supermarket(request):
-    return render(request, 'supermarket.html', {})
-
-
-@group_required('user')
 def view_profile(request, user_id):
     return render(request, 'profile.html', {})
 
