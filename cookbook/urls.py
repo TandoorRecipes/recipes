@@ -5,7 +5,6 @@ from django.views.generic import TemplateView
 from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
-from cookbook.helper import dal
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
 
@@ -135,11 +134,6 @@ urlpatterns = [
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
-
-    path('dal/keyword/', dal.KeywordAutocomplete.as_view(), name='dal_keyword'),
-    # TODO is this deprecated? not yet, some old forms remain, could likely be changed to generic API endpoints
-    path('dal/food/', dal.IngredientsAutocomplete.as_view(), name='dal_food'),  # TODO is this deprecated?
-    path('dal/unit/', dal.UnitAutocomplete.as_view(), name='dal_unit'),  # TODO is this deprecated?
 
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
