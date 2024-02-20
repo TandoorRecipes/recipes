@@ -218,7 +218,18 @@ SESSION_COOKIE_NAME=sessionid # use this only to not interfere with non unified 
 ### Features
 
 Some features can be enabled/disabled on a server level because they might change the user experience significantly,
-they might be unstable/beta or they have performance/security implications.
+they might be unstable/beta, or they have performance/security implications.
+
+For more see configurations:
+- [Authentication](https://docs.tandoor.dev/features/authentication/)
+- [Automation](https://docs.tandoor.dev/features/automation/)
+- [Connectors](https://docs.tandoor.dev/features/connectors/)
+- [External Recipes](https://docs.tandoor.dev/features/external_recipes/)
+- [Import/Export](https://docs.tandoor.dev/features/import_export/)
+- [Shopping](https://docs.tandoor.dev/features/shopping/)
+- [Telegram Bot](https://docs.tandoor.dev/features/telegram_bot/)
+- [Templating](https://docs.tandoor.dev/features/templating/)
+
 
 #### Captcha
 
