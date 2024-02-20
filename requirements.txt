@@ -53,3 +53,4 @@ pytest-factoryboy==2.6.0
 pytest-html==4.1.1
 pytest-asyncio==0.23.5
 pytest-xdist==3.5.0
+django-vite==3.0.3

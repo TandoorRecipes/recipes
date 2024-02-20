@@ -1,0 +1,11 @@
+{% load django_vite %}
+
+
+{% vite_hmr_client %}
+{% vite_asset 'src/apps/tandoor/main.ts' %}
+
+<script src="{% url 'js_reverse' %}"></script>
+
+<div id="app">
+
+</div>

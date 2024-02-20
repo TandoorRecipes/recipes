@@ -2,71 +2,71 @@ const BundleTracker = require("webpack-bundle-tracker")
 
 const pages = {
     recipe_search_view: {
-        entry: "./src/apps/RecipeSearchView/main.js",
+        entry: "./src/apps/RecipeSearchView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     recipe_view: {
-        entry: "./src/apps/RecipeView/main.js",
+        entry: "./src/apps/RecipeView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     offline_view: {
-        entry: "./src/apps/OfflineView/main.js",
+        entry: "./src/apps/OfflineView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     import_view: {
-        entry: "./src/apps/ImportView/main.js",
+        entry: "./src/apps/ImportView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     import_response_view: {
-        entry: "./src/apps/ImportResponseView/main.js",
+        entry: "./src/apps/ImportResponseView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     export_response_view: {
-        entry: "./src/apps/ExportResponseView/main.js",
+        entry: "./src/apps/ExportResponseView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     export_view: {
-        entry: "./src/apps/ExportView/main.js",
+        entry: "./src/apps/ExportView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     model_list_view: {
-        entry: "./src/apps/ModelListView/main.js",
+        entry: "./src/apps/ModelListView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     edit_internal_recipe: {
-        entry: "./src/apps/RecipeEditView/main.js",
+        entry: "./src/apps/RecipeEditView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     cookbook_view: {
-        entry: "./src/apps/CookbookView/main.js",
+        entry: "./src/apps/CookbookView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     meal_plan_view: {
-        entry: "./src/apps/MealPlanView/main.js",
+        entry: "./src/apps/MealPlanView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     ingredient_editor_view: {
-        entry: "./src/apps/IngredientEditorView/main.js",
+        entry: "./src/apps/IngredientEditorView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     property_editor_view: {
-        entry: "./src/apps/PropertyEditorView/main.js",
+        entry: "./src/apps/PropertyEditorView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     shopping_list_view: {
-        entry: "./src/apps/ShoppingListView/main.js",
+        entry: "./src/apps/ShoppingListView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     space_manage_view: {
-        entry: "./src/apps/SpaceManageView/main.js",
+        entry: "./src/apps/SpaceManageView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     settings_view: {
-        entry: "./src/apps/SettingsView/main.js",
+        entry: "./src/apps/SettingsView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     test_view: {
-        entry: "./src/apps/TestView/main.js",
+        entry: "./src/apps/TestView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     }
 }

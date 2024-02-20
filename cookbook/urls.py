@@ -74,6 +74,7 @@ for p in PLUGINS:
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('v3/', views.vue3, name='vue3'),
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('space-overview', views.space_overview, name='view_space_overview'),

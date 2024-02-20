@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import traceback
+import socket
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -384,6 +385,25 @@ for p in PLUGINS:
             'TIMEOUT': None,
             'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
         }
+
+DJANGO_VITE = {
+    "default": {
+        "dev_mode": False,
+        "static_url_prefix": 'vue3',
+        "dev_server_port": 5173,
+        "dev_server_host": os.getenv('DJANGO_VITE_DEV_SERVER_HOST', 'localhost'),
+    },
+}
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.settimeout(0.001)
+    try:
+        s.connect((DJANGO_VITE['default']['dev_server_host'], DJANGO_VITE['default']['dev_server_port']))
+        if DEBUG:
+            print("Vite Dev Server is running")
+            DJANGO_VITE['default']['dev_mode'] = True
+    except:
+        print("Running django-vite in production mode (no HMR)")
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
