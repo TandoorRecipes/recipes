@@ -87,7 +87,6 @@ urlpatterns = [
     path('settings/', views.user_settings, name='view_settings'),
     path('settings-shopping/', views.shopping_settings, name='view_shopping_settings'),  # TODO rename to search settings
     path('history/', views.history, name='view_history'),
-    path('supermarket/', views.supermarket, name='view_supermarket'),
     path('ingredient-editor/', views.ingredient_editor, name='view_ingredient_editor'),
     path('property-editor/<int:pk>', views.property_editor, name='view_property_editor'),
     path('abuse/<slug:token>', views.report_share_abuse, name='view_report_share_abuse'),
