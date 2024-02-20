@@ -6,20 +6,11 @@
 Connectors are a powerful add-on component to TandoorRecipes.
 They allow for certain actions to be translated to api calls to external services.
 
-### General Config
-
 !!! danger
     In order for this application to push data to external providers it needs to store authentication information.
     Please use read only/separate accounts or app passwords wherever possible.
 
-- `DISABLE_EXTERNAL_CONNECTORS` is a global switch to disable External Connectors entirely.
-- `EXTERNAL_CONNECTORS_QUEUE_SIZE` is the amount of changes that are kept in memory if the worker cannot keep up.
-
-Example Config
-```env
-DISABLE_EXTERNAL_CONNECTORS=0 // 0 = connectors enabled, 1 = connectors enabled
-EXTERNAL_CONNECTORS_QUEUE_SIZE=100 
-```
+for the configuration please see [Configuration](https://docs.tandoor.dev/system/configuration/#connectors)
 
 ## Current Connectors
 
