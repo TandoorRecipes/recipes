@@ -169,11 +169,6 @@ def meal_plan(request):
     return render(request, 'meal_plan.html', {})
 
 
-@group_required('user')
-def view_profile(request, user_id):
-    return render(request, 'profile.html', {})
-
-
 @group_required('guest')
 def user_settings(request):
     if request.space.demo:
