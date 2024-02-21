@@ -2200,7 +2200,7 @@ export interface Recipe {
      * @type {Array<RecipeKeywords>}
      * @memberof Recipe
      */
-    keywords: Array<RecipeKeywords>;
+    keywords?: Array<RecipeKeywords>;
     /**
      * 
      * @type {Array<RecipeSteps>}
