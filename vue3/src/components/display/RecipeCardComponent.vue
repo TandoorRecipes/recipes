@@ -1,5 +1,5 @@
 <template>
-    <v-card class="">
+    <v-card :to="`/recipe/${recipe.id}`">
 
         <v-img
             cover
@@ -33,9 +33,7 @@
 
             <div>{{ recipe.description }}</div>
         </v-card-text>
-        <v-card-actions>
-            <v-btn :to="`/recipe/${recipe.id}`">Open</v-btn>
-        </v-card-actions>
+
     </v-card>
 </template>
 

@@ -1,18 +1,15 @@
 <template>
-    <v-img max-height="15vh" :src="recipe.image"></v-img>
-    <h3>{{ recipe.name }}</h3>
-    {{ recipe.description }}
-
-    {{recipe}}
+    <RecipeViewComponent :recipe="recipe"></RecipeViewComponent>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {ApiApi, Recipe} from "@/openapi";
+import RecipeViewComponent from "@/components/display/RecipeViewComponent.vue";
 
 export default defineComponent({
     name: "RecipeSearchPage",
-    components: {},
+    components: {RecipeViewComponent},
     props: {
         id: Number
     },
