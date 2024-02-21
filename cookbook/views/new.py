@@ -6,9 +6,38 @@ from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
 from cookbook.forms import ImportRecipeForm, Storage, StorageForm
-from cookbook.helper.permission_helper import GroupRequiredMixin, group_required
-from cookbook.models import Recipe, RecipeImport, ShareLink
+from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step
 from recipes import settings
+
+
+class RecipeCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['user']
+    template_name = "generic/new_template.html"
+    model = Recipe
+    fields = ('name', )
+
+    def form_valid(self, form):
+        limit, msg = above_space_limit(self.request.space)
+        if limit:
+            messages.add_message(self.request, messages.WARNING, msg)
+            return HttpResponseRedirect(reverse('index'))
+
+        obj = form.save(commit=False)
+        obj.created_by = self.request.user
+        obj.space = self.request.space
+        obj.internal = True
+        obj.save()
+        obj.steps.add(Step.objects.create(space=self.request.space, show_as_header=False, show_ingredients_table=self.request.user.userpreference.show_step_ingredients))
+        return HttpResponseRedirect(reverse('edit_recipe', kwargs={'pk': obj.pk}))
+
+    def get_success_url(self):
+        return reverse('edit_recipe', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(RecipeCreate, self).get_context_data(**kwargs)
+        context['title'] = _("Recipe")
+        return context
 
 
 @group_required('user')

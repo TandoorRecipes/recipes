@@ -137,7 +137,8 @@ urlpatterns = [
     path('api-token-auth/', CustomAuthToken.as_view()),
     path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript',
+                                                    )), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 ]
 
