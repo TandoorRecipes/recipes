@@ -12,7 +12,7 @@ import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 
 const routes = [
-    {path: '/', component: RecipeSearchPage},
+    {path: '/search', component: RecipeSearchPage},
     {path: '/shopping', component: ShoppingListPage},
     {path: '/recipe/:id', component: RecipeViewPage, props: true},
 ]
