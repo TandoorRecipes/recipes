@@ -1,43 +1,48 @@
 <template>
     <v-app>
-        <v-app-bar color="primary" >
-            <template v-slot:prepend>
-                <v-app-bar-nav-icon></v-app-bar-nav-icon>
-            </template>
 
-            <v-app-bar-title><v-img height="40px" src="../../assets/brand_logo.svg"></v-img></v-app-bar-title>
-        </v-app-bar>
+            <v-app-bar color="primary">
+                <template v-slot:prepend>
+                    <v-app-bar-nav-icon></v-app-bar-nav-icon>
+                </template>
 
-        <v-main>
-            <router-view></router-view>
-        </v-main>
+                <v-app-bar-title>
+                    <v-img height="40px" src="../../assets/brand_logo.svg"></v-img>
+                </v-app-bar-title>
+            </v-app-bar>
 
-        <v-bottom-navigation>
-            <v-btn value="recent" to="/">
-                 <v-icon icon="fas fa-book" />
-                <span>Recipes</span>
-            </v-btn>
 
-            <v-btn value="favorites" to="/about">
-                <v-icon icon="fas fa-calendar-alt"></v-icon>
+            <v-main>
+                <v-container>
+                    <router-view></router-view>
+                </v-container>
+            </v-main>
 
-                <span>MealPlan</span>
-            </v-btn>
+            <v-bottom-navigation>
+                <v-btn value="recent" to="/">
+                    <v-icon icon="fas fa-book"/>
+                    <span>Recipes</span>
+                </v-btn>
 
-            <v-btn value="nearby">
-                <v-icon icon="fas fa-shopping-cart"></v-icon>
+                <v-btn value="favorites" to="/about">
+                    <v-icon icon="fas fa-calendar-alt"></v-icon>
 
-                <span>Shopping</span>
-            </v-btn>
-            <v-btn value="nearby">
-                <v-icon icon="fas fa-book-open"></v-icon>
+                    <span>MealPlan</span>
+                </v-btn>
 
-                <span>Books</span>
-            </v-btn>
-        </v-bottom-navigation>
+                <v-btn value="nearby">
+                    <v-icon icon="fas fa-shopping-cart"></v-icon>
+
+                    <span>Shopping</span>
+                </v-btn>
+                <v-btn value="nearby">
+                    <v-icon icon="fas fa-book-open"></v-icon>
+
+                    <span>Books</span>
+                </v-btn>
+            </v-bottom-navigation>
+
     </v-app>
-
-
 </template>
 
 <script lang="ts">

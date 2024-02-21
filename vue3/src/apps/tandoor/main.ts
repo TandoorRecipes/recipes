@@ -9,10 +9,12 @@ import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
 import ShoppingListPage from "@/pages/ShoppingListPage.vue";
 import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
+import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 
 const routes = [
     {path: '/', component: RecipeSearchPage},
-    {path: '/about', component: ShoppingListPage},
+    {path: '/shopping', component: ShoppingListPage},
+    {path: '/recipe/:id', component: RecipeViewPage, props: true},
 ]
 
 const router = createRouter({

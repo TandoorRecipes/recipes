@@ -468,7 +468,7 @@ class KeywordLabelSerializer(serializers.ModelSerializer):
 
 
 class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
-    label = serializers.SerializerMethodField('get_label')
+    label = serializers.SerializerMethodField('get_label', allow_null=False)
     recipe_filter = 'keywords'
 
     def get_label(self, obj):
