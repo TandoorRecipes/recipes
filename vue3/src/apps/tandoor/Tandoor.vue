@@ -5,7 +5,7 @@
                 <v-app-bar-nav-icon></v-app-bar-nav-icon>
             </template>
 
-            <v-app-bar-title><v-img src="../../assets/brand_logo.svg"></v-img></v-app-bar-title>
+            <v-app-bar-title><v-img height="40px" src="../../assets/brand_logo.svg"></v-img></v-app-bar-title>
         </v-app-bar>
 
         <v-main>
@@ -14,19 +14,23 @@
 
         <v-bottom-navigation>
             <v-btn value="recent" to="/">
-                <v-icon>mdi-history</v-icon>
-
+                 <v-icon icon="fas fa-book" />
                 <span>Recipes</span>
             </v-btn>
 
             <v-btn value="favorites" to="/about">
-                <v-icon>mdi-shopping</v-icon>
+                <v-icon icon="fas fa-calendar-alt"></v-icon>
 
-                <span>Shopping</span>
+                <span>MealPlan</span>
             </v-btn>
 
             <v-btn value="nearby">
-                <v-icon>mdi-book</v-icon>
+                <v-icon icon="fas fa-shopping-cart"></v-icon>
+
+                <span>Shopping</span>
+            </v-btn>
+            <v-btn value="nearby">
+                <v-icon icon="fas fa-book-open"></v-icon>
 
                 <span>Books</span>
             </v-btn>
