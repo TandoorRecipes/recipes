@@ -12,9 +12,11 @@ import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 
 const routes = [
-    {path: '/search', component: RecipeSearchPage},
-    {path: '/shopping', component: ShoppingListPage},
-    {path: '/recipe/:id', component: RecipeViewPage, props: true},
+    {path: '/', redirect: '/search', name: 'index'},
+    {path: '/search', component: RecipeSearchPage, name: 'view_search'},
+    {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
+    {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
+    {path: '/recipe/edit/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
 ]
 
 const router = createRouter({
