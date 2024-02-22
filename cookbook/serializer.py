@@ -5,6 +5,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
+from annoying.functions import get_object_or_None
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
