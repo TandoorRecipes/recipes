@@ -30,7 +30,6 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.timezone import make_aware
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
@@ -58,56 +57,36 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly,
-                                               CustomIsShared, CustomIsSpaceOwner, CustomIsUser,
-                                               CustomRecipePermission, CustomTokenHasReadWriteScope,
-                                               CustomTokenHasScope, CustomUserPermission,
-                                               IsReadOnlyDRF, above_space_limit, group_required,
-                                               has_group_permission, is_space_owner,
-                                               switch_user_active_space)
+from cookbook.helper.permission_helper import (
+    CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomRecipePermission, CustomTokenHasReadWriteScope,
+    CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required, has_group_permission, is_space_owner, switch_user_active_space,
+)
 from cookbook.helper.recipe_search import RecipeSearch
-from cookbook.helper.recipe_url_import import (clean_dict, get_from_youtube_scraper,
-                                               get_images_from_soup)
+from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
-from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
-                             FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
-                             Keyword, MealPlan, MealType, Property, PropertyType, Recipe,
-                             RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
-                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
-                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
-                             SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                             ViewLog)
+from cookbook.models import (
+    Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
+    Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
+    SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog,
+)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
-from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
-                                 AutoMealPlanSerializer, BookmarkletImportListSerializer,
-                                 BookmarkletImportSerializer, CookLogSerializer,
-                                 CustomFilterSerializer, ExportLogSerializer,
-                                 FoodInheritFieldSerializer, FoodSerializer,
-                                 FoodShoppingUpdateSerializer, FoodSimpleSerializer,
-                                 GroupSerializer, ImportLogSerializer, IngredientSerializer,
-                                 IngredientSimpleSerializer, InviteLinkSerializer,
-                                 KeywordSerializer, MealPlanSerializer, MealTypeSerializer,
-                                 PropertySerializer, PropertyTypeSerializer,
-                                 RecipeBookEntrySerializer, RecipeBookSerializer,
-                                 RecipeExportSerializer, RecipeFromSourceSerializer,
-                                 RecipeImageSerializer, RecipeOverviewSerializer, RecipeSerializer,
-                                 RecipeShoppingUpdateSerializer, RecipeSimpleSerializer,
-                                 ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
-                                 ShoppingListRecipeSerializer, ShoppingListSerializer,
-                                 SpaceSerializer, StepSerializer, StorageSerializer,
-                                 SupermarketCategoryRelationSerializer,
-                                 SupermarketCategorySerializer, SupermarketSerializer,
-                                 SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
-                                 UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
-                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer,
-                                 ShoppingListEntryBulkSerializer)
+from cookbook.serializer import (
+    AccessTokenSerializer, AutomationSerializer, AutoMealPlanSerializer, BookmarkletImportListSerializer, BookmarkletImportSerializer, CookLogSerializer, CustomFilterSerializer,
+    ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer, FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer, ImportLogSerializer,
+    IngredientSerializer, IngredientSimpleSerializer, InviteLinkSerializer, KeywordSerializer, MealPlanSerializer, MealTypeSerializer, PropertySerializer, PropertyTypeSerializer,
+    RecipeBookEntrySerializer, RecipeBookSerializer, RecipeExportSerializer, RecipeFromSourceSerializer, RecipeImageSerializer, RecipeOverviewSerializer, RecipeSerializer,
+    RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListAutoSyncSerializer, ShoppingListEntryBulkSerializer, ShoppingListEntrySerializer,
+    ShoppingListRecipeSerializer, ShoppingListSerializer, SpaceSerializer, StepSerializer, StorageSerializer, SupermarketCategoryRelationSerializer, SupermarketCategorySerializer,
+    SupermarketSerializer, SyncLogSerializer, SyncSerializer, UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer,
+    UserSpaceSerializer, ViewLogSerializer,
+)
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
 
 
 class StandardFilterMixin(ViewSetMixin):
@@ -612,14 +591,19 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
 
         response = requests.get(f'https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key={FDC_API_KEY}')
         if response.status_code == 429:
-            return JsonResponse({'msg': 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. Configure your key in Tandoor using environment FDC_API_KEY variable.'}, status=429,
+            return JsonResponse({'msg': 'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
+                Configure your key in Tandoor using environment FDC_API_KEY variable.'},
+                                status=429,
                                 json_dumps_params={'indent': 4})
         if response.status_code != 200:
             return JsonResponse({'msg': f'Error while requesting FDC data using url https://api.nal.usda.gov/fdc/v1/food/{food.fdc_id}?api_key=****'}, status=response.status_code,
                                 json_dumps_params={'indent': 4})
 
         food.properties_food_amount = 100
-        food.properties_food_unit = Unit.objects.get_or_create(base_unit__iexact='g', space=self.request.space, defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space})[0]
+        food.properties_food_unit = Unit.objects.get_or_create(
+            base_unit__iexact='g',
+            space=self.request.space,
+            defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space})[0]
         food.save()
 
         try:
@@ -1153,7 +1137,10 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
     query_params = [
         QueryParam(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), qtype='integer'),
-        QueryParam(name='checked', description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  - ''recent'' includes unchecked items and recently completed items.')
+        QueryParam(
+            name='checked',
+            description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
+                - ''recent'' includes unchecked items and recently completed items.')
                    ),
         QueryParam(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), qtype='integer'),
     ]
@@ -1198,7 +1185,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             if last_autosync:
                 last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
                 self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
-        except:
+        except Exception:
             traceback.print_exc()
 
         # TODO once old shopping list is removed this needs updated to sharing users in preferences
@@ -1323,12 +1310,52 @@ class UserFileViewSet(viewsets.ModelViewSet, StandardFilterMixin):
 
 
 class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
+    """
+    list:
+    optional parameters
+
+    - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.
+
+    *Automation Types:*
+    - FS: Food Alias
+    - UA: Unit Alias
+    - KA: Keyword Alias
+    - DR: Description Replace
+    - IR: Instruction Replace
+    - NU: Never Unit
+    - TW: Transpose Words
+    - FR: Food Replace
+    - UR: Unit Replace
+    - NR: Name Replace
+    """
+
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
+    query_params = [
+        QueryParam(name='automation_type', description=_('Return the Automations matching the automation type.  Multiple values allowed.'), qtype='string'),
+    ]
+    schema = QueryParamAutoSchema()
+
+    auto_type = {
+        'FS': 'FOOD_ALIAS',
+        'UA': 'UNIT_ALIAS',
+        'KA': 'KEYWORD_ALIAS',
+        'DR': 'DESCRIPTION_REPLACE',
+        'IR': 'INSTRUCTION_REPLACE',
+        'NU': 'NEVER_UNIT',
+        'TW': 'TRANSPOSE_WORDS',
+        'FR': 'FOOD_REPLACE',
+        'UR': 'UNIT_REPLACE',
+        'NR': 'NAME_REPLACE'
+    }
+
     def get_queryset(self):
+        automation_type = self.request.query_params.getlist('automation_type', [])
+        if automation_type:
+            self.queryset = self.queryset.filter(type__in=[self.auto_type[x.upper()] for x in automation_type])
         self.queryset = self.queryset.filter(space=self.request.space).all()
         return super().get_queryset()
 
