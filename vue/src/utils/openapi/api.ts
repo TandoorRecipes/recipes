@@ -1262,10 +1262,10 @@ export interface InlineResponse200 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<CookLog>}
+     * @type {Array<Automation>}
      * @memberof InlineResponse200
      */
-    results?: Array<CookLog>;
+    results?: Array<Automation>;
 }
 /**
  * 
@@ -1293,10 +1293,10 @@ export interface InlineResponse2001 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Food>}
+     * @type {Array<CookLog>}
      * @memberof InlineResponse2001
      */
-    results?: Array<Food>;
+    results?: Array<CookLog>;
 }
 /**
  * 
@@ -1324,10 +1324,10 @@ export interface InlineResponse20010 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Unit>}
+     * @type {Array<SupermarketCategoryRelation>}
      * @memberof InlineResponse20010
      */
-    results?: Array<Unit>;
+    results?: Array<SupermarketCategoryRelation>;
 }
 /**
  * 
@@ -1355,10 +1355,10 @@ export interface InlineResponse20011 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<UserSpace>}
+     * @type {Array<SyncLog>}
      * @memberof InlineResponse20011
      */
-    results?: Array<UserSpace>;
+    results?: Array<SyncLog>;
 }
 /**
  * 
@@ -1386,8 +1386,70 @@ export interface InlineResponse20012 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ViewLog>}
+     * @type {Array<Unit>}
      * @memberof InlineResponse20012
+     */
+    results?: Array<Unit>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse20013
+ */
+export interface InlineResponse20013 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20013
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20013
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20013
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<UserSpace>}
+     * @memberof InlineResponse20013
+     */
+    results?: Array<UserSpace>;
+}
+/**
+ * 
+ * @export
+ * @interface InlineResponse20014
+ */
+export interface InlineResponse20014 {
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineResponse20014
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20014
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineResponse20014
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ViewLog>}
+     * @memberof InlineResponse20014
      */
     results?: Array<ViewLog>;
 }
@@ -1417,10 +1479,10 @@ export interface InlineResponse2002 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ImportLog>}
+     * @type {Array<CustomFilter>}
      * @memberof InlineResponse2002
      */
-    results?: Array<ImportLog>;
+    results?: Array<CustomFilter>;
 }
 /**
  * 
@@ -1448,10 +1510,10 @@ export interface InlineResponse2003 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<ExportLog>}
+     * @type {Array<Food>}
      * @memberof InlineResponse2003
      */
-    results?: Array<ExportLog>;
+    results?: Array<Food>;
 }
 /**
  * 
@@ -1479,10 +1541,10 @@ export interface InlineResponse2004 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Ingredient>}
+     * @type {Array<ImportLog>}
      * @memberof InlineResponse2004
      */
-    results?: Array<Ingredient>;
+    results?: Array<ImportLog>;
 }
 /**
  * 
@@ -1510,10 +1572,10 @@ export interface InlineResponse2005 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Keyword>}
+     * @type {Array<ExportLog>}
      * @memberof InlineResponse2005
      */
-    results?: Array<Keyword>;
+    results?: Array<ExportLog>;
 }
 /**
  * 
@@ -1541,10 +1603,10 @@ export interface InlineResponse2006 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<RecipeOverview>}
+     * @type {Array<Ingredient>}
      * @memberof InlineResponse2006
      */
-    results?: Array<RecipeOverview>;
+    results?: Array<Ingredient>;
 }
 /**
  * 
@@ -1572,10 +1634,10 @@ export interface InlineResponse2007 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<Step>}
+     * @type {Array<Keyword>}
      * @memberof InlineResponse2007
      */
-    results?: Array<Step>;
+    results?: Array<Keyword>;
 }
 /**
  * 
@@ -1603,10 +1665,10 @@ export interface InlineResponse2008 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SupermarketCategoryRelation>}
+     * @type {Array<RecipeOverview>}
      * @memberof InlineResponse2008
      */
-    results?: Array<SupermarketCategoryRelation>;
+    results?: Array<RecipeOverview>;
 }
 /**
  * 
@@ -1634,10 +1696,10 @@ export interface InlineResponse2009 {
     previous?: string | null;
     /**
      * 
-     * @type {Array<SyncLog>}
+     * @type {Array<Step>}
      * @memberof InlineResponse2009
      */
-    results?: Array<SyncLog>;
+    results?: Array<Step>;
 }
 /**
  * 
@@ -6918,10 +6980,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAutomations: async (options: any = {}): Promise<RequestArgs> => {
+        listAutomations: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/automation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6933,6 +6997,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -7015,10 +7087,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCustomFilters: async (options: any = {}): Promise<RequestArgs> => {
+        listCustomFilters: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/custom-filter/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7030,6 +7104,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -13313,11 +13395,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listAutomations(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Automation>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listAutomations(options);
+        async listAutomations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAutomations(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13336,17 +13420,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listCookLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+        async listCookLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listCookLogs(page, pageSize, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listCustomFilters(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<CustomFilter>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listCustomFilters(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13356,7 +13431,18 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
+        async listCustomFilters(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listCustomFilters(page, pageSize, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listExportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listExportLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13379,7 +13465,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2001>> {
+        async listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2003>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFoods(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13399,7 +13485,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listImportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>> {
+        async listImportLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listImportLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13410,7 +13496,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listIngredients(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2004>> {
+        async listIngredients(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listIngredients(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13433,7 +13519,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
+        async listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listKeywords(query, root, tree, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13528,7 +13614,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2006>> {
+        async listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, updatedon, viewedon, makenow, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13580,7 +13666,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2007>> {
+        async listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSteps(recipe, query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13600,7 +13686,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2008>> {
+        async listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20010>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSupermarketCategoryRelations(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13631,7 +13717,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2009>> {
+        async listSyncLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20011>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listSyncLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13662,7 +13748,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20010>> {
+        async listUnits(query?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20012>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUnits(query, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13692,7 +13778,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listUserSpaces(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20011>> {
+        async listUserSpaces(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20013>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listUserSpaces(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -13712,7 +13798,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20012>> {
+        async listViewLogs(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse20014>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listViewLogs(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -15624,11 +15710,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAutomations(options?: any): AxiosPromise<Array<Automation>> {
-            return localVarFp.listAutomations(options).then((request) => request(axios, basePath));
+        listAutomations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.listAutomations(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15645,16 +15733,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listCookLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+        listCookLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
             return localVarFp.listCookLogs(page, pageSize, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listCustomFilters(options?: any): AxiosPromise<Array<CustomFilter>> {
-            return localVarFp.listCustomFilters(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15663,7 +15743,17 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
+        listCustomFilters(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2002> {
+            return localVarFp.listCustomFilters(page, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
             return localVarFp.listExportLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15684,7 +15774,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2001> {
+        listFoods(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2003> {
             return localVarFp.listFoods(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15702,7 +15792,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listImportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2002> {
+        listImportLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
             return localVarFp.listImportLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15712,7 +15802,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listIngredients(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2004> {
+        listIngredients(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
             return localVarFp.listIngredients(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15733,7 +15823,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2005> {
+        listKeywords(query?: string, root?: number, tree?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
             return localVarFp.listKeywords(query, root, tree, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15821,7 +15911,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2006> {
+        listRecipes(query?: string, keywords?: number, keywordsOr?: number, keywordsAnd?: number, keywordsOrNot?: number, keywordsAndNot?: number, foods?: number, foodsOr?: number, foodsAnd?: number, foodsOrNot?: number, foodsAndNot?: number, units?: number, rating?: number, books?: string, booksOr?: number, booksAnd?: number, booksOrNot?: number, booksAndNot?: number, internal?: string, random?: string, _new?: string, timescooked?: number, cookedon?: string, createdon?: string, updatedon?: string, viewedon?: string, makenow?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
             return localVarFp.listRecipes(query, keywords, keywordsOr, keywordsAnd, keywordsOrNot, keywordsAndNot, foods, foodsOr, foodsAnd, foodsOrNot, foodsAndNot, units, rating, books, booksOr, booksAnd, booksOrNot, booksAndNot, internal, random, _new, timescooked, cookedon, createdon, updatedon, viewedon, makenow, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15868,7 +15958,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2007> {
+        listSteps(recipe?: number, query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
             return localVarFp.listSteps(recipe, query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15886,7 +15976,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2008> {
+        listSupermarketCategoryRelations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20010> {
             return localVarFp.listSupermarketCategoryRelations(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15914,7 +16004,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse2009> {
+        listSyncLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20011> {
             return localVarFp.listSyncLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15942,7 +16032,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20010> {
+        listUnits(query?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20012> {
             return localVarFp.listUnits(query, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15969,7 +16059,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listUserSpaces(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20011> {
+        listUserSpaces(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20013> {
             return localVarFp.listUserSpaces(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -15987,7 +16077,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20012> {
+        listViewLogs(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse20014> {
             return localVarFp.listViewLogs(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
@@ -17921,12 +18011,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listAutomations(options?: any) {
-        return ApiApiFp(this.configuration).listAutomations(options).then((request) => request(this.axios, this.basePath));
+    public listAutomations(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listAutomations(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -17953,12 +18045,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listCustomFilters(options?: any) {
-        return ApiApiFp(this.configuration).listCustomFilters(options).then((request) => request(this.axios, this.basePath));
+    public listCustomFilters(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listCustomFilters(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

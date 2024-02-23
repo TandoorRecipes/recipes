@@ -1326,6 +1326,7 @@ class AutomationViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).all()
@@ -1354,6 +1355,7 @@ class CustomFilterViewSet(viewsets.ModelViewSet, StandardFilterMixin):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(
