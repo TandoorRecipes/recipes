@@ -518,7 +518,7 @@ export class Models {
             header_component: {
                 name: "BetaWarning",
             },
-            params: ["page", "pageSize", "options"],
+            params: ["automation_type", "page", "pageSize", "options"],
         },
         create: {
             params: [["name", "description", "type", "param_1", "param_2", "param_3", "order", "disabled"]],

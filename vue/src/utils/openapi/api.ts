@@ -6979,13 +6979,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * 
+         * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAutomations: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        listAutomations: async (automationType?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/automation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6997,6 +6998,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (automationType !== undefined) {
+                localVarQueryParameter['automation_type'] = automationType;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -7802,7 +7807,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
-         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                  - recent includes unchecked items and recently completed items.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -13394,14 +13399,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * 
+         * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listAutomations(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listAutomations(page, pageSize, options);
+        async listAutomations(automationType?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse200>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAutomations(automationType, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -13621,7 +13627,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
-         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                  - recent includes unchecked items and recently completed items.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15709,14 +15715,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.listAccessTokens(options).then((request) => request(axios, basePath));
         },
         /**
-         * 
+         * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listAutomations(page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
-            return localVarFp.listAutomations(page, pageSize, options).then((request) => request(axios, basePath));
+        listAutomations(automationType?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<InlineResponse200> {
+            return localVarFp.listAutomations(automationType, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -15917,7 +15924,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
-         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+         * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                  - recent includes unchecked items and recently completed items.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18010,15 +18017,16 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * 
+     * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public listAutomations(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).listAutomations(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listAutomations(automationType?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).listAutomations(automationType, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -18256,7 +18264,7 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
-     * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;  - recent includes unchecked items and recently completed items.
+     * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                  - recent includes unchecked items and recently completed items.
      * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
