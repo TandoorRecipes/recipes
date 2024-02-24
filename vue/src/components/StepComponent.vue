@@ -44,7 +44,7 @@
                     <!-- step text -->
                     <div class="row">
                         <div class="col col-md-12">
-                            <compile-component :code="step.ingredients_markdown"
+                            <compile-component :code="step.instructions_markdown"
                                                :ingredient_factor="ingredient_factor"></compile-component>
                         </div>
                     </div>
