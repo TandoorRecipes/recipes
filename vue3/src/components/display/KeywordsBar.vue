@@ -10,7 +10,7 @@ import {Keyword} from "@/openapi";
 import {PropType} from "vue";
 
 export default {
-    name: 'KeywordsComponent',
+    name: 'KeywordsBar',
     mixins: [],
     props: {
         keywords: Array as PropType<Array<Keyword>>,

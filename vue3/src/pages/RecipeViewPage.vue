@@ -1,17 +1,17 @@
 <template>
-    <RecipeViewComponent :recipe="recipe"></RecipeViewComponent>
+    <RecipeView :recipe="recipe"></RecipeView>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {ApiApi, Recipe} from "@/openapi";
-import RecipeViewComponent from "@/components/display/RecipeViewComponent.vue";
+import RecipeView from "@/components/display/RecipeView.vue";
 
 export default defineComponent({
     name: "RecipeSearchPage",
-    components: {RecipeViewComponent},
+    components: {RecipeView},
     props: {
-        id: Number
+        id: {type: String, required: true}
     },
     data() {
         return {

@@ -39,11 +39,11 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import KeywordsComponent from "@/components/display/KeywordsComponent.vue";
+import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import {Recipe} from "@/openapi";
 
 export default defineComponent({
-    name: "RecipeCardComponent",
+    name: "RecipeCard",
     components: {KeywordsComponent},
     props: {
         recipe: {} as Recipe

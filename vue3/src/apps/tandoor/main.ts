@@ -15,8 +15,10 @@ const routes = [
     {path: '/', redirect: '/search', name: 'index'},
     {path: '/search', component: RecipeSearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
+    {path: '/mealplan', component: ShoppingListPage, name: 'view_mealplan'},
+    {path: '/books', component: ShoppingListPage, name: 'view_books'},
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
-    {path: '/recipe/edit/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
+    {path: '/recipe/edit/:id', component: RecipeViewPage, name: 'edit_recipe', props: true},
 ]
 
 const router = createRouter({
