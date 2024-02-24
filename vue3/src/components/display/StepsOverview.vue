@@ -1,13 +1,20 @@
 <template>
-    <v-container>
+    <v-expansion-panels>
+        <v-expansion-panel title="Steps Overview">
+            <v-expansion-panel-text>
+                <v-container>
+                    <v-row v-for="(s, i) in steps">
+                        <v-col class="pa-1">
+                            <b v-if="s.showAsHeader">{{ i + 1 }}. {{ s.name }} </b>
+                            <IngredientsTable :ingredients="s.ingredients"></IngredientsTable>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-expansion-panel-text>
+        </v-expansion-panel>
 
-        <v-row v-for="(s, i) in steps" >
-            <v-col class="pa-1">
-                <b v-if="s.showAsHeader">{{i}}. {{ s.name }} </b>
-                <IngredientsTable :ingredients="s.ingredients"></IngredientsTable>
-            </v-col>
-        </v-row>
-    </v-container>
+    </v-expansion-panels>
+
 </template>
 
 <script lang="ts">
@@ -21,7 +28,7 @@ export default defineComponent({
     components: {IngredientsTable, IngredientsTableRow},
     props: {
         steps: {
-            type: [] as PropType<Array<Step>>,
+            type: Array as PropType<Array<Step>>,
             default: [],
         },
     }
