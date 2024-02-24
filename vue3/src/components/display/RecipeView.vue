@@ -56,25 +56,45 @@
         </v-card-text>
     </v-card>
 
+    <v-card class="mt-1" >
+        <v-card-title>Steps Overview</v-card-title>
+        <StepsOverview :steps="recipe.steps"></StepsOverview>
+    </v-card>
+
 
 </template>
 
 <script lang="ts">
 
 import {defineComponent, PropType} from 'vue'
-import {Recipe} from "@/openapi"
+import {Ingredient, Recipe} from "@/openapi"
 import KeywordsBar from "@/components/display/KeywordsBar.vue"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
+import IngredientsTable from "@/components/display/IngredientsTable.vue";
+import StepsOverview from "@/components/display/StepsOverview.vue";
 
 export default defineComponent({
     name: "RecipeView",
-    components: {NumberScalerDialog, KeywordsBar},
+    components: {StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
+    computed: {
+        allIngredients: function () {
+            let ingredients = [] as Ingredient[]
+            if(this.recipe.steps !== undefined){
+                this.recipe.steps.forEach((s) => {
+                    ingredients = ingredients.concat(s.ingredients)
+                })
+            }
+
+            return ingredients
+        }
+    },
     props: {
         recipe: {
             type: Object as PropType<Recipe>,
             required: true
         }
-    }
+    },
+    methods: {}
 })
 </script>
 
