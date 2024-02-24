@@ -61,13 +61,7 @@ export interface Step {
      * @type {string}
      * @memberof Step
      */
-    readonly ingredientsMarkdown?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Step
-     */
-    readonly ingredientsVue?: string;
+    readonly instructionsMarkdown?: string;
     /**
      * 
      * @type {number}
@@ -142,8 +136,7 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
         'name': !exists(json, 'name') ? undefined : json['name'],
         'instruction': !exists(json, 'instruction') ? undefined : json['instruction'],
         'ingredients': ((json['ingredients'] as Array<any>).map(RecipeStepsInnerIngredientsInnerFromJSON)),
-        'ingredientsMarkdown': !exists(json, 'ingredients_markdown') ? undefined : json['ingredients_markdown'],
-        'ingredientsVue': !exists(json, 'ingredients_vue') ? undefined : json['ingredients_vue'],
+        'instructionsMarkdown': !exists(json, 'instructions_markdown') ? undefined : json['instructions_markdown'],
         'time': !exists(json, 'time') ? undefined : json['time'],
         'order': !exists(json, 'order') ? undefined : json['order'],
         'showAsHeader': !exists(json, 'show_as_header') ? undefined : json['show_as_header'],

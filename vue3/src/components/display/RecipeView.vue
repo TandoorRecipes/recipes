@@ -65,6 +65,8 @@
         <Step :step="s"></Step>
     </v-card>
 
+    <RecipeActivity :recipe="recipe"></RecipeActivity>
+
 </template>
 
 <script lang="ts">
@@ -76,10 +78,11 @@ import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import Step from "@/components/display/Step.vue";
+import RecipeActivity from "@/components/display/RecipeActivity.vue";
 
 export default defineComponent({
     name: "RecipeView",
-    components: {Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
+    components: {RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
     computed: {
 
     },
