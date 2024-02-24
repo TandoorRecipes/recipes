@@ -337,7 +337,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     class Meta:
         model = UserSpace
         fields = (
-        'id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+            'id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -772,8 +772,7 @@ class IngredientSerializer(IngredientSimpleSerializer):
 
 class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     ingredients = IngredientSerializer(many=True)
-    ingredients_markdown = serializers.SerializerMethodField('get_ingredients_markdown')
-    ingredients_vue = serializers.SerializerMethodField('get_ingredients_vue')
+    instructions_markdown = serializers.SerializerMethodField('get_instructions_markdown')
     file = UserFileViewSerializer(allow_null=True, required=False)
     step_recipe_data = serializers.SerializerMethodField('get_step_recipe_data')
     recipe_filter = 'steps'
@@ -782,10 +781,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
-    def get_ingredients_vue(self, obj):
-        return obj.get_instruction_render()
-
-    def get_ingredients_markdown(self, obj):
+    def get_instructions_markdown(self, obj):
         return obj.get_instruction_render()
 
     def get_step_recipes(self, obj):
@@ -800,8 +796,8 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     class Meta:
         model = Step
         fields = (
-            'id', 'name', 'instruction', 'ingredients', 'ingredients_markdown',
-            'ingredients_vue', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
+            'id', 'name', 'instruction', 'ingredients', 'instructions_markdown',
+            'time', 'order', 'show_as_header', 'file', 'step_recipe',
             'step_recipe_data', 'numrecipe', 'show_ingredients_table'
         )
 
@@ -846,7 +842,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin
     class Meta:
         model = UnitConversion
         fields = (
-        'id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
+            'id', 'name', 'base_amount', 'base_unit', 'converted_amount', 'converted_unit', 'food', 'open_data_slug')
 
 
 class NutritionInformationSerializer(serializers.ModelSerializer):
@@ -871,6 +867,13 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
             return True
         else:
             return False
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ['id', 'created_at', 'created_by', 'updated_at',]
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
@@ -947,12 +950,6 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
 class RecipeImportSerializer(SpacedModelSerializer):
     class Meta:
         model = RecipeImport
-        fields = '__all__'
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
         fields = '__all__'
 
 
@@ -1150,7 +1147,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'recipe_mealplan',
             'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id', 'created_by', 'created_at','updated_at',)
+        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at',)
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
