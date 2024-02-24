@@ -1270,8 +1270,13 @@ class CookLogViewSet(viewsets.ModelViewSet):
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+    query_params = [
+        QueryParam(name='recipe', description=_('Filter for entries with the given recipe'), qtype='integer'),
+    ]
 
     def get_queryset(self):
+        if self.request.query_params.get('recipe', None):
+            self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         return self.queryset.filter(space=self.request.space)
 
 

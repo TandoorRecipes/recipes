@@ -873,7 +873,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'created_by', 'updated_at',]
+        read_only_fields = ['id', 'created_at', 'created_by', 'updated_at', ]
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
@@ -1200,6 +1200,8 @@ class ShareLinkSerializer(SpacedModelSerializer):
 
 
 class CookLogSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
@@ -1207,7 +1209,7 @@ class CookLogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CookLog
-        fields = ('id', 'recipe', 'servings', 'rating', 'created_by', 'created_at')
+        fields = ('id', 'recipe', 'servings', 'rating', 'comment', 'created_by', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_by')
 
 
