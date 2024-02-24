@@ -157,7 +157,8 @@ def recipe_view(request, pk, share=None):
             if not ViewLog.objects.filter(recipe=recipe, created_by=request.user, created_at__gt=(timezone.now() - timezone.timedelta(minutes=5)), space=request.space).exists():
                 ViewLog.objects.create(recipe=recipe, created_by=request.user, space=request.space)
 
-        if request.method == "GET":
+        servings = recipe.servings
+        if request.method == "GET" and 'servings' in request.GET:
             servings = request.GET.get("servings")
         return render(request, 'recipe_view.html',
                       {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
