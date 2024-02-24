@@ -16,7 +16,7 @@ export default defineComponent({
     components: {IngredientsTableRow},
     props: {
         ingredients: {
-            type: [] as PropType<Array<Ingredient>>,
+            type: Array as PropType<Array<Ingredient>>,
             default: [],
         },
     },
