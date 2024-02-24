@@ -13,6 +13,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { CookLogCreatedBy } from './CookLogCreatedBy';
+import {
+    CookLogCreatedByFromJSON,
+    CookLogCreatedByFromJSONTyped,
+    CookLogCreatedByToJSON,
+} from './CookLogCreatedBy';
+
 /**
  * 
  * @export
@@ -36,7 +43,7 @@ export interface CookLog {
      * @type {number}
      * @memberof CookLog
      */
-    servings?: number;
+    servings?: number | null;
     /**
      * 
      * @type {number}
@@ -48,13 +55,25 @@ export interface CookLog {
      * @type {string}
      * @memberof CookLog
      */
-    readonly createdBy?: string;
+    comment?: string | null;
+    /**
+     * 
+     * @type {CookLogCreatedBy}
+     * @memberof CookLog
+     */
+    createdBy?: CookLogCreatedBy;
     /**
      * 
      * @type {Date}
      * @memberof CookLog
      */
     createdAt?: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof CookLog
+     */
+    readonly updatedAt?: Date;
 }
 
 /**
@@ -81,8 +100,10 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
         'recipe': json['recipe'],
         'servings': !exists(json, 'servings') ? undefined : json['servings'],
         'rating': !exists(json, 'rating') ? undefined : json['rating'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'createdBy': !exists(json, 'created_by') ? undefined : CookLogCreatedByFromJSON(json['created_by']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
     };
 }
 
@@ -98,6 +119,8 @@ export function CookLogToJSON(value?: CookLog | null): any {
         'recipe': value.recipe,
         'servings': value.servings,
         'rating': value.rating,
+        'comment': value.comment,
+        'created_by': CookLogCreatedByToJSON(value.createdBy),
         'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
     };
 }

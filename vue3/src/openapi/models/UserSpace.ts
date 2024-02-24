@@ -13,18 +13,18 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { CookLogCreatedBy } from './CookLogCreatedBy';
+import {
+    CookLogCreatedByFromJSON,
+    CookLogCreatedByFromJSONTyped,
+    CookLogCreatedByToJSON,
+} from './CookLogCreatedBy';
 import type { InviteLinkGroup } from './InviteLinkGroup';
 import {
     InviteLinkGroupFromJSON,
     InviteLinkGroupFromJSONTyped,
     InviteLinkGroupToJSON,
 } from './InviteLinkGroup';
-import type { ShoppingListEntriesInnerCreatedBy } from './ShoppingListEntriesInnerCreatedBy';
-import {
-    ShoppingListEntriesInnerCreatedByFromJSON,
-    ShoppingListEntriesInnerCreatedByFromJSONTyped,
-    ShoppingListEntriesInnerCreatedByToJSON,
-} from './ShoppingListEntriesInnerCreatedBy';
 
 /**
  * 
@@ -40,10 +40,10 @@ export interface UserSpace {
     readonly id?: number;
     /**
      * 
-     * @type {ShoppingListEntriesInnerCreatedBy}
+     * @type {CookLogCreatedBy}
      * @memberof UserSpace
      */
-    user?: ShoppingListEntriesInnerCreatedBy;
+    user?: CookLogCreatedBy;
     /**
      * 
      * @type {string}
@@ -109,7 +109,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     return {
         
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'user': !exists(json, 'user') ? undefined : ShoppingListEntriesInnerCreatedByFromJSON(json['user']),
+        'user': !exists(json, 'user') ? undefined : CookLogCreatedByFromJSON(json['user']),
         'space': !exists(json, 'space') ? undefined : json['space'],
         'groups': ((json['groups'] as Array<any>).map(InviteLinkGroupFromJSON)),
         'active': !exists(json, 'active') ? undefined : json['active'],
@@ -129,7 +129,7 @@ export function UserSpaceToJSON(value?: UserSpace | null): any {
     }
     return {
         
-        'user': ShoppingListEntriesInnerCreatedByToJSON(value.user),
+        'user': CookLogCreatedByToJSON(value.user),
         'groups': ((value.groups as Array<any>).map(InviteLinkGroupToJSON)),
         'active': value.active,
         'internal_note': value.internalNote,

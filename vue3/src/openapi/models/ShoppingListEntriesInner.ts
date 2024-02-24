@@ -13,6 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import type { CookLogCreatedBy } from './CookLogCreatedBy';
+import {
+    CookLogCreatedByFromJSON,
+    CookLogCreatedByFromJSONTyped,
+    CookLogCreatedByToJSON,
+} from './CookLogCreatedBy';
 import type { FoodPropertiesFoodUnit } from './FoodPropertiesFoodUnit';
 import {
     FoodPropertiesFoodUnitFromJSON,
@@ -25,12 +31,6 @@ import {
     IngredientFoodFromJSONTyped,
     IngredientFoodToJSON,
 } from './IngredientFood';
-import type { ShoppingListEntriesInnerCreatedBy } from './ShoppingListEntriesInnerCreatedBy';
-import {
-    ShoppingListEntriesInnerCreatedByFromJSON,
-    ShoppingListEntriesInnerCreatedByFromJSONTyped,
-    ShoppingListEntriesInnerCreatedByToJSON,
-} from './ShoppingListEntriesInnerCreatedBy';
 import type { ShoppingListEntriesInnerRecipeMealplan } from './ShoppingListEntriesInnerRecipeMealplan';
 import {
     ShoppingListEntriesInnerRecipeMealplanFromJSON,
@@ -94,10 +94,10 @@ export interface ShoppingListEntriesInner {
     recipeMealplan?: ShoppingListEntriesInnerRecipeMealplan;
     /**
      * 
-     * @type {ShoppingListEntriesInnerCreatedBy}
+     * @type {CookLogCreatedBy}
      * @memberof ShoppingListEntriesInner
      */
-    createdBy?: ShoppingListEntriesInnerCreatedBy;
+    createdBy?: CookLogCreatedBy;
     /**
      * 
      * @type {Date}
@@ -153,7 +153,7 @@ export function ShoppingListEntriesInnerFromJSONTyped(json: any, ignoreDiscrimin
         'order': !exists(json, 'order') ? undefined : json['order'],
         'checked': !exists(json, 'checked') ? undefined : json['checked'],
         'recipeMealplan': !exists(json, 'recipe_mealplan') ? undefined : ShoppingListEntriesInnerRecipeMealplanFromJSON(json['recipe_mealplan']),
-        'createdBy': !exists(json, 'created_by') ? undefined : ShoppingListEntriesInnerCreatedByFromJSON(json['created_by']),
+        'createdBy': !exists(json, 'created_by') ? undefined : CookLogCreatedByFromJSON(json['created_by']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
         'completedAt': !exists(json, 'completed_at') ? undefined : (json['completed_at'] === null ? null : new Date(json['completed_at'])),
@@ -177,7 +177,7 @@ export function ShoppingListEntriesInnerToJSON(value?: ShoppingListEntriesInner 
         'order': value.order,
         'checked': value.checked,
         'recipe_mealplan': ShoppingListEntriesInnerRecipeMealplanToJSON(value.recipeMealplan),
-        'created_by': ShoppingListEntriesInnerCreatedByToJSON(value.createdBy),
+        'created_by': CookLogCreatedByToJSON(value.createdBy),
         'completed_at': value.completedAt === undefined ? undefined : (value.completedAt === null ? null : value.completedAt.toISOString()),
         'delay_until': value.delayUntil === undefined ? undefined : (value.delayUntil === null ? null : value.delayUntil.toISOString()),
     };
