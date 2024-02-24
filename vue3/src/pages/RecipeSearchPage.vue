@@ -13,8 +13,8 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
 import {ApiApi, Recipe} from "@/openapi";
-import KeywordsComponent from "@/components/display/KeywordsComponent.vue";
-import RecipeCardComponent from "@/components/display/RecipeCardComponent.vue";
+import KeywordsComponent from "@/components/display/KeywordsBar.vue";
+import RecipeCardComponent from "@/components/display/RecipeCard.vue";
 
 export default defineComponent({
     name: "RecipeSearchPage",
