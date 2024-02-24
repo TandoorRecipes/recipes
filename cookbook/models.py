@@ -1293,10 +1293,13 @@ class TelegramBot(models.Model, PermissionModelMixin):
 
 class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    rating = models.IntegerField(null=True, blank=True)
+    servings = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
-    rating = models.IntegerField(null=True)
-    servings = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
