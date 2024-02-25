@@ -1758,7 +1758,7 @@ def log_cooking(request, recipe_id):
 
 
 @group_required('user')
-def get_plan_ical(request, from_date, to_date):
+def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
     queryset = MealPlan.objects.filter(
         Q(created_by=request.user) | Q(shared=request.user)
     ).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
