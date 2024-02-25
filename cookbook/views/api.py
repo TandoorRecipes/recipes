@@ -1757,7 +1757,8 @@ def log_cooking(request, recipe_id):
     return {'error': 'recipe does not exist'}
 
 
-@group_required('user')
+@api_view(['GET'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def get_plan_ical(request, from_date, to_date):
     queryset = MealPlan.objects.filter(
         Q(created_by=request.user) | Q(shared=request.user)
