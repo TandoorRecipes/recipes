@@ -1095,6 +1095,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
             levels=levels)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
         return Response(self.serializer_class(qs, many=True).data)
 
+    @decorators.action(
+        detail=False,
+        methods=['GET'],
+    )
+    def flat(self, request):
+        return JsonResponse({'data': list(Recipe.objects.filter(space=request.space).filter(
+            Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))
+        ).values_list('name', flat=True))})
+
 
 class UnitConversionViewSet(viewsets.ModelViewSet):
     queryset = UnitConversion.objects
