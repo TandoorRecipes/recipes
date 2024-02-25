@@ -72,7 +72,7 @@
 <script lang="ts">
 
 import {defineComponent, PropType} from 'vue'
-import {Ingredient, Recipe} from "@/openapi"
+import {ApiApi, Ingredient, Recipe} from "@/openapi"
 import KeywordsBar from "@/components/display/KeywordsBar.vue"
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue"
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
@@ -83,14 +83,20 @@ import RecipeActivity from "@/components/display/RecipeActivity.vue";
 export default defineComponent({
     name: "RecipeView",
     components: {RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
-    computed: {
+    computed: {},
+    data() {
+        return {
 
+        }
     },
     props: {
         recipe: {
             type: Object as PropType<Recipe>,
             required: true
         }
+    },
+    mounted() {
+
     },
     methods: {}
 })
