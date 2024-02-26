@@ -569,4 +569,7 @@ ACCOUNT_RATE_LIMITS = {
     "login": "5/m/ip",
 }
 
+DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
+EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
+
 mimetypes.add_type("text/javascript", ".js", True)
