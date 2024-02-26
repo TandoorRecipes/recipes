@@ -112,6 +112,9 @@ def recipe_last(recipe, user):
 def page_help(page_name):
     help_pages = {
         'edit_storage': 'https://docs.tandoor.dev/features/external_recipes/',
+        'list_connector_config': 'https://docs.tandoor.dev/features/connectors/',
+        'new_connector_config': 'https://docs.tandoor.dev/features/connectors/',
+        'edit_connector_config': 'https://docs.tandoor.dev/features/connectors/',
         'view_shopping': 'https://docs.tandoor.dev/features/shopping/',
         'view_import': 'https://docs.tandoor.dev/features/import_export/',
         'data_import_url': 'https://docs.tandoor.dev/features/import_export/',

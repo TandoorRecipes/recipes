@@ -12,7 +12,7 @@ from recipes.settings import DEBUG, PLUGINS
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
                      Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
-                     UserFile, UserSpace, get_model_name)
+                     UserFile, UserSpace, get_model_name, ConnectorConfig)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
 
@@ -51,6 +51,7 @@ router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'space', api.SpaceViewSet)
 router.register(r'step', api.StepViewSet)
 router.register(r'storage', api.StorageViewSet)
+router.register(r'connector-config', api.ConnectorConfigConfigViewSet)
 router.register(r'supermarket', api.SupermarketViewSet)
 router.register(r'supermarket-category', api.SupermarketCategoryViewSet)
 router.register(r'supermarket-category-relation', api.SupermarketCategoryRelationViewSet)
@@ -167,7 +168,7 @@ urlpatterns = [
 ]
 
 generic_models = (
-    Recipe, RecipeImport, Storage, RecipeBook, SyncLog, Sync,
+    Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync,
     Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
 )
 

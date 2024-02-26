@@ -289,8 +289,11 @@ def shopping_settings(request):
 
 @group_required('guest')
 def history(request):
-    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user, space=request.space).order_by('-created_at').all())
-    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
+    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user, space=request.space).order_by('-created_at').all(), prefix="viewlog-")
+    view_log.paginate(page=request.GET.get("viewlog-page", 1), per_page=25)
+
+    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all(), prefix="cooklog-")
+    cook_log.paginate(page=request.GET.get("cooklog-page", 1), per_page=25)
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
