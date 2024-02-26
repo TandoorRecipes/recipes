@@ -904,7 +904,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     nutrition = NutritionInformationSerializer(allow_null=True, required=False)
     properties = PropertySerializer(many=True, required=False)
     steps = StepSerializer(many=True)
-    keywords = KeywordSerializer(many=True)
+    keywords = KeywordSerializer(many=True, required=False)
     shared = UserSerializer(many=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
