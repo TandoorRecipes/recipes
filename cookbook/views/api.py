@@ -97,7 +97,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
-                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer)
+                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer, RecipeFlatSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
@@ -1068,11 +1068,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @decorators.action(
         detail=False,
         methods=['GET'],
+        serializer_class=RecipeFlatSerializer,
     )
     def flat(self, request):
-        return JsonResponse({'data': list(Recipe.objects.filter(space=request.space).filter(
-            Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))
-        ).values_list('name', flat=True))})
+        qs = Recipe.objects.filter(
+            space=request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all() # TODO limit fields retrieved but .values() kills image
+
+        return Response(self.serializer_class(qs, many=True).data)
 
 
 class UnitConversionViewSet(viewsets.ModelViewSet):

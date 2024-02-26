@@ -6,9 +6,9 @@
                 <template v-slot:prepend>
                     Tandoor Brand Logo
                 </template>
-
+                <div id="id_dialog_anchor"></div>
                 <v-spacer></v-spacer>
-                <v-btn density="compact" icon="fas fa-search"></v-btn>
+                <global-search-dialog></global-search-dialog>
                 <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>
             </v-app-bar>
 
@@ -51,9 +51,10 @@
 <script lang="ts">
 
 import {defineComponent} from 'vue'
+import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue";
 
 export default defineComponent({
-    components: {},
+    components: {GlobalSearchDialog},
     mixins: [],
     data() {
         return {

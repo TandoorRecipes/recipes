@@ -5,7 +5,7 @@
         </template>
         <td>{{ ingredient.amount }}</td>
         <td><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
-        <td>{{ ingredient.food.name }}</td>
+        <td ><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
         <td>
             <v-icon class="far fa-comment" v-if="ingredient.note != ''" @click="show_tooltip = !show_tooltip">
                 <v-tooltip v-model="show_tooltip" activator="parent" location="start">{{ ingredient.note }}</v-tooltip>
