@@ -77,7 +77,7 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
                              ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                              Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
                              SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                             ViewLog)
+                             ViewLog, ConnectorConfig)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -104,7 +104,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
                                  UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer,
-                                 ShoppingListEntryBulkSerializer)
+                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer)
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import FDC_API_KEY, DRF_THROTTLE_RECIPE_URL_IMPORT
@@ -458,6 +458,15 @@ class StorageViewSet(viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
+    queryset = ConnectorConfig.objects
+    serializer_class = ConnectorConfigConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
@@ -1270,8 +1279,13 @@ class CookLogViewSet(viewsets.ModelViewSet):
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+    query_params = [
+        QueryParam(name='recipe', description=_('Filter for entries with the given recipe'), qtype='integer'),
+    ]
 
     def get_queryset(self):
+        if self.request.query_params.get('recipe', None):
+            self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         return self.queryset.filter(space=self.request.space)
 
 
