@@ -15,7 +15,7 @@ gunicorn==20.1.0
 lxml==4.9.3
 Markdown==3.5.1
 Pillow==10.2.0
-psycopg2-binary==2.9.5
+psycopg2-binary==2.9.9
 python-dotenv==1.0.0
 requests==2.31.0
 six==1.16.0
