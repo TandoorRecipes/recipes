@@ -437,6 +437,18 @@ key [here](https://fdc.nal.usda.gov/api-key-signup.html).
 FDC_API_KEY=DEMO_KEY
 ```
 
+#### Connectors
+
+- `DISABLE_EXTERNAL_CONNECTORS` is a global switch to disable External Connectors entirely.
+- `EXTERNAL_CONNECTORS_QUEUE_SIZE` is the amount of changes that are kept in memory if the worker cannot keep up.
+
+(External) Connectors are used to sync the status from Tandoor to other services. More info can be found [here](https://docs.tandoor.dev/features/connectors/).
+
+```env
+DISABLE_EXTERNAL_CONNECTORS=0  # Default 0 (false), set to 1 (true) to disable connectors
+EXTERNAL_CONNECTORS_QUEUE_SIZE=100  # Defaults to 100, set to any number >1
+```
+
 ### Debugging/Development settings
 
 !!! warning

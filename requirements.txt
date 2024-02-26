@@ -26,6 +26,7 @@ pyyaml==6.0.1
 uritemplate==4.1.1
 beautifulsoup4==4.12.2
 microdata==0.8.0
+mock==5.1.0
 Jinja2==3.1.3
 django-webpack-loader==1.8.1
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
@@ -33,6 +34,7 @@ django-allauth==0.61.1
 recipe-scrapers==14.52.0
 django-scopes==2.0.0
 pytest==8.0.0
+pytest-asyncio==0.23.5
 pytest-django==4.8.0
 django-treebeard==4.7
 django-cors-headers==4.2.0
@@ -46,3 +48,4 @@ pytest-factoryboy==2.6.0
 pyppeteer==1.0.2
 validators==0.20.0
 pytube==15.0.0
+homeassistant-api==4.1.1.post2
