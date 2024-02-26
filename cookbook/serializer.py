@@ -614,6 +614,21 @@ class RecipeSimpleSerializer(WritableNestedModelSerializer):
         fields = ('id', 'name', 'url')
 
 
+class RecipeFlatSerializer(WritableNestedModelSerializer):
+
+    def create(self, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
+    def update(self, instance, validated_data):
+        # don't allow writing to Recipe via this API
+        return Recipe.objects.get(**validated_data)
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image')
+
+
 class FoodSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Food
