@@ -562,5 +562,10 @@
     "ShowRecentlyCompleted": "Pokaż ostatnio zakończone elementy",
     "ShoppingBackgroundSyncWarning": "Słaba sieć, oczekiwanie na synchronizację...",
     "Enable": "Włączyć",
-    "created_by": "Stworzone przez"
+    "created_by": "Stworzone przez",
+    "Calculator": "Kalkulator",
+    "Created": "Utworzony",
+    "Updated": "Zaktualizowano",
+    "Unchanged": "Niezmienione",
+    "Error": "Błąd"
 }
