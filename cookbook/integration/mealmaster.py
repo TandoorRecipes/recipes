@@ -22,7 +22,7 @@ class MealMaster(Integration):
                         if 'Yield:' in line:
                             servings_text = line.replace('Yield:', '').strip()
                         else:
-                            if re.match('\s{2,}([0-9])+', line):
+                            if re.match(r'\s{2,}([0-9])+', line):
                                 ingredients.append(line.strip())
                             else:
                                 directions.append(line.strip())

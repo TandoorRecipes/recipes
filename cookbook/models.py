@@ -367,6 +367,7 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SyncLog.objects.filter(sync__space=self).delete()
         Sync.objects.filter(space=self).delete()
         Storage.objects.filter(space=self).delete()
+        ConnectorConfig.objects.filter(space=self).delete()
 
         ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
         ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
@@ -391,6 +392,31 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ConnectorConfig(models.Model, PermissionModelMixin):
+    HOMEASSISTANT = 'HomeAssistant'
+    CONNECTER_TYPE = ((HOMEASSISTANT, 'HomeAssistant'),)
+
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    type = models.CharField(
+        choices=CONNECTER_TYPE, max_length=128, default=HOMEASSISTANT
+    )
+
+    enabled = models.BooleanField(default=True, help_text="Is Connector Enabled")
+    on_shopping_list_entry_created_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_updated_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False)
+
+    url = models.URLField(blank=True, null=True)
+    token = models.CharField(max_length=512, blank=True, null=True)
+    todo_entity = models.CharField(max_length=128, blank=True, null=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
 
 
 class UserPreference(models.Model, PermissionModelMixin):
@@ -1293,10 +1319,13 @@ class TelegramBot(models.Model, PermissionModelMixin):
 
 class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    rating = models.IntegerField(null=True, blank=True)
+    servings = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
+
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
-    rating = models.IntegerField(null=True)
-    servings = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
