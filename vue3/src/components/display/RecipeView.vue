@@ -1,11 +1,20 @@
 <template>
 
-    <v-img cover lazy :src="recipe.image"></v-img>
-
-
     <v-card>
-
         <v-card-title>{{ recipe.name }}</v-card-title>
+
+        <v-img max-height="25vh" cover lazy :src="recipe.image">
+            <!-- TODO placement in image -->
+            <KeywordsBar :keywords="recipe?.keywords"></KeywordsBar>
+
+            <v-chip size="small" color="primary" label>
+                <v-icon icon="fas fa-calendar" class="mr-2"></v-icon>
+                {{ recipe.lastCooked }}
+            </v-chip>
+
+            <v-rating v-model="recipe.rating" color="tandoor"></v-rating>
+        </v-img>
+
 
         <v-container>
             <v-row class="text-center text-body-2">
@@ -24,36 +33,11 @@
                             <div class="text-grey"><span v-if="recipe?.servingsText">{{ recipe.servingsText }}</span><span v-else>Servings</span></div>
                         </template>
                     </NumberScalerDialog>
-
-
                 </v-col>
-
             </v-row>
         </v-container>
 
-        <v-card-subtitle v-if="recipe?.description"> {{ recipe.description }}</v-card-subtitle>
-        <v-card-subtitle>
-            <KeywordsBar :keywords="recipe?.keywords"></KeywordsBar>
-        </v-card-subtitle>
 
-
-        <v-card-text>
-
-            <v-chip size="small" color="primary" label>
-                <v-icon icon="fa fa-clock" class="mr-2"></v-icon>
-                {{ recipe.workingTime }} min
-            </v-chip>
-            <v-chip size="small" color="primary" label>
-                <v-icon icon="fas fa-hourglass-half" class="mr-2"></v-icon>
-                {{ recipe.waitingTime }} min
-            </v-chip>
-            <v-chip size="small" color="primary" label>
-                <v-icon icon="fas fa-calendar" class="mr-2"></v-icon>
-                {{ recipe.lastCooked }}
-            </v-chip>
-            <v-rating v-model="recipe.rating" color="tandoor"></v-rating>
-
-        </v-card-text>
     </v-card>
 
     <v-card class="mt-1">
@@ -65,7 +49,7 @@
         <Step :step="s"></Step>
     </v-card>
 
-<!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->
+    <!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->
 
 </template>
 
@@ -85,9 +69,7 @@ export default defineComponent({
     components: {RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
     computed: {},
     data() {
-        return {
-
-        }
+        return {}
     },
     props: {
         recipe: {

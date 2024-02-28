@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@mdi/font": "7.2.96",
+    "@types/luxon": "^3.4.2",
+    "luxon": "^3.4.4",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
     "vue-router": "4",
