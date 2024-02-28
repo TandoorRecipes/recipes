@@ -15,7 +15,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     groups_required = ['user']
     template_name = "generic/new_template.html"
     model = Recipe
-    fields = ('name',)
+    fields = ('name', )
 
     def form_valid(self, form):
         limit, msg = above_space_limit(self.request.space)
@@ -126,12 +126,6 @@ def create_new_external_recipe(request, import_id):
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:
         new_recipe = get_object_or_404(RecipeImport, pk=import_id, space=request.space)
-        form = ImportRecipeForm(
-            initial={
-                'file_path': new_recipe.file_path,
-                'name': new_recipe.name,
-                'file_uid': new_recipe.file_uid
-            }, space=request.space
-        )
+        form = ImportRecipeForm(initial={'file_path': new_recipe.file_path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid}, space=request.space)
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})
