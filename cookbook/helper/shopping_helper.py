@@ -1,9 +1,8 @@
-from datetime import timedelta
+
 from decimal import Decimal
 
 from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
-from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
@@ -76,10 +75,8 @@ class RecipeShoppingEditor():
 
     @staticmethod
     def get_shopping_list_recipe(id, user, space):
-        return ShoppingListRecipe.objects.filter(id=id).filter(Q(shoppinglist__space=space) | Q(entries__space=space)).filter(
-            Q(shoppinglist__created_by=user)
-            | Q(shoppinglist__shared=user)
-            | Q(entries__created_by=user)
+        return ShoppingListRecipe.objects.filter(id=id).filter(entries__space=space).filter(
+            Q(entries__created_by=user)
             | Q(entries__created_by__in=list(user.get_shopping_share()))
         ).prefetch_related('entries').first()
 
