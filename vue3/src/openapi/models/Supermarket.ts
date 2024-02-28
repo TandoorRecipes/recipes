@@ -13,12 +13,12 @@
  */
 
 import { exists, mapValues } from '../runtime';
-import type { ShoppingListSupermarketCategoryToSupermarketInner } from './ShoppingListSupermarketCategoryToSupermarketInner';
+import type { SupermarketCategoryToSupermarketInner } from './SupermarketCategoryToSupermarketInner';
 import {
-    ShoppingListSupermarketCategoryToSupermarketInnerFromJSON,
-    ShoppingListSupermarketCategoryToSupermarketInnerFromJSONTyped,
-    ShoppingListSupermarketCategoryToSupermarketInnerToJSON,
-} from './ShoppingListSupermarketCategoryToSupermarketInner';
+    SupermarketCategoryToSupermarketInnerFromJSON,
+    SupermarketCategoryToSupermarketInnerFromJSONTyped,
+    SupermarketCategoryToSupermarketInnerToJSON,
+} from './SupermarketCategoryToSupermarketInner';
 
 /**
  * 
@@ -46,10 +46,10 @@ export interface Supermarket {
     description?: string | null;
     /**
      * 
-     * @type {Array<ShoppingListSupermarketCategoryToSupermarketInner>}
+     * @type {Array<SupermarketCategoryToSupermarketInner>}
      * @memberof Supermarket
      */
-    readonly categoryToSupermarket?: Array<ShoppingListSupermarketCategoryToSupermarketInner>;
+    readonly categoryToSupermarket?: Array<SupermarketCategoryToSupermarketInner>;
     /**
      * 
      * @type {string}
@@ -81,7 +81,7 @@ export function SupermarketFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
-        'categoryToSupermarket': !exists(json, 'category_to_supermarket') ? undefined : ((json['category_to_supermarket'] as Array<any>).map(ShoppingListSupermarketCategoryToSupermarketInnerFromJSON)),
+        'categoryToSupermarket': !exists(json, 'category_to_supermarket') ? undefined : ((json['category_to_supermarket'] as Array<any>).map(SupermarketCategoryToSupermarketInnerFromJSON)),
         'openDataSlug': !exists(json, 'open_data_slug') ? undefined : json['open_data_slug'],
     };
 }

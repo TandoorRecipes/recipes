@@ -79,7 +79,7 @@ export interface Recipe {
      * @type {Array<RecipeKeywordsInner>}
      * @memberof Recipe
      */
-    keywords: Array<RecipeKeywordsInner>;
+    keywords?: Array<RecipeKeywordsInner>;
     /**
      * 
      * @type {Array<RecipeStepsInner>}
@@ -202,7 +202,6 @@ export interface Recipe {
 export function instanceOfRecipe(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "name" in value;
-    isInstance = isInstance && "keywords" in value;
     isInstance = isInstance && "steps" in value;
 
     return isInstance;
@@ -222,7 +221,7 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'name': json['name'],
         'description': !exists(json, 'description') ? undefined : json['description'],
         'image': !exists(json, 'image') ? undefined : json['image'],
-        'keywords': ((json['keywords'] as Array<any>).map(RecipeKeywordsInnerFromJSON)),
+        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(RecipeKeywordsInnerFromJSON)),
         'steps': ((json['steps'] as Array<any>).map(RecipeStepsInnerFromJSON)),
         'workingTime': !exists(json, 'working_time') ? undefined : json['working_time'],
         'waitingTime': !exists(json, 'waiting_time') ? undefined : json['waiting_time'],
@@ -256,7 +255,7 @@ export function RecipeToJSON(value?: Recipe | null): any {
         
         'name': value.name,
         'description': value.description,
-        'keywords': ((value.keywords as Array<any>).map(RecipeKeywordsInnerToJSON)),
+        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(RecipeKeywordsInnerToJSON)),
         'steps': ((value.steps as Array<any>).map(RecipeStepsInnerToJSON)),
         'working_time': value.workingTime,
         'waiting_time': value.waitingTime,

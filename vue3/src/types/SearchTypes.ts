@@ -6,9 +6,3 @@ export interface  SearchResult {
     icon?: string,
     image?: string,
 }
-
-export interface FlatRecipe{
-    id: number,
-    name: string,
-    image:string|null,
-}
