@@ -2,13 +2,10 @@
     <v-app>
 
 
-            <v-app-bar color="tandoor" flat density="compact" >
-                <template v-slot:prepend>
-                    Tandoor Brand Logo
-                </template>
-                <div id="id_dialog_anchor"></div>
-                <v-spacer></v-spacer>
+            <v-app-bar color="tandoor" flat density="comfortable" >
+                <v-img class="ms-2" src="../../assets/brand_logo.svg"></v-img>
                 <global-search-dialog></global-search-dialog>
+                <v-spacer></v-spacer>
                 <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>
             </v-app-bar>
 
