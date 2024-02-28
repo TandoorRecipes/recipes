@@ -10,6 +10,11 @@ import RecipeView from "@/components/display/RecipeView.vue";
 export default defineComponent({
     name: "RecipeSearchPage",
     components: {RecipeView},
+    watch: {
+        id: function (newValue) {
+            this.refreshData(newValue)
+        },
+    },
     props: {
         id: {type: String, required: true}
     },
@@ -19,10 +24,15 @@ export default defineComponent({
         }
     },
     mounted() {
-        const api = new ApiApi()
-        api.retrieveRecipe({id: this.id}).then(r => {
-            this.recipe = r
-        })
+        this.refreshData(this.id)
+    },
+    methods: {
+        refreshData(recipeId: string) {
+            const api = new ApiApi()
+            api.retrieveRecipe({id: recipeId}).then(r => {
+                this.recipe = r
+            })
+        }
     }
 })
 </script>

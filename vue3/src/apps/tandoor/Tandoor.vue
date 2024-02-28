@@ -14,7 +14,7 @@
 
 
             <v-main>
-                <v-container class="pa-0 ma-0">
+                <v-container class="pa-0 ma-0 mb-2">
                     <router-view></router-view>
                 </v-container>
             </v-main>
