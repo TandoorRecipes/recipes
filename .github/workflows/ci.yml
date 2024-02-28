@@ -9,8 +9,8 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.10']
-        node-version: ['18']
+        python-version: ['3.12']
+        node-version: ['20']
 
     steps:
     - uses: actions/checkout@v3
