@@ -19,6 +19,7 @@ import type {
   Automation,
   BookmarkletImport,
   BookmarkletImportList,
+  ConnectorConfigConfig,
   CookLog,
   CustomFilter,
   ExportLog,
@@ -30,7 +31,9 @@ import type {
   Ingredient,
   InviteLink,
   Keyword,
+  ListAutomations200Response,
   ListCookLogs200Response,
+  ListCustomFilters200Response,
   ListExportLogs200Response,
   ListFoods200Response,
   ListImportLogs200Response,
@@ -57,10 +60,10 @@ import type {
   Recipe,
   RecipeBook,
   RecipeBookEntry,
+  RecipeFlat,
   RecipeImage,
   RecipeShoppingUpdate,
   RecipeSimple,
-  ShoppingList,
   ShoppingListEntry,
   ShoppingListEntryBulk,
   ShoppingListRecipe,
@@ -89,6 +92,8 @@ import {
     BookmarkletImportToJSON,
     BookmarkletImportListFromJSON,
     BookmarkletImportListToJSON,
+    ConnectorConfigConfigFromJSON,
+    ConnectorConfigConfigToJSON,
     CookLogFromJSON,
     CookLogToJSON,
     CustomFilterFromJSON,
@@ -111,8 +116,12 @@ import {
     InviteLinkToJSON,
     KeywordFromJSON,
     KeywordToJSON,
+    ListAutomations200ResponseFromJSON,
+    ListAutomations200ResponseToJSON,
     ListCookLogs200ResponseFromJSON,
     ListCookLogs200ResponseToJSON,
+    ListCustomFilters200ResponseFromJSON,
+    ListCustomFilters200ResponseToJSON,
     ListExportLogs200ResponseFromJSON,
     ListExportLogs200ResponseToJSON,
     ListFoods200ResponseFromJSON,
@@ -165,14 +174,14 @@ import {
     RecipeBookToJSON,
     RecipeBookEntryFromJSON,
     RecipeBookEntryToJSON,
+    RecipeFlatFromJSON,
+    RecipeFlatToJSON,
     RecipeImageFromJSON,
     RecipeImageToJSON,
     RecipeShoppingUpdateFromJSON,
     RecipeShoppingUpdateToJSON,
     RecipeSimpleFromJSON,
     RecipeSimpleToJSON,
-    ShoppingListFromJSON,
-    ShoppingListToJSON,
     ShoppingListEntryFromJSON,
     ShoppingListEntryToJSON,
     ShoppingListEntryBulkFromJSON,
@@ -229,6 +238,10 @@ export interface CreateAutomationRequest {
 
 export interface CreateBookmarkletImportRequest {
     bookmarkletImport?: BookmarkletImport;
+}
+
+export interface CreateConnectorConfigRequest {
+    connectorConfigConfig?: ConnectorConfigConfig;
 }
 
 export interface CreateCookLogRequest {
@@ -323,10 +336,6 @@ export interface CreateRecipeUrlImportRequest {
     body?: any | null;
 }
 
-export interface CreateShoppingListRequest {
-    shoppingList?: ShoppingList;
-}
-
 export interface CreateShoppingListEntryRequest {
     shoppingListEntry?: ShoppingListEntry;
 }
@@ -393,6 +402,10 @@ export interface DestroyAutomationRequest {
 }
 
 export interface DestroyBookmarkletImportRequest {
+    id: string;
+}
+
+export interface DestroyConnectorConfigRequest {
     id: string;
 }
 
@@ -484,10 +497,6 @@ export interface DestroyRecipeBookEntryRequest {
     id: string;
 }
 
-export interface DestroyShoppingListRequest {
-    id: string;
-}
-
 export interface DestroyShoppingListEntryRequest {
     id: string;
 }
@@ -551,7 +560,18 @@ export interface ImageRecipeRequest {
     imageUrl?: string | null;
 }
 
+export interface ListAutomationsRequest {
+    automationType?: string;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ListCookLogsRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ListCustomFiltersRequest {
     page?: number;
     pageSize?: number;
 }
@@ -731,6 +751,11 @@ export interface PartialUpdateBookmarkletImportRequest {
     bookmarkletImport?: BookmarkletImport;
 }
 
+export interface PartialUpdateConnectorConfigRequest {
+    id: string;
+    connectorConfigConfig?: ConnectorConfigConfig;
+}
+
 export interface PartialUpdateCookLogRequest {
     id: string;
     cookLog?: CookLog;
@@ -841,11 +866,6 @@ export interface PartialUpdateRecipeBookEntryRequest {
     recipeBookEntry?: RecipeBookEntry;
 }
 
-export interface PartialUpdateShoppingListRequest {
-    id: string;
-    shoppingList?: ShoppingList;
-}
-
 export interface PartialUpdateShoppingListEntryRequest {
     id: string;
     shoppingListEntry?: ShoppingListEntry;
@@ -947,6 +967,10 @@ export interface RetrieveBookmarkletImportRequest {
     id: string;
 }
 
+export interface RetrieveConnectorConfigRequest {
+    id: string;
+}
+
 export interface RetrieveCookLogRequest {
     id: string;
 }
@@ -1044,10 +1068,6 @@ export interface RetrieveRecipeBookRequest {
 }
 
 export interface RetrieveRecipeBookEntryRequest {
-    id: string;
-}
-
-export interface RetrieveShoppingListRequest {
     id: string;
 }
 
@@ -1154,6 +1174,11 @@ export interface UpdateAutomationRequest {
 export interface UpdateBookmarkletImportRequest {
     id: string;
     bookmarkletImport?: BookmarkletImport;
+}
+
+export interface UpdateConnectorConfigRequest {
+    id: string;
+    connectorConfigConfig?: ConnectorConfigConfig;
 }
 
 export interface UpdateCookLogRequest {
@@ -1264,11 +1289,6 @@ export interface UpdateRecipeBookRequest {
 export interface UpdateRecipeBookEntryRequest {
     id: string;
     recipeBookEntry?: RecipeBookEntry;
-}
-
-export interface UpdateShoppingListRequest {
-    id: string;
-    shoppingList?: ShoppingList;
 }
 
 export interface UpdateShoppingListEntryRequest {
@@ -1487,6 +1507,35 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async createBookmarkletImport(requestParameters: CreateBookmarkletImportRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.createBookmarkletImportRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * 
+     */
+    async createConnectorConfigRaw(requestParameters: CreateConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/connector-config/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ConnectorConfigConfigToJSON(requestParameters.connectorConfigConfig),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * 
+     */
+    async createConnectorConfig(requestParameters: CreateConnectorConfigRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+        const response = await this.createConnectorConfigRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -2164,35 +2213,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async createShoppingListRaw(requestParameters: CreateShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/shopping-list/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ShoppingListToJSON(requestParameters.shoppingList),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
-    }
-
-    /**
-     * 
-     */
-    async createShoppingList(requestParameters: CreateShoppingListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
-        const response = await this.createShoppingListRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * 
-     */
     async createShoppingListEntryRaw(requestParameters: CreateShoppingListEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         const queryParameters: any = {};
 
@@ -2702,6 +2722,35 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async destroyBookmarkletImport(requestParameters: DestroyBookmarkletImportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.destroyBookmarkletImportRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * 
+     */
+    async destroyConnectorConfigRaw(requestParameters: DestroyConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling destroyConnectorConfig.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * 
+     */
+    async destroyConnectorConfig(requestParameters: DestroyConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.destroyConnectorConfigRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -3345,35 +3394,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async destroyShoppingListRaw(requestParameters: DestroyShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling destroyShoppingList.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     * 
-     */
-    async destroyShoppingList(requestParameters: DestroyShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.destroyShoppingListRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     * 
-     */
     async destroyShoppingListEntryRaw(requestParameters: DestroyShoppingListEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling destroyShoppingListEntry.');
@@ -3784,7 +3804,7 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async flatRecipeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
+    async flatRecipeRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeFlat>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -3796,13 +3816,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFlatFromJSON(jsonValue));
     }
 
     /**
      * 
      */
-    async flatRecipe(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
+    async flatRecipe(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeFlat> {
         const response = await this.flatRecipeRaw(initOverrides);
         return await response.value();
     }
@@ -3889,10 +3909,22 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * 
+     * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
      */
-    async listAutomationsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Automation>>> {
+    async listAutomationsRaw(requestParameters: ListAutomationsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListAutomations200Response>> {
         const queryParameters: any = {};
+
+        if (requestParameters.automationType !== undefined) {
+            queryParameters['automation_type'] = requestParameters.automationType;
+        }
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.pageSize !== undefined) {
+            queryParameters['page_size'] = requestParameters.pageSize;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3903,14 +3935,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AutomationFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ListAutomations200ResponseFromJSON(jsonValue));
     }
 
     /**
-     * 
+     * optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
      */
-    async listAutomations(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Automation>> {
-        const response = await this.listAutomationsRaw(initOverrides);
+    async listAutomations(requestParameters: ListAutomationsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListAutomations200Response> {
+        const response = await this.listAutomationsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -3937,6 +3969,32 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async listBookmarkletImports(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BookmarkletImportList>> {
         const response = await this.listBookmarkletImportsRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * 
+     */
+    async listConnectorConfigsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ConnectorConfigConfig>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/connector-config/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ConnectorConfigConfigFromJSON));
+    }
+
+    /**
+     * 
+     */
+    async listConnectorConfigs(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ConnectorConfigConfig>> {
+        const response = await this.listConnectorConfigsRaw(initOverrides);
         return await response.value();
     }
 
@@ -3977,8 +4035,16 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async listCustomFiltersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CustomFilter>>> {
+    async listCustomFiltersRaw(requestParameters: ListCustomFiltersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListCustomFilters200Response>> {
         const queryParameters: any = {};
+
+        if (requestParameters.page !== undefined) {
+            queryParameters['page'] = requestParameters.page;
+        }
+
+        if (requestParameters.pageSize !== undefined) {
+            queryParameters['page_size'] = requestParameters.pageSize;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3989,14 +4055,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomFilterFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => ListCustomFilters200ResponseFromJSON(jsonValue));
     }
 
     /**
      * 
      */
-    async listCustomFilters(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CustomFilter>> {
-        const response = await this.listCustomFiltersRaw(initOverrides);
+    async listCustomFilters(requestParameters: ListCustomFiltersRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListCustomFilters200Response> {
+        const response = await this.listCustomFiltersRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4857,32 +4923,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async listShoppingListsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ShoppingList>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/shopping-list/`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ShoppingListFromJSON));
-    }
-
-    /**
-     * 
-     */
-    async listShoppingLists(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ShoppingList>> {
-        const response = await this.listShoppingListsRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * 
-     */
     async listSpacesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Space>>> {
         const queryParameters: any = {};
 
@@ -5696,6 +5736,39 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
+    async partialUpdateConnectorConfigRaw(requestParameters: PartialUpdateConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling partialUpdateConnectorConfig.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ConnectorConfigConfigToJSON(requestParameters.connectorConfigConfig),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * 
+     */
+    async partialUpdateConnectorConfig(requestParameters: PartialUpdateConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+        const response = await this.partialUpdateConnectorConfigRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * 
+     */
     async partialUpdateCookLogRaw(requestParameters: PartialUpdateCookLogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling partialUpdateCookLog.');
@@ -6422,39 +6495,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
-    async partialUpdateShoppingListRaw(requestParameters: PartialUpdateShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling partialUpdateShoppingList.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ShoppingListToJSON(requestParameters.shoppingList),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
-    }
-
-    /**
-     * 
-     */
-    async partialUpdateShoppingList(requestParameters: PartialUpdateShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
-        const response = await this.partialUpdateShoppingListRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * 
-     */
     async partialUpdateShoppingListEntryRaw(requestParameters: PartialUpdateShoppingListEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling partialUpdateShoppingListEntry.');
@@ -7143,6 +7183,36 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async retrieveBookmarkletImport(requestParameters: RetrieveBookmarkletImportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.retrieveBookmarkletImportRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * 
+     */
+    async retrieveConnectorConfigRaw(requestParameters: RetrieveConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling retrieveConnectorConfig.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * 
+     */
+    async retrieveConnectorConfig(requestParameters: RetrieveConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+        const response = await this.retrieveConnectorConfigRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7897,36 +7967,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async retrieveRecipeBookEntry(requestParameters: RetrieveRecipeBookEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.retrieveRecipeBookEntryRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * 
-     */
-    async retrieveShoppingListRaw(requestParameters: RetrieveShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling retrieveShoppingList.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
-    }
-
-    /**
-     * 
-     */
-    async retrieveShoppingList(requestParameters: RetrieveShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
-        const response = await this.retrieveShoppingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8710,6 +8750,39 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * 
      */
+    async updateConnectorConfigRaw(requestParameters: UpdateConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateConnectorConfig.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: ConnectorConfigConfigToJSON(requestParameters.connectorConfigConfig),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
+    }
+
+    /**
+     * 
+     */
+    async updateConnectorConfig(requestParameters: UpdateConnectorConfigRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
+        const response = await this.updateConnectorConfigRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * 
+     */
     async updateCookLogRaw(requestParameters: UpdateCookLogRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateCookLog.');
@@ -9430,39 +9503,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async updateRecipeBookEntry(requestParameters: UpdateRecipeBookEntryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.updateRecipeBookEntryRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * 
-     */
-    async updateShoppingListRaw(requestParameters: UpdateShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingList>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateShoppingList.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: ShoppingListToJSON(requestParameters.shoppingList),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListFromJSON(jsonValue));
-    }
-
-    /**
-     * 
-     */
-    async updateShoppingList(requestParameters: UpdateShoppingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingList> {
-        const response = await this.updateShoppingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

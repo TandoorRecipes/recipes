@@ -23,39 +23,39 @@ import {
 /**
  * 
  * @export
- * @interface SupermarketCategoryRelation
+ * @interface SupermarketCategoryToSupermarketInner
  */
-export interface SupermarketCategoryRelation {
+export interface SupermarketCategoryToSupermarketInner {
     /**
      * 
      * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @memberof SupermarketCategoryToSupermarketInner
      */
     readonly id?: number;
     /**
      * 
      * @type {SupermarketCategoryToSupermarketInnerCategory}
-     * @memberof SupermarketCategoryRelation
+     * @memberof SupermarketCategoryToSupermarketInner
      */
     category: SupermarketCategoryToSupermarketInnerCategory;
     /**
      * 
      * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @memberof SupermarketCategoryToSupermarketInner
      */
     supermarket: number;
     /**
      * 
      * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @memberof SupermarketCategoryToSupermarketInner
      */
     order?: number;
 }
 
 /**
- * Check if a given object implements the SupermarketCategoryRelation interface.
+ * Check if a given object implements the SupermarketCategoryToSupermarketInner interface.
  */
-export function instanceOfSupermarketCategoryRelation(value: object): boolean {
+export function instanceOfSupermarketCategoryToSupermarketInner(value: object): boolean {
     let isInstance = true;
     isInstance = isInstance && "category" in value;
     isInstance = isInstance && "supermarket" in value;
@@ -63,11 +63,11 @@ export function instanceOfSupermarketCategoryRelation(value: object): boolean {
     return isInstance;
 }
 
-export function SupermarketCategoryRelationFromJSON(json: any): SupermarketCategoryRelation {
-    return SupermarketCategoryRelationFromJSONTyped(json, false);
+export function SupermarketCategoryToSupermarketInnerFromJSON(json: any): SupermarketCategoryToSupermarketInner {
+    return SupermarketCategoryToSupermarketInnerFromJSONTyped(json, false);
 }
 
-export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscriminator: boolean): SupermarketCategoryRelation {
+export function SupermarketCategoryToSupermarketInnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): SupermarketCategoryToSupermarketInner {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -80,7 +80,7 @@ export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRelation | null): any {
+export function SupermarketCategoryToSupermarketInnerToJSON(value?: SupermarketCategoryToSupermarketInner | null): any {
     if (value === undefined) {
         return undefined;
     }

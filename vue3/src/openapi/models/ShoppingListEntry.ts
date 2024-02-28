@@ -31,12 +31,12 @@ import {
     IngredientFoodFromJSONTyped,
     IngredientFoodToJSON,
 } from './IngredientFood';
-import type { ShoppingListEntriesInnerRecipeMealplan } from './ShoppingListEntriesInnerRecipeMealplan';
+import type { ShoppingListEntryRecipeMealplan } from './ShoppingListEntryRecipeMealplan';
 import {
-    ShoppingListEntriesInnerRecipeMealplanFromJSON,
-    ShoppingListEntriesInnerRecipeMealplanFromJSONTyped,
-    ShoppingListEntriesInnerRecipeMealplanToJSON,
-} from './ShoppingListEntriesInnerRecipeMealplan';
+    ShoppingListEntryRecipeMealplanFromJSON,
+    ShoppingListEntryRecipeMealplanFromJSONTyped,
+    ShoppingListEntryRecipeMealplanToJSON,
+} from './ShoppingListEntryRecipeMealplan';
 
 /**
  * 
@@ -88,10 +88,10 @@ export interface ShoppingListEntry {
     checked?: boolean;
     /**
      * 
-     * @type {ShoppingListEntriesInnerRecipeMealplan}
+     * @type {ShoppingListEntryRecipeMealplan}
      * @memberof ShoppingListEntry
      */
-    recipeMealplan?: ShoppingListEntriesInnerRecipeMealplan;
+    recipeMealplan?: ShoppingListEntryRecipeMealplan;
     /**
      * 
      * @type {CookLogCreatedBy}
@@ -152,7 +152,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
         'amount': json['amount'],
         'order': !exists(json, 'order') ? undefined : json['order'],
         'checked': !exists(json, 'checked') ? undefined : json['checked'],
-        'recipeMealplan': !exists(json, 'recipe_mealplan') ? undefined : ShoppingListEntriesInnerRecipeMealplanFromJSON(json['recipe_mealplan']),
+        'recipeMealplan': !exists(json, 'recipe_mealplan') ? undefined : ShoppingListEntryRecipeMealplanFromJSON(json['recipe_mealplan']),
         'createdBy': !exists(json, 'created_by') ? undefined : CookLogCreatedByFromJSON(json['created_by']),
         'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
         'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
@@ -176,7 +176,7 @@ export function ShoppingListEntryToJSON(value?: ShoppingListEntry | null): any {
         'amount': value.amount,
         'order': value.order,
         'checked': value.checked,
-        'recipe_mealplan': ShoppingListEntriesInnerRecipeMealplanToJSON(value.recipeMealplan),
+        'recipe_mealplan': ShoppingListEntryRecipeMealplanToJSON(value.recipeMealplan),
         'created_by': CookLogCreatedByToJSON(value.createdBy),
         'completed_at': value.completedAt === undefined ? undefined : (value.completedAt === null ? null : value.completedAt.toISOString()),
         'delay_until': value.delayUntil === undefined ? undefined : (value.delayUntil === null ? null : value.delayUntil.toISOString()),
