@@ -69,10 +69,17 @@
                             <td v-for="p in f.properties" v-bind:key="`${f.id}_${p.property_type.id}`">
                                 <b-input-group>
                                     <template v-if="p.property_amount == null">
-                                        <b-btn class="btn-sm btn-block btn-success" @click="p.property_amount = 0; updateFood(f)">Add</b-btn>
+                                        <b-btn class="btn-sm btn-block btn-success" @click="enableProperty(p,f)">Add</b-btn>
                                     </template>
                                     <template v-else>
-                                        <b-form-input v-model="p.property_amount" type="number" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name" @change="updateFood(f)"></b-form-input>
+                                        <b-input-group>
+
+                                            <b-form-input v-model="p.property_amount" type="number" :ref="`id_input_${f.id}_${p.property_type.id}`" :disabled="f.loading" v-b-tooltip.focus :title="p.property_type.name"
+                                                          @change="updateFood(f)"></b-form-input>
+                                            <b-input-group-append>
+                                                <b-btn @click="p.property_amount = null; updateFood(f)"><i class="fas fa-trash-alt"></i></b-btn>
+                                            </b-input-group-append>
+                                        </b-input-group>
                                     </template>
                                 </b-input-group>
                             </td>
@@ -95,13 +102,12 @@
                                 <b-input type="number" v-model="calculator_from_per"></b-input>
                                 <i class="fas fa-equals fa-fw mr-1 ml-1"></i>
 
-                                <b-input-group >
+                                <b-input-group>
                                     <b-input v-model="calculator_to_amount" disabled></b-input>
                                     <b-input-group-append>
                                         <b-btn variant="success" @click="copyCalculatedResult()"><i class="far fa-copy"></i></b-btn>
                                     </b-input-group-append>
                                 </b-input-group>
-
 
 
                                 <i class="fas fa-divide fa-fw mr-1 ml-1"></i>
@@ -150,6 +156,7 @@ import GenericMultiselect from "@/components/GenericMultiselect.vue";
 import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
 import KeywordsComponent from "@/components/KeywordsComponent.vue";
 import VueClipboard from 'vue-clipboard2'
+
 Vue.use(VueClipboard)
 Vue.use(BootstrapVue)
 
@@ -197,7 +204,7 @@ export default {
 
                     this.recipe.steps.forEach(s => {
                         s.ingredients.forEach(i => {
-                            if (this.foods.filter(x => (x.id === i.food.id)).length === 0) {
+                            if (i.food != null && this.foods.filter(x => (x.id === i.food.id)).length === 0) {
                                 this.foods.push(this.buildFood(i.food))
                             }
                         })
@@ -248,7 +255,8 @@ export default {
         updateFood: function (food) {
             let apiClient = new ApiApiFactory()
             apiClient.partialUpdateFood(food.id, food).then(result => {
-                this.spliceInFood(this.buildFood(result.data))
+                // don't use result to prevent flickering
+                //this.spliceInFood(this.buildFood(result.data))
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             }).catch((err) => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
@@ -266,9 +274,16 @@ export default {
                 food.loading = false;
             })
         },
-        copyCalculatedResult: function(){
+        copyCalculatedResult: function () {
             this.$copyText(this.calculator_to_amount)
-        }
+        },
+        enableProperty: async function (property, food) {
+            property.property_amount = 0;
+            this.updateFood(food)
+            await this.$nextTick();
+            this.$refs[`id_input_${food.id}_${property.property_type.id}`][0].focus()
+            this.$refs[`id_input_${food.id}_${property.property_type.id}`][0].select()
+        },
     },
 }
 </script>
