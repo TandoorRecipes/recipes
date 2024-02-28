@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2022-11-06 22:09+0000\n"
-"Last-Translator: Gorkem <g.kalipcilar@gmail.com>\n"
+"PO-Revision-Date: 2024-02-29 02:19+0000\n"
+"Last-Translator: M Ugur <mugurd@gmail.com>\n"
 "Language-Team: Turkish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/tr/>\n"
 "Language: tr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15\n"
 
 #: .\cookbook\forms.py:52
 msgid "Default unit"
@@ -28,15 +28,15 @@ msgstr "Varsayılan birim"
 
 #: .\cookbook\forms.py:53
 msgid "Use fractions"
-msgstr ""
+msgstr "Kesirleri kullan"
 
 #: .\cookbook\forms.py:54
 msgid "Use KJ"
-msgstr ""
+msgstr "KiloJoule kullan"
 
 #: .\cookbook\forms.py:55
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: .\cookbook\forms.py:56
 msgid "Navbar color"
@@ -55,14 +55,12 @@ msgid "Plan sharing"
 msgstr ""
 
 #: .\cookbook\forms.py:60
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient decimal places"
-msgstr "Malzemeler"
+msgstr "Malzeme ondalık virgül yeri"
 
 #: .\cookbook\forms.py:61
 msgid "Shopping list auto sync period"
-msgstr ""
+msgstr "Alışveriş listesinin otomatik eşleşme sıklığı"
 
 #: .\cookbook\forms.py:62 .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -70,7 +68,7 @@ msgstr "Yorumlar"
 
 #: .\cookbook\forms.py:63
 msgid "Left-handed mode"
-msgstr ""
+msgstr "Solaklar için"
 
 #: .\cookbook\forms.py:67
 msgid ""
@@ -100,7 +98,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:75
 msgid "Users with whom to share shopping lists."
-msgstr ""
+msgstr "Alışveriş listesinin paylaşılacağı kullanıcılar."
 
 #: .\cookbook\forms.py:76
 msgid "Number of decimals to round ingredients."
@@ -424,10 +422,8 @@ msgid "Fields on food that should be inherited by default."
 msgstr ""
 
 #: .\cookbook\forms.py:558
-#, fuzzy
-#| msgid "Show recently viewed recipes on search page."
 msgid "Show recipe counts on search filters"
-msgstr "Son görüntülenen tarifleri arama sayfasında göster."
+msgstr "süzülen tarifleri arama sayfasında göster."
 
 #: .\cookbook\forms.py:559
 msgid "Use the plural form for units and food inside this space."
