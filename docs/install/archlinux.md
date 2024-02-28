@@ -1,3 +1,6 @@
+!!! info "Community Contributed"
+    This guide was contributed by the community and is neither officially supported, nor updated or tested.
+
 These are instructions for pacman based distributions, like ArchLinux. The package is available from the [AUR](https://aur.archlinux.org/packages/tandoor-recipes-git) or from [GitHub](https://github.com/jdecourval/tandoor-recipes-pkgbuild).
 
 ## Features
