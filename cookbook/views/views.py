@@ -1,7 +1,5 @@
-import json
 import os
 import re
-import subprocess
 from datetime import datetime
 from io import StringIO
 from uuid import UUID
@@ -17,7 +15,6 @@ from django.core.management import call_command
 from django.db import models
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -30,7 +27,7 @@ from cookbook.models import Comment, CookLog, InviteLink, SearchFields, SearchPr
 from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
-from recipes.settings import BASE_DIR, PLUGINS
+from recipes.settings import PLUGINS
 
 
 def index(request):
@@ -160,8 +157,8 @@ def recipe_view(request, pk, share=None):
         servings = recipe.servings
         if request.method == "GET" and 'servings' in request.GET:
             servings = request.GET.get("servings")
-        return render(request, 'recipe_view.html',
-                      {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
+        return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
+
 
 
 @group_required('user')
@@ -172,16 +169,6 @@ def books(request):
 @group_required('user')
 def meal_plan(request):
     return render(request, 'meal_plan.html', {})
-
-
-@group_required('user')
-def supermarket(request):
-    return render(request, 'supermarket.html', {})
-
-
-@group_required('user')
-def view_profile(request, user_id):
-    return render(request, 'profile.html', {})
 
 
 @group_required('guest')
@@ -289,8 +276,11 @@ def shopping_settings(request):
 
 @group_required('guest')
 def history(request):
-    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user, space=request.space).order_by('-created_at').all())
-    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all())
+    view_log = ViewLogTable(ViewLog.objects.filter(created_by=request.user, space=request.space).order_by('-created_at').all(), prefix="viewlog-")
+    view_log.paginate(page=request.GET.get("viewlog-page", 1), per_page=25)
+
+    cook_log = CookLogTable(CookLog.objects.filter(created_by=request.user).order_by('-created_at').all(), prefix="cooklog-")
+    cook_log.paginate(page=request.GET.get("cooklog-page", 1), per_page=25)
     return render(request, 'history.html', {'view_log': view_log, 'cook_log': cook_log})
 
 
@@ -363,7 +353,8 @@ def setup(request):
         if User.objects.count() > 0 or 'django.contrib.auth.backends.RemoteUserBackend' in settings.AUTHENTICATION_BACKENDS:
             messages.add_message(
                 request, messages.ERROR,
-                _('The setup page can only be used to create the first user! If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'
+                _('The setup page can only be used to create the first user! \
+                    If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'
                   ))
             return HttpResponseRedirect(reverse('account_login'))
 

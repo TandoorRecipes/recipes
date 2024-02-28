@@ -367,10 +367,10 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
         SyncLog.objects.filter(sync__space=self).delete()
         Sync.objects.filter(space=self).delete()
         Storage.objects.filter(space=self).delete()
+        ConnectorConfig.objects.filter(space=self).delete()
 
-        ShoppingListEntry.objects.filter(shoppinglist__space=self).delete()
-        ShoppingListRecipe.objects.filter(shoppinglist__space=self).delete()
-        ShoppingList.objects.filter(space=self).delete()
+        ShoppingListEntry.objects.filter(space=self).delete()
+        ShoppingListRecipe.objects.filter(recipe__space=self).delete()
 
         SupermarketCategoryRelation.objects.filter(supermarket__space=self).delete()
         SupermarketCategory.objects.filter(space=self).delete()
@@ -391,6 +391,31 @@ class Space(ExportModelOperationsMixin('space'), models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ConnectorConfig(models.Model, PermissionModelMixin):
+    HOMEASSISTANT = 'HomeAssistant'
+    CONNECTER_TYPE = ((HOMEASSISTANT, 'HomeAssistant'),)
+
+    name = models.CharField(max_length=128, validators=[MinLengthValidator(1)])
+    type = models.CharField(
+        choices=CONNECTER_TYPE, max_length=128, default=HOMEASSISTANT
+    )
+
+    enabled = models.BooleanField(default=True, help_text="Is Connector Enabled")
+    on_shopping_list_entry_created_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_updated_enabled = models.BooleanField(default=False)
+    on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False)
+
+    url = models.URLField(blank=True, null=True)
+    token = models.CharField(max_length=512, blank=True, null=True)
+    todo_entity = models.CharField(max_length=128, blank=True, null=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
 
 
 class UserPreference(models.Model, PermissionModelMixin):
@@ -1169,7 +1194,10 @@ class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), mod
 
     def get_owner(self):
         try:
-            return getattr(self.entries.first(), 'created_by', None) or getattr(self.shoppinglist_set.first(), 'created_by', None)
+            if not self.entries.exists():
+                return 'orphan'
+            else:
+                return getattr(self.entries.first(), 'created_by', None)
         except AttributeError:
             return None
 
@@ -1192,51 +1220,17 @@ class ShoppingListEntry(ExportModelOperationsMixin('shopping_list_entry'), model
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
 
-    @staticmethod
-    def get_space_key():
-        return 'shoppinglist', 'space'
-
-    def get_space(self):
-        return self.shoppinglist_set.first().space
-
     def __str__(self):
         return f'Shopping list entry {self.id}'
 
     def get_shared(self):
-        try:
-            return self.shoppinglist_set.first().shared.all()
-        except AttributeError:
-            return self.created_by.userpreference.shopping_share.all()
+        return self.created_by.userpreference.shopping_share.all()
 
     def get_owner(self):
         try:
-            return self.created_by or self.shoppinglist_set.first().created_by
+            return self.created_by
         except AttributeError:
             return None
-
-
-class ShoppingList(ExportModelOperationsMixin('shopping_list'), models.Model, PermissionModelMixin):
-    uuid = models.UUIDField(default=uuid.uuid4)
-    note = models.TextField(blank=True, null=True)
-    recipes = models.ManyToManyField(ShoppingListRecipe, blank=True)
-    entries = models.ManyToManyField(ShoppingListEntry, blank=True)
-    shared = models.ManyToManyField(User, blank=True, related_name='list_share')
-    supermarket = models.ForeignKey(Supermarket, null=True, blank=True, on_delete=models.SET_NULL)
-    finished = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    space = models.ForeignKey(Space, on_delete=models.CASCADE)
-    objects = ScopedManager(space='space')
-
-    def __str__(self):
-        return f'Shopping list {self.id}'
-
-    def get_shared(self):
-        try:
-            return self.shared.all() or self.created_by.userpreference.shopping_share.all()
-        except AttributeError:
-            return []
 
 
 class ShareLink(ExportModelOperationsMixin('share_link'), models.Model, PermissionModelMixin):

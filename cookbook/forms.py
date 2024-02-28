@@ -10,7 +10,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference
+from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig
 
 
 class SelectWidget(widgets.Select):
@@ -160,22 +160,50 @@ class StorageForm(forms.ModelForm):
         help_texts = {'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'), }
 
 
-# TODO: Deprecate
-# class RecipeBookEntryForm(forms.ModelForm):
-#     prefix = 'bookmark'
 
-#     def __init__(self, *args, **kwargs):
-#         space = kwargs.pop('space')
-#         super().__init__(*args, **kwargs)
-#         self.fields['book'].queryset = RecipeBook.objects.filter(space=space).all()
+class ConnectorConfigForm(forms.ModelForm):
+    enabled = forms.BooleanField(
+        help_text="Is the connector enabled",
+        required=False,
+    )
 
-#     class Meta:
-#         model = RecipeBookEntry
-#         fields = ('book',)
+    on_shopping_list_entry_created_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry created events",
+        required=False,
+    )
 
-#         field_classes = {
-#             'book': SafeModelChoiceField,
-#         }
+    on_shopping_list_entry_updated_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry updated events",
+        required=False,
+    )
+
+    on_shopping_list_entry_deleted_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry deleted events",
+        required=False,
+    )
+
+    update_token = forms.CharField(
+        widget=forms.TextInput(attrs={'autocomplete': 'update-token', 'type': 'password'}),
+        required=False,
+        help_text=_('<a href="https://www.home-assistant.io/docs/authentication/#your-account-profile">Long Lived Access Token</a> for your HomeAssistant instance')
+    )
+
+    url = forms.URLField(
+        required=False,
+        help_text=_('Something like http://homeassistant.local:8123/api'),
+    )
+
+    class Meta:
+        model = ConnectorConfig
+
+        fields = (
+            'name', 'type', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+            'on_shopping_list_entry_deleted_enabled', 'url', 'todo_entity',
+        )
+
+        help_texts = {
+            'url': _('http://homeassistant.local:8123/api for example'),
+        }
 
 
 class SyncForm(forms.ModelForm):
@@ -194,7 +222,6 @@ class SyncForm(forms.ModelForm):
         labels = {'storage': _('Storage'), 'path': _('Path'), 'active': _('Active')}
 
 
-# TODO deprecate
 class BatchEditForm(forms.Form):
     search = forms.CharField(label=_('Search String'))
     keywords = forms.ModelMultipleChoiceField(queryset=Keyword.objects.none(), required=False, widget=MultiSelectWidget)
@@ -328,73 +355,3 @@ class SearchPreferenceForm(forms.ModelForm):
             'search': SelectWidget, 'unaccent': MultiSelectWidget, 'icontains': MultiSelectWidget, 'istartswith': MultiSelectWidget, 'trigram': MultiSelectWidget, 'fulltext':
             MultiSelectWidget,
         }
-
-
-# class ShoppingPreferenceForm(forms.ModelForm):
-#     prefix = 'shopping'
-
-#     class Meta:
-#         model = UserPreference
-
-#         fields = (
-#             'shopping_share', 'shopping_auto_sync', 'mealplan_autoadd_shopping', 'mealplan_autoexclude_onhand',
-#             'mealplan_autoinclude_related', 'shopping_add_onhand', 'default_delay', 'filter_to_supermarket', 'shopping_recent_days', 'csv_delim', 'csv_prefix'
-#         )
-
-#         help_texts = {
-#             'shopping_share': _('Users will see all items you add to your shopping list.  They must add you to see items on their list.'),
-#             'shopping_auto_sync': _(
-#                 'Setting to 0 will disable auto sync. When viewing a shopping list the list is updated every set seconds to sync changes someone else might have made. Useful when shopping with multiple people but might use a little bit '
-#                 'of mobile data. If lower than instance limit it is reset when saving.'
-#             ),
-#             'mealplan_autoadd_shopping': _('Automatically add meal plan ingredients to shopping list.'),
-#             'mealplan_autoinclude_related': _('When adding a meal plan to the shopping list (manually or automatically), include all related recipes.'),
-#             'mealplan_autoexclude_onhand': _('When adding a meal plan to the shopping list (manually or automatically), exclude ingredients that are on hand.'),
-#             'default_delay': _('Default number of hours to delay a shopping list entry.'),
-#             'filter_to_supermarket': _('Filter shopping list to only include supermarket categories.'),
-#             'shopping_recent_days': _('Days of recent shopping list entries to display.'),
-#             'shopping_add_onhand': _("Mark food 'On Hand' when checked off shopping list."),
-#             'csv_delim': _('Delimiter to use for CSV exports.'),
-#             'csv_prefix': _('Prefix to add when copying list to the clipboard.'),
-
-#         }
-#         labels = {
-#             'shopping_share': _('Share Shopping List'),
-#             'shopping_auto_sync': _('Autosync'),
-#             'mealplan_autoadd_shopping': _('Auto Add Meal Plan'),
-#             'mealplan_autoexclude_onhand': _('Exclude On Hand'),
-#             'mealplan_autoinclude_related': _('Include Related'),
-#             'default_delay': _('Default Delay Hours'),
-#             'filter_to_supermarket': _('Filter to Supermarket'),
-#             'shopping_recent_days': _('Recent Days'),
-#             'csv_delim': _('CSV Delimiter'),
-#             "csv_prefix_label": _("List Prefix"),
-#             'shopping_add_onhand': _("Auto On Hand"),
-#         }
-
-#         widgets = {
-#             'shopping_share': MultiSelectWidget
-#         }
-
-# class SpacePreferenceForm(forms.ModelForm):
-#     prefix = 'space'
-#     reset_food_inherit = forms.BooleanField(label=_("Reset Food Inheritance"), initial=False, required=False,
-#                                             help_text=_("Reset all food to inherit the fields configured."))
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)  # populates the post
-#         self.fields['food_inherit'].queryset = Food.inheritable_fields
-
-#     class Meta:
-#         model = Space
-
-#         fields = ('food_inherit', 'reset_food_inherit',)
-
-#         help_texts = {
-#             'food_inherit': _('Fields on food that should be inherited by default.'),
-#             'use_plural': _('Use the plural form for units and food inside this space.'),
-#         }
-
-#         widgets = {
-#             'food_inherit': MultiSelectWidget
-#         }

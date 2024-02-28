@@ -8,8 +8,12 @@ from django.utils.translation import gettext as _
 from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
+
+from cookbook.models import Comment, InviteLink, Recipe, RecipeImport, Space, Storage, Sync, UserSpace
+
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Space, Storage, Sync, UserSpace)
+                             RecipeImport, Space, Storage, Sync, UserSpace, ConnectorConfig)
+
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -114,12 +118,22 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
         try:
             return self.delete(request, *args, **kwargs)
         except ProtectedError:
-            messages.add_message(
-                request,
-                messages.WARNING,
-                _('Could not delete this storage backend as it is used in at least one monitor.')  # noqa: E501
-            )
+            messages.add_message(request, messages.WARNING,
+                                 _('Could not delete this storage backend as it is used in at least one monitor.')  # noqa: E501
+                                 )
             return HttpResponseRedirect(reverse('list_storage'))
+
+
+class ConnectorConfigDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['admin']
+    template_name = "generic/delete_template.html"
+    model = ConnectorConfig
+    success_url = reverse_lazy('list_connector_config')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("Connectors Config Backend")
+        return context
 
 
 class CommentDelete(OwnerRequiredMixin, DeleteView):
@@ -130,40 +144,6 @@ class CommentDelete(OwnerRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super(CommentDelete, self).get_context_data(**kwargs)
         context['title'] = _("Comment")
-        return context
-
-
-class RecipeBookDelete(OwnerRequiredMixin, DeleteView):
-    template_name = "generic/delete_template.html"
-    model = RecipeBook
-    success_url = reverse_lazy('view_books')
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Recipe Book")
-        return context
-
-
-class RecipeBookEntryDelete(OwnerRequiredMixin, DeleteView):
-    groups_required = ['user']
-    template_name = "generic/delete_template.html"
-    model = RecipeBookEntry
-    success_url = reverse_lazy('view_books')
-
-    def get_context_data(self, **kwargs):
-        context = super(RecipeBookEntryDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Bookmarks")
-        return context
-
-
-class MealPlanDelete(OwnerRequiredMixin, DeleteView):
-    template_name = "generic/delete_template.html"
-    model = MealPlan
-    success_url = reverse_lazy('view_plan')
-
-    def get_context_data(self, **kwargs):
-        context = super(MealPlanDelete, self).get_context_data(**kwargs)
-        context['title'] = _("Meal-Plan")
         return context
 
 

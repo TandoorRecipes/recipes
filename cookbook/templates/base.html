@@ -114,7 +114,7 @@
                         class="fas fa-fw fa-calendar"></i> {% trans 'Meal-Plan' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'list_shopping_list,view_shopping' %}active{% endif %}">
-                <a class="nav-link" href="{% url 'list_shopping_list' %}"><i
+                <a class="nav-link" href="{% url 'view_shopping' %}"><i
                         class="fas fa-fw fa-shopping-cart"></i> {% trans 'Shopping' %}</a>
             </li>
             <li class="nav-item {% if request.resolver_match.url_name in 'view_books' %}active{% endif %}">
@@ -334,6 +334,10 @@
                         {% if request.user == request.space.created_by %}
                             <a class="dropdown-item" href="{% url 'view_space_manage' request.space.pk %}"><i
                                     class="fas fa-server fa-fw"></i> {% trans 'Space Settings' %}</a>
+                        {% endif %}
+                        {% if not DISABLE_EXTERNAL_CONNECTORS and request.user == request.space.created_by or not DISABLE_EXTERNAL_CONNECTORS and user.is_superuser  %}
+                            <a class="dropdown-item" href="{% url 'list_connector_config' %}"><i
+                                class="fas fa-sync-alt fa-fw"></i> {% trans 'External Connectors' %}</a>
                         {% endif %}
                         {% if user.is_superuser %}
                             <div class="dropdown-divider"></div>
