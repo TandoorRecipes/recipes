@@ -29,10 +29,6 @@ const pages = {
         entry: "./src/apps/ExportView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
-    supermarket_view: {
-        entry: "./src/apps/SupermarketView/main.ts",
-        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
-    },
     model_list_view: {
         entry: "./src/apps/ModelListView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
@@ -63,10 +59,6 @@ const pages = {
     },
     space_manage_view: {
         entry: "./src/apps/SpaceManageView/main.ts",
-        chunks: ["chunk-vendors","locales-chunk","api-chunk"],
-    },
-    profile_view: {
-        entry: "./src/apps/ProfileView/main.ts",
         chunks: ["chunk-vendors","locales-chunk","api-chunk"],
     },
     settings_view: {

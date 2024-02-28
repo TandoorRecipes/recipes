@@ -75,7 +75,7 @@ def is_object_owner(user, obj):
     if not user.is_authenticated:
         return False
     try:
-        return obj.get_owner() == user
+        return obj.get_owner() == 'orphan' or obj.get_owner() == user
     except Exception:
         return False
 
