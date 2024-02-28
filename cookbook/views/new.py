@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,9 +5,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, Storage, StorageForm
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm, ConnectorConfigForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
-from cookbook.models import Recipe, RecipeImport, ShareLink, Step
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step, ConnectorConfig
 from recipes import settings
 
 
@@ -68,6 +67,35 @@ class StorageCreate(GroupRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(StorageCreate, self).get_context_data(**kwargs)
         context['title'] = _("Storage Backend")
+        return context
+
+
+class ConnectorConfigCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['admin']
+    template_name = "generic/new_template.html"
+    model = ConnectorConfig
+    form_class = ConnectorConfigForm
+    success_url = reverse_lazy('list_connector_config')
+
+    def form_valid(self, form):
+        if self.request.space.demo:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
+
+        if settings.DISABLE_EXTERNAL_CONNECTORS:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not enabled by the server admin!'))
+            return redirect('index')
+
+        obj = form.save(commit=False)
+        obj.token = form.cleaned_data['update_token']
+        obj.created_by = self.request.user
+        obj.space = self.request.space
+        obj.save()
+        return HttpResponseRedirect(reverse('edit_connector_config', kwargs={'pk': obj.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("Connector Config Backend")
         return context
 
 

@@ -9,7 +9,7 @@ from django.views.generic import DeleteView
 
 from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, group_required
 from cookbook.models import (Comment, InviteLink, MealPlan, Recipe, RecipeBook, RecipeBookEntry,
-                             RecipeImport, Space, Storage, Sync, UserSpace)
+                             RecipeImport, Space, Storage, Sync, UserSpace, ConnectorConfig)
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
@@ -120,6 +120,18 @@ class StorageDelete(GroupRequiredMixin, DeleteView):
                 _('Could not delete this storage backend as it is used in at least one monitor.')  # noqa: E501
             )
             return HttpResponseRedirect(reverse('list_storage'))
+
+
+class ConnectorConfigDelete(GroupRequiredMixin, DeleteView):
+    groups_required = ['admin']
+    template_name = "generic/delete_template.html"
+    model = ConnectorConfig
+    success_url = reverse_lazy('list_connector_config')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("Connectors Config Backend")
+        return context
 
 
 class CommentDelete(OwnerRequiredMixin, DeleteView):

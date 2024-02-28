@@ -10,7 +10,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField, SafeModelMultipleChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference
+from .models import Comment, InviteLink, Keyword, Recipe, SearchPreference, Space, Storage, Sync, User, UserPreference, ConnectorConfig
 
 
 class SelectWidget(widgets.Select):
@@ -158,6 +158,51 @@ class StorageForm(forms.ModelForm):
         fields = ('name', 'method', 'username', 'password', 'token', 'url', 'path')
 
         help_texts = {'url': _('Leave empty for dropbox and enter only base url for nextcloud (<code>/remote.php/webdav/</code> is added automatically)'), }
+
+
+class ConnectorConfigForm(forms.ModelForm):
+    enabled = forms.BooleanField(
+        help_text="Is the connector enabled",
+        required=False,
+    )
+
+    on_shopping_list_entry_created_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry created events",
+        required=False,
+    )
+
+    on_shopping_list_entry_updated_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry updated events",
+        required=False,
+    )
+
+    on_shopping_list_entry_deleted_enabled = forms.BooleanField(
+        help_text="Enable action for ShoppingListEntry deleted events",
+        required=False,
+    )
+
+    update_token = forms.CharField(
+        widget=forms.TextInput(attrs={'autocomplete': 'update-token', 'type': 'password'}),
+        required=False,
+        help_text=_('<a href="https://www.home-assistant.io/docs/authentication/#your-account-profile">Long Lived Access Token</a> for your HomeAssistant instance')
+    )
+
+    url = forms.URLField(
+        required=False,
+        help_text=_('Something like http://homeassistant.local:8123/api'),
+    )
+
+    class Meta:
+        model = ConnectorConfig
+
+        fields = (
+            'name', 'type', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+            'on_shopping_list_entry_deleted_enabled', 'url', 'todo_entity',
+        )
+
+        help_texts = {
+            'url': _('http://homeassistant.local:8123/api for example'),
+        }
 
 
 # TODO: Deprecate

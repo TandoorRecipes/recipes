@@ -2262,7 +2262,7 @@ export interface Recipe {
      * @type {Array<RecipeKeywords>}
      * @memberof Recipe
      */
-    keywords: Array<RecipeKeywords>;
+    keywords?: Array<RecipeKeywords>;
     /**
      * 
      * @type {Array<RecipeSteps>}
@@ -2940,7 +2940,7 @@ export interface RecipeSteps {
      * @type {string}
      * @memberof RecipeSteps
      */
-    ingredients_markdown?: string;
+    instructions_markdown?: string;
     /**
      * 
      * @type {string}
@@ -3793,7 +3793,7 @@ export interface Step {
      * @type {string}
      * @memberof Step
      */
-    ingredients_markdown?: string;
+    instructions_markdown?: string;
     /**
      * 
      * @type {string}

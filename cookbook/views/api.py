@@ -65,15 +65,27 @@ from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
+
 from cookbook.models import (
     Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink, Keyword, MealPlan, MealType,
     Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket,
     SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace, ViewLog,
 )
+
+from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
+                             FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
+                             Keyword, MealPlan, MealType, Property, PropertyType, Recipe,
+                             RecipeBook, RecipeBookEntry, ShareLink, ShoppingList,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                             Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync,
+                             SyncLog, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                             ViewLog, ConnectorConfig)
+
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
+
 from cookbook.serializer import (
     AccessTokenSerializer, AutomationSerializer, AutoMealPlanSerializer, BookmarkletImportListSerializer, BookmarkletImportSerializer, CookLogSerializer, CustomFilterSerializer,
     ExportLogSerializer, FoodInheritFieldSerializer, FoodSerializer, FoodShoppingUpdateSerializer, FoodSimpleSerializer, GroupSerializer, ImportLogSerializer,
@@ -84,6 +96,31 @@ from cookbook.serializer import (
     SupermarketSerializer, SyncLogSerializer, SyncSerializer, UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer,
     UserSpaceSerializer, ViewLogSerializer,
 )
+
+from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
+                                 AutoMealPlanSerializer, BookmarkletImportListSerializer,
+                                 BookmarkletImportSerializer, CookLogSerializer,
+                                 CustomFilterSerializer, ExportLogSerializer,
+                                 FoodInheritFieldSerializer, FoodSerializer,
+                                 FoodShoppingUpdateSerializer, FoodSimpleSerializer,
+                                 GroupSerializer, ImportLogSerializer, IngredientSerializer,
+                                 IngredientSimpleSerializer, InviteLinkSerializer,
+                                 KeywordSerializer, MealPlanSerializer, MealTypeSerializer,
+                                 PropertySerializer, PropertyTypeSerializer,
+                                 RecipeBookEntrySerializer, RecipeBookSerializer,
+                                 RecipeExportSerializer, RecipeFromSourceSerializer,
+                                 RecipeImageSerializer, RecipeOverviewSerializer, RecipeSerializer,
+                                 RecipeShoppingUpdateSerializer, RecipeSimpleSerializer,
+                                 ShoppingListAutoSyncSerializer, ShoppingListEntrySerializer,
+                                 ShoppingListRecipeSerializer, ShoppingListSerializer,
+                                 SpaceSerializer, StepSerializer, StorageSerializer,
+                                 SupermarketCategoryRelationSerializer,
+                                 SupermarketCategorySerializer, SupermarketSerializer,
+                                 SyncLogSerializer, SyncSerializer, UnitConversionSerializer,
+                                 UnitSerializer, UserFileSerializer, UserPreferenceSerializer,
+                                 UserSerializer, UserSpaceSerializer, ViewLogSerializer,
+                                 ShoppingListEntryBulkSerializer, ConnectorConfigConfigSerializer)
+
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
@@ -437,6 +474,15 @@ class StorageViewSet(viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
+    permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+
+    def get_queryset(self):
+        return self.queryset.filter(space=self.request.space)
+
+
+class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
+    queryset = ConnectorConfig.objects
+    serializer_class = ConnectorConfigConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
     def get_queryset(self):
@@ -1257,8 +1303,13 @@ class CookLogViewSet(viewsets.ModelViewSet):
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
+    query_params = [
+        QueryParam(name='recipe', description=_('Filter for entries with the given recipe'), qtype='integer'),
+    ]
 
     def get_queryset(self):
+        if self.request.query_params.get('recipe', None):
+            self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         return self.queryset.filter(space=self.request.space)
 
 
