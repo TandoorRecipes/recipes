@@ -10,6 +10,7 @@ import vuetify from "@/vuetify";
 import ShoppingListPage from "@/pages/ShoppingListPage.vue";
 import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
+import luxonPlugin from "@/plugins/luxonPlugin";
 
 const routes = [
     {path: '/', redirect: '/search', name: 'index'},
@@ -33,5 +34,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(vuetify)
 app.use(router)
+app.use(luxonPlugin)
 
 app.mount('#app')
