@@ -104,7 +104,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 # Application definition
 
 INSTALLED_APPS = [
-    'dal', 'dal_select2', 'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
+    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
     'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_prometheus', 'django_tables2', 'corsheaders', 'crispy_forms',
     'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
     'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
