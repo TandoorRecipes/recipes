@@ -35,6 +35,7 @@ nav:
       - KubeSail or PiBox: install/kubesail.md
       - TrueNAS Portainer: install/truenas_portainer.md
       - WSL: install/wsl.md
+      - ArchLinux: install/archlinux.md
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
