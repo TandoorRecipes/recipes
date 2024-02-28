@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Migrations",
+        "type": "shell",
+        "command": "python3 manage.py migrate",
+      },
+      {
+        "label": "Run Dev Server",
+        "type": "shell",
+        "dependsOn": ["Run Migrations"],
+        "command": "python3 manage.py runserver",
+      },
+      {
+        "label": "Yarn Install",
+        "type": "shell",
+        "command": "yarn install",
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        }
+      },
+      {
+        "label": "Yarn Serve",
+        "type": "shell",
+        "command": "yarn serve",
+        "dependsOn": ["Yarn Install"],
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        }
+      },
+      {
+        "label": "Yarn Build",
+        "type": "shell",
+        "command": "yarn build",
+        "dependsOn": ["Yarn Install"],
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        },
+        "group": "build",
+      },
+      {
+        "label": "Pytest",
+        "type": "shell",
+        "command": "python3 -m pytest cookbook/tests",
+        "group": "test",
+      }
+    ]
+}
