@@ -65,7 +65,7 @@
         <Step :step="s"></Step>
     </v-card>
 
-    <RecipeActivity :recipe="recipe"></RecipeActivity>
+<!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->
 
 </template>
 
