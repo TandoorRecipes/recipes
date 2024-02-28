@@ -4,14 +4,12 @@ from mock.mock import Mock
 
 from cookbook.connectors.connector import Connector
 from cookbook.connectors.connector_manager import run_connectors, ActionType
-from cookbook.models import ShoppingListEntry, ShoppingList, Food
+from cookbook.models import ShoppingListEntry, Food
 
 
 @pytest.fixture()
 def obj_1(space_1, u1_s1):
     e = ShoppingListEntry.objects.create(created_by=auth.get_user(u1_s1), food=Food.objects.get_or_create(name='test 1', space=space_1)[0], space=space_1)
-    s = ShoppingList.objects.create(created_by=auth.get_user(u1_s1), space=space_1, )
-    s.entries.add(e)
     return e
 
 
