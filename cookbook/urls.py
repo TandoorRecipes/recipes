@@ -10,7 +10,7 @@ from recipes.settings import DEBUG, PLUGINS
 
 
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
-                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShoppingList, Space, Step,
+                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step,
                      Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
                      UserFile, UserSpace, get_model_name, ConnectorConfig)
 
@@ -149,7 +149,7 @@ urlpatterns = [
 
 generic_models = (
     Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync,
-    Comment, RecipeBookEntry, ShoppingList, InviteLink, UserSpace, Space
+    Comment, RecipeBookEntry, InviteLink, UserSpace, Space
 )
 
 
