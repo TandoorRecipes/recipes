@@ -28,8 +28,8 @@ be used by other editors as well.  Once the container is running, you can do thi
 dev server, run python tests, etc. by either using the VSCode tasks below, or manually running commands described in the individual
 technology sections below.
 
-#### VSCode Tasks
-If you use dev containers with VSCode, there are a number of tasks that are available.  Here are a few of the key ones:
+### VSCode Tasks
+If you use VSCode, there are a number of tasks that are available.  Here are a few of the key ones:
 
 * `Setup Dev Server` - Runs all the prerequisite steps so that the dev server can be run inside VSCode.
 * `Setup Tests` - Runs all prerequisites so tests can be run inside VSCode.
