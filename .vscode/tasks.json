@@ -15,7 +15,7 @@
       {
         "label": "Run Dev Server",
         "type": "shell",
-        "dependsOn": ["Run Migrations"],
+        "dependsOn": ["Run Migrations", "Yarn Build"],
         "command": "python3 manage.py runserver",
       },
       {
