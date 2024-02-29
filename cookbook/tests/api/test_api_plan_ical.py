@@ -1,11 +1,9 @@
 from datetime import datetime, timedelta
-from io import BytesIO
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
-from django_scopes import scope, scopes_disabled
-from icalendar import Calendar, Event
+from icalendar import Calendar
 
 from cookbook.models import MealPlan, MealType
 
