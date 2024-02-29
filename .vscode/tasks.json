@@ -10,6 +10,7 @@
         "label": "Collect Static Files",
         "type": "shell",
         "command": "python3 manage.py collectstatic",
+        "dependsOn": ["Yarn Build"],
       },
       {
         "label": "Run Dev Server",
@@ -45,10 +46,14 @@
         "group": "build",
       },
       {
-        "label": "Pytest",
+        "label": "Setup Tests",
+        "dependsOn": ["Run Migrations", "Collect Static Files"],
+      },
+      {
+        "label": "Run all pytests",
         "type": "shell",
         "command": "python3 -m pytest cookbook/tests",
-        "dependsOn": ["Run Migrations", "Collect Static Files"],
+        "dependsOn": ["Setup Tests"],
         "group": "test",
       }
     ]
