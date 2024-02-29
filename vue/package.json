@@ -16,7 +16,7 @@
     "@codemirror/view": "^6.23.1",
     "@popperjs/core": "^2.11.7",
     "@vue/cli": "^5.0.8",
-    "@vue/composition-api": "1.7.1",
+    "@vue/composition-api": "1.7.2",
     "axios": "^1.6.7",
     "babel": "^6.23.0",
     "babel-core": "^6.26.3",
