@@ -1,0 +1,75 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Migrations",
+        "type": "shell",
+        "command": "python3 manage.py migrate",
+      },
+      {
+        "label": "Collect Static Files",
+        "type": "shell",
+        "command": "python3 manage.py collectstatic",
+        "dependsOn": ["Yarn Build"],
+      },
+      {
+        "label": "Setup Dev Server",
+        "dependsOn": ["Run Migrations", "Yarn Build"],
+      },
+      {
+        "label": "Run Dev Server",
+        "type": "shell",
+        "dependsOn": ["Setup Dev Server"],
+        "command": "python3 manage.py runserver",
+      },
+      {
+        "label": "Yarn Install",
+        "type": "shell",
+        "command": "yarn install",
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        }
+      },
+      {
+        "label": "Yarn Serve",
+        "type": "shell",
+        "command": "yarn serve",
+        "dependsOn": ["Yarn Install"],
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        }
+      },
+      {
+        "label": "Yarn Build",
+        "type": "shell",
+        "command": "yarn build",
+        "dependsOn": ["Yarn Install"],
+        "options": {
+          "cwd": "${workspaceFolder}/vue"
+        },
+        "group": "build",
+      },
+      {
+        "label": "Setup Tests",
+        "dependsOn": ["Run Migrations", "Collect Static Files"],
+      },
+      {
+        "label": "Run all pytests",
+        "type": "shell",
+        "command": "python3 -m pytest cookbook/tests",
+        "dependsOn": ["Setup Tests"],
+        "group": "test",
+      },
+      {
+        "label": "Setup Documentation Dependencies",
+        "type": "shell",
+        "command": "pip install mkdocs-material mkdocs-include-markdown-plugin",
+      },
+      {
+        "label": "Serve Documentation",
+        "type": "shell",
+        "command": "mkdocs serve",
+        "dependsOn": ["Setup Documentation Dependencies"],
+      }
+    ]
+}
