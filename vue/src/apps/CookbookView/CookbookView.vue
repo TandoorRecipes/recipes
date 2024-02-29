@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1 offset">
+    <div id="app" class="books col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1 offset">
         <div class="col-12 col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
             <div class="row">
                 <div class="col col-md-12">
@@ -11,68 +11,121 @@
                                     <b-button variant="primary" v-b-tooltip.hover :title="$t('Create')" @click="createNew">
                                         <i class="fas fa-plus"></i>
                                     </b-button>
+                                    <b-dropdown variant="primary" id="sortDropDown" text="Order By"  class="border-left">
+                                        <b-dropdown-item @click = "orderBy('id','asc')"   :disabled= "isActiveSort('id','asc')">oldest to newest</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('id','desc')"  :disabled= "isActiveSort('id','desc')">newest to oldest</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('name','asc')" :disabled= "isActiveSort('name','asc')">alphabetical order</b-dropdown-item>
+                                        <b-dropdown-item @click = "orderBy('order','asc')"   :disabled= "isActiveSort('order','asc')" >manually</b-dropdown-item>
+                                    </b-dropdown>
                                 </b-input-group-append>
+                                <b-button class= "ml-2" variant="primary" v-if="isActiveSort('order','asc')" @click="handleEditButton" >
+                                    {{submitText}}
+                                </b-button>
                             </b-input-group>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mb-3" v-for="book in filteredBooks" :key="book.id">
-            <div class="row">
-                <div class="col-md-12">
-                    <b-card class="d-flex flex-column" v-hover v-on:click="openBook(book.id)">
-                        <b-row no-gutters style="height: inherit">
-                            <b-col no-gutters md="2" style="height: inherit">
-                                <h3>{{ book.icon }}</h3>
-                            </b-col>
-                            <b-col no-gutters md="10" style="height: inherit">
-                                <b-card-body class="m-0 py-0" style="height: inherit">
-                                    <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
-                                        <h5 class="m-0 mt-1 text-truncate">
-                                            {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
-                                        </h5>
-                                        <div class="m-0 text-truncate">{{ book.description }}</div>
-                                        <div class="mt-auto mb-1 d-flex flex-row justify-content-end"></div>
-                                    </b-card-text>
-                                </b-card-body>
-                            </b-col>
-                        </b-row>
-                    </b-card>
+        <div v-if="!isActiveSort('order','asc') || !manSubmitted">
+            <div style="padding-bottom: 55px">
+                <div class="mb-3" v-for="(book) in filteredBooks" :key="book.id">
+                <div class="row">
+                    <div class="col-md-12"> 
+                        <b-card class="d-flex flex-column" v-hover  > 
+                            <b-row no-gutters style="height: inherit" class="d-flex align-items-center">
+                                <b-col no-gutters style="height: inherit">
+                                    <b-card-body class="m-0 py-0" style="height: inherit">
+                                        <b-card-text class="h-100 my-0 d-flex flex-column" style="text-overflow: ellipsis">
+                                            <b-button  v-on:click="openBook(book.id)"  style="color: #000; background-color: white" variant="primary">                                        
+                                                <h5 class="m-0 mt-1 text-truncate" >
+                                                {{ book.name }} <span class="float-right"><i class="fa fa-book"></i></span>
+                                                </h5></b-button>
+                                            <div class="m-0 text-truncate">{{ book.description }}</div>
+                                            <div class="mt-auto mb-1 d-flex flex-row justify-content-end"></div>
+                                        </b-card-text>
+                                    </b-card-body>
+                                </b-col>
+                            </b-row>
+                        </b-card>
+                    </div>
+                </div>
+
+                <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
+                <transition name="slide-fade">
+                    <cookbook-slider
+                        :recipes="recipes"
+                        :book="book"
+                        :key="`slider_${book.id}`"
+                        v-if="current_book === book.id && !loading"
+                        v-on:refresh="refreshData"
+                        @reload="openBook(current_book, true)"
+                    ></cookbook-slider>
+                </transition>
+
                 </div>
             </div>
-
-            <loading-spinner v-if="current_book === book.id && loading"></loading-spinner>
-            <transition name="slide-fade">
-                <cookbook-slider
-                    :recipes="recipes"
-                    :book="book"
-                    :key="`slider_${book.id}`"
-                    v-if="current_book === book.id && !loading"
-                    v-on:refresh="refreshData"
-                    @reload="openBook(current_book, true)"
-                ></cookbook-slider>
-            </transition>
+        </div>    
+        <div v-else>
+         <draggable 
+         @change="updateManualSorting"
+         :list="cookbooks" ghost-class="ghost">     
+            <b-card no-body class="mt-1 list-group-item p-2"
+                    style="cursor: move"
+                    v-for=" (book,index) in filteredBooks"
+                    v-hover
+                    :key="book.id">
+                <b-card-header class="p-2 border-0">
+                    <div class="row">
+                        <div class="col-2">
+                            <button type="button"
+                                    class="btn btn-lg shadow-none"><i
+                                class="fas fa-arrows-alt-v"></i></button>
+                        </div>
+                        <div class="col-10">
+                            <h5 class="mt-1 mb-1">
+                                <b-badge class="float-left text-white mr-2">
+                                    #{{ index + 1 }}
+                                </b-badge>
+                                {{ book.name }}
+                            </h5>
+                        </div>
+                    </div>
+                </b-card-header>
+            </b-card>
+        </draggable>
         </div>
+
+        <bottom-navigation-bar active-view="view_books">
+            <template #custom_create_functions>
+                <div class="dropdown-divider" ></div>
+                <h6 class="dropdown-header">{{ $t('Books')}}</h6>
+
+                <a class="dropdown-item" @click="createNew()"><i
+                                class="fa fa-book"></i> {{$t("Create")}}</a>
+
+            </template>
+        </bottom-navigation-bar>
     </div>
 </template>
 
 <script>
 import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
-
+import draggable from "vuedraggable"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 import { ApiApiFactory } from "@/utils/openapi/api"
 import CookbookSlider from "@/components/CookbookSlider"
 import LoadingSpinner from "@/components/LoadingSpinner"
 import { StandardToasts, ApiMixin } from "@/utils/utils"
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "CookbookView",
     mixins: [ApiMixin],
-    components: { LoadingSpinner, CookbookSlider },
+    components: { LoadingSpinner, CookbookSlider, BottomNavigationBar, draggable },
     data() {
         return {
             cookbooks: [],
@@ -81,6 +134,11 @@ export default {
             current_book: undefined,
             loading: false,
             search: "",
+            activeSortField : 'id',
+            activeSortDirection: 'desc',
+            inputValue: "",
+            manSubmitted : false,
+            submitText: "Edit"
         }
     },
     computed: {
@@ -97,7 +155,7 @@ export default {
     methods: {
         refreshData: function () {
             let apiClient = new ApiApiFactory()
-
+            
             apiClient.listRecipeBooks().then((result) => {
                 this.cookbooks = result.data
             })
@@ -126,7 +184,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient
-                .createRecipeBook({ name: this.$t("New_Cookbook"), description: "", icon: "", shared: [] })
+                .createRecipeBook({ name: this.$t("New_Cookbook"), description: "", shared: [] })
                 .then((result) => {
                     let new_book = result.data
                     this.refreshData()
@@ -155,7 +213,45 @@ export default {
                 }
             })
         },
-    },
+        orderBy: function(order_field,order_direction){
+            let apiClient = new ApiApiFactory()
+            const options = {
+                order_field: order_field,
+                order_direction: order_direction
+            }
+            this.activeSortField = order_field
+            this.activeSortDirection = order_direction
+            apiClient.listRecipeBooks(options).then((result) => {
+                this.cookbooks = result.data
+            })
+        },
+        isActiveSort: function(field, direction) {
+        // Check if the current item is the active sorting option
+        return this.activeSortField === field && this.activeSortDirection === direction;
+        },
+        handleEditButton: function(){
+            if (!this.manSubmitted){
+                this.submitText = "Back"
+                this.manSubmitted = true
+            } else {
+                this.submitText = "Edit"
+                this.manSubmitted = false
+            }
+        },
+        updateManualSorting: function(){
+                let old_order = Object.assign({}, this.cookbooks);
+                let promises = []
+                this.cookbooks.forEach((element, index) => {
+                    let apiClient = new ApiApiFactory()
+                    promises.push(apiClient.partialUpdateManualOrderBooks(element.id, {order: index}))
+                })
+                return Promise.all(promises).then(() => {
+                }).catch((err) => {
+                    this.cookbooks = old_order
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+                })
+        }
+    }, 
     directives: {
         hover: {
             inserted: function (el) {

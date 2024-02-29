@@ -3,8 +3,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from django_tables2.utils import A
 
-from .models import (CookLog, InviteLink, Recipe, RecipeImport,
-                     Storage, Sync, SyncLog, ViewLog)
+from .models import CookLog, InviteLink, RecipeImport, Storage, Sync, SyncLog, ViewLog, ConnectorConfig
 
 
 class StorageTable(tables.Table):
@@ -14,6 +13,15 @@ class StorageTable(tables.Table):
         model = Storage
         template_name = 'generic/table_template.html'
         fields = ('id', 'name', 'method')
+
+
+class ConnectorConfigTable(tables.Table):
+    id = tables.LinkColumn('edit_connector_config', args=[A('id')])
+
+    class Meta:
+        model = ConnectorConfig
+        template_name = 'generic/table_template.html'
+        fields = ('id', 'name', 'type', 'enabled')
 
 
 class ImportLogTable(tables.Table):

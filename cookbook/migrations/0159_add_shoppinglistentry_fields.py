@@ -6,11 +6,12 @@ from django.conf import settings
 from django.db import migrations, models
 from django_scopes import scopes_disabled
 
-from cookbook.models import PermissionModelMixin, ShoppingListEntry
+from cookbook.models import PermissionModelMixin
 
 
 def copy_values_to_sle(apps, schema_editor):
     with scopes_disabled():
+        ShoppingListEntry = apps.get_model('cookbook', 'ShoppingListEntry')
         entries = ShoppingListEntry.objects.all()
         for entry in entries:
             if entry.shoppinglist_set.first():

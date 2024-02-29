@@ -24,6 +24,8 @@ Give the user permissions: `chown -R recipes:www-data /var/www/recipes`
 
 Create virtual env: `python3 -m venv /var/www/recipes`
 
+Activate virtual env: `source /var/www/recipes/bin/activate`
+
 Install Javascript Tools (nodejs >= 12 required)
 ```shell
 ### Just use one of these possibilites!
@@ -180,11 +182,11 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /static {
+    location /static/ {
         alias /var/www/recipes/staticfiles;
     }
     
-    location /media {
+    location /media/ {
         alias /var/www/recipes/mediafiles;
     }
 

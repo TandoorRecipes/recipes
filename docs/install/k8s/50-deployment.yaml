@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        backup.velero.io/backup-volumes: media,static    
+        backup.velero.io/backup-volumes: media,static
       labels:
         app: recipes
         tier: frontend
@@ -35,7 +35,7 @@ spec:
                 name: recipes
                 key: secret-key
           - name: DB_ENGINE
-            value: django.db.backends.postgresql_psycopg2
+            value: django.db.backends.postgresql
           - name: POSTGRES_HOST
             value: recipes-postgresql
           - name: POSTGRES_PORT
@@ -49,7 +49,7 @@ spec:
               secretKeyRef:
                 name: recipes
                 key: postgresql-postgres-password
-        image: vabene1111/recipes:1.0.1
+        image: vabene1111/recipes
         imagePullPolicy: Always
         resources:
           requests:
@@ -110,7 +110,7 @@ spec:
             subPath: nginx-config
             readOnly: true
       - name: recipes
-        image: vabene1111/recipes:1.0.1
+        image: vabene1111/recipes
         imagePullPolicy: IfNotPresent
         command:
           - /opt/recipes/venv/bin/gunicorn
@@ -159,8 +159,10 @@ spec:
               secretKeyRef:
                 name: recipes
                 key: secret-key
+          - name: GUNICORN_MEDIA
+            value: "0"
           - name: DB_ENGINE
-            value: django.db.backends.postgresql_psycopg2
+            value: django.db.backends.postgresql
           - name: POSTGRES_HOST
             value: recipes-postgresql
           - name: POSTGRES_PORT

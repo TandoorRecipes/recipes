@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 import ast
 import json
+import mimetypes
 import os
 import re
+import sys
+import traceback
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_STANDARD_KEY_SET_IN_ENV'
 
 DEBUG = bool(int(os.getenv('DEBUG', True)))
+DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', True)))
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
@@ -37,15 +41,22 @@ SPACE_DEFAULT_ALLOW_SHARING = bool(int(os.getenv('SPACE_DEFAULT_ALLOW_SHARING', 
 INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
-GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', True)))
+GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', False)))
 
-REVERSE_PROXY_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+if os.getenv('REVERSE_PROXY_AUTH') is not None:
+    print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
+    REMOTE_USER_AUTH = bool(int(os.getenv('REVERSE_PROXY_AUTH', False)))
+else:
+    REMOTE_USER_AUTH = bool(int(os.getenv('REMOTE_USER_AUTH', False)))
 
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = bool(int(os.getenv('COMMENT_PREF_DEFAULT', True)))
 FRACTION_PREF_DEFAULT = bool(int(os.getenv('FRACTION_PREF_DEFAULT', False)))
 KJ_PREF_DEFAULT = bool(int(os.getenv('KJ_PREF_DEFAULT', False)))
 STICKY_NAV_PREF_DEFAULT = bool(int(os.getenv('STICKY_NAV_PREF_DEFAULT', True)))
+MAX_OWNED_SPACES_PREF_DEFAULT = int(os.getenv('MAX_OWNED_SPACES_PREF_DEFAULT', 100))
+UNAUTHENTICATED_THEME_FROM_SPACE = int(os.getenv('UNAUTHENTICATED_THEME_FROM_SPACE', 0))
+FORCE_THEME_FROM_SPACE = int(os.getenv('FORCE_THEME_FROM_SPACE', 0))
 
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
@@ -55,7 +66,11 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOST
 if os.getenv('CSRF_TRUSTED_ORIGINS'):
     CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
 
-CORS_ORIGIN_ALLOW_ALL = True
+if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
+    print('DEPRECATION WARNING: Environment var "CORS_ORIGIN_ALLOW_ALL" is deprecated. Please use "CORS_ALLOW_ALL_ORIGINS."')
+    CORS_ALLOW_ALL_ORIGINS = CORS_ORIGIN_ALLOW_ALL
+else:
+    CORS_ALLOW_ALL_ORIGINS = bool(int(os.getenv("CORS_ALLOW_ALL_ORIGINS", True)))
 
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
@@ -72,50 +87,69 @@ DJANGO_TABLES2_PAGE_RANGE = 8
 HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
+FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
+
 SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))
 
-ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+DRF_THROTTLE_RECIPE_URL_IMPORT = os.getenv('DRF_THROTTLE_RECIPE_URL_IMPORT', '60/hour')
 
 TERMS_URL = os.getenv('TERMS_URL', '')
 PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 
-MESSAGE_TAGS = {
-    messages.ERROR: 'danger'
-}
+MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.sites',
-    'django.contrib.staticfiles',
-    'django.contrib.postgres',
-    'oauth2_provider',
-    'django_prometheus',
-    'django_tables2',
-    'corsheaders',
-    'crispy_forms',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'django_cleanup.apps.CleanupConfig',
-    'webpack_loader',
-    'django_js_reverse',
-    'hcaptcha',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'cookbook.apps.CookbookConfig',
-    'treebeard',
+    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
+    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_prometheus', 'django_tables2', 'corsheaders', 'crispy_forms',
+    'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
+    'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
 ]
+
+PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
+PLUGINS = []
+try:
+    if os.path.isdir(PLUGINS_DIRECTORY):
+        for d in os.listdir(PLUGINS_DIRECTORY):
+            if d != '__pycache__':
+                try:
+                    apps_path = f'recipes.plugins.{d}.apps'
+                    __import__(apps_path)
+                    app_config_classname = dir(sys.modules[apps_path])[1]
+                    plugin_module = f'recipes.plugins.{d}.apps.{app_config_classname}'
+                    plugin_class = getattr(sys.modules[apps_path], app_config_classname)
+                    plugin_disabled = False
+                    if hasattr(plugin_class, 'disabled'):
+                        plugin_disabled = plugin_class.disabled
+                    if plugin_module not in INSTALLED_APPS and not plugin_disabled:
+                        INSTALLED_APPS.append(plugin_module)
+
+                        plugin_config = {
+                            'name': plugin_class.verbose_name if hasattr(plugin_class, 'verbose_name') else plugin_class.name,
+                            'version': plugin_class.VERSION if hasattr(plugin_class, 'VERSION') else 'unknown',
+                            'website': plugin_class.website if hasattr(plugin_class, 'website') else '',
+                            'github': plugin_class.github if hasattr(plugin_class, 'github') else '',
+                            'module': f'recipes.plugins.{d}',
+                            'base_path': os.path.join(BASE_DIR, 'recipes', 'plugins', d),
+                            'base_url': plugin_class.base_url,
+                            'bundle_name': plugin_class.bundle_name if hasattr(plugin_class, 'bundle_name') else '',
+                            'api_router_name': plugin_class.api_router_name if hasattr(plugin_class, 'api_router_name') else '',
+                            'nav_main': plugin_class.nav_main if hasattr(plugin_class, 'nav_main') else '',
+                            'nav_dropdown': plugin_class.nav_dropdown if hasattr(plugin_class, 'nav_dropdown') else '',
+                        }
+                        PLUGINS.append(plugin_config)
+                        print(f'PLUGIN {d} loaded')
+                except Exception:
+                    if DEBUG:
+                        traceback.print_exc()
+                        print(f'ERROR failed to initialize plugin {d}')
+except Exception:
+    if DEBUG:
+        print('ERROR failed to initialize plugins')
 
 SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -128,11 +162,9 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
 ACCOUNT_LOGOUT_ON_GET = True
 
 try:
-    SOCIALACCOUNT_PROVIDERS = ast.literal_eval(
-        os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+    SOCIALACCOUNT_PROVIDERS = ast.literal_eval(os.getenv('SOCIALACCOUNT_PROVIDERS') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 except ValueError:
-    SOCIALACCOUNT_PROVIDERS = json.loads(
-        os.getenv('SOCIALACCOUNT_PROVIDERS').replace("'", '"') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
+    SOCIALACCOUNT_PROVIDERS = json.loads(os.getenv('SOCIALACCOUNT_PROVIDERS').replace("'", '"') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
 SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
 SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_NAME', 'sessionid')
@@ -145,28 +177,21 @@ ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
 EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cookbook.helper.scope_middleware.ScopeMiddleware',
+    'corsheaders.middleware.CorsMiddleware', 'django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 'cookbook.helper.scope_middleware.ScopeMiddleware', 'allauth.account.middleware.AccountMiddleware',
 ]
 
-if DEBUG:
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
+if DEBUG_TOOLBAR:
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    INSTALLED_APPS += ('debug_toolbar', )
 
 SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware', )
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -182,13 +207,10 @@ if LDAP_AUTH:
 
     AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
     AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
+    AUTH_LDAP_START_TLS = bool(int(os.getenv('AUTH_LDAP_START_TLS', False)))
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
     AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
-    AUTH_LDAP_USER_SEARCH = LDAPSearch(
-        os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'),
-        ldap.SCOPE_SUBTREE,
-        os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
-    )
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'), ldap.SCOPE_SUBTREE, os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'), )
     AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
         'first_name': 'givenName',
         'last_name': 'sn',
@@ -202,95 +224,84 @@ if LDAP_AUTH:
         LOGGING = {
             "version": 1,
             "disable_existing_loggers": False,
-            "handlers": {"console": {"class": "logging.StreamHandler"}},
-            "loggers": {"django_auth_ldap": {"level": "DEBUG", "handlers": ["console"]}},
+            "handlers": {
+                "console": {
+                    "class": "logging.StreamHandler"
+                }
+            },
+            "loggers": {
+                "django_auth_ldap": {
+                    "level": "DEBUG",
+                    "handlers": ["console"]
+                }
+            },
         }
 
-AUTHENTICATION_BACKENDS += [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
+AUTHENTICATION_BACKENDS += ['django.contrib.auth.backends.ModelBackend', 'allauth.account.auth_backends.AuthenticationBackend', ]
 
 # django allauth site id
 SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
-if REVERSE_PROXY_AUTH:
+if REMOTE_USER_AUTH:
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = [{
+    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+}, {
+    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+}, {
+    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+}, {
+    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+}, ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'bookmarklet': 'only access to bookmarklet'}
-}
+OAUTH2_PROVIDER = {'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'bookmarklet': 'only access to bookmarklet'}}
 READ_SCOPE = 'read'
 WRITE_SCOPE = 'write'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ('rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication',
+     ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
 }
 
 ROOT_URLCONF = 'recipes.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'cookbook', 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media',
-                'cookbook.helper.context_processors.context_settings',
-            ],
-        },
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'cookbook', 'templates')],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+            'django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages', 'django.template.context_processors.media', 'cookbook.helper.context_processors.context_settings',
+        ],
     },
-]
+}, ]
 
 WSGI_APPLICATION = 'recipes.wsgi.application'
 
 # Database
 # Load settings from env files
 if os.getenv('DATABASE_URL'):
-    match = re.match(
-        r'(?P<schema>\w+):\/\/(?P<user>[\w\d_-]+)(:(?P<password>[^@]+))?@(?P<host>[^:/]+)(:(?P<port>\d+))?(\/(?P<database>[\w\d\/\._-]+))?',
-        os.getenv('DATABASE_URL')
-    )
+    match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
+                     os.getenv('DATABASE_URL'))
     settings = match.groupdict()
     schema = settings['schema']
     if schema.startswith('postgres'):
         engine = 'django.db.backends.postgresql'
     elif schema == 'sqlite':
+        if not os.path.exists(db_path := os.path.dirname(settings['database'])):
+            os.makedirs(db_path)
         engine = 'django.db.backends.sqlite3'
     else:
         raise Exception("Unsupported database schema: '%s'" % schema)
@@ -344,12 +355,7 @@ else:
 #     }
 # }
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'default',
-    }
-}
+CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'default', }}
 
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
@@ -362,15 +368,30 @@ WEBPACK_LOADER = {
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-    }
+    },
 }
+
+for p in PLUGINS:
+    if p['bundle_name'] != '':
+        WEBPACK_LOADER[p['bundle_name']] = {
+            'CACHE': not DEBUG,
+            'BUNDLE_DIR_NAME': 'vue/',  # must end with slash
+            'STATS_FILE': os.path.join(p["base_path"], 'vue', 'webpack-stats.json'),
+            'POLL_INTERVAL': 0.1,
+            'TIMEOUT': None,
+            'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en'
 
-TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
+if os.getenv('TIMEZONE') is not None:
+    print('DEPRECATION WARNING: Environment var "TIMEZONE" is deprecated. Please use "TZ" instead.')
+    TIME_ZONE = os.getenv('TIMEZONE') if os.getenv('TIMEZONE') else 'Europe/Berlin'
+else:
+    TIME_ZONE = os.getenv('TZ') if os.getenv('TZ') else 'Europe/Berlin'
 
 USE_I18N = True
 
@@ -378,23 +399,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-LANGUAGES = [
-    ('hy', _('Armenian ')),
-    ('bg', _('Bulgarian')),
-    ('ca', _('Catalan')),
-    ('cs', _('Czech')),
-    ('da', _('Danish')),
-    ('nl', _('Dutch')),
-    ('en', _('English')),
-    ('fr', _('French')),
-    ('de', _('German')),
-    ('it', _('Italian')),
-    ('lv', _('Latvian')),
-    ('pl', _('Polish')),
-    ('ru', _('Russian')),
-    ('es', _('Spanish')),
-    ('sv', _('Swedish')),
-]
+LANGUAGES = [('hy', _('Armenian ')), ('bg', _('Bulgarian')), ('ca', _('Catalan')), ('cs', _('Czech')), ('da', _('Danish')), ('nl', _('Dutch')), ('en', _('English')),
+             ('fr', _('French')), ('de', _('German')), ('hu', _('Hungarian')), ('it', _('Italian')), ('lv', _('Latvian')), ('nb', _('Norwegian ')), ('pl', _('Polish')),
+             ('ru', _('Russian')), ('es', _('Spanish')), ('sv', _('Swedish')), ]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -457,3 +464,14 @@ EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', False)))
 EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', False)))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
+
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_RATE_LIMITS = {"change_password": "1/m/user", "reset_password": "1/m/ip,1/m/key", "reset_password_from_key": "1/m/ip", "signup": "5/m/ip", "login": "5/m/ip", }
+
+DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
+EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
+
+mimetypes.add_type("text/javascript", ".js", True)

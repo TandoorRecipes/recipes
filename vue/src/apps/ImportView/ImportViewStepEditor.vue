@@ -3,10 +3,15 @@
         <h5>Steps</h5>
         <div class="row">
             <div class="col col-md-12 text-center">
-                <b-button @click="splitAllSteps('\n')" variant="secondary" v-b-tooltip.hover :title="$t('Split_All_Steps')"><i
+                <b-button @click="autoSortIngredients()" variant="secondary" v-b-tooltip.hover v-if="recipe_json.steps.length > 1"
+                          :title="$t('Auto_Sort_Help')"><i class="fas fa-random"></i> {{ $t('Auto_Sort') }}
+                </b-button>
+                <b-button @click="splitAllSteps('\n')" variant="secondary" class="ml-1" v-b-tooltip.hover
+                          :title="$t('Split_All_Steps')"><i
                     class="fas fa-expand-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
-                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1" v-b-tooltip.hover :title="$t('Combine_All_Steps')"><i
+                <b-button @click="mergeAllSteps()" variant="primary" class="ml-1" v-b-tooltip.hover
+                          :title="$t('Combine_All_Steps')"><i
                     class="fas fa-compress-arrows-alt"></i> {{ $t('All') }}
                 </b-button>
             </div>
@@ -18,7 +23,12 @@
                            :empty-insert-threshold="10">
                     <b-list-group-item v-for="i in s.ingredients"
                                        v-bind:key="i.original_text"><i
-                        class="fas fa-arrows-alt"></i> {{ i.original_text }}
+                        class="fas fa-arrows-alt mr-2"></i>
+                        <b-badge variant="light">{{ i.amount.toFixed(2) }}</b-badge>
+                        <b-badge variant="secondary" v-if="i.unit">{{ i.unit.name }}</b-badge>
+                        <b-badge variant="info" v-if="i.food">{{ i.food.name }}</b-badge>
+                        <i>{{ i.original_text }}</i>
+                        <b-button @click="prepareIngredientEditModal(s,i)" v-b-modal.ingredient_edit_modal class="float-right btn-sm"><i class="fas fa-pencil-alt"></i></b-button>
                     </b-list-group-item>
                 </draggable>
             </div>
@@ -51,6 +61,39 @@
 
                 </div>
             </div>
+
+            <b-modal id="ingredient_edit_modal" ref="ingredient_edit_modal" :title="$t('Edit')" @hidden="destroyIngredientEditModal">
+                <div v-if="current_edit_ingredient !== null">
+                    <b-form-group v-bind:label="$t('Original_Text')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.original_text" type="text" disabled></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Amount')" class="mb-3">
+                        <b-form-input v-model.number="current_edit_ingredient.amount" type="number"></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Unit')" class="mb-3" v-if="current_edit_ingredient.unit !== null">
+                        <b-form-input v-model="current_edit_ingredient.unit.name" type="text"></b-form-input>
+                    </b-form-group>
+
+                    <b-form-group v-bind:label="$t('Food')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.food.name" type="text"></b-form-input>
+                    </b-form-group>
+                    <b-form-group v-bind:label="$t('Note')" class="mb-3">
+                        <b-form-input v-model="current_edit_ingredient.note" type="text"></b-form-input>
+                    </b-form-group>
+                </div>
+
+                <template v-slot:modal-footer>
+                    <div class="row w-100">
+
+                        <div class="col-auto justify-content-end">
+                            <b-button class="mx-1" @click="destroyIngredientEditModal()">{{ $t('Ok') }}</b-button>
+                            <b-button class="mx-1" @click="removeIngredient(current_edit_step,current_edit_ingredient);destroyIngredientEditModal()" variant="danger">{{ $t('Delete') }}</b-button>
+                        </div>
+                    </div>
+                </template>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -59,6 +102,8 @@
 
 
 import draggable from "vuedraggable";
+import stringSimilarity from "string-similarity"
+import {getUserPreference} from "@/utils/utils"
 
 export default {
     name: "ImportViewStepEditor",
@@ -70,7 +115,10 @@ export default {
     },
     data() {
         return {
-            recipe_json: undefined
+            recipe_json: undefined,
+            current_edit_ingredient: null,
+            current_edit_step: null,
+            user_preferences: null,
         }
     },
     watch: {
@@ -80,6 +128,7 @@ export default {
     },
     mounted() {
         this.recipe_json = this.recipe
+        this.user_preferences = getUserPreference();
     },
     methods: {
         /**
@@ -92,7 +141,7 @@ export default {
             let steps = []
             step.instruction.split(split_character).forEach(part => {
                 if (part.trim() !== '') {
-                    steps.push({'instruction': part, 'ingredients': []})
+                    steps.push({'instruction': part, 'ingredients': [], 'show_ingredients_table': this.user_preferences.show_step_ingredients})
                 }
             })
             steps[0].ingredients = step.ingredients // put all ingredients from the original step in the ingredients of the first step of the split step list
@@ -142,6 +191,77 @@ export default {
                 'ingredients': removed_steps.flatMap(x => x.ingredients)
             })
         },
+        /**
+         * automatically assign ingredients to steps based on text matching
+         */
+        autoSortIngredients: function () {
+            let ingredients = this.recipe_json.steps.flatMap(s => s.ingredients)
+            this.recipe_json.steps.forEach(s => s.ingredients = [])
+
+            ingredients.forEach(i => {
+                let found = false
+                this.recipe_json.steps.forEach(s => {
+                    if (s.instruction.includes(i.food.name.trim()) && !found) {
+                        found = true
+                        s.ingredients.push(i)
+                    }
+                })
+                if (!found) {
+                    let best_match = {rating: 0, step: this.recipe_json.steps[0]}
+                    this.recipe_json.steps.forEach(s => {
+                        let match = stringSimilarity.findBestMatch(i.food.name.trim(), s.instruction.split(' '))
+                        if (match.bestMatch.rating > best_match.rating) {
+                            best_match = {rating: match.bestMatch.rating, step: s}
+                        }
+                    })
+                    best_match.step.ingredients.push(i)
+                    found = true
+                }
+            })
+        },
+        /**
+         * Prepare variable that holds currently edited ingredient for modal to manipulate it
+         * add default placeholder for food/unit in case it is not present, so it can be edited as well
+         * @param ingredient
+         */
+        prepareIngredientEditModal: function (step, ingredient) {
+            if (ingredient.unit === null) {
+                ingredient.unit = {
+                    "name": ""
+                }
+            }
+            if (ingredient.food === null) {
+                ingredient.food = {
+                    "name": ""
+                }
+            }
+            this.current_edit_ingredient = ingredient
+            this.current_edit_step = step
+        },
+        /**
+         * can be called to remove an ingredient from the given step
+         * @param step step to remove ingredient from
+         * @param ingredient ingredient to remove
+         */
+        removeIngredient: function (step, ingredient) {
+            step.ingredients = step.ingredients.filter((i) => i !== ingredient)
+        },
+        /**
+         * cleanup method called to close modal
+         * closes modal UI and cleanups variables
+         */
+        destroyIngredientEditModal: function () {
+            this.$bvModal.hide('ingredient_edit_modal')
+            if (this.current_edit_ingredient.unit !== null && this.current_edit_ingredient.unit.name === '') {
+                this.current_edit_ingredient.unit = null
+            }
+            if (this.current_edit_ingredient.food !== null && this.current_edit_ingredient.food.name === '') {
+                this.current_edit_ingredient.food = null
+            }
+            this.current_edit_ingredient = null
+            this.current_edit_step = null
+        }
+
     }
 }
 </script>

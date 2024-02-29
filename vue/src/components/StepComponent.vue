@@ -1,15 +1,14 @@
 <template>
-    <div>
+    <div class="step" :class="stepClassName" >
         <hr/>
         <!-- Step header (only shown if more than one step -->
         <div class="row mb-1" v-if="recipe.steps.length > 1">
             <div class="col col-md-8">
-                <h5 class="text-primary">
-                    <template v-if="step.name">{{ step.name }}</template>
-                    <template v-else>{{ $t("Step") }} {{ index + 1 }}</template>
-                    <small style="margin-left: 4px" class="text-muted" v-if="step.time !== 0"><i
+                <h5 class="step__name text-primary" :class="stepClassNameType">
+                    {{ step_name }}
+                    <small style="margin-left: 4px" class="step__time text-muted" v-if="step.time !== 0"><i
                         class="fas fa-user-clock"></i> {{ step_time }}</small>
-                    <small v-if="start_time !== ''" class="d-print-none">
+                    <small v-if="start_time !== ''" class="step__start-time d-print-none">
                         <b-link :id="`id_reactive_popover_${step.id}`" @click="openPopover" href="#">
                             {{ moment(start_time).add(step.time_offset, "minutes").format("HH:mm") }}
                         </b-link>
@@ -20,38 +19,38 @@
                 <b-button
                     @click="details_visible = !details_visible"
                     style="border: none; background: none"
-                    class="shadow-none d-print-none"
-                    :class="{ 'text-primary': details_visible, 'text-success': !details_visible }"
+                    class="shadow-none d-print-none step__button-collapse"
+                    :class="{ 'step__button-collapse_visible text-primary': details_visible, 'step_button-collapse_visible_false text-success': !details_visible }"
                 >
                     <i class="far fa-check-circle"></i>
                 </b-button>
             </div>
         </div>
 
-        <b-collapse id="collapse-1" v-model="details_visible">
+        <b-collapse id="collapse-1" class="step__details" :class="[details_visible ? 'step__details_visible':'step__details_visible_false']" v-model="details_visible">
 
             <div class="row">
                 <!-- ingredients table -->
-                <div class="col col-md-4"
-                     v-if="step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
+                <div class="step__ingredients col col-md-4"
+                     v-if="step.show_ingredients_table && step.ingredients.length > 0 && (recipe.steps.length > 1 || force_ingredients)">
                     <table class="table table-sm">
-                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor" :use_plural="use_plural"
+                        <ingredients-card :steps="[step]" :ingredient_factor="ingredient_factor"
                                           @checked-state-changed="$emit('checked-state-changed', $event)"/>
                     </table>
                 </div>
 
-                <div class="col"
+                <div class="step__instructions col"
                      :class="{ 'col-md-8 col-12': recipe.steps.length > 1, 'col-md-12 col-12': recipe.steps.length <= 1 }">
                     <!-- step text -->
                     <div class="row">
                         <div class="col col-md-12">
-                            <compile-component :code="step.ingredients_markdown"
+                            <compile-component :code="step.instructions_markdown"
                                                :ingredient_factor="ingredient_factor"></compile-component>
                         </div>
                     </div>
 
                     <!-- File (preview if image, download else) -->
-                    <div class="row" v-if="step.file !== null">
+                    <div class="step__file row" v-if="step.file !== null">
                         <div class="col col-md-12">
                             <template>
                                 <div
@@ -71,10 +70,10 @@
             </div>
 
             <!-- Sub recipe (always full width own row) -->
-            <div class="row">
+            <div class="step__subrecipe row">
                 <div class="col col-md-12">
                     <div class="card" v-if="step.step_recipe_data !== null">
-                        <b-collapse id="collapse-1" v-model="details_visible">
+                        <b-collapse id="collapse-1" :class="[details_visible ? 'step__details_visible':'step__details_visible_false']" v-model="details_visible">
                             <div class="card-body">
                                 <h2 class="card-title">
                                     <a :href="resolveDjangoUrl('view_recipe', step.step_recipe_data.id)">{{
@@ -90,7 +89,6 @@
                                         :index="index"
                                         :start_time="start_time"
                                         :force_ingredients="true"
-                                        :use_plural="use_plural"
                                     ></step-component>
                                 </div>
                             </div>
@@ -124,21 +122,18 @@
 </template>
 
 <script>
-import {calculateAmount} from "@/utils/utils"
-
-import {GettextMixin} from "@/utils/utils"
-
+import {calculateAmount, GettextMixin, getUserPreference} from "@/utils/utils"
 import CompileComponent from "@/components/CompileComponent"
 import IngredientsCard from "@/components/IngredientsCard"
 import Vue from "vue"
 import moment from "moment"
-import {ResolveUrlMixin, calculateHourMinuteSplit} from "@/utils/utils"
+import {ResolveUrlMixin, calculateHourMinuteSplit, EscapeCSSMixin} from "@/utils/utils"
 
 Vue.prototype.moment = moment
 
 export default {
     name: "StepComponent",
-    mixins: [GettextMixin, ResolveUrlMixin],
+    mixins: [GettextMixin, ResolveUrlMixin, EscapeCSSMixin],
     components: {CompileComponent, IngredientsCard},
     props: {
         step: Object,
@@ -150,14 +145,30 @@ export default {
             type: Boolean,
             default: false,
         },
-        use_plural: {
-            type: Boolean,
-            default: false,
-        },
     },
     computed: {
         step_time: function() {
-            return calculateHourMinuteSplit(this.step.time)},
+            return calculateHourMinuteSplit(this.step.time)
+        },
+        step_name: function() {
+            if (this.step.name) {
+                return this.step.name
+            }
+            return this.$t("Step") + ' ' + String(this.index+1)
+        },
+        stepClassName: function() {
+            let classes = {}
+            const nameclass = this.escapeCSS("_stepname-" + this.step_name)
+            classes[nameclass] = !!this.step.name
+            classes['_stepname-' + String(this.index+1)] = !this.step.name
+            return classes
+        },
+        stepClassNameType: function() {
+            let classes = {}
+            classes['step__name_custom'] = !!this.step.name
+            classes['step__name_custom_false'] = !this.step.name
+            return classes
+        }
     },
     data() {
         return {
@@ -186,7 +197,7 @@ export default {
         },
         openPopover: function () {
             this.$refs[`id_reactive_popover_${this.step.id}`].$emit("open")
-        },
+        }
     },
 }
 </script>

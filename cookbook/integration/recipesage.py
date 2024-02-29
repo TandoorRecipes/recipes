@@ -5,6 +5,7 @@ import requests
 import validators
 
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step
 
@@ -18,25 +19,27 @@ class RecipeSage(Integration):
             created_by=self.request.user, internal=True,
             space=self.request.space)
 
+        if file['recipeYield'] != '':
+            recipe.servings = parse_servings(file['recipeYield'])
+            recipe.servings_text = parse_servings_text(file['recipeYield'])
+
         try:
-            if file['recipeYield'] != '':
-                recipe.servings = int(file['recipeYield'])
+            if 'totalTime' in file and file['totalTime'] != '':
+                recipe.working_time = parse_time(file['totalTime'])
 
-            if file['totalTime'] != '':
-                recipe.waiting_time = int(file['totalTime']) - int(file['timePrep'])
-
-            if file['prepTime'] != '':
-                recipe.working_time = int(file['timePrep'])
-
-            recipe.save()
+            if 'timePrep' in file and file['prepTime'] != '':
+                recipe.working_time = parse_time(file['timePrep'])
+                recipe.waiting_time = parse_time(file['totalTime']) - parse_time(file['timePrep'])
         except Exception as e:
-            print('failed to parse yield or time ', str(e))
+            print('failed to parse time ', str(e))
+
+        recipe.save()
 
         ingredient_parser = IngredientParser(self.request, True)
         ingredients_added = False
         for s in file['recipeInstructions']:
             step = Step.objects.create(
-                instruction=s['text'], space=self.request.space,
+                instruction=s['text'], space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
             )
             if not ingredients_added:
                 ingredients_added = True

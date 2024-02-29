@@ -69,7 +69,7 @@ services:
   db_recipes:
     restart: always
     container_name: db_recipes
-    image: postgres:11-alpine
+    image: postgres:16-alpine
     volumes:
       - ./recipes/db:/var/lib/postgresql/data
     env_file:

@@ -44,12 +44,12 @@ class TreeSchema(AutoSchema):
             "name": 'root', "in": "query", "required": False,
             "description": 'Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.'.format(
                 obj=api_name),
-            'schema': {'type': 'int', },
+            'schema': {'type': 'integer', },
         })
         parameters.append({
             "name": 'tree', "in": "query", "required": False,
             "description": 'Return all self and children of {} with ID [int].'.format(api_name),
-            'schema': {'type': 'int', },
+            'schema': {'type': 'integer', },
         })
         return parameters
 
@@ -67,17 +67,3 @@ class FilterSchema(AutoSchema):
             'schema': {'type': 'string', },
         })
         return parameters
-
-
-# class QueryOnlySchema(AutoSchema):
-#     def get_path_parameters(self, path, method):
-#         if not is_list_view(path, method, self.view):
-#             return super(QueryOnlySchema, self).get_path_parameters(path, method)
-
-#         parameters = super().get_path_parameters(path, method)
-#         parameters.append({
-#             "name": 'query', "in": "query", "required": False,
-#             "description": 'Query string matched (fuzzy) against object name.',
-#             'schema': {'type': 'string', },
-#         })
-#         return parameters

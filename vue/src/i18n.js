@@ -4,6 +4,8 @@ import VueI18n from 'vue-i18n'
 Vue.use(VueI18n)
 
 function loadLocaleMessages () {
+  const start_time = Date.now();
+  console.log('started loading locale messages')
   const locales = require.context('./locales', true, /[A-Za-z0-9-_,\s]+\.json$/i)
   const messages = {}
   locales.keys().forEach(key => {
@@ -13,6 +15,7 @@ function loadLocaleMessages () {
       messages[locale] = locales(key)
     }
   })
+  console.log('finished loading messages in ', Date.now() - start_time, ' ms')
   return messages
 }
 

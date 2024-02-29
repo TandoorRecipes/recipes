@@ -1,13 +1,10 @@
-import pytest
 from django.contrib import auth
 from django.contrib.auth.models import Group
-from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.forms import ImportExportBase
-from cookbook.helper.ingredient_parser import IngredientParser
-from cookbook.helper.permission_helper import has_group_permission, is_space_owner, switch_user_active_space, is_object_owner
-from cookbook.models import ExportLog, UserSpace, Food, Space, Comment, RecipeBook, RecipeBookEntry
+from cookbook.helper.permission_helper import (has_group_permission, is_object_owner,
+                                               is_space_owner, switch_user_active_space)
+from cookbook.models import Food, RecipeBook, RecipeBookEntry, Space, UserSpace
 
 
 def test_has_group_permission(u1_s1, a_u, space_2):

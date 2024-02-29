@@ -33,15 +33,21 @@ nav:
       - Synology: install/synology.md
       - Kubernetes: install/kubernetes.md
       - KubeSail or PiBox: install/kubesail.md
+      - TrueNAS Portainer: install/truenas_portainer.md
+      - WSL: install/wsl.md
+      - ArchLinux: install/archlinux.md
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
       - Templating: features/templating.md
       - Shopping: features/shopping.md
       - Authentication: features/authentication.md
+      - Automation: features/automation.md
+      - Connectors: features/connectors.md
       - Storages and Sync: features/external_recipes.md
       - Import/Export: features/import_export.md
   - System:
+      - Configuration: system/configuration.md
       - Updating: system/updating.md
       - Permission System: system/permissions.md
       - Backup: system/backup.md

@@ -1,8 +1,6 @@
 <template>
-    <div id="app">
-        <template v-if="loading">
-            <loading-spinner></loading-spinner>
-        </template>
+    <div id="app" class="recipe" v-if="recipe_id !== undefined">
+        <recipe-view-component :recipe_id="recipe_id"></recipe-view-component>
 
         <div v-if="!loading">
             <RecipeSwitcher ref="ref_recipe_switcher" @switch="quickSwitch($event)"/>
@@ -180,6 +178,7 @@
                 <a :href="resolveDjangoUrl('view_report_share_abuse', share_uid)">{{ $t("Report Abuse") }}</a>
             </div>
         </div>
+        <bottom-navigation-bar active-view="view_search"></bottom-navigation-bar>
     </div>
 </template>
 
@@ -188,188 +187,28 @@ import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import {apiLoadRecipe} from "@/utils/api"
-
-import RecipeContextMenu from "@/components/RecipeContextMenu"
-import {ResolveUrlMixin, ToastMixin, calculateHourMinuteSplit} from "@/utils/utils"
-
-import PdfViewer from "@/components/PdfViewer"
-import ImageViewer from "@/components/ImageViewer"
-
-import moment from "moment"
-import LoadingSpinner from "@/components/LoadingSpinner"
-import AddRecipeToBook from "@/components/Modals/AddRecipeToBook"
-import RecipeRating from "@/components/RecipeRating"
-import LastCooked from "@/components/LastCooked"
-import IngredientsCard from "@/components/IngredientsCard"
-import StepComponent from "@/components/StepComponent"
-import KeywordsComponent from "@/components/KeywordsComponent"
-import NutritionComponent from "@/components/NutritionComponent"
-import RecipeSwitcher from "@/components/Buttons/RecipeSwitcher"
-import CustomInputSpinButton from "@/components/CustomInputSpinButton"
-import {ApiApiFactory} from "@/utils/openapi/api";
-
-Vue.prototype.moment = moment
+import RecipeViewComponent from "@/components/RecipeViewComponent.vue";
+import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
 
 Vue.use(BootstrapVue)
 
 export default {
     name: "RecipeView",
-    mixins: [ResolveUrlMixin, ToastMixin],
+    mixins: [],
     components: {
-        LastCooked,
-        RecipeRating,
-        PdfViewer,
-        ImageViewer,
-        IngredientsCard,
-        StepComponent,
-        RecipeContextMenu,
-        NutritionComponent,
-        KeywordsComponent,
-        LoadingSpinner,
-        AddRecipeToBook,
-        RecipeSwitcher,
-        CustomInputSpinButton,
+        RecipeViewComponent,
+        BottomNavigationBar
     },
-    computed: {
-        ingredient_factor: function () {
-            return this.servings / this.recipe.servings
-        },
-        ingredient_count() {
-            return this.recipe?.steps.map((x) => x.ingredients).flat().length
-        },
-        working_time: function () {
-            return calculateHourMinuteSplit(this.recipe.working_time)
-        },
-        waiting_time: function () {
-            return calculateHourMinuteSplit(this.recipe.waiting_time)
-        },
-    },
+    computed: {},
     data() {
         return {
-            use_plural: false,
-            loading: true,
-            recipe: undefined,
-            rootrecipe: undefined,
-            servings: 1,
-            servings_cache: {},
-            start_time: "",
-            share_uid: window.SHARE_UID,
-            wake_lock: null,
-            ingredient_height: '250',
+            recipe_id: window.RECIPE_ID
         }
     },
-    watch: {
-        servings(newVal, oldVal) {
-            this.servings_cache[this.recipe.id] = this.servings
-        },
-    },
     mounted() {
-        this.loadRecipe(window.RECIPE_ID)
         this.$i18n.locale = window.CUSTOM_LOCALE
-        this.requestWakeLock()
-        window.addEventListener('resize', this.handleResize);
-
-        let apiClient = new ApiApiFactory()
-        apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
-            this.use_plural = r.data.use_plural
-        })
     },
-    beforeUnmount() {
-        this.destroyWakeLock()
-    },
-    methods: {
-        requestWakeLock: async function () {
-            if ('wakeLock' in navigator) {
-                try {
-                    this.wake_lock = await navigator.wakeLock.request('screen')
-                    document.addEventListener('visibilitychange', this.visibilityChange)
-                } catch (err) {
-                    console.log(err)
-                }
-            }
-        },
-        handleResize: function () {
-            if (document.getElementById('nutrition_container') !== null) {
-                this.ingredient_height = document.getElementById('ingredient_container').clientHeight - document.getElementById('nutrition_container').clientHeight
-            } else {
-                this.ingredient_height = document.getElementById('ingredient_container').clientHeight
-            }
-        },
-        destroyWakeLock: function () {
-            if (this.wake_lock != null) {
-                this.wake_lock.release()
-                    .then(() => {
-                        this.wake_lock = null
-                    });
-            }
-
-            document.removeEventListener('visibilitychange', this.visibilityChange)
-        },
-        visibilityChange: async function () {
-            if (this.wake_lock != null && document.visibilityState === 'visible') {
-                await this.requestWakeLock()
-            }
-        },
-        loadRecipe: function (recipe_id) {
-            apiLoadRecipe(recipe_id).then((recipe) => {
-                let total_time = 0
-                for (let step of recipe.steps) {
-                    for (let ingredient of step.ingredients) {
-                        this.$set(ingredient, "checked", false)
-                    }
-
-                    step.time_offset = total_time
-                    total_time += step.time
-                }
-
-                // set start time only if there are any steps with timers (otherwise no timers are rendered)
-                if (total_time > 0) {
-                    this.start_time = moment().format("yyyy-MM-DDTHH:mm")
-                }
-
-
-                if (recipe.image === null) this.printReady()
-
-                this.recipe = this.rootrecipe = recipe
-                this.servings = this.servings_cache[this.rootrecipe.id] = recipe.servings
-                this.loading = false
-
-                setTimeout(() => {
-                    this.handleResize()
-                }, 100)
-            })
-        },
-        updateStartTime: function (e) {
-            this.start_time = e
-        },
-        updateIngredientCheckedState: function (e) {
-            for (let step of this.recipe.steps) {
-                for (let ingredient of step.ingredients) {
-                    if (ingredient.id === e.id) {
-                        this.$set(ingredient, "checked", !ingredient.checked)
-                    }
-                }
-            }
-        },
-        quickSwitch: function (e) {
-            if (e === -1) {
-                this.recipe = this.rootrecipe
-                this.servings = this.servings_cache[this.rootrecipe?.id ?? 1]
-            } else {
-                this.recipe = e
-                this.servings = this.servings_cache?.[e.id] ?? e.servings
-            }
-        },
-        printReady: function () {
-            const template = document.createElement("template");
-            template.id = "printReady";
-            document.body.appendChild(template);
-        },
-        onImgLoad: function () {
-            this.printReady()
-        },
-    },
+    methods: {},
 }
 </script>
 
@@ -381,7 +220,5 @@ export default {
 </style>
 
 <style>
-#app > div > div {
-    break-inside: avoid;
-}
+
 </style>

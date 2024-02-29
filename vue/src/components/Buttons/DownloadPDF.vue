@@ -1,12 +1,11 @@
 <template>
-    <div style="cursor:pointer">
-        <a v-if="!button" class="dropdown-item" @click="downloadFile"><i :class="icon"></i> {{ label }}</a>
-        <b-button v-if="button" @click="downloadFile">{{ label }}</b-button>
+    <div style="cursor:pointer;">
+        <a v-if="!button" class="dropdown-item" @click="downloadFile" href="#"><i :class="icon"></i> {{ label }}</a>
+        <b-button class="dropdown-item" v-if="button" @click="downloadFile">{{ label }}</b-button>
     </div>
 </template>
 
 <script>
-import html2pdf from "html2pdf.js"
 
 export default {
     name: "DownloadPDF",
@@ -20,12 +19,7 @@ export default {
     },
     methods: {
         downloadFile() {
-            const doc = document.querySelector(this.dom)
-            var options = {
-                margin: 1,
-                filename: this.name,
-            }
-            html2pdf().from(doc).set(options).save()
+            window.print()
         },
     },
 }

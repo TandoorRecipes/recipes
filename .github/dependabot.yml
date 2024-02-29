@@ -5,6 +5,11 @@
 
 version: 2
 updates:
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
@@ -12,5 +17,10 @@ updates:
 
   - package-ecosystem: "npm"
     directory: "/vue/"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "monthly"

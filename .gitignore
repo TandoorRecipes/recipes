@@ -54,7 +54,6 @@ docs/_build/
 target/
 
 \.idea/dataSources/
-
 \.idea/dataSources\.xml
 
 \.idea/dataSources\.local\.xml
@@ -74,13 +73,17 @@ mediafiles/
 \.env
 staticfiles/
 postgresql/
+data/
 
 
 /docker-compose.override.yml
 vue/node_modules
-.vscode/
+plugins
 vetur.config.js
 cookbook/static/vue
 vue/webpack-stats.json
 cookbook/templates/sw.js
 .prettierignore
+vue/.yarn
+vue3/.vite
+vue3/node_modules

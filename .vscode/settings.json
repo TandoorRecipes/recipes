@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "cookbook/tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

@@ -18,25 +18,6 @@
                     {{ $t("All recipes") }}
                 </b-form-checkbox>
 
-                <!-- <multiselect
-                    :searchable="true"
-                    :disabled="disabled_multiselect"
-                    v-model="recipe_list"
-                    :options="recipes"
-                    :close-on-select="false"
-                    :clear-on-select="true"
-                    :hide-selected="true"
-                    :preserve-search="true"
-                    placeholder="Select Recipes"
-                    :taggable="false"
-                    label="name"
-                    track-by="id"
-                    id="id_recipes"
-                    :multiple="true"
-                    :loading="recipes_loading"
-                    @search-change="searchRecipes"
-                >
-                </multiselect> -->
                 <generic-multiselect
                     class="input-group-text m-0 p-0"
                     @change="recipe_list = $event.val"
@@ -64,14 +45,12 @@
 </template>
 
 <script>
-import Vue from "vue"
 import { BootstrapVue } from "bootstrap-vue"
+import Vue from "vue"
 
 import "bootstrap-vue/dist/bootstrap-vue.css"
 
-import LoadingSpinner from "@/components/LoadingSpinner"
-
-import { StandardToasts, makeToast, resolveDjangoUrl, ApiMixin } from "@/utils/utils"
+import { ApiMixin, StandardToasts, makeToast, resolveDjangoUrl } from "@/utils/utils"
 // import Multiselect from "vue-multiselect"
 import GenericMultiselect from "@/components/GenericMultiselect"
 import { ApiApiFactory } from "@/utils/openapi/api.ts"
@@ -81,10 +60,6 @@ Vue.use(BootstrapVue)
 
 export default {
     name: "ExportView",
-    /*mixins: [
-    ResolveUrlMixin,
-    ToastMixin,
-  ],*/
     components: { GenericMultiselect },
     mixins: [ApiMixin],
     data() {
@@ -92,7 +67,6 @@ export default {
             export_id: window.EXPORT_ID,
             loading: false,
             disabled_multiselect: false,
-
             recipe_app: "DEFAULT",
             recipe_list: [],
             recipes_loading: false,
@@ -103,7 +77,6 @@ export default {
     },
     mounted() {
         if (this.export_id) this.insertRequested()
-        // else this.searchRecipes("")
     },
     methods: {
         insertRequested: function () {
@@ -118,24 +91,9 @@ export default {
                     this.recipe_list.push(response.data)
                 })
                 .catch((err) => {
-                    StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH, err)
+                    StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
                 })
-            // .then((e) => this.searchRecipes(""))
         },
-
-        // searchRecipes: function (query) {
-        //     this.recipes_loading = true
-
-        //     this.genericAPI(this.Models.RECIPE, this.Actions.LIST, { query: query })
-        //         .then((response) => {
-        //             this.recipes = response.data.results
-        //             this.recipes_loading = false
-        //         })
-        //         .catch((err) => {
-        //             console.log(err)
-        //             StandardToasts.makeStandardToast(this,StandardToasts.FAIL_FETCH)
-        //         })
-        // },
 
         exportRecipe: function () {
             if (this.recipe_list.length < 1 && this.export_all == false && this.filter === undefined) {
@@ -148,7 +106,7 @@ export default {
             let formData = new FormData()
             formData.append("type", this.recipe_app)
             formData.append("all", this.export_all)
-            formData.append("filter", this.filter?.id ?? null)
+            formData.append("custom_filter", this.filter?.id ?? "")
 
             for (var i = 0; i < this.recipe_list.length; i++) {
                 formData.append("recipes", this.recipe_list[i].id)

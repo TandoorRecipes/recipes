@@ -6,11 +6,12 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, MealPlan, MealType
+from cookbook.models import MealPlan, MealType
 from cookbook.tests.factories import RecipeFactory
 
 LIST_URL = 'api:mealplan-list'
 DETAIL_URL = 'api:mealplan-detail'
+
 
 # NOTE: auto adding shopping list from meal plan is tested in test_shopping_recipe as tests are identical
 
@@ -22,13 +23,13 @@ def meal_type(space_1, u1_s1):
 
 @pytest.fixture()
 def obj_1(space_1, recipe_1_s1, meal_type, u1_s1):
-    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(),
+    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, from_date=datetime.now(), to_date=datetime.now(),
                                    created_by=auth.get_user(u1_s1))
 
 
 @pytest.fixture
 def obj_2(space_1, recipe_1_s1, meal_type, u1_s1):
-    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, date=datetime.now(),
+    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, from_date=datetime.now(), to_date=datetime.now(),
                                    created_by=auth.get_user(u1_s1))
 
 
@@ -59,6 +60,12 @@ def test_list_filter(obj_1, u1_s1):
     assert r.status_code == 200
     response = json.loads(r.content)
     assert len(response) == 1
+
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?meal_type={response[0]["meal_type"]["id"]}').content)
+    assert len(response) == 1
+
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?meal_type=0').content)
+    assert len(response) == 0
 
     response = json.loads(
         u1_s1.get(f'{reverse(LIST_URL)}?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}').content)
@@ -109,7 +116,7 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
     r = c.post(
         reverse(LIST_URL),
         {'recipe': {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, 'keywords': []}, 'meal_type': {'id': meal_type.id, 'name': meal_type.name},
-         'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': []},
+         'from_date': (datetime.now()).strftime("%Y-%m-%d"), 'to_date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': []},
         content_type='application/json'
     )
     response = json.loads(r.content)
@@ -148,10 +155,10 @@ def test_add_with_shopping(u1_s1, meal_type):
     space = meal_type.space
     with scope(space=space):
         recipe = RecipeFactory.create(space=space)
-    r = u1_s1.post(
+    u1_s1.post(
         reverse(LIST_URL),
         {'recipe': {'id': recipe.id, 'name': recipe.name, 'keywords': []}, 'meal_type': {'id': meal_type.id, 'name': meal_type.name},
-         'date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': [], 'addshopping': True},
+         'from_date': (datetime.now()).strftime("%Y-%m-%d"), 'to_date': (datetime.now()).strftime("%Y-%m-%d"), 'servings': 1, 'title': 'test', 'shared': [], 'addshopping': True},
         content_type='application/json'
     )
 

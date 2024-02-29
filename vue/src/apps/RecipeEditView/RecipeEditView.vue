@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-            <!-- Image and misc properties -->
+            <!-- Image and misc -->
             <div class="row pt-2">
                 <div class="col-md-6" style="max-height: 50vh; min-height: 30vh">
                     <input id="id_file_upload" ref="file_upload" type="file" hidden
@@ -99,65 +99,53 @@
                 </div>
             </div>
 
-            <!-- Nutrition -->
             <div class="row pt-2">
                 <div class="col-md-12">
-                    <div class="card border-grey">
-                        <div class="card-header" style="display: table">
-                            <div class="row">
-                                <div class="col-md-9 d-table">
-                                    <h5 class="d-table-cell align-middle">{{ $t("Nutrition") }}</h5>
+                    <div class="card mt-2 mb-2">
+                        <div class="card-body pr-2 pl-2 pr-md-5 pl-md-5 pt-3 pb-3">
+                            <h6>{{ $t('Properties') }} <small class="text-muted"> {{ $t('per_serving') }}</small></h6>
+
+                            <div class="alert alert-info" role="alert">
+                                {{ $t('recipe_property_info') }}
+                            </div>
+
+                            <div class="d-flex mt-2" v-for="p in recipe.properties" v-bind:key="p.id">
+                                <div class="flex-fill w-50">
+                                    <generic-multiselect
+                                        @change="p.property_type = $event.val"
+                                        :initial_single_selection="p.property_type"
+                                        :label="'name'"
+                                        :model="Models.PROPERTY_TYPE"
+                                        :limit="25"
+                                        :multiple="false"
+                                    ></generic-multiselect>
                                 </div>
-                                <div class="col-md-3">
-                                    <button
-                                        type="button"
-                                        @click="addNutrition()"
-                                        v-if="recipe.nutrition === null"
-                                        v-b-tooltip.hover
-                                        v-bind:title="$t('Add_nutrition_recipe')"
-                                        class="btn btn-sm btn-success shadow-none float-right"
-                                    >
-                                        <i class="fas fa-plus-circle"></i>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        @click="removeNutrition()"
-                                        v-if="recipe.nutrition !== null"
-                                        v-b-tooltip.hover
-                                        v-bind:title="$t('Remove_nutrition_recipe')"
-                                        class="btn btn-sm btn-danger shadow-none float-right"
-                                    >
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+                                <div class="flex-fill w-50">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" v-model="p.property_amount">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" v-if="p.property_type !== null && p.property_type.unit !== ''">{{ p.property_type.unit }}</span>
+                                            <button class="btn btn-danger" @click="deleteProperty(p)"><i class="fa fa-trash fa-fw"></i></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="flex-row mt-2">
+                                <div class="flex-column w-25 offset-4">
+                                    <button class="btn btn-success btn-block" @click="addProperty()"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                         </div>
-
-                        <b-collapse id="id_nutrition_collapse" class="mt-2" v-model="nutrition_visible">
-                            <div class="card-body" v-if="recipe.nutrition !== null">
-                                <b-alert show>
-                                    There is currently only very basic support for tracking nutritional information. A
-                                    <a href="https://github.com/vabene1111/recipes/issues/896" target="_blank"
-                                       rel="noreferrer nofollow">big update</a> is planned to improve on this in many
-                                    different areas.
-                                </b-alert>
-
-                                <label for="id_name"> {{ $t(energy()) }}</label>
-
-                                <input class="form-control" id="id_calories" v-model="recipe.nutrition.calories"/>
-
-                                <label for="id_name"> {{ $t("Carbohydrates") }}</label>
-                                <input class="form-control" id="id_carbohydrates"
-                                       v-model="recipe.nutrition.carbohydrates"/>
-
-                                <label for="id_name"> {{ $t("Fats") }}</label>
-                                <input class="form-control" id="id_fats" v-model="recipe.nutrition.fats"/>
-
-                                <label for="id_name"> {{ $t("Proteins") }}</label>
-                                <input class="form-control" id="id_proteins" v-model="recipe.nutrition.proteins"/>
-                            </div>
-                        </b-collapse>
                     </div>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-md-12">
+
+
                     <b-card-header header-tag="header" class="p-1" role="tab">
                         <b-button squared block v-b-toggle.additional_collapse class="text-left"
                                   variant="outline-primary">{{ $t("additional_options") }}
@@ -252,6 +240,16 @@
                                                 v-if="step_index !== recipe.steps.length - 1">
                                             <i class="fa fa-arrow-down fa-fw"></i> {{ $t("Move_Down") }}
                                         </button>
+                                        <!-- Show "Hide step ingredients if state is currently set to shown"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, false)"
+                                                v-if="step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye-slash"></i> {{ $t("hide_step_ingredients") }}
+                                        </button>
+                                        <!-- Show "Show step ingredients if state is currently set to hidden"  -->
+                                        <button class="dropdown-item" @click="setStepShowIngredientsTable(step, true)"
+                                                v-if="! step.show_ingredients_table">
+                                            <i class="op-icon fa fa-mavon-eye"></i> {{ $t("show_step_ingredients") }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +280,6 @@
                                               @click="step.time_visible = true" v-if="!step.time_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Time") }}
                                     </b-button>
-
                                     <b-button pill variant="primary" size="sm" class="ml-1 mb-1 mb-md-0"
                                               @click="step.ingredients_visible = true" v-if="!step.ingredients_visible">
                                         <i class="fas fa-plus-circle"></i> {{ $t("Ingredients") }}
@@ -572,36 +569,36 @@
                                                                         {{ $t("Enable_Amount") }}
                                                                     </button>
 
-                                                                        <template v-if="use_plural">
-                                                                            <button type="button" class="dropdown-item"
-                                                                                    v-if="!ingredient.always_use_plural_unit"
-                                                                                    @click="ingredient.always_use_plural_unit = true">
-                                                                                <i class="fas fa-filter fa-fw"></i>
-                                                                                {{ $t("Use_Plural_Unit_Always") }}
-                                                                            </button>
 
-                                                                            <button type="button" class="dropdown-item"
-                                                                                    v-if="ingredient.always_use_plural_unit"
-                                                                                    @click="ingredient.always_use_plural_unit = false">
-                                                                                <i class="fas fa-filter fa-fw"></i>
-                                                                                {{ $t("Use_Plural_Unit_Simple") }}
-                                                                            </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="!ingredient.always_use_plural_unit"
+                                                                            @click="ingredient.always_use_plural_unit = true">
+                                                                        <i class="fas fa-filter fa-fw"></i>
+                                                                        {{ $t("Use_Plural_Unit_Always") }}
+                                                                    </button>
 
-                                                                            <button type="button" class="dropdown-item"
-                                                                                    v-if="!ingredient.always_use_plural_food"
-                                                                                    @click="ingredient.always_use_plural_food = true">
-                                                                                <i class="fas fa-filter fa-fw"></i>
-                                                                                {{ $t("Use_Plural_Food_Always") }}
-                                                                            </button>
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="ingredient.always_use_plural_unit"
+                                                                            @click="ingredient.always_use_plural_unit = false">
+                                                                        <i class="fas fa-filter fa-fw"></i>
+                                                                        {{ $t("Use_Plural_Unit_Simple") }}
+                                                                    </button>
 
-                                                                            <button type="button" class="dropdown-item"
-                                                                                    v-if="ingredient.always_use_plural_food"
-                                                                                    @click="ingredient.always_use_plural_food = false">
-                                                                                <i class="fas fa-filter fa-fw"></i>
-                                                                                {{ $t("Use_Plural_Food_Simple") }}
-                                                                            </button>
-                                                                    </template>
-                                                                    
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="!ingredient.always_use_plural_food"
+                                                                            @click="ingredient.always_use_plural_food = true">
+                                                                        <i class="fas fa-filter fa-fw"></i>
+                                                                        {{ $t("Use_Plural_Food_Always") }}
+                                                                    </button>
+
+                                                                    <button type="button" class="dropdown-item"
+                                                                            v-if="ingredient.always_use_plural_food"
+                                                                            @click="ingredient.always_use_plural_food = false">
+                                                                        <i class="fas fa-filter fa-fw"></i>
+                                                                        {{ $t("Use_Plural_Food_Simple") }}
+                                                                    </button>
+
+
                                                                     <button type="button" class="dropdown-item"
                                                                             @click="copyTemplateReference(index, ingredient)">
                                                                         <i class="fas fa-code"></i>
@@ -648,7 +645,18 @@
                                     <mavon-editor v-model="step.instruction" :autofocus="false"
                                                   style="z-index: auto" :id="'id_instruction_' + step.id"
                                                   :language="'en'"
-                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'"/>
+                                                  :toolbars="md_editor_toolbars" :defaultOpen="'edit'">
+                                        <template #left-toolbar-after>
+                                            <span class="op-icon-divider"></span>
+                                            <button
+                                                type="button"
+                                                @click="step.instruction+= ' {{ scale(100) }}'"
+                                                class="op-icon fas fa-times"
+                                                aria-hidden="true"
+                                                title="Scalable Number"
+                                            ></button>
+                                        </template>
+                                    </mavon-editor>
 
                                     <!-- TODO markdown DOCS link and markdown editor -->
                                 </div>
@@ -692,7 +700,7 @@
             <br/>
 
             <!-- bottom buttons save/close/view -->
-            <div class="row fixed-bottom p-2 b-2 border-top text-center" style="background: white"
+            <div class="row fixed-bottom p-2 b-2 border-top text-center bg-white bottom-action-bar"
                  v-if="recipe !== undefined">
                 <div class="col-3 col-md-6 mb-1 mb-md-0 pr-2 pl-2">
                     <a :href="resolveDjangoUrl('delete_recipe', recipe.id)"
@@ -782,7 +790,8 @@ import {
     ResolveUrlMixin,
     StandardToasts,
     convertEnergyToCalories,
-    energyHeading
+    energyHeading,
+    getUserPreference
 } from "@/utils/utils"
 import Multiselect from "vue-multiselect"
 import {ApiApiFactory} from "@/utils/openapi/api"
@@ -825,6 +834,7 @@ export default {
             show_file_create: false,
             step_for_file_create: undefined,
             use_plural: false,
+            user_preferences: undefined,
             additional_visible: false,
             create_food: undefined,
             md_editor_toolbars: {
@@ -833,7 +843,7 @@ export default {
                 header: true,
                 underline: true,
                 strikethrough: true,
-                mark: true,
+                mark: false,
                 superscript: true,
                 subscript: true,
                 quote: true,
@@ -870,9 +880,9 @@ export default {
         this.searchKeywords("")
         this.searchFiles("")
         this.searchRecipes("")
-
         this.$i18n.locale = window.CUSTOM_LOCALE
         let apiClient = new ApiApiFactory()
+        this.user_preferences = getUserPreference()
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
@@ -937,7 +947,7 @@ export default {
                     // set default visibility style for each component of the step
                     this.recipe.steps.forEach((s) => {
                         this.$set(s, "time_visible", s.time !== 0)
-                        this.$set(s, "ingredients_visible", s.ingredients.length > 0 || this.recipe.steps.length === 1)
+                        this.$set(s, "ingredients_visible", (s.ingredients.length > 0 || this.recipe.steps.length === 1))
                         this.$set(s, "instruction_visible", s.instruction !== "" || this.recipe.steps.length === 1)
                         this.$set(s, "step_recipe_visible", s.step_recipe !== null)
                         this.$set(s, "file_visible", s.file !== null)
@@ -1040,6 +1050,7 @@ export default {
                 show_as_header: false,
                 time_visible: false,
                 ingredients_visible: true,
+                show_ingredients_table: this.user_preferences.show_step_ingredients,
                 instruction_visible: true,
                 step_recipe_visible: false,
                 file_visible: false,
@@ -1081,12 +1092,17 @@ export default {
             this.$nextTick(() => document.getElementById(`amount_${this.recipe.steps.indexOf(step)}_${step.ingredients.length - 1}`).select())
         },
         removeIngredient: function (step, ingredient) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Ingredient")}))) {
+            let message = this.$t("confirm_delete", {object: this.$t("Ingredient")})
+            if (ingredient.food?.name) {
+                message = this.$t("delete_confirmation", {source: `"${ingredient.food.name}"`})
+            }
+            if (confirm(message)) {
                 step.ingredients = step.ingredients.filter((item) => item !== ingredient)
             }
         },
         removeStep: function (step) {
-            if (confirm(this.$t("confirm_delete", {object: this.$t("Step")}))) {
+            const step_index = this.recipe.steps.indexOf(step)
+            if (confirm(this.$t("delete_confirmation", {source: `${this.$t("Step")} "${step.name || step_index}"`}))) {
                 this.recipe.steps = this.recipe.steps.filter((item) => item !== step)
             }
         },
@@ -1094,6 +1110,9 @@ export default {
             this.recipe.steps.splice(this.recipe.steps.indexOf(step), 1)
             this.recipe.steps.splice(new_index < 0 ? 0 : new_index, 0, step)
             this.sortSteps()
+        },
+        setStepShowIngredientsTable: function (step, show_state) {
+            step.show_ingredients_table = show_state
         },
         moveIngredient: function (step, ingredient, new_index) {
             step.ingredients.splice(step.ingredients.indexOf(ingredient), 1)
@@ -1120,6 +1139,14 @@ export default {
         addKeyword: function (tag) {
             let new_keyword = {label: tag, name: tag}
             this.recipe.keywords.push(new_keyword)
+        },
+        addProperty: function () {
+            this.recipe.properties.push(
+                {'property_amount': 0, 'property_type': null}
+            )
+        },
+        deleteProperty: function (recipe_property) {
+            this.recipe.properties = this.recipe.properties.filter(p => p.id !== recipe_property.id)
         },
         searchKeywords: function (query) {
             let apiFactory = new ApiApiFactory()
@@ -1258,28 +1285,34 @@ export default {
             ing_list.forEach((ing) => {
                 if (ing.trim() !== "") {
                     promises.push(this.genericPostAPI("api_ingredient_from_string", {text: ing}).then((result) => {
+
                         let unit = null
                         if (result.data.unit !== "" && result.data.unit !== null) {
                             unit = {name: result.data.unit}
                         }
-                        parsed_ing_list.push({
+                        let new_ingredient = {
                             amount: result.data.amount,
                             unit: unit,
                             food: {name: result.data.food},
                             note: result.data.note,
                             original_text: ing,
-                        })
+                        }
+                        console.log(ing, new_ingredient)
+                        parsed_ing_list.push(new_ingredient)
                     }))
                 }
             })
             Promise.allSettled(promises).then(() => {
                 ing_list.forEach(ing => {
-                    step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    if (ing.trim() !== "") {
+                        step.ingredients.push(parsed_ing_list.find(x => x.original_text === ing))
+                    }
                 })
             })
         },
         duplicateIngredient: function (step, ingredient, new_index) {
             delete ingredient.id
+            ingredient = JSON.parse(JSON.stringify(ingredient))
             step.ingredients.splice(new_index < 0 ? 0 : new_index, 0, ingredient)
         }
     },
@@ -1297,5 +1330,11 @@ export default {
 
 textarea:not(.form-control) {
     border: 0 !important;
+}
+</style>
+
+<style scoped>
+.row.fixed-bottom {
+    margin: 0;
 }
 </style>

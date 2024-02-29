@@ -1,22 +1,22 @@
-from decimal import Decimal
 from functools import wraps
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import SearchVector
+from django.core.cache import caches
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import translation
 from django_scopes import scope, scopes_disabled
 
+from cookbook.helper.cache_helper import CacheHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.managers import DICTIONARY
-from cookbook.models import (Food, FoodInheritField, Ingredient, MealPlan, Recipe,
-                             ShoppingListEntry, Step, UserPreference, SearchPreference, SearchFields)
+from cookbook.models import (Food, MealPlan, PropertyType, Recipe, SearchFields, SearchPreference,
+                             Step, Unit, UserPreference)
 
 SQLITE = True
-if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2',
-                                               'django.db.backends.postgresql']:
+if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     SQLITE = False
 
 
@@ -149,3 +149,15 @@ def auto_add_shopping(sender, instance=None, created=False, weak=False, **kwargs
             print("MEAL_AUTO_ADD Created SLR")
     except AttributeError:
         pass
+
+
+@receiver(post_save, sender=Unit)
+def clear_unit_cache(sender, instance=None, created=False, **kwargs):
+    if instance:
+        caches['default'].delete(CacheHelper(instance.space).BASE_UNITS_CACHE_KEY)
+
+
+@receiver(post_save, sender=PropertyType)
+def clear_property_type_cache(sender, instance=None, created=False, **kwargs):
+    if instance:
+        caches['default'].delete(CacheHelper(instance.space).PROPERTY_TYPE_CACHE_KEY)

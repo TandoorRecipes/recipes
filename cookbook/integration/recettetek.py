@@ -46,7 +46,7 @@ class RecetteTek(Integration):
         if not instructions:
             instructions = ''
 
-        step = Step.objects.create(instruction=instructions, space=self.request.space,)
+        step = Step.objects.create(instruction=instructions, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,)
 
         # Append the original import url to the step (if it exists)
         try:
@@ -61,7 +61,7 @@ class RecetteTek(Integration):
             ingredient_parser = IngredientParser(self.request, True)
             for ingredient in file['ingredients'].split('\n'):
                 if len(ingredient.strip()) > 0:
-                    amount, unit, food, note = ingredient_parser.parse(food)
+                    amount, unit, food, note = ingredient_parser.parse(ingredient.strip())
                     f = ingredient_parser.get_food(ingredient)
                     u = ingredient_parser.get_unit(unit)
                     step.ingredients.add(Ingredient.objects.create(

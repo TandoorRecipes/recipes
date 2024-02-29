@@ -24,8 +24,11 @@
                                             <div class="row justify-content-center">
                                                 <div class="col-12 justify-content-cente">
                                                     <b-checkbox v-model="import_multiple" switch><span
-                                                        v-if="import_multiple"><i class="far fa-copy fa-fw"></i> {{ $t('Multiple') }}</span><span
-                                                        v-if="!import_multiple"><i class="far fa-file fa-fw"></i> {{ $t('Single') }}</span></b-checkbox>
+                                                        v-if="import_multiple"><i
+                                                        class="far fa-copy fa-fw"></i> {{ $t('Multiple') }}</span><span
+                                                        v-if="!import_multiple"><i
+                                                        class="far fa-file fa-fw"></i> {{ $t('Single') }}</span>
+                                                    </b-checkbox>
                                                 </div>
                                             </div>
                                             <b-input-group class="mt-2" :class="{ bounce: empty_input }"
@@ -52,23 +55,23 @@
                                             </b-button>
 
                                             <!-- recent imports, nice for testing/development -->
-<!--                                            <div class="row mt-2"> -->
-<!--                                                <div class="col col-md-12">-->
-<!--                                                    <div v-if="!import_multiple">-->
-<!--                                                        <a href="#" @click="clearRecentImports()">Clear recent-->
-<!--                                                            imports</a>-->
-<!--                                                        <ul>-->
-<!--                                                            <li v-for="x in recent_urls" v-bind:key="x">-->
-<!--                                                                <a href="#"-->
-<!--                                                                   @click="loadRecipe(x, false, undefined)">{{-->
-<!--                                                                        x-->
-<!--                                                                    }}</a>-->
-<!--                                                            </li>-->
-<!--                                                        </ul>-->
+                                            <!--                                            <div class="row mt-2"> -->
+                                            <!--                                                <div class="col col-md-12">-->
+                                            <!--                                                    <div v-if="!import_multiple">-->
+                                            <!--                                                        <a href="#" @click="clearRecentImports()">Clear recent-->
+                                            <!--                                                            imports</a>-->
+                                            <!--                                                        <ul>-->
+                                            <!--                                                            <li v-for="x in recent_urls" v-bind:key="x">-->
+                                            <!--                                                                <a href="#"-->
+                                            <!--                                                                   @click="loadRecipe(x, false, undefined)">{{-->
+                                            <!--                                                                        x-->
+                                            <!--                                                                    }}</a>-->
+                                            <!--                                                            </li>-->
+                                            <!--                                                        </ul>-->
 
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
+                                            <!--                                                    </div>-->
+                                            <!--                                                </div>-->
+                                            <!--                                            </div>-->
 
                                         </div>
                                     </div>
@@ -204,7 +207,7 @@
                                                    v-if="!import_multiple">
 
                                                 <recipe-card :recipe="recipe_json" :detailed="false"
-                                                             :show_context_menu="false" :use_plural="use_plural"
+                                                             :show_context_menu="false"
                                                 ></recipe-card>
                                             </b-col>
                                             <b-col>
@@ -238,17 +241,22 @@
                                         </b-row>
                                     </b-card-body>
                                     <b-card-footer class="text-center">
+                                        <div class="d-flex justify-content-center mb-3" v-if="import_loading">
+                                            <b-spinner variant="primary"></b-spinner>
+                                        </div>
                                         <b-button-group>
-                                            <b-button @click="importRecipe('view')" v-if="!import_multiple">Import &
+                                            <b-button @click="importRecipe('view')" v-if="!import_multiple"
+                                                      :disabled="import_loading">Import &
                                                 View
                                             </b-button> <!-- TODO localize -->
                                             <b-button @click="importRecipe('edit')" variant="success"
-                                                      v-if="!import_multiple">Import & Edit
+                                                      v-if="!import_multiple" :disabled="import_loading">Import & Edit
                                             </b-button>
-                                            <b-button @click="importRecipe('import')" v-if="!import_multiple">Import &
+                                            <b-button @click="importRecipe('import')" v-if="!import_multiple"
+                                                      :disabled="import_loading">Import &
                                                 Restart
                                             </b-button>
-                                            <b-button @click="location.reload()">Restart
+                                            <b-button @click="location.reload()" :disabled="import_loading">Restart
                                             </b-button>
                                         </b-button-group>
                                     </b-card-footer>
@@ -259,10 +267,10 @@
                         <b-tab v-bind:title="$t('App')">
                             <b-container>
                                 <h4>{{ $t('Select_App_To_Import') }}:</h4>
-                                <b-row class="mt-4">
-                                    <b-col cols="4" offset="0" offset-md="4" v-for="i in INTEGRATIONS_TD" :value="i.id"
+                                <b-row align-h="center" class="mt-4">
+                                    <b-col cols="12" md="6" v-for="i in INTEGRATIONS_TD" :value="i.id"
                                            v-bind:key="i.id">
-                                        <b-list-group style="max-width: 300px;">
+                                        <b-list-group>
                                             <b-list-group-item class="d-flex align-items-center" v-hover
                                                                style="cursor: pointer"
                                                                v-bind:class="{ 'bg-success': recipe_app === i.id }"
@@ -289,9 +297,9 @@
                                     </b-col>
                                 </b-row>
                                 <b-row class="mt-4">
-                                    <b-col cols="3" v-for="i in INTEGRATIONS_WO" :value="i.id" v-bind:key="i.id"
+                                    <b-col cols="12" md="6" lg="4" xl="3" v-for="i in INTEGRATIONS_WO" :value="i.id" v-bind:key="i.id"
                                            class="mt-1">
-                                        <b-list-group style="max-width: 300px;">
+                                        <b-list-group>
                                             <b-list-group-item class="d-flex align-items-center" v-hover
                                                                style="cursor: pointer"
                                                                v-bind:class="{ 'bg-success': recipe_app === i.id }"
@@ -462,6 +470,7 @@ export default {
             source_data: '',
             recipe_json: undefined,
             use_plural: false,
+            import_loading: false,
             // recipe_html: undefined,
             // recipe_tree: undefined,
             recipe_images: [],
@@ -495,6 +504,17 @@ export default {
         apiClient.retrieveSpace(window.ACTIVE_SPACE_ID).then(r => {
             this.use_plural = r.data.use_plural
         })
+
+        let urlParams = new URLSearchParams(window.location.search)
+
+        if (urlParams.has("url")) {
+            this.website_url = urlParams.get('url')
+            this.loadRecipe(this.website_url)
+        }
+        if (urlParams.has("text")) {
+            this.website_url = urlParams.get('text')
+            this.loadRecipe(this.website_url)
+        }
     },
     methods: {
         /**
@@ -504,6 +524,7 @@ export default {
          * @param silent do not show any messages for imports
          */
         importRecipe: function (action, data, silent) {
+            this.import_loading = true
             if (this.recipe_json !== undefined) {
                 this.$set(this.recipe_json, 'keywords', this.recipe_json.keywords.filter(k => k.show))
             }
@@ -528,12 +549,14 @@ export default {
                     if (recipe_json.source_url !== '') {
                         this.failed_imports.push(recipe_json.source_url)
                     }
+                    this.import_loading = false
                     if (!silent) {
                         StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                     }
                 })
             } else {
                 console.log('cant import recipe without data')
+                this.import_loading = false
                 if (!silent) {
                     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
                 }
@@ -563,6 +586,7 @@ export default {
                     this.imported_recipes.push(recipe)
                     break;
                 case 'nothing':
+                    this.import_loading = false
                     break;
             }
         },
@@ -614,6 +638,11 @@ export default {
             }
 
             return axios.post(resolveDjangoUrl('api_recipe_from_source'), payload,).then((response) => {
+                if (response.status === 201 && 'link' in response.data) {
+                    window.location = response.data.link
+                    return
+                }
+
                 this.loading = false
                 this.recipe_json = response.data['recipe_json'];
 
@@ -640,8 +669,7 @@ export default {
                 if (url !== '') {
                     this.failed_imports.push(url)
                 }
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
-                throw "Load Recipe Error"
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_IMPORT, err)
             })
         },
         /**
@@ -650,12 +678,26 @@ export default {
          */
         autoImport: function () {
             this.collapse_visible.import = true
-            this.website_url_list.split('\n').forEach(r => {
-                this.loadRecipe(r, true, undefined).then((recipe_json) => {
+            let url_list = this.website_url_list.split('\n').filter(x => x.trim() !== '')
+            if (url_list.length > 0) {
+                let url = url_list.shift()
+                this.website_url_list = url_list.join('\n')
+
+
+                this.loadRecipe(url, true, undefined).then((recipe_json) => {
                     this.importRecipe('multi_import', recipe_json, true)
+                    setTimeout(() => {
+                        this.autoImport()
+                    }, 2000)
+                }).catch((err) => {
+
                 })
-            })
-            this.website_url_list = ''
+            } else {
+                this.import_loading = false
+                this.loading = false
+            }
+
+
         },
         /**
          * Import recipes with uploaded files and app integration
@@ -670,8 +712,7 @@ export default {
             axios.post(resolveDjangoUrl('view_import'), formData, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                 window.location.href = resolveDjangoUrl('view_import_response', response.data['import_id'])
             }).catch((err) => {
-                console.log(err)
-                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_IMPORT, err)
             })
         },
         /**

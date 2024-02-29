@@ -22,7 +22,7 @@ class MealMaster(Integration):
                         if 'Yield:' in line:
                             servings_text = line.replace('Yield:', '').strip()
                         else:
-                            if re.match('\s{2,}([0-9])+', line):
+                            if re.match(r'\s{2,}([0-9])+', line):
                                 ingredients.append(line.strip())
                             else:
                                 directions.append(line.strip())
@@ -39,7 +39,7 @@ class MealMaster(Integration):
             recipe.keywords.add(keyword)
 
         step = Step.objects.create(
-            instruction='\n'.join(directions) + '\n\n', space=self.request.space,
+            instruction='\n'.join(directions) + '\n\n', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
         )
 
         ingredient_parser = IngredientParser(self.request, True)

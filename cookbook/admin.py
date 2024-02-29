@@ -10,12 +10,13 @@ from treebeard.forms import movenodeform_factory
 
 from cookbook.managers import DICTIONARY
 
-from .models import (BookmarkletImport, Comment, CookLog, Food, FoodInheritField, ImportLog,
-                     Ingredient, InviteLink, Keyword, MealPlan, MealType, NutritionInformation,
+from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
+                     Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
-                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
-                     TelegramBot, Unit, UserFile, UserPreference, ViewLog, Automation, UserSpace)
+                     TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
+                     ViewLog, ConnectorConfig)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -32,12 +33,14 @@ admin.site.unregister(Group)
 @admin.action(description='Delete all data from a space')
 def delete_space_action(modeladmin, request, queryset):
     for space in queryset:
-        space.save()
+        space.safe_delete()
 
 
 class SpaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing', 'use_plural')
+    list_display = ('name', 'created_by', 'max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     search_fields = ('name', 'created_by__username')
+    autocomplete_fields = ('created_by',)
+    filter_horizontal = ('food_inherit',)
     list_filter = ('max_recipes', 'max_users', 'max_file_storage_mb', 'allow_sharing')
     date_hierarchy = 'created_at'
     actions = [delete_space_action]
@@ -49,16 +52,19 @@ admin.site.register(Space, SpaceAdmin)
 class UserSpaceAdmin(admin.ModelAdmin):
     list_display = ('user', 'space',)
     search_fields = ('user__username', 'space__name',)
+    filter_horizontal = ('groups',)
+    autocomplete_fields = ('user', 'space',)
 
 
 admin.site.register(UserSpace, UserSpaceAdmin)
 
 
 class UserPreferenceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'theme', 'nav_color', 'default_page',)
+    list_display = ('name', 'theme', 'default_page')
     search_fields = ('user__username',)
-    list_filter = ('theme', 'nav_color', 'default_page',)
+    list_filter = ('theme', 'default_page',)
     date_hierarchy = 'created_at'
+    filter_horizontal = ('plan_share', 'shopping_share',)
 
     @staticmethod
     def name(obj):
@@ -89,6 +95,14 @@ class StorageAdmin(admin.ModelAdmin):
 admin.site.register(Storage, StorageAdmin)
 
 
+class ConnectorConfigAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type', 'enabled', 'url')
+    search_fields = ('name', 'url')
+
+
+admin.site.register(ConnectorConfig, ConnectorConfigAdmin)
+
+
 class SyncAdmin(admin.ModelAdmin):
     list_display = ('storage', 'path', 'active', 'last_checked')
     search_fields = ('storage__name', 'path')
@@ -102,11 +116,16 @@ class SupermarketCategoryInline(admin.TabularInline):
 
 
 class SupermarketAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space',)
     inlines = (SupermarketCategoryInline,)
 
 
+class SupermarketCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space',)
+
+
 admin.site.register(Supermarket, SupermarketAdmin)
-admin.site.register(SupermarketCategory)
+admin.site.register(SupermarketCategory, SupermarketCategoryAdmin)
 
 
 class SyncLogAdmin(admin.ModelAdmin):
@@ -150,9 +169,24 @@ class KeywordAdmin(TreeAdmin):
 admin.site.register(Keyword, KeywordAdmin)
 
 
+@admin.action(description='Delete Steps not part of a Recipe.')
+def delete_unattached_steps(modeladmin, request, queryset):
+    with scopes_disabled():
+        Step.objects.filter(recipe=None).delete()
+
+
 class StepAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order',)
-    search_fields = ('name',)
+    list_display = ('recipe_and_name', 'order', 'space')
+    ordering = ('recipe__name', 'name', 'space',)
+    search_fields = ('name', 'recipe__name')
+    actions = [delete_unattached_steps]
+
+    @staticmethod
+    @admin.display(description="Name")
+    def recipe_and_name(obj):
+        if not obj.recipe_set.exists():
+            return f"Orphaned Step{'':s if not obj.name else f': {obj.name}'}"
+        return f"{obj.recipe_set.first().name}: {obj.name}" if obj.name else obj.recipe_set.first().name
 
 
 admin.site.register(Step, StepAdmin)
@@ -170,8 +204,9 @@ def rebuild_index(modeladmin, request, queryset):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'internal', 'created_by', 'storage')
+    list_display = ('name', 'internal', 'created_by', 'storage', 'space')
     search_fields = ('name', 'created_by__username')
+    ordering = ('name', 'created_by__username',)
     list_filter = ('internal',)
     date_hierarchy = 'created_at'
 
@@ -179,13 +214,20 @@ class RecipeAdmin(admin.ModelAdmin):
     def created_by(obj):
         return obj.created_by.get_user_display_name()
 
-    if settings.DATABASES['default']['ENGINE'] in ['django.db.backends.postgresql_psycopg2', 'django.db.backends.postgresql']:
+    if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         actions = [rebuild_index]
 
 
 admin.site.register(Recipe, RecipeAdmin)
 
-admin.site.register(Unit)
+
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'space')
+    ordering = ('name', 'space',)
+    search_fields = ('name',)
+
+
+admin.site.register(Unit, UnitAdmin)
 
 
 # admin.site.register(FoodInheritField)
@@ -201,9 +243,30 @@ class FoodAdmin(TreeAdmin):
 admin.site.register(Food, FoodAdmin)
 
 
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('food', 'amount', 'unit')
+class UnitConversionAdmin(admin.ModelAdmin):
+    list_display = ('base_amount', 'base_unit', 'food', 'converted_amount', 'converted_unit')
     search_fields = ('food__name', 'unit__name')
+
+
+admin.site.register(UnitConversion, UnitConversionAdmin)
+
+
+@admin.action(description='Delete Ingredients not part of a Recipe.')
+def delete_unattached_ingredients(modeladmin, request, queryset):
+    with scopes_disabled():
+        Ingredient.objects.filter(step__recipe=None).delete()
+
+
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('recipe_name', 'amount', 'unit', 'food', 'space')
+    search_fields = ('food__name', 'unit__name', 'step__recipe__name')
+    actions = [delete_unattached_ingredients]
+
+    @staticmethod
+    @admin.display(description="Recipe")
+    def recipe_name(obj):
+        recipes = obj.step_set.first().recipe_set.all() if obj.step_set.exists() else None
+        return recipes.first().name if recipes else 'Orphaned Ingredient'
 
 
 admin.site.register(Ingredient, IngredientAdmin)
@@ -230,7 +293,7 @@ admin.site.register(RecipeImport, RecipeImportAdmin)
 
 
 class RecipeBookAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user_name')
+    list_display = ('name', 'user_name', 'space')
     search_fields = ('name', 'created_by__username')
 
     @staticmethod
@@ -249,7 +312,7 @@ admin.site.register(RecipeBookEntry, RecipeBookEntryAdmin)
 
 
 class MealPlanAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe', 'meal_type', 'date')
+    list_display = ('user', 'recipe', 'meal_type', 'from_date', 'to_date')
 
     @staticmethod
     def user(obj):
@@ -260,8 +323,8 @@ admin.site.register(MealPlan, MealPlanAdmin)
 
 
 class MealTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'order')
-    search_fields = ('name', 'created_by__username')
+    list_display = ('name', 'space', 'created_by', 'order')
+    search_fields = ('name', 'space', 'created_by__username')
 
 
 admin.site.register(MealType, MealTypeAdmin)
@@ -286,6 +349,7 @@ admin.site.register(InviteLink, InviteLinkAdmin)
 
 class CookLogAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'created_at', 'rating', 'servings')
+    search_fields = ('recipe__name', 'space__name',)
 
 
 admin.site.register(CookLog, CookLogAdmin)
@@ -305,18 +369,27 @@ class ShoppingListEntryAdmin(admin.ModelAdmin):
 admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
 
 
-class ShoppingListAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_by', 'created_at')
-
-
-admin.site.register(ShoppingList, ShoppingListAdmin)
-
-
 class ShareLinkAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'created_by', 'uuid', 'created_at',)
 
 
 admin.site.register(ShareLink, ShareLinkAdmin)
+
+
+class PropertyTypeAdmin(admin.ModelAdmin):
+    search_fields = ('space',)
+
+    list_display = ('id', 'space', 'name', 'fdc_id')
+
+
+admin.site.register(PropertyType, PropertyTypeAdmin)
+
+
+class PropertyAdmin(admin.ModelAdmin):
+    list_display = ('property_amount', 'property_type')
+
+
+admin.site.register(Property, PropertyAdmin)
 
 
 class NutritionInformationAdmin(admin.ModelAdmin):
