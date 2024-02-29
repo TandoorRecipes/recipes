@@ -28,6 +28,11 @@ be used by other editors as well.  Once the container is running, you can do thi
 dev server, run python tests, etc. by either using the VSCode tasks below, or manually running commands described in the individual
 technology sections below.
 
+In VSCode, simply check out the git repository, and then via the command palette, choose `Dev Containers: Reopen in container`.
+
+If you need to change python dependencies (requierments.txt) or OS packages, you will need to rebuild the container.  If you are
+changing OS package requirements, you will need to update both the main `Dockerfile` and the `.devcontainer/Dockerfile`.
+
 ### VSCode Tasks
 If you use VSCode, there are a number of tasks that are available.  Here are a few of the key ones:
 
