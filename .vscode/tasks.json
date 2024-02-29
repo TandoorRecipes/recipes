@@ -7,6 +7,11 @@
         "command": "python3 manage.py migrate",
       },
       {
+        "label": "Collect Static Files",
+        "type": "shell",
+        "command": "python3 manage.py collectstatic",
+      },
+      {
         "label": "Run Dev Server",
         "type": "shell",
         "dependsOn": ["Run Migrations"],
@@ -43,6 +48,7 @@
         "label": "Pytest",
         "type": "shell",
         "command": "python3 -m pytest cookbook/tests",
+        "dependsOn": ["Run Migrations", "Collect Static Files"],
         "group": "test",
       }
     ]
