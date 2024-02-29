@@ -78,7 +78,7 @@ data/
 
 /docker-compose.override.yml
 vue/node_modules
-plugins
+/recipes/plugins
 .vscode/
 vetur.config.js
 cookbook/static/vue
