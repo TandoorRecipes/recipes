@@ -32,11 +32,11 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
   "src/apps/tandoor/main.ts": {
-    "file": "assets/main-OseOyQb7.js",
+    "file": "assets/main-Dn7LZ1Sm.js",
     "src": "src/apps/tandoor/main.ts",
     "isEntry": true,
     "css": [
-      "assets/main-DFkSTGyd.css"
+      "assets/main-C0cQ5WeY.css"
     ],
     "assets": [
       "assets/brand_logo-D4X97p3N.svg",

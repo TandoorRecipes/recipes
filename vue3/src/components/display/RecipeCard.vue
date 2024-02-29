@@ -3,19 +3,19 @@
 
         <v-img
             cover
-            height="250"
+            height="50%"
             :src="recipe.image"
         ></v-img>
 
         <v-card-item>
             <v-card-title>{{ recipe.name }}</v-card-title>
 
-            <v-card-subtitle>
+            <v-card-subtitle v-if="show_keywords">
                 <KeywordsComponent :keywords="recipe.keywords"></KeywordsComponent>
             </v-card-subtitle>
         </v-card-item>
 
-        <v-card-text>
+        <v-card-text v-if="show_description">
             <v-row align="center" class="mx-0" v-if="recipe.rating">
                 <v-rating
                     :model-value="recipe.rating"
@@ -26,7 +26,7 @@
                     size="small"
                 ></v-rating>
 
-                <div class="text-grey ms-4">
+                <div class="text-grey ">
                     {{ recipe.rating }}
                 </div>
             </v-row>
@@ -46,7 +46,9 @@ export default defineComponent({
     name: "RecipeCard",
     components: {KeywordsComponent},
     props: {
-        recipe: {} as Recipe
+        recipe: {} as Recipe,
+        show_keywords: {type: Boolean, required: false},
+        show_description: {type: Boolean, required: false},
     }
 })
 </script>
