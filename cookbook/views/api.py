@@ -593,25 +593,26 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
             return FoodSimpleSerializer
         return self.serializer_class
 
-    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
-    # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
-    def shopping(self, request, pk):
-        if self.request.space.demo:
-            raise PermissionDenied(detail='Not available in demo', code=None)
-        obj = self.get_object()
-        shared_users = list(self.request.user.get_shopping_share())
-        shared_users.append(request.user)
-        if request.data.get('_delete', False) == 'true':
-            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by__in=shared_users).delete()
-            content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
-            return Response(content, status=status.HTTP_204_NO_CONTENT)
-
-        amount = request.data.get('amount', 1)
-        unit = request.data.get('unit', None)
-        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-
-        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
-        return Response(content, status=status.HTTP_204_NO_CONTENT)
+    # TODO I could not find any usage of this and it causes schema generation issues, so commenting it for now
+    # @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
+    # # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
+    # def shopping(self, request, pk):
+    #     if self.request.space.demo:
+    #         raise PermissionDenied(detail='Not available in demo', code=None)
+    #     obj = self.get_object()
+    #     shared_users = list(self.request.user.get_shopping_share())
+    #     shared_users.append(request.user)
+    #     if request.data.get('_delete', False) == 'true':
+    #         ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by__in=shared_users).delete()
+    #         content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
+    #         return Response(content, status=status.HTTP_204_NO_CONTENT)
+    #
+    #     amount = request.data.get('amount', 1)
+    #     unit = request.data.get('unit', None)
+    #     content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+    #
+    #     ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
+    #     return Response(content, status=status.HTTP_204_NO_CONTENT)
 
     @decorators.action(detail=True, methods=['POST'], )
     def fdc(self, request, pk):
@@ -1089,8 +1090,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         qs = obj.get_related_recipes(levels=levels)  # TODO: make levels a user setting, included in request data?, keep solely in the backend?
         return Response(self.serializer_class(qs, many=True).data)
 
+    @extend_schema(
+        responses=RecipeFlatSerializer(many=True)
+    )
     @decorators.action(
         detail=False,
+        pagination_class=None,
         methods=['GET'],
         serializer_class=RecipeFlatSerializer,
     )

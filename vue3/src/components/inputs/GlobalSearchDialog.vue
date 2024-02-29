@@ -113,9 +113,8 @@ export default defineComponent({
         })
 
         const api = new ApiApi()
-        api.flatRecipe().then(r => {
-            console.log(r)
-            this.flat_recipes = [] // TODO fix API schema generation to generate valid API response (schema type array)
+        api.apiRecipeFlatList().then(r => {
+            this.flat_recipes = r
         })
     },
     methods: {

@@ -29,7 +29,7 @@ export default defineComponent({
     methods: {
         refreshData(recipeId: string) {
             const api = new ApiApi()
-            api.retrieveRecipe({id: recipeId}).then(r => {
+            api.apiRecipeRetrieve({id: Number(recipeId)}).then(r => {
                 this.recipe = r
             })
         }
