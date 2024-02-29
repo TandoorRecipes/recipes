@@ -11,7 +11,7 @@ django-oauth-toolkit==2.3.0
 django-debug-toolbar==4.2.0
 bleach==6.0.0
 gunicorn==20.1.0
-lxml==4.9.3
+lxml==5.1.0
 Markdown==3.5.1
 Pillow==10.2.0
 psycopg2-binary==2.9.9
@@ -20,14 +20,14 @@ requests==2.31.0
 six==1.16.0
 webdavclient3==3.14.6
 whitenoise==6.6.0
-icalendar==5.0.7
+icalendar==5.0.11
 pyyaml==6.0.1
 uritemplate==4.1.1
 beautifulsoup4==4.12.2
 microdata==0.8.0
 mock==5.1.0
 Jinja2==3.1.3
-django-webpack-loader==1.8.1
+django-webpack-loader==3.0.1
 git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491f1fe049ec82
 django-allauth==0.61.1
 recipe-scrapers==14.52.0
@@ -44,7 +44,7 @@ django-hCaptcha==0.2.0
 python-ldap==3.4.4
 django-auth-ldap==4.6.0
 pytest-factoryboy==2.6.0
-pyppeteer==1.0.2
+pyppeteer==2.0.0
 validators==0.20.0
 pytube==15.0.0
-homeassistant-api==4.1.1.post2
+homeassistant-api==4.2.1
