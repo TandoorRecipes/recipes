@@ -55,6 +55,16 @@
         "command": "python3 -m pytest cookbook/tests",
         "dependsOn": ["Setup Tests"],
         "group": "test",
+      },
+      {
+        "label": "Setup Documentation Dependencies",
+        "type": "shell",
+        "command": "pip install mkdocs-material mkdocs-include-markdown-plugin",
+      },
+      {
+        "label": "Serve Documentation",
+        "type": "shell",
+        "command": "mkdocs serve",
       }
     ]
 }
