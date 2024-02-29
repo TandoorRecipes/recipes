@@ -105,10 +105,34 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
-    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_tables2', 'corsheaders', 'crispy_forms',
-    'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
-    'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
+    'django.contrib.postgres',
+    'oauth2_provider',
+    'django_prometheus',
+    'django_tables2',
+    'corsheaders',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'django_cleanup.apps.CleanupConfig',
+    'webpack_loader',
+    'django_vite',
+    'django_js_reverse',
+    'hcaptcha',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'cookbook.apps.CookbookConfig',
+    'treebeard',
 ]
 
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
@@ -185,14 +209,14 @@ MIDDLEWARE = [
 ]
 
 if DEBUG_TOOLBAR:
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
-    INSTALLED_APPS += ('debug_toolbar', )
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += ('debug_toolbar',)
 
 SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware', )
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -271,9 +295,10 @@ WRITE_SCOPE = 'write'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
-    ('rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication',
-     ),
+        ('rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication',
+         ),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 ROOT_URLCONF = 'recipes.urls'
