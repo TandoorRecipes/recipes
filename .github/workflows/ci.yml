@@ -32,7 +32,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Cache StaticFiles
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: django_cache
       with:
         path: |
@@ -67,7 +67,7 @@ jobs:
         python3 manage.py collectstatic --noinput
         python3 manage.py collectstatic_js_reverse
 
-    - uses: actions/cache/save@v3
+    - uses: actions/cache/save@v4
       if: steps.django_cache.outputs.cache-hit != 'true'
       with:
         path: |
