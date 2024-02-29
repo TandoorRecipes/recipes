@@ -13,9 +13,13 @@
         "dependsOn": ["Yarn Build"],
       },
       {
+        "label": "Setup Dev Server",
+        "dependsOn": ["Run Migrations", "Yarn Build"],
+      },
+      {
         "label": "Run Dev Server",
         "type": "shell",
-        "dependsOn": ["Run Migrations", "Yarn Build"],
+        "dependsOn": ["Setup Dev Server"],
         "command": "python3 manage.py runserver",
       },
       {
@@ -65,6 +69,7 @@
         "label": "Serve Documentation",
         "type": "shell",
         "command": "mkdocs serve",
+        "dependsOn": ["Setup Documentation Dependencies"],
       }
     ]
 }
