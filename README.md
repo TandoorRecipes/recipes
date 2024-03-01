@@ -16,8 +16,6 @@
 <a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>
 <a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>
 <a href="https://app.tandoor.dev/accounts/login/?demo" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>
-<a href="https://docs.tandoor.dev/recipes/reports/tests/tests.html" rel="noopener noreferrer"><img src="https://docs.tandoor.dev/recipes/reports/tests/pytest-badge.svg?nocache=true" ></a>
-<a href="https://docs.tandoor.dev/recipes/reports/coverage/index.html" rel="noopener noreferrer"><img src="https://docs.tandoor.dev.recipes/reports/coverage/coverage-badge.svg?nocache=true" ></a>
 </p>
 
 <p align="center">
