@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@codemirror/autocomplete": "^6.13.0",
-    "@codemirror/commands": "^6.3.2",
+    "@codemirror/commands": "^6.3.3",
     "@codemirror/lang-markdown": "^6.2.3",
     "@codemirror/state": "^6.3.3",
     "@codemirror/view": "^6.24.1",
