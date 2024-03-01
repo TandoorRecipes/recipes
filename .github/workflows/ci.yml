@@ -61,7 +61,7 @@ jobs:
               working-directory: ./vue
               run: yarn build
 
-            - name: Compile Django StatisFiles
+            - name: Compile Django StaticFiles
               if: steps.django_cache.outputs.cache-hit != 'true'
               run: |
                   python3 manage.py collectstatic --noinput
@@ -78,13 +78,4 @@ jobs:
                       ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
 
             - name: Django Testing project
-              timeout-minutes: 6
               run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
-
-            - name: Publish Test Results
-              uses: EnricoMi/publish-unit-test-result-action@v2
-              if: always()
-              with:
-                  comment_mode: off
-                  files: |
-                      junit/test-results-${{ matrix.python-version }}.xml
