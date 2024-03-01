@@ -1307,17 +1307,17 @@
     "@lezer/common" "^1.0.0"
     "@lezer/javascript" "^1.0.0"
 
-"@codemirror/lang-markdown@^6.2.3":
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.2.3.tgz#ce572230a872e8eef88bce40213f26e66a7e4497"
-  integrity sha512-wCewRLWpdefWi7uVkHIDiE8+45Fe4buvMDZkihqEom5uRUQrl76Zb13emjeK3W+8pcRgRfAmwelURBbxNEKCIg==
+"@codemirror/lang-markdown@^6.2.4":
+  version "6.2.4"
+  resolved "https://registry.yarnpkg.com/@codemirror/lang-markdown/-/lang-markdown-6.2.4.tgz#1ec906a74d8353d87800bd8a16bd5feea73b37df"
+  integrity sha512-UghkA1vSMs8bT7RSZM6vsIocigyah2bV00eRQuZy76401UmFZdsTsbQNBGdyxRQDOLeEvF5iFwap0BM8LKyd+g==
   dependencies:
     "@codemirror/autocomplete" "^6.7.1"
     "@codemirror/lang-html" "^6.0.0"
     "@codemirror/language" "^6.3.0"
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
-    "@lezer/common" "^1.0.0"
+    "@lezer/common" "^1.2.1"
     "@lezer/markdown" "^1.0.0"
 
 "@codemirror/language@^6.0.0", "@codemirror/language@^6.3.0", "@codemirror/language@^6.4.0", "@codemirror/language@^6.6.0":
@@ -1579,10 +1579,10 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.1.2.tgz#2fc5cd6788094ffc816b539ab2bc55bafacd2abc"
-  integrity sha512-V+GqBsga5+cQJMfM0GdnHmg4DgWvLzgMWjbldBg0+jC3k9Gu6nJNZDLJxXEBT1Xj8KhRN4jmbC5CY7SIL++sVw==
+"@lezer/common@^1.0.0", "@lezer/common@^1.0.2", "@lezer/common@^1.1.0", "@lezer/common@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@lezer/common/-/common-1.2.1.tgz#198b278b7869668e1bebbe687586e12a42731049"
+  integrity sha512-yemX0ZD2xS/73llMZIK6KplkjIjf2EvAHcinDi/TfJ9hS25G0388+ClHt6/3but0oOxinTcQHJLDXh6w1crzFQ==
 
 "@lezer/css@^1.0.0", "@lezer/css@^1.1.0":
   version "1.1.4"
