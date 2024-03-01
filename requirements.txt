@@ -32,9 +32,6 @@ git+https://github.com/BITSOLVER/django-js-reverse@071e304fd600107bc64bbde6f2491
 django-allauth==0.61.1
 recipe-scrapers==14.52.0
 django-scopes==2.0.0
-pytest==8.0.0
-pytest-asyncio==0.23.5
-pytest-django==4.8.0
 django-treebeard==4.7
 django-cors-headers==4.2.0
 django-storages==1.14.2
@@ -43,8 +40,15 @@ django-prometheus==2.2.0
 django-hCaptcha==0.2.0
 python-ldap==3.4.4
 django-auth-ldap==4.6.0
-pytest-factoryboy==2.6.0
 pyppeteer==2.0.0
 validators==0.20.0
 pytube==15.0.0
 homeassistant-api==4.2.1
+
+# Development
+pytest==8.0.0
+pytest-django==4.8.0
+pytest-cov===4.1.0
+pytest-factoryboy==2.6.0
+pytest-html==4.1.1
+pytest-asyncio==0.23.5

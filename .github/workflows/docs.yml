@@ -1,12 +1,15 @@
 name: Make Docs
 on:
-  push:
-    branches:
-      - master
+  # the 1st condition
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    branches: [master]
+    types:
+      - completed
 
 jobs:
   deploy:
-    if: github.repository_owner == 'TandoorRecipes'
+    if: github.repository_owner == 'TandoorRecipes' && ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
