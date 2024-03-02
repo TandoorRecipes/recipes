@@ -3,10 +3,12 @@
 
 
         <v-app-bar color="tandoor" flat density="comfortable">
-            <v-img class="ms-2" src="../../assets/brand_logo.svg"></v-img>
+            <router-link :to="{name: 'view_search', params: {}}">
+                <v-img  src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
+            </router-link>
             <global-search-dialog></global-search-dialog>
             <v-spacer></v-spacer>
-            <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>
+<!--            <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>-->
         </v-app-bar>
 
 
@@ -16,7 +18,7 @@
             </v-container>
         </v-main>
 
-        <v-bottom-navigation>
+        <v-bottom-navigation grow>
             <v-btn value="recent" to="/search">
                 <v-icon icon="fas fa-book"/>
                 <span>Recipes</span>

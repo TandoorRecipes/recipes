@@ -1,40 +1,37 @@
 <template>
-    <v-dialog width="90%" max-width="800px" activator="parent" v-model="dialog" location="id_dialog_anchor"
-              location-strategy="connected"
-    >
-        <template v-slot:activator="{ props }">
-            <slot name="activator">
-                <v-btn v-bind="props" size="small" density="default" variant="outlined"><i class="fas fa-search mr-1"></i> Search</v-btn>
-            </slot>
-        </template>
+    <slot name="activator">
+        <v-btn @click="dialog = true"><i class="fas fa-search mr-1"></i> Search</v-btn>
+    </slot>
 
-        <template v-slot:default="{ isActive }">
-            <v-card>
-                <v-card-text class="pb-0">
-                    <v-text-field
-                        id="id_global_search_input"
-                        v-model="search_query"
-                        autocomplete="off"
-                        clearable
-                        placeholder="Search"
-                        prepend-inner-icon="fas fa-search"
-                        variant="solo"
-                    ></v-text-field>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-text>
+    <v-dialog width="90%" max-width="800px" v-model="dialog" location="id_dialog_anchor"
+              location-strategy="connected">
 
-                    <v-card :variant="cardVariant(index)" v-for="(item, index) in search_results" hover class="mt-1" @click="selected_result = index">
-                        <v-card-title @click="goToSelectedRecipe()">
-                            <v-avatar v-if="item.image" :image="item.image"></v-avatar>
-                            <v-icon :icon="item.icon" v-if="item.icon"></v-icon>
-                            {{ item.name }}
-                        </v-card-title>
-                    </v-card>
-                </v-card-text>
-            </v-card>
+        <v-card>
+            <v-card-text class="pb-0">
+                <v-text-field
+                    id="id_global_search_input"
+                    v-model="search_query"
+                    autocomplete="off"
+                    clearable
+                    placeholder="Search"
+                    prepend-inner-icon="fas fa-search"
+                    variant="solo"
+                ></v-text-field>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-text>
 
-        </template>
+                <v-card :variant="cardVariant(index)" v-for="(item, index) in search_results" hover class="mt-1" @click="selected_result = index">
+                    <v-card-title @click="goToSelectedRecipe()">
+                        <v-avatar v-if="item.image" :image="item.image"></v-avatar>
+                        <v-icon :icon="item.icon" v-if="item.icon"></v-icon>
+                        {{ item.name }}
+                    </v-card-title>
+                </v-card>
+            </v-card-text>
+        </v-card>
+
+
     </v-dialog>
 </template>
 
@@ -61,9 +58,9 @@ export default defineComponent({
                 }
             }, 20)
         },
-        search_query: function (newValue){
-            if (this.selected_result >= this.search_results.length){
-                this.selected_result = this.search_results.length -1
+        search_query: function (newValue) {
+            if (this.selected_result >= this.search_results.length) {
+                this.selected_result = this.search_results.length - 1
             }
         },
     },
