@@ -1,7 +1,7 @@
 <template>
 
     <v-card>
-        <v-card-title>{{ recipe.name }}</v-card-title>
+        <v-card-title>{{ recipe.name }} <recipe-context-menu :recipe="recipe"></recipe-context-menu></v-card-title>
 
         <v-img max-height="25vh" cover lazy :src="recipe.image">
             <!-- TODO placement in image -->
@@ -63,10 +63,11 @@ import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import StepsOverview from "@/components/display/StepsOverview.vue";
 import Step from "@/components/display/Step.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
+import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 
 export default defineComponent({
     name: "RecipeView",
-    components: {RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
+    components: {RecipeContextMenu, RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
     computed: {},
     data() {
         return {}
