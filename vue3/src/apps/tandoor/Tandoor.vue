@@ -13,9 +13,9 @@
 
 
         <v-main>
-            <v-container class="pa-0 ma-0 mb-2">
-                <router-view></router-view>
-            </v-container>
+
+            <router-view></router-view>
+
         </v-main>
 
         <v-bottom-navigation grow>

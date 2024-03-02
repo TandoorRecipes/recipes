@@ -1,69 +1,83 @@
 <template>
+    <v-container>
 
-    <v-form>
-        <v-text-field
-            label="Name"
-            v-model="recipe.name"
-        ></v-text-field>
+        <v-form>
+            <v-text-field
+                label="Name"
+                v-model="recipe.name"
+            ></v-text-field>
 
-        <v-textarea
-            label="Description"
-            v-model="recipe.description"
-            clearable
-        ></v-textarea>
+            <v-textarea
+                label="Description"
+                v-model="recipe.description"
+                clearable
+            ></v-textarea>
 
-        <v-combobox
-            label="Keywords"
-            v-model="recipe.keywords"
-            :items="keywords"
-            item-title="name"
-            multiple
-            clearable
-            chips
-        ></v-combobox>
+            <v-combobox
+                label="Keywords"
+                v-model="recipe.keywords"
+                :items="keywords"
+                item-title="name"
+                multiple
+                clearable
+                chips
+            ></v-combobox>
 
-        <v-row>
-            <v-col>
-                <v-text-field
-                    v-model.number="recipe.waitingTime"
-                    label="Waiting Time (min)"
-                ></v-text-field>
-            </v-col>
-            <v-col>
-                <v-text-field
-                    v-model.number="recipe.workingTime"
-                    label="Working Time (min)"
-                ></v-text-field>
-            </v-col>
-        </v-row>
+            <v-row>
+                <v-col>
+                    <v-text-field
+                        v-model.number="recipe.waitingTime"
+                        label="Waiting Time (min)"
+                    ></v-text-field>
+                </v-col>
+                <v-col>
+                    <v-text-field
+                        v-model.number="recipe.workingTime"
+                        label="Working Time (min)"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
 
-        <v-row>
-            <v-col>
-                <v-text-field
-                    v-model.number="recipe.servings"
-                    label="Servings"
-                ></v-text-field>
-            </v-col>
-            <v-col>
-                <v-text-field
-                    v-model="recipe.servingsText"
-                    label="Servings Text"
-                ></v-text-field>
-            </v-col>
-        </v-row>
+            <v-row>
+                <v-col>
+                    <v-text-field
+                        v-model.number="recipe.servings"
+                        label="Servings"
+                    ></v-text-field>
+                </v-col>
+                <v-col>
+                    <v-text-field
+                        v-model="recipe.servingsText"
+                        label="Servings Text"
+                    ></v-text-field>
+                </v-col>
+            </v-row>
 
-    </v-form>
+            <v-row v-for="step in recipe.steps">
+                <!--TODO  name, time, recipe, file(s), ingredients, quick add ingredients -->
+                <v-col>
+                    <step-markdown-editor :step="step"></step-markdown-editor>
+                </v-col>
+            </v-row>
 
-    <v-btn @click="updateRecipe()">Save</v-btn>
-    <v-btn :to="{name: 'view_recipe', params: {id: recipe_id}}">View</v-btn>
+        </v-form>
+
+        <v-btn @click="updateRecipe()">Save</v-btn>
+        <v-btn :to="{name: 'view_recipe', params: {id: recipe_id}}">View</v-btn>
+    </v-container>
+
+
 </template>
 
 <script lang="ts">
 import {defineComponent, PropType} from 'vue'
 import {ApiApi, Keyword, Recipe} from "@/openapi";
+import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
+
 
 export default defineComponent({
     name: "RecipeEditPage",
+    components: {StepMarkdownEditor},
     props: {
         recipe_id: {type: String, required: false},
     },
