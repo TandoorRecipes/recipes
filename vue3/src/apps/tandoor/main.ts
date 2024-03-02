@@ -4,7 +4,7 @@ import {createPinia} from 'pinia'
 // @ts-ignore
 import App from './Tandoor.vue'
 
-
+import mavonEditor from 'mavon-editor'
 import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
 import ShoppingListPage from "@/pages/ShoppingListPage.vue";
@@ -36,5 +36,6 @@ app.use(createPinia())
 app.use(vuetify)
 app.use(router)
 app.use(luxonPlugin)
+app.use(mavonEditor) // TODO only use on pages that need it
 
 app.mount('#app')
