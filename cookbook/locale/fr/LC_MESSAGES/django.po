@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2024-03-03 23:19+0000\n"
+"PO-Revision-Date: 2024-03-05 22:19+0000\n"
 "Last-Translator: Jocelin Lebreton <jocelin.lebreton@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
@@ -2128,7 +2128,7 @@ msgstr "Se connecter via %(provider)s"
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
-"ous êtes sur le point de vous connecter en utilisant un compte tiers depuis "
+"Vous êtes sur le point de vous connecter en utilisant un compte tiers depuis "
 "%(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
