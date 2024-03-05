@@ -146,6 +146,13 @@ This can either be a relative path from the applications base path or the url of
 MEDIA_URL=/media/
 ```
 
+#### Media root
+
+> default `<basedir>/mediafiles` - options `/some/other/media/path`.
+
+Where mediafiles should be stored on disk. The default location is a
+`mediafiles` subfolder at the root of the application directory.
+
 #### Gunicorn Workers
 
 > default `3` - options `1-X`

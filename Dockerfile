@@ -1,4 +1,4 @@
-FROM python:3.10-alpine3.18
+FROM python:3.12-alpine3.19
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git
@@ -25,8 +25,8 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     echo -n "INPUT ( libldap.so )" > /usr/lib/libldap_r.so && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip install wheel==0.37.1 && \
-    venv/bin/pip install setuptools_rust==1.1.2 && \
+    venv/bin/pip install wheel==0.42.0 && \
+    venv/bin/pip install setuptools_rust==1.9.0 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 
