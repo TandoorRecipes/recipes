@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2023-12-10 14:19+0000\n"
-"Last-Translator: Robin Wilmet <wilmetrobin@hotmail.com>\n"
+"PO-Revision-Date: 2024-03-03 23:19+0000\n"
+"Last-Translator: Jocelin Lebreton <jocelin.lebreton@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/fr/>\n"
 "Language: fr\n"
@@ -1802,23 +1802,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:39
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Web searches simulate functionality found on many web search "
-#| "sites supporting special syntax.\n"
-#| "            Placing quotes around several words will convert those words "
-#| "into a phrase.\n"
-#| "            'or' is recongized as searching for the word (or phrase) "
-#| "immediately before 'or' OR the word (or phrase) directly after.\n"
-#| "            '-' is recognized as searching for recipes that do not "
-#| "include the word (or phrase) that comes immediately after. \n"
-#| "            For example searching for 'apple pie' or cherry -butter will "
-#| "return any recipe that includes the phrase 'apple pie' or the word "
-#| "'cherry' \n"
-#| "            in any field included in the full text search but exclude any "
-#| "recipe that has the word 'butter' in any field included.\n"
-#| "            "
 msgid ""
 " \n"
 "            Web searches simulate functionality found on many web search "
@@ -1869,19 +1852,6 @@ msgstr ""
 "            "
 
 #: .\cookbook\templates\search_info.html:59
-#, fuzzy
-#| msgid ""
-#| " \n"
-#| "            Another approach to searching that also requires Postgresql "
-#| "is fuzzy search or trigram similarity. A trigram is a group of three "
-#| "consecutive characters.\n"
-#| "            For example searching for 'apple' will create x trigrams "
-#| "'app', 'ppl', 'ple' and will create a score of how closely words match "
-#| "the generated trigrams.\n"
-#| "            One benefit of searching trigams is that a search for "
-#| "'sandwich' will find mispelled words such as 'sandwhich' that would be "
-#| "missed by other methods.\n"
-#| "            "
 msgid ""
 " \n"
 "            Another approach to searching that also requires Postgresql is "
@@ -2465,69 +2435,93 @@ msgstr ""
 
 #: .\cookbook\views\api.py:687
 msgid "Query string matched (fuzzy) against object name."
-msgstr ""
+msgstr "Correspondance (floue) entre la chaîne de requête et le nom de l'objet."
 
 #: .\cookbook\views\api.py:731
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"La chaîne d'interrogation correspond (de manière floue) au nom de la "
+"recette. À l'avenir, la recherche en texte intégral sera également possible."
 
 #: .\cookbook\views\api.py:733
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
+"ID du mot-clé qu'une recette doit avoir. Pour les paramètres à répétition "
+"multiple. Equivalent à keywords_or"
 
 #: .\cookbook\views\api.py:736
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"ID des mots-clés, répéter pour plusieurs. Retourner les recettes avec "
+"n'importe quel mot-clé"
 
 #: .\cookbook\views\api.py:739
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"ID des mots-clés, répéter pour plusieurs. Retourner les recettes contenant "
+"tous les mots-clés."
 
 #: .\cookbook\views\api.py:742
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"ID des mots-clés, répéter pour plusieurs. Exclure les recettes contenant "
+"l'un des mots-clés."
 
 #: .\cookbook\views\api.py:745
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"ID des mots-clés, répéter pour plusieurs. Exclure les recettes contenant "
+"l'un des mots-clés."
 
 #: .\cookbook\views\api.py:747
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID de l'aliment qu'une recette doit contenir. Pour les paramètres de "
+"répétition multiples."
 
 #: .\cookbook\views\api.py:750
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"ID des aliments, répéter pour plusieurs. Retourner les recettes contenant "
+"l'un des aliments"
 
 #: .\cookbook\views\api.py:752
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"ID des aliments, répéter pour plusieurs. Retourner les recettes avec tous "
+"les aliments."
 
 #: .\cookbook\views\api.py:754
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"ID des aliments, répéter pour plusieurs. Exclure les recettes contenant l'un "
+"des aliments."
 
 #: .\cookbook\views\api.py:756
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"ID des aliments, répéter pour plusieurs. Exclure les recettes contenant tous "
+"les aliments."
 
 #: .\cookbook\views\api.py:757
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID de l'unité qu'une recette doit avoir."
 
 #: .\cookbook\views\api.py:759
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
+"Note qu'une recette devrait avoir ou être supérieure. [0 - 5] Une valeur "
+"négative filtre une note inférieure à."
 
 #: .\cookbook\views\api.py:760
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
@@ -2686,10 +2680,8 @@ msgid "Invite Link"
 msgstr "Lien d’invitation"
 
 #: .\cookbook\views\delete.py:200
-#, fuzzy
-#| msgid "Members"
 msgid "Space Membership"
-msgstr "Membres"
+msgstr "Adhésion à l'espace"
 
 #: .\cookbook\views\edit.py:116
 msgid "You cannot edit this storage!"
