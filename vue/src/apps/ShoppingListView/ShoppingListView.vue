@@ -59,7 +59,7 @@
                         <b-row class="d-lg-block d-print-none d-none mb-3 mt-3">
                             <b-col cols="12">
                                 <b-input-group>
-                                    <b-form-input type="text" :placeholder="$t('Food')"
+                                    <b-form-input type="text" :placeholder="$t('Shopping_input_placeholder')"
                                                   v-model="new_item.ingredient"
                                                   @keyup.enter="addItem"
                                                   ref="amount_input_simple"></b-form-input>
@@ -430,7 +430,7 @@
                     <b-col cols="12">
                         <template v-if="current_tab===0">
                             <b-input-group>
-                                <b-form-input v-model="new_item.ingredient" :placeholder="$t('Food')"
+                                <b-form-input v-model="new_item.ingredient" :placeholder="$t('Shopping_input_placeholder')"
                                               @keyup.enter="addItem"></b-form-input>
                                 <b-input-group-append>
                                     <b-button @click="addItem" variant="success">
