@@ -8,7 +8,7 @@
             <button
                 type="button"
                 @click="mutable_step.instruction+= ' {{ scale(100) }}'"
-                class="op-icon fas fa-times"
+                class="op-icon fas fa-calculator"
                 aria-hidden="true"
                 title="Scalable Number"
             ></button>
@@ -24,6 +24,16 @@ import 'mavon-editor/dist/css/index.css'
 
 export default defineComponent({
     name: "StepMarkdownEditor",
+    emits: {
+        change(payload: { step: Step }) {
+            return payload
+        }
+    },
+    watch: {
+        mutable_step: function (){
+            this.$emit('change', {step: this.mutable_step})
+        }
+    },
     props: {
         step: {type: Object as PropType<Step>, required: true}
     },
@@ -38,22 +48,22 @@ export default defineComponent({
                 underline: true,
                 strikethrough: true,
                 mark: false,
-                superscript: true,
-                subscript: true,
+                superscript: false,
+                subscript: false,
                 quote: true,
                 ol: true,
                 ul: true,
                 link: true,
                 imagelink: false,
-                code: true,
+                code: false,
                 table: false,
                 fullscreen: false,
                 readmodel: false,
                 htmlcode: false,
-                help: true,
+                help: false,
                 undo: true,
                 redo: true,
-                navigation: true,
+                navigation: false,
                 alignleft: false,
                 aligncenter: false,
                 alignright: false,

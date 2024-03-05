@@ -53,10 +53,9 @@
                 </v-col>
             </v-row>
 
-            <v-row v-for="step in recipe.steps">
-                <!--TODO  name, time, recipe, file(s), ingredients, quick add ingredients -->
+            <v-row v-for="(step, index) in recipe.steps">
                 <v-col>
-                    <step-markdown-editor :step="step"></step-markdown-editor>
+                    <step-editor :step="step" :step-index="index"></step-editor>
                 </v-col>
             </v-row>
 
@@ -73,11 +72,12 @@
 import {defineComponent, PropType} from 'vue'
 import {ApiApi, Keyword, Recipe} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
+import StepEditor from "@/components/inputs/StepEditor.vue";
 
 
 export default defineComponent({
     name: "RecipeEditPage",
-    components: {StepMarkdownEditor},
+    components: {StepEditor, StepMarkdownEditor},
     props: {
         recipe_id: {type: String, required: false},
     },
