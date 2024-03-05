@@ -20,7 +20,7 @@
         <IngredientsTable :ingredients="step.ingredients"></IngredientsTable>
 
         <v-card-text v-if="step.instructionsMarkdown.length > 0">
-           <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="1"></instructions>
+           <instructions :instructions_html="step.instructionsMarkdown" :ingredient_factor="ingredient_factor"></instructions>
         </v-card-text>
     </v-card>
 </template>
@@ -66,7 +66,11 @@ export default defineComponent({
         step: {
             type: {} as PropType<Step>,
             required: true,
-        }
+        },
+        ingredient_factor: {
+            type: Number,
+            required: true,
+        },
     },
     data() {
         return {
