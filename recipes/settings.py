@@ -478,10 +478,10 @@ if os.getenv('S3_ACCESS_KEY', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 else:
     MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -518,5 +518,20 @@ ACCOUNT_RATE_LIMITS = {"change_password": "1/m/user", "reset_password": "1/m/ip,
 
 DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
+
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {
+    'signup': 'cookbook.forms.AllAuthSignupForm',
+    'reset_password': 'cookbook.forms.CustomPasswordResetForm'
+}
+
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
 
 mimetypes.add_type("text/javascript", ".js", True)

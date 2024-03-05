@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-18 14:28+0200\n"
-"PO-Revision-Date: 2024-02-29 02:19+0000\n"
+"PO-Revision-Date: 2024-03-03 23:19+0000\n"
 "Last-Translator: M Ugur <mugurd@gmail.com>\n"
 "Language-Team: Turkish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/tr/>\n"
@@ -40,19 +40,19 @@ msgstr "Tema"
 
 #: .\cookbook\forms.py:56
 msgid "Navbar color"
-msgstr ""
+msgstr "Gezinti çubuğu rengi"
 
 #: .\cookbook\forms.py:57
 msgid "Sticky navbar"
-msgstr ""
+msgstr "Yapışkan gezinti çubuğu"
 
 #: .\cookbook\forms.py:58
 msgid "Default page"
-msgstr ""
+msgstr "Varsayılan sayfa"
 
 #: .\cookbook\forms.py:59
 msgid "Plan sharing"
-msgstr ""
+msgstr "Plan paylaşımı"
 
 #: .\cookbook\forms.py:60
 msgid "Ingredient decimal places"
@@ -87,10 +87,12 @@ msgid ""
 "Enables support for fractions in ingredient amounts (e.g. convert decimals "
 "to fractions automatically)"
 msgstr ""
+"Malzeme miktarı için kesir desteğini etkinleştir (örn. ondalıkları kesire "
+"otomatik çevir)"
 
 #: .\cookbook\forms.py:73
 msgid "Display nutritional energy amounts in joules instead of calories"
-msgstr ""
+msgstr "Besin değerlerini kalori yerine jul olarak görüntüle"
 
 #: .\cookbook\forms.py:74
 msgid "Users with whom newly created meal plans should be shared by default."
@@ -127,11 +129,11 @@ msgstr ""
 
 #: .\cookbook\forms.py:83 .\cookbook\forms.py:512
 msgid "Automatically add meal plan ingredients to shopping list."
-msgstr ""
+msgstr "Otomatik olarak yemek planındaki malzemeleri alışveriş listesine ekle."
 
 #: .\cookbook\forms.py:84
 msgid "Exclude ingredients that are on hand."
-msgstr ""
+msgstr "Var olan malzemeleri hariç tut."
 
 #: .\cookbook\forms.py:85
 msgid "Will optimize the UI for use with your left hand."
@@ -142,6 +144,8 @@ msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Her iki değer de tercihe bağlıdır. Hiç birisi verilmezse yerlerine kullanıcı "
+"adı gösterilecektir"
 
 #: .\cookbook\forms.py:123 .\cookbook\forms.py:314
 msgid "Name"
@@ -149,23 +153,23 @@ msgstr "İsim"
 
 #: .\cookbook\forms.py:124 .\cookbook\forms.py:315 .\cookbook\views\lists.py:88
 msgid "Keywords"
-msgstr ""
+msgstr "Anahtar kelimeler"
 
 #: .\cookbook\forms.py:125
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Hazırlık süresi dakika cinsinden"
 
 #: .\cookbook\forms.py:126
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Bekleme süresi (pişirme/fırınlama) dakika cinsinden"
 
 #: .\cookbook\forms.py:127 .\cookbook\forms.py:283 .\cookbook\forms.py:316
 msgid "Path"
-msgstr ""
+msgstr "Adres"
 
 #: .\cookbook\forms.py:128
 msgid "Storage UID"
-msgstr ""
+msgstr "Saklama UID (biricik tanımlayıcı)"
 
 #: .\cookbook\forms.py:161
 msgid "Default"
