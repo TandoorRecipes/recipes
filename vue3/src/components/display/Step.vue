@@ -19,8 +19,8 @@
 
         <IngredientsTable :ingredients="step.ingredients"></IngredientsTable>
 
-        <v-card-text v-if="step.instruction?.length > 0">
-            {{ step.instruction }}
+        <v-card-text v-if="step.instructionsMarkdown.length > 0">
+           <instructions-compile-component :code="step.instructionsMarkdown" :ingredient_factor="1"></instructions-compile-component>
         </v-card-text>
     </v-card>
 </template>
@@ -30,6 +30,8 @@ import {defineComponent, PropType} from 'vue'
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import {Step} from "@/openapi";
 import {DateTime, Duration, Interval} from "luxon";
+
+import InstructionsCompileComponent from "@/components/display/InstructionsCompileComponent.vue";
 
 export default defineComponent({
     name: "Step",
@@ -59,7 +61,7 @@ export default defineComponent({
             return ''
         }
     },
-    components: {IngredientsTable},
+    components: {InstructionsCompileComponent, IngredientsTable},
     props: {
         step: {
             type: {} as PropType<Step>,
