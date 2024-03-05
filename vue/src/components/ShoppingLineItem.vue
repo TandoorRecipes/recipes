@@ -1,176 +1,134 @@
 <template>
-    <div id="shopping_line_item" class="pt-1">
-        <b-row align-h="start"
-               ref="shopping_line_item" class="invis-border">
-            <b-col cols="2" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
-                   v-if="settings.left_handed">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
-                          variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
-                                                :class="showDetails ? 'rotated' : ''"></i></div>
-                </b-button>
-            </b-col>
-            <b-col cols="1" class="align-items-center d-flex">
-                <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
-                     @click.stop="$emit('open-context-menu', $event, entries)">
-                    <button
-                        aria-haspopup="true"
-                        aria-expanded="false"
-                        type="button"
-                        :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                        class="btn dropdown-toggle btn-link text-decoration-none text-body pr-0 pl-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
+    <div class="swipe-container" :id="item_container_id" @touchend="handleSwipe()"
+         v-if="(useUserPreferenceStore().device_settings.shopping_show_checked_entries || !is_checked) && (useUserPreferenceStore().device_settings.shopping_show_delayed_entries || !is_delayed)"
+    >
+        <div class="swipe-action" :class="{'bg-success': !is_checked , 'bg-warning': is_checked }">
+            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
+        </div>
+
+        <b-button-group class="swipe-element">
+            <b-button variant="primary" v-if="is_delayed">
+                <i class="fa-fw fas fa-hourglass-half"></i>
+            </b-button>
+            <div class="card flex-grow-1 btn-block p-2" @click="detail_modal_visible = true">
+                <div class="d-flex">
+                    <div class="d-flex flex-column pr-2" v-if="Object.keys(amounts).length> 0">
+                        <span v-for="a in amounts" v-bind:key="a.id">
+
+                            <span><i class="fas fa-check" v-if="a.checked && !is_checked"></i><i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>{{ a.amount }} {{
+                                    a.unit
+                                }} </b></span>
+                            <br/></span>
+
+                    </div>
+                    <div class="d-flex  flex-column flex-grow-1 align-self-center">
+                        {{ food.name }} <br/>
+                        <span v-if="info_row"><small class="text-muted">{{ info_row }}</small></span>
+                    </div>
                 </div>
-            </b-col>
-            <b-col cols="1" class="px-1 justify-content-center align-items-center d-none d-md-flex">
-                <input type="checkbox" class="form-control form-control-sm checkbox-control"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-            </b-col>
-            <b-col cols="8">
-                <b-row class="d-flex h-100">
-                    <b-col cols="6" md="3" class="d-flex align-items-center" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           v-if="Object.entries(formatAmount).length == 1">
-                        <strong class="mr-1">{{ Object.entries(formatAmount)[0][1] }}</strong>
-                        {{ Object.entries(formatAmount)[0][0] }}
-                    </b-col>
-                    <b-col cols="6" md="3" class="d-flex flex-column" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           v-if="Object.entries(formatAmount).length != 1">
-                        <div class="small" v-for="(x, i) in Object.entries(formatAmount)" :key="i">
-                            {{ x[1] }} &ensp;
-                            {{ x[0] }}
-                        </div>
+
+
+            </div>
+            <b-button variant="success" @click="useShoppingListStore().setEntriesCheckedState(entries, !is_checked, true)"
+                      :class="{'btn-success': !is_checked, 'btn-warning': is_checked}">
+                <i class="d-print-none fa-fw fas" :class="{'fa-check': !is_checked , 'fa-cart-plus': is_checked }"></i>
+            </b-button>
+        </b-button-group>
+        <div class="swipe-action bg-primary justify-content-end">
+            <i class="fa-fw fas fa-hourglass-half swipe-icon"></i>
+        </div>
+
+        <b-modal v-model="detail_modal_visible" @hidden="detail_modal_visible = false" body-class="pr-4 pl-4 pt-0">
+            <template #modal-title>
+                <h5> {{ food_row }}</h5>
+                <small class="text-muted">{{ food.description }}</small>
+
+            </template>
+
+            <template #default>
+                <h5 class="mt-2">{{ $t('Quick actions') }}</h5>
+                {{ $t('Category') }}
+                <b-form-select
+                    class="form-control mb-2"
+                    :options="useShoppingListStore().supermarket_categories"
+                    text-field="name"
+                    value-field="id"
+                    v-model="food.supermarket_category"
+                    @change="detail_modal_visible = false; updateFoodCategory(food)"
+                ></b-form-select>
+
+                <b-button variant="info" block
+                          @click="detail_modal_visible = false;useShoppingListStore().delayEntries(entries,!is_delayed, true)">
+                    {{ $t('Postpone') }}
+                </b-button>
+
+
+                <h6 class="mt-2">{{ $t('Entries') }}</h6>
+
+
+                <b-row v-for="e in entries" v-bind:key="e.id">
+                    <b-col cold="12">
+
+                        <b-button-group class="w-100">
+                            <div class="card flex-grow-1 btn-block p-2">
+                                <span><i class="fas fa-check" v-if="e.checked"></i><i class="fas fa-hourglass-half" v-if="e.delay_until !== null && !e.checked"></i>
+                                     <b><span v-if="e.amount > 0">{{ e.amount }}</span> {{ e.unit?.name }}</b> {{ food.name }}</span>
+                                <span><small class="text-muted">
+                                    <span v-if="e.recipe_mealplan && e.recipe_mealplan.recipe_name !== ''">
+                                        <a :href="resolveDjangoUrl('view_recipe', e.recipe_mealplan.recipe)"> <b>  {{
+                                                e.recipe_mealplan.recipe_name
+                                            }} </b></a>({{
+                                            e.recipe_mealplan.servings
+                                        }} {{ $t('Servings') }})<br/>
+                                    </span>
+                                    <span
+                                        v-if="e.recipe_mealplan && e.recipe_mealplan.mealplan_type !== undefined"> {{
+                                            e.recipe_mealplan.mealplan_type
+                                        }} {{ formatDate(e.recipe_mealplan.mealplan_from_date) }} <br/></span>
+
+                                    {{ e.created_by.display_name }} {{ formatDate(e.created_at) }}<br/>
+                                </small></span>
+
+                            </div>
+                            <b-button variant="outline-danger"
+                                      @click="useShoppingListStore().deleteObject(e)"><i
+                                class="fas fa-trash"></i></b-button>
+                        </b-button-group>
+
+                        <generic-multiselect
+                            class="mt-1"
+                            v-if="e.recipe_mealplan === null"
+                            :initial_single_selection="e.unit"
+                            :model="Models.UNIT"
+                            :multiple="false"
+                            @change="e.unit = $event.val; useShoppingListStore().updateObject(e)"
+                        >
+                        </generic-multiselect>
+
+                        <number-scaler-component :number="e.amount"
+                                                 @change="e.amount = $event; useShoppingListStore().updateObject(e)"
+                                                 v-if="e.recipe_mealplan === null"></number-scaler-component>
+                        <hr class="m-2"/>
                     </b-col>
 
-                    <b-col cols="6" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-                        {{ formatFood }}
-                    </b-col>
-                    <b-col cols="3" data-html2canvas-ignore="true" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                           class="align-items-center d-none d-md-flex justify-content-end">
-                        <b-button size="sm" @click="showDetails = !showDetails"
-                                  class="p-0 mr-0 mr-md-2 p-md-2 text-decoration-none" variant="link">
-                            <div class="text-nowrap">
-                                <i class="fa fa-chevron-right rotate" :class="showDetails ? 'rotated' : ''"></i>
-                                <span class="d-none d-md-inline-block"><span class="ml-2">{{
-                                        $t("Details")
-                                    }}</span></span>
-                            </div>
-                        </b-button>
-                    </b-col>
                 </b-row>
-            </b-col>
-            <b-col cols="2" class="justify-content-start align-items-center d-flex d-md-none pl-0 pr-0" v-touch:start="startHandler" v-touch:moving="moveHandler" v-touch:end="endHandler"
-                   v-if="!settings.left_handed">
-                <b-button size="sm" @click="showDetails = !showDetails" class="d-inline-block d-md-none p-0"
-                          variant="link">
-                    <div class="text-nowrap"><i class="fa fa-chevron-right rotate"
-                                                :class="showDetails ? 'rotated' : ''"></i></div>
+
+                <b-button variant="success" block @click="useShoppingListStore().createObject({ amount: 0, unit: null, food: food, })"> {{ $t("Add") }}</b-button>
+                <b-button variant="warning" block @click="detail_modal_visible = false; setFoodIgnoredAndChecked(food)"> {{ $t("Ignore_Shopping") }}</b-button>
+                <b-button variant="danger" block class="mt-2"
+                          @click="detail_modal_visible = false;useShoppingListStore().deleteEntries(entries)">
+                    {{ $t('Delete_All') }}
                 </b-button>
-                <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                       :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-            </b-col>
-        </b-row>
-        <b-row align-h="center" class="d-none d-md-flex">
-            <b-col cols="12">
-                <div class="small text-muted text-truncate">{{ formatHint }}</div>
-            </b-col>
-        </b-row>
-        <!-- detail rows -->
-        <div class="card no-body mb-1 pt-2 align-content-center shadow-sm" v-if="showDetails">
-            <div v-for="(e, x) in entries" :key="e.id">
-                <b-row class="small justify-content-around">
-                    <b-col cols="auto" md="4" class="overflow-hidden text-nowrap">
-                        <button
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            type="button"
-                            class="btn btn-link btn-sm m-0 p-0 pl-2"
-                            style="text-overflow: ellipsis"
-                            @click.stop="openRecipeCard($event, e)"
-                            @mouseover="openRecipeCard($event, e)"
-                        >
-                            {{ formatOneRecipe(e) }}
-                        </button>
-                    </b-col>
-                    <b-col cols="auto" md="4" class="text-muted">{{ formatOneMealPlan(e) }}</b-col>
-                    <b-col cols="auto" md="4" class="text-muted text-right overflow-hidden text-nowrap pr-4">
-                        {{ formatOneCreatedBy(e) }}
-                        <div v-if="formatOneCompletedAt(e)">{{ formatOneCompletedAt(e) }}</div>
-                    </b-col>
-                </b-row>
-                <b-row align-h="start">
-                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none pr-0"
-                           v-if="settings.left_handed">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                    </b-col>
-                    <b-col cols="2" md="1" class="align-items-center d-flex">
-                        <div class="dropdown b-dropdown position-static inline-block" data-html2canvas-ignore="true"
-                             @click.stop="$emit('open-context-menu', $event, e)">
-                            <button
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                type="button"
-                                :class="settings.left_handed ? 'dropdown-spacing' : ''"
-                                class="btn dropdown-toggle btn-link text-decoration-none text-body pr-1 pr-md-3 pl-md-3 dropdown-toggle-no-caret"
-                            >
-                                <i class="fas fa-ellipsis-v fa-lg"></i>
-                            </button>
-                        </div>
-                    </b-col>
-                    <b-col cols="1" class="justify-content-center align-items-center d-none d-md-flex">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control"
-                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                    </b-col>
-                    <b-col cols="7" md="9">
-                        <b-row class="d-flex align-items-center h-100">
-                            <b-col cols="5" md="3" class="d-flex align-items-center">
-                                <strong class="mr-1">{{ formatOneAmount(e) }}</strong> {{ formatOneUnit(e) }}
-                            </b-col>
-                            <b-col cols="7" md="6" class="align-items-center d-flex pl-0 pr-0 pl-md-2 pr-md-2">
-                                {{ formatOneFood(e) }}
-                            </b-col>
-                            <b-col cols="12" class="d-flex d-md-none">
-                                <div class="small text-muted text-truncate" v-for="(n, i) in formatOneNote(e)"
-                                     :key="i">{{ n }}
-                                </div>
-                            </b-col>
-                        </b-row>
-                    </b-col>
-                    <b-col cols="3" md="2" class="justify-content-start align-items-center d-flex d-md-none"
-                           v-if="!settings.left_handed">
-                        <input type="checkbox" class="form-control form-control-sm checkbox-control-mobile"
-                               :checked="formatChecked" @change="updateChecked" :key="entries[0].id"/>
-                    </b-col>
-                </b-row>
-                <hr class="w-75 mt-1 mb-1 mt-md-3 mb-md-3" v-if="x !== entries.length - 1"/>
-                <div class="pb-1 pb-md-4" v-if="x === entries.length - 1"></div>
-            </div>
-        </div>
-        <hr class="m-1" v-if="!showDetails"/>
-        <ContextMenu ref="recipe_card" triggers="click, hover" :title="$t('Filters')" style="max-width: 300">
-            <template #menu="{ contextData }" v-if="recipe">
-                <ContextMenuItem>
-                    <RecipeCard :recipe="contextData" :detail="false"></RecipeCard>
-                </ContextMenuItem>
-                <ContextMenuItem @click="$refs.menu.close()">
-                    <b-form-group label-cols="9" content-cols="3" class="text-nowrap m-0 mr-2">
-                        <template #label>
-                            <a class="dropdown-item p-2" href="#"><i class="fas fa-pizza-slice"></i>
-                                {{ $t("Servings") }}</a>
-                        </template>
-                        <div @click.prevent.stop>
-                            <b-form-input class="mt-2" min="0" type="number" v-model="servings"></b-form-input>
-                        </div>
-                    </b-form-group>
-                </ContextMenuItem>
             </template>
-        </ContextMenu>
-        <i class="fa fa-hourglass fa-lg" style="display: none; position: absolute" aria-hidden="true"
-           ref="delay_icon"></i>
-        <i class="fa fa-check fa-lg" style="display: none; position: absolute" aria-hidden="true" ref="check_icon"></i>
+
+            <template #modal-footer>
+                <span></span>
+            </template>
+        </b-modal>
+
+        <generic-modal-form :model="Models.FOOD" :show="editing_food !== null"
+                            @hidden="editing_food = null; useShoppingListStore().refreshFromAPI()"></generic-modal-form>
+
     </div>
 </template>
 
@@ -178,292 +136,237 @@
 import Vue from "vue"
 import {BootstrapVue} from "bootstrap-vue"
 import "bootstrap-vue/dist/bootstrap-vue.css"
-import ContextMenu from "@/components/ContextMenu/ContextMenu"
-import ContextMenuItem from "@/components/ContextMenu/ContextMenuItem"
-import {ApiMixin} from "@/utils/utils"
-import RecipeCard from "./RecipeCard.vue"
-import Vue2TouchEvents from "vue2-touch-events"
+import {ApiMixin, FormatMixin, resolveDjangoUrl, StandardToasts} from "@/utils/utils"
+import {useMealPlanStore} from "@/stores/MealPlanStore";
+import {useShoppingListStore} from "@/stores/ShoppingListStore";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import NumberScalerComponent from "@/components/NumberScalerComponent.vue";
+import GenericModalForm from "@/components/Modals/GenericModalForm.vue";
+import GenericMultiselect from "@/components/GenericMultiselect.vue";
+
 
 Vue.use(BootstrapVue)
-Vue.use(Vue2TouchEvents)
 
 export default {
-    // TODO ApiGenerator doesn't capture and share error information - would be nice to share error details when available
-    // or i'm capturing it incorrectly
     name: "ShoppingLineItem",
-    mixins: [ApiMixin],
-    components: {RecipeCard, ContextMenu, ContextMenuItem},
+    mixins: [ApiMixin, FormatMixin],
+    components: {GenericMultiselect, GenericModalForm, NumberScalerComponent},
     props: {
-        entries: {
-            type: Array,
-        },
-        settings: Object,
-        groupby: {type: String},
+        entries: {type: Object,},
     },
     data() {
         return {
-            showDetails: false,
-            recipe: undefined,
-            servings: 1,
-            dragStartX: 0,
-            distance_left: 0
+            detail_modal_visible: false,
+            editing_food: null,
         }
     },
     computed: {
-        formatAmount: function () {
-            let amount = {}
-            this.entries.forEach((entry) => {
-                let unit = entry?.unit?.name ?? "---"
-                if (entry.amount) {
-                    if (amount[unit]) {
-                        amount[unit] += entry.amount
-                    } else {
-                        amount[unit] = entry.amount
+        item_container_id: function () {
+            let id = 'id_sli_'
+            for (let i in this.entries) {
+                id += i + '_'
+            }
+            return id
+        },
+        is_checked: function () {
+            for (let i in this.entries) {
+                if (!this.entries[i].checked) {
+                    return false
+                }
+            }
+            return true
+        },
+        is_delayed: function () {
+            for (let i in this.entries) {
+                if (Date.parse(this.entries[i].delay_until) > new Date(Date.now())) {
+                    return true
+                }
+            }
+            return false
+        },
+        food: function () {
+            return this.entries[Object.keys(this.entries)[0]]['food']
+        },
+        amounts: function () {
+            let unit_amounts = {}
+
+            for (let i in this.entries) {
+                let e = this.entries[i]
+
+                if (!e.checked && e.delay_until === null
+                    || (e.checked && useUserPreferenceStore().device_settings.shopping_show_checked_entries)
+                    || (e.delay_until !== null && useUserPreferenceStore().device_settings.shopping_show_delayed_entries)) {
+
+                    let unit = -1
+                    if (e.unit !== undefined && e.unit !== null) {
+                        unit = e.unit.id
+                    }
+                    if (e.amount > 0) {
+                        if (unit in unit_amounts) {
+                            unit_amounts[unit]['amount'] += e.amount
+                        } else {
+                            if (unit === -1) {
+                                unit_amounts[unit] = {id: -1, unit: "", amount: e.amount, checked: e.checked, delayed: (e.delay_until !== null)}
+                            } else {
+                                unit_amounts[unit] = {id: e.unit.id, unit: e.unit.name, amount: e.amount, checked: e.checked, delayed: (e.delay_until !== null)}
+                            }
+
+                        }
                     }
                 }
-            })
-            for (const [k, v] of Object.entries(amount)) {
-                amount[k] = Math.round(v * 100 + Number.EPSILON) / 100 // javascript hack to force rounding at 2 places
             }
-            return amount
+            return unit_amounts
         },
-        formatCategory: function () {
-            return this.formatOneCategory(this.entries[0]) || this.$t("Undefined")
+        food_row: function () {
+            return this.food.name
         },
-        formatChecked: function () {
-            return this.entries.map((x) => x.checked).every((x) => x === true)
-        },
-        formatHint: function () {
-            if (this.groupby == "recipe") {
-                return this.formatCategory
-            } else {
-                return this.formatRecipe
-            }
-        },
-        formatFood: function () {
-            return this.formatOneFood(this.entries[0])
-        },
-        formatUnit: function () {
-            return this.formatOneUnit(this.entries[0])
-        },
-        formatRecipe: function () {
-            if (this.entries?.length == 1) {
-                return this.formatOneMealPlan(this.entries[0]) || ""
-            } else {
-                let mealplan_name = this.entries.filter((x) => x?.recipe_mealplan?.name)
-                // return [this.formatOneMealPlan(mealplan_name?.[0]), this.$t("CountMore", { count: this.entries?.length - 1 })].join("  ")
+        info_row: function () {
+            let info_row = []
 
-                return mealplan_name
-                    .map((x) => {
-                        return this.formatOneMealPlan(x)
-                    })
-                    .join(" - ")
+            let authors = []
+            let recipes = []
+            let meal_pans = []
+
+            for (let i in this.entries) {
+                let e = this.entries[i]
+
+                if (authors.indexOf(e.created_by.display_name) === -1) {
+                    authors.push(e.created_by.display_name)
+                }
+
+
+                if (e.recipe_mealplan !== null) {
+                    let recipe_name = e.recipe_mealplan.recipe_name
+                    if (recipes.indexOf(recipe_name) === -1) {
+                        recipes.push(recipe_name.substring(0, 14) + (recipe_name.length > 14 ? '..' : ''))
+                    }
+
+                    if ('mealplan_from_date' in e.recipe_mealplan) {
+                        let meal_plan_entry = (e?.recipe_mealplan?.mealplan_type || '') + ' (' + this.formatDate(e.recipe_mealplan.mealplan_from_date) + ')'
+                        if (meal_pans.indexOf(meal_plan_entry) === -1) {
+                            meal_pans.push(meal_plan_entry)
+                        }
+                    }
+                }
             }
-        },
-        formatNotes: function () {
-            if (this.entries?.length == 1) {
-                return this.formatOneNote(this.entries[0]) || ""
+
+            if (useUserPreferenceStore().device_settings.shopping_item_info_created_by && authors.length > 0) {
+                info_row.push(authors.join(', '))
             }
-            return ""
-        },
+            if (useUserPreferenceStore().device_settings.shopping_item_info_recipe && recipes.length > 0) {
+                info_row.push(recipes.join(', '))
+            }
+            if (useUserPreferenceStore().device_settings.shopping_item_info_mealplan && meal_pans.length > 0) {
+                info_row.push(meal_pans.join(', '))
+            }
+
+            return info_row.join(' - ')
+        }
     },
     watch: {},
     mounted() {
-        this.servings = this.entries?.[0]?.recipe_mealplan?.servings ?? 0
+
     },
     methods: {
-        // this.genericAPI inherited from ApiMixin
-
-        formatDate: function (datetime) {
-            if (!datetime) {
-                return
+        useUserPreferenceStore,
+        useShoppingListStore,
+        resolveDjangoUrl,
+        /**
+         * update the food after the category was changed
+         * handle changing category to category ID as a workaround
+         * @param food
+         */
+        updateFoodCategory: function (food) {
+            if (typeof food.supermarket_category === "number") { // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
+                food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
             }
-            return Intl.DateTimeFormat(window.navigator.language, {
-                dateStyle: "short",
-                timeStyle: "short",
-            }).format(Date.parse(datetime))
-        },
-        startHandler: function (event) {
-            if (event.changedTouches.length > 0) {
-                this.dragStartX = event.changedTouches[0].clientX
-            }
-        },
-        getOffset(el) {
-            let rect = el.getBoundingClientRect();
-            return {
-                left: rect.left + window.scrollX,
-                top: rect.top + window.scrollY,
-                right: rect.right - window.scrollX,
-            };
-        },
-        moveHandler: function (event) {
-            let item = this.$refs['shopping_line_item'];
-            this.distance_left = event.changedTouches[0].clientX - this.dragStartX;
-            item.style.marginLeft = this.distance_left
-            item.style.marginRight = -this.distance_left
-            item.style.backgroundColor = '#ddbf86'
-            item.style.border = "1px solid #000"
 
-            let delay_icon = this.$refs['delay_icon']
-            let check_icon = this.$refs['check_icon']
+            let apiClient = new ApiApiFactory()
+            apiClient.updateFood(food.id, food).then(r => {
 
-            let color_factor = Math.abs(this.distance_left) / 100
-
-            if (this.distance_left > 0) {
-                item.parentElement.parentElement.style.backgroundColor = 'rgba(130,170,139,0)'.replace(/[^,]+(?=\))/, color_factor)
-                check_icon.style.display = "block"
-                check_icon.style.left = this.getOffset(item.parentElement.parentElement).left + 40
-                check_icon.style.top = this.getOffset(item.parentElement.parentElement).top - 92
-                check_icon.style.opacity = color_factor - 0.3
-            } else {
-                item.parentElement.parentElement.style.backgroundColor = 'rgba(185,135,102,0)'.replace(/[^,]+(?=\))/, color_factor)
-                delay_icon.style.display = "block"
-                delay_icon.style.left = this.getOffset(item.parentElement.parentElement).right - 40
-                delay_icon.style.top = this.getOffset(item.parentElement.parentElement).top - 92
-                delay_icon.style.opacity = color_factor - 0.3
-            }
-        },
-        endHandler: function (event) {
-            let item = this.$refs['shopping_line_item'];
-            item.removeAttribute('style');
-            item.parentElement.parentElement.removeAttribute('style');
-
-            let delay_icon = this.$refs['delay_icon']
-            let check_icon = this.$refs['check_icon']
-
-            delay_icon.style.display = "none"
-            check_icon.style.display = "none"
-
-            if (Math.abs(this.distance_left) > window.screen.width / 6) {
-                if (this.distance_left > 0) {
-                    let checked = false;
-                    this.entries.forEach((cur) => {
-                        checked = cur.checked
-                    })
-                    let update = {entries: this.entries.map((x) => x.id), checked: !checked}
-                    this.$emit("update-checkbox", update)
-                } else {
-                    this.$emit("update-delaythis", this.entries)
-                }
-            }
-        },
-        formatOneAmount: function (item) {
-            return item?.amount ?? 1
-        },
-        formatOneUnit: function (item) {
-            return item?.unit?.name ?? ""
-        },
-        formatOneCategory: function (item) {
-            return item?.food?.supermarket_category?.name
-        },
-        formatOneCompletedAt: function (item) {
-            if (!item.completed_at) {
-                return false
-            }
-            return [this.$t("Completed"), "@", this.formatDate(item.completed_at)].join(" ")
-        },
-        formatOneFood: function (item) {
-            return item.food.name
-        },
-        formatOneDelayUntil: function (item) {
-            if (!item.delay_until || (item.delay_until && item.checked)) {
-                return false
-            }
-            return [this.$t("DelayUntil"), "-", this.formatDate(item.delay_until)].join(" ")
-        },
-        formatOneMealPlan: function (item) {
-            return item?.recipe_mealplan?.name ?? ""
-        },
-        formatOneRecipe: function (item) {
-            return item?.recipe_mealplan?.recipe_name ?? ""
-        },
-        formatOneNote: function (item) {
-            if (!item) {
-                item = this.entries[0]
-            }
-            return [item?.recipe_mealplan?.mealplan_note, item?.ingredient_note].filter(String)
-        },
-        formatOneCreatedBy: function (item) {
-            return [this.$t("Added_by"), item?.created_by.display_name, "@", this.formatDate(item.created_at)].join(" ")
-        },
-        openRecipeCard: function (e, item) {
-            this.genericAPI(this.Models.RECIPE, this.Actions.FETCH, {id: item.recipe_mealplan.recipe}).then((result) => {
-                let recipe = result.data
-                recipe.steps = undefined
-                this.recipe = true
-                this.$refs.recipe_card.open(e, recipe)
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
             })
         },
-        updateChecked: function (e, item) {
-            let update = undefined
-            if (!item) {
-                update = {entries: this.entries.map((x) => x.id), checked: !this.formatChecked}
-            } else {
-                update = {entries: [item], checked: !item.checked}
-            }
-            console.log(update)
-            this.$emit("update-checkbox", update)
+        /**
+         * set food on_hand status to true and check all associated entries
+         * @param food
+         */
+        setFoodIgnoredAndChecked: function (food) {
+            let apiClient = new ApiApiFactory()
+
+            food.ignore_shopping = true
+            apiClient.updateFood(food.id, food).then(r => {
+            }).catch((err) => {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            })
+
+            useShoppingListStore().setEntriesCheckedState(this.entries, true, false)
         },
+        /**
+         * function triggered by touchend event of swipe container
+         * check if min distance is reached and execute desired action
+         */
+        handleSwipe: function () {
+            const minDistance = 80;
+            const container = document.querySelector('#' + this.item_container_id);
+            // get the distance the user swiped
+            const swipeDistance = container.scrollLeft - container.clientWidth;
+            if (swipeDistance < minDistance * -1) {
+                useShoppingListStore().setEntriesCheckedState(this.entries, !this.is_checked, true)
+            } else if (swipeDistance > minDistance) {
+                useShoppingListStore().delayEntries(this.entries, !this.is_delayed, true)
+            }
+        }
     },
 }
 </script>
 
-<!--style src="vue-multiselect/dist/vue-multiselect.min.css"></style-->
 
 <style>
-/* table           { border-collapse:collapse } /* Ensure no space between cells   */
-/* tr.strikeout td { position:relative        } /* Setup a new coordinate system   */
-/* tr.strikeout td:before {                     /* Create a new element that       */
-/*   content: " ";                              /* …has no text content            */
-/*   position: absolute;                        /* …is absolutely positioned       */
-/*   left: 0; top: 50%; width: 100%;            /* …with the top across the middle */
-/*   border-bottom: 1px solid #000;             /* …and with a border on the top   */
-/* }   */
-.checkbox-control {
-    font-size: 0.6rem;
+/* scroll snap takes care of restoring scroll position */
+.swipe-container {
+    display: flex;
+    overflow: auto;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
 }
 
-.checkbox-control-mobile {
-    font-size: 1rem;
+/* scrollbar should be hidden */
+.swipe-container::-webkit-scrollbar {
+    display: none;
 }
 
-.rotate {
-    -moz-transition: all 0.25s linear;
-    -webkit-transition: all 0.25s linear;
-    transition: all 0.25s linear;
+.swipe-container {
+    scrollbar-width: none; /* For Firefox */
 }
 
-.rotated {
-    -moz-transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
+/* main element should always snap into view */
+.swipe-element {
+    scroll-snap-align: start;
 }
 
-.unit-badge-lg {
-    font-size: 1rem !important;
-    font-weight: 500 !important;
+.swipe-icon {
+    color: white;
+    position: sticky;
+    left: 16px;
+    right: 16px;
 }
 
-@media (max-width: 768px) {
-    .dropdown-spacing {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
+/* swipe-actions and element should be 100% wide */
+.swipe-action,
+.swipe-element {
+    min-width: 100%;
 }
 
-.invis-border {
-    border: 1px solid transparent;
+.swipe-action {
+    display: flex;
+    align-items: center;
 }
 
-@media (min-width: 992px) {
-    .fa-ellipsis-v {
-        font-size: 20px;
-    }
+.right {
+    justify-content: flex-end;
 }
 
-@media (min-width: 576px) {
-    .fa-ellipsis-v {
-        font-size: 16px;
-    }
-}
 </style>

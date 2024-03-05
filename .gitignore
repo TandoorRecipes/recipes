@@ -43,6 +43,7 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
+docs/reports/**
 
 # Django stuff:
 *.log
@@ -54,7 +55,6 @@ docs/_build/
 target/
 
 \.idea/dataSources/
-
 \.idea/dataSources\.xml
 
 \.idea/dataSources\.local\.xml
@@ -80,10 +80,11 @@ data/
 /docker-compose.override.yml
 vue/node_modules
 plugins
-.vscode/
 vetur.config.js
 cookbook/static/vue
 vue/webpack-stats.json
 cookbook/templates/sw.js
 .prettierignore
 vue/.yarn
+vue3/.vite
+vue3/node_modules

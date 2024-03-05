@@ -1,3 +1,4 @@
+import copy
 import os
 
 from django.contrib import messages
@@ -8,14 +9,15 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django.views.generic.edit import FormMixin
 
-from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm
-from cookbook.helper.permission_helper import (GroupRequiredMixin, OwnerRequiredMixin,
-                                               above_space_limit, group_required)
-from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync
+from cookbook.forms import CommentForm, ExternalRecipeForm, StorageForm, SyncForm, ConnectorConfigForm
+from cookbook.helper.permission_helper import GroupRequiredMixin, OwnerRequiredMixin, above_space_limit, group_required
+from cookbook.models import Comment, Recipe, RecipeImport, Storage, Sync, ConnectorConfig
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
 from recipes import settings
+
+VALUE_NOT_CHANGED = '__NO__CHANGE__'
 
 
 @group_required('guest')
@@ -76,7 +78,7 @@ class SyncUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
 
 @group_required('admin')
 def edit_storage(request, pk):
-    instance = get_object_or_404(Storage, pk=pk, space=request.space)
+    instance: Storage = get_object_or_404(Storage, pk=pk, space=request.space)
 
     if not (instance.created_by == request.user or request.user.is_superuser):
         messages.add_message(request, messages.ERROR, _('You cannot edit this storage!'))
@@ -87,41 +89,58 @@ def edit_storage(request, pk):
         return redirect('index')
 
     if request.method == "POST":
-        form = StorageForm(request.POST, instance=instance)
+        form = StorageForm(request.POST, instance=copy.deepcopy(instance))
         if form.is_valid():
             instance.name = form.cleaned_data['name']
             instance.method = form.cleaned_data['method']
             instance.username = form.cleaned_data['username']
             instance.url = form.cleaned_data['url']
+            instance.path = form.cleaned_data['path']
 
-            if form.cleaned_data['password'] != '__NO__CHANGE__':
+            if form.cleaned_data['password'] != VALUE_NOT_CHANGED:
                 instance.password = form.cleaned_data['password']
 
-            if form.cleaned_data['token'] != '__NO__CHANGE__':
+            if form.cleaned_data['token'] != VALUE_NOT_CHANGED:
                 instance.token = form.cleaned_data['token']
 
             instance.save()
 
-            messages.add_message(
-                request, messages.SUCCESS, _('Storage saved!')
-            )
+            messages.add_message(request, messages.SUCCESS, _('Storage saved!'))
         else:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                _('There was an error updating this storage backend!')
-            )
+            messages.add_message(request, messages.ERROR, _('There was an error updating this storage backend!'))
     else:
         pseudo_instance = instance
-        pseudo_instance.password = '__NO__CHANGE__'
-        pseudo_instance.token = '__NO__CHANGE__'
+        pseudo_instance.password = VALUE_NOT_CHANGED
+        pseudo_instance.token = VALUE_NOT_CHANGED
         form = StorageForm(instance=pseudo_instance)
 
-    return render(
-        request,
-        'generic/edit_template.html',
-        {'form': form, 'title': _('Storage')}
-    )
+    return render(request, 'generic/edit_template.html', {'form': form, 'title': _('Storage')})
+
+
+class ConnectorConfigUpdate(GroupRequiredMixin, UpdateView):
+    groups_required = ['admin']
+    template_name = "generic/edit_template.html"
+    model = ConnectorConfig
+    form_class = ConnectorConfigForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['initial']['update_token'] = VALUE_NOT_CHANGED
+        return kwargs
+
+    def form_valid(self, form):
+        if form.cleaned_data['update_token'] != VALUE_NOT_CHANGED and form.cleaned_data['update_token'] != "":
+            form.instance.token = form.cleaned_data['update_token']
+        messages.add_message(self.request, messages.SUCCESS, _('Config saved!'))
+        return super(ConnectorConfigUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('edit_connector_config', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("ConnectorConfig")
+        return context
 
 
 class CommentUpdate(OwnerRequiredMixin, UpdateView):
@@ -135,9 +154,7 @@ class CommentUpdate(OwnerRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(CommentUpdate, self).get_context_data(**kwargs)
         context['title'] = _("Comment")
-        context['view_url'] = reverse(
-            'view_recipe', args=[self.object.recipe.pk]
-        )
+        context['view_url'] = reverse('view_recipe', args=[self.object.recipe.pk])
         return context
 
 
@@ -176,11 +193,7 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
             if self.object.storage.method == Storage.LOCAL:
                 Local.rename_file(old_recipe, self.object.name)
 
-            self.object.file_path = "%s/%s%s" % (
-                os.path.dirname(self.object.file_path),
-                self.object.name,
-                os.path.splitext(self.object.file_path)[1]
-            )
+            self.object.file_path = "%s/%s%s" % (os.path.dirname(self.object.file_path), self.object.name, os.path.splitext(self.object.file_path)[1])
 
         messages.add_message(self.request, messages.SUCCESS, _('Changes saved!'))
         return super(ExternalRecipeUpdate, self).form_valid(form)
@@ -197,7 +210,5 @@ class ExternalRecipeUpdate(GroupRequiredMixin, UpdateView, SpaceFormMixing):
         context['title'] = _("Recipe")
         context['view_url'] = reverse('view_recipe', args=[self.object.pk])
         if self.object.storage:
-            context['delete_external_url'] = reverse(
-                'delete_recipe_source', args=[self.object.pk]
-            )
+            context['delete_external_url'] = reverse('delete_recipe_source', args=[self.object.pk])
         return context

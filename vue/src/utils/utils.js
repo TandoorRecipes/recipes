@@ -131,7 +131,7 @@ export class StandardToasts {
         }
 
 
-        let DEBUG = localStorage.getItem("DEBUG") === "True" || always_show_errors
+        let DEBUG = (localStorage.getItem("DEBUG") === "True" || always_show_errors) && variant !== 'success'
         if (DEBUG){
             console.log('ERROR ', err, JSON.stringify(err?.response?.data))
             console.trace();
@@ -317,6 +317,15 @@ export function calculateAmount(amount, factor) {
     }
 }
 
+/* Replace spaces by dashes, then use DOM method to escape special characters. Use for dynamically generated CSS classes*/
+export const EscapeCSSMixin = {
+    methods: {
+        escapeCSS: function(classname) {
+            return CSS.escape(classname.replace(/\s+/g, "-").toLowerCase())
+        }
+    }
+}
+
 export function roundDecimals(num) {
     let decimals = getUserPreference("user_fractions") ? getUserPreference("user_fractions") : 2
     return +(Math.round(num + `e+${decimals}`) + `e-${decimals}`)
@@ -365,6 +374,23 @@ export function energyHeading() {
     }
 }
 
+export const FormatMixin = {
+    name: "FormatMixin",
+    methods: {
+        /**
+         * format short date from datetime
+         * @param datetime any string that can be parsed by Date.parse()
+         * @return {string}
+         */
+        formatDate: function (datetime) {
+            return Intl.DateTimeFormat(window.navigator.language, {
+                dateStyle: "short",
+            }).format(Date.parse(datetime))
+        },
+    },
+}
+
+
 axios.defaults.xsrfCookieName = "csrftoken"
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
@@ -376,7 +402,7 @@ export const ApiMixin = {
         }
     },
     methods: {
-        // if passing parameters that are not part of the offical schema of the endpoint use parameter: options: {query: {simple: 1}}
+        // if passing parameters that are not part of the official schema of the endpoint use parameter: options: {query: {simple: 1}}
         genericAPI: function (model, action, options) {
             let setup = getConfig(model, action)
             if (setup?.config?.function) {

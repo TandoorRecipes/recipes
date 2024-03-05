@@ -1,9 +1,8 @@
-from datetime import timedelta
+
 from decimal import Decimal
 
 from django.db.models import F, OuterRef, Q, Subquery, Value
 from django.db.models.functions import Coalesce
-from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from cookbook.models import (Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe,
@@ -27,9 +26,6 @@ def shopping_helper(qs, request):
     elif checked in ['true', 1, '1']:
         qs = qs.filter(checked=True)
     elif checked in ['recent']:
-        today_start = timezone.now().replace(hour=0, minute=0, second=0)
-        week_ago = today_start - timedelta(days=user.userpreference.shopping_recent_days)
-        qs = qs.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
         supermarket_order = ['checked'] + supermarket_order
 
     return qs.distinct().order_by(*supermarket_order).select_related('unit', 'food', 'ingredient', 'created_by', 'list_recipe', 'list_recipe__mealplan', 'list_recipe__recipe')
@@ -79,10 +75,8 @@ class RecipeShoppingEditor():
 
     @staticmethod
     def get_shopping_list_recipe(id, user, space):
-        return ShoppingListRecipe.objects.filter(id=id).filter(Q(shoppinglist__space=space) | Q(entries__space=space)).filter(
-            Q(shoppinglist__created_by=user)
-            | Q(shoppinglist__shared=user)
-            | Q(entries__created_by=user)
+        return ShoppingListRecipe.objects.filter(id=id).filter(entries__space=space).filter(
+            Q(entries__created_by=user)
             | Q(entries__created_by__in=list(user.get_shopping_share()))
         ).prefetch_related('entries').first()
 

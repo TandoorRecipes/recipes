@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="rating">
         <span class="d-inline" v-if="recipe.rating > 0">
             <div v-if="!pill">
                 <i class="fas fa-star fa-xs text-primary" v-for="i in Math.floor(recipe.rating)" v-bind:key="i"></i>
