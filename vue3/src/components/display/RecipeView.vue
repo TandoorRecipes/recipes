@@ -1,7 +1,9 @@
 <template>
 
     <v-card>
-        <v-card-title>{{ recipe.name }} <recipe-context-menu :recipe="recipe"></recipe-context-menu></v-card-title>
+        <v-card-title>{{ recipe.name }}
+            <recipe-context-menu :recipe="recipe"></recipe-context-menu>
+        </v-card-title>
 
         <v-img max-height="25vh" cover lazy :src="recipe.image">
             <!-- TODO placement in image -->
@@ -27,9 +29,9 @@
                     <div class="text-grey">Waiting Time</div>
                 </v-col>
                 <v-col class="pt-1 pb-1">
-                    <NumberScalerDialog :number="recipe.servings" @change="recipe.servings = $event.number" title="Servings">
+                    <NumberScalerDialog :number="servings" @change="servings = $event.number" title="Servings">
                         <template #activator>
-                            <i class="fas fa-calendar-alt"></i> {{ recipe.servings }} <br/>
+                            <i class="fas fa-calendar-alt"></i> {{ servings }} <br/>
                             <div class="text-grey"><span v-if="recipe?.servingsText">{{ recipe.servingsText }}</span><span v-else>Servings</span></div>
                         </template>
                     </NumberScalerDialog>
@@ -46,7 +48,7 @@
 
 
     <v-card class="mt-1" v-for="s in recipe.steps" :key="s.id">
-        <Step :step="s"></Step>
+        <Step :step="s" :ingredient_factor="ingredient_factor"></Step>
     </v-card>
 
     <!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->
@@ -68,9 +70,22 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 export default defineComponent({
     name: "RecipeView",
     components: {RecipeContextMenu, RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
-    computed: {},
+    computed: {
+        ingredient_factor: function () {
+            return this.servings / this.recipe.servings
+        },
+    },
     data() {
-        return {}
+        return {
+            servings: 1,
+        }
+    },
+    watch: {
+        'recipe.servings': function () {
+            if (this.recipe.servings){
+                this.servings = this.recipe.servings
+            }
+        }
     },
     props: {
         recipe: {

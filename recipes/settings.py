@@ -299,6 +299,13 @@ REST_FRAMEWORK = {
          ),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'COERCE_DECIMAL_TO_STRING': False,
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Tandoor',
+    'DESCRIPTION': 'Tandoor API Docs',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 ROOT_URLCONF = 'recipes.urls'

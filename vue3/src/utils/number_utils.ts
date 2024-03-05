@@ -9,7 +9,7 @@ function getUserPreference(pref: string) {
  */
 export function roundDecimals(num: number) {
     let decimals = 2 //TODO get user preference
-    return num.toFixed(decimals)
+    return Number(num.toFixed(decimals))
 }
 
 /**
