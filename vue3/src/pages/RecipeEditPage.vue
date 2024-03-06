@@ -1,69 +1,82 @@
 <template>
     <v-container>
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-title>{{ recipe.name }}</v-card-title>
 
-        <v-form>
-            <v-text-field
-                label="Name"
-                v-model="recipe.name"
-            ></v-text-field>
+                    <v-card-text>
 
-            <v-textarea
-                label="Description"
-                v-model="recipe.description"
-                clearable
-            ></v-textarea>
 
-            <v-combobox
-                label="Keywords"
-                v-model="recipe.keywords"
-                :items="keywords"
-                item-title="name"
-                multiple
-                clearable
-                chips
-            ></v-combobox>
+                        <v-form>
+                            <v-text-field
+                                label="Name"
+                                v-model="recipe.name"
+                            ></v-text-field>
 
-            <v-row>
-                <v-col>
-                    <v-text-field
-                        v-model.number="recipe.waitingTime"
-                        label="Waiting Time (min)"
-                    ></v-text-field>
-                </v-col>
-                <v-col>
-                    <v-text-field
-                        v-model.number="recipe.workingTime"
-                        label="Working Time (min)"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
+                            <v-textarea
+                                label="Description"
+                                v-model="recipe.description"
+                                clearable
+                            ></v-textarea>
 
-            <v-row>
-                <v-col>
-                    <v-text-field
-                        v-model.number="recipe.servings"
-                        label="Servings"
-                    ></v-text-field>
-                </v-col>
-                <v-col>
-                    <v-text-field
-                        v-model="recipe.servingsText"
-                        label="Servings Text"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
+                            <v-combobox
+                                label="Keywords"
+                                v-model="recipe.keywords"
+                                :items="keywords"
+                                item-title="name"
+                                multiple
+                                clearable
+                                chips
+                            ></v-combobox>
 
-            <v-row v-for="(step, index) in recipe.steps">
-                <v-col>
-                    <step-editor :step="step" :step-index="index"></step-editor>
-                </v-col>
-            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field
+                                        v-model.number="recipe.waitingTime"
+                                        label="Waiting Time (min)"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col>
+                                    <v-text-field
+                                        v-model.number="recipe.workingTime"
+                                        label="Working Time (min)"
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
 
-        </v-form>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field
+                                        v-model.number="recipe.servings"
+                                        label="Servings"
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col>
+                                    <v-text-field
+                                        v-model="recipe.servingsText"
+                                        label="Servings Text"
+                                    ></v-text-field>
+                                </v-col>
+                            </v-row>
 
-        <v-btn @click="updateRecipe()">Save</v-btn>
-        <v-btn :to="{name: 'view_recipe', params: {id: recipe_id}}">View</v-btn>
+
+                        </v-form>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+
+        <v-row v-for="(step, index) in recipe.steps" class="mt-1">
+            <v-col>
+                <step-editor v-model="recipe.steps[index]" :step-index="index"></step-editor>
+            </v-col>
+        </v-row>
     </v-container>
+
+    <v-btn @click="updateRecipe()">Save</v-btn>
+    <v-btn :to="{name: 'view_recipe', params: {id: recipe_id}}">View</v-btn>
 
 
 </template>
@@ -96,13 +109,13 @@ export default defineComponent({
         this.refreshRecipe()
 
         const api = new ApiApi()
-        api.apiKeywordList().then(r => {
+        api.apiKeywordList({page: 1, pageSize: 100}).then(r => {
             this.keywords = r.results
         })
     },
     methods: {
         refreshRecipe() {
-            if (this.recipe.id != this.recipe_id) {
+            if (this.recipe.id != Number(this.recipe_id)) {
                 const api = new ApiApi()
                 api.apiRecipeRetrieve({id: Number(this.recipe_id)}).then(r => {
                     this.recipe = r
@@ -111,7 +124,7 @@ export default defineComponent({
         },
         updateRecipe() {
             const api = new ApiApi()
-            api.apiRecipeUpdate({id: this.recipe_id, recipe: this.recipe}).then(r => {
+            api.apiRecipeUpdate({id: Number(this.recipe_id), recipe: this.recipe}).then(r => {
                 this.recipe = r
             })
         }
