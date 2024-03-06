@@ -128,18 +128,20 @@ export default defineComponent({
     mounted() {
         // add keyhandlers
         window.addEventListener('keydown', (e) => {
-            if (e.key == 'ArrowUp') {
-                this.selected_result = Math.max(0, this.selected_result - 1)
-            }
-            if (e.key == 'ArrowDown') {
-                this.selected_result = Math.min(this.search_results.length, this.selected_result + 1)
-            }
-            if (e.key == 'Enter') {
-                this.goToSelectedRecipe()
-            }
-            if (e.key == 'k' && e.ctrlKey) {
-                this.dialog = true
-                e.preventDefault()
+            if (this.dialog) {
+                if (e.key == 'ArrowUp') {
+                    this.selected_result = Math.max(0, this.selected_result - 1)
+                }
+                if (e.key == 'ArrowDown') {
+                    this.selected_result = Math.min(this.search_results.length, this.selected_result + 1)
+                }
+                if (e.key == 'Enter') {
+                    this.goToSelectedRecipe()
+                }
+                if (e.key == 'k' && e.ctrlKey) {
+                    this.dialog = true
+                    e.preventDefault()
+                }
             }
         })
 
