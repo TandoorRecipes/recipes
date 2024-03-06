@@ -1,21 +1,18 @@
 <template>
-    <v-app>
-
+    <v-app >
 
         <v-app-bar color="tandoor" flat density="comfortable">
             <router-link :to="{name: 'view_search', params: {}}">
-                <v-img  src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
             </router-link>
             <global-search-dialog></global-search-dialog>
             <v-spacer></v-spacer>
-<!--            <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>-->
+            <!--            <v-btn density="compact" icon="fas fa-ellipsis-v"></v-btn>-->
         </v-app-bar>
 
 
         <v-main>
-
             <router-view></router-view>
-
         </v-main>
 
         <v-bottom-navigation grow>
@@ -58,6 +55,7 @@ export default defineComponent({
         return {
             drawer: true,
             rail: true,
+            overlay: false
         }
     },
     mounted() {

@@ -1,11 +1,11 @@
 {% load django_vite %}
 
-
+<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Tandoor</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     
@@ -15,7 +15,7 @@
 
 {% vite_hmr_client %}
 {% vite_asset 'src/apps/tandoor/main.ts' %}
-<script src="{% url 'js_reverse' %}"></script>
+
 
 </body>
 </html>

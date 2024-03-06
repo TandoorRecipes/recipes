@@ -19,29 +19,63 @@
                 <v-chip><i class="fas fa-plus-circle"></i> Time</v-chip>
             </v-chip-group>
 
-            <ingredients-table :ingredients="step.ingredients" :show-notes="false" draggable>
+            <v-table density="compact">
 
-            </ingredients-table>
+                <draggable tag="tbody" v-model="step.ingredients" handle=".drag-handle" item-key="id" @sort="sortIngredients">
+                    <template #item="{element}">
+                        <v-dialog>
+                            <template v-slot:activator="{ props: activatorProps }">
+                                <IngredientsTableRow v-bind="activatorProps" :ingredient="element" :key="element.id" :show-notes="false" :draggable="true"></IngredientsTableRow>
+                            </template>
+                            <template v-slot:default="{ isActive }">
+                                <v-card  >
+                                    <v-card-title>Ingredient</v-card-title>
+                                   <v-card-text>
+                                       <v-form>
+                                           <v-text-field
+                                               label="Amount"
+                                                v-model="element.amount"
+                                           ></v-text-field>
+                                       </v-form>
 
-            <v-alert @click="dialog_markdown_edit = true">
+                                   </v-card-text>
+                                </v-card>
+                            </template>
+                        </v-dialog>
+
+                    </template>
+                </draggable>
+
+            </v-table>
+
+            <v-alert @click="dialog_markdown_edit = true" class="mt-2">
                 {{ step.instruction }}
             </v-alert>
 
         </v-card-text>
     </v-card>
 
+    <v-dialog
+        v-model="dialog_markdown_edit"
+        transition="dialog-bottom-transition">
+        <v-card>
+            <v-card-title>Ingredient</v-card-title>
+            <v-form>
+                <v-text-field></v-text-field>
+            </v-form>
+        </v-card>
+    </v-dialog>
 
     <v-dialog
         v-model="dialog_markdown_edit"
         transition="dialog-bottom-transition"
-        fullscreen
-        @close="$emit('change', {step: step})">
+        fullscreen>
         <v-card>
             <v-toolbar>
                 <v-toolbar-title>Edit Instructions</v-toolbar-title>
                 <v-btn icon="fas fa-close" @click="dialog_markdown_edit = false"></v-btn>
             </v-toolbar>
-            <step-markdown-editor class="h-100" :step="step" @change="step = $event.step; $emit('change', {step: step})"></step-markdown-editor>
+            <step-markdown-editor class="h-100" :step="step" @change="step = $event.step;"></step-markdown-editor>
         </v-card>
     </v-dialog>
 </template>
@@ -51,17 +85,15 @@ import {defineComponent, PropType} from 'vue'
 import {Step} from "@/openapi";
 import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
+import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
+import draggable from "vuedraggable";
 
 export default defineComponent({
     name: "StepEditor",
-    components: {IngredientsTable, StepMarkdownEditor},
-    emits: {
-        change(payload: { step: Step }) {
-            return payload
-        }
-    },
+    components: {draggable, IngredientsTableRow, IngredientsTable, StepMarkdownEditor},
+    emits: ['update:modelValue'],
     props: {
-        step: {
+        modelValue: {
             type: Object as PropType<Step>,
             required: true,
         },
@@ -70,9 +102,26 @@ export default defineComponent({
             required: false,
         },
     },
+    computed: {
+        step: {
+            get() {
+                return this.modelValue
+            },
+            set(value: Step) {
+                this.$emit('update:modelValue', value)
+            }
+        }
+    },
     data() {
         return {
             dialog_markdown_edit: false,
+        }
+    },
+    methods: {
+        sortIngredients() {
+            this.step.ingredients.forEach((value, index) => {
+                value.order = index
+            })
         }
     }
 })
