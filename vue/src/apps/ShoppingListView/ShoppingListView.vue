@@ -569,6 +569,9 @@ export default {
             api.retrieveSupermarket(useUserPreferenceStore().device_settings.shopping_selected_supermarket.id).then(r => {
                 useUserPreferenceStore().device_settings.shopping_selected_supermarket = r.data
                 useUserPreferenceStore().updateDeviceSettings()
+            }).catch(err => {
+                useUserPreferenceStore().device_settings.shopping_selected_supermarket = null
+                useUserPreferenceStore().updateDeviceSettings()
             })
         }
 
