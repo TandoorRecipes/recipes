@@ -427,6 +427,15 @@ export class Models {
                     placeholder: "",
                     optional: true,
                 },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
+                    optional: true,
+                },
             },
         },
     }
