@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-04-11 15:09+0200\n"
-"PO-Revision-Date: 2024-02-27 12:19+0000\n"
-"Last-Translator: Lukas Åteg <lukas@ategsolutions.se>\n"
+"PO-Revision-Date: 2024-03-10 06:11+0000\n"
+"Last-Translator: Kn <kn@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -1006,7 +1006,7 @@ msgstr "Återställ sökning"
 
 #: .\cookbook\templates\index.html:85
 msgid "Last viewed"
-msgstr "Senast visade"
+msgstr "Senast öppnade"
 
 #: .\cookbook\templates\index.html:87 .\cookbook\templates\meal_plan.html:178
 #: .\cookbook\templates\stats.html:22
