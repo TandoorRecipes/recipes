@@ -293,11 +293,10 @@ def system(request):
 
     if postgres:
         postgres_current = 16  # will need to be updated as PostgreSQL releases new major versions
-        from decimal import Decimal
 
         from django.db import connection
 
-        postgres_ver = Decimal(str(connection.pg_version).replace('00', '.'))
+        postgres_ver = divmod(connection.pg_version, 10000)
         if postgres_ver >= postgres_current:
             database_status = 'success'
             database_message = _('Everything is fine!')
