@@ -1,5 +1,5 @@
 {
-    "warning_feature_beta": "Tämä ominaisuus on BETA (testaus) vaiheessa. Bugeja ja hajottavia muutoksia saattaa ilmaantua tulevaisuudessa tätä ominaisuutta (mahdollisesti menettää ominaisuuksiin liittyvää tietoa)käytettäessä.",
+    "warning_feature_beta": "Tämä ominaisuus on BETA (testaus) vaiheessa. Bugeja ja hajottavia muutoksia saattaa ilmaantua tulevaisuudessa tätä ominaisuutta (mahdollisesti menettää ominaisuuksiin liittyvää tietoa) käytettäessä.",
     "err_fetching_resource": "Resurssin noutamisessa tapahtui virhe!",
     "err_creating_resource": "Resurssin luomisessa tapahtui virhe!",
     "err_updating_resource": "Resurssin päivittämisessä tapahtui virhe!",
