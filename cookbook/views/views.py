@@ -38,7 +38,7 @@ def index(request):
             return HttpResponseRedirect(reverse_lazy('view_search'))
 
     try:
-        page_map = {UserPreference.SEARCH: reverse_lazy('view_search'), UserPreference.PLAN: reverse_lazy('view_plan'), UserPreference.BOOKS: reverse_lazy('view_books'), }
+        page_map = {UserPreference.SEARCH: reverse_lazy('view_search'), UserPreference.PLAN: reverse_lazy('view_plan'), UserPreference.BOOKS: reverse_lazy('view_books'), UserPreference.SHOPPING: reverse_lazy('view_shopping'),}
 
         return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
     except UserPreference.DoesNotExist:
@@ -293,11 +293,10 @@ def system(request):
 
     if postgres:
         postgres_current = 16  # will need to be updated as PostgreSQL releases new major versions
-        from decimal import Decimal
 
         from django.db import connection
 
-        postgres_ver = Decimal(str(connection.pg_version).replace('00', '.'))
+        postgres_ver = divmod(connection.pg_version, 10000)
         if postgres_ver >= postgres_current:
             database_status = 'success'
             database_message = _('Everything is fine!')
@@ -446,7 +445,7 @@ def web_manifest(request):
             theme_values['app_name'], "description":
             _("Manage recipes, shopping list, meal plans and more."), "icons":
             icons, "start_url":
-            "./search", "background_color":
+            "./", "background_color":
             theme_values['nav_bg_color'], "display":
             "standalone", "scope":
             ".", "theme_color":
@@ -454,7 +453,7 @@ def web_manifest(request):
             [{"name": _("Plan"), "short_name": _("Plan"), "description": _("View your meal Plan"), "url":
                 "./plan"}, {"name": _("Books"), "short_name": _("Books"), "description": _("View your cookbooks"), "url": "./books"},
              {"name": _("Shopping"), "short_name": _("Shopping"), "description": _("View your shopping lists"), "url":
-                 "./list/shopping-list/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
+                 "./shopping/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
     }
 
     return JsonResponse(manifest_info, json_dumps_params={'indent': 4})

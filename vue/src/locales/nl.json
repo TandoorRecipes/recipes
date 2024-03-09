@@ -520,5 +520,6 @@
     "imperial_gallon": "imperial gal [imp gal] (Verenigd Koninkrijk, volume)",
     "imperial_tsp": "imperial thelepel [imp tsp] (UK, volume)",
     "Choose_Category": "Kies Categorie",
-    "Back": "Terug"
+    "Back": "Terug",
+    "err_importing_recipe": "Bij het importeren van het recept is een fout opgetreden!"
 }

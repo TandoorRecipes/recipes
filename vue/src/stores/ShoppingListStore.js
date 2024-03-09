@@ -65,6 +65,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 let count_checked = 0
                 let count_unchecked_food = 0
                 let count_checked_food = 0
+                let count_delayed_unchecked = 0
 
                 for (let fi in structure[i]['foods']) {
                     let food_checked = true
@@ -74,6 +75,9 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                         } else {
                             food_checked = false
                             count_unchecked++
+                            if (structure[i]['foods'][fi]['entries'][ei].delay_until != null){
+                                count_delayed_unchecked++
+                            }
                         }
                     }
                     if (food_checked) {
@@ -87,6 +91,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 Vue.set(structure[i], 'count_checked', count_checked)
                 Vue.set(structure[i], 'count_unchecked_food', count_unchecked_food)
                 Vue.set(structure[i], 'count_checked_food', count_checked_food)
+                Vue.set(structure[i], 'count_delayed_unchecked', count_delayed_unchecked)
 
                 total_unchecked += count_unchecked
                 total_checked += count_checked

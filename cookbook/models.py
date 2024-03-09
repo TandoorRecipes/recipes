@@ -449,11 +449,13 @@ class UserPreference(models.Model, PermissionModelMixin):
     SEARCH = 'SEARCH'
     PLAN = 'PLAN'
     BOOKS = 'BOOKS'
+    SHOPPING = 'SHOPPING'
 
     PAGES = (
         (SEARCH, _('Search')),
         (PLAN, _('Meal-Plan')),
         (BOOKS, _('Books')),
+        (SHOPPING, _('Shopping')),
     )
 
     user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)

@@ -16,7 +16,7 @@ from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keywor
 
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
-
+import datetime
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
@@ -122,9 +122,9 @@ urlpatterns = [
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
-    path('api/plan-ical/', api.get_plan_ical, name='api_get_plan_ical_future'),
-    path('api/plan-ical/<slug:from_date>/', api.get_plan_ical, name='api_get_plan_ical_from'),
-    path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
+
+    path('api/plan-ical/', api.get_plan_ical, kwargs={'from_date': datetime.date.today(), 'to_date': None}, name='api_get_plan_ical_future'),
+
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),

@@ -75,7 +75,7 @@
                         <!-- --------------------------------------- shopping list table -->
                         <b-row v-for="c in shopping_list_store.get_entries_by_group" v-bind:key="c.id">
                             <b-col cols="12"
-                                   v-if="c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries && (c.count_unchecked + c.count_checked) > 0">
+                                   v-if="(c.count_unchecked > 0 || user_preference_store.device_settings.shopping_show_checked_entries) && (c.count_unchecked + c.count_checked) > 0 && (c.count_delayed_unchecked < c.count_unchecked ||user_preference_store.device_settings.shopping_show_delayed_entries )">
                                 <b-button-group class="w-100 mt-1"
                                                 :class="{'flex-row-reverse': useUserPreferenceStore().user_settings.left_handed}">
                                     <b-button variant="info" block class="btn btn-block text-left">
@@ -568,6 +568,9 @@ export default {
             let api = new ApiApiFactory()
             api.retrieveSupermarket(useUserPreferenceStore().device_settings.shopping_selected_supermarket.id).then(r => {
                 useUserPreferenceStore().device_settings.shopping_selected_supermarket = r.data
+                useUserPreferenceStore().updateDeviceSettings()
+            }).catch(err => {
+                useUserPreferenceStore().device_settings.shopping_selected_supermarket = null
                 useUserPreferenceStore().updateDeviceSettings()
             })
         }
