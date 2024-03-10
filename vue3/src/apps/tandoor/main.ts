@@ -12,12 +12,13 @@ import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 import luxonPlugin from "@/plugins/luxonPlugin";
 import RecipeEditPage from "@/pages/RecipeEditPage.vue";
+import MealPlanPage from "@/pages/MealPlanPage.vue";
 
 const routes = [
     {path: '/', redirect: '/search', name: 'index'},
     {path: '/search', component: RecipeSearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
-    {path: '/mealplan', component: ShoppingListPage, name: 'view_mealplan'},
+    {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
     {path: '/books', component: ShoppingListPage, name: 'view_books'},
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
