@@ -561,6 +561,17 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
+# TODO make TreeMixin a view type and move schema to view type
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
+            OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
+            OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
+            OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
+        ]
+    )
+)
 class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
@@ -1101,7 +1112,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     )
     def flat(self, request):
         qs = Recipe.objects.filter(
-            space=request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all() # TODO limit fields retrieved but .values() kills image
+            space=request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()  # TODO limit fields retrieved but .values() kills image
 
         return Response(self.serializer_class(qs, many=True).data)
 

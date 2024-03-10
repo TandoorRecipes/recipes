@@ -16,13 +16,15 @@
  * * `SEARCH` - Search
 * `PLAN` - Meal-Plan
 * `BOOKS` - Books
+* `SHOPPING` - Shopping
  * @export
  * @enum {string}
  */
 export enum DefaultPageEnum {
     Search = 'SEARCH',
     Plan = 'PLAN',
-    Books = 'BOOKS'
+    Books = 'BOOKS',
+    Shopping = 'SHOPPING'
 }
 
 export function DefaultPageEnumFromJSON(json: any): DefaultPageEnum {

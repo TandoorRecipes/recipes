@@ -539,8 +539,12 @@ export interface ApiFoodInheritFieldRetrieveRequest {
 }
 
 export interface ApiFoodListRequest {
+    limit?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
+    random?: string;
+    updatedAt?: string;
 }
 
 export interface ApiFoodMergeUpdateRequest {
@@ -945,15 +949,6 @@ export interface ApiOpenDataVersionRetrieveRequest {
 export interface ApiOpenDataVersionUpdateRequest {
     id: number;
     openDataVersion: OpenDataVersion;
-}
-
-export interface ApiPlanIcalRetrieve2Request {
-    fromDate: string;
-}
-
-export interface ApiPlanIcalRetrieve3Request {
-    fromDate: string;
-    toDate: string;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -3135,12 +3130,28 @@ export class ApiApi extends runtime.BaseAPI {
     async apiFoodListRaw(requestParameters: ApiFoodListRequest): Promise<runtime.ApiResponse<PaginatedFoodList>> {
         const queryParameters: any = {};
 
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
 
         if (requestParameters.pageSize !== undefined) {
             queryParameters['page_size'] = requestParameters.pageSize;
+        }
+
+        if (requestParameters.query !== undefined) {
+            queryParameters['query'] = requestParameters.query;
+        }
+
+        if (requestParameters.random !== undefined) {
+            queryParameters['random'] = requestParameters.random;
+        }
+
+        if (requestParameters.updatedAt !== undefined) {
+            queryParameters['updated_at'] = requestParameters.updatedAt;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -6588,70 +6599,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiPlanIcalRetrieve(): Promise<void> {
         await this.apiPlanIcalRetrieveRaw();
-    }
-
-    /**
-     */
-    async apiPlanIcalRetrieve2Raw(requestParameters: ApiPlanIcalRetrieve2Request): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.fromDate === null || requestParameters.fromDate === undefined) {
-            throw new runtime.RequiredError('fromDate','Required parameter requestParameters.fromDate was null or undefined when calling apiPlanIcalRetrieve2.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
-        }
-        const response = await this.request({
-            path: `/api/plan-ical/{from_date}/`.replace(`{${"from_date"}}`, encodeURIComponent(String(requestParameters.fromDate))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiPlanIcalRetrieve2(requestParameters: ApiPlanIcalRetrieve2Request): Promise<void> {
-        await this.apiPlanIcalRetrieve2Raw(requestParameters);
-    }
-
-    /**
-     */
-    async apiPlanIcalRetrieve3Raw(requestParameters: ApiPlanIcalRetrieve3Request): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters.fromDate === null || requestParameters.fromDate === undefined) {
-            throw new runtime.RequiredError('fromDate','Required parameter requestParameters.fromDate was null or undefined when calling apiPlanIcalRetrieve3.');
-        }
-
-        if (requestParameters.toDate === null || requestParameters.toDate === undefined) {
-            throw new runtime.RequiredError('toDate','Required parameter requestParameters.toDate was null or undefined when calling apiPlanIcalRetrieve3.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
-        }
-        const response = await this.request({
-            path: `/api/plan-ical/{from_date}/{to_date}/`.replace(`{${"from_date"}}`, encodeURIComponent(String(requestParameters.fromDate))).replace(`{${"to_date"}}`, encodeURIComponent(String(requestParameters.toDate))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiPlanIcalRetrieve3(requestParameters: ApiPlanIcalRetrieve3Request): Promise<void> {
-        await this.apiPlanIcalRetrieve3Raw(requestParameters);
     }
 
     /**
