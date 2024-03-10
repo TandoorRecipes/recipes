@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-10 07:12+0100\n"
-"PO-Revision-Date: 2024-03-10 06:11+0000\n"
+"PO-Revision-Date: 2024-03-11 13:02+0000\n"
 "Last-Translator: Kn <kn@users.noreply.translate.tandoor.dev>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -87,14 +87,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Långt varande Access Token</a> för din HomeAssistant instans"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Till exempel http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api till exempel"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -102,7 +104,7 @@ msgstr "Lagring"
 
 #: .\cookbook\forms.py:222
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
@@ -114,31 +116,35 @@ msgstr "Fil-ID"
 
 #: .\cookbook\forms.py:262
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Maximalt antal användare för detta utrymme har uppnåtts."
 
 #: .\cookbook\forms.py:268
 msgid "Email address already taken!"
-msgstr ""
+msgstr "E-postadressen har redan tagits!"
 
 #: .\cookbook\forms.py:275
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"En e-postadress krävs inte, men om den finns kommer inbjudningslänken att "
+"skickas till användaren."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
-msgstr ""
+msgstr "Namnet är redan taget."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Acceptera villkor och integritetspolicy"
 
 #: .\cookbook\forms.py:332
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Bestämmer hur fuzzy en sökning är om den använder trigramlikhetsmatchning ("
+"t.ex. låga värden innebär att fler stavfel ignoreras)."
 
 #: .\cookbook\forms.py:340
 msgid ""
@@ -190,19 +196,19 @@ msgstr "Sök"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Fuzzy uppslagning"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorera accent"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
-msgstr ""
+msgstr "Delvis matchning"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr ""
+msgstr "Börjar med"
 
 #: .\cookbook\forms.py:351
 #, fuzzy
@@ -265,23 +271,23 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:306
 msgid "knead"
-msgstr ""
+msgstr "knåda"
 
 #: .\cookbook\helper\recipe_url_import.py:307
 msgid "thicken"
-msgstr ""
+msgstr "förtjocka"
 
 #: .\cookbook\helper\recipe_url_import.py:308
 msgid "warm up"
-msgstr ""
+msgstr "Uppvärm"
 
 #: .\cookbook\helper\recipe_url_import.py:309
 msgid "ferment"
-msgstr ""
+msgstr "fermentera"
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
@@ -295,7 +301,7 @@ msgstr "Det gick inte att läsa mallkoden."
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorit"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
@@ -403,8 +409,6 @@ msgid "Other"
 msgstr "Annat"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
 msgstr "Fett"
 
@@ -412,7 +416,7 @@ msgstr "Fett"
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
@@ -428,7 +432,7 @@ msgstr "Kalorier"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -465,38 +469,36 @@ msgid "Nutrition"
 msgstr "Näringsinnehåll"
 
 #: .\cookbook\models.py:919
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Slå samman"
+msgstr "Allergen"
 
 #: .\cookbook\models.py:920
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 #: .\cookbook\models.py:920
 msgid "Goal"
-msgstr ""
+msgstr "Mål"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Enkel"
 
 #: .\cookbook\models.py:1409 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Fras"
 
 #: .\cookbook\models.py:1410 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Internet"
 
 #: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Rå"
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
-msgstr ""
+msgstr "Alternativt namn för mat"
 
 #: .\cookbook\models.py:1468
 #, fuzzy
@@ -530,11 +532,11 @@ msgstr "Ny enhet"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Transponera ord"
 
 #: .\cookbook\models.py:1474
 msgid "Food Replace"
-msgstr ""
+msgstr "Ersätt mat"
 
 #: .\cookbook\models.py:1475
 #, fuzzy
@@ -573,7 +575,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
-msgstr ""
+msgstr "Hej"
 
 #: .\cookbook\serializer.py:1270
 msgid "You have been invited by "
@@ -658,7 +660,7 @@ msgstr "Rapportera en bugg"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Email adresser"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -672,7 +674,7 @@ msgstr "Inställningar"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
@@ -680,15 +682,15 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "Bekräftad"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "Obekräktad"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Primär"
 
 #: .\cookbook\templates\account\email.html:47
 #, fuzzy
@@ -707,10 +709,8 @@ msgid "Remove"
 msgstr "Ta bort"
 
 #: .\cookbook\templates\account\email.html:58
-#, fuzzy
-#| msgid "Warning"
 msgid "Warning:"
-msgstr "Varning"
+msgstr "Varning:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -724,7 +724,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Lägg till email"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
@@ -825,14 +825,12 @@ msgstr "Ändringar sparade!"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
-#, fuzzy
-#| msgid "Password Reset"
 msgid "Password"
-msgstr "Återställ lösenord"
+msgstr "Lösenord"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Glömt lösenord?"
 
 #: .\cookbook\templates\account\password_reset.html:7
 #: .\cookbook\templates\account\password_reset.html:13
@@ -876,7 +874,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr ""
+msgstr "byt lösenord"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
@@ -914,12 +912,12 @@ msgstr ""
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "och"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Integritetspolicy"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
@@ -948,8 +946,6 @@ msgid "Recipes"
 msgstr "Recept"
 
 #: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
-#, fuzzy
-#| msgid "Food"
 msgid "Foods"
 msgstr "Livsmedel"
 
@@ -962,22 +958,16 @@ msgid "Supermarket"
 msgstr "Mataffär"
 
 #: .\cookbook\templates\base.html:199
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarket Category"
-msgstr "Mataffär"
+msgstr "Mataffärkategori"
 
 #: .\cookbook\templates\base.html:211 .\cookbook\views\lists.py:186
-#, fuzzy
-#| msgid "Information"
 msgid "Automations"
-msgstr "Information"
+msgstr "Automationer"
 
 #: .\cookbook\templates\base.html:225 .\cookbook\views\lists.py:222
-#, fuzzy
-#| msgid "File ID"
 msgid "Files"
-msgstr "Fil-ID"
+msgstr "Filer"
 
 #: .\cookbook\templates\base.html:237
 msgid "Batch Edit"
@@ -1004,7 +994,7 @@ msgstr "Exportera"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Egenskaper"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 #, fuzzy
@@ -1055,7 +1045,7 @@ msgstr "Inget utrymme"
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "Överblick"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
@@ -1067,7 +1057,7 @@ msgstr "Github"
 
 #: .\cookbook\templates\base.html:376
 msgid "Translate Tandoor"
-msgstr ""
+msgstr "Översätt Tandoor"
 
 #: .\cookbook\templates\base.html:380
 msgid "API Browser"
@@ -1188,15 +1178,15 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
-msgstr ""
+msgstr "Beskyddad"
 
 #: .\cookbook\templates\generic\delete_template.html:42
 msgid "Cascade"
-msgstr ""
+msgstr "Kaskad"
 
 #: .\cookbook\templates\generic\delete_template.html:73
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
@@ -1508,7 +1498,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "Tillbaka"
 
 #: .\cookbook\templates\property_editor.html:7
 msgid "Property Editor"
@@ -1716,7 +1706,7 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:32
 msgid "Fuzzy"
-msgstr ""
+msgstr "Fuzzy"
 
 #: .\cookbook\templates\settings.html:33
 msgid ""
@@ -1731,11 +1721,11 @@ msgstr ""
 
 #: .\cookbook\templates\settings.html:37 .\cookbook\templates\settings.html:46
 msgid "Apply"
-msgstr ""
+msgstr "Använd"
 
 #: .\cookbook\templates\settings.html:42
 msgid "Precise"
-msgstr ""
+msgstr "Exakt"
 
 #: .\cookbook\templates\settings.html:43
 msgid ""
@@ -1837,7 +1827,7 @@ msgstr ""
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
-msgstr ""
+msgstr "Fortsätt"
 
 #: .\cookbook\templates\socialaccount\signup.html:10
 #, python-format
@@ -1901,7 +1891,7 @@ msgstr ""
 
 #: .\cookbook\templates\space_overview.html:53
 msgid "Owner"
-msgstr ""
+msgstr "Ägare"
 
 #: .\cookbook\templates\space_overview.html:57
 #, fuzzy
@@ -2065,7 +2055,7 @@ msgstr "Info"
 
 #: .\cookbook\templates\system.html:99 .\cookbook\templates\system.html:116
 msgid "Migrations"
-msgstr ""
+msgstr "migrationer"
 
 #: .\cookbook\templates\system.html:105
 msgid ""
@@ -2081,15 +2071,15 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:171
 msgid "False"
-msgstr ""
+msgstr "Falsk"
 
 #: .\cookbook\templates\system.html:171
 msgid "True"
-msgstr ""
+msgstr "Sann"
 
 #: .\cookbook\templates\system.html:196
 msgid "Hide"
-msgstr ""
+msgstr "Göm"
 
 #: .\cookbook\templates\system.html:199
 #, fuzzy
@@ -2447,7 +2437,7 @@ msgstr "Ändringar sparade!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "Anslutningskonfiguration"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
@@ -2486,10 +2476,8 @@ msgid "Invite Links"
 msgstr "Inbjudningslänkar"
 
 #: .\cookbook\views\lists.py:154
-#, fuzzy
-#| msgid "Supermarket"
 msgid "Supermarkets"
-msgstr "Mataffär"
+msgstr "Mataffärer"
 
 #: .\cookbook\views\lists.py:170
 #, fuzzy
