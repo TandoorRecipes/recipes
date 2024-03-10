@@ -568,5 +568,6 @@
     "imperial_gallon": "imperial gal [imp gal] (UK, volym)",
     "imperial_quart": "imperial quart [imp qt] (UK, volym)",
     "open_data_help_text": "Tandoor Open Data projektet ger tillgång till Tandoor data som har bidragits av voluntärer. Det här fältet fylls automatiskt vid import och möjliggör updateringar i framtiden.",
-    "Calculator": "Räknare"
+    "Calculator": "Räknare",
+    "DefaultPage": "Standardsida"
 }
