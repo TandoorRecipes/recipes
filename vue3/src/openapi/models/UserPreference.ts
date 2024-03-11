@@ -12,29 +12,37 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { DefaultPageEnum } from './DefaultPageEnum';
 import {
-    DefaultPageEnum,
     DefaultPageEnumFromJSON,
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
-    ThemeEnum,
+} from './DefaultPageEnum';
+import type { ThemeEnum } from './ThemeEnum';
+import {
     ThemeEnumFromJSON,
     ThemeEnumFromJSONTyped,
     ThemeEnumToJSON,
-    User,
+} from './ThemeEnum';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-    UserFileView,
+} from './User';
+import type { UserFileView } from './UserFileView';
+import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-    UserPreferenceNavTextColorEnum,
+} from './UserFileView';
+import type { UserPreferenceNavTextColorEnum } from './UserPreferenceNavTextColorEnum';
+import {
     UserPreferenceNavTextColorEnumFromJSON,
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
-} from './';
+} from './UserPreferenceNavTextColorEnum';
 
 /**
  * Adds nested create feature
@@ -53,7 +61,7 @@ export interface UserPreference {
      * @type {UserFileView}
      * @memberof UserPreference
      */
-    image?: UserFileView | null;
+    image?: UserFileView;
     /**
      * 
      * @type {ThemeEnum}
@@ -107,7 +115,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    planShare?: Array<User> | null;
+    planShare?: Array<User>;
     /**
      * 
      * @type {boolean}
@@ -167,7 +175,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    shoppingShare?: Array<User> | null;
+    shoppingShare?: Array<User>;
     /**
      * 
      * @type {number}
@@ -218,85 +226,91 @@ export interface UserPreference {
     readonly foodChildrenExist: string;
 }
 
+/**
+ * Check if a given object implements the UserPreference interface.
+ */
+export function instanceOfUserPreference(value: object): boolean {
+    if (!('user' in value)) return false;
+    if (!('foodInheritDefault' in value)) return false;
+    if (!('foodChildrenExist' in value)) return false;
+    return true;
+}
+
 export function UserPreferenceFromJSON(json: any): UserPreference {
     return UserPreferenceFromJSONTyped(json, false);
 }
 
 export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserPreference {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'user': json['user'],
-        'image': !exists(json, 'image') ? undefined : UserFileViewFromJSON(json['image']),
-        'theme': !exists(json, 'theme') ? undefined : ThemeEnumFromJSON(json['theme']),
-        'navBgColor': !exists(json, 'nav_bg_color') ? undefined : json['nav_bg_color'],
-        'navTextColor': !exists(json, 'nav_text_color') ? undefined : UserPreferenceNavTextColorEnumFromJSON(json['nav_text_color']),
-        'navShowLogo': !exists(json, 'nav_show_logo') ? undefined : json['nav_show_logo'],
-        'defaultUnit': !exists(json, 'default_unit') ? undefined : json['default_unit'],
-        'defaultPage': !exists(json, 'default_page') ? undefined : DefaultPageEnumFromJSON(json['default_page']),
-        'useFractions': !exists(json, 'use_fractions') ? undefined : json['use_fractions'],
-        'useKj': !exists(json, 'use_kj') ? undefined : json['use_kj'],
-        'planShare': !exists(json, 'plan_share') ? undefined : (json['plan_share'] === null ? null : (json['plan_share'] as Array<any>).map(UserFromJSON)),
-        'navSticky': !exists(json, 'nav_sticky') ? undefined : json['nav_sticky'],
-        'ingredientDecimals': !exists(json, 'ingredient_decimals') ? undefined : json['ingredient_decimals'],
-        'comments': !exists(json, 'comments') ? undefined : json['comments'],
-        'shoppingAutoSync': !exists(json, 'shopping_auto_sync') ? undefined : json['shopping_auto_sync'],
-        'mealplanAutoaddShopping': !exists(json, 'mealplan_autoadd_shopping') ? undefined : json['mealplan_autoadd_shopping'],
+        'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
+        'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
+        'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
+        'navTextColor': json['nav_text_color'] == null ? undefined : UserPreferenceNavTextColorEnumFromJSON(json['nav_text_color']),
+        'navShowLogo': json['nav_show_logo'] == null ? undefined : json['nav_show_logo'],
+        'defaultUnit': json['default_unit'] == null ? undefined : json['default_unit'],
+        'defaultPage': json['default_page'] == null ? undefined : DefaultPageEnumFromJSON(json['default_page']),
+        'useFractions': json['use_fractions'] == null ? undefined : json['use_fractions'],
+        'useKj': json['use_kj'] == null ? undefined : json['use_kj'],
+        'planShare': json['plan_share'] == null ? undefined : ((json['plan_share'] as Array<any>).map(UserFromJSON)),
+        'navSticky': json['nav_sticky'] == null ? undefined : json['nav_sticky'],
+        'ingredientDecimals': json['ingredient_decimals'] == null ? undefined : json['ingredient_decimals'],
+        'comments': json['comments'] == null ? undefined : json['comments'],
+        'shoppingAutoSync': json['shopping_auto_sync'] == null ? undefined : json['shopping_auto_sync'],
+        'mealplanAutoaddShopping': json['mealplan_autoadd_shopping'] == null ? undefined : json['mealplan_autoadd_shopping'],
         'foodInheritDefault': json['food_inherit_default'],
-        'defaultDelay': !exists(json, 'default_delay') ? undefined : json['default_delay'],
-        'mealplanAutoincludeRelated': !exists(json, 'mealplan_autoinclude_related') ? undefined : json['mealplan_autoinclude_related'],
-        'mealplanAutoexcludeOnhand': !exists(json, 'mealplan_autoexclude_onhand') ? undefined : json['mealplan_autoexclude_onhand'],
-        'shoppingShare': !exists(json, 'shopping_share') ? undefined : (json['shopping_share'] === null ? null : (json['shopping_share'] as Array<any>).map(UserFromJSON)),
-        'shoppingRecentDays': !exists(json, 'shopping_recent_days') ? undefined : json['shopping_recent_days'],
-        'csvDelim': !exists(json, 'csv_delim') ? undefined : json['csv_delim'],
-        'csvPrefix': !exists(json, 'csv_prefix') ? undefined : json['csv_prefix'],
-        'filterToSupermarket': !exists(json, 'filter_to_supermarket') ? undefined : json['filter_to_supermarket'],
-        'shoppingAddOnhand': !exists(json, 'shopping_add_onhand') ? undefined : json['shopping_add_onhand'],
-        'leftHanded': !exists(json, 'left_handed') ? undefined : json['left_handed'],
-        'showStepIngredients': !exists(json, 'show_step_ingredients') ? undefined : json['show_step_ingredients'],
+        'defaultDelay': json['default_delay'] == null ? undefined : json['default_delay'],
+        'mealplanAutoincludeRelated': json['mealplan_autoinclude_related'] == null ? undefined : json['mealplan_autoinclude_related'],
+        'mealplanAutoexcludeOnhand': json['mealplan_autoexclude_onhand'] == null ? undefined : json['mealplan_autoexclude_onhand'],
+        'shoppingShare': json['shopping_share'] == null ? undefined : ((json['shopping_share'] as Array<any>).map(UserFromJSON)),
+        'shoppingRecentDays': json['shopping_recent_days'] == null ? undefined : json['shopping_recent_days'],
+        'csvDelim': json['csv_delim'] == null ? undefined : json['csv_delim'],
+        'csvPrefix': json['csv_prefix'] == null ? undefined : json['csv_prefix'],
+        'filterToSupermarket': json['filter_to_supermarket'] == null ? undefined : json['filter_to_supermarket'],
+        'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
+        'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
+        'showStepIngredients': json['show_step_ingredients'] == null ? undefined : json['show_step_ingredients'],
         'foodChildrenExist': json['food_children_exist'],
     };
 }
 
 export function UserPreferenceToJSON(value?: UserPreference | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'user': value.user,
-        'image': UserFileViewToJSON(value.image),
-        'theme': ThemeEnumToJSON(value.theme),
-        'nav_bg_color': value.navBgColor,
-        'nav_text_color': UserPreferenceNavTextColorEnumToJSON(value.navTextColor),
-        'nav_show_logo': value.navShowLogo,
-        'default_unit': value.defaultUnit,
-        'default_page': DefaultPageEnumToJSON(value.defaultPage),
-        'use_fractions': value.useFractions,
-        'use_kj': value.useKj,
-        'plan_share': value.planShare === undefined ? undefined : (value.planShare === null ? null : (value.planShare as Array<any>).map(UserToJSON)),
-        'nav_sticky': value.navSticky,
-        'ingredient_decimals': value.ingredientDecimals,
-        'comments': value.comments,
-        'shopping_auto_sync': value.shoppingAutoSync,
-        'mealplan_autoadd_shopping': value.mealplanAutoaddShopping,
-        'default_delay': value.defaultDelay,
-        'mealplan_autoinclude_related': value.mealplanAutoincludeRelated,
-        'mealplan_autoexclude_onhand': value.mealplanAutoexcludeOnhand,
-        'shopping_share': value.shoppingShare === undefined ? undefined : (value.shoppingShare === null ? null : (value.shoppingShare as Array<any>).map(UserToJSON)),
-        'shopping_recent_days': value.shoppingRecentDays,
-        'csv_delim': value.csvDelim,
-        'csv_prefix': value.csvPrefix,
-        'filter_to_supermarket': value.filterToSupermarket,
-        'shopping_add_onhand': value.shoppingAddOnhand,
-        'left_handed': value.leftHanded,
-        'show_step_ingredients': value.showStepIngredients,
+        'user': value['user'],
+        'image': UserFileViewToJSON(value['image']),
+        'theme': ThemeEnumToJSON(value['theme']),
+        'nav_bg_color': value['navBgColor'],
+        'nav_text_color': UserPreferenceNavTextColorEnumToJSON(value['navTextColor']),
+        'nav_show_logo': value['navShowLogo'],
+        'default_unit': value['defaultUnit'],
+        'default_page': DefaultPageEnumToJSON(value['defaultPage']),
+        'use_fractions': value['useFractions'],
+        'use_kj': value['useKj'],
+        'plan_share': value['planShare'] == null ? undefined : ((value['planShare'] as Array<any>).map(UserToJSON)),
+        'nav_sticky': value['navSticky'],
+        'ingredient_decimals': value['ingredientDecimals'],
+        'comments': value['comments'],
+        'shopping_auto_sync': value['shoppingAutoSync'],
+        'mealplan_autoadd_shopping': value['mealplanAutoaddShopping'],
+        'default_delay': value['defaultDelay'],
+        'mealplan_autoinclude_related': value['mealplanAutoincludeRelated'],
+        'mealplan_autoexclude_onhand': value['mealplanAutoexcludeOnhand'],
+        'shopping_share': value['shoppingShare'] == null ? undefined : ((value['shoppingShare'] as Array<any>).map(UserToJSON)),
+        'shopping_recent_days': value['shoppingRecentDays'],
+        'csv_delim': value['csvDelim'],
+        'csv_prefix': value['csvPrefix'],
+        'filter_to_supermarket': value['filterToSupermarket'],
+        'shopping_add_onhand': value['shoppingAddOnhand'],
+        'left_handed': value['leftHanded'],
+        'show_step_ingredients': value['showStepIngredients'],
     };
 }
-
 

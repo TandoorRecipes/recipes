@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { CustomFilter } from './CustomFilter';
 import {
-    CustomFilter,
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
-    User,
+} from './CustomFilter';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -65,7 +67,7 @@ export interface PatchedRecipeBook {
      * @type {CustomFilter}
      * @memberof PatchedRecipeBook
      */
-    filter?: CustomFilter | null;
+    filter?: CustomFilter;
     /**
      * 
      * @type {number}
@@ -74,41 +76,44 @@ export interface PatchedRecipeBook {
     order?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedRecipeBook interface.
+ */
+export function instanceOfPatchedRecipeBook(value: object): boolean {
+    return true;
+}
+
 export function PatchedRecipeBookFromJSON(json: any): PatchedRecipeBook {
     return PatchedRecipeBookFromJSONTyped(json, false);
 }
 
 export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedRecipeBook {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'shared': !exists(json, 'shared') ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'filter': !exists(json, 'filter') ? undefined : CustomFilterFromJSON(json['filter']),
-        'order': !exists(json, 'order') ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
+        'order': json['order'] == null ? undefined : json['order'],
     };
 }
 
 export function PatchedRecipeBookToJSON(value?: PatchedRecipeBook | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'description': value.description,
-        'shared': value.shared === undefined ? undefined : ((value.shared as Array<any>).map(UserToJSON)),
-        'filter': CustomFilterToJSON(value.filter),
-        'order': value.order,
+        'name': value['name'],
+        'description': value['description'],
+        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
+        'filter': CustomFilterToJSON(value['filter']),
+        'order': value['order'],
     };
 }
-
 

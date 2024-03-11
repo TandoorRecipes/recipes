@@ -12,21 +12,25 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataFood } from './OpenDataFood';
 import {
-    OpenDataFood,
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
-    OpenDataUnit,
+} from './OpenDataFood';
+import type { OpenDataUnit } from './OpenDataUnit';
+import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataVersion,
+} from './OpenDataUnit';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Adds nested create feature
@@ -102,49 +106,52 @@ export interface PatchedOpenDataConversion {
     readonly createdBy?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedOpenDataConversion interface.
+ */
+export function instanceOfPatchedOpenDataConversion(value: object): boolean {
+    return true;
+}
+
 export function PatchedOpenDataConversionFromJSON(json: any): PatchedOpenDataConversion {
     return PatchedOpenDataConversionFromJSONTyped(json, false);
 }
 
 export function PatchedOpenDataConversionFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedOpenDataConversion {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'version': !exists(json, 'version') ? undefined : OpenDataVersionFromJSON(json['version']),
-        'slug': !exists(json, 'slug') ? undefined : json['slug'],
-        'food': !exists(json, 'food') ? undefined : OpenDataFoodFromJSON(json['food']),
-        'baseAmount': !exists(json, 'base_amount') ? undefined : json['base_amount'],
-        'baseUnit': !exists(json, 'base_unit') ? undefined : OpenDataUnitFromJSON(json['base_unit']),
-        'convertedAmount': !exists(json, 'converted_amount') ? undefined : json['converted_amount'],
-        'convertedUnit': !exists(json, 'converted_unit') ? undefined : OpenDataUnitFromJSON(json['converted_unit']),
-        'source': !exists(json, 'source') ? undefined : json['source'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'version': json['version'] == null ? undefined : OpenDataVersionFromJSON(json['version']),
+        'slug': json['slug'] == null ? undefined : json['slug'],
+        'food': json['food'] == null ? undefined : OpenDataFoodFromJSON(json['food']),
+        'baseAmount': json['base_amount'] == null ? undefined : json['base_amount'],
+        'baseUnit': json['base_unit'] == null ? undefined : OpenDataUnitFromJSON(json['base_unit']),
+        'convertedAmount': json['converted_amount'] == null ? undefined : json['converted_amount'],
+        'convertedUnit': json['converted_unit'] == null ? undefined : OpenDataUnitFromJSON(json['converted_unit']),
+        'source': json['source'] == null ? undefined : json['source'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedOpenDataConversionToJSON(value?: PatchedOpenDataConversion | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'food': OpenDataFoodToJSON(value.food),
-        'base_amount': value.baseAmount,
-        'base_unit': OpenDataUnitToJSON(value.baseUnit),
-        'converted_amount': value.convertedAmount,
-        'converted_unit': OpenDataUnitToJSON(value.convertedUnit),
-        'source': value.source,
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'food': OpenDataFoodToJSON(value['food']),
+        'base_amount': value['baseAmount'],
+        'base_unit': OpenDataUnitToJSON(value['baseUnit']),
+        'converted_amount': value['convertedAmount'],
+        'converted_unit': OpenDataUnitToJSON(value['convertedUnit']),
+        'source': value['source'],
+        'comment': value['comment'],
     };
 }
-
 

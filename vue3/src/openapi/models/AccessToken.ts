@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -57,12 +57,24 @@ export interface AccessToken {
     readonly updated: Date;
 }
 
+/**
+ * Check if a given object implements the AccessToken interface.
+ */
+export function instanceOfAccessToken(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('token' in value)) return false;
+    if (!('expires' in value)) return false;
+    if (!('created' in value)) return false;
+    if (!('updated' in value)) return false;
+    return true;
+}
+
 export function AccessTokenFromJSON(json: any): AccessToken {
     return AccessTokenFromJSONTyped(json, false);
 }
 
 export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean): AccessToken {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -70,24 +82,20 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'id': json['id'],
         'token': json['token'],
         'expires': (new Date(json['expires'])),
-        'scope': !exists(json, 'scope') ? undefined : json['scope'],
+        'scope': json['scope'] == null ? undefined : json['scope'],
         'created': (new Date(json['created'])),
         'updated': (new Date(json['updated'])),
     };
 }
 
 export function AccessTokenToJSON(value?: AccessToken | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'expires': (value.expires.toISOString()),
-        'scope': value.scope,
+        'expires': ((value['expires']).toISOString()),
+        'scope': value['scope'],
     };
 }
-
 

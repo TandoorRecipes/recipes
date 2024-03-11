@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { SupermarketCategory } from './SupermarketCategory';
 import {
-    SupermarketCategory,
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-} from './';
+} from './SupermarketCategory';
 
 /**
  * Adds nested create feature
@@ -52,36 +52,39 @@ export interface PatchedSupermarketCategoryRelation {
     order?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedSupermarketCategoryRelation interface.
+ */
+export function instanceOfPatchedSupermarketCategoryRelation(value: object): boolean {
+    return true;
+}
+
 export function PatchedSupermarketCategoryRelationFromJSON(json: any): PatchedSupermarketCategoryRelation {
     return PatchedSupermarketCategoryRelationFromJSONTyped(json, false);
 }
 
 export function PatchedSupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedSupermarketCategoryRelation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'category': !exists(json, 'category') ? undefined : SupermarketCategoryFromJSON(json['category']),
-        'supermarket': !exists(json, 'supermarket') ? undefined : json['supermarket'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'category': json['category'] == null ? undefined : SupermarketCategoryFromJSON(json['category']),
+        'supermarket': json['supermarket'] == null ? undefined : json['supermarket'],
+        'order': json['order'] == null ? undefined : json['order'],
     };
 }
 
 export function PatchedSupermarketCategoryRelationToJSON(value?: PatchedSupermarketCategoryRelation | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'category': SupermarketCategoryToJSON(value.category),
-        'supermarket': value.supermarket,
-        'order': value.order,
+        'category': SupermarketCategoryToJSON(value['category']),
+        'supermarket': value['supermarket'],
+        'order': value['order'],
     };
 }
-
 

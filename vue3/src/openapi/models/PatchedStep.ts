@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Ingredient } from './Ingredient';
 import {
-    Ingredient,
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-    UserFileView,
+} from './Ingredient';
+import type { UserFileView } from './UserFileView';
+import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-} from './';
+} from './UserFileView';
 
 /**
  * Adds nested create feature
@@ -83,13 +85,13 @@ export interface PatchedStep {
      * @type {UserFileView}
      * @memberof PatchedStep
      */
-    file?: UserFileView | null;
+    file?: UserFileView;
     /**
      * 
      * @type {number}
      * @memberof PatchedStep
      */
-    stepRecipe?: number | null;
+    stepRecipe?: number;
     /**
      * 
      * @type {string}
@@ -110,51 +112,54 @@ export interface PatchedStep {
     showIngredientsTable?: boolean;
 }
 
+/**
+ * Check if a given object implements the PatchedStep interface.
+ */
+export function instanceOfPatchedStep(value: object): boolean {
+    return true;
+}
+
 export function PatchedStepFromJSON(json: any): PatchedStep {
     return PatchedStepFromJSONTyped(json, false);
 }
 
 export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedStep {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'instruction': !exists(json, 'instruction') ? undefined : json['instruction'],
-        'ingredients': !exists(json, 'ingredients') ? undefined : ((json['ingredients'] as Array<any>).map(IngredientFromJSON)),
-        'instructionsMarkdown': !exists(json, 'instructions_markdown') ? undefined : json['instructions_markdown'],
-        'time': !exists(json, 'time') ? undefined : json['time'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'showAsHeader': !exists(json, 'show_as_header') ? undefined : json['show_as_header'],
-        'file': !exists(json, 'file') ? undefined : UserFileViewFromJSON(json['file']),
-        'stepRecipe': !exists(json, 'step_recipe') ? undefined : json['step_recipe'],
-        'stepRecipeData': !exists(json, 'step_recipe_data') ? undefined : json['step_recipe_data'],
-        'numrecipe': !exists(json, 'numrecipe') ? undefined : json['numrecipe'],
-        'showIngredientsTable': !exists(json, 'show_ingredients_table') ? undefined : json['show_ingredients_table'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'instruction': json['instruction'] == null ? undefined : json['instruction'],
+        'ingredients': json['ingredients'] == null ? undefined : ((json['ingredients'] as Array<any>).map(IngredientFromJSON)),
+        'instructionsMarkdown': json['instructions_markdown'] == null ? undefined : json['instructions_markdown'],
+        'time': json['time'] == null ? undefined : json['time'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'showAsHeader': json['show_as_header'] == null ? undefined : json['show_as_header'],
+        'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
+        'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
+        'stepRecipeData': json['step_recipe_data'] == null ? undefined : json['step_recipe_data'],
+        'numrecipe': json['numrecipe'] == null ? undefined : json['numrecipe'],
+        'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 
 export function PatchedStepToJSON(value?: PatchedStep | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'instruction': value.instruction,
-        'ingredients': value.ingredients === undefined ? undefined : ((value.ingredients as Array<any>).map(IngredientToJSON)),
-        'time': value.time,
-        'order': value.order,
-        'show_as_header': value.showAsHeader,
-        'file': UserFileViewToJSON(value.file),
-        'step_recipe': value.stepRecipe,
-        'show_ingredients_table': value.showIngredientsTable,
+        'name': value['name'],
+        'instruction': value['instruction'],
+        'ingredients': value['ingredients'] == null ? undefined : ((value['ingredients'] as Array<any>).map(IngredientToJSON)),
+        'time': value['time'],
+        'order': value['order'],
+        'show_as_header': value['showAsHeader'],
+        'file': UserFileViewToJSON(value['file']),
+        'step_recipe': value['stepRecipe'],
+        'show_ingredients_table': value['showIngredientsTable'],
     };
 }
-
 

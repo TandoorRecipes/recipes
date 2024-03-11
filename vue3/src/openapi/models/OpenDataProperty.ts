@@ -12,50 +12,50 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataVersion } from './OpenDataVersion';
 import {
-    OpenDataVersion,
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface OpenDataProperty
  */
@@ -95,7 +95,7 @@ export interface OpenDataProperty {
      * @type {number}
      * @memberof OpenDataProperty
      */
-    fdcId?: number | null;
+    fdcId?: number;
     /**
      * 
      * @type {string}
@@ -110,12 +110,24 @@ export interface OpenDataProperty {
     readonly createdBy: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataProperty interface.
+ */
+export function instanceOfOpenDataProperty(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('version' in value)) return false;
+    if (!('slug' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function OpenDataPropertyFromJSON(json: any): OpenDataProperty {
     return OpenDataPropertyFromJSONTyped(json, false);
 }
 
 export function OpenDataPropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataProperty {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -124,29 +136,25 @@ export function OpenDataPropertyFromJSONTyped(json: any, ignoreDiscriminator: bo
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
-        'unit': !exists(json, 'unit') ? undefined : json['unit'],
-        'fdcId': !exists(json, 'fdc_id') ? undefined : json['fdc_id'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'unit': json['unit'] == null ? undefined : json['unit'],
+        'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };
 }
 
 export function OpenDataPropertyToJSON(value?: OpenDataProperty | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'name': value.name,
-        'unit': value.unit,
-        'fdc_id': value.fdcId,
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'name': value['name'],
+        'unit': value['unit'],
+        'fdc_id': value['fdcId'],
+        'comment': value['comment'],
     };
 }
-
 

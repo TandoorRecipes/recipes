@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,7 +36,16 @@ export interface FoodSimple {
      * @type {string}
      * @memberof FoodSimple
      */
-    pluralName?: string | null;
+    pluralName?: string;
+}
+
+/**
+ * Check if a given object implements the FoodSimple interface.
+ */
+export function instanceOfFoodSimple(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    return true;
 }
 
 export function FoodSimpleFromJSON(json: any): FoodSimple {
@@ -44,29 +53,25 @@ export function FoodSimpleFromJSON(json: any): FoodSimple {
 }
 
 export function FoodSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolean): FoodSimple {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'pluralName': !exists(json, 'plural_name') ? undefined : json['plural_name'],
+        'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
     };
 }
 
 export function FoodSimpleToJSON(value?: FoodSimple | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'plural_name': value.pluralName,
+        'name': value['name'],
+        'plural_name': value['pluralName'],
     };
 }
-
 

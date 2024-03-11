@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -45,34 +45,37 @@ export interface PatchedViewLog {
     readonly createdAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedViewLog interface.
+ */
+export function instanceOfPatchedViewLog(value: object): boolean {
+    return true;
+}
+
 export function PatchedViewLogFromJSON(json: any): PatchedViewLog {
     return PatchedViewLogFromJSONTyped(json, false);
 }
 
 export function PatchedViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedViewLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'recipe': !exists(json, 'recipe') ? undefined : json['recipe'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
     };
 }
 
 export function PatchedViewLogToJSON(value?: PatchedViewLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
+        'recipe': value['recipe'],
     };
 }
-
 

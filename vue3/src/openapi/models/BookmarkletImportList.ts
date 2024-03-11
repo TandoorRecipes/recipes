@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -30,7 +30,7 @@ export interface BookmarkletImportList {
      * @type {string}
      * @memberof BookmarkletImportList
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {number}
@@ -45,34 +45,40 @@ export interface BookmarkletImportList {
     readonly createdAt: Date;
 }
 
+/**
+ * Check if a given object implements the BookmarkletImportList interface.
+ */
+export function instanceOfBookmarkletImportList(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    return true;
+}
+
 export function BookmarkletImportListFromJSON(json: any): BookmarkletImportList {
     return BookmarkletImportListFromJSONTyped(json, false);
 }
 
 export function BookmarkletImportListFromJSONTyped(json: any, ignoreDiscriminator: boolean): BookmarkletImportList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'url': !exists(json, 'url') ? undefined : json['url'],
+        'url': json['url'] == null ? undefined : json['url'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
 export function BookmarkletImportListToJSON(value?: BookmarkletImportList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'url': value.url,
+        'url': value['url'],
     };
 }
-
 

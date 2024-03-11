@@ -12,62 +12,68 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataCategory } from './OpenDataCategory';
 import {
-    OpenDataCategory,
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
-    OpenDataFoodProperty,
+} from './OpenDataCategory';
+import type { OpenDataFoodProperty } from './OpenDataFoodProperty';
+import {
     OpenDataFoodPropertyFromJSON,
     OpenDataFoodPropertyFromJSONTyped,
     OpenDataFoodPropertyToJSON,
-    OpenDataUnit,
+} from './OpenDataFoodProperty';
+import type { OpenDataUnit } from './OpenDataUnit';
+import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataVersion,
+} from './OpenDataUnit';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface OpenDataFood
  */
@@ -113,25 +119,25 @@ export interface OpenDataFood {
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit | null;
+    preferredUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit | null;
+    preferredShoppingUnitMetric?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit | null;
+    preferredUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit | null;
+    preferredShoppingUnitImperial?: OpenDataUnit;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
@@ -176,12 +182,29 @@ export interface OpenDataFood {
     readonly createdBy: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataFood interface.
+ */
+export function instanceOfOpenDataFood(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('version' in value)) return false;
+    if (!('slug' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('pluralName' in value)) return false;
+    if (!('storeCategory' in value)) return false;
+    if (!('properties' in value)) return false;
+    if (!('propertiesFoodUnit' in value)) return false;
+    if (!('fdcId' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function OpenDataFoodFromJSON(json: any): OpenDataFood {
     return OpenDataFoodFromJSONTyped(json, false);
 }
 
 export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataFood {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -192,45 +215,41 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'name': json['name'],
         'pluralName': json['plural_name'],
         'storeCategory': OpenDataCategoryFromJSON(json['store_category']),
-        'preferredUnitMetric': !exists(json, 'preferred_unit_metric') ? undefined : OpenDataUnitFromJSON(json['preferred_unit_metric']),
-        'preferredShoppingUnitMetric': !exists(json, 'preferred_shopping_unit_metric') ? undefined : OpenDataUnitFromJSON(json['preferred_shopping_unit_metric']),
-        'preferredUnitImperial': !exists(json, 'preferred_unit_imperial') ? undefined : OpenDataUnitFromJSON(json['preferred_unit_imperial']),
-        'preferredShoppingUnitImperial': !exists(json, 'preferred_shopping_unit_imperial') ? undefined : OpenDataUnitFromJSON(json['preferred_shopping_unit_imperial']),
-        'properties': (json['properties'] === null ? null : (json['properties'] as Array<any>).map(OpenDataFoodPropertyFromJSON)),
-        'propertiesFoodAmount': !exists(json, 'properties_food_amount') ? undefined : json['properties_food_amount'],
+        'preferredUnitMetric': json['preferred_unit_metric'] == null ? undefined : OpenDataUnitFromJSON(json['preferred_unit_metric']),
+        'preferredShoppingUnitMetric': json['preferred_shopping_unit_metric'] == null ? undefined : OpenDataUnitFromJSON(json['preferred_shopping_unit_metric']),
+        'preferredUnitImperial': json['preferred_unit_imperial'] == null ? undefined : OpenDataUnitFromJSON(json['preferred_unit_imperial']),
+        'preferredShoppingUnitImperial': json['preferred_shopping_unit_imperial'] == null ? undefined : OpenDataUnitFromJSON(json['preferred_shopping_unit_imperial']),
+        'properties': (json['properties'] == null ? null : (json['properties'] as Array<any>).map(OpenDataFoodPropertyFromJSON)),
+        'propertiesFoodAmount': json['properties_food_amount'] == null ? undefined : json['properties_food_amount'],
         'propertiesFoodUnit': OpenDataUnitFromJSON(json['properties_food_unit']),
-        'propertiesSource': !exists(json, 'properties_source') ? undefined : json['properties_source'],
+        'propertiesSource': json['properties_source'] == null ? undefined : json['properties_source'],
         'fdcId': json['fdc_id'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };
 }
 
 export function OpenDataFoodToJSON(value?: OpenDataFood | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'name': value.name,
-        'plural_name': value.pluralName,
-        'store_category': OpenDataCategoryToJSON(value.storeCategory),
-        'preferred_unit_metric': OpenDataUnitToJSON(value.preferredUnitMetric),
-        'preferred_shopping_unit_metric': OpenDataUnitToJSON(value.preferredShoppingUnitMetric),
-        'preferred_unit_imperial': OpenDataUnitToJSON(value.preferredUnitImperial),
-        'preferred_shopping_unit_imperial': OpenDataUnitToJSON(value.preferredShoppingUnitImperial),
-        'properties': (value.properties === null ? null : (value.properties as Array<any>).map(OpenDataFoodPropertyToJSON)),
-        'properties_food_amount': value.propertiesFoodAmount,
-        'properties_food_unit': OpenDataUnitToJSON(value.propertiesFoodUnit),
-        'properties_source': value.propertiesSource,
-        'fdc_id': value.fdcId,
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'name': value['name'],
+        'plural_name': value['pluralName'],
+        'store_category': OpenDataCategoryToJSON(value['storeCategory']),
+        'preferred_unit_metric': OpenDataUnitToJSON(value['preferredUnitMetric']),
+        'preferred_shopping_unit_metric': OpenDataUnitToJSON(value['preferredShoppingUnitMetric']),
+        'preferred_unit_imperial': OpenDataUnitToJSON(value['preferredUnitImperial']),
+        'preferred_shopping_unit_imperial': OpenDataUnitToJSON(value['preferredShoppingUnitImperial']),
+        'properties': (value['properties'] == null ? null : (value['properties'] as Array<any>).map(OpenDataFoodPropertyToJSON)),
+        'properties_food_amount': value['propertiesFoodAmount'],
+        'properties_food_unit': OpenDataUnitToJSON(value['propertiesFoodUnit']),
+        'properties_source': value['propertiesSource'],
+        'fdc_id': value['fdcId'],
+        'comment': value['comment'],
     };
 }
-
 

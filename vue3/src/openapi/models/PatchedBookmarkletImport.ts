@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -30,7 +30,7 @@ export interface PatchedBookmarkletImport {
      * @type {string}
      * @memberof PatchedBookmarkletImport
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {string}
@@ -51,36 +51,39 @@ export interface PatchedBookmarkletImport {
     readonly createdAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedBookmarkletImport interface.
+ */
+export function instanceOfPatchedBookmarkletImport(value: object): boolean {
+    return true;
+}
+
 export function PatchedBookmarkletImportFromJSON(json: any): PatchedBookmarkletImport {
     return PatchedBookmarkletImportFromJSONTyped(json, false);
 }
 
 export function PatchedBookmarkletImportFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedBookmarkletImport {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'url': !exists(json, 'url') ? undefined : json['url'],
-        'html': !exists(json, 'html') ? undefined : json['html'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'url': json['url'] == null ? undefined : json['url'],
+        'html': json['html'] == null ? undefined : json['html'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
     };
 }
 
 export function PatchedBookmarkletImportToJSON(value?: PatchedBookmarkletImport | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'url': value.url,
-        'html': value.html,
+        'url': value['url'],
+        'html': value['html'],
     };
 }
-
 

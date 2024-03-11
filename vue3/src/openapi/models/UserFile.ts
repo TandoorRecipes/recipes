@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -57,12 +57,25 @@ export interface UserFile {
     readonly fileSizeKb: number;
 }
 
+/**
+ * Check if a given object implements the UserFile interface.
+ */
+export function instanceOfUserFile(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('file' in value)) return false;
+    if (!('fileDownload' in value)) return false;
+    if (!('preview' in value)) return false;
+    if (!('fileSizeKb' in value)) return false;
+    return true;
+}
+
 export function UserFileFromJSON(json: any): UserFile {
     return UserFileFromJSONTyped(json, false);
 }
 
 export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserFile {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -77,17 +90,13 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
 }
 
 export function UserFileToJSON(value?: UserFile | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'file': value.file,
+        'name': value['name'],
+        'file': value['file'],
     };
 }
-
 

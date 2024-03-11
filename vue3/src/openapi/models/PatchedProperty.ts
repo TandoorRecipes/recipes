@@ -12,50 +12,50 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { PropertyType } from './PropertyType';
 import {
-    PropertyType,
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
-} from './';
+} from './PropertyType';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface PatchedProperty
  */
@@ -71,7 +71,7 @@ export interface PatchedProperty {
      * @type {string}
      * @memberof PatchedProperty
      */
-    propertyAmount?: string | null;
+    propertyAmount?: string;
     /**
      * 
      * @type {PropertyType}
@@ -80,34 +80,37 @@ export interface PatchedProperty {
     propertyType?: PropertyType;
 }
 
+/**
+ * Check if a given object implements the PatchedProperty interface.
+ */
+export function instanceOfPatchedProperty(value: object): boolean {
+    return true;
+}
+
 export function PatchedPropertyFromJSON(json: any): PatchedProperty {
     return PatchedPropertyFromJSONTyped(json, false);
 }
 
 export function PatchedPropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedProperty {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'propertyAmount': !exists(json, 'property_amount') ? undefined : json['property_amount'],
-        'propertyType': !exists(json, 'property_type') ? undefined : PropertyTypeFromJSON(json['property_type']),
+        'id': json['id'] == null ? undefined : json['id'],
+        'propertyAmount': json['property_amount'] == null ? undefined : json['property_amount'],
+        'propertyType': json['property_type'] == null ? undefined : PropertyTypeFromJSON(json['property_type']),
     };
 }
 
 export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'property_amount': value.propertyAmount,
-        'property_type': PropertyTypeToJSON(value.propertyType),
+        'property_amount': value['propertyAmount'],
+        'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
-
 

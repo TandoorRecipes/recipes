@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Keyword } from './Keyword';
 import {
-    Keyword,
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-} from './';
+} from './Keyword';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedKeywordList {
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Keyword>}
@@ -52,37 +52,40 @@ export interface PaginatedKeywordList {
     results?: Array<Keyword>;
 }
 
+/**
+ * Check if a given object implements the PaginatedKeywordList interface.
+ */
+export function instanceOfPaginatedKeywordList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedKeywordListFromJSON(json: any): PaginatedKeywordList {
     return PaginatedKeywordListFromJSONTyped(json, false);
 }
 
 export function PaginatedKeywordListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedKeywordList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(KeywordFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(KeywordFromJSON)),
     };
 }
 
 export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(KeywordToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(KeywordToJSON)),
     };
 }
-
 

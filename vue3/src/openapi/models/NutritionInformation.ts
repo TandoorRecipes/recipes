@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -54,7 +54,19 @@ export interface NutritionInformation {
      * @type {string}
      * @memberof NutritionInformation
      */
-    source?: string | null;
+    source?: string;
+}
+
+/**
+ * Check if a given object implements the NutritionInformation interface.
+ */
+export function instanceOfNutritionInformation(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('carbohydrates' in value)) return false;
+    if (!('fats' in value)) return false;
+    if (!('proteins' in value)) return false;
+    if (!('calories' in value)) return false;
+    return true;
 }
 
 export function NutritionInformationFromJSON(json: any): NutritionInformation {
@@ -62,7 +74,7 @@ export function NutritionInformationFromJSON(json: any): NutritionInformation {
 }
 
 export function NutritionInformationFromJSONTyped(json: any, ignoreDiscriminator: boolean): NutritionInformation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -72,25 +84,21 @@ export function NutritionInformationFromJSONTyped(json: any, ignoreDiscriminator
         'fats': json['fats'],
         'proteins': json['proteins'],
         'calories': json['calories'],
-        'source': !exists(json, 'source') ? undefined : json['source'],
+        'source': json['source'] == null ? undefined : json['source'],
     };
 }
 
 export function NutritionInformationToJSON(value?: NutritionInformation | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'carbohydrates': value.carbohydrates,
-        'fats': value.fats,
-        'proteins': value.proteins,
-        'calories': value.calories,
-        'source': value.source,
+        'carbohydrates': value['carbohydrates'],
+        'fats': value['fats'],
+        'proteins': value['proteins'],
+        'calories': value['calories'],
+        'source': value['source'],
     };
 }
-
 

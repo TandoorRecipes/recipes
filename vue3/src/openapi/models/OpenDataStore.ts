@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataStoreCategory } from './OpenDataStoreCategory';
 import {
-    OpenDataStoreCategory,
     OpenDataStoreCategoryFromJSON,
     OpenDataStoreCategoryFromJSONTyped,
     OpenDataStoreCategoryToJSON,
-    OpenDataVersion,
+} from './OpenDataStoreCategory';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Adds nested create feature
@@ -74,12 +76,25 @@ export interface OpenDataStore {
     readonly createdBy: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataStore interface.
+ */
+export function instanceOfOpenDataStore(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('version' in value)) return false;
+    if (!('slug' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('categoryToStore' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function OpenDataStoreFromJSON(json: any): OpenDataStore {
     return OpenDataStoreFromJSONTyped(json, false);
 }
 
 export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataStore {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -88,27 +103,23 @@ export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boole
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
-        'categoryToStore': (json['category_to_store'] === null ? null : (json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryFromJSON)),
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'categoryToStore': (json['category_to_store'] == null ? null : (json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryFromJSON)),
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };
 }
 
 export function OpenDataStoreToJSON(value?: OpenDataStore | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'name': value.name,
-        'category_to_store': (value.categoryToStore === null ? null : (value.categoryToStore as Array<any>).map(OpenDataStoreCategoryToJSON)),
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'name': value['name'],
+        'category_to_store': (value['categoryToStore'] == null ? null : (value['categoryToStore'] as Array<any>).map(OpenDataStoreCategoryToJSON)),
+        'comment': value['comment'],
     };
 }
-
 

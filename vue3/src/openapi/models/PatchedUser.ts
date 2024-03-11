@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -51,36 +51,39 @@ export interface PatchedUser {
     readonly displayName?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedUser interface.
+ */
+export function instanceOfPatchedUser(value: object): boolean {
+    return true;
+}
+
 export function PatchedUserFromJSON(json: any): PatchedUser {
     return PatchedUserFromJSONTyped(json, false);
 }
 
 export function PatchedUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedUser {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'username': !exists(json, 'username') ? undefined : json['username'],
-        'firstName': !exists(json, 'first_name') ? undefined : json['first_name'],
-        'lastName': !exists(json, 'last_name') ? undefined : json['last_name'],
-        'displayName': !exists(json, 'display_name') ? undefined : json['display_name'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'username': json['username'] == null ? undefined : json['username'],
+        'firstName': json['first_name'] == null ? undefined : json['first_name'],
+        'lastName': json['last_name'] == null ? undefined : json['last_name'],
+        'displayName': json['display_name'] == null ? undefined : json['display_name'],
     };
 }
 
 export function PatchedUserToJSON(value?: PatchedUser | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'first_name': value.firstName,
-        'last_name': value.lastName,
+        'first_name': value['firstName'],
+        'last_name': value['lastName'],
     };
 }
-
 

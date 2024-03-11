@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Food } from './Food';
 import {
-    Food,
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    Unit,
+} from './Food';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-} from './';
+} from './Unit';
 
 /**
  * Adds nested create feature
@@ -41,13 +43,13 @@ export interface PatchedIngredient {
      * @type {Food}
      * @memberof PatchedIngredient
      */
-    food?: Food | null;
+    food?: Food;
     /**
      * 
      * @type {Unit}
      * @memberof PatchedIngredient
      */
-    unit?: Unit | null;
+    unit?: Unit;
     /**
      * 
      * @type {string}
@@ -65,7 +67,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    note?: string | null;
+    note?: string;
     /**
      * 
      * @type {number}
@@ -89,7 +91,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    originalText?: string | null;
+    originalText?: string;
     /**
      * 
      * @type {string}
@@ -110,52 +112,55 @@ export interface PatchedIngredient {
     alwaysUsePluralFood?: boolean;
 }
 
+/**
+ * Check if a given object implements the PatchedIngredient interface.
+ */
+export function instanceOfPatchedIngredient(value: object): boolean {
+    return true;
+}
+
 export function PatchedIngredientFromJSON(json: any): PatchedIngredient {
     return PatchedIngredientFromJSONTyped(json, false);
 }
 
 export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedIngredient {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'food': !exists(json, 'food') ? undefined : FoodFromJSON(json['food']),
-        'unit': !exists(json, 'unit') ? undefined : UnitFromJSON(json['unit']),
-        'amount': !exists(json, 'amount') ? undefined : json['amount'],
-        'conversions': !exists(json, 'conversions') ? undefined : json['conversions'],
-        'note': !exists(json, 'note') ? undefined : json['note'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'isHeader': !exists(json, 'is_header') ? undefined : json['is_header'],
-        'noAmount': !exists(json, 'no_amount') ? undefined : json['no_amount'],
-        'originalText': !exists(json, 'original_text') ? undefined : json['original_text'],
-        'usedInRecipes': !exists(json, 'used_in_recipes') ? undefined : json['used_in_recipes'],
-        'alwaysUsePluralUnit': !exists(json, 'always_use_plural_unit') ? undefined : json['always_use_plural_unit'],
-        'alwaysUsePluralFood': !exists(json, 'always_use_plural_food') ? undefined : json['always_use_plural_food'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
+        'amount': json['amount'] == null ? undefined : json['amount'],
+        'conversions': json['conversions'] == null ? undefined : json['conversions'],
+        'note': json['note'] == null ? undefined : json['note'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'isHeader': json['is_header'] == null ? undefined : json['is_header'],
+        'noAmount': json['no_amount'] == null ? undefined : json['no_amount'],
+        'originalText': json['original_text'] == null ? undefined : json['original_text'],
+        'usedInRecipes': json['used_in_recipes'] == null ? undefined : json['used_in_recipes'],
+        'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
+        'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
     };
 }
 
 export function PatchedIngredientToJSON(value?: PatchedIngredient | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'food': FoodToJSON(value.food),
-        'unit': UnitToJSON(value.unit),
-        'amount': value.amount,
-        'note': value.note,
-        'order': value.order,
-        'is_header': value.isHeader,
-        'no_amount': value.noAmount,
-        'original_text': value.originalText,
-        'always_use_plural_unit': value.alwaysUsePluralUnit,
-        'always_use_plural_food': value.alwaysUsePluralFood,
+        'food': FoodToJSON(value['food']),
+        'unit': UnitToJSON(value['unit']),
+        'amount': value['amount'],
+        'note': value['note'],
+        'order': value['order'],
+        'is_header': value['isHeader'],
+        'no_amount': value['noAmount'],
+        'original_text': value['originalText'],
+        'always_use_plural_unit': value['alwaysUsePluralUnit'],
+        'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
-
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -42,13 +42,13 @@ export interface PatchedShoppingListRecipe {
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    recipe?: number | null;
+    recipe?: number;
     /**
      * 
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    mealplan?: number | null;
+    mealplan?: number;
     /**
      * 
      * @type {string}
@@ -75,41 +75,44 @@ export interface PatchedShoppingListRecipe {
     readonly mealplanType?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedShoppingListRecipe interface.
+ */
+export function instanceOfPatchedShoppingListRecipe(value: object): boolean {
+    return true;
+}
+
 export function PatchedShoppingListRecipeFromJSON(json: any): PatchedShoppingListRecipe {
     return PatchedShoppingListRecipeFromJSONTyped(json, false);
 }
 
 export function PatchedShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedShoppingListRecipe {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'recipeName': !exists(json, 'recipe_name') ? undefined : json['recipe_name'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'recipe': !exists(json, 'recipe') ? undefined : json['recipe'],
-        'mealplan': !exists(json, 'mealplan') ? undefined : json['mealplan'],
-        'servings': !exists(json, 'servings') ? undefined : json['servings'],
-        'mealplanNote': !exists(json, 'mealplan_note') ? undefined : json['mealplan_note'],
-        'mealplanFromDate': !exists(json, 'mealplan_from_date') ? undefined : (new Date(json['mealplan_from_date'])),
-        'mealplanType': !exists(json, 'mealplan_type') ? undefined : json['mealplan_type'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'mealplanNote': json['mealplan_note'] == null ? undefined : json['mealplan_note'],
+        'mealplanFromDate': json['mealplan_from_date'] == null ? undefined : (new Date(json['mealplan_from_date'])),
+        'mealplanType': json['mealplan_type'] == null ? undefined : json['mealplan_type'],
     };
 }
 
 export function PatchedShoppingListRecipeToJSON(value?: PatchedShoppingListRecipe | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
-        'mealplan': value.mealplan,
-        'servings': value.servings,
+        'recipe': value['recipe'],
+        'mealplan': value['mealplan'],
+        'servings': value['servings'],
     };
 }
-
 

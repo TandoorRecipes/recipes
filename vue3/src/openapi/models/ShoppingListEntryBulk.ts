@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -33,12 +33,21 @@ export interface ShoppingListEntryBulk {
     checked: boolean;
 }
 
+/**
+ * Check if a given object implements the ShoppingListEntryBulk interface.
+ */
+export function instanceOfShoppingListEntryBulk(value: object): boolean {
+    if (!('ids' in value)) return false;
+    if (!('checked' in value)) return false;
+    return true;
+}
+
 export function ShoppingListEntryBulkFromJSON(json: any): ShoppingListEntryBulk {
     return ShoppingListEntryBulkFromJSONTyped(json, false);
 }
 
 export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShoppingListEntryBulk {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -49,17 +58,13 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
 }
 
 export function ShoppingListEntryBulkToJSON(value?: ShoppingListEntryBulk | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'ids': value.ids,
-        'checked': value.checked,
+        'ids': value['ids'],
+        'checked': value['checked'],
     };
 }
-
 

@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { MethodEnum } from './MethodEnum';
 import {
-    MethodEnum,
     MethodEnumFromJSON,
     MethodEnumFromJSONTyped,
     MethodEnumToJSON,
-} from './';
+} from './MethodEnum';
 
 /**
  * 
@@ -49,19 +49,19 @@ export interface Storage {
      * @type {string}
      * @memberof Storage
      */
-    username?: string | null;
+    username?: string;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    password?: string | null;
+    password?: string;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    token?: string | null;
+    token?: string;
     /**
      * 
      * @type {number}
@@ -70,41 +70,47 @@ export interface Storage {
     readonly createdBy: number;
 }
 
+/**
+ * Check if a given object implements the Storage interface.
+ */
+export function instanceOfStorage(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function StorageFromJSON(json: any): Storage {
     return StorageFromJSONTyped(json, false);
 }
 
 export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): Storage {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'method': !exists(json, 'method') ? undefined : MethodEnumFromJSON(json['method']),
-        'username': !exists(json, 'username') ? undefined : json['username'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
-        'token': !exists(json, 'token') ? undefined : json['token'],
+        'method': json['method'] == null ? undefined : MethodEnumFromJSON(json['method']),
+        'username': json['username'] == null ? undefined : json['username'],
+        'password': json['password'] == null ? undefined : json['password'],
+        'token': json['token'] == null ? undefined : json['token'],
         'createdBy': json['created_by'],
     };
 }
 
 export function StorageToJSON(value?: Storage | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'method': MethodEnumToJSON(value.method),
-        'username': value.username,
-        'password': value.password,
-        'token': value.token,
+        'name': value['name'],
+        'method': MethodEnumToJSON(value['method']),
+        'username': value['username'],
+        'password': value['password'],
+        'token': value['token'],
     };
 }
-
 

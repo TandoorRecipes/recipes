@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { User } from './User';
 import {
-    User,
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -58,37 +58,40 @@ export interface PatchedCustomFilter {
     readonly createdBy?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedCustomFilter interface.
+ */
+export function instanceOfPatchedCustomFilter(value: object): boolean {
+    return true;
+}
+
 export function PatchedCustomFilterFromJSON(json: any): PatchedCustomFilter {
     return PatchedCustomFilterFromJSONTyped(json, false);
 }
 
 export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedCustomFilter {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'search': !exists(json, 'search') ? undefined : json['search'],
-        'shared': !exists(json, 'shared') ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'search': json['search'] == null ? undefined : json['search'],
+        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedCustomFilterToJSON(value?: PatchedCustomFilter | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'search': value.search,
-        'shared': value.shared === undefined ? undefined : ((value.shared as Array<any>).map(UserToJSON)),
+        'name': value['name'],
+        'search': value['search'],
+        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-
 

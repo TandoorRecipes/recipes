@@ -1,6 +1,9 @@
 <template>
 
-  <model-select model="Food" allow_create></model-select>
+  <model-select model="Food" allow-create clearable></model-select>
+
+
+  <model-select model="Food" :multiple="false" allow-create clearable></model-select>
 
 </template>
 

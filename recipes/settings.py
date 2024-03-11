@@ -306,6 +306,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Tandoor',
     'DESCRIPTION': 'Tandoor API Docs',
     'SERVE_INCLUDE_SCHEMA': False,
+    'ENUM_ADD_EXPLICIT_BLANK_NULL_CHOICE': False,
 }
 
 ROOT_URLCONF = 'recipes.urls'

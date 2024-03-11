@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Keyword } from './Keyword';
 import {
-    Keyword,
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-} from './';
+} from './Keyword';
 
 /**
  * 
@@ -82,43 +82,51 @@ export interface ImportLog {
     readonly createdAt: Date;
 }
 
+/**
+ * Check if a given object implements the ImportLog interface.
+ */
+export function instanceOfImportLog(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('type' in value)) return false;
+    if (!('keyword' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    return true;
+}
+
 export function ImportLogFromJSON(json: any): ImportLog {
     return ImportLogFromJSONTyped(json, false);
 }
 
 export function ImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): ImportLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'type': json['type'],
-        'msg': !exists(json, 'msg') ? undefined : json['msg'],
-        'running': !exists(json, 'running') ? undefined : json['running'],
+        'msg': json['msg'] == null ? undefined : json['msg'],
+        'running': json['running'] == null ? undefined : json['running'],
         'keyword': KeywordFromJSON(json['keyword']),
-        'totalRecipes': !exists(json, 'total_recipes') ? undefined : json['total_recipes'],
-        'importedRecipes': !exists(json, 'imported_recipes') ? undefined : json['imported_recipes'],
+        'totalRecipes': json['total_recipes'] == null ? undefined : json['total_recipes'],
+        'importedRecipes': json['imported_recipes'] == null ? undefined : json['imported_recipes'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
 export function ImportLogToJSON(value?: ImportLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'type': value.type,
-        'msg': value.msg,
-        'running': value.running,
-        'total_recipes': value.totalRecipes,
-        'imported_recipes': value.importedRecipes,
+        'type': value['type'],
+        'msg': value['msg'],
+        'running': value['running'],
+        'total_recipes': value['totalRecipes'],
+        'imported_recipes': value['importedRecipes'],
     };
 }
-
 

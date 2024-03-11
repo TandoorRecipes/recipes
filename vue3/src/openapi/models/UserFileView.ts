@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -45,12 +45,23 @@ export interface UserFileView {
     readonly preview: string;
 }
 
+/**
+ * Check if a given object implements the UserFileView interface.
+ */
+export function instanceOfUserFileView(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('fileDownload' in value)) return false;
+    if (!('preview' in value)) return false;
+    return true;
+}
+
 export function UserFileViewFromJSON(json: any): UserFileView {
     return UserFileViewFromJSONTyped(json, false);
 }
 
 export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserFileView {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -63,16 +74,12 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
 }
 
 export function UserFileViewToJSON(value?: UserFileView | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
+        'name': value['name'],
     };
 }
-
 

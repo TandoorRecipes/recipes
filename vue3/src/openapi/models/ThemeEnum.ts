@@ -12,24 +12,26 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `TANDOOR` - Tandoor
-* `BOOTSTRAP` - Bootstrap
-* `DARKLY` - Darkly
-* `FLATLY` - Flatly
-* `SUPERHERO` - Superhero
-* `TANDOOR_DARK` - Tandoor Dark (INCOMPLETE)
+ * * `BOOTSTRAP` - Bootstrap
+ * * `DARKLY` - Darkly
+ * * `FLATLY` - Flatly
+ * * `SUPERHERO` - Superhero
+ * * `TANDOOR_DARK` - Tandoor Dark (INCOMPLETE)
  * @export
- * @enum {string}
  */
-export enum ThemeEnum {
-    Tandoor = 'TANDOOR',
-    Bootstrap = 'BOOTSTRAP',
-    Darkly = 'DARKLY',
-    Flatly = 'FLATLY',
-    Superhero = 'SUPERHERO',
-    TandoorDark = 'TANDOOR_DARK'
-}
+export const ThemeEnum = {
+    Tandoor: 'TANDOOR',
+    Bootstrap: 'BOOTSTRAP',
+    Darkly: 'DARKLY',
+    Flatly: 'FLATLY',
+    Superhero: 'SUPERHERO',
+    TandoorDark: 'TANDOOR_DARK'
+} as const;
+export type ThemeEnum = typeof ThemeEnum[keyof typeof ThemeEnum];
+
 
 export function ThemeEnumFromJSON(json: any): ThemeEnum {
     return ThemeEnumFromJSONTyped(json, false);

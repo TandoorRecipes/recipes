@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Unit } from './Unit';
 import {
-    Unit,
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-} from './';
+} from './Unit';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedUnitList {
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Unit>}
@@ -52,37 +52,40 @@ export interface PaginatedUnitList {
     results?: Array<Unit>;
 }
 
+/**
+ * Check if a given object implements the PaginatedUnitList interface.
+ */
+export function instanceOfPaginatedUnitList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedUnitListFromJSON(json: any): PaginatedUnitList {
     return PaginatedUnitListFromJSONTyped(json, false);
 }
 
 export function PaginatedUnitListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedUnitList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(UnitFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(UnitFromJSON)),
     };
 }
 
 export function PaginatedUnitListToJSON(value?: PaginatedUnitList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(UnitToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(UnitToJSON)),
     };
 }
-
 

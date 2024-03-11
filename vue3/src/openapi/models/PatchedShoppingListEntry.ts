@@ -12,25 +12,31 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Food } from './Food';
 import {
-    Food,
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    ShoppingListRecipe,
+} from './Food';
+import type { ShoppingListRecipe } from './ShoppingListRecipe';
+import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
-    Unit,
+} from './ShoppingListRecipe';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    User,
+} from './Unit';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -49,19 +55,19 @@ export interface PatchedShoppingListEntry {
      * @type {number}
      * @memberof PatchedShoppingListEntry
      */
-    listRecipe?: number | null;
+    listRecipe?: number;
     /**
      * 
      * @type {Food}
      * @memberof PatchedShoppingListEntry
      */
-    food?: Food | null;
+    food?: Food;
     /**
      * 
      * @type {Unit}
      * @memberof PatchedShoppingListEntry
      */
-    unit?: Unit | null;
+    unit?: Unit;
     /**
      * 
      * @type {string}
@@ -109,13 +115,20 @@ export interface PatchedShoppingListEntry {
      * @type {Date}
      * @memberof PatchedShoppingListEntry
      */
-    completedAt?: Date | null;
+    completedAt?: Date;
     /**
      * 
      * @type {Date}
      * @memberof PatchedShoppingListEntry
      */
-    delayUntil?: Date | null;
+    delayUntil?: Date;
+}
+
+/**
+ * Check if a given object implements the PatchedShoppingListEntry interface.
+ */
+export function instanceOfPatchedShoppingListEntry(value: object): boolean {
+    return true;
 }
 
 export function PatchedShoppingListEntryFromJSON(json: any): PatchedShoppingListEntry {
@@ -123,45 +136,41 @@ export function PatchedShoppingListEntryFromJSON(json: any): PatchedShoppingList
 }
 
 export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedShoppingListEntry {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'listRecipe': !exists(json, 'list_recipe') ? undefined : json['list_recipe'],
-        'food': !exists(json, 'food') ? undefined : FoodFromJSON(json['food']),
-        'unit': !exists(json, 'unit') ? undefined : UnitFromJSON(json['unit']),
-        'amount': !exists(json, 'amount') ? undefined : json['amount'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'checked': !exists(json, 'checked') ? undefined : json['checked'],
-        'recipeMealplan': !exists(json, 'recipe_mealplan') ? undefined : ShoppingListRecipeFromJSON(json['recipe_mealplan']),
-        'createdBy': !exists(json, 'created_by') ? undefined : UserFromJSON(json['created_by']),
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
-        'completedAt': !exists(json, 'completed_at') ? undefined : (json['completed_at'] === null ? null : new Date(json['completed_at'])),
-        'delayUntil': !exists(json, 'delay_until') ? undefined : (json['delay_until'] === null ? null : new Date(json['delay_until'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
+        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
+        'amount': json['amount'] == null ? undefined : json['amount'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'checked': json['checked'] == null ? undefined : json['checked'],
+        'recipeMealplan': json['recipe_mealplan'] == null ? undefined : ShoppingListRecipeFromJSON(json['recipe_mealplan']),
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
+        'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
+        'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
     };
 }
 
 export function PatchedShoppingListEntryToJSON(value?: PatchedShoppingListEntry | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'list_recipe': value.listRecipe,
-        'food': FoodToJSON(value.food),
-        'unit': UnitToJSON(value.unit),
-        'amount': value.amount,
-        'order': value.order,
-        'checked': value.checked,
-        'completed_at': value.completedAt === undefined ? undefined : (value.completedAt === null ? null : value.completedAt.toISOString()),
-        'delay_until': value.delayUntil === undefined ? undefined : (value.delayUntil === null ? null : value.delayUntil.toISOString()),
+        'list_recipe': value['listRecipe'],
+        'food': FoodToJSON(value['food']),
+        'unit': UnitToJSON(value['unit']),
+        'amount': value['amount'],
+        'order': value['order'],
+        'checked': value['checked'],
+        'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
+        'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
     };
 }
-
 

@@ -22,7 +22,7 @@ export class ApiImportOpenDataApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiImportOpenDataCreateRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiImportOpenDataCreateRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -35,20 +35,20 @@ export class ApiImportOpenDataApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async apiImportOpenDataCreate(): Promise<void> {
-        await this.apiImportOpenDataCreateRaw();
+    async apiImportOpenDataCreate(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiImportOpenDataCreateRaw(initOverrides);
     }
 
     /**
      */
-    async apiImportOpenDataRetrieveRaw(): Promise<runtime.ApiResponse<void>> {
+    async apiImportOpenDataRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -61,15 +61,15 @@ export class ApiImportOpenDataApi extends runtime.BaseAPI {
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
-        });
+        }, initOverrides);
 
         return new runtime.VoidApiResponse(response);
     }
 
     /**
      */
-    async apiImportOpenDataRetrieve(): Promise<void> {
-        await this.apiImportOpenDataRetrieveRaw();
+    async apiImportOpenDataRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiImportOpenDataRetrieveRaw(initOverrides);
     }
 
 }

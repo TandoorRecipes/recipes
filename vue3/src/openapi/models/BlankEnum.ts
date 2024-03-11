@@ -12,14 +12,16 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * 
  * @export
- * @enum {string}
  */
-export enum BlankEnum {
-    Empty = ''
-}
+export const BlankEnum = {
+    Empty: ''
+} as const;
+export type BlankEnum = typeof BlankEnum[keyof typeof BlankEnum];
+
 
 export function BlankEnumFromJSON(json: any): BlankEnum {
     return BlankEnumFromJSONTyped(json, false);

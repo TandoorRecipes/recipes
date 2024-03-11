@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { CustomFilter } from './CustomFilter';
 import {
-    CustomFilter,
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
-    User,
+} from './CustomFilter';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -65,7 +67,7 @@ export interface RecipeBook {
      * @type {CustomFilter}
      * @memberof RecipeBook
      */
-    filter?: CustomFilter | null;
+    filter?: CustomFilter;
     /**
      * 
      * @type {number}
@@ -74,41 +76,48 @@ export interface RecipeBook {
     order?: number;
 }
 
+/**
+ * Check if a given object implements the RecipeBook interface.
+ */
+export function instanceOfRecipeBook(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('shared' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function RecipeBookFromJSON(json: any): RecipeBook {
     return RecipeBookFromJSONTyped(json, false);
 }
 
 export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean): RecipeBook {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
+        'description': json['description'] == null ? undefined : json['description'],
         'shared': ((json['shared'] as Array<any>).map(UserFromJSON)),
         'createdBy': json['created_by'],
-        'filter': !exists(json, 'filter') ? undefined : CustomFilterFromJSON(json['filter']),
-        'order': !exists(json, 'order') ? undefined : json['order'],
+        'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
+        'order': json['order'] == null ? undefined : json['order'],
     };
 }
 
 export function RecipeBookToJSON(value?: RecipeBook | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'description': value.description,
-        'shared': ((value.shared as Array<any>).map(UserToJSON)),
-        'filter': CustomFilterToJSON(value.filter),
-        'order': value.order,
+        'name': value['name'],
+        'description': value['description'],
+        'shared': ((value['shared'] as Array<any>).map(UserToJSON)),
+        'filter': CustomFilterToJSON(value['filter']),
+        'order': value['order'],
     };
 }
-
 

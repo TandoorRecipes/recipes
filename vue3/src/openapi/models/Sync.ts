@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -48,7 +48,7 @@ export interface Sync {
      * @type {Date}
      * @memberof Sync
      */
-    lastChecked?: Date | null;
+    lastChecked?: Date;
     /**
      * 
      * @type {Date}
@@ -63,40 +63,47 @@ export interface Sync {
     readonly updatedAt: Date;
 }
 
+/**
+ * Check if a given object implements the Sync interface.
+ */
+export function instanceOfSync(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('storage' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    if (!('updatedAt' in value)) return false;
+    return true;
+}
+
 export function SyncFromJSON(json: any): Sync {
     return SyncFromJSONTyped(json, false);
 }
 
 export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'storage': json['storage'],
-        'path': !exists(json, 'path') ? undefined : json['path'],
-        'active': !exists(json, 'active') ? undefined : json['active'],
-        'lastChecked': !exists(json, 'last_checked') ? undefined : (json['last_checked'] === null ? null : new Date(json['last_checked'])),
+        'path': json['path'] == null ? undefined : json['path'],
+        'active': json['active'] == null ? undefined : json['active'],
+        'lastChecked': json['last_checked'] == null ? undefined : (new Date(json['last_checked'])),
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
     };
 }
 
 export function SyncToJSON(value?: Sync | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'storage': value.storage,
-        'path': value.path,
-        'active': value.active,
-        'last_checked': value.lastChecked === undefined ? undefined : (value.lastChecked === null ? null : value.lastChecked.toISOString()),
+        'storage': value['storage'],
+        'path': value['path'],
+        'active': value['active'],
+        'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
     };
 }
-
 

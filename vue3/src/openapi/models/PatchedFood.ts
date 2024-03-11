@@ -12,70 +12,80 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { FoodInheritField } from './FoodInheritField';
 import {
-    FoodInheritField,
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    FoodSimple,
+} from './FoodInheritField';
+import type { FoodSimple } from './FoodSimple';
+import {
     FoodSimpleFromJSON,
     FoodSimpleFromJSONTyped,
     FoodSimpleToJSON,
-    Property,
+} from './FoodSimple';
+import type { Property } from './Property';
+import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
-    RecipeSimple,
+} from './Property';
+import type { RecipeSimple } from './RecipeSimple';
+import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
-    SupermarketCategory,
+} from './RecipeSimple';
+import type { SupermarketCategory } from './SupermarketCategory';
+import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-    Unit,
+} from './SupermarketCategory';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-} from './';
+} from './Unit';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface PatchedFood
  */
@@ -97,7 +107,7 @@ export interface PatchedFood {
      * @type {string}
      * @memberof PatchedFood
      */
-    pluralName?: string | null;
+    pluralName?: string;
     /**
      * 
      * @type {string}
@@ -115,19 +125,19 @@ export interface PatchedFood {
      * @type {RecipeSimple}
      * @memberof PatchedFood
      */
-    recipe?: RecipeSimple | null;
+    recipe?: RecipeSimple;
     /**
      * 
      * @type {string}
      * @memberof PatchedFood
      */
-    url?: string | null;
+    url?: string;
     /**
      * 
      * @type {Array<Property>}
      * @memberof PatchedFood
      */
-    properties?: Array<Property> | null;
+    properties?: Array<Property>;
     /**
      * 
      * @type {string}
@@ -139,25 +149,25 @@ export interface PatchedFood {
      * @type {Unit}
      * @memberof PatchedFood
      */
-    propertiesFoodUnit?: Unit | null;
+    propertiesFoodUnit?: Unit;
     /**
      * 
      * @type {number}
      * @memberof PatchedFood
      */
-    fdcId?: number | null;
+    fdcId?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedFood
      */
-    foodOnhand?: string | null;
+    foodOnhand?: string;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof PatchedFood
      */
-    supermarketCategory?: SupermarketCategory | null;
+    supermarketCategory?: SupermarketCategory;
     /**
      * 
      * @type {string}
@@ -175,7 +185,7 @@ export interface PatchedFood {
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
-    inheritFields?: Array<FoodInheritField> | null;
+    inheritFields?: Array<FoodInheritField>;
     /**
      * 
      * @type {string}
@@ -193,7 +203,7 @@ export interface PatchedFood {
      * @type {Array<FoodSimple>}
      * @memberof PatchedFood
      */
-    substitute?: Array<FoodSimple> | null;
+    substitute?: Array<FoodSimple>;
     /**
      * 
      * @type {boolean}
@@ -217,13 +227,20 @@ export interface PatchedFood {
      * @type {Array<FoodInheritField>}
      * @memberof PatchedFood
      */
-    childInheritFields?: Array<FoodInheritField> | null;
+    childInheritFields?: Array<FoodInheritField>;
     /**
      * 
      * @type {string}
      * @memberof PatchedFood
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
+}
+
+/**
+ * Check if a given object implements the PatchedFood interface.
+ */
+export function instanceOfPatchedFood(value: object): boolean {
+    return true;
 }
 
 export function PatchedFoodFromJSON(json: any): PatchedFood {
@@ -231,66 +248,62 @@ export function PatchedFoodFromJSON(json: any): PatchedFood {
 }
 
 export function PatchedFoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedFood {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'pluralName': !exists(json, 'plural_name') ? undefined : json['plural_name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'shopping': !exists(json, 'shopping') ? undefined : json['shopping'],
-        'recipe': !exists(json, 'recipe') ? undefined : RecipeSimpleFromJSON(json['recipe']),
-        'url': !exists(json, 'url') ? undefined : json['url'],
-        'properties': !exists(json, 'properties') ? undefined : (json['properties'] === null ? null : (json['properties'] as Array<any>).map(PropertyFromJSON)),
-        'propertiesFoodAmount': !exists(json, 'properties_food_amount') ? undefined : json['properties_food_amount'],
-        'propertiesFoodUnit': !exists(json, 'properties_food_unit') ? undefined : UnitFromJSON(json['properties_food_unit']),
-        'fdcId': !exists(json, 'fdc_id') ? undefined : json['fdc_id'],
-        'foodOnhand': !exists(json, 'food_onhand') ? undefined : json['food_onhand'],
-        'supermarketCategory': !exists(json, 'supermarket_category') ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
-        'parent': !exists(json, 'parent') ? undefined : json['parent'],
-        'numchild': !exists(json, 'numchild') ? undefined : json['numchild'],
-        'inheritFields': !exists(json, 'inherit_fields') ? undefined : (json['inherit_fields'] === null ? null : (json['inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
-        'fullName': !exists(json, 'full_name') ? undefined : json['full_name'],
-        'ignoreShopping': !exists(json, 'ignore_shopping') ? undefined : json['ignore_shopping'],
-        'substitute': !exists(json, 'substitute') ? undefined : (json['substitute'] === null ? null : (json['substitute'] as Array<any>).map(FoodSimpleFromJSON)),
-        'substituteSiblings': !exists(json, 'substitute_siblings') ? undefined : json['substitute_siblings'],
-        'substituteChildren': !exists(json, 'substitute_children') ? undefined : json['substitute_children'],
-        'substituteOnhand': !exists(json, 'substitute_onhand') ? undefined : json['substitute_onhand'],
-        'childInheritFields': !exists(json, 'child_inherit_fields') ? undefined : (json['child_inherit_fields'] === null ? null : (json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
-        'openDataSlug': !exists(json, 'open_data_slug') ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'shopping': json['shopping'] == null ? undefined : json['shopping'],
+        'recipe': json['recipe'] == null ? undefined : RecipeSimpleFromJSON(json['recipe']),
+        'url': json['url'] == null ? undefined : json['url'],
+        'properties': json['properties'] == null ? undefined : ((json['properties'] as Array<any>).map(PropertyFromJSON)),
+        'propertiesFoodAmount': json['properties_food_amount'] == null ? undefined : json['properties_food_amount'],
+        'propertiesFoodUnit': json['properties_food_unit'] == null ? undefined : UnitFromJSON(json['properties_food_unit']),
+        'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
+        'foodOnhand': json['food_onhand'] == null ? undefined : json['food_onhand'],
+        'supermarketCategory': json['supermarket_category'] == null ? undefined : SupermarketCategoryFromJSON(json['supermarket_category']),
+        'parent': json['parent'] == null ? undefined : json['parent'],
+        'numchild': json['numchild'] == null ? undefined : json['numchild'],
+        'inheritFields': json['inherit_fields'] == null ? undefined : ((json['inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
+        'fullName': json['full_name'] == null ? undefined : json['full_name'],
+        'ignoreShopping': json['ignore_shopping'] == null ? undefined : json['ignore_shopping'],
+        'substitute': json['substitute'] == null ? undefined : ((json['substitute'] as Array<any>).map(FoodSimpleFromJSON)),
+        'substituteSiblings': json['substitute_siblings'] == null ? undefined : json['substitute_siblings'],
+        'substituteChildren': json['substitute_children'] == null ? undefined : json['substitute_children'],
+        'substituteOnhand': json['substitute_onhand'] == null ? undefined : json['substitute_onhand'],
+        'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldFromJSON)),
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
 export function PatchedFoodToJSON(value?: PatchedFood | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'plural_name': value.pluralName,
-        'description': value.description,
-        'recipe': RecipeSimpleToJSON(value.recipe),
-        'url': value.url,
-        'properties': value.properties === undefined ? undefined : (value.properties === null ? null : (value.properties as Array<any>).map(PropertyToJSON)),
-        'properties_food_amount': value.propertiesFoodAmount,
-        'properties_food_unit': UnitToJSON(value.propertiesFoodUnit),
-        'fdc_id': value.fdcId,
-        'food_onhand': value.foodOnhand,
-        'supermarket_category': SupermarketCategoryToJSON(value.supermarketCategory),
-        'inherit_fields': value.inheritFields === undefined ? undefined : (value.inheritFields === null ? null : (value.inheritFields as Array<any>).map(FoodInheritFieldToJSON)),
-        'ignore_shopping': value.ignoreShopping,
-        'substitute': value.substitute === undefined ? undefined : (value.substitute === null ? null : (value.substitute as Array<any>).map(FoodSimpleToJSON)),
-        'substitute_siblings': value.substituteSiblings,
-        'substitute_children': value.substituteChildren,
-        'child_inherit_fields': value.childInheritFields === undefined ? undefined : (value.childInheritFields === null ? null : (value.childInheritFields as Array<any>).map(FoodInheritFieldToJSON)),
-        'open_data_slug': value.openDataSlug,
+        'name': value['name'],
+        'plural_name': value['pluralName'],
+        'description': value['description'],
+        'recipe': RecipeSimpleToJSON(value['recipe']),
+        'url': value['url'],
+        'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(PropertyToJSON)),
+        'properties_food_amount': value['propertiesFoodAmount'],
+        'properties_food_unit': UnitToJSON(value['propertiesFoodUnit']),
+        'fdc_id': value['fdcId'],
+        'food_onhand': value['foodOnhand'],
+        'supermarket_category': SupermarketCategoryToJSON(value['supermarketCategory']),
+        'inherit_fields': value['inheritFields'] == null ? undefined : ((value['inheritFields'] as Array<any>).map(FoodInheritFieldToJSON)),
+        'ignore_shopping': value['ignoreShopping'],
+        'substitute': value['substitute'] == null ? undefined : ((value['substitute'] as Array<any>).map(FoodSimpleToJSON)),
+        'substitute_siblings': value['substituteSiblings'],
+        'substitute_children': value['substituteChildren'],
+        'child_inherit_fields': value['childInheritFields'] == null ? undefined : ((value['childInheritFields'] as Array<any>).map(FoodInheritFieldToJSON)),
+        'open_data_slug': value['openDataSlug'],
     };
 }
-
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -57,37 +57,40 @@ export interface PatchedAccessToken {
     readonly updated?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedAccessToken interface.
+ */
+export function instanceOfPatchedAccessToken(value: object): boolean {
+    return true;
+}
+
 export function PatchedAccessTokenFromJSON(json: any): PatchedAccessToken {
     return PatchedAccessTokenFromJSONTyped(json, false);
 }
 
 export function PatchedAccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedAccessToken {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'token': !exists(json, 'token') ? undefined : json['token'],
-        'expires': !exists(json, 'expires') ? undefined : (new Date(json['expires'])),
-        'scope': !exists(json, 'scope') ? undefined : json['scope'],
-        'created': !exists(json, 'created') ? undefined : (new Date(json['created'])),
-        'updated': !exists(json, 'updated') ? undefined : (new Date(json['updated'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'token': json['token'] == null ? undefined : json['token'],
+        'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
+        'scope': json['scope'] == null ? undefined : json['scope'],
+        'created': json['created'] == null ? undefined : (new Date(json['created'])),
+        'updated': json['updated'] == null ? undefined : (new Date(json['updated'])),
     };
 }
 
 export function PatchedAccessTokenToJSON(value?: PatchedAccessToken | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'expires': value.expires === undefined ? undefined : (value.expires.toISOString()),
-        'scope': value.scope,
+        'expires': value['expires'] == null ? undefined : ((value['expires']).toISOString()),
+        'scope': value['scope'],
     };
 }
-
 

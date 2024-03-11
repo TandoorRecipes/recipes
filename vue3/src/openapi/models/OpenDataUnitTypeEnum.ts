@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `WEIGHT` - weight
-* `VOLUME` - volume
-* `OTHER` - other
+ * * `VOLUME` - volume
+ * * `OTHER` - other
  * @export
- * @enum {string}
  */
-export enum OpenDataUnitTypeEnum {
-    Weight = 'WEIGHT',
-    Volume = 'VOLUME',
-    Other = 'OTHER'
-}
+export const OpenDataUnitTypeEnum = {
+    Weight: 'WEIGHT',
+    Volume: 'VOLUME',
+    Other: 'OTHER'
+} as const;
+export type OpenDataUnitTypeEnum = typeof OpenDataUnitTypeEnum[keyof typeof OpenDataUnitTypeEnum];
+
 
 export function OpenDataUnitTypeEnumFromJSON(json: any): OpenDataUnitTypeEnum {
     return OpenDataUnitTypeEnumFromJSONTyped(json, false);

@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { User } from './User';
 import {
-    User,
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * 
@@ -43,19 +43,19 @@ export interface CookLog {
      * @type {number}
      * @memberof CookLog
      */
-    servings?: number | null;
+    servings?: number;
     /**
      * 
      * @type {number}
      * @memberof CookLog
      */
-    rating?: number | null;
+    rating?: number;
     /**
      * 
      * @type {string}
      * @memberof CookLog
      */
-    comment?: string | null;
+    comment?: string;
     /**
      * 
      * @type {User}
@@ -76,42 +76,49 @@ export interface CookLog {
     readonly updatedAt: Date;
 }
 
+/**
+ * Check if a given object implements the CookLog interface.
+ */
+export function instanceOfCookLog(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('recipe' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('updatedAt' in value)) return false;
+    return true;
+}
+
 export function CookLogFromJSON(json: any): CookLog {
     return CookLogFromJSONTyped(json, false);
 }
 
 export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): CookLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'recipe': json['recipe'],
-        'servings': !exists(json, 'servings') ? undefined : json['servings'],
-        'rating': !exists(json, 'rating') ? undefined : json['rating'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'rating': json['rating'] == null ? undefined : json['rating'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': UserFromJSON(json['created_by']),
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
     };
 }
 
 export function CookLogToJSON(value?: CookLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
-        'servings': value.servings,
-        'rating': value.rating,
-        'comment': value.comment,
-        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'recipe': value['recipe'],
+        'servings': value['servings'],
+        'rating': value['rating'],
+        'comment': value['comment'],
+        'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
     };
 }
-
 

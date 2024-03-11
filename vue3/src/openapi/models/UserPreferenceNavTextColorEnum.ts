@@ -12,16 +12,18 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `LIGHT` - Light
-* `DARK` - Dark
+ * * `DARK` - Dark
  * @export
- * @enum {string}
  */
-export enum UserPreferenceNavTextColorEnum {
-    Light = 'LIGHT',
-    Dark = 'DARK'
-}
+export const UserPreferenceNavTextColorEnum = {
+    Light: 'LIGHT',
+    Dark: 'DARK'
+} as const;
+export type UserPreferenceNavTextColorEnum = typeof UserPreferenceNavTextColorEnum[keyof typeof UserPreferenceNavTextColorEnum];
+
 
 export function UserPreferenceNavTextColorEnumFromJSON(json: any): UserPreferenceNavTextColorEnum {
     return UserPreferenceNavTextColorEnumFromJSONTyped(json, false);

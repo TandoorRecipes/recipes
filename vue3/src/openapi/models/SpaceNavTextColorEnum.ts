@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `BLANK` - -------
-* `LIGHT` - Light
-* `DARK` - Dark
+ * * `LIGHT` - Light
+ * * `DARK` - Dark
  * @export
- * @enum {string}
  */
-export enum SpaceNavTextColorEnum {
-    Blank = 'BLANK',
-    Light = 'LIGHT',
-    Dark = 'DARK'
-}
+export const SpaceNavTextColorEnum = {
+    Blank: 'BLANK',
+    Light: 'LIGHT',
+    Dark: 'DARK'
+} as const;
+export type SpaceNavTextColorEnum = typeof SpaceNavTextColorEnum[keyof typeof SpaceNavTextColorEnum];
+
 
 export function SpaceNavTextColorEnumFromJSON(json: any): SpaceNavTextColorEnum {
     return SpaceNavTextColorEnumFromJSONTyped(json, false);

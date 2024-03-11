@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Ingredient } from './Ingredient';
 import {
-    Ingredient,
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-    UserFileView,
+} from './Ingredient';
+import type { UserFileView } from './UserFileView';
+import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-} from './';
+} from './UserFileView';
 
 /**
  * Adds nested create feature
@@ -83,13 +85,13 @@ export interface Step {
      * @type {UserFileView}
      * @memberof Step
      */
-    file?: UserFileView | null;
+    file?: UserFileView;
     /**
      * 
      * @type {number}
      * @memberof Step
      */
-    stepRecipe?: number | null;
+    stepRecipe?: number;
     /**
      * 
      * @type {string}
@@ -110,51 +112,59 @@ export interface Step {
     showIngredientsTable?: boolean;
 }
 
+/**
+ * Check if a given object implements the Step interface.
+ */
+export function instanceOfStep(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('ingredients' in value)) return false;
+    if (!('instructionsMarkdown' in value)) return false;
+    if (!('stepRecipeData' in value)) return false;
+    if (!('numrecipe' in value)) return false;
+    return true;
+}
+
 export function StepFromJSON(json: any): Step {
     return StepFromJSONTyped(json, false);
 }
 
 export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'instruction': !exists(json, 'instruction') ? undefined : json['instruction'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'instruction': json['instruction'] == null ? undefined : json['instruction'],
         'ingredients': ((json['ingredients'] as Array<any>).map(IngredientFromJSON)),
         'instructionsMarkdown': json['instructions_markdown'],
-        'time': !exists(json, 'time') ? undefined : json['time'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'showAsHeader': !exists(json, 'show_as_header') ? undefined : json['show_as_header'],
-        'file': !exists(json, 'file') ? undefined : UserFileViewFromJSON(json['file']),
-        'stepRecipe': !exists(json, 'step_recipe') ? undefined : json['step_recipe'],
+        'time': json['time'] == null ? undefined : json['time'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'showAsHeader': json['show_as_header'] == null ? undefined : json['show_as_header'],
+        'file': json['file'] == null ? undefined : UserFileViewFromJSON(json['file']),
+        'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'stepRecipeData': json['step_recipe_data'],
         'numrecipe': json['numrecipe'],
-        'showIngredientsTable': !exists(json, 'show_ingredients_table') ? undefined : json['show_ingredients_table'],
+        'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
     };
 }
 
 export function StepToJSON(value?: Step | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'instruction': value.instruction,
-        'ingredients': ((value.ingredients as Array<any>).map(IngredientToJSON)),
-        'time': value.time,
-        'order': value.order,
-        'show_as_header': value.showAsHeader,
-        'file': UserFileViewToJSON(value.file),
-        'step_recipe': value.stepRecipe,
-        'show_ingredients_table': value.showIngredientsTable,
+        'name': value['name'],
+        'instruction': value['instruction'],
+        'ingredients': ((value['ingredients'] as Array<any>).map(IngredientToJSON)),
+        'time': value['time'],
+        'order': value['order'],
+        'show_as_header': value['showAsHeader'],
+        'file': UserFileViewToJSON(value['file']),
+        'step_recipe': value['stepRecipe'],
+        'show_ingredients_table': value['showIngredientsTable'],
     };
 }
-
 

@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { SupermarketCategory } from './SupermarketCategory';
 import {
-    SupermarketCategory,
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
-} from './';
+} from './SupermarketCategory';
 
 /**
  * Adds nested create feature
@@ -52,12 +52,22 @@ export interface SupermarketCategoryRelation {
     order?: number;
 }
 
+/**
+ * Check if a given object implements the SupermarketCategoryRelation interface.
+ */
+export function instanceOfSupermarketCategoryRelation(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('category' in value)) return false;
+    if (!('supermarket' in value)) return false;
+    return true;
+}
+
 export function SupermarketCategoryRelationFromJSON(json: any): SupermarketCategoryRelation {
     return SupermarketCategoryRelationFromJSONTyped(json, false);
 }
 
 export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscriminator: boolean): SupermarketCategoryRelation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -65,23 +75,19 @@ export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscri
         'id': json['id'],
         'category': SupermarketCategoryFromJSON(json['category']),
         'supermarket': json['supermarket'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
+        'order': json['order'] == null ? undefined : json['order'],
     };
 }
 
 export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRelation | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'category': SupermarketCategoryToJSON(value.category),
-        'supermarket': value.supermarket,
-        'order': value.order,
+        'category': SupermarketCategoryToJSON(value['category']),
+        'supermarket': value['supermarket'],
+        'order': value['order'],
     };
 }
-
 

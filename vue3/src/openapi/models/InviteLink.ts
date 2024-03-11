@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Group } from './Group';
 import {
-    Group,
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-} from './';
+} from './Group';
 
 /**
  * Adds nested create feature
@@ -61,7 +61,7 @@ export interface InviteLink {
      * @type {number}
      * @memberof InviteLink
      */
-    usedBy?: number | null;
+    usedBy?: number;
     /**
      * 
      * @type {boolean}
@@ -73,7 +73,7 @@ export interface InviteLink {
      * @type {string}
      * @memberof InviteLink
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -88,45 +88,53 @@ export interface InviteLink {
     readonly createdAt: Date;
 }
 
+/**
+ * Check if a given object implements the InviteLink interface.
+ */
+export function instanceOfInviteLink(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('uuid' in value)) return false;
+    if (!('group' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    return true;
+}
+
 export function InviteLinkFromJSON(json: any): InviteLink {
     return InviteLinkFromJSONTyped(json, false);
 }
 
 export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean): InviteLink {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'uuid': json['uuid'],
-        'email': !exists(json, 'email') ? undefined : json['email'],
+        'email': json['email'] == null ? undefined : json['email'],
         'group': GroupFromJSON(json['group']),
-        'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
-        'usedBy': !exists(json, 'used_by') ? undefined : json['used_by'],
-        'reusable': !exists(json, 'reusable') ? undefined : json['reusable'],
-        'internalNote': !exists(json, 'internal_note') ? undefined : json['internal_note'],
+        'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
+        'usedBy': json['used_by'] == null ? undefined : json['used_by'],
+        'reusable': json['reusable'] == null ? undefined : json['reusable'],
+        'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
 export function InviteLinkToJSON(value?: InviteLink | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'email': value.email,
-        'group': GroupToJSON(value.group),
-        'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString().substr(0,10)),
-        'used_by': value.usedBy,
-        'reusable': value.reusable,
-        'internal_note': value.internalNote,
+        'email': value['email'],
+        'group': GroupToJSON(value['group']),
+        'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
+        'used_by': value['usedBy'],
+        'reusable': value['reusable'],
+        'internal_note': value['internalNote'],
     };
 }
-
 

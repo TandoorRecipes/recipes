@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -51,36 +51,42 @@ export interface User {
     readonly displayName: string;
 }
 
+/**
+ * Check if a given object implements the User interface.
+ */
+export function instanceOfUser(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('username' in value)) return false;
+    if (!('displayName' in value)) return false;
+    return true;
+}
+
 export function UserFromJSON(json: any): User {
     return UserFromJSONTyped(json, false);
 }
 
 export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'username': json['username'],
-        'firstName': !exists(json, 'first_name') ? undefined : json['first_name'],
-        'lastName': !exists(json, 'last_name') ? undefined : json['last_name'],
+        'firstName': json['first_name'] == null ? undefined : json['first_name'],
+        'lastName': json['last_name'] == null ? undefined : json['last_name'],
         'displayName': json['display_name'],
     };
 }
 
 export function UserToJSON(value?: User | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'first_name': value.firstName,
-        'last_name': value.lastName,
+        'first_name': value['firstName'],
+        'last_name': value['lastName'],
     };
 }
-
 
