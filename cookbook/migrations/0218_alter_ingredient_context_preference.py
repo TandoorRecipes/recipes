@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cookbook', '0210_shoppinglistentry_updated_at'),
+        ('cookbook', '0217_alter_userpreference_default_page'),
     ]
 
     operations = [
