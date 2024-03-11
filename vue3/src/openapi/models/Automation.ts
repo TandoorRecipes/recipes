@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { AutomationTypeEnum } from './AutomationTypeEnum';
 import {
-    AutomationTypeEnum,
     AutomationTypeEnumFromJSON,
     AutomationTypeEnumFromJSONTyped,
     AutomationTypeEnumToJSON,
-} from './';
+} from './AutomationTypeEnum';
 
 /**
  * 
@@ -49,25 +49,25 @@ export interface Automation {
      * @type {string}
      * @memberof Automation
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param1?: string | null;
+    param1?: string;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param2?: string | null;
+    param2?: string;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param3?: string | null;
+    param3?: string;
     /**
      * 
      * @type {number}
@@ -88,47 +88,53 @@ export interface Automation {
     readonly createdBy: number;
 }
 
+/**
+ * Check if a given object implements the Automation interface.
+ */
+export function instanceOfAutomation(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('type' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function AutomationFromJSON(json: any): Automation {
     return AutomationFromJSONTyped(json, false);
 }
 
 export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean): Automation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'type': AutomationTypeEnumFromJSON(json['type']),
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'param1': !exists(json, 'param_1') ? undefined : json['param_1'],
-        'param2': !exists(json, 'param_2') ? undefined : json['param_2'],
-        'param3': !exists(json, 'param_3') ? undefined : json['param_3'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'disabled': !exists(json, 'disabled') ? undefined : json['disabled'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'param1': json['param_1'] == null ? undefined : json['param_1'],
+        'param2': json['param_2'] == null ? undefined : json['param_2'],
+        'param3': json['param_3'] == null ? undefined : json['param_3'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'disabled': json['disabled'] == null ? undefined : json['disabled'],
         'createdBy': json['created_by'],
     };
 }
 
 export function AutomationToJSON(value?: Automation | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'type': AutomationTypeEnumToJSON(value.type),
-        'name': value.name,
-        'description': value.description,
-        'param_1': value.param1,
-        'param_2': value.param2,
-        'param_3': value.param3,
-        'order': value.order,
-        'disabled': value.disabled,
+        'type': AutomationTypeEnumToJSON(value['type']),
+        'name': value['name'],
+        'description': value['description'],
+        'param_1': value['param1'],
+        'param_2': value['param2'],
+        'param_3': value['param3'],
+        'order': value['order'],
+        'disabled': value['disabled'],
     };
 }
-
 

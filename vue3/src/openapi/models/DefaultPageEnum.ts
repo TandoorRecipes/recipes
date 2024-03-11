@@ -12,20 +12,22 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `SEARCH` - Search
-* `PLAN` - Meal-Plan
-* `BOOKS` - Books
-* `SHOPPING` - Shopping
+ * * `PLAN` - Meal-Plan
+ * * `BOOKS` - Books
+ * * `SHOPPING` - Shopping
  * @export
- * @enum {string}
  */
-export enum DefaultPageEnum {
-    Search = 'SEARCH',
-    Plan = 'PLAN',
-    Books = 'BOOKS',
-    Shopping = 'SHOPPING'
-}
+export const DefaultPageEnum = {
+    Search: 'SEARCH',
+    Plan: 'PLAN',
+    Books: 'BOOKS',
+    Shopping: 'SHOPPING'
+} as const;
+export type DefaultPageEnum = typeof DefaultPageEnum[keyof typeof DefaultPageEnum];
+
 
 export function DefaultPageEnumFromJSON(json: any): DefaultPageEnum {
     return DefaultPageEnumFromJSONTyped(json, false);

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -42,7 +42,7 @@ export interface PatchedMealType {
      * @type {string}
      * @memberof PatchedMealType
      */
-    color?: string | null;
+    color?: string;
     /**
      * 
      * @type {boolean}
@@ -57,39 +57,42 @@ export interface PatchedMealType {
     readonly createdBy?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedMealType interface.
+ */
+export function instanceOfPatchedMealType(value: object): boolean {
+    return true;
+}
+
 export function PatchedMealTypeFromJSON(json: any): PatchedMealType {
     return PatchedMealTypeFromJSONTyped(json, false);
 }
 
 export function PatchedMealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedMealType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'color': !exists(json, 'color') ? undefined : json['color'],
-        '_default': !exists(json, 'default') ? undefined : json['default'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'color': json['color'] == null ? undefined : json['color'],
+        '_default': json['default'] == null ? undefined : json['default'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedMealTypeToJSON(value?: PatchedMealType | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'order': value.order,
-        'color': value.color,
-        'default': value._default,
+        'name': value['name'],
+        'order': value['order'],
+        'color': value['color'],
+        'default': value['_default'],
     };
 }
-
 

@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { ImportLog } from './ImportLog';
 import {
-    ImportLog,
     ImportLogFromJSON,
     ImportLogFromJSONTyped,
     ImportLogToJSON,
-} from './';
+} from './ImportLog';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedImportLogList {
      * @type {string}
      * @memberof PaginatedImportLogList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedImportLogList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<ImportLog>}
@@ -52,37 +52,40 @@ export interface PaginatedImportLogList {
     results?: Array<ImportLog>;
 }
 
+/**
+ * Check if a given object implements the PaginatedImportLogList interface.
+ */
+export function instanceOfPaginatedImportLogList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedImportLogListFromJSON(json: any): PaginatedImportLogList {
     return PaginatedImportLogListFromJSONTyped(json, false);
 }
 
 export function PaginatedImportLogListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedImportLogList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(ImportLogFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(ImportLogFromJSON)),
     };
 }
 
 export function PaginatedImportLogListToJSON(value?: PaginatedImportLogList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(ImportLogToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(ImportLogToJSON)),
     };
 }
-
 

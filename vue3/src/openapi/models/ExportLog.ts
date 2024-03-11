@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -81,46 +81,53 @@ export interface ExportLog {
     readonly createdAt: Date;
 }
 
+/**
+ * Check if a given object implements the ExportLog interface.
+ */
+export function instanceOfExportLog(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('type' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    return true;
+}
+
 export function ExportLogFromJSON(json: any): ExportLog {
     return ExportLogFromJSONTyped(json, false);
 }
 
 export function ExportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): ExportLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'type': json['type'],
-        'msg': !exists(json, 'msg') ? undefined : json['msg'],
-        'running': !exists(json, 'running') ? undefined : json['running'],
-        'totalRecipes': !exists(json, 'total_recipes') ? undefined : json['total_recipes'],
-        'exportedRecipes': !exists(json, 'exported_recipes') ? undefined : json['exported_recipes'],
-        'cacheDuration': !exists(json, 'cache_duration') ? undefined : json['cache_duration'],
-        'possiblyNotExpired': !exists(json, 'possibly_not_expired') ? undefined : json['possibly_not_expired'],
+        'msg': json['msg'] == null ? undefined : json['msg'],
+        'running': json['running'] == null ? undefined : json['running'],
+        'totalRecipes': json['total_recipes'] == null ? undefined : json['total_recipes'],
+        'exportedRecipes': json['exported_recipes'] == null ? undefined : json['exported_recipes'],
+        'cacheDuration': json['cache_duration'] == null ? undefined : json['cache_duration'],
+        'possiblyNotExpired': json['possibly_not_expired'] == null ? undefined : json['possibly_not_expired'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
 export function ExportLogToJSON(value?: ExportLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'type': value.type,
-        'msg': value.msg,
-        'running': value.running,
-        'total_recipes': value.totalRecipes,
-        'exported_recipes': value.exportedRecipes,
-        'cache_duration': value.cacheDuration,
-        'possibly_not_expired': value.possiblyNotExpired,
+        'type': value['type'],
+        'msg': value['msg'],
+        'running': value['running'],
+        'total_recipes': value['totalRecipes'],
+        'exported_recipes': value['exportedRecipes'],
+        'cache_duration': value['cacheDuration'],
+        'possibly_not_expired': value['possiblyNotExpired'],
     };
 }
-
 

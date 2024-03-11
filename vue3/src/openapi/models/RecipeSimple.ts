@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -39,12 +39,22 @@ export interface RecipeSimple {
     readonly url: string;
 }
 
+/**
+ * Check if a given object implements the RecipeSimple interface.
+ */
+export function instanceOfRecipeSimple(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('url' in value)) return false;
+    return true;
+}
+
 export function RecipeSimpleFromJSON(json: any): RecipeSimple {
     return RecipeSimpleFromJSONTyped(json, false);
 }
 
 export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolean): RecipeSimple {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -56,16 +66,12 @@ export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolea
 }
 
 export function RecipeSimpleToJSON(value?: RecipeSimple | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
+        'name': value['name'],
     };
 }
-
 

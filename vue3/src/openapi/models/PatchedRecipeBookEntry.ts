@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -51,36 +51,39 @@ export interface PatchedRecipeBookEntry {
     readonly recipeContent?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedRecipeBookEntry interface.
+ */
+export function instanceOfPatchedRecipeBookEntry(value: object): boolean {
+    return true;
+}
+
 export function PatchedRecipeBookEntryFromJSON(json: any): PatchedRecipeBookEntry {
     return PatchedRecipeBookEntryFromJSONTyped(json, false);
 }
 
 export function PatchedRecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedRecipeBookEntry {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'book': !exists(json, 'book') ? undefined : json['book'],
-        'bookContent': !exists(json, 'book_content') ? undefined : json['book_content'],
-        'recipe': !exists(json, 'recipe') ? undefined : json['recipe'],
-        'recipeContent': !exists(json, 'recipe_content') ? undefined : json['recipe_content'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'book': json['book'] == null ? undefined : json['book'],
+        'bookContent': json['book_content'] == null ? undefined : json['book_content'],
+        'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'recipeContent': json['recipe_content'] == null ? undefined : json['recipe_content'],
     };
 }
 
 export function PatchedRecipeBookEntryToJSON(value?: PatchedRecipeBookEntry | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'book': value.book,
-        'recipe': value.recipe,
+        'book': value['book'],
+        'recipe': value['recipe'],
     };
 }
-
 

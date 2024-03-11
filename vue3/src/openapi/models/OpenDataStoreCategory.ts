@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataCategory } from './OpenDataCategory';
 import {
-    OpenDataCategory,
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
-} from './';
+} from './OpenDataCategory';
 
 /**
  * Adds nested create feature
@@ -52,12 +52,22 @@ export interface OpenDataStoreCategory {
     order?: number;
 }
 
+/**
+ * Check if a given object implements the OpenDataStoreCategory interface.
+ */
+export function instanceOfOpenDataStoreCategory(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('category' in value)) return false;
+    if (!('store' in value)) return false;
+    return true;
+}
+
 export function OpenDataStoreCategoryFromJSON(json: any): OpenDataStoreCategory {
     return OpenDataStoreCategoryFromJSONTyped(json, false);
 }
 
 export function OpenDataStoreCategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataStoreCategory {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -65,23 +75,19 @@ export function OpenDataStoreCategoryFromJSONTyped(json: any, ignoreDiscriminato
         'id': json['id'],
         'category': OpenDataCategoryFromJSON(json['category']),
         'store': json['store'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
+        'order': json['order'] == null ? undefined : json['order'],
     };
 }
 
 export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'category': OpenDataCategoryToJSON(value.category),
-        'store': value.store,
-        'order': value.order,
+        'category': OpenDataCategoryToJSON(value['category']),
+        'store': value['store'],
+        'order': value['order'],
     };
 }
-
 

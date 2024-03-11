@@ -12,25 +12,31 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Food } from './Food';
 import {
-    Food,
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    ShoppingListRecipe,
+} from './Food';
+import type { ShoppingListRecipe } from './ShoppingListRecipe';
+import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
-    Unit,
+} from './ShoppingListRecipe';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-    User,
+} from './Unit';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -49,7 +55,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    listRecipe?: number | null;
+    listRecipe?: number;
     /**
      * 
      * @type {Food}
@@ -61,7 +67,7 @@ export interface ShoppingListEntry {
      * @type {Unit}
      * @memberof ShoppingListEntry
      */
-    unit?: Unit | null;
+    unit?: Unit;
     /**
      * 
      * @type {string}
@@ -109,13 +115,27 @@ export interface ShoppingListEntry {
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    completedAt?: Date | null;
+    completedAt?: Date;
     /**
      * 
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    delayUntil?: Date | null;
+    delayUntil?: Date;
+}
+
+/**
+ * Check if a given object implements the ShoppingListEntry interface.
+ */
+export function instanceOfShoppingListEntry(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('food' in value)) return false;
+    if (!('amount' in value)) return false;
+    if (!('recipeMealplan' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    if (!('updatedAt' in value)) return false;
+    return true;
 }
 
 export function ShoppingListEntryFromJSON(json: any): ShoppingListEntry {
@@ -123,45 +143,41 @@ export function ShoppingListEntryFromJSON(json: any): ShoppingListEntry {
 }
 
 export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShoppingListEntry {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'listRecipe': !exists(json, 'list_recipe') ? undefined : json['list_recipe'],
+        'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
         'food': FoodFromJSON(json['food']),
-        'unit': !exists(json, 'unit') ? undefined : UnitFromJSON(json['unit']),
+        'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'checked': !exists(json, 'checked') ? undefined : json['checked'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'checked': json['checked'] == null ? undefined : json['checked'],
         'recipeMealplan': ShoppingListRecipeFromJSON(json['recipe_mealplan']),
         'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
-        'completedAt': !exists(json, 'completed_at') ? undefined : (json['completed_at'] === null ? null : new Date(json['completed_at'])),
-        'delayUntil': !exists(json, 'delay_until') ? undefined : (json['delay_until'] === null ? null : new Date(json['delay_until'])),
+        'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
+        'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
     };
 }
 
 export function ShoppingListEntryToJSON(value?: ShoppingListEntry | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'list_recipe': value.listRecipe,
-        'food': FoodToJSON(value.food),
-        'unit': UnitToJSON(value.unit),
-        'amount': value.amount,
-        'order': value.order,
-        'checked': value.checked,
-        'completed_at': value.completedAt === undefined ? undefined : (value.completedAt === null ? null : value.completedAt.toISOString()),
-        'delay_until': value.delayUntil === undefined ? undefined : (value.delayUntil === null ? null : value.delayUntil.toISOString()),
+        'list_recipe': value['listRecipe'],
+        'food': FoodToJSON(value['food']),
+        'unit': UnitToJSON(value['unit']),
+        'amount': value['amount'],
+        'order': value['order'],
+        'checked': value['checked'],
+        'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
+        'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
     };
 }
-
 

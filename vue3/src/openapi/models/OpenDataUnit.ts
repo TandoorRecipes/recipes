@@ -12,62 +12,62 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { BaseUnitEnum } from './BaseUnitEnum';
 import {
-    BaseUnitEnum,
     BaseUnitEnumFromJSON,
     BaseUnitEnumFromJSONTyped,
     BaseUnitEnumToJSON,
-    BlankEnum,
-    BlankEnumFromJSON,
-    BlankEnumFromJSONTyped,
-    BlankEnumToJSON,
-    OpenDataUnitTypeEnum,
+} from './BaseUnitEnum';
+import type { OpenDataUnitTypeEnum } from './OpenDataUnitTypeEnum';
+import {
     OpenDataUnitTypeEnumFromJSON,
     OpenDataUnitTypeEnumFromJSONTyped,
     OpenDataUnitTypeEnumToJSON,
-    OpenDataVersion,
+} from './OpenDataUnitTypeEnum';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface OpenDataUnit
  */
@@ -104,10 +104,10 @@ export interface OpenDataUnit {
     pluralName?: string;
     /**
      * 
-     * @type {BaseUnitEnum | BlankEnum}
+     * @type {BaseUnitEnum}
      * @memberof OpenDataUnit
      */
-    baseUnit?: BaseUnitEnum | BlankEnum;
+    baseUnit?: BaseUnitEnum;
     /**
      * 
      * @type {OpenDataUnitTypeEnum}
@@ -128,12 +128,25 @@ export interface OpenDataUnit {
     readonly createdBy: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataUnit interface.
+ */
+export function instanceOfOpenDataUnit(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('version' in value)) return false;
+    if (!('slug' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('type' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function OpenDataUnitFromJSON(json: any): OpenDataUnit {
     return OpenDataUnitFromJSONTyped(json, false);
 }
 
 export function OpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataUnit {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -142,31 +155,27 @@ export function OpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
-        'pluralName': !exists(json, 'plural_name') ? undefined : json['plural_name'],
-        'baseUnit': !exists(json, 'base_unit') ? undefined : BaseUnitEnum | BlankEnumFromJSON(json['base_unit']),
+        'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
+        'baseUnit': json['base_unit'] == null ? undefined : BaseUnitEnumFromJSON(json['base_unit']),
         'type': OpenDataUnitTypeEnumFromJSON(json['type']),
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };
 }
 
 export function OpenDataUnitToJSON(value?: OpenDataUnit | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'name': value.name,
-        'plural_name': value.pluralName,
-        'base_unit': BaseUnitEnum | BlankEnumToJSON(value.baseUnit),
-        'type': OpenDataUnitTypeEnumToJSON(value.type),
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'name': value['name'],
+        'plural_name': value['pluralName'],
+        'base_unit': BaseUnitEnumToJSON(value['baseUnit']),
+        'type': OpenDataUnitTypeEnumToJSON(value['type']),
+        'comment': value['comment'],
     };
 }
-
 

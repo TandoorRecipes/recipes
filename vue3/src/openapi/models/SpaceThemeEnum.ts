@@ -12,26 +12,28 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `BLANK` - -------
-* `TANDOOR` - Tandoor
-* `BOOTSTRAP` - Bootstrap
-* `DARKLY` - Darkly
-* `FLATLY` - Flatly
-* `SUPERHERO` - Superhero
-* `TANDOOR_DARK` - Tandoor Dark (INCOMPLETE)
+ * * `TANDOOR` - Tandoor
+ * * `BOOTSTRAP` - Bootstrap
+ * * `DARKLY` - Darkly
+ * * `FLATLY` - Flatly
+ * * `SUPERHERO` - Superhero
+ * * `TANDOOR_DARK` - Tandoor Dark (INCOMPLETE)
  * @export
- * @enum {string}
  */
-export enum SpaceThemeEnum {
-    Blank = 'BLANK',
-    Tandoor = 'TANDOOR',
-    Bootstrap = 'BOOTSTRAP',
-    Darkly = 'DARKLY',
-    Flatly = 'FLATLY',
-    Superhero = 'SUPERHERO',
-    TandoorDark = 'TANDOOR_DARK'
-}
+export const SpaceThemeEnum = {
+    Blank: 'BLANK',
+    Tandoor: 'TANDOOR',
+    Bootstrap: 'BOOTSTRAP',
+    Darkly: 'DARKLY',
+    Flatly: 'FLATLY',
+    Superhero: 'SUPERHERO',
+    TandoorDark: 'TANDOOR_DARK'
+} as const;
+export type SpaceThemeEnum = typeof SpaceThemeEnum[keyof typeof SpaceThemeEnum];
+
 
 export function SpaceThemeEnumFromJSON(json: any): SpaceThemeEnum {
     return SpaceThemeEnumFromJSONTyped(json, false);

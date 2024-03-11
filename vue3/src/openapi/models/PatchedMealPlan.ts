@@ -12,21 +12,25 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { MealType } from './MealType';
 import {
-    MealType,
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
-    RecipeOverview,
+} from './MealType';
+import type { RecipeOverview } from './RecipeOverview';
+import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    User,
+} from './RecipeOverview';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -51,7 +55,7 @@ export interface PatchedMealPlan {
      * @type {RecipeOverview}
      * @memberof PatchedMealPlan
      */
-    recipe?: RecipeOverview | null;
+    recipe?: RecipeOverview;
     /**
      * 
      * @type {string}
@@ -99,7 +103,7 @@ export interface PatchedMealPlan {
      * @type {Array<User>}
      * @memberof PatchedMealPlan
      */
-    shared?: Array<User> | null;
+    shared?: Array<User>;
     /**
      * 
      * @type {string}
@@ -120,51 +124,54 @@ export interface PatchedMealPlan {
     readonly shopping?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedMealPlan interface.
+ */
+export function instanceOfPatchedMealPlan(value: object): boolean {
+    return true;
+}
+
 export function PatchedMealPlanFromJSON(json: any): PatchedMealPlan {
     return PatchedMealPlanFromJSONTyped(json, false);
 }
 
 export function PatchedMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedMealPlan {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
-        'recipe': !exists(json, 'recipe') ? undefined : RecipeOverviewFromJSON(json['recipe']),
-        'servings': !exists(json, 'servings') ? undefined : json['servings'],
-        'note': !exists(json, 'note') ? undefined : json['note'],
-        'noteMarkdown': !exists(json, 'note_markdown') ? undefined : json['note_markdown'],
-        'fromDate': !exists(json, 'from_date') ? undefined : (new Date(json['from_date'])),
-        'toDate': !exists(json, 'to_date') ? undefined : (new Date(json['to_date'])),
-        'mealType': !exists(json, 'meal_type') ? undefined : MealTypeFromJSON(json['meal_type']),
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'shared': !exists(json, 'shared') ? undefined : (json['shared'] === null ? null : (json['shared'] as Array<any>).map(UserFromJSON)),
-        'recipeName': !exists(json, 'recipe_name') ? undefined : json['recipe_name'],
-        'mealTypeName': !exists(json, 'meal_type_name') ? undefined : json['meal_type_name'],
-        'shopping': !exists(json, 'shopping') ? undefined : json['shopping'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'title': json['title'] == null ? undefined : json['title'],
+        'recipe': json['recipe'] == null ? undefined : RecipeOverviewFromJSON(json['recipe']),
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'note': json['note'] == null ? undefined : json['note'],
+        'noteMarkdown': json['note_markdown'] == null ? undefined : json['note_markdown'],
+        'fromDate': json['from_date'] == null ? undefined : (new Date(json['from_date'])),
+        'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
+        'mealType': json['meal_type'] == null ? undefined : MealTypeFromJSON(json['meal_type']),
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
+        'recipeName': json['recipe_name'] == null ? undefined : json['recipe_name'],
+        'mealTypeName': json['meal_type_name'] == null ? undefined : json['meal_type_name'],
+        'shopping': json['shopping'] == null ? undefined : json['shopping'],
     };
 }
 
 export function PatchedMealPlanToJSON(value?: PatchedMealPlan | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'title': value.title,
-        'recipe': RecipeOverviewToJSON(value.recipe),
-        'servings': value.servings,
-        'note': value.note,
-        'from_date': value.fromDate === undefined ? undefined : (value.fromDate.toISOString().substr(0,10)),
-        'to_date': value.toDate === undefined ? undefined : (value.toDate.toISOString().substr(0,10)),
-        'meal_type': MealTypeToJSON(value.mealType),
-        'shared': value.shared === undefined ? undefined : (value.shared === null ? null : (value.shared as Array<any>).map(UserToJSON)),
+        'title': value['title'],
+        'recipe': RecipeOverviewToJSON(value['recipe']),
+        'servings': value['servings'],
+        'note': value['note'],
+        'from_date': value['fromDate'] == null ? undefined : ((value['fromDate']).toISOString().substring(0,10)),
+        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString().substring(0,10)),
+        'meal_type': MealTypeToJSON(value['mealType']),
+        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-
 

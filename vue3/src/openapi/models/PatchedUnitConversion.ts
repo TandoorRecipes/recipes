@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Food } from './Food';
 import {
-    Food,
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    Unit,
+} from './Food';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-} from './';
+} from './Unit';
 
 /**
  * Adds nested create feature
@@ -71,13 +73,20 @@ export interface PatchedUnitConversion {
      * @type {Food}
      * @memberof PatchedUnitConversion
      */
-    food?: Food | null;
+    food?: Food;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnitConversion
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
+}
+
+/**
+ * Check if a given object implements the PatchedUnitConversion interface.
+ */
+export function instanceOfPatchedUnitConversion(value: object): boolean {
+    return true;
 }
 
 export function PatchedUnitConversionFromJSON(json: any): PatchedUnitConversion {
@@ -85,38 +94,34 @@ export function PatchedUnitConversionFromJSON(json: any): PatchedUnitConversion 
 }
 
 export function PatchedUnitConversionFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedUnitConversion {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'baseAmount': !exists(json, 'base_amount') ? undefined : json['base_amount'],
-        'baseUnit': !exists(json, 'base_unit') ? undefined : UnitFromJSON(json['base_unit']),
-        'convertedAmount': !exists(json, 'converted_amount') ? undefined : json['converted_amount'],
-        'convertedUnit': !exists(json, 'converted_unit') ? undefined : UnitFromJSON(json['converted_unit']),
-        'food': !exists(json, 'food') ? undefined : FoodFromJSON(json['food']),
-        'openDataSlug': !exists(json, 'open_data_slug') ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'baseAmount': json['base_amount'] == null ? undefined : json['base_amount'],
+        'baseUnit': json['base_unit'] == null ? undefined : UnitFromJSON(json['base_unit']),
+        'convertedAmount': json['converted_amount'] == null ? undefined : json['converted_amount'],
+        'convertedUnit': json['converted_unit'] == null ? undefined : UnitFromJSON(json['converted_unit']),
+        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
 export function PatchedUnitConversionToJSON(value?: PatchedUnitConversion | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'base_amount': value.baseAmount,
-        'base_unit': UnitToJSON(value.baseUnit),
-        'converted_amount': value.convertedAmount,
-        'converted_unit': UnitToJSON(value.convertedUnit),
-        'food': FoodToJSON(value.food),
-        'open_data_slug': value.openDataSlug,
+        'base_amount': value['baseAmount'],
+        'base_unit': UnitToJSON(value['baseUnit']),
+        'converted_amount': value['convertedAmount'],
+        'converted_unit': UnitToJSON(value['convertedUnit']),
+        'food': FoodToJSON(value['food']),
+        'open_data_slug': value['openDataSlug'],
     };
 }
-
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -36,7 +36,16 @@ export interface RecipeFlat {
      * @type {string}
      * @memberof RecipeFlat
      */
-    image?: string | null;
+    image?: string;
+}
+
+/**
+ * Check if a given object implements the RecipeFlat interface.
+ */
+export function instanceOfRecipeFlat(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    return true;
 }
 
 export function RecipeFlatFromJSON(json: any): RecipeFlat {
@@ -44,29 +53,25 @@ export function RecipeFlatFromJSON(json: any): RecipeFlat {
 }
 
 export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean): RecipeFlat {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'image': !exists(json, 'image') ? undefined : json['image'],
+        'image': json['image'] == null ? undefined : json['image'],
     };
 }
 
 export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'image': value.image,
+        'name': value['name'],
+        'image': value['image'],
     };
 }
-
 

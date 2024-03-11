@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Group } from './Group';
 import {
-    Group,
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-} from './';
+} from './Group';
 
 /**
  * Adds nested create feature
@@ -61,7 +61,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    usedBy?: number | null;
+    usedBy?: number;
     /**
      * 
      * @type {boolean}
@@ -73,7 +73,7 @@ export interface PatchedInviteLink {
      * @type {string}
      * @memberof PatchedInviteLink
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -88,45 +88,48 @@ export interface PatchedInviteLink {
     readonly createdAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedInviteLink interface.
+ */
+export function instanceOfPatchedInviteLink(value: object): boolean {
+    return true;
+}
+
 export function PatchedInviteLinkFromJSON(json: any): PatchedInviteLink {
     return PatchedInviteLinkFromJSONTyped(json, false);
 }
 
 export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedInviteLink {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'uuid': !exists(json, 'uuid') ? undefined : json['uuid'],
-        'email': !exists(json, 'email') ? undefined : json['email'],
-        'group': !exists(json, 'group') ? undefined : GroupFromJSON(json['group']),
-        'validUntil': !exists(json, 'valid_until') ? undefined : (new Date(json['valid_until'])),
-        'usedBy': !exists(json, 'used_by') ? undefined : json['used_by'],
-        'reusable': !exists(json, 'reusable') ? undefined : json['reusable'],
-        'internalNote': !exists(json, 'internal_note') ? undefined : json['internal_note'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'uuid': json['uuid'] == null ? undefined : json['uuid'],
+        'email': json['email'] == null ? undefined : json['email'],
+        'group': json['group'] == null ? undefined : GroupFromJSON(json['group']),
+        'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
+        'usedBy': json['used_by'] == null ? undefined : json['used_by'],
+        'reusable': json['reusable'] == null ? undefined : json['reusable'],
+        'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
     };
 }
 
 export function PatchedInviteLinkToJSON(value?: PatchedInviteLink | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'email': value.email,
-        'group': GroupToJSON(value.group),
-        'valid_until': value.validUntil === undefined ? undefined : (value.validUntil.toISOString().substr(0,10)),
-        'used_by': value.usedBy,
-        'reusable': value.reusable,
-        'internal_note': value.internalNote,
+        'email': value['email'],
+        'group': GroupToJSON(value['group']),
+        'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
+        'used_by': value['usedBy'],
+        'reusable': value['reusable'],
+        'internal_note': value['internalNote'],
     };
 }
-
 

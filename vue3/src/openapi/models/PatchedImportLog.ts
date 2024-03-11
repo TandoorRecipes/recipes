@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Keyword } from './Keyword';
 import {
-    Keyword,
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-} from './';
+} from './Keyword';
 
 /**
  * 
@@ -82,43 +82,46 @@ export interface PatchedImportLog {
     readonly createdAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedImportLog interface.
+ */
+export function instanceOfPatchedImportLog(value: object): boolean {
+    return true;
+}
+
 export function PatchedImportLogFromJSON(json: any): PatchedImportLog {
     return PatchedImportLogFromJSONTyped(json, false);
 }
 
 export function PatchedImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedImportLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'type': !exists(json, 'type') ? undefined : json['type'],
-        'msg': !exists(json, 'msg') ? undefined : json['msg'],
-        'running': !exists(json, 'running') ? undefined : json['running'],
-        'keyword': !exists(json, 'keyword') ? undefined : KeywordFromJSON(json['keyword']),
-        'totalRecipes': !exists(json, 'total_recipes') ? undefined : json['total_recipes'],
-        'importedRecipes': !exists(json, 'imported_recipes') ? undefined : json['imported_recipes'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'type': json['type'] == null ? undefined : json['type'],
+        'msg': json['msg'] == null ? undefined : json['msg'],
+        'running': json['running'] == null ? undefined : json['running'],
+        'keyword': json['keyword'] == null ? undefined : KeywordFromJSON(json['keyword']),
+        'totalRecipes': json['total_recipes'] == null ? undefined : json['total_recipes'],
+        'importedRecipes': json['imported_recipes'] == null ? undefined : json['imported_recipes'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
     };
 }
 
 export function PatchedImportLogToJSON(value?: PatchedImportLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'type': value.type,
-        'msg': value.msg,
-        'running': value.running,
-        'total_recipes': value.totalRecipes,
-        'imported_recipes': value.importedRecipes,
+        'type': value['type'],
+        'msg': value['msg'],
+        'running': value['running'],
+        'total_recipes': value['totalRecipes'],
+        'imported_recipes': value['importedRecipes'],
     };
 }
-
 

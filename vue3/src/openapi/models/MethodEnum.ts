@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
+
 /**
  * * `DB` - Dropbox
-* `NEXTCLOUD` - Nextcloud
-* `LOCAL` - Local
+ * * `NEXTCLOUD` - Nextcloud
+ * * `LOCAL` - Local
  * @export
- * @enum {string}
  */
-export enum MethodEnum {
-    Db = 'DB',
-    Nextcloud = 'NEXTCLOUD',
-    Local = 'LOCAL'
-}
+export const MethodEnum = {
+    Db: 'DB',
+    Nextcloud: 'NEXTCLOUD',
+    Local: 'LOCAL'
+} as const;
+export type MethodEnum = typeof MethodEnum[keyof typeof MethodEnum];
+
 
 export function MethodEnumFromJSON(json: any): MethodEnum {
     return MethodEnumFromJSONTyped(json, false);

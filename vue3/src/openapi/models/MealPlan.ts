@@ -12,21 +12,25 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { MealType } from './MealType';
 import {
-    MealType,
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
-    RecipeOverview,
+} from './MealType';
+import type { RecipeOverview } from './RecipeOverview';
+import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
-    User,
+} from './RecipeOverview';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -51,7 +55,7 @@ export interface MealPlan {
      * @type {RecipeOverview}
      * @memberof MealPlan
      */
-    recipe?: RecipeOverview | null;
+    recipe?: RecipeOverview;
     /**
      * 
      * @type {string}
@@ -99,7 +103,7 @@ export interface MealPlan {
      * @type {Array<User>}
      * @memberof MealPlan
      */
-    shared?: Array<User> | null;
+    shared?: Array<User>;
     /**
      * 
      * @type {string}
@@ -120,27 +124,43 @@ export interface MealPlan {
     readonly shopping: string;
 }
 
+/**
+ * Check if a given object implements the MealPlan interface.
+ */
+export function instanceOfMealPlan(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('servings' in value)) return false;
+    if (!('noteMarkdown' in value)) return false;
+    if (!('fromDate' in value)) return false;
+    if (!('mealType' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('recipeName' in value)) return false;
+    if (!('mealTypeName' in value)) return false;
+    if (!('shopping' in value)) return false;
+    return true;
+}
+
 export function MealPlanFromJSON(json: any): MealPlan {
     return MealPlanFromJSONTyped(json, false);
 }
 
 export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): MealPlan {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
-        'title': !exists(json, 'title') ? undefined : json['title'],
-        'recipe': !exists(json, 'recipe') ? undefined : RecipeOverviewFromJSON(json['recipe']),
+        'title': json['title'] == null ? undefined : json['title'],
+        'recipe': json['recipe'] == null ? undefined : RecipeOverviewFromJSON(json['recipe']),
         'servings': json['servings'],
-        'note': !exists(json, 'note') ? undefined : json['note'],
+        'note': json['note'] == null ? undefined : json['note'],
         'noteMarkdown': json['note_markdown'],
         'fromDate': (new Date(json['from_date'])),
-        'toDate': !exists(json, 'to_date') ? undefined : (new Date(json['to_date'])),
+        'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
         'mealType': MealTypeFromJSON(json['meal_type']),
         'createdBy': json['created_by'],
-        'shared': !exists(json, 'shared') ? undefined : (json['shared'] === null ? null : (json['shared'] as Array<any>).map(UserFromJSON)),
+        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'recipeName': json['recipe_name'],
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
@@ -148,23 +168,19 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
 }
 
 export function MealPlanToJSON(value?: MealPlan | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'title': value.title,
-        'recipe': RecipeOverviewToJSON(value.recipe),
-        'servings': value.servings,
-        'note': value.note,
-        'from_date': (value.fromDate.toISOString().substr(0,10)),
-        'to_date': value.toDate === undefined ? undefined : (value.toDate.toISOString().substr(0,10)),
-        'meal_type': MealTypeToJSON(value.mealType),
-        'shared': value.shared === undefined ? undefined : (value.shared === null ? null : (value.shared as Array<any>).map(UserToJSON)),
+        'title': value['title'],
+        'recipe': RecipeOverviewToJSON(value['recipe']),
+        'servings': value['servings'],
+        'note': value['note'],
+        'from_date': ((value['fromDate']).toISOString().substring(0,10)),
+        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString().substring(0,10)),
+        'meal_type': MealTypeToJSON(value['mealType']),
+        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-
 

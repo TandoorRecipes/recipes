@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Food } from './Food';
 import {
-    Food,
     FoodFromJSON,
     FoodFromJSONTyped,
     FoodToJSON,
-    Unit,
+} from './Food';
+import type { Unit } from './Unit';
+import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
-} from './';
+} from './Unit';
 
 /**
  * Adds nested create feature
@@ -71,13 +73,26 @@ export interface UnitConversion {
      * @type {Food}
      * @memberof UnitConversion
      */
-    food?: Food | null;
+    food?: Food;
     /**
      * 
      * @type {string}
      * @memberof UnitConversion
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
+}
+
+/**
+ * Check if a given object implements the UnitConversion interface.
+ */
+export function instanceOfUnitConversion(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('baseAmount' in value)) return false;
+    if (!('baseUnit' in value)) return false;
+    if (!('convertedAmount' in value)) return false;
+    if (!('convertedUnit' in value)) return false;
+    return true;
 }
 
 export function UnitConversionFromJSON(json: any): UnitConversion {
@@ -85,7 +100,7 @@ export function UnitConversionFromJSON(json: any): UnitConversion {
 }
 
 export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: boolean): UnitConversion {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -96,27 +111,23 @@ export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: bool
         'baseUnit': UnitFromJSON(json['base_unit']),
         'convertedAmount': json['converted_amount'],
         'convertedUnit': UnitFromJSON(json['converted_unit']),
-        'food': !exists(json, 'food') ? undefined : FoodFromJSON(json['food']),
-        'openDataSlug': !exists(json, 'open_data_slug') ? undefined : json['open_data_slug'],
+        'food': json['food'] == null ? undefined : FoodFromJSON(json['food']),
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
     };
 }
 
 export function UnitConversionToJSON(value?: UnitConversion | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'base_amount': value.baseAmount,
-        'base_unit': UnitToJSON(value.baseUnit),
-        'converted_amount': value.convertedAmount,
-        'converted_unit': UnitToJSON(value.convertedUnit),
-        'food': FoodToJSON(value.food),
-        'open_data_slug': value.openDataSlug,
+        'base_amount': value['baseAmount'],
+        'base_unit': UnitToJSON(value['baseUnit']),
+        'converted_amount': value['convertedAmount'],
+        'converted_unit': UnitToJSON(value['convertedUnit']),
+        'food': FoodToJSON(value['food']),
+        'open_data_slug': value['openDataSlug'],
     };
 }
-
 

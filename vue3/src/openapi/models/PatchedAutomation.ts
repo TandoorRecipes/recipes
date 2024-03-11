@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { AutomationTypeEnum } from './AutomationTypeEnum';
 import {
-    AutomationTypeEnum,
     AutomationTypeEnumFromJSON,
     AutomationTypeEnumFromJSONTyped,
     AutomationTypeEnumToJSON,
-} from './';
+} from './AutomationTypeEnum';
 
 /**
  * 
@@ -49,25 +49,25 @@ export interface PatchedAutomation {
      * @type {string}
      * @memberof PatchedAutomation
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param1?: string | null;
+    param1?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param2?: string | null;
+    param2?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param3?: string | null;
+    param3?: string;
     /**
      * 
      * @type {number}
@@ -88,47 +88,50 @@ export interface PatchedAutomation {
     readonly createdBy?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedAutomation interface.
+ */
+export function instanceOfPatchedAutomation(value: object): boolean {
+    return true;
+}
+
 export function PatchedAutomationFromJSON(json: any): PatchedAutomation {
     return PatchedAutomationFromJSONTyped(json, false);
 }
 
 export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedAutomation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'type': !exists(json, 'type') ? undefined : AutomationTypeEnumFromJSON(json['type']),
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'param1': !exists(json, 'param_1') ? undefined : json['param_1'],
-        'param2': !exists(json, 'param_2') ? undefined : json['param_2'],
-        'param3': !exists(json, 'param_3') ? undefined : json['param_3'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'disabled': !exists(json, 'disabled') ? undefined : json['disabled'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'type': json['type'] == null ? undefined : AutomationTypeEnumFromJSON(json['type']),
+        'name': json['name'] == null ? undefined : json['name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'param1': json['param_1'] == null ? undefined : json['param_1'],
+        'param2': json['param_2'] == null ? undefined : json['param_2'],
+        'param3': json['param_3'] == null ? undefined : json['param_3'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'disabled': json['disabled'] == null ? undefined : json['disabled'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedAutomationToJSON(value?: PatchedAutomation | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'type': AutomationTypeEnumToJSON(value.type),
-        'name': value.name,
-        'description': value.description,
-        'param_1': value.param1,
-        'param_2': value.param2,
-        'param_3': value.param3,
-        'order': value.order,
-        'disabled': value.disabled,
+        'type': AutomationTypeEnumToJSON(value['type']),
+        'name': value['name'],
+        'description': value['description'],
+        'param_1': value['param1'],
+        'param_2': value['param2'],
+        'param_3': value['param3'],
+        'order': value['order'],
+        'disabled': value['disabled'],
     };
 }
-
 

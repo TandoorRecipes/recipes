@@ -14,11 +14,13 @@
 
 
 import * as runtime from '../runtime';
+import type {
+  AuthToken,
+} from '../models/index';
 import {
-    AuthToken,
     AuthTokenFromJSON,
     AuthTokenToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface ApiTokenAuthCreateRequest {
     username: string;
@@ -33,17 +35,26 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiTokenAuthCreateRaw(requestParameters: ApiTokenAuthCreateRequest): Promise<runtime.ApiResponse<AuthToken>> {
-        if (requestParameters.username === null || requestParameters.username === undefined) {
-            throw new runtime.RequiredError('username','Required parameter requestParameters.username was null or undefined when calling apiTokenAuthCreate.');
+    async apiTokenAuthCreateRaw(requestParameters: ApiTokenAuthCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthToken>> {
+        if (requestParameters['username'] == null) {
+            throw new runtime.RequiredError(
+                'username',
+                'Required parameter "username" was null or undefined when calling apiTokenAuthCreate().'
+            );
         }
 
-        if (requestParameters.password === null || requestParameters.password === undefined) {
-            throw new runtime.RequiredError('password','Required parameter requestParameters.password was null or undefined when calling apiTokenAuthCreate.');
+        if (requestParameters['password'] == null) {
+            throw new runtime.RequiredError(
+                'password',
+                'Required parameter "password" was null or undefined when calling apiTokenAuthCreate().'
+            );
         }
 
-        if (requestParameters.token === null || requestParameters.token === undefined) {
-            throw new runtime.RequiredError('token','Required parameter requestParameters.token was null or undefined when calling apiTokenAuthCreate.');
+        if (requestParameters['token'] == null) {
+            throw new runtime.RequiredError(
+                'token',
+                'Required parameter "token" was null or undefined when calling apiTokenAuthCreate().'
+            );
         }
 
         const queryParameters: any = {};
@@ -69,16 +80,16 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
             formParams = new URLSearchParams();
         }
 
-        if (requestParameters.username !== undefined) {
-            formParams.append('username', requestParameters.username as any);
+        if (requestParameters['username'] != null) {
+            formParams.append('username', requestParameters['username'] as any);
         }
 
-        if (requestParameters.password !== undefined) {
-            formParams.append('password', requestParameters.password as any);
+        if (requestParameters['password'] != null) {
+            formParams.append('password', requestParameters['password'] as any);
         }
 
-        if (requestParameters.token !== undefined) {
-            formParams.append('token', requestParameters.token as any);
+        if (requestParameters['token'] != null) {
+            formParams.append('token', requestParameters['token'] as any);
         }
 
         const response = await this.request({
@@ -87,15 +98,15 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
             headers: headerParameters,
             query: queryParameters,
             body: formParams,
-        });
+        }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AuthTokenFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiTokenAuthCreate(requestParameters: ApiTokenAuthCreateRequest): Promise<AuthToken> {
-        const response = await this.apiTokenAuthCreateRaw(requestParameters);
+    async apiTokenAuthCreate(requestParameters: ApiTokenAuthCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthToken> {
+        const response = await this.apiTokenAuthCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

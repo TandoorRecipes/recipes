@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Group } from './Group';
 import {
-    Group,
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    User,
+} from './Group';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -65,13 +67,13 @@ export interface PatchedUserSpace {
      * @type {string}
      * @memberof PatchedUserSpace
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly inviteLink?: number | null;
+    readonly inviteLink?: number;
     /**
      * 
      * @type {Date}
@@ -86,41 +88,44 @@ export interface PatchedUserSpace {
     readonly updatedAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedUserSpace interface.
+ */
+export function instanceOfPatchedUserSpace(value: object): boolean {
+    return true;
+}
+
 export function PatchedUserSpaceFromJSON(json: any): PatchedUserSpace {
     return PatchedUserSpaceFromJSONTyped(json, false);
 }
 
 export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedUserSpace {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'user': !exists(json, 'user') ? undefined : UserFromJSON(json['user']),
-        'space': !exists(json, 'space') ? undefined : json['space'],
-        'groups': !exists(json, 'groups') ? undefined : ((json['groups'] as Array<any>).map(GroupFromJSON)),
-        'active': !exists(json, 'active') ? undefined : json['active'],
-        'internalNote': !exists(json, 'internal_note') ? undefined : json['internal_note'],
-        'inviteLink': !exists(json, 'invite_link') ? undefined : json['invite_link'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
+        'space': json['space'] == null ? undefined : json['space'],
+        'groups': json['groups'] == null ? undefined : ((json['groups'] as Array<any>).map(GroupFromJSON)),
+        'active': json['active'] == null ? undefined : json['active'],
+        'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
+        'inviteLink': json['invite_link'] == null ? undefined : json['invite_link'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
     };
 }
 
 export function PatchedUserSpaceToJSON(value?: PatchedUserSpace | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'groups': value.groups === undefined ? undefined : ((value.groups as Array<any>).map(GroupToJSON)),
-        'active': value.active,
-        'internal_note': value.internalNote,
+        'groups': value['groups'] == null ? undefined : ((value['groups'] as Array<any>).map(GroupToJSON)),
+        'active': value['active'],
+        'internal_note': value['internalNote'],
     };
 }
-
 

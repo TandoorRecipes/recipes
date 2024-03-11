@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { MethodEnum } from './MethodEnum';
 import {
-    MethodEnum,
     MethodEnumFromJSON,
     MethodEnumFromJSONTyped,
     MethodEnumToJSON,
-} from './';
+} from './MethodEnum';
 
 /**
  * 
@@ -49,19 +49,19 @@ export interface PatchedStorage {
      * @type {string}
      * @memberof PatchedStorage
      */
-    username?: string | null;
+    username?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    password?: string | null;
+    password?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    token?: string | null;
+    token?: string;
     /**
      * 
      * @type {number}
@@ -70,41 +70,44 @@ export interface PatchedStorage {
     readonly createdBy?: number;
 }
 
+/**
+ * Check if a given object implements the PatchedStorage interface.
+ */
+export function instanceOfPatchedStorage(value: object): boolean {
+    return true;
+}
+
 export function PatchedStorageFromJSON(json: any): PatchedStorage {
     return PatchedStorageFromJSONTyped(json, false);
 }
 
 export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedStorage {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'method': !exists(json, 'method') ? undefined : MethodEnumFromJSON(json['method']),
-        'username': !exists(json, 'username') ? undefined : json['username'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
-        'token': !exists(json, 'token') ? undefined : json['token'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'method': json['method'] == null ? undefined : MethodEnumFromJSON(json['method']),
+        'username': json['username'] == null ? undefined : json['username'],
+        'password': json['password'] == null ? undefined : json['password'],
+        'token': json['token'] == null ? undefined : json['token'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedStorageToJSON(value?: PatchedStorage | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'method': MethodEnumToJSON(value.method),
-        'username': value.username,
-        'password': value.password,
-        'token': value.token,
+        'name': value['name'],
+        'method': MethodEnumToJSON(value['method']),
+        'username': value['username'],
+        'password': value['password'],
+        'token': value['token'],
     };
 }
-
 

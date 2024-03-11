@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -36,13 +36,13 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    unit?: string | null;
+    unit?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {number}
@@ -54,13 +54,20 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    openDataSlug?: string | null;
+    openDataSlug?: string;
     /**
      * 
      * @type {number}
      * @memberof PatchedPropertyType
      */
-    fdcId?: number | null;
+    fdcId?: number;
+}
+
+/**
+ * Check if a given object implements the PatchedPropertyType interface.
+ */
+export function instanceOfPatchedPropertyType(value: object): boolean {
+    return true;
 }
 
 export function PatchedPropertyTypeFromJSON(json: any): PatchedPropertyType {
@@ -68,38 +75,34 @@ export function PatchedPropertyTypeFromJSON(json: any): PatchedPropertyType {
 }
 
 export function PatchedPropertyTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedPropertyType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'unit': !exists(json, 'unit') ? undefined : json['unit'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'openDataSlug': !exists(json, 'open_data_slug') ? undefined : json['open_data_slug'],
-        'fdcId': !exists(json, 'fdc_id') ? undefined : json['fdc_id'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'unit': json['unit'] == null ? undefined : json['unit'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
     };
 }
 
 export function PatchedPropertyTypeToJSON(value?: PatchedPropertyType | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'id': value.id,
-        'name': value.name,
-        'unit': value.unit,
-        'description': value.description,
-        'order': value.order,
-        'open_data_slug': value.openDataSlug,
-        'fdc_id': value.fdcId,
+        'id': value['id'],
+        'name': value['name'],
+        'unit': value['unit'],
+        'description': value['description'],
+        'order': value['order'],
+        'open_data_slug': value['openDataSlug'],
+        'fdc_id': value['fdcId'],
     };
 }
-
 

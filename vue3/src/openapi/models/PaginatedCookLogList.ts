@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { CookLog } from './CookLog';
 import {
-    CookLog,
     CookLogFromJSON,
     CookLogFromJSONTyped,
     CookLogToJSON,
-} from './';
+} from './CookLog';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedCookLogList {
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<CookLog>}
@@ -52,37 +52,40 @@ export interface PaginatedCookLogList {
     results?: Array<CookLog>;
 }
 
+/**
+ * Check if a given object implements the PaginatedCookLogList interface.
+ */
+export function instanceOfPaginatedCookLogList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedCookLogListFromJSON(json: any): PaginatedCookLogList {
     return PaginatedCookLogListFromJSONTyped(json, false);
 }
 
 export function PaginatedCookLogListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedCookLogList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(CookLogFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(CookLogFromJSON)),
     };
 }
 
 export function PaginatedCookLogListToJSON(value?: PaginatedCookLogList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(CookLogToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(CookLogToJSON)),
     };
 }
-
 

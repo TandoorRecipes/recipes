@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -42,13 +42,13 @@ export interface ShoppingListRecipe {
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    recipe?: number | null;
+    recipe?: number;
     /**
      * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    mealplan?: number | null;
+    mealplan?: number;
     /**
      * 
      * @type {string}
@@ -75,12 +75,26 @@ export interface ShoppingListRecipe {
     readonly mealplanType: string;
 }
 
+/**
+ * Check if a given object implements the ShoppingListRecipe interface.
+ */
+export function instanceOfShoppingListRecipe(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('recipeName' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('servings' in value)) return false;
+    if (!('mealplanNote' in value)) return false;
+    if (!('mealplanFromDate' in value)) return false;
+    if (!('mealplanType' in value)) return false;
+    return true;
+}
+
 export function ShoppingListRecipeFromJSON(json: any): ShoppingListRecipe {
     return ShoppingListRecipeFromJSONTyped(json, false);
 }
 
 export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): ShoppingListRecipe {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -88,8 +102,8 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
         'id': json['id'],
         'recipeName': json['recipe_name'],
         'name': json['name'],
-        'recipe': !exists(json, 'recipe') ? undefined : json['recipe'],
-        'mealplan': !exists(json, 'mealplan') ? undefined : json['mealplan'],
+        'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'servings': json['servings'],
         'mealplanNote': json['mealplan_note'],
         'mealplanFromDate': (new Date(json['mealplan_from_date'])),
@@ -98,18 +112,14 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
 }
 
 export function ShoppingListRecipeToJSON(value?: ShoppingListRecipe | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
-        'mealplan': value.mealplan,
-        'servings': value.servings,
+        'recipe': value['recipe'],
+        'mealplan': value['mealplan'],
+        'servings': value['servings'],
     };
 }
-
 

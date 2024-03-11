@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -51,12 +51,24 @@ export interface RecipeBookEntry {
     readonly recipeContent: string;
 }
 
+/**
+ * Check if a given object implements the RecipeBookEntry interface.
+ */
+export function instanceOfRecipeBookEntry(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('book' in value)) return false;
+    if (!('bookContent' in value)) return false;
+    if (!('recipe' in value)) return false;
+    if (!('recipeContent' in value)) return false;
+    return true;
+}
+
 export function RecipeBookEntryFromJSON(json: any): RecipeBookEntry {
     return RecipeBookEntryFromJSONTyped(json, false);
 }
 
 export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boolean): RecipeBookEntry {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -70,17 +82,13 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
 }
 
 export function RecipeBookEntryToJSON(value?: RecipeBookEntry | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'book': value.book,
-        'recipe': value.recipe,
+        'book': value['book'],
+        'recipe': value['recipe'],
     };
 }
-
 

@@ -12,29 +12,37 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Keyword } from './Keyword';
 import {
-    Keyword,
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
-    NutritionInformation,
+} from './Keyword';
+import type { NutritionInformation } from './NutritionInformation';
+import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
-    Property,
+} from './NutritionInformation';
+import type { Property } from './Property';
+import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
-    Step,
+} from './Property';
+import type { Step } from './Step';
+import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
-    User,
+} from './Step';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -59,13 +67,13 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    description?: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipe
      */
-    readonly image?: string | null;
+    readonly image?: string;
     /**
      * 
      * @type {Array<Keyword>}
@@ -113,7 +121,7 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    sourceUrl?: string | null;
+    sourceUrl?: string;
     /**
      * 
      * @type {boolean}
@@ -131,7 +139,7 @@ export interface PatchedRecipe {
      * @type {NutritionInformation}
      * @memberof PatchedRecipe
      */
-    nutrition?: NutritionInformation | null;
+    nutrition?: NutritionInformation;
     /**
      * 
      * @type {Array<Property>}
@@ -167,13 +175,13 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    readonly rating?: string | null;
+    readonly rating?: string;
     /**
      * 
      * @type {Date}
      * @memberof PatchedRecipe
      */
-    readonly lastCooked?: Date | null;
+    readonly lastCooked?: Date;
     /**
      * 
      * @type {boolean}
@@ -188,69 +196,72 @@ export interface PatchedRecipe {
     shared?: Array<User>;
 }
 
+/**
+ * Check if a given object implements the PatchedRecipe interface.
+ */
+export function instanceOfPatchedRecipe(value: object): boolean {
+    return true;
+}
+
 export function PatchedRecipeFromJSON(json: any): PatchedRecipe {
     return PatchedRecipeFromJSONTyped(json, false);
 }
 
 export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedRecipe {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'description': !exists(json, 'description') ? undefined : json['description'],
-        'image': !exists(json, 'image') ? undefined : json['image'],
-        'keywords': !exists(json, 'keywords') ? undefined : ((json['keywords'] as Array<any>).map(KeywordFromJSON)),
-        'steps': !exists(json, 'steps') ? undefined : ((json['steps'] as Array<any>).map(StepFromJSON)),
-        'workingTime': !exists(json, 'working_time') ? undefined : json['working_time'],
-        'waitingTime': !exists(json, 'waiting_time') ? undefined : json['waiting_time'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
-        'sourceUrl': !exists(json, 'source_url') ? undefined : json['source_url'],
-        'internal': !exists(json, 'internal') ? undefined : json['internal'],
-        'showIngredientOverview': !exists(json, 'show_ingredient_overview') ? undefined : json['show_ingredient_overview'],
-        'nutrition': !exists(json, 'nutrition') ? undefined : NutritionInformationFromJSON(json['nutrition']),
-        'properties': !exists(json, 'properties') ? undefined : ((json['properties'] as Array<any>).map(PropertyFromJSON)),
-        'foodProperties': !exists(json, 'food_properties') ? undefined : json['food_properties'],
-        'servings': !exists(json, 'servings') ? undefined : json['servings'],
-        'filePath': !exists(json, 'file_path') ? undefined : json['file_path'],
-        'servingsText': !exists(json, 'servings_text') ? undefined : json['servings_text'],
-        'rating': !exists(json, 'rating') ? undefined : json['rating'],
-        'lastCooked': !exists(json, 'last_cooked') ? undefined : (json['last_cooked'] === null ? null : new Date(json['last_cooked'])),
-        '_private': !exists(json, 'private') ? undefined : json['private'],
-        'shared': !exists(json, 'shared') ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'description': json['description'] == null ? undefined : json['description'],
+        'image': json['image'] == null ? undefined : json['image'],
+        'keywords': json['keywords'] == null ? undefined : ((json['keywords'] as Array<any>).map(KeywordFromJSON)),
+        'steps': json['steps'] == null ? undefined : ((json['steps'] as Array<any>).map(StepFromJSON)),
+        'workingTime': json['working_time'] == null ? undefined : json['working_time'],
+        'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
+        'sourceUrl': json['source_url'] == null ? undefined : json['source_url'],
+        'internal': json['internal'] == null ? undefined : json['internal'],
+        'showIngredientOverview': json['show_ingredient_overview'] == null ? undefined : json['show_ingredient_overview'],
+        'nutrition': json['nutrition'] == null ? undefined : NutritionInformationFromJSON(json['nutrition']),
+        'properties': json['properties'] == null ? undefined : ((json['properties'] as Array<any>).map(PropertyFromJSON)),
+        'foodProperties': json['food_properties'] == null ? undefined : json['food_properties'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'filePath': json['file_path'] == null ? undefined : json['file_path'],
+        'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
+        'rating': json['rating'] == null ? undefined : json['rating'],
+        'lastCooked': json['last_cooked'] == null ? undefined : (new Date(json['last_cooked'])),
+        '_private': json['private'] == null ? undefined : json['private'],
+        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
     };
 }
 
 export function PatchedRecipeToJSON(value?: PatchedRecipe | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'description': value.description,
-        'keywords': value.keywords === undefined ? undefined : ((value.keywords as Array<any>).map(KeywordToJSON)),
-        'steps': value.steps === undefined ? undefined : ((value.steps as Array<any>).map(StepToJSON)),
-        'working_time': value.workingTime,
-        'waiting_time': value.waitingTime,
-        'source_url': value.sourceUrl,
-        'internal': value.internal,
-        'show_ingredient_overview': value.showIngredientOverview,
-        'nutrition': NutritionInformationToJSON(value.nutrition),
-        'properties': value.properties === undefined ? undefined : ((value.properties as Array<any>).map(PropertyToJSON)),
-        'servings': value.servings,
-        'file_path': value.filePath,
-        'servings_text': value.servingsText,
-        'private': value._private,
-        'shared': value.shared === undefined ? undefined : ((value.shared as Array<any>).map(UserToJSON)),
+        'name': value['name'],
+        'description': value['description'],
+        'keywords': value['keywords'] == null ? undefined : ((value['keywords'] as Array<any>).map(KeywordToJSON)),
+        'steps': value['steps'] == null ? undefined : ((value['steps'] as Array<any>).map(StepToJSON)),
+        'working_time': value['workingTime'],
+        'waiting_time': value['waitingTime'],
+        'source_url': value['sourceUrl'],
+        'internal': value['internal'],
+        'show_ingredient_overview': value['showIngredientOverview'],
+        'nutrition': NutritionInformationToJSON(value['nutrition']),
+        'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(PropertyToJSON)),
+        'servings': value['servings'],
+        'file_path': value['filePath'],
+        'servings_text': value['servingsText'],
+        'private': value['_private'],
+        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
-
 

@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Group } from './Group';
 import {
-    Group,
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
-    User,
+} from './Group';
+import type { User } from './User';
+import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * Adds nested create feature
@@ -65,7 +67,7 @@ export interface UserSpace {
      * @type {string}
      * @memberof UserSpace
      */
-    internalNote?: string | null;
+    internalNote?: string;
     /**
      * 
      * @type {number}
@@ -86,12 +88,26 @@ export interface UserSpace {
     readonly updatedAt: Date;
 }
 
+/**
+ * Check if a given object implements the UserSpace interface.
+ */
+export function instanceOfUserSpace(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('user' in value)) return false;
+    if (!('space' in value)) return false;
+    if (!('groups' in value)) return false;
+    if (!('inviteLink' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    if (!('updatedAt' in value)) return false;
+    return true;
+}
+
 export function UserSpaceFromJSON(json: any): UserSpace {
     return UserSpaceFromJSONTyped(json, false);
 }
 
 export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): UserSpace {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -100,8 +116,8 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'user': UserFromJSON(json['user']),
         'space': json['space'],
         'groups': ((json['groups'] as Array<any>).map(GroupFromJSON)),
-        'active': !exists(json, 'active') ? undefined : json['active'],
-        'internalNote': !exists(json, 'internal_note') ? undefined : json['internal_note'],
+        'active': json['active'] == null ? undefined : json['active'],
+        'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'inviteLink': json['invite_link'],
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
@@ -109,18 +125,14 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
 }
 
 export function UserSpaceToJSON(value?: UserSpace | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'groups': ((value.groups as Array<any>).map(GroupToJSON)),
-        'active': value.active,
-        'internal_note': value.internalNote,
+        'groups': ((value['groups'] as Array<any>).map(GroupToJSON)),
+        'active': value['active'],
+        'internal_note': value['internalNote'],
     };
 }
-
 

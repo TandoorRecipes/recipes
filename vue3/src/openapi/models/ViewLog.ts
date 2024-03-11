@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -45,12 +45,23 @@ export interface ViewLog {
     readonly createdAt: Date;
 }
 
+/**
+ * Check if a given object implements the ViewLog interface.
+ */
+export function instanceOfViewLog(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('recipe' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
+    return true;
+}
+
 export function ViewLogFromJSON(json: any): ViewLog {
     return ViewLogFromJSONTyped(json, false);
 }
 
 export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): ViewLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -63,16 +74,12 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
 }
 
 export function ViewLogToJSON(value?: ViewLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
+        'recipe': value['recipe'],
     };
 }
-
 

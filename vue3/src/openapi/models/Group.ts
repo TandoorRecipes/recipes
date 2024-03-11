@@ -12,43 +12,43 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface Group
  */
@@ -67,12 +67,21 @@ export interface Group {
     name: string;
 }
 
+/**
+ * Check if a given object implements the Group interface.
+ */
+export function instanceOfGroup(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    return true;
+}
+
 export function GroupFromJSON(json: any): Group {
     return GroupFromJSONTyped(json, false);
 }
 
 export function GroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Group {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -83,16 +92,12 @@ export function GroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gro
 }
 
 export function GroupToJSON(value?: Group | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
+        'name': value['name'],
     };
 }
-
 

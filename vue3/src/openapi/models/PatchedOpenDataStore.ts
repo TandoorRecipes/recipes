@@ -12,17 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataStoreCategory } from './OpenDataStoreCategory';
 import {
-    OpenDataStoreCategory,
     OpenDataStoreCategoryFromJSON,
     OpenDataStoreCategoryFromJSONTyped,
     OpenDataStoreCategoryToJSON,
-    OpenDataVersion,
+} from './OpenDataStoreCategory';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Adds nested create feature
@@ -59,7 +61,7 @@ export interface PatchedOpenDataStore {
      * @type {Array<OpenDataStoreCategory>}
      * @memberof PatchedOpenDataStore
      */
-    categoryToStore?: Array<OpenDataStoreCategory> | null;
+    categoryToStore?: Array<OpenDataStoreCategory>;
     /**
      * 
      * @type {string}
@@ -74,41 +76,44 @@ export interface PatchedOpenDataStore {
     readonly createdBy?: string;
 }
 
+/**
+ * Check if a given object implements the PatchedOpenDataStore interface.
+ */
+export function instanceOfPatchedOpenDataStore(value: object): boolean {
+    return true;
+}
+
 export function PatchedOpenDataStoreFromJSON(json: any): PatchedOpenDataStore {
     return PatchedOpenDataStoreFromJSONTyped(json, false);
 }
 
 export function PatchedOpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedOpenDataStore {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'version': !exists(json, 'version') ? undefined : OpenDataVersionFromJSON(json['version']),
-        'slug': !exists(json, 'slug') ? undefined : json['slug'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'categoryToStore': !exists(json, 'category_to_store') ? undefined : (json['category_to_store'] === null ? null : (json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryFromJSON)),
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'version': json['version'] == null ? undefined : OpenDataVersionFromJSON(json['version']),
+        'slug': json['slug'] == null ? undefined : json['slug'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'categoryToStore': json['category_to_store'] == null ? undefined : ((json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryFromJSON)),
+        'comment': json['comment'] == null ? undefined : json['comment'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
 export function PatchedOpenDataStoreToJSON(value?: PatchedOpenDataStore | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'name': value.name,
-        'category_to_store': value.categoryToStore === undefined ? undefined : (value.categoryToStore === null ? null : (value.categoryToStore as Array<any>).map(OpenDataStoreCategoryToJSON)),
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'name': value['name'],
+        'category_to_store': value['categoryToStore'] == null ? undefined : ((value['categoryToStore'] as Array<any>).map(OpenDataStoreCategoryToJSON)),
+        'comment': value['comment'],
     };
 }
-
 

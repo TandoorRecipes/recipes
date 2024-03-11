@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Adds nested create feature
  * @export
@@ -42,7 +42,7 @@ export interface MealType {
      * @type {string}
      * @memberof MealType
      */
-    color?: string | null;
+    color?: string;
     /**
      * 
      * @type {boolean}
@@ -57,39 +57,45 @@ export interface MealType {
     readonly createdBy: number;
 }
 
+/**
+ * Check if a given object implements the MealType interface.
+ */
+export function instanceOfMealType(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('name' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function MealTypeFromJSON(json: any): MealType {
     return MealTypeFromJSONTyped(json, false);
 }
 
 export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): MealType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'order': !exists(json, 'order') ? undefined : json['order'],
-        'color': !exists(json, 'color') ? undefined : json['color'],
-        '_default': !exists(json, 'default') ? undefined : json['default'],
+        'order': json['order'] == null ? undefined : json['order'],
+        'color': json['color'] == null ? undefined : json['color'],
+        '_default': json['default'] == null ? undefined : json['default'],
         'createdBy': json['created_by'],
     };
 }
 
 export function MealTypeToJSON(value?: MealType | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'order': value.order,
-        'color': value.color,
-        'default': value._default,
+        'name': value['name'],
+        'order': value['order'],
+        'color': value['color'],
+        'default': value['_default'],
     };
 }
-
 

@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { Ingredient } from './Ingredient';
 import {
-    Ingredient,
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
-} from './';
+} from './Ingredient';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedIngredientList {
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<Ingredient>}
@@ -52,37 +52,40 @@ export interface PaginatedIngredientList {
     results?: Array<Ingredient>;
 }
 
+/**
+ * Check if a given object implements the PaginatedIngredientList interface.
+ */
+export function instanceOfPaginatedIngredientList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedIngredientListFromJSON(json: any): PaginatedIngredientList {
     return PaginatedIngredientListFromJSONTyped(json, false);
 }
 
 export function PaginatedIngredientListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedIngredientList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(IngredientFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(IngredientFromJSON)),
     };
 }
 
 export function PaginatedIngredientListToJSON(value?: PaginatedIngredientList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(IngredientToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(IngredientToJSON)),
     };
 }
-
 

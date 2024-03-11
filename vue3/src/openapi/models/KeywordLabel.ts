@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -33,12 +33,21 @@ export interface KeywordLabel {
     readonly label: string;
 }
 
+/**
+ * Check if a given object implements the KeywordLabel interface.
+ */
+export function instanceOfKeywordLabel(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('label' in value)) return false;
+    return true;
+}
+
 export function KeywordLabelFromJSON(json: any): KeywordLabel {
     return KeywordLabelFromJSONTyped(json, false);
 }
 
 export function KeywordLabelFromJSONTyped(json: any, ignoreDiscriminator: boolean): KeywordLabel {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -49,15 +58,11 @@ export function KeywordLabelFromJSONTyped(json: any, ignoreDiscriminator: boolea
 }
 
 export function KeywordLabelToJSON(value?: KeywordLabel | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
     };
 }
-
 

@@ -12,21 +12,25 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataFood } from './OpenDataFood';
 import {
-    OpenDataFood,
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
-    OpenDataUnit,
+} from './OpenDataFood';
+import type { OpenDataUnit } from './OpenDataUnit';
+import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
-    OpenDataVersion,
+} from './OpenDataUnit';
+import type { OpenDataVersion } from './OpenDataVersion';
+import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
-} from './';
+} from './OpenDataVersion';
 
 /**
  * Adds nested create feature
@@ -102,12 +106,29 @@ export interface OpenDataConversion {
     readonly createdBy: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataConversion interface.
+ */
+export function instanceOfOpenDataConversion(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('version' in value)) return false;
+    if (!('slug' in value)) return false;
+    if (!('food' in value)) return false;
+    if (!('baseAmount' in value)) return false;
+    if (!('baseUnit' in value)) return false;
+    if (!('convertedAmount' in value)) return false;
+    if (!('convertedUnit' in value)) return false;
+    if (!('source' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    return true;
+}
+
 export function OpenDataConversionFromJSON(json: any): OpenDataConversion {
     return OpenDataConversionFromJSONTyped(json, false);
 }
 
 export function OpenDataConversionFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataConversion {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -121,30 +142,26 @@ export function OpenDataConversionFromJSONTyped(json: any, ignoreDiscriminator: 
         'convertedAmount': json['converted_amount'],
         'convertedUnit': OpenDataUnitFromJSON(json['converted_unit']),
         'source': json['source'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
         'createdBy': json['created_by'],
     };
 }
 
 export function OpenDataConversionToJSON(value?: OpenDataConversion | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'version': OpenDataVersionToJSON(value.version),
-        'slug': value.slug,
-        'food': OpenDataFoodToJSON(value.food),
-        'base_amount': value.baseAmount,
-        'base_unit': OpenDataUnitToJSON(value.baseUnit),
-        'converted_amount': value.convertedAmount,
-        'converted_unit': OpenDataUnitToJSON(value.convertedUnit),
-        'source': value.source,
-        'comment': value.comment,
+        'version': OpenDataVersionToJSON(value['version']),
+        'slug': value['slug'],
+        'food': OpenDataFoodToJSON(value['food']),
+        'base_amount': value['baseAmount'],
+        'base_unit': OpenDataUnitToJSON(value['baseUnit']),
+        'converted_amount': value['convertedAmount'],
+        'converted_unit': OpenDataUnitToJSON(value['convertedUnit']),
+        'source': value['source'],
+        'comment': value['comment'],
     };
 }
-
 

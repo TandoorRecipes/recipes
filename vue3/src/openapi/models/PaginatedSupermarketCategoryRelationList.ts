@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { SupermarketCategoryRelation } from './SupermarketCategoryRelation';
 import {
-    SupermarketCategoryRelation,
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
-} from './';
+} from './SupermarketCategoryRelation';
 
 /**
  * 
@@ -37,13 +37,13 @@ export interface PaginatedSupermarketCategoryRelationList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    next?: string | null;
+    next?: string;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    previous?: string | null;
+    previous?: string;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -52,37 +52,40 @@ export interface PaginatedSupermarketCategoryRelationList {
     results?: Array<SupermarketCategoryRelation>;
 }
 
+/**
+ * Check if a given object implements the PaginatedSupermarketCategoryRelationList interface.
+ */
+export function instanceOfPaginatedSupermarketCategoryRelationList(value: object): boolean {
+    return true;
+}
+
 export function PaginatedSupermarketCategoryRelationListFromJSON(json: any): PaginatedSupermarketCategoryRelationList {
     return PaginatedSupermarketCategoryRelationListFromJSONTyped(json, false);
 }
 
 export function PaginatedSupermarketCategoryRelationListFromJSONTyped(json: any, ignoreDiscriminator: boolean): PaginatedSupermarketCategoryRelationList {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'count': !exists(json, 'count') ? undefined : json['count'],
-        'next': !exists(json, 'next') ? undefined : json['next'],
-        'previous': !exists(json, 'previous') ? undefined : json['previous'],
-        'results': !exists(json, 'results') ? undefined : ((json['results'] as Array<any>).map(SupermarketCategoryRelationFromJSON)),
+        'count': json['count'] == null ? undefined : json['count'],
+        'next': json['next'] == null ? undefined : json['next'],
+        'previous': json['previous'] == null ? undefined : json['previous'],
+        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(SupermarketCategoryRelationFromJSON)),
     };
 }
 
 export function PaginatedSupermarketCategoryRelationListToJSON(value?: PaginatedSupermarketCategoryRelationList | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'count': value.count,
-        'next': value.next,
-        'previous': value.previous,
-        'results': value.results === undefined ? undefined : ((value.results as Array<any>).map(SupermarketCategoryRelationToJSON)),
+        'count': value['count'],
+        'next': value['next'],
+        'previous': value['previous'],
+        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(SupermarketCategoryRelationToJSON)),
     };
 }
-
 

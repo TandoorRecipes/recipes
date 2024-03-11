@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { User } from './User';
 import {
-    User,
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
-} from './';
+} from './User';
 
 /**
  * 
@@ -43,19 +43,19 @@ export interface PatchedCookLog {
      * @type {number}
      * @memberof PatchedCookLog
      */
-    servings?: number | null;
+    servings?: number;
     /**
      * 
      * @type {number}
      * @memberof PatchedCookLog
      */
-    rating?: number | null;
+    rating?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedCookLog
      */
-    comment?: string | null;
+    comment?: string;
     /**
      * 
      * @type {User}
@@ -76,42 +76,45 @@ export interface PatchedCookLog {
     readonly updatedAt?: Date;
 }
 
+/**
+ * Check if a given object implements the PatchedCookLog interface.
+ */
+export function instanceOfPatchedCookLog(value: object): boolean {
+    return true;
+}
+
 export function PatchedCookLogFromJSON(json: any): PatchedCookLog {
     return PatchedCookLogFromJSONTyped(json, false);
 }
 
 export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedCookLog {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'recipe': !exists(json, 'recipe') ? undefined : json['recipe'],
-        'servings': !exists(json, 'servings') ? undefined : json['servings'],
-        'rating': !exists(json, 'rating') ? undefined : json['rating'],
-        'comment': !exists(json, 'comment') ? undefined : json['comment'],
-        'createdBy': !exists(json, 'created_by') ? undefined : UserFromJSON(json['created_by']),
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'updatedAt': !exists(json, 'updated_at') ? undefined : (new Date(json['updated_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
+        'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
+        'rating': json['rating'] == null ? undefined : json['rating'],
+        'comment': json['comment'] == null ? undefined : json['comment'],
+        'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'updatedAt': json['updated_at'] == null ? undefined : (new Date(json['updated_at'])),
     };
 }
 
 export function PatchedCookLogToJSON(value?: PatchedCookLog | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'recipe': value.recipe,
-        'servings': value.servings,
-        'rating': value.rating,
-        'comment': value.comment,
-        'created_at': value.createdAt === undefined ? undefined : (value.createdAt.toISOString()),
+        'recipe': value['recipe'],
+        'servings': value['servings'],
+        'rating': value['rating'],
+        'comment': value['comment'],
+        'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
     };
 }
-
 

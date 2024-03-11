@@ -12,13 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { OpenDataProperty } from './OpenDataProperty';
 import {
-    OpenDataProperty,
     OpenDataPropertyFromJSON,
     OpenDataPropertyFromJSONTyped,
     OpenDataPropertyToJSON,
-} from './';
+} from './OpenDataProperty';
 
 /**
  * Adds nested create feature
@@ -46,12 +46,22 @@ export interface OpenDataFoodProperty {
     propertyAmount: string;
 }
 
+/**
+ * Check if a given object implements the OpenDataFoodProperty interface.
+ */
+export function instanceOfOpenDataFoodProperty(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('property' in value)) return false;
+    if (!('propertyAmount' in value)) return false;
+    return true;
+}
+
 export function OpenDataFoodPropertyFromJSON(json: any): OpenDataFoodProperty {
     return OpenDataFoodPropertyFromJSONTyped(json, false);
 }
 
 export function OpenDataFoodPropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): OpenDataFoodProperty {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -63,17 +73,13 @@ export function OpenDataFoodPropertyFromJSONTyped(json: any, ignoreDiscriminator
 }
 
 export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'property': OpenDataPropertyToJSON(value.property),
-        'property_amount': value.propertyAmount,
+        'property': OpenDataPropertyToJSON(value['property']),
+        'property_amount': value['propertyAmount'],
     };
 }
-
 

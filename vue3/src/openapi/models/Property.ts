@@ -12,50 +12,50 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { PropertyType } from './PropertyType';
 import {
-    PropertyType,
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
-} from './';
+} from './PropertyType';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
-It solves the problem with nested validation for unique fields on update.
-
-If you want more details, you can read related issues and articles:
-https://github.com/beda-software/drf-writable-nested/issues/1
-http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
-
-Example of usage:
-```
-    class Child(models.Model):
-    field = models.CharField(unique=True)
-
-
-class Parent(models.Model):
-    child = models.ForeignKey('Child')
-
-
-class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Child
-
-
-class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
-    child = ChildSerializer()
-
-    class Meta:
-        model = Parent
-```
-
-Note: `UniqueFieldsMixin` must be applied only on the serializer
-which has unique fields.
-
-Note: When you are using both mixins
-(`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
-you should put `UniqueFieldsMixin` ahead.
+ * It solves the problem with nested validation for unique fields on update.
+ * 
+ * If you want more details, you can read related issues and articles:
+ * https://github.com/beda-software/drf-writable-nested/issues/1
+ * http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers
+ * 
+ * Example of usage:
+ * ```
+ *     class Child(models.Model):
+ *     field = models.CharField(unique=True)
+ * 
+ * 
+ * class Parent(models.Model):
+ *     child = models.ForeignKey('Child')
+ * 
+ * 
+ * class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):
+ *     class Meta:
+ *         model = Child
+ * 
+ * 
+ * class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):
+ *     child = ChildSerializer()
+ * 
+ *     class Meta:
+ *         model = Parent
+ * ```
+ * 
+ * Note: `UniqueFieldsMixin` must be applied only on the serializer
+ * which has unique fields.
+ * 
+ * Note: When you are using both mixins
+ * (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`)
+ * you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface Property
  */
@@ -80,12 +80,22 @@ export interface Property {
     propertyType: PropertyType;
 }
 
+/**
+ * Check if a given object implements the Property interface.
+ */
+export function instanceOfProperty(value: object): boolean {
+    if (!('id' in value)) return false;
+    if (!('propertyAmount' in value)) return false;
+    if (!('propertyType' in value)) return false;
+    return true;
+}
+
 export function PropertyFromJSON(json: any): Property {
     return PropertyFromJSONTyped(json, false);
 }
 
 export function PropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): Property {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -97,17 +107,13 @@ export function PropertyFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
 }
 
 export function PropertyToJSON(value?: Property | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'property_amount': value.propertyAmount,
-        'property_type': PropertyTypeToJSON(value.propertyType),
+        'property_amount': value['propertyAmount'],
+        'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
-
 

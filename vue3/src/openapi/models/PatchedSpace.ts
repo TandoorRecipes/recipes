@@ -12,25 +12,31 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { FoodInheritField } from './FoodInheritField';
 import {
-    FoodInheritField,
     FoodInheritFieldFromJSON,
     FoodInheritFieldFromJSONTyped,
     FoodInheritFieldToJSON,
-    SpaceNavTextColorEnum,
+} from './FoodInheritField';
+import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
+import {
     SpaceNavTextColorEnumFromJSON,
     SpaceNavTextColorEnumFromJSONTyped,
     SpaceNavTextColorEnumToJSON,
-    SpaceThemeEnum,
+} from './SpaceNavTextColorEnum';
+import type { SpaceThemeEnum } from './SpaceThemeEnum';
+import {
     SpaceThemeEnumFromJSON,
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
-    UserFileView,
+} from './SpaceThemeEnum';
+import type { UserFileView } from './UserFileView';
+import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
-} from './';
+} from './UserFileView';
 
 /**
  * Adds nested create feature
@@ -55,7 +61,7 @@ export interface PatchedSpace {
      * @type {number}
      * @memberof PatchedSpace
      */
-    readonly createdBy?: number | null;
+    readonly createdBy?: number;
     /**
      * 
      * @type {Date}
@@ -127,13 +133,13 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    image?: UserFileView | null;
+    image?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    navLogo?: UserFileView | null;
+    navLogo?: UserFileView;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -145,7 +151,7 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    customSpaceTheme?: UserFileView | null;
+    customSpaceTheme?: UserFileView;
     /**
      * 
      * @type {string}
@@ -163,43 +169,50 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor32?: UserFileView | null;
+    logoColor32?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor128?: UserFileView | null;
+    logoColor128?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor144?: UserFileView | null;
+    logoColor144?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor180?: UserFileView | null;
+    logoColor180?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor192?: UserFileView | null;
+    logoColor192?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor512?: UserFileView | null;
+    logoColor512?: UserFileView;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColorSvg?: UserFileView | null;
+    logoColorSvg?: UserFileView;
+}
+
+/**
+ * Check if a given object implements the PatchedSpace interface.
+ */
+export function instanceOfPatchedSpace(value: object): boolean {
+    return true;
 }
 
 export function PatchedSpaceFromJSON(json: any): PatchedSpace {
@@ -207,67 +220,63 @@ export function PatchedSpaceFromJSON(json: any): PatchedSpace {
 }
 
 export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedSpace {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
-        'createdBy': !exists(json, 'created_by') ? undefined : json['created_by'],
-        'createdAt': !exists(json, 'created_at') ? undefined : (new Date(json['created_at'])),
-        'message': !exists(json, 'message') ? undefined : json['message'],
-        'maxRecipes': !exists(json, 'max_recipes') ? undefined : json['max_recipes'],
-        'maxFileStorageMb': !exists(json, 'max_file_storage_mb') ? undefined : json['max_file_storage_mb'],
-        'maxUsers': !exists(json, 'max_users') ? undefined : json['max_users'],
-        'allowSharing': !exists(json, 'allow_sharing') ? undefined : json['allow_sharing'],
-        'demo': !exists(json, 'demo') ? undefined : json['demo'],
-        'foodInherit': !exists(json, 'food_inherit') ? undefined : ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
-        'userCount': !exists(json, 'user_count') ? undefined : json['user_count'],
-        'recipeCount': !exists(json, 'recipe_count') ? undefined : json['recipe_count'],
-        'fileSizeMb': !exists(json, 'file_size_mb') ? undefined : json['file_size_mb'],
-        'image': !exists(json, 'image') ? undefined : UserFileViewFromJSON(json['image']),
-        'navLogo': !exists(json, 'nav_logo') ? undefined : UserFileViewFromJSON(json['nav_logo']),
-        'spaceTheme': !exists(json, 'space_theme') ? undefined : SpaceThemeEnumFromJSON(json['space_theme']),
-        'customSpaceTheme': !exists(json, 'custom_space_theme') ? undefined : UserFileViewFromJSON(json['custom_space_theme']),
-        'navBgColor': !exists(json, 'nav_bg_color') ? undefined : json['nav_bg_color'],
-        'navTextColor': !exists(json, 'nav_text_color') ? undefined : SpaceNavTextColorEnumFromJSON(json['nav_text_color']),
-        'logoColor32': !exists(json, 'logo_color_32') ? undefined : UserFileViewFromJSON(json['logo_color_32']),
-        'logoColor128': !exists(json, 'logo_color_128') ? undefined : UserFileViewFromJSON(json['logo_color_128']),
-        'logoColor144': !exists(json, 'logo_color_144') ? undefined : UserFileViewFromJSON(json['logo_color_144']),
-        'logoColor180': !exists(json, 'logo_color_180') ? undefined : UserFileViewFromJSON(json['logo_color_180']),
-        'logoColor192': !exists(json, 'logo_color_192') ? undefined : UserFileViewFromJSON(json['logo_color_192']),
-        'logoColor512': !exists(json, 'logo_color_512') ? undefined : UserFileViewFromJSON(json['logo_color_512']),
-        'logoColorSvg': !exists(json, 'logo_color_svg') ? undefined : UserFileViewFromJSON(json['logo_color_svg']),
+        'id': json['id'] == null ? undefined : json['id'],
+        'name': json['name'] == null ? undefined : json['name'],
+        'createdBy': json['created_by'] == null ? undefined : json['created_by'],
+        'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'message': json['message'] == null ? undefined : json['message'],
+        'maxRecipes': json['max_recipes'] == null ? undefined : json['max_recipes'],
+        'maxFileStorageMb': json['max_file_storage_mb'] == null ? undefined : json['max_file_storage_mb'],
+        'maxUsers': json['max_users'] == null ? undefined : json['max_users'],
+        'allowSharing': json['allow_sharing'] == null ? undefined : json['allow_sharing'],
+        'demo': json['demo'] == null ? undefined : json['demo'],
+        'foodInherit': json['food_inherit'] == null ? undefined : ((json['food_inherit'] as Array<any>).map(FoodInheritFieldFromJSON)),
+        'userCount': json['user_count'] == null ? undefined : json['user_count'],
+        'recipeCount': json['recipe_count'] == null ? undefined : json['recipe_count'],
+        'fileSizeMb': json['file_size_mb'] == null ? undefined : json['file_size_mb'],
+        'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
+        'navLogo': json['nav_logo'] == null ? undefined : UserFileViewFromJSON(json['nav_logo']),
+        'spaceTheme': json['space_theme'] == null ? undefined : SpaceThemeEnumFromJSON(json['space_theme']),
+        'customSpaceTheme': json['custom_space_theme'] == null ? undefined : UserFileViewFromJSON(json['custom_space_theme']),
+        'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
+        'navTextColor': json['nav_text_color'] == null ? undefined : SpaceNavTextColorEnumFromJSON(json['nav_text_color']),
+        'logoColor32': json['logo_color_32'] == null ? undefined : UserFileViewFromJSON(json['logo_color_32']),
+        'logoColor128': json['logo_color_128'] == null ? undefined : UserFileViewFromJSON(json['logo_color_128']),
+        'logoColor144': json['logo_color_144'] == null ? undefined : UserFileViewFromJSON(json['logo_color_144']),
+        'logoColor180': json['logo_color_180'] == null ? undefined : UserFileViewFromJSON(json['logo_color_180']),
+        'logoColor192': json['logo_color_192'] == null ? undefined : UserFileViewFromJSON(json['logo_color_192']),
+        'logoColor512': json['logo_color_512'] == null ? undefined : UserFileViewFromJSON(json['logo_color_512']),
+        'logoColorSvg': json['logo_color_svg'] == null ? undefined : UserFileViewFromJSON(json['logo_color_svg']),
     };
 }
 
 export function PatchedSpaceToJSON(value?: PatchedSpace | null): any {
-    if (value === undefined) {
-        return undefined;
-    }
-    if (value === null) {
-        return null;
+    if (value == null) {
+        return value;
     }
     return {
         
-        'name': value.name,
-        'message': value.message,
-        'food_inherit': value.foodInherit === undefined ? undefined : ((value.foodInherit as Array<any>).map(FoodInheritFieldToJSON)),
-        'image': UserFileViewToJSON(value.image),
-        'nav_logo': UserFileViewToJSON(value.navLogo),
-        'space_theme': SpaceThemeEnumToJSON(value.spaceTheme),
-        'custom_space_theme': UserFileViewToJSON(value.customSpaceTheme),
-        'nav_bg_color': value.navBgColor,
-        'nav_text_color': SpaceNavTextColorEnumToJSON(value.navTextColor),
-        'logo_color_32': UserFileViewToJSON(value.logoColor32),
-        'logo_color_128': UserFileViewToJSON(value.logoColor128),
-        'logo_color_144': UserFileViewToJSON(value.logoColor144),
-        'logo_color_180': UserFileViewToJSON(value.logoColor180),
-        'logo_color_192': UserFileViewToJSON(value.logoColor192),
-        'logo_color_512': UserFileViewToJSON(value.logoColor512),
-        'logo_color_svg': UserFileViewToJSON(value.logoColorSvg),
+        'name': value['name'],
+        'message': value['message'],
+        'food_inherit': value['foodInherit'] == null ? undefined : ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),
+        'image': UserFileViewToJSON(value['image']),
+        'nav_logo': UserFileViewToJSON(value['navLogo']),
+        'space_theme': SpaceThemeEnumToJSON(value['spaceTheme']),
+        'custom_space_theme': UserFileViewToJSON(value['customSpaceTheme']),
+        'nav_bg_color': value['navBgColor'],
+        'nav_text_color': SpaceNavTextColorEnumToJSON(value['navTextColor']),
+        'logo_color_32': UserFileViewToJSON(value['logoColor32']),
+        'logo_color_128': UserFileViewToJSON(value['logoColor128']),
+        'logo_color_144': UserFileViewToJSON(value['logoColor144']),
+        'logo_color_180': UserFileViewToJSON(value['logoColor180']),
+        'logo_color_192': UserFileViewToJSON(value['logoColor192']),
+        'logo_color_512': UserFileViewToJSON(value['logoColor512']),
+        'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
     };
 }
-
 
