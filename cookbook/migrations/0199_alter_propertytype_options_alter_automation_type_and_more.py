@@ -27,9 +27,4 @@ class Migration(migrations.Migration):
                     ('NAME_REPLACE', 'Name Replace')],
                 max_length=128),
         ),
-        migrations.AddField(
-            model_name='userpreference',
-            name='ingredient_context',
-            field=models.BooleanField(default=False),
-        ),
     ]
