@@ -395,8 +395,6 @@ else:
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 LANGUAGES = [('hy', _('Armenian ')), ('bg', _('Bulgarian')), ('ca', _('Catalan')), ('cs', _('Czech')), ('da', _('Danish')), ('nl', _('Dutch')), ('en', _('English')),
