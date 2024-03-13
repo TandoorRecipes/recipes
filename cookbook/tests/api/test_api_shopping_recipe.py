@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient, ShoppingListRecipe, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry
 from cookbook.tests.factories import MealPlanFactory, RecipeFactory, StepFactory, UserFactory
 
 if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':

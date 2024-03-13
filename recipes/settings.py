@@ -440,13 +440,10 @@ if os.getenv('S3_ACCESS_KEY', ''):
     if os.getenv('S3_CUSTOM_DOMAIN', ''):
         AWS_S3_CUSTOM_DOMAIN = os.getenv('S3_CUSTOM_DOMAIN', '')
 
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
-else:
-    MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
-    MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
+MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
 
-TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
+# TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
