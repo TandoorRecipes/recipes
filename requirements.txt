@@ -52,3 +52,4 @@ pytest-cov===4.1.0
 pytest-factoryboy==2.6.0
 pytest-html==4.1.1
 pytest-asyncio==0.23.5
+pytest-xdist==3.5.0
