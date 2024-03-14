@@ -27,7 +27,6 @@
       "env": {
         // coverage and pytest can't both be running at the same time
         "PYTEST_ADDOPTS": "--no-cov",
-        "DATABASES": "{'default': {'ENGINE': 'django.db.backends.sqlite3'}}"
       },
       "django": true,
       "justMyCode": true

@@ -104,10 +104,10 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
-    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_prometheus', 'django_tables2', 'corsheaders', 'crispy_forms',
-    'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
-    'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
+    'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.sites', 'django.contrib.staticfiles',
+    'django.contrib.postgres', 'oauth2_provider', 'django_tables2', 'corsheaders', 'crispy_forms', 'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken',
+    'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth', 'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig',
+    'treebeard',
 ]
 
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
@@ -195,6 +195,7 @@ if bool(int(os.getenv('SQL_DEBUG', False))):
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
+    INSTALLED_APPS += 'django_prometheus',
 
 # Auth related settings
 AUTHENTICATION_BACKENDS = []
@@ -442,8 +443,6 @@ if os.getenv('S3_ACCESS_KEY', ''):
 
 MEDIA_URL = os.getenv('MEDIA_URL', '/media/')
 MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, "mediafiles"))
-
-# TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
