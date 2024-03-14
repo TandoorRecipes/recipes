@@ -104,10 +104,10 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.sites', 'django.contrib.staticfiles',
-    'django.contrib.postgres', 'oauth2_provider', 'django_tables2', 'corsheaders', 'crispy_forms', 'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken',
-    'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth', 'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig',
-    'treebeard',
+    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
+    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider',  'django_tables2', 'corsheaders', 'crispy_forms',
+    'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
+    'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
 ]
 
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
@@ -290,12 +290,30 @@ TEMPLATES = [{
 }, ]
 
 WSGI_APPLICATION = 'recipes.wsgi.application'
+if sys.argv[1] == "test":
+    DATABASE_URL = os.getenv('TEST_DATABASE_URL')
+    DB_OPTIONS = os.getenv('TEST_DB_OPTIONS')
+    DB_ENGINE = os.getenv('TEST_DB_ENGINE')
+    POSTGRES_HOST = os.getenv('TEST_POSTGRES_HOST')
+    POSTGRES_PORT = os.getenv('TEST_POSTGRES_PORT')
+    POSTGRES_USER = os.getenv('TEST_POSTGRES_USER')
+    POSTGRES_PASSWORD = os.getenv('TEST_POSTGRES_PASSWORD')
+    POSTGRES_DB = os.getenv('TEST_POSTGRES_DB') 
+else:
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    DB_OPTIONS = os.getenv('DB_OPTIONS')
+    DB_ENGINE = os.getenv('DB_ENGINE')
+    POSTGRES_HOST = os.getenv('POSTGRES_HOST')
+    POSTGRES_PORT = os.getenv('POSTGRES_PORT')
+    POSTGRES_USER = os.getenv('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    POSTGRES_DB = os.getenv('POSTGRES_DB') 
 
 # Database
 # Load settings from env files
-if os.getenv('DATABASE_URL'):
+if DATABASE_URL:
     match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
-                     os.getenv('DATABASE_URL'))
+                     DATABASE_URL)
     settings = match.groupdict()
     schema = settings['schema']
     if schema.startswith('postgres'):
@@ -310,7 +328,7 @@ if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': {
             'ENGINE': engine,
-            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
+            'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
             'HOST': settings['host'],
             'PORT': settings['port'],
             'USER': settings['user'],
@@ -322,39 +340,17 @@ if os.getenv('DATABASE_URL'):
 else:
     DATABASES = {
         'default': {
-            'ENGINE': os.getenv('DB_ENGINE') if os.getenv('DB_ENGINE') else 'django.db.backends.sqlite3',
-            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'NAME': os.getenv('POSTGRES_DB') if os.getenv('POSTGRES_DB') else 'db.sqlite3',
+            'ENGINE': DB_ENGINE if DB_ENGINE else 'django.db.backends.sqlite3',
+            'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
+            'HOST': POSTGRES_HOST,
+            'PORT': POSTGRES_PORT,
+            'USER': POSTGRES_USER,
+            'PASSWORD': POSTGRES_PASSWORD,
+            'NAME': POSTGRES_DB if POSTGRES_DB else 'db.sqlite3',
             'CONN_MAX_AGE': 60,
         }
     }
 
-# Local testing DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'HOST': 'localhost',
-#         'PORT': 5432,
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',  # set to local pw
-#         'NAME': 'tandoor_app',
-#         'CONN_MAX_AGE': 600,
-#     }
-# }
-
-# SQLite testing DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-#         'NAME': 'db.sqlite3',
-#         'CONN_MAX_AGE': 600,
-#     }
-# }
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'default', }}
 
