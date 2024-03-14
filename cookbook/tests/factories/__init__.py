@@ -1,5 +1,5 @@
 import inspect
-from datetime import date
+from datetime import datetime
 from decimal import Decimal
 
 import factory
@@ -356,7 +356,7 @@ class RecipeFactory(factory.django.DjangoModelFactory):
     waiting_time = factory.LazyAttribute(lambda x: faker.random_int(min=0, max=360))
     internal = False
     created_by = factory.SubFactory(UserFactory, space=factory.SelfAttribute('..space'))
-    created_at = factory.LazyAttribute(lambda x: faker.date_between_dates(date_start=pytz.UTC.localize(date(2000, 1, 1)), date_end=pytz.UTC.localize(date(2020, 12, 31))))
+    created_at = factory.LazyAttribute(lambda x: faker.date_between_dates(date_start=pytz.UTC.localize(datetime(2000, 1, 1)), date_end=pytz.UTC.localize(datetime(2020, 12, 31))))
     space = factory.SubFactory(SpaceFactory)
 
     @classmethod
