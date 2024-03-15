@@ -496,5 +496,6 @@
     "Conversion": "Omregn enhet",
     "Properties": "Egenskaper",
     "Alignment": "Justering",
-    "Welcome": "Velkommen"
+    "Welcome": "Velkommen",
+    "err_importing_recipe": "Det oppsto en feil ved import av oppskriften!"
 }
