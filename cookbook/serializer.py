@@ -908,12 +908,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
-    keywords = KeywordLabelSerializer(many=True)
-    new = serializers.SerializerMethodField('is_recipe_new')
+    keywords = KeywordLabelSerializer(many=True, read_only=True)
+    new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
     recent = serializers.ReadOnlyField()
 
-    rating = CustomDecimalField(required=False, allow_null=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True)
+    rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
 
     def create(self, validated_data):
         pass
@@ -928,7 +928,9 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
-        read_only_fields = ['image', 'created_by', 'created_at']
+        read_only_fields = ['id', 'name', 'description', 'image', 'keywords', 'working_time',
+                            'waiting_time', 'created_by', 'created_at', 'updated_at',
+                            'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent']
 
 
 class RecipeSerializer(RecipeBaseSerializer):

@@ -715,8 +715,12 @@ export interface ApiKeywordDestroyRequest {
 }
 
 export interface ApiKeywordListRequest {
+    limit?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
+    random?: string;
+    updatedAt?: string;
 }
 
 export interface ApiKeywordMergeUpdateRequest {
@@ -951,6 +955,11 @@ export interface ApiOpenDataVersionRetrieveRequest {
 export interface ApiOpenDataVersionUpdateRequest {
     id: number;
     openDataVersion: OpenDataVersion;
+}
+
+export interface ApiPlanIcalRetrieveRequest {
+    fromDate: string;
+    toDate: string;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -1349,8 +1358,12 @@ export interface ApiUnitDestroyRequest {
 }
 
 export interface ApiUnitListRequest {
+    limit?: string;
     page?: number;
     pageSize?: number;
+    query?: string;
+    random?: string;
+    updatedAt?: string;
 }
 
 export interface ApiUnitMergeUpdateRequest {
@@ -4795,12 +4808,28 @@ export class ApiApi extends runtime.BaseAPI {
     async apiKeywordListRaw(requestParameters: ApiKeywordListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedKeywordList>> {
         const queryParameters: any = {};
 
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
+        if (requestParameters['random'] != null) {
+            queryParameters['random'] = requestParameters['random'];
+        }
+
+        if (requestParameters['updatedAt'] != null) {
+            queryParameters['updated_at'] = requestParameters['updatedAt'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -7047,7 +7076,21 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiPlanIcalRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiPlanIcalRetrieveRaw(requestParameters: ApiPlanIcalRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['fromDate'] == null) {
+            throw new runtime.RequiredError(
+                'fromDate',
+                'Required parameter "fromDate" was null or undefined when calling apiPlanIcalRetrieve().'
+            );
+        }
+
+        if (requestParameters['toDate'] == null) {
+            throw new runtime.RequiredError(
+                'toDate',
+                'Required parameter "toDate" was null or undefined when calling apiPlanIcalRetrieve().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -7056,7 +7099,7 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
         }
         const response = await this.request({
-            path: `/api/plan-ical/`,
+            path: `/api/plan-ical/{from_date}/{to_date}/`.replace(`{${"from_date"}}`, encodeURIComponent(String(requestParameters['fromDate']))).replace(`{${"to_date"}}`, encodeURIComponent(String(requestParameters['toDate']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7067,8 +7110,8 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiPlanIcalRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiPlanIcalRetrieveRaw(initOverrides);
+    async apiPlanIcalRetrieve(requestParameters: ApiPlanIcalRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiPlanIcalRetrieveRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -10440,12 +10483,28 @@ export class ApiApi extends runtime.BaseAPI {
     async apiUnitListRaw(requestParameters: ApiUnitListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUnitList>> {
         const queryParameters: any = {};
 
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['query'] != null) {
+            queryParameters['query'] = requestParameters['query'];
+        }
+
+        if (requestParameters['random'] != null) {
+            queryParameters['random'] = requestParameters['random'];
+        }
+
+        if (requestParameters['updatedAt'] != null) {
+            queryParameters['updated_at'] = requestParameters['updatedAt'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

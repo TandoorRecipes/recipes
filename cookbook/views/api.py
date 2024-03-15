@@ -534,6 +534,17 @@ class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
+# TODO make TreeMixin a view type and move schema to view type
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
+            OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
+            OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
+            OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
+        ]
+    )
+)
 class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
@@ -542,7 +553,7 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(viewsets.ModelViewSet, MergeMixin, FuzzyFilterMixin):
+class UnitViewSet(StandardFilterModelViewSet, MergeMixin):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer

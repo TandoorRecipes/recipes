@@ -16,7 +16,10 @@
                 label="Step Name"
             ></v-text-field>
             <v-chip-group>
-                <v-chip><i class="fas fa-plus-circle"></i> Time</v-chip>
+                <v-chip v-if="step.time == 0"><i class="fas fa-plus-circle fa-fw mr-1"></i> Time</v-chip>
+                <v-chip v-if="step.instruction == ''"><i class="fas fa-plus-circle fa-fw mr-1"></i> Instructions</v-chip>
+                <v-chip v-if="step.file == null"><i class="fas fa-plus-circle fa-fw mr-1"></i> File</v-chip>
+                <v-chip v-if="step.stepRecipe == null"><i class="fas fa-plus-circle fa-fw mr-1"></i> Recipe</v-chip>
             </v-chip-group>
 
             <v-table density="compact">
@@ -34,7 +37,13 @@
                                        <v-form>
                                            <v-text-field
                                                label="Amount"
-                                                v-model="element.amount"
+                                                v-model.number="element.amount"
+                                           ></v-text-field>
+                                           <model-select model="Unit" v-model="element.unit" :multiple="false"></model-select>
+                                           <model-select model="Food" v-model="element.food" :multiple="false"></model-select>
+                                           <v-text-field
+                                               label="Note"
+                                                v-model="element.note"
                                            ></v-text-field>
                                        </v-form>
 
@@ -87,10 +96,11 @@ import StepMarkdownEditor from "@/components/inputs/StepMarkdownEditor.vue";
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
 import draggable from "vuedraggable";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 export default defineComponent({
     name: "StepEditor",
-    components: {draggable, IngredientsTableRow, IngredientsTable, StepMarkdownEditor},
+    components: {ModelSelect, draggable, IngredientsTableRow, IngredientsTable, StepMarkdownEditor},
     emits: ['update:modelValue'],
     props: {
         modelValue: {

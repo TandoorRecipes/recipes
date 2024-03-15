@@ -37,13 +37,13 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    name: string;
+    readonly name: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
-    description?: string;
+    readonly description: string | null;
     /**
      * 
      * @type {string}
@@ -55,19 +55,19 @@ export interface RecipeOverview {
      * @type {Array<KeywordLabel>}
      * @memberof RecipeOverview
      */
-    keywords: Array<KeywordLabel>;
+    readonly keywords: Array<KeywordLabel>;
     /**
      * 
      * @type {number}
      * @memberof RecipeOverview
      */
-    workingTime?: number;
+    readonly workingTime: number;
     /**
      * 
      * @type {number}
      * @memberof RecipeOverview
      */
-    waitingTime?: number;
+    readonly waitingTime: number;
     /**
      * 
      * @type {number}
@@ -91,31 +91,31 @@ export interface RecipeOverview {
      * @type {boolean}
      * @memberof RecipeOverview
      */
-    internal?: boolean;
+    readonly internal: boolean;
     /**
      * 
      * @type {number}
      * @memberof RecipeOverview
      */
-    servings?: number;
+    readonly servings: number;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
-    servingsText?: string;
+    readonly servingsText: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
-    rating?: string;
+    readonly rating: string | null;
     /**
      * 
      * @type {Date}
      * @memberof RecipeOverview
      */
-    lastCooked?: Date;
+    readonly lastCooked: Date | null;
     /**
      * 
      * @type {string}
@@ -136,11 +136,19 @@ export interface RecipeOverview {
 export function instanceOfRecipeOverview(value: object): boolean {
     if (!('id' in value)) return false;
     if (!('name' in value)) return false;
+    if (!('description' in value)) return false;
     if (!('image' in value)) return false;
     if (!('keywords' in value)) return false;
+    if (!('workingTime' in value)) return false;
+    if (!('waitingTime' in value)) return false;
     if (!('createdBy' in value)) return false;
     if (!('createdAt' in value)) return false;
     if (!('updatedAt' in value)) return false;
+    if (!('internal' in value)) return false;
+    if (!('servings' in value)) return false;
+    if (!('servingsText' in value)) return false;
+    if (!('rating' in value)) return false;
+    if (!('lastCooked' in value)) return false;
     if (!('_new' in value)) return false;
     if (!('recent' in value)) return false;
     return true;
@@ -158,19 +166,19 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'],
         'name': json['name'],
-        'description': json['description'] == null ? undefined : json['description'],
+        'description': json['description'],
         'image': json['image'],
         'keywords': ((json['keywords'] as Array<any>).map(KeywordLabelFromJSON)),
-        'workingTime': json['working_time'] == null ? undefined : json['working_time'],
-        'waitingTime': json['waiting_time'] == null ? undefined : json['waiting_time'],
+        'workingTime': json['working_time'],
+        'waitingTime': json['waiting_time'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
         'updatedAt': (new Date(json['updated_at'])),
-        'internal': json['internal'] == null ? undefined : json['internal'],
-        'servings': json['servings'] == null ? undefined : json['servings'],
-        'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
-        'rating': json['rating'] == null ? undefined : json['rating'],
-        'lastCooked': json['last_cooked'] == null ? undefined : (new Date(json['last_cooked'])),
+        'internal': json['internal'],
+        'servings': json['servings'],
+        'servingsText': json['servings_text'],
+        'rating': json['rating'],
+        'lastCooked': (json['last_cooked'] == null ? null : new Date(json['last_cooked'])),
         '_new': json['new'],
         'recent': json['recent'],
     };
@@ -182,16 +190,6 @@ export function RecipeOverviewToJSON(value?: RecipeOverview | null): any {
     }
     return {
         
-        'name': value['name'],
-        'description': value['description'],
-        'keywords': ((value['keywords'] as Array<any>).map(KeywordLabelToJSON)),
-        'working_time': value['workingTime'],
-        'waiting_time': value['waitingTime'],
-        'internal': value['internal'],
-        'servings': value['servings'],
-        'servings_text': value['servingsText'],
-        'rating': value['rating'],
-        'last_cooked': value['lastCooked'] == null ? undefined : ((value['lastCooked'] as any).toISOString()),
     };
 }
 
