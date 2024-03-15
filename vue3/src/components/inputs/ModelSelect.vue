@@ -1,87 +1,65 @@
 <template>
-    <template v-if="allowCreate">
-        <v-combobox
-            label="Combobox"
+    <v-input>
+
+        <VueMultiselect
+            :id="id"
             v-model="selected_items"
-            v-model:search="search_query"
-            @update:search="debouncedSearchFunction"
-            :items="items"
-            :loading="search_loading"
-            :hide-no-data="!(allowCreate && search_query != '')"
+            :options="items"
+            :close-on-select="true"
+            :clear-on-select="true"
+            :hide-selected="multiple"
+            :preserve-search="true"
+            :internal-search="false"
+            :limit="limit"
+            :placeholder="model"
+            :label="label"
+            track-by="id"
             :multiple="multiple"
-            :clearable="clearable"
-            item-title="name"
-            item-value="id"
-            :chips="renderAsChips"
-            :closable-chips="renderAsChips"
-            no-filter
+            :taggable="allowCreate"
+            tag-placeholder="TODO CREATE PLACEHOLDER"
+            :loading="search_loading"
+            @search-change="debouncedSearchFunction"
+            @input="selectionChanged"
+            @tag="addItem"
+            @open="search('')"
+            :disabled="disabled"
         >
+        </VueMultiselect>
+    </v-input>
 
-            <template #no-data v-if="allowCreate && search_query != '' && !search_loading && multiple">
-                <v-list-item>
-                    <v-list-item-title>
-                        Press enter to create "<strong>{{ search_query }}</strong>"
-                    </v-list-item-title>
-                </v-list-item>
-            </template>
-
-            <template v-slot:item="{ item, index, props }">
-                <v-list-item v-bind="props">
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
-                </v-list-item>
-            </template>
-
-            <template v-if="renderAsChips" v-slot:chip="{ item, index, props }">
-                <v-chip closable>{{ item.title }}</v-chip>
-            </template>
-
-        </v-combobox>
-
-    </template>
-    <template v-else>
-
-        <v-autocomplete
-            label="Autocomplete"
-            :items="items"
-            :loading="search_loading"
-            :multiple="multiple"
-            item-title="name"
-            item-value="id"
-            chips
-            closable-chips
-            no-filter
-            @update:search="debouncedSearchFunction"
-        ></v-autocomplete>
-    </template>
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, ref, Ref, watch} from 'vue'
+import {computed, onMounted, ref, Ref,} from 'vue'
 import {ApiApi} from "@/openapi/index.js";
 import {useDebounceFn} from "@vueuse/core";
-
+import {GenericModel, getModelFromStr} from "@/types/Models";
+import VueMultiselect from 'vue-multiselect'
 
 const props = defineProps(
     {
-        search_on_load: {type: Boolean, default: false},
+        model: {type: String, required: true},
         multiple: {type: Boolean, default: true},
+        limit: {type: Number, default: 25},
         allowCreate: {type: Boolean, default: false},
+
+        id: {type: String, required: false, default: Math.random().toString()},
+
+        // not verified
+        search_on_load: {type: Boolean, default: false},
+
+
         clearable: {type: Boolean, default: false,},
         chips: {type: Boolean, default: undefined,},
 
         itemName: {type: String, default: 'name'},
         itemValue: {type: String, default: 'id'},
 
-        // old props
 
         placeholder: {type: String, default: undefined},
-        model: {
-            type: String,
-            required: true,
-        },
         label: {type: String, default: "name"},
         parent_variable: {type: String, default: undefined},
-        limit: {type: Number, default: 25},
+
         sticky_options: {
             type: Array,
             default() {
@@ -104,40 +82,15 @@ const props = defineProps(
     }
 )
 
+const model_class = ref({} as GenericModel<any>)
 const items: Ref<Array<any>> = ref([])
 const selected_items: Ref<Array<any> | any> = ref(undefined)
 const search_query = ref('')
 const search_loading = ref(false)
 
-const renderAsChips = computed(() => {
-    if (props.chips != undefined) {
-        return props.chips
-    }
-    return props.multiple
-})
-
-watch(selected_items, (new_items, old_items) => {
-    if (!(new_items instanceof Array) && !(old_items instanceof Array)) {
-        //TODO detect creation of single selects
-    } else {
-        if (old_items == undefined && new_items instanceof Array) {
-            old_items = []
-        }
-        if (new_items == undefined && old_items instanceof Array) {
-            new_items = []
-        }
-
-        if (old_items.length > new_items.length) {
-            // item was removed
-        } else if (old_items.length < new_items.length) {
-            console.log('items created')
-        }
-    }
-
-
-})
 
 onMounted(() => {
+    model_class.value = getModelFromStr(props.model)
     if (props.search_on_load) {
         debouncedSearchFunction('')
     }
@@ -155,16 +108,15 @@ const debouncedSearchFunction = useDebounceFn((query: string) => {
  * @param query input to search for on the API
  */
 function search(query: string) {
-    const api = new ApiApi()
+
     search_loading.value = true
-    api.apiFoodList({query: query}).then(r => {
-        if (r.results) {
-            items.value = r.results
-            if (props.allowCreate && search_query.value != '') {
-                // TODO check if search_query is already in items
-                items.value.unshift({id: null, name: `Create "${search_query.value}"`})
-            }
+    model_class.value.list(query).then(r => {
+        items.value = r
+        if (props.allowCreate && search_query.value != '') {
+            // TODO check if search_query is already in items
+            items.value.unshift({id: null, name: `Create "${search_query.value}"`})
         }
+
     }).catch(err => {
         //useMessageStore().addMessage(MessageType.ERROR, err, 8000)
     }).finally(() => {
@@ -172,9 +124,34 @@ function search(query: string) {
     })
 }
 
+function addItem(item: string) {
+    console.log("CREATEING NEW with -> ", item)
+    const api = new ApiApi()
+    api.apiKeywordList()
+
+    model_class.value.create(item).then(createdObj => {
+        //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+        if (selected_items.value instanceof Array) {
+            selected_items.value.push(createdObj)
+        } else {
+            selected_items.value = createdObj
+        }
+        items.value.push(createdObj)
+        selectionChanged()
+    }).catch((err) => {
+        //StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE)
+    }).finally(() => {
+        search_loading.value = false
+    })
+}
+
+function selectionChanged() {
+    //this.$emit("change", { var: this.parent_variable, val: this.selected_objects })
+}
+
 </script>
 
-
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style scoped>
 
 </style>

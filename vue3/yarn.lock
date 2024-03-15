@@ -889,6 +889,11 @@ vue-demi@>=0.14.5, vue-demi@>=0.14.7:
   resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.14.7.tgz#8317536b3ef74c5b09f268f7782e70194567d8f2"
   integrity sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==
 
+vue-multiselect@^3.0.0-beta.3:
+  version "3.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-3.0.0-beta.3.tgz#b1348238a84c435582c3f46f2a9c045b29bb976c"
+  integrity sha512-P7Fx+ovVF7WMERSZ0lw6N3p4H4bnQ3NcaY3ORjzFPv0r/6lpIqvFWmK9Xnwze9mgAvmNV1foI1VWrBmjnfBTLQ==
+
 vue-router@4:
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-4.2.5.tgz#b9e3e08f1bd9ea363fdd173032620bc50cf0e98a"

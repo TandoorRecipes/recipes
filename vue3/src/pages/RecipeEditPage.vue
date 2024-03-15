@@ -110,7 +110,9 @@ export default defineComponent({
 
         const api = new ApiApi()
         api.apiKeywordList({page: 1, pageSize: 100}).then(r => {
-            this.keywords = r.results
+            if(r.results){
+                this.keywords = r.results
+            }
         })
     },
     methods: {
