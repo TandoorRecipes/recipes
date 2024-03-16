@@ -40,7 +40,7 @@ from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
@@ -726,6 +726,11 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
         return queryset
 
 
+class MealPlanAutoSchema(QueryParamAutoSchema):
+    def is_query(self, path, method):
+        return self.view.action == 'ical' or super().is_query(path, method)
+
+
 class MealPlanViewSet(viewsets.ModelViewSet):
     """
     list:
@@ -744,7 +749,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         QueryParam(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), qtype='string'),
         QueryParam(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), qtype='integer'),
     ]
-    schema = QueryParamAutoSchema()
+    schema = MealPlanAutoSchema()
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().all()
@@ -762,6 +767,13 @@ class MealPlanViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(meal_type__in=meal_type)
 
         return queryset
+    
+    @action(detail=False)
+    def ical(self, request):
+        from_date = self.request.query_params.get('from_date', None)
+        to_date = self.request.query_params.get('to_date', None)
+        return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
+
 
 
 class AutoPlanViewSet(viewsets.ViewSet):
@@ -1704,6 +1716,9 @@ def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
     if to_date is not None:
         queryset = queryset.filter(to_date__lte=to_date)
 
+    return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
+
+def meal_plans_to_ical(queryset, filename):
     cal = Calendar()
 
     for p in queryset:
@@ -1719,7 +1734,7 @@ def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
         cal.add_component(event)
 
     response = FileResponse(io.BytesIO(cal.to_ical()))
-    response["Content-Disposition"] = f'attachment; filename=meal_plan_{from_date}-{to_date}.ics'  # noqa: E501
+    response["Content-Disposition"] = f'attachment; filename={filename}'  # noqa: E501
 
     return response
 

@@ -14,8 +14,11 @@ class QueryParam(object):
 
 
 class QueryParamAutoSchema(AutoSchema):
+    def is_query(self, path, method):
+        return is_list_view(path, method, self.view)
+
     def get_path_parameters(self, path, method):
-        if not is_list_view(path, method, self.view):
+        if not self.is_query(path, method):
             return super().get_path_parameters(path, method)
         parameters = super().get_path_parameters(path, method)
         for q in self.view.query_params:

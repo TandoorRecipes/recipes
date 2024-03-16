@@ -5,12 +5,14 @@ import pytest
 from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
+from icalendar import Calendar
 
 from cookbook.models import MealPlan, MealType
 from cookbook.tests.factories import RecipeFactory
 
 LIST_URL = 'api:mealplan-list'
 DETAIL_URL = 'api:mealplan-detail'
+ICAL_URL = 'api:mealplan-ical'
 
 
 # NOTE: auto adding shopping list from meal plan is tested in test_shopping_recipe as tests are identical
@@ -30,6 +32,11 @@ def obj_1(space_1, recipe_1_s1, meal_type, u1_s1):
 @pytest.fixture
 def obj_2(space_1, recipe_1_s1, meal_type, u1_s1):
     return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, from_date=datetime.now(), to_date=datetime.now(),
+                                   created_by=auth.get_user(u1_s1))
+
+@pytest.fixture
+def obj_3(space_1, recipe_1_s1, meal_type, u1_s1):
+    return MealPlan.objects.create(recipe=recipe_1_s1, space=space_1, meal_type=meal_type, from_date=datetime.now() - timedelta(days=30), to_date=datetime.now() - timedelta(days=1),
                                    created_by=auth.get_user(u1_s1))
 
 
@@ -163,3 +170,32 @@ def test_add_with_shopping(u1_s1, meal_type):
     )
 
     assert len(json.loads(u1_s1.get(reverse('api:shoppinglistentry-list')).content)) == 10
+
+
+@pytest.mark.parametrize("arg", [
+    [f'', 2],
+    [f'?from_date={datetime.now().strftime("%Y-%m-%d")}', 1],
+    [f'?to_date={(datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")}', 1],
+    [f'?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}', 0],
+])
+def test_ical(arg, request, obj_1, obj_3, u1_s1):
+    r = u1_s1.get(f'{reverse(ICAL_URL)}{arg[0]}')
+    assert r.status_code == 200
+    cal = Calendar.from_ical(r.getvalue().decode('UTF-8'))
+    events = cal.walk('VEVENT')
+    assert len(events) == arg[1]
+
+
+def test_ical_event(obj_1, u1_s1):
+    r = u1_s1.get(f'{reverse(ICAL_URL)}')
+
+    cal = Calendar.from_ical(r.getvalue().decode('UTF-8'))
+    events = cal.walk('VEVENT')
+    assert len(events) == 1
+
+    event = events[0]
+    assert int(event['uid']) == obj_1.id
+    assert event['summary'] == f'{obj_1.meal_type.name}: {obj_1.get_label()}'
+    assert event['description'] == obj_1.note
+    assert event.decoded('dtstart') == datetime.now().date()
+    assert event.decoded('dtend') == datetime.now().date()
