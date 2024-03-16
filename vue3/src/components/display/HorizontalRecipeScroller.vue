@@ -3,54 +3,72 @@
         <v-col>
             <h2>{{ title }}</h2>
         </v-col>
+    </v-row>
+
+    <v-row v-if="recipeWindows.length > 0">
         <v-col>
-            <v-btn density="default" variant="outlined" size="x-small" icon="fas fa-chevron-left" @click="scrollList('left', scroll_id)"></v-btn>
-            <v-btn density="default" variant="outlined" size="x-small" icon="fas fa-chevron-right" @click="scrollList('right', scroll_id)"></v-btn>
+            <v-window show-arrows>
+                <v-window-item v-for="w in recipeWindows">
+                    <v-row>
+                        <v-col v-for="r in w" :key="r.id">
+                            <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 20vh"></recipe-card>
+                        </v-col>
+                    </v-row>
+                </v-window-item>
+            </v-window>
         </v-col>
     </v-row>
 
-    <v-row>
-        <v-col>
-
-            <v-infinite-scroll direction="horizontal" mode="manual" :id="scroll_id">
-
-                <div v-for="r in recipes" class="mr-2">
-                    <recipe-card :recipe="r" :show_description="false" :show_keywords="false" style="width: 45vw; height: 30vh"></recipe-card>
-                </div>
-
-                <template #load-more></template>
-
-            </v-infinite-scroll>
-        </v-col>
-    </v-row>
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from 'vue'
-import {Recipe, RecipeOverview} from "@/openapi";
-import RecipeCard from "@/components/display/RecipeCard.vue";
 
-export default defineComponent({
-    name: "HorizontalRecipeScroller",
-    components: {RecipeCard},
-    props: {
+<script lang="ts" setup>
+import {computed, PropType, toRefs} from 'vue'
+import RecipeCard from "@/components/display/RecipeCard.vue";
+import {useDisplay} from "vuetify";
+import {Recipe, RecipeOverview} from "@/openapi";
+
+const {mdAndUp} = useDisplay()
+
+const props = defineProps(
+    {
         title: {type: String, required: true},
-        recipes: {type: Array as PropType<Array<Recipe | RecipeOverview>>, required: true},
-    },
-    data() {
-        return {
-            scroll_id: Math.random(1000).toString()
-        }
-    },
-    methods: {
-        scrollList(direction: string, target: string) {
-            const newRecipeScroll = document.getElementById(target)
-            if (newRecipeScroll != null) {
-                newRecipeScroll.scrollLeft = newRecipeScroll.scrollLeft + (200 * ((direction == 'left') ? -1 : 1))
+        recipes: {
+            type: Array as PropType<Recipe[] | RecipeOverview[]>,
+            required: true
+        },
+    }
+)
+const {title, recipes} = toRefs(props)
+
+let numberOfCols = computed(() => {
+    return mdAndUp.value ? 4 : 2
+})
+
+type CustomWindow = {
+    id: number,
+    recipes: Array<Recipe | RecipeOverview>
+}
+
+let recipeWindows = computed(() => {
+    let windows = []
+    let current_window = []
+    for (const [i, r] of recipes?.value.entries()) {
+        current_window.push(r)
+
+        if (i % numberOfCols.value == numberOfCols.value - 1) {
+            if (current_window.length > 0) {
+                windows.push(current_window)
             }
+            current_window = []
         }
     }
+    if (current_window.length > 0) {
+        windows.push(current_window)
+    }
+    return windows
 })
+
 </script>
 
 
