@@ -3,8 +3,7 @@
 
         <!--TODO ideas for "start page": new recipes, meal plan, "last year/month/cooked long ago", high rated, random keyword -->
         <horizontal-recipe-scroller title="New Recipes" :recipes="new_recipes"></horizontal-recipe-scroller>
-        <horizontal-recipe-scroller title="Top Rated" :recipes="high_rated_recipes" ></horizontal-recipe-scroller>
-
+        <horizontal-recipe-scroller title="Top Rated" :recipes="high_rated_recipes"></horizontal-recipe-scroller>
 
     </v-container>
 
