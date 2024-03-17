@@ -1,11 +1,13 @@
 <template>
     <v-card :to="`/recipe/${recipe.id}`">
 
-        <v-img
+        <v-img v-if="recipe.image != null"
             cover
             height="50%"
             :src="recipe.image"
         ></v-img>
+        <v-img v-else src="../../assets/recipe_no_image.svg" cover
+            height="50%"></v-img>
 
         <v-card-item>
             <v-card-title>{{ recipe.name }}</v-card-title>
@@ -38,15 +40,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue'
+import {defineComponent, PropType} from 'vue'
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
-import {Recipe} from "@/openapi";
+import {Recipe, RecipeOverview} from "@/openapi";
 
 export default defineComponent({
     name: "RecipeCard",
     components: {KeywordsComponent},
     props: {
-        recipe: {} as Recipe,
+        recipe: {type: {} as PropType<Recipe|RecipeOverview>, required: true,},
         show_keywords: {type: Boolean, required: false},
         show_description: {type: Boolean, required: false},
     }
