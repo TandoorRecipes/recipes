@@ -1,7 +1,7 @@
 <template>
     <v-row justify="space-between">
         <v-col>
-            <h2>{{ title }}</h2>
+            <h2><i v-if="icon != 'undefined'" :class="icon + ' fa-fw'"></i>  {{ title }}</h2>
         </v-col>
     </v-row>
 
@@ -12,6 +12,19 @@
                     <v-row>
                         <v-col v-for="r in w" :key="r.id">
                             <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 20vh"></recipe-card>
+                        </v-col>
+                    </v-row>
+                </v-window-item>
+            </v-window>
+        </v-col>
+    </v-row>
+    <v-row v-if="recipeWindows.length == 0 && skeletons > 0">
+        <v-col>
+            <v-window >
+                <v-window-item>
+                    <v-row>
+                        <v-col v-for="n in skeletons">
+                            <v-skeleton-loader :elevation="3" type="card"></v-skeleton-loader>
                         </v-col>
                     </v-row>
                 </v-window-item>
@@ -32,7 +45,9 @@ const {mdAndUp} = useDisplay()
 
 const props = defineProps(
     {
-        title: {type: String, required: true},
+        title: {type: String as PropType<undefined|String>, required: true},
+        icon: {type: String, required: false},
+        skeletons: {type: Number, default: 0},
         recipes: {
             type: Array as PropType<Recipe[] | RecipeOverview[]>,
             required: true
