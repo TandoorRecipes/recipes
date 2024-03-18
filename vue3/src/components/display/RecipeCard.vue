@@ -40,7 +40,14 @@
         </v-card>
     </template>
     <template v-else>
-        <v-skeleton-loader :elevation="3" type="image, heading, subtitle" v-if="loading" ></v-skeleton-loader>
+        <v-card :style="{'height': height}">
+            <v-img  src="../../assets/recipe_no_image.svg" cover height="60%"></v-img>
+            <v-card-title><v-skeleton-loader type="heading"></v-skeleton-loader></v-card-title>
+            <v-card-text>
+                <v-skeleton-loader type="subtitle"></v-skeleton-loader>
+            </v-card-text>
+        </v-card>
+
     </template>
 
 </template>
