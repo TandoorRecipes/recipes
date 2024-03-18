@@ -222,79 +222,79 @@ def create_user(client, space, **kwargs):
         return c
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def a_u(client):
     return copy.deepcopy(client)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def ng1_s1(client, space_1):
     return create_user(client, space_1)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def ng1_s2(client, space_2):
     return create_user(client, space_2)
 
 
 # guests
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def g1_s1(client, space_1):
     return create_user(client, space_1, group='guest')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def g2_s1(client, space_1):
     return create_user(client, space_1, group='guest')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def g1_s2(client, space_2):
     return create_user(client, space_2, group='guest')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def g2_s2(client, space_2):
     return create_user(client, space_2, group='guest')
 
 
 # users
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def u1_s1(client, space_1):
     return create_user(client, space_1, group='user')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def u2_s1(client, space_1):
     return create_user(client, space_1, group='user')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def u1_s2(client, space_2):
     return create_user(client, space_2, group='user')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def u2_s2(client, space_2):
     return create_user(client, space_2, group='user')
 
 
 # admins
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def a1_s1(client, space_1):
     return create_user(client, space_1, group='admin')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def a2_s1(client, space_1):
     return create_user(client, space_1, group='admin')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def a1_s2(client, space_2):
     return create_user(client, space_2, group='admin')
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def a2_s2(client, space_2):
     return create_user(client, space_2, group='admin')

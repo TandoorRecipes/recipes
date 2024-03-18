@@ -104,10 +104,10 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
-    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider',  'django_tables2', 'corsheaders', 'crispy_forms',
-    'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
-    'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
+    'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.sites',
+    'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_tables2', 'corsheaders', 'crispy_forms', 'crispy_bootstrap4', 'rest_framework',
+    'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth', 'allauth.account', 'allauth.socialaccount',
+    'cookbook.apps.CookbookConfig', 'treebeard',
 ]
 
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
@@ -184,6 +184,8 @@ MIDDLEWARE = [
 ]
 
 if DEBUG_TOOLBAR:
+    if DEBUG:
+        print('Setting up Debug Toolbar.')
     MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
     INSTALLED_APPS += ('debug_toolbar', )
 
@@ -191,9 +193,12 @@ SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
+    print('Setting up SQL Debug middleware.')
     MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware', )
 
 if ENABLE_METRICS:
+    if DEBUG:
+        print('Enabling Prometheus metric collection')
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
     INSTALLED_APPS += 'django_prometheus',
 
@@ -222,6 +227,7 @@ if LDAP_AUTH:
     if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
         AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
     if DEBUG:
+        print('Setting up LDAP.')
         LOGGING = {
             "version": 1,
             "disable_existing_loggers": False,
@@ -246,6 +252,8 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
 if REMOTE_USER_AUTH:
+    if DEBUG:
+        print('Setting up Remote User Auth.')
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
@@ -290,67 +298,73 @@ TEMPLATES = [{
 }, ]
 
 WSGI_APPLICATION = 'recipes.wsgi.application'
-if sys.argv[1] == "test":
-    DATABASE_URL = os.getenv('TEST_DATABASE_URL')
-    DB_OPTIONS = os.getenv('TEST_DB_OPTIONS')
-    DB_ENGINE = os.getenv('TEST_DB_ENGINE')
-    POSTGRES_HOST = os.getenv('TEST_POSTGRES_HOST')
-    POSTGRES_PORT = os.getenv('TEST_POSTGRES_PORT')
-    POSTGRES_USER = os.getenv('TEST_POSTGRES_USER')
-    POSTGRES_PASSWORD = os.getenv('TEST_POSTGRES_PASSWORD')
-    POSTGRES_DB = os.getenv('TEST_POSTGRES_DB') 
-else:
-    DATABASE_URL = os.getenv('DATABASE_URL')
-    DB_OPTIONS = os.getenv('DB_OPTIONS')
-    DB_ENGINE = os.getenv('DB_ENGINE')
-    POSTGRES_HOST = os.getenv('POSTGRES_HOST')
-    POSTGRES_PORT = os.getenv('POSTGRES_PORT')
-    POSTGRES_USER = os.getenv('POSTGRES_USER')
-    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
-    POSTGRES_DB = os.getenv('POSTGRES_DB') 
 
 # Database
 # Load settings from env files
-if DATABASE_URL:
-    match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
-                     DATABASE_URL)
-    settings = match.groupdict()
-    schema = settings['schema']
-    if schema.startswith('postgres'):
-        engine = 'django.db.backends.postgresql'
-    elif schema == 'sqlite':
-        if not os.path.exists(db_path := os.path.dirname(settings['database'])):
-            os.makedirs(db_path)
-        engine = 'django.db.backends.sqlite3'
+DATABASE_URL = os.getenv('DATABASE_URL') or None
+DB_OPTIONS = os.getenv('DB_OPTIONS') or None
+DB_ENGINE = os.getenv('DB_ENGINE') or None
+POSTGRES_HOST = os.getenv('POSTGRES_HOST') or None
+POSTGRES_PORT = os.getenv('POSTGRES_PORT') or None
+POSTGRES_USER = os.getenv('POSTGRES_USER') or None
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD') or None
+POSTGRES_DB = os.getenv('POSTGRES_DB') or None
+
+
+def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
+    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+
+    DATABASE_URL = db_url or DATABASE_URL
+    DB_OPTIONS = db_options or DB_OPTIONS
+    DB_ENGINE = db_engine or DB_ENGINE
+    POSTGRES_HOST = pg_host or POSTGRES_HOST
+    POSTGRES_PORT = pg_port or POSTGRES_PORT
+    POSTGRES_USER = pg_user or POSTGRES_USER
+    POSTGRES_PASSWORD = pg_password or POSTGRES_PASSWORD
+    POSTGRES_DB = pg_db or POSTGRES_DB
+
+    if DATABASE_URL:
+        match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?', DATABASE_URL)
+        settings = match.groupdict()
+        schema = settings['schema']
+        if schema.startswith('postgres'):
+            engine = 'django.db.backends.postgresql'
+        elif schema == 'sqlite':
+            if (db_path := os.path.dirname(settings['database'])) and not os.path.exists(db_path):
+                os.makedirs(db_path)
+            engine = 'django.db.backends.sqlite3'
+        else:
+            raise Exception("Unsupported database schema: '%s'" % schema)
+
+        DATABASES = {
+            'default': {
+                'ENGINE': engine,
+                'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
+                'HOST': settings['host'],
+                'PORT': settings['port'],
+                'USER': settings['user'],
+                'PASSWORD': settings['password'],
+                'NAME': settings['database'],
+                'CONN_MAX_AGE': 600,
+            }
+        }
     else:
-        raise Exception("Unsupported database schema: '%s'" % schema)
-
-    DATABASES = {
-        'default': {
-            'ENGINE': engine,
-            'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
-            'HOST': settings['host'],
-            'PORT': settings['port'],
-            'USER': settings['user'],
-            'PASSWORD': settings['password'],
-            'NAME': settings['database'],
-            'CONN_MAX_AGE': 600,
+        DATABASES = {
+            'default': {
+                'ENGINE': DB_ENGINE if DB_ENGINE else 'django.db.backends.sqlite3',
+                'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
+                'HOST': POSTGRES_HOST,
+                'PORT': POSTGRES_PORT,
+                'USER': POSTGRES_USER,
+                'PASSWORD': POSTGRES_PASSWORD,
+                'NAME': POSTGRES_DB if POSTGRES_DB else 'db.sqlite3',
+                'CONN_MAX_AGE': 60,
+            }
         }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': DB_ENGINE if DB_ENGINE else 'django.db.backends.sqlite3',
-            'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
-            'HOST': POSTGRES_HOST,
-            'PORT': POSTGRES_PORT,
-            'USER': POSTGRES_USER,
-            'PASSWORD': POSTGRES_PASSWORD,
-            'NAME': POSTGRES_DB if POSTGRES_DB else 'db.sqlite3',
-            'CONN_MAX_AGE': 60,
-        }
-    }
+    return DATABASES
 
+
+DATABASES = setup_database()
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'default', }}
 
@@ -422,6 +436,8 @@ STORAGES = {
 }
 
 if os.getenv('S3_ACCESS_KEY', ''):
+    if DEBUG:
+        print('Setting up S3 storage.')
     STORAGES['default']['BACKEND'] = 'cookbook.helper.CustomStorageClass.CachedS3Boto3Storage'
 
     AWS_ACCESS_KEY_ID = os.getenv('S3_ACCESS_KEY', '')
