@@ -7,6 +7,8 @@ crispy-bootstrap4==2022.1
 django-tables2==2.7.0
 djangorestframework==3.14.0
 drf-writable-nested==0.7.0
+drf-spectacular==0.27.1
+drf-spectacular-sidecar==2024.2.1
 django-oauth-toolkit==2.3.0
 django-debug-toolbar==4.2.0
 bleach==6.0.0
@@ -44,6 +46,7 @@ pyppeteer==2.0.0
 validators==0.20.0
 pytube==15.0.0
 homeassistant-api==4.1.1.post2
+django-vite==3.0.3
 
 # Development
 pytest==8.0.0

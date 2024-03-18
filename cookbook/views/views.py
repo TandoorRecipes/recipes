@@ -494,6 +494,11 @@ def test2(request):
         return HttpResponseRedirect(reverse('index'))
 
 
+@group_required('admin')
+def vue3(request):
+    return render(request, 'frontend/tandoor.html', {})
+
+
 def get_orphan_files(delete_orphans=False):
     # Get list of all image files in media folder
     media_dir = settings.MEDIA_ROOT

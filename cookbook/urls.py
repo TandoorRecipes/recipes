@@ -2,6 +2,7 @@ from pydoc import locate
 
 from django.urls import include, path
 from django.views.generic import TemplateView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
 from rest_framework import permissions, routers
 from rest_framework.schemas import get_schema_view
 
@@ -74,6 +75,7 @@ for p in PLUGINS:
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('v3/', views.vue3, name='vue3'),
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('space-overview', views.space_overview, name='view_space_overview'),
@@ -135,8 +137,10 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/search/', views.search_info, name='docs_search'),
-    path('docs/api/', views.api_info, name='docs_api'),
-    path('openapi/', get_schema_view(title="Django Recipes", version=TANDOOR_VERSION, public=True, permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
+    path('docs/api/',  SpectacularRedocView.as_view(url_name='openapi-schema'), name='docs_api'),
+
+    path('openapi/', SpectacularAPIView.as_view(api_version=TANDOOR_VERSION), name='openapi-schema'),
+
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
