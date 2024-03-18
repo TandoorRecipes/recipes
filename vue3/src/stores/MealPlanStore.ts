@@ -55,13 +55,14 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
             currently_updating.value = [from_date, to_date] // certainly no perfect check but better than nothing
 
             const api = new ApiApi()
-            api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string}).then(r => {
+            return api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string}).then(r => {
                 r.forEach((p) => {
                     plans.value.set(p.id, p)
                 })
                 currently_updating.value = [new Date(0), new Date(0)]
             })
         }
+        return new Promise(() => {})
     }
 
     function createObject(object: MealPlan) {
