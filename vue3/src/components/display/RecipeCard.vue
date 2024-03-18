@@ -1,42 +1,48 @@
 <template>
-    <v-card :to="`/recipe/${recipe.id}`">
+    <template v-if="!loading">
+        <v-card :to="`/recipe/${recipe.id}`" :style="{'height': height}">
 
-        <v-img v-if="recipe.image != null"
-            cover
-            height="50%"
-            :src="recipe.image"
-        ></v-img>
-        <v-img v-else src="../../assets/recipe_no_image.svg" cover
-            height="50%"></v-img>
+            <v-img v-if="recipe.image != null"
+                   cover
+                   height="60%"
+                   :src="recipe.image"
+            ></v-img>
+            <v-img v-else src="../../assets/recipe_no_image.svg" cover
+                   height="60%"></v-img>
 
-        <v-card-item>
-            <v-card-title>{{ recipe.name }}</v-card-title>
+            <v-card-item>
+                <v-card-title>{{ recipe.name }}</v-card-title>
 
-            <v-card-subtitle v-if="show_keywords">
-                <KeywordsComponent :keywords="recipe.keywords"></KeywordsComponent>
-            </v-card-subtitle>
-        </v-card-item>
+                <v-card-subtitle v-if="show_keywords">
+                    <KeywordsComponent :keywords="recipe.keywords"></KeywordsComponent>
+                </v-card-subtitle>
+            </v-card-item>
 
-        <v-card-text v-if="show_description">
-            <v-row align="center" class="mx-0" v-if="recipe.rating">
-                <v-rating
-                    :model-value="recipe.rating"
-                    color="amber"
-                    density="compact"
-                    half-increments
-                    readonly
-                    size="small"
-                ></v-rating>
+            <v-card-text v-if="show_description">
+                <v-row align="center" class="mx-0" v-if="recipe.rating">
+                    <v-rating
+                        :model-value="recipe.rating"
+                        color="amber"
+                        density="compact"
+                        half-increments
+                        readonly
+                        size="small"
+                    ></v-rating>
 
-                <div class="text-grey ">
-                    {{ recipe.rating }}
-                </div>
-            </v-row>
+                    <div class="text-grey ">
+                        {{ recipe.rating }}
+                    </div>
+                </v-row>
 
-            <div>{{ recipe.description }}</div>
-        </v-card-text>
+                <div>{{ recipe.description }}</div>
+            </v-card-text>
 
-    </v-card>
+        </v-card>
+    </template>
+    <template v-else>
+        <v-skeleton-loader :elevation="3" type="image, heading, subtitle" v-if="loading" ></v-skeleton-loader>
+    </template>
+
 </template>
 
 <script lang="ts">
@@ -48,9 +54,11 @@ export default defineComponent({
     name: "RecipeCard",
     components: {KeywordsComponent},
     props: {
-        recipe: {type: {} as PropType<Recipe|RecipeOverview>, required: true,},
+        recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},
+        loading: {type: Boolean, required: false},
         show_keywords: {type: Boolean, required: false},
         show_description: {type: Boolean, required: false},
+        height: {type: String, required: false, default: '25vh'},
     }
 })
 </script>
