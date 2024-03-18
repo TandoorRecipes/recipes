@@ -1,10 +1,10 @@
-import {ApiApiFactory} from "@/utils/openapi/api"
-import {StandardToasts} from "@/utils/utils"
-import {defineStore} from "pinia"
-import Vue from "vue"
-import _ from 'lodash';
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {ApiApiFactory} from "@/utils/openapi/api";
+import {StandardToasts} from "@/utils/utils";
+import _ from 'lodash';
 import moment from "moment/moment";
+import {defineStore} from "pinia";
+import Vue from "vue";
 
 const _STORE_ID = "shopping_list_store"
 /*
@@ -60,6 +60,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
             let total_checked = 0
             let total_unchecked_food = 0
             let total_checked_food = 0
+
             for (let i in structure) {
                 let count_unchecked = 0
                 let count_checked = 0
@@ -75,7 +76,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                         } else {
                             food_checked = false
                             count_unchecked++
-                            if (structure[i]['foods'][fi]['entries'][ei].delay_until != null){
+                            if (this.is_delayed(structure[i]['foods'][fi]['entries'][ei])){
                                 count_delayed_unchecked++
                             }
                         }
@@ -171,7 +172,8 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 }
             }
             return false
-        }
+        },
+        
     },
     actions: {
         /**
@@ -222,8 +224,7 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 this.last_autosync = new Date().getTime();
 
                 let apiClient = new ApiApiFactory()
-                apiClient.listShoppingListEntrys(undefined, undefined, undefined, {
-                    'query': {'last_autosync': previous_autosync}
+                apiClient.listShoppingListEntrys(undefined, undefined, undefined, {'query': {'last_autosync': previous_autosync}
                 }).then((r) => {
                     r.data.forEach((e) => {
                         // dont update stale client data
@@ -491,6 +492,17 @@ export const useShoppingListStore = defineStore(_STORE_ID, {
                 // can use localization in store
                 //StandardToasts.makeStandardToast(this, this.$t('NoMoreUndo'))
             }
+        },
+        /**
+         * checks if the delay_until is in the future.  If it is, the item is delayed
+         */
+        is_delayed: function(entry) {
+            let delayed = false
+            if (entry.delay_until != null) {
+                const delay_until = new Date(entry.delay_until)
+                delayed = delay_until.getTime() > Date.now()
+            }
+            return delayed
         }
     },
 })
