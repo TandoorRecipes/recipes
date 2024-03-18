@@ -5,7 +5,7 @@
         </v-col>
     </v-row>
 
-    <v-row v-if="recipeWindows.length > 0">
+    <v-row class="mt-0" v-if="recipeWindows.length > 0">
         <v-col>
             <v-window show-arrows>
                 <v-window-item v-for="w in recipeWindows" class="pt-1 pb-1">

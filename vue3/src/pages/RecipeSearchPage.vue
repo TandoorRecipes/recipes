@@ -1,49 +1,7 @@
 <template>
     <v-container>
 
-        <v-row justify="space-between">
-            <v-col>
-                <h2><i class="fas fa-calendar-week fa-fw"></i> Meal Plan</h2>
-            </v-col>
-        </v-row>
-
-        <v-row>
-            <v-col v-for="day in meal_plan_grid">
-                <v-list density="compact">
-                    <v-list-item>
-                        {{ day.date_label }}
-                    </v-list-item>
-                    <v-divider></v-divider>
-                    <v-list-item v-for="p in day.plan_entries">
-                        <template #prepend>
-                            <v-avatar :image="p.recipe.image" v-if="p.recipe?.image"></v-avatar>
-                            <v-avatar image="../../assets/recipe_no_image.svg" v-else></v-avatar>
-                        </template>
-                        <v-list-item-title>
-                            <span v-if="p.recipe">{{ p.recipe.name }}</span>
-                            <span v-else>{{ p.title }}</span>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            {{ p.mealType.name }}
-                        </v-list-item-subtitle>
-                    </v-list-item>
-
-                </v-list>
-            </v-col>
-        </v-row>
-
-
-        <v-row>
-            <v-col>
-                <v-window show-arrows>
-                    <v-window-item>
-                        <v-row>
-
-                        </v-row>
-                    </v-window-item>
-                </v-window>
-            </v-col>
-        </v-row>
+        <horizontal-meal-plan-window title="Meal Plans"></horizontal-meal-plan-window>
 
 
         <!--TODO ideas for "start page": new recipes, meal plan, "last year/month/cooked long ago", high rated, random keyword -->
@@ -63,14 +21,15 @@ import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import RecipeCardComponent from "@/components/display/RecipeCard.vue";
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue";
 import RecipeCard from "@/components/display/RecipeCard.vue";
-import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeScroller.vue";
+import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindow.vue";
 import {DateTime} from "luxon";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
+import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue";
 
 
 export default defineComponent({
     name: "RecipeSearchPage",
-    components: {HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
+    components: {HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
     computed: {
 
         meal_plan_grid: function () {
@@ -105,8 +64,6 @@ export default defineComponent({
     },
     mounted() {
         const api = new ApiApi()
-
-        useMealPlanStore().refreshFromAPI(DateTime.now().toJSDate(), DateTime.now().plus({days: 7}).toJSDate())
 
         api.apiRecipeList({_new: 'true', pageSize: 16}).then(r => {
             if (r.results != undefined) { // TODO openapi generator makes arrays nullable for some reason
