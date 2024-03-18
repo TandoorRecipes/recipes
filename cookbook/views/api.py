@@ -33,6 +33,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
@@ -765,13 +766,19 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
         return queryset
 
 
+MealPlanViewQueryParameters = [
+    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), type=str),
+    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), type=str),
+    OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
+]
+
 @extend_schema_view(
     list=extend_schema(
-        parameters=[
-            OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), type=str),
-            OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), type=str),
-            OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
-        ]
+        parameters= MealPlanViewQueryParameters
+    ),
+    ical=extend_schema(
+        parameters=MealPlanViewQueryParameters,
+        responses={(200, 'text/calendar'): OpenApiTypes.STR}
     )
 )
 class MealPlanViewSet(viewsets.ModelViewSet):
