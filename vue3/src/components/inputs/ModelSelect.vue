@@ -1,6 +1,6 @@
 <template>
     <v-input>
-
+        <!--TODO Problems: 1. behind other cards when those are underneath the element, making card overflow visible breaks cards -->
         <VueMultiselect
             :id="id"
             v-model="selected_items"

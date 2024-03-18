@@ -47,6 +47,7 @@
 
 
         <!--TODO ideas for "start page": new recipes, meal plan, "last year/month/cooked long ago", high rated, random keyword -->
+        <!--TODO if nothing comes up for a category, hide the element, probably move fetch logic into component -->
         <horizontal-recipe-scroller title="New Recipes" :skeletons="4" :recipes="new_recipes" icon="fas fa-calendar-alt"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller title="Top Rated" :skeletons="2" :recipes="high_rated_recipes" icon="fas fa-star"></horizontal-recipe-scroller>
         <horizontal-recipe-scroller :title="random_keyword.label" :skeletons="4" :recipes="random_keyword_recipes" icon="fas fa-tags"></horizontal-recipe-scroller>

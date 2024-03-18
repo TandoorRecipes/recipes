@@ -8,10 +8,10 @@
     <v-row v-if="recipeWindows.length > 0">
         <v-col>
             <v-window show-arrows>
-                <v-window-item v-for="w in recipeWindows">
+                <v-window-item v-for="w in recipeWindows" class="pt-1 pb-1">
                     <v-row>
                         <v-col v-for="r in w" :key="r.id">
-                            <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 20vh"></recipe-card>
+                            <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 25vh"></recipe-card>
                         </v-col>
                     </v-row>
                 </v-window-item>
@@ -57,7 +57,7 @@ const props = defineProps(
 const {title, recipes} = toRefs(props)
 
 let numberOfCols = computed(() => {
-    return mdAndUp.value ? 4 : 2
+    return mdAndUp.value ? 5 : 2
 })
 
 type CustomWindow = {
