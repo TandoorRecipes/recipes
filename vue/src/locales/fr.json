@@ -540,5 +540,9 @@
     "Created": "Créé",
     "Updated": "Mis à jour",
     "Unchanged": "Inchangé",
-    "Error": "Erreur"
+    "Error": "Erreur",
+    "Logo": "Logo",
+    "Show_Logo": "Montrer le logo",
+    "Shopping_input_placeholder": "par ex. Pommes de terre/100 Pommes de terre/100 gr Pomme de terre",
+    "Sticky_Nav": "Barre de navigation collante"
 }
