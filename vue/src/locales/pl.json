@@ -567,5 +567,7 @@
     "Created": "Utworzony",
     "Updated": "Zaktualizowano",
     "Unchanged": "Niezmienione",
-    "Error": "Błąd"
+    "Error": "Błąd",
+    "DefaultPage": "Strona domyślna",
+    "Shopping_input_placeholder": "np. Ziemniak/100 ziemniaków/100 g ziemniaków"
 }
