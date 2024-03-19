@@ -11,3 +11,20 @@ DATABASES = setup_database(  # noqa: F405
     pg_password=os.getenv('TEST_POSTGRES_PASSWORD'),
     pg_db=os.getenv('TEST_POSTGRES_DB')
     )
+
+
+UNINSTALL_MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', 'django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 
+    'django.middleware.locale.LocaleMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware'
+]
+
+UNINSTALL_INSTALLED_APPS = [
+    'django.contrib.messages', 'django.contrib.sites', 'django.contrib.staticfiles', 'corsheaders', 'django_cleanup.apps.CleanupConfig', 'django_js_reverse', 'hcaptcha']
+
+# disable extras not needed for testing
+for x in UNINSTALL_MIDDLEWARE:
+    MIDDLEWARE.remove(x)  # noqa: F405
+
+for y in UNINSTALL_INSTALLED_APPS:
+    INSTALLED_APPS.remove(y)  # noqa: F405

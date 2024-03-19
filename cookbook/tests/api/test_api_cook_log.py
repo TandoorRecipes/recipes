@@ -11,7 +11,7 @@ LIST_URL = 'api:cooklog-list'
 DETAIL_URL = 'api:cooklog-detail'
 
 
-@pytest.fixture()
+@pytest.fixture
 def obj_1(space_1, u1_s1, recipe_1_s1):
     return CookLog.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1), space=space_1)
 
