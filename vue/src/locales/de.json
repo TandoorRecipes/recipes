@@ -563,5 +563,8 @@
     "ShoppingBackgroundSyncWarning": "Schlechte Netzwerkverbindung, Warten auf Synchronisation ...",
     "ShowRecentlyCompleted": "Zuletzt abgehakte Zutaten zeigen",
     "Enable": "Aktivieren",
-    "Delete_All": "Alles löschen"
+    "Delete_All": "Alles löschen",
+    "Error": "Fehler",
+    "Unchanged": "Unverändert",
+    "Calculator": "Rechner"
 }
