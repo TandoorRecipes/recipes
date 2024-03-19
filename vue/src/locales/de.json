@@ -534,7 +534,7 @@
     "Transpose_Words": "Wörter Umwandeln",
     "Never_Unit": "Nie Einheit",
     "Unit_Replace": "Einheit Ersetzen",
-    "quart": "\"Quart\" [qt] (US, Volumen)",
+    "quart": "\"Viertel\" [qt] (US, Volumen)",
     "imperial_quart": "Engl. \"Quart\" [imp qt] (UK, Volumen)",
     "err_importing_recipe": "Es trat ein Fehler auf beim importieren des Rezepts!",
     "property_type_fdc_hint": "Nur Eigenschaftstypen mit einer FDC-ID können automatisch Daten aus der FDC-Datenbank beziehen",
