@@ -297,36 +297,36 @@ def test_fuzzy_lookup(found_recipe, recipes, param_type, user1, space_1):
 
 # commenting this out for general use - it is really slow
 # it should be run on occasion to ensure everything still works
-# @pytest.mark.skipif(sqlite and True, reason="requires PostgreSQL")
-# @pytest.mark.parametrize("user1", itertools.product(
-#     [
-#         ('fuzzy_search', True), ('fuzzy_search', False),
-#         ('fulltext', True), ('fulltext', False),
-#         ('icontains', True), ('icontains', False),
-#         ('istartswith', True), ('istartswith', False),
-#     ],
-#     [('unaccent', True), ('unaccent', False)]
-# ), indirect=['user1'])
-# @pytest.mark.parametrize("found_recipe", [
-#     ({'name': True}),
-#     ({'description': True}),
-#     ({'instruction': True}),
-#     ({'keyword': True}),
-#     ({'food': True}),
-# ], indirect=['found_recipe'])
-# # user array contains: user client, expected count of search, expected count of mispelled search, search string, mispelled search string, user search preferences
-# def test_search_string(found_recipe, recipes, user1, space_1):
-#     with scope(space=space_1):
-#         param1 = f"query={user1[3]}"
-#         param2 = f"query={user1[4]}"
+@pytest.mark.skipif(sqlite and True, reason="requires PostgreSQL")
+@pytest.mark.parametrize("user1", itertools.product(
+    [
+        ('fuzzy_search', True), ('fuzzy_search', False),
+        ('fulltext', True), ('fulltext', False),
+        ('icontains', True), ('icontains', False),
+        ('istartswith', True), ('istartswith', False),
+    ],
+    [('unaccent', True), ('unaccent', False)]
+), indirect=['user1'])
+@pytest.mark.parametrize("found_recipe", [
+    ({'name': True}),
+    ({'description': True}),
+    ({'instruction': True}),
+    ({'keyword': True}),
+    ({'food': True}),
+], indirect=['found_recipe'])
+# user array contains: user client, expected count of search, expected count of mispelled search, search string, mispelled search string, user search preferences
+def test_search_string(found_recipe, recipes, user1, space_1):
+    with scope(space=space_1):
+        param1 = f"query={user1[3]}"
+        param2 = f"query={user1[4]}"
 
-#         r = json.loads(user1[0].get(reverse(LIST_URL) + f'?{param1}').content)
-#         assert len([x['id'] for x in r['results'] if x['id'] in [
-#                    found_recipe[0].id, found_recipe[1].id]]) == user1[1]
+        r = json.loads(user1[0].get(reverse(LIST_URL) + f'?{param1}').content)
+        assert len([x['id'] for x in r['results'] if x['id'] in [
+                   found_recipe[0].id, found_recipe[1].id]]) == user1[1]
 
-#         r = json.loads(user1[0].get(reverse(LIST_URL) + f'?{param2}').content)
-#         assert len([x['id'] for x in r['results'] if x['id'] in [
-#                    found_recipe[0].id, found_recipe[1].id]]) == user1[2]
+        r = json.loads(user1[0].get(reverse(LIST_URL) + f'?{param2}').content)
+        assert len([x['id'] for x in r['results'] if x['id'] in [
+                   found_recipe[0].id, found_recipe[1].id]]) == user1[2]
 
 
 @pytest.mark.parametrize("found_recipe, param_type, result", [
