@@ -8,7 +8,6 @@ from rest_framework.schemas import get_schema_view
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
 
-
 from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step,
                      Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
@@ -16,7 +15,7 @@ from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keywor
 
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
-
+import datetime
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
@@ -121,9 +120,9 @@ urlpatterns = [
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
     path('api/log_cooking/<int:recipe_id>/', api.log_cooking, name='api_log_cooking'),
-    path('api/plan-ical/', api.get_plan_ical, name='api_get_plan_ical_future'),
-    path('api/plan-ical/<slug:from_date>/', api.get_plan_ical, name='api_get_plan_ical_from'),
+
     path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
+
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/backup/', api.get_backup, name='api_backup'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
@@ -137,7 +136,7 @@ urlpatterns = [
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/search/', views.search_info, name='docs_search'),
     path('docs/api/', views.api_info, name='docs_api'),
-    path('openapi/', get_schema_view(title="Django Recipes", version=TANDOOR_VERSION, public=True, permission_classes=(permissions.AllowAny, )), name='openapi-schema'),
+    path('openapi/', get_schema_view(title="Django Recipes", version=TANDOOR_VERSION, public=True, permission_classes=(permissions.AllowAny,)), name='openapi-schema'),
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
@@ -148,12 +147,10 @@ urlpatterns = [
     path('manifest.json', views.web_manifest, name='web_manifest'),
 ]
 
-
 generic_models = (
     Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync,
     Comment, RecipeBookEntry, InviteLink, UserSpace, Space
 )
-
 
 for m in generic_models:
     py_name = get_model_name(m)
