@@ -1236,12 +1236,24 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     @decorators.action(detail=False, methods=['POST'], serializer_class=ShoppingListEntryBulkSerializer, permission_classes=[CustomIsUser])
     def bulk(self, request):
         serializer = self.serializer_class(data=request.data)
+
         if serializer.is_valid():
-            ShoppingListEntry.objects.filter(Q(created_by=self.request.user)
-                                             | Q(created_by__in=list(self.request.user.get_shopping_share()))).filter(space=request.space, id__in=serializer.validated_data['ids']
-                                                                                                                      ).update(checked=serializer.validated_data['checked'],
-                                                                                                                               updated_at=timezone.now(),
-                                                                                                                               )
+            print(serializer.validated_data)
+            bulk_entries = ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+                ).filter(space=request.space, id__in=serializer.validated_data['ids'])
+            bulk_entries.update(checked=(checked := serializer.validated_data['checked']), updated_at=timezone.now(), )
+
+            # update the onhand for food if shopping_add_onhand is True
+            if request.user.userpreference.shopping_add_onhand:
+                foods = Food.objects.filter(id__in=bulk_entries.values('food'))
+                if checked:
+                    for f in foods:
+                        f.onhand_users.add(*request.user.userpreference.shopping_share.all(), request.user)
+                elif checked == False:
+                    for f in foods:
+                        f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
+
             return Response(serializer.data)
         else:
             return Response(serializer.errors, 400)

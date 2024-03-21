@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-10 07:18+0100\n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
 "PO-Revision-Date: 2024-03-08 23:19+0000\n"
 "Last-Translator: Enric Bergadà <enric@bergada.cat>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
@@ -2352,56 +2352,56 @@ msgstr ""
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
 
-#: .\cookbook\views\api.py:1199
+#: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1281
+#: .\cookbook\views\api.py:1293
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
 
-#: .\cookbook\views\api.py:1404
+#: .\cookbook\views\api.py:1416
 msgid "Nothing to do."
 msgstr "Res a fer."
 
-#: .\cookbook\views\api.py:1431
+#: .\cookbook\views\api.py:1443
 msgid "Invalid Url"
 msgstr ""
 
-#: .\cookbook\views\api.py:1435
+#: .\cookbook\views\api.py:1447
 msgid "Connection Refused."
 msgstr "Connexió Refusada."
 
-#: .\cookbook\views\api.py:1437
+#: .\cookbook\views\api.py:1449
 msgid "Bad URL Schema."
 msgstr ""
 
-#: .\cookbook\views\api.py:1460
+#: .\cookbook\views\api.py:1472
 msgid "No usable data could be found."
 msgstr "No s'han trobat dades utilitzables."
 
-#: .\cookbook\views\api.py:1535
+#: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1552 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
 msgstr "Importació no implementada en aquest proveïdor"
 
-#: .\cookbook\views\api.py:1636 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr ""
 "Aquesta funció encara no està disponible a la versió allotjada de tandoor!"
 
-#: .\cookbook\views\api.py:1657
+#: .\cookbook\views\api.py:1669
 msgid "Sync successful!"
 msgstr "Sincronització correcte"
 
-#: .\cookbook\views\api.py:1660
+#: .\cookbook\views\api.py:1672
 msgid "Error synchronizing with Storage"
 msgstr "Error de sincronització amb emmagatzematge"
 

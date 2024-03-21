@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-10 07:18+0100\n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
 "PO-Revision-Date: 2023-04-12 11:55+0000\n"
 "Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Bulgarian <http://translate.tandoor.dev/projects/tandoor/"
@@ -2517,11 +2517,11 @@ msgstr ""
 "Връща записите в списъка за пазаруване, сортирани по реда на категории "
 "супермаркети."
 
-#: .\cookbook\views\api.py:1199
+#: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1281
+#: .\cookbook\views\api.py:1293
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
@@ -2533,45 +2533,45 @@ msgstr ""
 "Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
 "Разрешени са множество стойности."
 
-#: .\cookbook\views\api.py:1404
+#: .\cookbook\views\api.py:1416
 msgid "Nothing to do."
 msgstr "Няма нищо за правене."
 
-#: .\cookbook\views\api.py:1431
+#: .\cookbook\views\api.py:1443
 msgid "Invalid Url"
 msgstr ""
 
-#: .\cookbook\views\api.py:1435
+#: .\cookbook\views\api.py:1447
 msgid "Connection Refused."
 msgstr "Връзката е отказана."
 
-#: .\cookbook\views\api.py:1437
+#: .\cookbook\views\api.py:1449
 msgid "Bad URL Schema."
 msgstr "Лоша URL схема."
 
-#: .\cookbook\views\api.py:1460
+#: .\cookbook\views\api.py:1472
 msgid "No usable data could be found."
 msgstr "Не бяха намерени полезни данни."
 
-#: .\cookbook\views\api.py:1535
+#: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1552 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
 msgstr "Импортирането не е реализирано за този доставчик"
 
-#: .\cookbook\views\api.py:1636 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "Тази функция все още не е налична в хостваната версия на tandoor!"
 
-#: .\cookbook\views\api.py:1657
+#: .\cookbook\views\api.py:1669
 msgid "Sync successful!"
 msgstr "Синхронизирането успешно!"
 
-#: .\cookbook\views\api.py:1660
+#: .\cookbook\views\api.py:1672
 msgid "Error synchronizing with Storage"
 msgstr "Грешка при синхронизирането с хранилището"
 

@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-10 07:18+0100\n"
-"PO-Revision-Date: 2024-03-05 22:19+0000\n"
-"Last-Translator: Jocelin Lebreton <jocelin.lebreton@gmail.com>\n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
+"PO-Revision-Date: 2024-03-19 13:59+0000\n"
+"Last-Translator: Anthony BARRIER <barrier.anthony@gmail.com>\n"
 "Language-Team: French <http://translate.tandoor.dev/projects/tandoor/recipes-"
 "backend/fr/>\n"
 "Language: fr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -97,14 +97,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Jeton d'accès longue durée</a> pour votre instance de HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Par exemple http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api par exemple"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -2506,45 +2508,45 @@ msgstr ""
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
 
-#: .\cookbook\views\api.py:1199
+#: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1281
+#: .\cookbook\views\api.py:1293
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
 
-#: .\cookbook\views\api.py:1404
+#: .\cookbook\views\api.py:1416
 msgid "Nothing to do."
 msgstr "Rien à faire."
 
-#: .\cookbook\views\api.py:1431
+#: .\cookbook\views\api.py:1443
 msgid "Invalid Url"
 msgstr "Url non valide"
 
-#: .\cookbook\views\api.py:1435
+#: .\cookbook\views\api.py:1447
 msgid "Connection Refused."
 msgstr "Connexion refusée."
 
-#: .\cookbook\views\api.py:1437
+#: .\cookbook\views\api.py:1449
 msgid "Bad URL Schema."
 msgstr "Mauvais schéma d’URL."
 
-#: .\cookbook\views\api.py:1460
+#: .\cookbook\views\api.py:1472
 msgid "No usable data could be found."
 msgstr "Aucune information utilisable n'a été trouvée."
 
-#: .\cookbook\views\api.py:1535
+#: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1552 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
 msgstr "L’importation n’est pas implémentée pour ce fournisseur"
 
-#: .\cookbook\views\api.py:1636 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
@@ -2552,11 +2554,11 @@ msgstr ""
 "Cette fonctionnalité n’est pas encore disponible dans la version hébergée de "
 "Tandoor !"
 
-#: .\cookbook\views\api.py:1657
+#: .\cookbook\views\api.py:1669
 msgid "Sync successful!"
 msgstr "Synchronisation réussie !"
 
-#: .\cookbook\views\api.py:1660
+#: .\cookbook\views\api.py:1672
 msgid "Error synchronizing with Storage"
 msgstr "Erreur lors de la synchronisation avec le stockage"
 
