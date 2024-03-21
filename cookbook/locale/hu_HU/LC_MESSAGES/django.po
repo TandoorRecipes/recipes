@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-10 07:18+0100\n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
 "PO-Revision-Date: 2023-12-05 09:15+0000\n"
 "Last-Translator: Ferenc <ugyes@freemail.hu>\n"
 "Language-Team: Hungarian <http://translate.tandoor.dev/projects/tandoor/"
@@ -2554,11 +2554,11 @@ msgstr ""
 "Visszaadja a bevásárlólista bejegyzéseit szupermarket kategóriák szerinti "
 "sorrendben."
 
-#: .\cookbook\views\api.py:1199
+#: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1281
+#: .\cookbook\views\api.py:1293
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
@@ -2570,45 +2570,45 @@ msgstr ""
 "Visszaadja az id elsődleges kulccsal rendelkező bevásárlólista-bejegyzést.  "
 "Több érték megengedett."
 
-#: .\cookbook\views\api.py:1404
+#: .\cookbook\views\api.py:1416
 msgid "Nothing to do."
 msgstr "Semmi feladat."
 
-#: .\cookbook\views\api.py:1431
+#: .\cookbook\views\api.py:1443
 msgid "Invalid Url"
 msgstr "Érvénytelen URL"
 
-#: .\cookbook\views\api.py:1435
+#: .\cookbook\views\api.py:1447
 msgid "Connection Refused."
 msgstr "Kapcsolat megtagadva."
 
-#: .\cookbook\views\api.py:1437
+#: .\cookbook\views\api.py:1449
 msgid "Bad URL Schema."
 msgstr "Rossz URL séma."
 
-#: .\cookbook\views\api.py:1460
+#: .\cookbook\views\api.py:1472
 msgid "No usable data could be found."
 msgstr "Nem sikerült használható adatokat találni."
 
-#: .\cookbook\views\api.py:1535
+#: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1552 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
 msgstr "Az importálás nincs implementálva ennél a szolgáltatónál"
 
-#: .\cookbook\views\api.py:1636 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "Ez a funkció még nem érhető el a tandoor hosztolt verziójában!"
 
-#: .\cookbook\views\api.py:1657
+#: .\cookbook\views\api.py:1669
 msgid "Sync successful!"
 msgstr "Szinkronizálás sikeres!"
 
-#: .\cookbook\views\api.py:1660
+#: .\cookbook\views\api.py:1672
 msgid "Error synchronizing with Storage"
 msgstr "Hiba szinkronizálás közben a tárolóval"
 
