@@ -31,7 +31,7 @@ SECRET_KEY_FILE=/path/to/file.txt
 
 Multiple parameters are required to configure the database.
 
-_ Note: You can setup parameters for a test database by defining all of the parameters preceded by `TEST_` e.g. TEST_DB_ENGINE= _
+**Note: You can setup parameters for a test database by defining all of the parameters preceded by `TEST_` e.g. TEST_DB_ENGINE=**
 
 | Var               | Options                                                            | Description                                                             |
 |-------------------|--------------------------------------------------------------------|-------------------------------------------------------------------------|
