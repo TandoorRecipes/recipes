@@ -46,19 +46,6 @@
             </v-window>
         </v-col>
     </v-row>
-    <v-row v-if="mealPlanWindows.length == 0 && skeletons > 0">
-        <v-col>
-            <v-window>
-                <v-window-item>
-                    <v-row>
-                        <v-col v-for="n in skeletons">
-                            <v-skeleton-loader :elevation="3" type="card"></v-skeleton-loader>
-                        </v-col>
-                    </v-row>
-                </v-window-item>
-            </v-window>
-        </v-col>
-    </v-row>
 
 </template>
 
@@ -97,7 +84,7 @@ const meal_plan_grid = computed(() => {
                 date: grid_day_date,
                 create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
                 date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
-                plan_entries: useMealPlanStore().plan_list.filter(m => (DateTime.fromJSDate(m.fromDate) <= grid_day_date && DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate) >= grid_day_date)),
+                plan_entries: useMealPlanStore().plan_list.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
             } as MealPlanGridItem)
         }
     }
