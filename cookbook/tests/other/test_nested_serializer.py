@@ -18,15 +18,14 @@ register(UnitFactory, 'unit_1', space=LazyFixture('space_1'))
 
 
 @pytest.mark.parametrize("arg", ['dict', 'pk'])
-def test_unested_serializer__single(arg, recipe_1_s1, food_1, u1_s1):
+def test_unnested_serializer__single(arg, recipe_1_s1, food_1, u1_s1):
     if arg == 'dict':
         recipe = {'id': recipe_1_s1.id, 'name': recipe_1_s1.name, }
     elif arg == 'pk':
         recipe = recipe_1_s1.id
-    with scopes_disabled():
-        r = u1_s1.patch(reverse(FOOD_URL, args={food_1.id}), {'name': food_1.name, 'recipe': recipe}, content_type='application/json')
-        assert r.status_code == 200
-        assert json.loads(r.content)['recipe']['id'] == recipe_1_s1.id
+    r = u1_s1.patch(reverse(FOOD_URL, args={food_1.id}), {'name': food_1.name, 'recipe': recipe}, content_type='application/json')
+    assert r.status_code == 200
+    assert json.loads(r.content)['recipe']['id'] == recipe_1_s1.id
 
 
 def test_nested_serializer_many(recipe_1_s1, food_1, food_2, keyword_1, keyword_2, unit_1, u1_s1):
