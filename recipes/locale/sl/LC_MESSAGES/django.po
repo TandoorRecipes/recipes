@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-10 07:18+0100\n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
-"n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
+
 #: .\recipes\plugins\enterprise_plugin\helper\permission_helper.py:58
 msgid ""
 "You do not have the required permissions to view this page! You need to have "
@@ -36,24 +37,36 @@ msgstr ""
 msgid "You do not have the required module to view this page!"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Recipe"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Recipe Keyword"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Meal Plan"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Shopping"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Book"
+msgstr ""
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "start"
+msgstr ""
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "center"
+msgstr ""
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "end"
 msgstr ""
 
 #: .\recipes\settings.py:402
