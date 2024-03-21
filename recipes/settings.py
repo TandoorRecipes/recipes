@@ -293,7 +293,6 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 
 # Database
 # Load settings from env files
-if os.getenv('DATABASE_URL'):
 DATABASE_URL = os.getenv('DATABASE_URL') or None
 DB_OPTIONS = os.getenv('DB_OPTIONS') or None
 DB_ENGINE = os.getenv('DB_ENGINE') or None
