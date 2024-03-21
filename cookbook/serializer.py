@@ -21,6 +21,7 @@ from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import IntegerField
+from rest_framework.serializers import PrimaryKeyRelatedField
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
@@ -42,37 +43,61 @@ from recipes.settings import AWS_ENABLED, MEDIA_URL
 
 class WritableNestedModelSerializer(WNMS):
 
-    # overload to_internal_value to allow using PK only on nested object 
+    # overload to_internal_value to allow using PK only on nested object
     def to_internal_value(self, data):
-
-        def get_object(field, model, serializer, value):
-            # get object with PK of <value> 
-            nested_obj = get_object_or_None(model, id=value)
-            if nested_obj is not None:
-                # convert to dictionary with default serializer
-                obj = serializer(nested_obj, context=self.context).data
-                # pop any field that isn't required to avoid errors from non-model field values
-                for key in list(serializer(nested_obj, context=self.context).data):
-                    if key not in ['id'] + [field_name for field_name, field in serializer().fields.items() if field.required]:
-                        obj.pop(key, None)
-                return obj
-            else:
-                return value
 
         # iterate through every field on the posted object
         for f in list(data):
+            has_nested_pk = False
             if f not in self.fields:
                 continue
             elif issubclass(self.fields[f].__class__, serializers.Serializer):
-                # if the field is a serializer and an integer, assume its an ID and retrieve the associated object
+                many = False
+                model = self.fields[f].Meta.model
+                # if the field is a serializer and an integer, assume its an ID of an existing object
                 if isinstance(data[f], int):
-                    data[f] = get_object(f, self.fields[f].Meta.model, self.fields[f].__class__, data[f])
+                    has_nested_pk = True
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
-                # if the field is a ListSerializer, iterated the list and if there is an integer, assume its an ID and retrieve the associated object
-                for idx, item in enumerate(data[f]):
-                    if isinstance(item, int):
-                        data[f][idx] = get_object(f, self.fields[f].child.Meta.model, self.fields[f].child.__class__, item)
-        return super().to_internal_value(data)
+                many = True
+                model = self.fields[f].child.Meta.model
+                # if the field is a ListSerializer, iterated the list and if there is an integer, assume its an ID of an existing object
+                if any(isinstance(x, int) for x in data[f]):
+                    has_nested_pk = True
+
+            # if there is a nested pk create a new PrimaryKeyRelatedField to store the PK
+            if has_nested_pk:
+                # check if the model requires filtering by space
+                require_space = 'space' in dir(model)
+
+                # check if a pk_only field has been added to the serializer - if not, add it
+                if not (new_field := f"{f}_pk_only") in self.fields:
+                    if require_space:
+                        self.fields.__setitem__(
+                            new_field,
+                            PrimaryKeyRelatedField(many=many, queryset=model.objects.filter(space=self.context['request'].space))
+                        )
+                    else:
+                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(many=many, queryset=model.objects.filter.all()))
+
+                # move the data to the right field
+                if many:
+                    # add integer values to pk_only field
+                    data[new_field] = [x for x in data[f] if isinstance(x, int)]
+                    # filter existing field to non-integer values
+                    data[f] = [x for x in data[f] if not isinstance(x, int)]
+                else:
+                    data[new_field] = data[f]
+                    # delete the old field from the data
+                    del data[f]
+        internal_value = super().to_internal_value(data)
+
+        # once converted to internal data - move the pk_only back to the normal field
+        for field in [x for x in internal_value.keys() if '_pk_only' in x]:
+            if isinstance(internal_value[field],  list):
+                internal_value[field.replace('_pk_only', '')] += internal_value.pop(field)
+            else:
+                internal_value[field.replace('_pk_only', '')] = internal_value.pop(field)
+        return internal_value
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
