@@ -31,12 +31,32 @@
     "file": "assets/fa-v4compatibility-aR9vOKaP.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
   },
+  "node_modules/mavon-editor/dist/font/fontello.eot": {
+    "file": "assets/fontello-CnWxryRb.eot",
+    "src": "node_modules/mavon-editor/dist/font/fontello.eot"
+  },
+  "node_modules/mavon-editor/dist/font/fontello.svg": {
+    "file": "assets/fontello-BxS_W-ym.svg",
+    "src": "node_modules/mavon-editor/dist/font/fontello.svg"
+  },
+  "node_modules/mavon-editor/dist/font/fontello.ttf": {
+    "file": "assets/fontello-B1X0PDnA.ttf",
+    "src": "node_modules/mavon-editor/dist/font/fontello.ttf"
+  },
+  "node_modules/mavon-editor/dist/font/fontello.woff": {
+    "file": "assets/fontello-BEgLts9b.woff",
+    "src": "node_modules/mavon-editor/dist/font/fontello.woff"
+  },
+  "node_modules/mavon-editor/dist/font/fontello.woff2": {
+    "file": "assets/fontello-BJkOxCgW.woff2",
+    "src": "node_modules/mavon-editor/dist/font/fontello.woff2"
+  },
   "src/apps/tandoor/main.ts": {
-    "file": "assets/main-Dn7LZ1Sm.js",
+    "file": "assets/main-D49MKQU0.js",
     "src": "src/apps/tandoor/main.ts",
     "isEntry": true,
     "css": [
-      "assets/main-C0cQ5WeY.css"
+      "assets/main-g3hspULu.css"
     ],
     "assets": [
       "assets/brand_logo-D4X97p3N.svg",
@@ -47,7 +67,12 @@
       "assets/fa-solid-900-DAI24fNt.woff2",
       "assets/fa-solid-900-DM0teJdg.ttf",
       "assets/fa-v4compatibility-aR9vOKaP.woff2",
-      "assets/fa-v4compatibility-F0dlVTLQ.ttf"
+      "assets/fa-v4compatibility-F0dlVTLQ.ttf",
+      "assets/fontello-CnWxryRb.eot",
+      "assets/fontello-BJkOxCgW.woff2",
+      "assets/fontello-BEgLts9b.woff",
+      "assets/fontello-B1X0PDnA.ttf",
+      "assets/fontello-BxS_W-ym.svg"
     ]
   },
   "src/assets/brand_logo.svg": {
