@@ -1,5 +1,9 @@
 #!/bin/sh
-source venv/bin/activate
+
+# conditionally activate virtualenv, since the docker container does not need it
+if [[ "${DOCKER}" != "true" ]]; then
+    source venv/bin/activate
+fi
 
 TANDOOR_PORT="${TANDOOR_PORT:-8080}"
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
@@ -67,12 +71,20 @@ echo "Migrating database"
 
 python manage.py migrate
 
-echo "Generating static files"
+if [[ "${DOCKER}" == "true" ]]; then
+    echo "Collecting static files"
 
-python manage.py collectstatic_js_reverse
-python manage.py collectstatic --noinput
+    mkdir -p /opt/recipes/staticfiles
+    mv /opt/recipes/staticfiles-collect/* /opt/recipes/staticfiles
+    rm -rf /opt/recipes/staticfiles-collect
+else
+    echo "Generating static files"
 
-echo "Done"
+    python manage.py collectstatic_js_reverse
+    python manage.py collectstatic --noinput
+
+    echo "Done"
+fi
 
 chmod -R 755 /opt/recipes/mediafiles
 
