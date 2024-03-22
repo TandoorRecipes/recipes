@@ -72,14 +72,14 @@ echo "Migrating database"
 python manage.py migrate
 
 if [[ "${DOCKER}" == "true" ]]; then
-    echo "Collecting static files"
+    echo "Copying cached static files from docker build"
 
     mkdir -p /opt/recipes/staticfiles
     rm -rf /opt/recipes/staticfiles/*
     mv /opt/recipes/staticfiles-collect/* /opt/recipes/staticfiles
     rm -rf /opt/recipes/staticfiles-collect
 else
-    echo "Generating static files"
+    echo "Collecting static files, this may take a while..."
 
     python manage.py collectstatic_js_reverse
     python manage.py collectstatic --noinput
