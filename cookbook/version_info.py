@@ -1,3 +1,3 @@
-TANDOOR_VERSION = "9be2d95d58f1c06eaa3787615536e549c1e19c43"
-TANDOOR_REF = "9be2d95d58f1c06eaa3787615536e549c1e19c43"
-VERSION_INFO = [{'name': 'Tandoor ', 'version': "commit 9be2d95d58f1c06eaa3787615536e549c1e19c43\nMerge: 8c4eb62e b6f3ed6b\nAuthor: smilerz \nDate:   Tue Mar 19 09:14:27 2024 -0500\n\n    Merge branch 'shoppinglist_fix' into working\n", 'website': 'https://github.com/smilerz/recipes', 'commit_link': 'https://github.com/smilerz/recipes/commit/9be2d95d58f1c06eaa3787615536e549c1e19c43', 'ref': '9be2d95d58f1c06eaa3787615536e549c1e19c43', 'branch': 'working', 'tag': ''}]
+TANDOOR_VERSION = "cf0401a119ba4024a53dbdf877e4cdb5522f4f32"
+TANDOOR_REF = "cf0401a119ba4024a53dbdf877e4cdb5522f4f32"
+VERSION_INFO = [{'name': 'Tandoor ', 'version': 'commit cf0401a119ba4024a53dbdf877e4cdb5522f4f32\nAuthor: smilerz \nDate:   Fri Mar 22 15:34:54 2024 -0500\n\n    python client generation\n', 'website': 'https://github.com/smilerz/recipes', 'commit_link': 'https://github.com/smilerz/recipes/commit/cf0401a119ba4024a53dbdf877e4cdb5522f4f32', 'ref': 'cf0401a119ba4024a53dbdf877e4cdb5522f4f32', 'branch': 'working', 'tag': ''}]
