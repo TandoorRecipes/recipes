@@ -38,7 +38,6 @@ COPY . ./
 RUN python manage.py collectstatic_js_reverse
 RUN python manage.py collectstatic --noinput
 # copy the collected static files to a different location, so they can be moved into a potentially mounted volume
-RUN rm -rf /opt/recipes/staticfiles/*
 RUN mv /opt/recipes/staticfiles /opt/recipes/staticfiles-collect
 
 # collect information from git repositories

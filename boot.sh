@@ -75,6 +75,7 @@ if [[ "${DOCKER}" == "true" ]]; then
     echo "Collecting static files"
 
     mkdir -p /opt/recipes/staticfiles
+    rm -rf /opt/recipes/staticfiles/*
     mv /opt/recipes/staticfiles-collect/* /opt/recipes/staticfiles
     rm -rf /opt/recipes/staticfiles-collect
 else
