@@ -57,7 +57,7 @@ const props = defineProps(
 const {title, recipes} = toRefs(props)
 
 let numberOfCols = computed(() => {
-    return mdAndUp.value ? 5 : 2
+    return mdAndUp.value ? 4 : 2
 })
 
 type CustomWindow = {
