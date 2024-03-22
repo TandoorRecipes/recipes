@@ -7,48 +7,51 @@
                 no-click-animation
                 :open-on-hover="recipe.description != null && recipe.description != ''"
                 contained
-                opacity="2%"
             >
                 <template v-slot:activator="{ props }">
-                    <v-img v-if="recipe.image != null" v-bind="props"
-                           cover
+                    <v-img cover
                            height="60%"
-                           :src="recipe.image"
-                    ></v-img>
-                    <v-img v-else src="../../assets/recipe_no_image.svg" cover v-bind="props"
-                           height="60%"></v-img>
+                           :src="recipeImageUrl"
+                    >
+                        <v-chip size="x-small" prepend-icon="fa fa-clock" label color="light" variant="elevated"
+                                class="float-start ms-1 mt-1">
+                            {{ recipe.workingTime }}
+                        </v-chip>
+                        <v-chip size="x-small" prepend-icon="fa fa-pause" label color="secondary" variant="elevated"
+                                class="float-start ms-1 mt-1">
+                            {{ recipe.waitingTime }}
+                        </v-chip>
+                    </v-img>
+                    <v-divider class="p-0" v-if="recipe.image == null"></v-divider>
 
                 </template>
                 <div v-if="recipe.description != null && recipe.description != ''">
-                    {{recipe.description}}
+                    {{ recipe.description }}
                 </div>
             </v-tooltip>
 
             <v-card-item>
-                <v-card-title>{{ recipe.name }}</v-card-title>
+                <v-card-title>
+                             {{ recipe.name }}
+                            <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>
+
+                </v-card-title>
+
 
                 <v-card-subtitle v-if="show_keywords">
                     <KeywordsComponent :keywords="recipe.keywords"></KeywordsComponent>
                 </v-card-subtitle>
+                <v-rating
+                    v-if="recipe.rating != null"
+                    v-model="recipe.rating"
+                    color="amber"
+                    density="comfortable"
+                    half-increments
+                    readonly
+                    size="x-small"
+                ></v-rating>
+
             </v-card-item>
-
-            <v-card-text v-if="show_description">
-                <v-row align="center" class="mx-0" v-if="recipe.rating">
-                    <v-rating
-                        :model-value="recipe.rating"
-                        color="amber"
-                        density="compact"
-                        half-increments
-                        readonly
-                        size="small"
-                    ></v-rating>
-
-                    <div class="text-grey ">
-                        {{ recipe.rating }}
-                    </div>
-                </v-row>
-
-            </v-card-text>
 
         </v-card>
     </template>
@@ -71,16 +74,23 @@
 import {defineComponent, PropType} from 'vue'
 import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 import {Recipe, RecipeOverview} from "@/openapi";
+import recipeNoImage from '@/assets/recipe_no_image.svg';
+import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 
 export default defineComponent({
     name: "RecipeCard",
-    components: {KeywordsComponent},
+    components: {RecipeContextMenu, KeywordsComponent},
     props: {
         recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},
         loading: {type: Boolean, required: false},
         show_keywords: {type: Boolean, required: false},
         show_description: {type: Boolean, required: false},
         height: {type: String, required: false, default: '25vh'},
+    },
+    computed: {
+        recipeImageUrl: function () {
+            return (this.recipe.image != null) ? this.recipe.image : recipeNoImage
+        }
     }
 })
 </script>

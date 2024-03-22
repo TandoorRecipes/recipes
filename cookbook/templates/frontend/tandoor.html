@@ -1,5 +1,10 @@
 {% load django_vite %}
 
+{% load theming_tags %}
+{% load custom_tags %}
+
+{% theme_values request as theme_values %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +13,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
-    
+
+    <link rel="icon" href="{{ theme_values.logo_color_svg }}">
+    <link rel="icon" href="{{ theme_values.logo_color_32 }}" sizes="32x32">
+    <link rel="icon" href="{{ theme_values.logo_color_128 }}" sizes="128x128">
+    <link rel="icon" href="{{ theme_values.logo_color_192 }}" sizes="192x192">
+    <link rel="apple-touch-icon" href="{{ theme_values.logo_color_180 }}" sizes="180x180">
+
+    <meta name="msapplication-TileColor" content="{{ theme_values.nav_bg_color }}">
+    <meta name="msapplication-TileImage" content="{{ theme_values.logo_color_144 }}">
+
+    <meta name="theme-color" content="{{ theme_values.nav_bg_color }}">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+
 </head>
 <body>
 <div id="app"></div>
