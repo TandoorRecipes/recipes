@@ -29,23 +29,31 @@ from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
-                             ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
-                             Keyword, MealPlan, MealType, NutritionInformation, Property,
-                             PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
-                             Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+from cookbook.models import (Automation, BookmarkletImport, Comment, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
+                             Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UnitConversion, UserFile, UserPreference, UserSpace, ViewLog,
+                             )
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
 
 class WritableNestedModelSerializer(WNMS):
+    # WritableNestedModelSerializer always attempts to update every nested field.
+    # When passing a PK this isn't necessary
+    def _extract_relations(self, *args, **kwargs):
+        relations, reverse_relations = super()._extract_relations(*args, **kwargs)
+        for f in self.skip_relations:
+            relations.pop(f, None)
+            reverse_relations.pop(f, None)
+        return relations, reverse_relations
 
-    # overload to_internal_value to allow using PK only on nested object
+    # override to_internal_value() to allow using PK only on nested object
     def to_internal_value(self, data):
+        if not isinstance(data, dict):
+            return super().to_internal_value(data)
 
+        self.skip_relations = []
         # iterate through every field on the posted object
         for f in list(data):
             has_nested_pk = False
@@ -72,32 +80,22 @@ class WritableNestedModelSerializer(WNMS):
                 # check if a pk_only field has been added to the serializer - if not, add it
                 if not (new_field := f"{f}_pk_only") in self.fields:
                     if require_space:
-                        self.fields.__setitem__(
-                            new_field,
-                            PrimaryKeyRelatedField(many=many, queryset=model.objects.filter(space=self.context['request'].space))
-                        )
+                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(source=f, many=many, queryset=model.objects.filter(space=self.context['request'].space)))
                     else:
-                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(many=many, queryset=model.objects.filter.all()))
+                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(source=f, many=many, queryset=model.objects.filter.all()))
 
-                # move the data to the right field
                 if many:
                     # add integer values to pk_only field
                     data[new_field] = [x for x in data[f] if isinstance(x, int)]
                     # filter existing field to non-integer values
                     data[f] = [x for x in data[f] if not isinstance(x, int)]
                 else:
+                    # move value to pk only field and serializer
                     data[new_field] = data[f]
-                    # delete the old field from the data
                     del data[f]
-        internal_value = super().to_internal_value(data)
+                    self.skip_relations += [f]
 
-        # once converted to internal data - move the pk_only back to the normal field
-        for field in [x for x in internal_value.keys() if '_pk_only' in x]:
-            if isinstance(internal_value[field],  list):
-                internal_value[field.replace('_pk_only', '')] += internal_value.pop(field)
-            else:
-                internal_value[field.replace('_pk_only', '')] = internal_value.pop(field)
-        return internal_value
+        return super().to_internal_value(data)
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -388,7 +386,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at', )
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -467,17 +465,12 @@ class ConnectorConfigConfigSerializer(SpacedModelSerializer):
 
     class Meta:
         model = ConnectorConfig
-        fields = (
-            'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
-            'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled', 'created_by'
-        )
+        fields = ('id', 'name', 'url', 'token', 'todo_entity', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+                  'on_shopping_list_entry_deleted_enabled', 'created_by')
 
-        read_only_fields = ('created_by',)
+        read_only_fields = ('created_by', )
 
-        extra_kwargs = {
-            'token': {'write_only': True},
-        }
+        extra_kwargs = {'token': {'write_only': True}, }
 
 
 class SyncSerializer(SpacedModelSerializer):
@@ -829,11 +822,8 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
 
     class Meta:
         model = Step
-        fields = (
-            'id', 'name', 'instruction', 'ingredients', 'instructions_markdown',
-            'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
-        )
+        fields = ('id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data', 'numrecipe',
+                  'show_ingredients_table')
 
 
 class StepRecipeSerializer(WritableNestedModelSerializer):
@@ -899,6 +889,7 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Comment
         fields = '__all__'
@@ -1150,12 +1141,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = ShoppingListEntry
-        fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
-            'recipe_mealplan',
-            'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
-        )
-        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at',)
+        fields = ('id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked', 'recipe_mealplan', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until')
+        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at', )
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
