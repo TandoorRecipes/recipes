@@ -8,9 +8,10 @@ import {createVuetify} from 'vuetify'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
     defaults: {
-        VCard: {
-            class: 'overflow-visible' // this is needed so that vue-multiselect options show above a card, vuetify uses overlay container to avoid this
-        }
+        // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
+        // VCard: {
+        //     class: 'overflow-visible' // this is needed so that vue-multiselect options show above a card, vuetify uses overlay container to avoid this
+        // }
     },
     theme: {
         defaultTheme: 'light',
