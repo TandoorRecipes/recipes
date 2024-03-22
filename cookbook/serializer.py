@@ -5,7 +5,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
-from annoying.functions import get_object_or_None
+from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
@@ -28,37 +28,19 @@ from cookbook.helper.permission_helper import above_space_limit
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
-from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, CustomFilter,
-                             ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
-                             Keyword, MealPlan, MealType, NutritionInformation, Property,
-                             PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
-                             Step, Storage, Supermarket, SupermarketCategory,
-                             SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
+from cookbook.models import (Automation, BookmarkletImport, Comment, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
+                             Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport, ShareLink,
+                             ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit,
+                             UnitConversion, UserFile, UserPreference, UserSpace, ViewLog,
+                             )
 from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
 
 class WritableNestedModelSerializer(WNMS):
 
-    # overload to_internal_value to allow using PK only on nested object 
+    # overload to_internal_value to allow using PK only on nested object
     def to_internal_value(self, data):
-
-        def get_object(field, model, serializer, value):
-            # get object with PK of <value> 
-            nested_obj = get_object_or_None(model, id=value)
-            if nested_obj is not None:
-                # convert to dictionary with default serializer
-                obj = serializer(nested_obj, context=self.context).data
-                # pop any field that isn't required to avoid errors from non-model field values
-                for key in list(serializer(nested_obj, context=self.context).data):
-                    if key not in ['id'] + [field_name for field_name, field in serializer().fields.items() if field.required]:
-                        obj.pop(key, None)
-                return obj
-            else:
-                return value
-
         # iterate through every field on the posted object
         for f in list(data):
             if f not in self.fields:
@@ -66,12 +48,19 @@ class WritableNestedModelSerializer(WNMS):
             elif issubclass(self.fields[f].__class__, serializers.Serializer):
                 # if the field is a serializer and an integer, assume its an ID and retrieve the associated object
                 if isinstance(data[f], int):
-                    data[f] = get_object(f, self.fields[f].Meta.model, self.fields[f].__class__, data[f])
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
+                    data[f] = model_to_dict(self.fields[f].Meta.model.objects.get(id=data[f]), fields=required_fields)
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
-                # if the field is a ListSerializer, iterated the list and if there is an integer, assume its an ID and retrieve the associated object
-                for idx, item in enumerate(data[f]):
-                    if isinstance(item, int):
-                        data[f][idx] = get_object(f, self.fields[f].child.Meta.model, self.fields[f].child.__class__, item)
+                # if the field is a ListSerializer get dict values of PKs provided
+                if any(isinstance(x, int) for x in data[f]):
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].child.__class__().fields.items() if field.required]
+                    # filter values to integer values
+                    pk_data = [x for x in data[f] if isinstance(x, int)]
+                    # merge non-pk values with retrieved values
+                    data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                        + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
         return super().to_internal_value(data)
 
 
@@ -363,7 +352,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at', )
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -442,17 +431,12 @@ class ConnectorConfigConfigSerializer(SpacedModelSerializer):
 
     class Meta:
         model = ConnectorConfig
-        fields = (
-            'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
-            'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled', 'created_by'
-        )
+        fields = ('id', 'name', 'url', 'token', 'todo_entity', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
+                  'on_shopping_list_entry_deleted_enabled', 'created_by')
 
-        read_only_fields = ('created_by',)
+        read_only_fields = ('created_by', )
 
-        extra_kwargs = {
-            'token': {'write_only': True},
-        }
+        extra_kwargs = {'token': {'write_only': True}, }
 
 
 class SyncSerializer(SpacedModelSerializer):
@@ -804,11 +788,8 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
 
     class Meta:
         model = Step
-        fields = (
-            'id', 'name', 'instruction', 'ingredients', 'instructions_markdown',
-            'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
-        )
+        fields = ('id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe', 'step_recipe_data', 'numrecipe',
+                  'show_ingredients_table')
 
 
 class StepRecipeSerializer(WritableNestedModelSerializer):
@@ -874,6 +855,7 @@ class RecipeBaseSerializer(WritableNestedModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Comment
         fields = '__all__'
@@ -1125,12 +1107,8 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = ShoppingListEntry
-        fields = (
-            'id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked',
-            'recipe_mealplan',
-            'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
-        )
-        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at',)
+        fields = ('id', 'list_recipe', 'food', 'unit', 'amount', 'order', 'checked', 'recipe_mealplan', 'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until')
+        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at', )
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
