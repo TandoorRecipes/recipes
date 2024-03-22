@@ -1,9 +1,5 @@
 #!/bin/sh
-
-# conditionally activate virtualenv, since the docker container does not need it
-if [[ "${DOCKER}" != "true" ]]; then
-    source venv/bin/activate
-fi
+source venv/bin/activate
 
 TANDOOR_PORT="${TANDOOR_PORT:-8080}"
 GUNICORN_WORKERS="${GUNICORN_WORKERS:-3}"
