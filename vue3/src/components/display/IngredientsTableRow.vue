@@ -8,12 +8,12 @@
             <td><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
             <td><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
             <td v-if="showNotes">
-                <v-icon class="far fa-comment" v-if="ingredient.note != ''" @click="show_tooltip = !show_tooltip">
+                <v-icon class="far fa-comment float-right" v-if="ingredient.note != ''" @click="show_tooltip = !show_tooltip">
                     <v-tooltip v-model="show_tooltip" activator="parent" location="start">{{ ingredient.note }}</v-tooltip>
                 </v-icon>
             </td>
             <td v-if="draggable">
-                <i class="fas fa-grip-lines drag-handle"></i>
+                <i class="fas fa-grip-lines drag-handle cursor-move"></i>
             </td>
         </template>
 

@@ -1,5 +1,8 @@
 <template>
-    <RecipeView :recipe="recipe"></RecipeView>
+    <v-container class="ps-0 pe-0 pt-0">
+        <RecipeView :recipe="recipe"></RecipeView>
+    </v-container>
+
 </template>
 
 <script lang="ts">
