@@ -8,29 +8,25 @@
 
         <template v-slot:default="{ isActive }">
             <v-card :title="title">
-                <v-card-text>
-                    Change Number
-                </v-card-text>
 
                 <v-card-text>
-                    <v-btn-group divided color="primary">
-                        <v-btn @click="updateNumber( 'half')"><i class="fas fa-divide"></i> 2
+
+                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')" control-variant="split" :min="0" >
+                    </v-number-input>
+
+                    <v-btn-group divided class="d-flex">
+                        <v-btn  variant="tonal" class="flex-grow-1" @click="updateNumber( 'half')">
+                            <i class="fas fa-divide"></i> 2
                         </v-btn>
-                        <v-btn @click="updateNumber( 'sub')"><i class="fas fa-minus"></i>
-                        </v-btn>
-                        <v-btn @click="updateNumber('prompt')">
-                            {{ mutable_number }}
-                        </v-btn>
-                        <v-btn @click="updateNumber( 'add')"><i class="fas fa-plus"></i>
-                        </v-btn>
-                        <v-btn @click="updateNumber('double')"><i class="fas fa-times"></i> 2
+                        <v-btn variant="tonal" class="flex-grow-1" @click="updateNumber('double')">
+                            <i class="fas fa-times"></i> 2
                         </v-btn>
                     </v-btn-group>
 
-                    <v-text-field type="number" v-model.number="mutable_number" @change="updateNumber('set')"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn rounded variant="outlined" @click="dialog = false">Close</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn class="float-right" rounded @click="dialog = false">Close</v-btn>
                 </v-card-actions>
             </v-card>
 
@@ -41,9 +37,10 @@
 <script lang="ts">
 
 import {defineComponent} from 'vue'
-
+import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
 export default defineComponent({
     name: "NumberScalerDialog",
+    components: {VNumberInput},
     emits: {
         change(payload: { number: number }) {
             return payload

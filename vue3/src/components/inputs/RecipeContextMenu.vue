@@ -1,6 +1,6 @@
 <template>
 
-    <v-menu open-on-hover open-delay="0" :open-on-click="true">
+    <v-menu open-on-hover open-delay="0" :open-on-click="true" location="start">
         <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="fas fa-ellipsis-v" variant="plain"></v-btn>
         </template>
