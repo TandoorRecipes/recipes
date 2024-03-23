@@ -1,6 +1,7 @@
 <template>
     <v-expansion-panels>
-        <v-expansion-panel title="Steps Overview">
+        <v-expansion-panel>
+            <v-expansion-panel-title><i class="far fa-list-alt fa-fw me-2"></i> Steps Overview</v-expansion-panel-title>
             <v-expansion-panel-text>
                 <v-container>
                     <v-row v-for="(s, i) in steps">

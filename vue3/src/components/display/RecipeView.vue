@@ -1,28 +1,34 @@
 <template>
 
-    <v-card>
-        <v-card-title>{{ recipe.name }}
-            <recipe-context-menu :recipe="recipe"></recipe-context-menu>
-        </v-card-title>
 
-        <v-img max-height="25vh" cover lazy :src="recipe.image">
-            <!-- TODO placement in image -->
-            <KeywordsBar :keywords="recipe?.keywords"></KeywordsBar>
+    <v-card class="mt-md-4">
 
-            <v-chip size="small" color="primary" label>
-                <v-icon icon="fas fa-calendar" class="mr-2"></v-icon>
-                {{ recipe.lastCooked }}
-            </v-chip>
-
-            <v-rating v-model="recipe.rating" color="tandoor"></v-rating>
+        <v-img max-height="25vh" cover lazy :src="recipe.image" v-if="recipe.image != undefined" class="align-end">
+            <KeywordsComponent variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></KeywordsComponent>
         </v-img>
 
+        <v-card>
+            <v-sheet class="d-flex align-center">
+                <span class="ps-2 text-h5 text-truncate flex-grow-1">{{ recipe.name }}</span>
+                <recipe-context-menu :recipe="recipe"></recipe-context-menu>
+            </v-sheet>
+        </v-card>
 
+<!--        <v-card class="mt-1">-->
+<!--            <v-sheet class="d-flex ">-->
+<!--                <span class="ps-2 text-h5 flex-grow-1">{{ recipe.name }}</span>-->
+<!--                <recipe-context-menu :recipe="recipe"></recipe-context-menu>-->
+<!--            </v-sheet>-->
+<!--        </v-card>-->
+
+    </v-card>
+
+    <v-card class="mt-1">
         <v-container>
             <v-row class="text-center text-body-2">
                 <v-col class="pt-1 pb-1">
                     <i class="fas fa-cogs"></i> {{ recipe.workingTime }} min<br/>
-                    <v-label>Working Time</v-label>
+                    <div class="text-grey">Working Time</div>
                 </v-col>
                 <v-col class="pt-1 pb-1">
                     <div><i class="fas fa-hourglass-half"></i> {{ recipe.waitingTime }} min</div>
@@ -38,14 +44,11 @@
                 </v-col>
             </v-row>
         </v-container>
-
-
     </v-card>
 
-    <v-card class="mt-1">
+    <v-card class="mt-1" v-if="recipe.steps.length > 1">
         <StepsOverview :steps="recipe.steps"></StepsOverview>
     </v-card>
-
 
     <v-card class="mt-1" v-for="s in recipe.steps" :key="s.id">
         <Step :step="s" :ingredient_factor="ingredient_factor"></Step>
@@ -66,10 +69,11 @@ import StepsOverview from "@/components/display/StepsOverview.vue";
 import Step from "@/components/display/Step.vue";
 import RecipeActivity from "@/components/display/RecipeActivity.vue";
 import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
+import KeywordsComponent from "@/components/display/KeywordsBar.vue";
 
 export default defineComponent({
     name: "RecipeView",
-    components: {RecipeContextMenu, RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
+    components: {KeywordsComponent, RecipeContextMenu, RecipeActivity, Step, StepsOverview, IngredientsTable, NumberScalerDialog, KeywordsBar},
     computed: {
         ingredient_factor: function () {
             return this.servings / this.recipe.servings
@@ -82,7 +86,7 @@ export default defineComponent({
     },
     watch: {
         'recipe.servings': function () {
-            if (this.recipe.servings){
+            if (this.recipe.servings) {
                 this.servings = this.recipe.servings
             }
         }

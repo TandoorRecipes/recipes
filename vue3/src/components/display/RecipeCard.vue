@@ -14,11 +14,11 @@
                            :src="recipeImageUrl"
                     >
                         <v-chip size="x-small" prepend-icon="fa fa-clock" label color="light" variant="elevated"
-                                class="float-start ms-1 mt-1">
+                                class="float-start ms-1 mt-1" v-if="recipe.workingTime != undefined && recipe.workingTime > 0">
                             {{ recipe.workingTime }}
                         </v-chip>
                         <v-chip size="x-small" prepend-icon="fa fa-pause" label color="secondary" variant="elevated"
-                                class="float-start ms-1 mt-1">
+                                class="float-start ms-1 mt-1" v-if="recipe.waitingTime != undefined && recipe.waitingTime > 0">
                             {{ recipe.waitingTime }}
                         </v-chip>
                     </v-img>
