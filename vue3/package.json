@@ -19,7 +19,7 @@
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "4",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.5.8"
+    "vuetify": "^3.5.10"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
