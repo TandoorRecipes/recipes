@@ -296,7 +296,7 @@ def system(request):
 
         from django.db import connection
 
-        postgres_ver = divmod(connection.pg_version, 10000)
+        postgres_ver = divmod(connection.pg_version, 10000)[0] # divmod will return a tuple not an int
         if postgres_ver >= postgres_current:
             database_status = 'success'
             database_message = _('Everything is fine!')
