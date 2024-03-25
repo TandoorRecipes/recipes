@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-      
       {
         "name": "Python Debugger: Django",
         "type": "debugpy",
@@ -24,8 +23,8 @@
       ],
       "console": "integratedTerminal",
       "env": {
-        "//comment": "coverage and pytest can't both be running at the same time",
-        "PYTEST_ADDOPTS": "--no-cov -n 2"
+        // coverage and pytest can't both be running at the same time
+        "PYTEST_ADDOPTS": "--no-cov"
       },
       "django": true,
       "justMyCode": true
