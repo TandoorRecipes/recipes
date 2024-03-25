@@ -71,7 +71,7 @@ class FoodPropertyHelper:
     # TODO move to central helper ? --> use defaultdict
     @staticmethod
     def add_or_create(d, key, value, food):
-        if key in d:
+        if key in d and d[key]['value']:
             d[key]['value'] += value
         else:
             d[key] = {'id': food.id, 'food': food.name, 'value': value}
