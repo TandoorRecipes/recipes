@@ -1,6 +1,6 @@
 import logging
 from logging import Logger
-from typing import Dict
+from typing import Dict, Tuple
 from urllib.parse import urljoin
 
 from aiohttp import ClientError, request
@@ -17,10 +17,12 @@ class HomeAssistant(Connector):
         if not config.token or not config.url or not config.todo_entity:
             raise ValueError("config for HomeAssistantConnector in incomplete")
 
+        if config.url[-1] != "/":
+            config.url += "/"
         self._config = config
         self._logger = logging.getLogger("connector.HomeAssistant")
 
-    async def send_api_call(self, method: str, path: str, data: Dict) -> str:
+    async def homeassistant_api_call(self, method: str, path: str, data: Dict) -> str:
         headers = {
             "Authorization": f"Bearer {self._config.token}",
             "Content-Type": "application/json"
@@ -44,7 +46,7 @@ class HomeAssistant(Connector):
         }
 
         try:
-            await self.send_api_call("POST", "services/todo/add_item", data)
+            await self.homeassistant_api_call("POST", "services/todo/add_item", data)
         except ClientError as err:
             self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
 
@@ -57,6 +59,11 @@ class HomeAssistant(Connector):
         if not self._config.on_shopping_list_entry_deleted_enabled:
             return
 
+        if not hasattr(shopping_list_entry._state.fields_cache, "food"):
+            # Sometimes the food foreign key is not loaded, and we cant load it from an async process
+            self._logger.debug("required property was not present in ShoppingListEntry")
+            return
+
         item, _ = _format_shopping_list_entry(shopping_list_entry)
 
         logging.debug(f"removing {item=} from {self._config.name}")
@@ -67,15 +74,16 @@ class HomeAssistant(Connector):
         }
 
         try:
-            await self.send_api_call("POST", "services/todo/remove_item", data)
+            await self.homeassistant_api_call("POST", "services/todo/remove_item", data)
         except ClientError as err:
-            self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
+            # This error will always trigger if the item is not present/found
+            self._logger.debug(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
 
     async def close(self) -> None:
         pass
 
 
-def _format_shopping_list_entry(shopping_list_entry: ShoppingListEntry):
+def _format_shopping_list_entry(shopping_list_entry: ShoppingListEntry) -> Tuple[str, str]:
     item = shopping_list_entry.food.name
     if shopping_list_entry.amount > 0:
         item += f" ({shopping_list_entry.amount:.2f}".rstrip('0').rstrip('.')
