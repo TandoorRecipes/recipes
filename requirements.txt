@@ -43,7 +43,7 @@ django-auth-ldap==4.6.0
 pyppeteer==2.0.0
 validators==0.20.0
 pytube==15.0.0
-homeassistant-api==4.1.1.post2
+aiohttp==3.9.3
 
 # Development
 pytest==8.0.0
