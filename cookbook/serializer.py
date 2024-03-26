@@ -5,7 +5,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
-from annoying.functions import get_object_or_None
+from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
@@ -39,21 +39,9 @@ from recipes.settings import AWS_ENABLED, MEDIA_URL
 
 
 class WritableNestedModelSerializer(WNMS):
-    # WritableNestedModelSerializer always attempts to update every nested field.
-    # When passing a PK this isn't necessary
-    def _extract_relations(self, *args, **kwargs):
-        relations, reverse_relations = super()._extract_relations(*args, **kwargs)
-        for f in self.skip_relations:
-            relations.pop(f, None)
-            reverse_relations.pop(f, None)
-        return relations, reverse_relations
 
-    # override to_internal_value() to allow using PK only on nested object
+    # overload to_internal_value to allow using PK only on nested object
     def to_internal_value(self, data):
-        if not isinstance(data, dict):
-            return super().to_internal_value(data)
-
-        self.skip_relations = []
         # iterate through every field on the posted object
         for f in list(data):
             has_nested_pk = False
@@ -64,37 +52,19 @@ class WritableNestedModelSerializer(WNMS):
                 model = self.fields[f].Meta.model
                 # if the field is a serializer and an integer, assume its an ID of an existing object
                 if isinstance(data[f], int):
-                    has_nested_pk = True
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
+                    data[f] = model_to_dict(self.fields[f].Meta.model.objects.get(id=data[f]), fields=required_fields)
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
-                many = True
-                model = self.fields[f].child.Meta.model
-                # if the field is a ListSerializer, iterated the list and if there is an integer, assume its an ID of an existing object
+                # if the field is a ListSerializer get dict values of PKs provided
                 if any(isinstance(x, int) for x in data[f]):
-                    has_nested_pk = True
-
-            # if there is a nested pk create a new PrimaryKeyRelatedField to store the PK
-            if has_nested_pk:
-                # check if the model requires filtering by space
-                require_space = 'space' in dir(model)
-
-                # check if a pk_only field has been added to the serializer - if not, add it
-                if not (new_field := f"{f}_pk_only") in self.fields:
-                    if require_space:
-                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(source=f, many=many, queryset=model.objects.filter(space=self.context['request'].space)))
-                    else:
-                        self.fields.__setitem__(new_field, PrimaryKeyRelatedField(source=f, many=many, queryset=model.objects.filter.all()))
-
-                if many:
-                    # add integer values to pk_only field
-                    data[new_field] = [x for x in data[f] if isinstance(x, int)]
-                    # filter existing field to non-integer values
-                    data[f] = [x for x in data[f] if not isinstance(x, int)]
-                else:
-                    # move value to pk only field and serializer
-                    data[new_field] = data[f]
-                    del data[f]
-                    self.skip_relations += [f]
-
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].child.__class__().fields.items() if field.required]
+                    # filter values to integer values
+                    pk_data = [x for x in data[f] if isinstance(x, int)]
+                    # merge non-pk values with retrieved values
+                    data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                        + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
         return super().to_internal_value(data)
 
 
