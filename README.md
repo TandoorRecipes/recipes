@@ -39,13 +39,13 @@
 
 - 🔍 Powerful & customizable **search** with fulltext support and [TrigramSimilarity](https://docs.djangoproject.com/en/3.0/ref/contrib/postgres/search/#trigram-similarity)
 - 🏷️ Create and search for **tags**, assign them in batch to all files matching certain filters
-- ↔️ Quickly merge and rename ingredients, tags and units 
+- ↔️ Quickly merge and rename ingredients, tags and units
 - 📥️ **Import recipes** from thousands of websites supporting [ld+json or microdata](https://schema.org/Recipe)
 - ➗ Support for **fractions** or decimals
 - 🐳 Easy setup with **Docker** and included examples for **Kubernetes**, **Unraid** and **Synology**
 - 🎨 Customize your interface with **themes**
 - 📦 **Sync** files with Dropbox and Nextcloud
-  
+
 ## All the must haves
 
 - 📱Optimized for use on **mobile** devices
@@ -54,7 +54,7 @@
 - ➕ Many more like recipe scaling, image compression, printing views and supermarkets
 
 This application is meant for people with a collection of recipes they want to share with family and friends or simply
-store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as 
+store them in a nicely organized way. A basic permission system exists but this application is not meant to be run as
 a public page.
 
 ## Docs
@@ -62,13 +62,13 @@ a public page.
 Documentation can be found [here](https://docs.tandoor.dev/).
 
 ## Support our work
-Tandoor is developed by volunteers in their free time just because its fun. That said earning 
+Tandoor is developed by volunteers in their free time just because its fun. That said earning
 some money with the project allows us to spend more time on it and thus make improvements we otherwise couldn't.
 Because of that there are several ways you can support us
 
 - **GitHub Sponsors** You can sponsor contributors of this project on GitHub: [vabene1111](https://github.com/sponsors/vabene1111)
 - **Host at Hetzner** We have been very happy customers of Hetzner for multiple years for all of our projects. If you want to get into self-hosting or are tired of the expensive big providers, their cloud servers are a great place to get started. When you sign up via our [referral link](https://hetzner.cloud/?ref=ISdlrLmr9kGj) you will get 20€ worth of cloud credits and we get a small kickback too.
-- **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).  
+- **Let us host for you** We are offering a [hosted version](https://app.tandoor.dev) where all profits support us and the development of tandoor (currently only available in germany).
 
 ## Contributing
 Contributions are welcome but please read [this](https://docs.tandoor.dev/contribute/#contributing-code) **BEFORE** contributing anything!
@@ -100,7 +100,7 @@ Beginning with version 0.10.0 the code in this repository is licensed under the 
 > I am in the process of getting some professional legal advice to sort out these issues. 
 > Please also see [Issue 238](https://github.com/vabene1111/recipes/issues/238) for some discussion and **reasoning** regarding the topic.
 
-**Reasoning**  
+**Reasoning**
 **This software and *all* its features are and will always be free for everyone to use and enjoy.**
 
 The reason for the selling exception is that a significant amount of time was spend over multiple years to develop this software.

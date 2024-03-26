@@ -37,6 +37,15 @@
             </b-form-checkbox>
         </b-form-group>
 
+        <b-form-group :label="$t('DefaultPage')">
+            <b-form-select v-model="user_preferences.default_page" @change="updateSettings(true);">
+                <b-form-select-option value="SEARCH">{{$t('Search')}}</b-form-select-option>
+                <b-form-select-option value="SHOPPING">{{$t('Shopping')}}</b-form-select-option>
+                <b-form-select-option value="PLAN">{{$t('Meal_Plan')}}</b-form-select-option>
+                <b-form-select-option value="BOOKS">{{$t('Books')}}</b-form-select-option>
+            </b-form-select>
+
+        </b-form-group>
 
         <hr/>
 

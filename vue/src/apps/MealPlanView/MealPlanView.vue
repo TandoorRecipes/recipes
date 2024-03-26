@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="app" class="mealplan">
         <div class="d-none d-lg-block">
             <div class="row ">
                 <div class="col col-2">
@@ -126,7 +126,7 @@
                                     <div class="flex-grow-1 ml-2"
                                          style="text-overflow: ellipsis; overflow-wrap: anywhere;">
                                                     <span class="two-row-text">
-                                                        <a :href="resolveDjangoUrl('view_recipe', plan.entry.recipe.id)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
+                                                        <a :href="getRecipeURL(plan.entry.recipe, plan.entry.servings)" v-if="plan.entry.recipe">{{ plan.entry.recipe.name }}</a>
                                                         <span v-else>{{ plan.entry.title }}</span> <br/>
                                                     </span>
                                         <span v-if="plan.entry.note" class="two-row-text">
@@ -169,7 +169,7 @@
                     v-if="contextData && contextData.originalItem && contextData.originalItem.entry.recipe != null"
                     @click="
                         $refs.menu.close()
-                        openRecipe(contextData.originalItem.entry.recipe)
+                        openRecipe(contextData.originalItem.entry.recipe, contextData.originalItem.entry.servings)
                     "
                 >
                     <a class="dropdown-item p-2" href="javascript:void(0)"><i class="fas fa-pizza-slice"></i>
@@ -392,8 +392,13 @@ export default {
         },
     },
     methods: {
-        openRecipe: function (recipe) {
-            window.open(this.resolveDjangoUrl("view_recipe", recipe.id))
+
+        getRecipeURL: function (recipe, servings) {
+            return this.resolveDjangoUrl("view_recipe",`${recipe.id}?servings=${servings}`)
+        },
+
+        openRecipe: function (recipe, servings) {
+            window.open(this.getRecipeURL(recipe, servings))
         },
         setStartingDay(days) {
             if (this.settings.startingDayOfWeek + days < 0) {

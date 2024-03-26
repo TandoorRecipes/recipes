@@ -20,6 +20,7 @@ Below are some of the larger contributions made yet.
 - [murphy83] added support for IPv6 #1490
 - [TheHaf] added custom serving size component #1411
 - [lostlont] added LDAP support #960
+- [c0mputerguru] added devcontainers for ease of development
 
 ## Translations
 

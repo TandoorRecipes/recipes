@@ -554,5 +554,20 @@
     "CustomLogos": "Własne loga",
     "Show_Logo": "Pokaż logo",
     "Nav_Text_Mode": "Tryb nawigacji tekstowej",
-    "Nav_Text_Mode_Help": "Zachowuje się inaczej dla każdego motywu."
+    "Nav_Text_Mode_Help": "Zachowuje się inaczej dla każdego motywu.",
+    "Input": "Wprowadź",
+    "Undo": "Cofnij",
+    "NoMoreUndo": "Brak zmian do wycofania.",
+    "Delete_All": "Usuń wszystko",
+    "ShowRecentlyCompleted": "Pokaż ostatnio zakończone elementy",
+    "ShoppingBackgroundSyncWarning": "Słaba sieć, oczekiwanie na synchronizację...",
+    "Enable": "Włączyć",
+    "created_by": "Stworzone przez",
+    "Calculator": "Kalkulator",
+    "Created": "Utworzony",
+    "Updated": "Zaktualizowano",
+    "Unchanged": "Niezmienione",
+    "Error": "Błąd",
+    "DefaultPage": "Strona domyślna",
+    "Shopping_input_placeholder": "np. Ziemniak/100 ziemniaków/100 g ziemniaków"
 }

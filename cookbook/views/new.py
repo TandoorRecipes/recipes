@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,9 +5,9 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 
-from cookbook.forms import ImportRecipeForm, Storage, StorageForm
+from cookbook.forms import ImportRecipeForm, Storage, StorageForm, ConnectorConfigForm
 from cookbook.helper.permission_helper import GroupRequiredMixin, above_space_limit, group_required
-from cookbook.models import Recipe, RecipeImport, ShareLink, Step
+from cookbook.models import Recipe, RecipeImport, ShareLink, Step, ConnectorConfig
 from recipes import settings
 
 
@@ -16,7 +15,7 @@ class RecipeCreate(GroupRequiredMixin, CreateView):
     groups_required = ['user']
     template_name = "generic/new_template.html"
     model = Recipe
-    fields = ('name',)
+    fields = ('name', )
 
     def form_valid(self, form):
         limit, msg = above_space_limit(self.request.space)
@@ -71,6 +70,35 @@ class StorageCreate(GroupRequiredMixin, CreateView):
         return context
 
 
+class ConnectorConfigCreate(GroupRequiredMixin, CreateView):
+    groups_required = ['admin']
+    template_name = "generic/new_template.html"
+    model = ConnectorConfig
+    form_class = ConnectorConfigForm
+    success_url = reverse_lazy('list_connector_config')
+
+    def form_valid(self, form):
+        if self.request.space.demo:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
+            return redirect('index')
+
+        if settings.DISABLE_EXTERNAL_CONNECTORS:
+            messages.add_message(self.request, messages.ERROR, _('This feature is not enabled by the server admin!'))
+            return redirect('index')
+
+        obj = form.save(commit=False)
+        obj.token = form.cleaned_data['update_token']
+        obj.created_by = self.request.user
+        obj.space = self.request.space
+        obj.save()
+        return HttpResponseRedirect(reverse('edit_connector_config', kwargs={'pk': obj.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("Connector Config Backend")
+        return context
+
+
 @group_required('user')
 def create_new_external_recipe(request, import_id):
     if request.method == "POST":
@@ -98,12 +126,6 @@ def create_new_external_recipe(request, import_id):
             messages.add_message(request, messages.ERROR, _('There was an error importing this recipe!'))
     else:
         new_recipe = get_object_or_404(RecipeImport, pk=import_id, space=request.space)
-        form = ImportRecipeForm(
-            initial={
-                'file_path': new_recipe.file_path,
-                'name': new_recipe.name,
-                'file_uid': new_recipe.file_uid
-            }, space=request.space
-        )
+        form = ImportRecipeForm(initial={'file_path': new_recipe.file_path, 'name': new_recipe.name, 'file_uid': new_recipe.file_uid}, space=request.space)
 
     return render(request, 'forms/edit_import_recipe.html', {'form': form})

@@ -13,10 +13,10 @@ from cookbook.managers import DICTIONARY
 from .models import (BookmarkletImport, Comment, CookLog, Food, ImportLog, Ingredient, InviteLink,
                      Keyword, MealPlan, MealType, NutritionInformation, Property, PropertyType,
                      Recipe, RecipeBook, RecipeBookEntry, RecipeImport, SearchPreference, ShareLink,
-                     ShoppingList, ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
+                     ShoppingListEntry, ShoppingListRecipe, Space, Step, Storage,
                      Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog,
                      TelegramBot, Unit, UnitConversion, UserFile, UserPreference, UserSpace,
-                     ViewLog)
+                     ViewLog, ConnectorConfig)
 
 
 class CustomUserAdmin(UserAdmin):
@@ -93,6 +93,14 @@ class StorageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Storage, StorageAdmin)
+
+
+class ConnectorConfigAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type', 'enabled', 'url')
+    search_fields = ('name', 'url')
+
+
+admin.site.register(ConnectorConfig, ConnectorConfigAdmin)
 
 
 class SyncAdmin(admin.ModelAdmin):
@@ -315,8 +323,8 @@ admin.site.register(MealPlan, MealPlanAdmin)
 
 
 class MealTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_by', 'order')
-    search_fields = ('name', 'created_by__username')
+    list_display = ('name', 'space', 'created_by', 'order')
+    search_fields = ('name', 'space', 'created_by__username')
 
 
 admin.site.register(MealType, MealTypeAdmin)
@@ -359,13 +367,6 @@ class ShoppingListEntryAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ShoppingListEntry, ShoppingListEntryAdmin)
-
-
-# class ShoppingListAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'created_by', 'created_at')
-
-
-# admin.site.register(ShoppingList, ShoppingListAdmin)
 
 
 class ShareLinkAdmin(admin.ModelAdmin):

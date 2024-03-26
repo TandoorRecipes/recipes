@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      
+      {
+        "name": "Python Debugger: Django",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/manage.py",
+        "args": ["runserver"],
+        "django": true,
+        "justMyCode": true
+      },
+    {
+      "name": "Python: Debug Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "purpose": [
+        "debug-test"
+      ],
+      "console": "integratedTerminal",
+      "env": {
+        "//comment": "coverage and pytest can't both be running at the same time",
+        "PYTEST_ADDOPTS": "--no-cov -n 2"
+      },
+      "django": true,
+      "justMyCode": true
+    },
+    ]
+  }

@@ -408,6 +408,7 @@ export class Models {
     static SHOPPING_CATEGORY = {
         name: "Shopping_Category",
         apiName: "SupermarketCategory",
+        merge: true,
         create: {
             params: [["name", "description"]],
             form: {
@@ -424,6 +425,15 @@ export class Models {
                     field: "description",
                     label: "Description",
                     placeholder: "",
+                    optional: true,
+                },
+                open_data_slug: {
+                    form_field: true,
+                    type: "text",
+                    field: "open_data_slug",
+                    disabled: true,
+                    label: "Open_Data_Slug",
+                    help_text: "open_data_help_text",
                     optional: true,
                 },
             },
@@ -517,6 +527,7 @@ export class Models {
             header_component: {
                 name: "BetaWarning",
             },
+            params: ["automation_type", "page", "pageSize", "options"],
         },
         create: {
             params: [["name", "description", "type", "param_1", "param_2", "param_3", "order", "disabled"]],
@@ -619,7 +630,7 @@ export class Models {
                 },
                 form_function: "AutomationOrderDefault",
             },
-        },
+        }
     }
 
     static UNIT_CONVERSION = {
@@ -1031,7 +1042,7 @@ export class Models {
     static CUSTOM_FILTER = {
         name: "Custom Filter",
         apiName: "CustomFilter",
-
+        paginated: true,
         create: {
             params: [["name", "search", "shared"]],
             form: {
@@ -1053,6 +1064,9 @@ export class Models {
                     multiple: true,
                 },
             },
+        },
+        list: {
+            params: ["page", "pageSize", "options"],
         },
     }
     static USER_NAME = {
@@ -1227,6 +1241,7 @@ export class Models {
     static STEP = {
         name: "Step",
         apiName: "Step",
+        paginated: true,
         list: {
             params: ["recipe", "query", "page", "pageSize", "options"],
         },
