@@ -164,14 +164,13 @@ class ExtendedRecipeMixin():
         return queryset
 
 
-# @extend_schema_view(
-#     list=extend_schema(
-#         parameters=[
-#             OpenApiParameter(name='query', description='Match name field against against parameter', type=str)
-#         ]
-#     )
-# )
-class FuzzyFilterMixin(ViewSetMixin, ExtendedRecipeMixin):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
+    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
+    OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
+    OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
+]))
+class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
@@ -293,7 +292,11 @@ class MergeMixin(ViewSetMixin):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TreeMixin(MergeMixin, FuzzyFilterMixin, ExtendedRecipeMixin):
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='root', description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.', type=int),
+    OpenApiParameter(name='tree', description='Return all self and children of {} with ID [int].', type=int),
+]))
+class TreeMixin(MergeMixin, FuzzyFilterMixin):
     # schema = TreeSchema()
     model = None
 
@@ -493,7 +496,8 @@ class SupermarketViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-class SupermarketCategoryViewSet(viewsets.ModelViewSet, FuzzyFilterMixin, MergeMixin):
+# TODO does supermarket category have settings to support fuzzy filtering and/or merge?
+class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
@@ -515,14 +519,7 @@ class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-# TODO make TreeMixin a view type and move schema to view type
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
-    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
-    OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
-    OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
-]))
-class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
+class KeywordViewSet(TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
@@ -530,15 +527,12 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(StandardFilterModelViewSet, MergeMixin):
+class UnitViewSet(MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-
-    def get_queryset(self):
-        return super().get_queryset()
 
 
 class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
@@ -552,14 +546,7 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
-# TODO make TreeMixin a view type and move schema to view type
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
-    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
-    OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
-    OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
-]))
-class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
+class FoodViewSet(TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
