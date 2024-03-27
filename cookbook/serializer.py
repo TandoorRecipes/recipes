@@ -5,6 +5,7 @@ from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
 
+from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
@@ -13,7 +14,8 @@ from django.http import BadHeaderError
 from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
-from drf_writable_nested import UniqueFieldsMixin, WritableNestedModelSerializer
+from drf_writable_nested import UniqueFieldsMixin
+from drf_writable_nested import WritableNestedModelSerializer as WNMS
 from oauth2_provider.models import AccessToken
 from PIL import Image
 from rest_framework import serializers
@@ -38,6 +40,33 @@ from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL
 
 
+class WritableNestedModelSerializer(WNMS):
+
+    # overload to_internal_value to allow using PK only on nested object
+    def to_internal_value(self, data):
+        # iterate through every field on the posted object
+        for f in list(data):
+            if f not in self.fields:
+                continue
+            elif issubclass(self.fields[f].__class__, serializers.Serializer):
+                # if the field is a serializer and an integer, assume its an ID of an existing object
+                if isinstance(data[f], int):
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
+                    data[f] = model_to_dict(self.fields[f].Meta.model.objects.get(id=data[f]), fields=required_fields)
+            elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
+                # if the field is a ListSerializer get dict values of PKs provided
+                if any(isinstance(x, int) for x in data[f]):
+                    # only retrieve serializer required fields
+                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].child.__class__().fields.items() if field.required]
+                    # filter values to integer values
+                    pk_data = [x for x in data[f] if isinstance(x, int)]
+                    # merge non-pk values with retrieved values
+                    data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                        + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+        return super().to_internal_value(data)
+
+
 class ExtendedRecipeMixin(serializers.ModelSerializer):
     # adds image and recipe count to serializer when query param extended=1
     # ORM path to this object from Recipe
@@ -56,8 +85,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
             api_serializer = None
         # extended values are computationally expensive and not needed in normal circumstances
         try:
-            if str2bool(
-                    self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
+            if str2bool(self.context['request'].query_params.get('extended', False)) and self.__class__ == api_serializer:
                 return fields
         except (AttributeError, KeyError):
             pass
@@ -122,16 +150,12 @@ class CustomOnHandField(serializers.Field):
         if not self.context["request"].user.is_authenticated:
             return []
         shared_users = []
-        if c := caches['default'].get(
-                f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
+        if c := caches['default'].get(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', None):
             shared_users = c
         else:
             try:
-                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [
-                    self.context['request'].user.id]
-                caches['default'].set(
-                    f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}',
-                    shared_users, timeout=5 * 60)
+                shared_users = [x.id for x in list(self.context['request'].user.get_shopping_share())] + [self.context['request'].user.id]
+                caches['default'].set(f'shopping_shared_users_{self.context["request"].space.id}_{self.context["request"].user.id}', shared_users, timeout=5 * 60)
                 # TODO ugly hack that improves API performance significantly, should be done properly
             except AttributeError:  # Anonymous users (using share links) don't have shared users
                 pass
