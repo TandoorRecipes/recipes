@@ -77,7 +77,6 @@ from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilte
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
 from cookbook.provider.nextcloud import Nextcloud
-from cookbook.schemas import FilterSchema, QueryParam, QueryParamAutoSchema, TreeSchema
 from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer,
                                  AutoMealPlanSerializer, BookmarkletImportListSerializer,
                                  BookmarkletImportSerializer, CookLogSerializer,
@@ -617,25 +616,26 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
         return self.serializer_class
 
     # TODO I could not find any usage of this and it causes schema generation issues, so commenting it for now
-    # @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
+    # this is used on the Shopping Badge
+    @decorators.action(detail=True, methods=['PUT'], serializer_class=FoodShoppingUpdateSerializer, )
     # # TODO DRF only allows one action in a decorator action without overriding get_operation_id_base() this should be PUT and DELETE probably
-    # def shopping(self, request, pk):
-    #     if self.request.space.demo:
-    #         raise PermissionDenied(detail='Not available in demo', code=None)
-    #     obj = self.get_object()
-    #     shared_users = list(self.request.user.get_shopping_share())
-    #     shared_users.append(request.user)
-    #     if request.data.get('_delete', False) == 'true':
-    #         ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by__in=shared_users).delete()
-    #         content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
-    #         return Response(content, status=status.HTTP_204_NO_CONTENT)
-    #
-    #     amount = request.data.get('amount', 1)
-    #     unit = request.data.get('unit', None)
-    #     content = {'msg': _(f'{obj.name} was added to the shopping list.')}
-    #
-    #     ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
-    #     return Response(content, status=status.HTTP_204_NO_CONTENT)
+    def shopping(self, request, pk):
+        if self.request.space.demo:
+            raise PermissionDenied(detail='Not available in demo', code=None)
+        obj = self.get_object()
+        shared_users = list(self.request.user.get_shopping_share())
+        shared_users.append(request.user)
+        if request.data.get('_delete', False) == 'true':
+            ShoppingListEntry.objects.filter(food=obj, checked=False, space=request.space, created_by__in=shared_users).delete()
+            content = {'msg': _(f'{obj.name} was removed from the shopping list.')}
+            return Response(content, status=status.HTTP_204_NO_CONTENT)
+
+        amount = request.data.get('amount', 1)
+        unit = request.data.get('unit', None)
+        content = {'msg': _(f'{obj.name} was added to the shopping list.')}
+
+        ShoppingListEntry.objects.create(food=obj, amount=amount, unit=unit, space=request.space, created_by=request.user)
+        return Response(content, status=status.HTTP_204_NO_CONTENT)
 
     @decorators.action(detail=True, methods=['POST'], )
     def fdc(self, request, pk):
@@ -663,13 +663,11 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
                                 json_dumps_params={'indent': 4})
 
         food.properties_food_amount = 100
-        food.properties_food_unit = Unit.objects.get_or_create(base_unit__iexact='g',
-                                                               space=self.request.space,
-                                                               defaults={
-                                                                   'name': 'g',
-                                                                   'base_unit': 'g',
-                                                                   'space': self.request.space
-                                                               })[0]
+        food.properties_food_unit = Unit.objects.get_or_create(
+            base_unit__iexact='g',
+            space=self.request.space,
+            defaults={ 'name': 'g', 'base_unit': 'g', 'space': self.request.space}
+        )[0]
 
         food.save()
 
@@ -772,9 +770,10 @@ MealPlanViewQueryParameters = [
     OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
 ]
 
+
 @extend_schema_view(
     list=extend_schema(
-        parameters= MealPlanViewQueryParameters
+        parameters=MealPlanViewQueryParameters
     ),
     ical=extend_schema(
         parameters=MealPlanViewQueryParameters,
@@ -811,13 +810,12 @@ class MealPlanViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(meal_type__in=meal_type)
 
         return queryset
-    
+
     @action(detail=False)
     def ical(self, request):
         from_date = self.request.query_params.get('from_date', None)
         to_date = self.request.query_params.get('to_date', None)
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
-
 
 
 class AutoPlanViewSet(viewsets.ViewSet):
@@ -1136,8 +1134,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer_class=RecipeFlatSerializer,
     )
     def flat(self, request):
-        qs = Recipe.objects.filter(
-            space=request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()  # TODO limit fields retrieved but .values() kills image
+        # TODO limit fields retrieved but .values() kills image
+        qs = Recipe.objects.filter(space=request.space).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).all()
 
         return Response(self.serializer_class(qs, many=True).data)
 
@@ -1284,14 +1282,18 @@ class ViewLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(created_by=self.request.user).filter(space=self.request.space)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int),
+        ]
+    )
+)
 class CookLogViewSet(viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
-    query_params = [
-        QueryParam(name='recipe', description=_('Filter for entries with the given recipe'), qtype='integer'),
-    ]
 
     def get_queryset(self):
         if self.request.query_params.get('recipe', None):
@@ -1801,6 +1803,7 @@ def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
         queryset = queryset.filter(to_date__lte=to_date)
 
     return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
+
 
 def meal_plans_to_ical(queryset, filename):
     cal = Calendar()
