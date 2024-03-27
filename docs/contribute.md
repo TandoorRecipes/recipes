@@ -66,7 +66,7 @@ Most new frontend pages are build using [Vue.js](https://vuejs.org/).
 
 In order to work on these pages, you will have to install a Javascript package manager of your choice. The following examples use yarn.
 
-In the `vue` folder run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
+In the `vue3` folder run `yarn install` to install the dependencies. After that you can use `yarn serve` to start the development server,
 and proceed to test your changes. If you do not wish to work on those pages, but instead want the application to work properly during 
 development, run `yarn build` to build the frontend pages once. 
 
@@ -76,9 +76,9 @@ For this [openapi-generator](https://github.com/OpenAPITools/openapi-generator) 
 
 Install it using your desired setup method. (For example, using `npm install @openapitools/openapi-generator-cli -g`.)
 
-Navigate to `vue/src/utils/openapi`.
+Navigate to `vue3/src/openapi`.
 
-Generate the schema using `openapi-generator-cli generate -g typescript-axios -i http://127.0.0.1:8000/openapi/`. (Replace your dev server url if required.)
+Generate the schema using `openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi/`. (Replace your dev server url if required.)
 
 ## Contribute Documentation
 The documentation is built from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
