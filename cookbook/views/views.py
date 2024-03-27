@@ -19,10 +19,11 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
+from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
 from cookbook.forms import CommentForm, Recipe, SearchPreferenceForm, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm, UserPreference
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import group_required, has_group_permission, share_link_valid, switch_user_active_space
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, group_required, has_group_permission, share_link_valid, switch_user_active_space
 from cookbook.models import Comment, CookLog, InviteLink, SearchFields, SearchPreference, ShareLink, Space, UserSpace, ViewLog
 from cookbook.tables import CookLogTable, ViewLogTable
 from cookbook.templatetags.theming_tags import get_theming_values
@@ -38,16 +39,20 @@ def index(request):
             return HttpResponseRedirect(reverse_lazy('view_search'))
 
     try:
-        page_map = {UserPreference.SEARCH: reverse_lazy('view_search'), UserPreference.PLAN: reverse_lazy('view_plan'), UserPreference.BOOKS: reverse_lazy('view_books'), UserPreference.SHOPPING: reverse_lazy('view_shopping'),}
+        page_map = {
+            UserPreference.SEARCH: reverse_lazy('view_search'),
+            UserPreference.PLAN: reverse_lazy('view_plan'),
+            UserPreference.BOOKS: reverse_lazy('view_books'),
+            UserPreference.SHOPPING: reverse_lazy('view_shopping'),
+        }
 
         return HttpResponseRedirect(page_map.get(request.user.userpreference.default_page))
     except UserPreference.DoesNotExist:
         return HttpResponseRedirect(reverse('view_search'))
 
 
-# TODO need to deprecate
 def search(request):
-    if has_group_permission(request.user, ('guest',)):
+    if has_group_permission(request.user, ('guest', )):
         return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
@@ -127,7 +132,7 @@ def recipe_view(request, pk, share=None):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
 
-        if not (has_group_permission(request.user, ('guest',)) and recipe.space == request.space) and not share_link_valid(recipe, share):
+        if not (has_group_permission(request.user, ('guest', )) and recipe.space == request.space) and not share_link_valid(recipe, share):
             messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
             return HttpResponseRedirect(reverse('index'))
 
@@ -158,7 +163,6 @@ def recipe_view(request, pk, share=None):
         if request.method == "GET" and 'servings' in request.GET:
             servings = request.GET.get("servings")
         return render(request, 'recipe_view.html', {'recipe': recipe, 'comments': comments, 'comment_form': comment_form, 'share': share, 'servings': servings})
-
 
 
 @group_required('user')
@@ -346,8 +350,17 @@ def system(request):
 
     return render(
         request, 'system.html', {
-            'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'postgres_version': postgres_ver, 'postgres_status': database_status,
-            'postgres_message': database_message, 'version_info': VERSION_INFO, 'plugins': PLUGINS, 'secret_key': secret_key, 'orphans': orphans, 'migration_info': migration_info,
+            'gunicorn_media': settings.GUNICORN_MEDIA,
+            'debug': settings.DEBUG,
+            'postgres': postgres,
+            'postgres_version': postgres_ver,
+            'postgres_status': database_status,
+            'postgres_message': database_message,
+            'version_info': VERSION_INFO,
+            'plugins': PLUGINS,
+            'secret_key': secret_key,
+            'orphans': orphans,
+            'migration_info': migration_info,
             'missing_migration': missing_migration,
         })
 
@@ -358,8 +371,7 @@ def setup(request):
             messages.add_message(
                 request, messages.ERROR,
                 _('The setup page can only be used to create the first user! \
-                    If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'
-                  ))
+                    If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
             return HttpResponseRedirect(reverse('account_login'))
 
         if request.method == 'POST':
@@ -441,24 +453,63 @@ def report_share_abuse(request, token):
 def web_manifest(request):
     theme_values = get_theming_values(request)
 
-    icons = [{"src": theme_values['logo_color_svg'], "sizes": "any"}, {"src": theme_values['logo_color_144'], "type": "image/png", "sizes": "144x144"},
-             {"src": theme_values['logo_color_512'], "type": "image/png", "sizes": "512x512"}]
+    icons = [{
+        "src": theme_values['logo_color_svg'],
+        "sizes": "any"
+    }, {
+        "src": theme_values['logo_color_144'],
+        "type": "image/png",
+        "sizes": "144x144"
+    }, {
+        "src": theme_values['logo_color_512'],
+        "type": "image/png",
+        "sizes": "512x512"
+    }]
 
     manifest_info = {
         "name":
-            theme_values['app_name'], "short_name":
-            theme_values['app_name'], "description":
-            _("Manage recipes, shopping list, meal plans and more."), "icons":
-            icons, "start_url":
-            "./", "background_color":
-            theme_values['nav_bg_color'], "display":
-            "standalone", "scope":
-            ".", "theme_color":
-            theme_values['nav_bg_color'], "shortcuts":
-            [{"name": _("Plan"), "short_name": _("Plan"), "description": _("View your meal Plan"), "url":
-                "./plan"}, {"name": _("Books"), "short_name": _("Books"), "description": _("View your cookbooks"), "url": "./books"},
-             {"name": _("Shopping"), "short_name": _("Shopping"), "description": _("View your shopping lists"), "url":
-                 "./shopping/"}], "share_target": {"action": "/data/import/url", "method": "GET", "params": {"title": "title", "url": "url", "text": "text"}}
+        theme_values['app_name'],
+        "short_name":
+        theme_values['app_name'],
+        "description":
+        _("Manage recipes, shopping list, meal plans and more."),
+        "icons":
+        icons,
+        "start_url":
+        "./",
+        "background_color":
+        theme_values['nav_bg_color'],
+        "display":
+        "standalone",
+        "scope":
+        ".",
+        "theme_color":
+        theme_values['nav_bg_color'],
+        "shortcuts": [{
+            "name": _("Plan"),
+            "short_name": _("Plan"),
+            "description": _("View your meal Plan"),
+            "url": "./plan"
+        }, {
+            "name": _("Books"),
+            "short_name": _("Books"),
+            "description": _("View your cookbooks"),
+            "url": "./books"
+        }, {
+            "name": _("Shopping"),
+            "short_name": _("Shopping"),
+            "description": _("View your shopping lists"),
+            "url": "./shopping/"
+        }],
+        "share_target": {
+            "action": "/data/import/url",
+            "method": "GET",
+            "params": {
+                "title": "title",
+                "url": "url",
+                "text": "text"
+            }
+        }
     }
 
     return JsonResponse(manifest_info, json_dumps_params={'indent': 4})
@@ -472,9 +523,14 @@ def search_info(request):
     return render(request, 'search_info.html', {})
 
 
-@group_required('guest')
-def api_info(request):
-    return render(request, 'api_info.html', {})
+class Redoc(GroupRequiredMixin, SpectacularRedocView):
+    permission_classes = [CustomIsGuest]
+    groups_required = ['guest']
+
+
+class Swagger(GroupRequiredMixin, SpectacularSwaggerView):
+    permission_classes = [CustomIsGuest]
+    groups_required = ['guest']
 
 
 def offline(request):
