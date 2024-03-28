@@ -52,14 +52,14 @@
     "src": "node_modules/mavon-editor/dist/font/fontello.woff2"
   },
   "src/apps/tandoor/main.ts": {
-    "file": "assets/main-D49MKQU0.js",
+    "file": "assets/main-CnbWi3Kc.js",
     "src": "src/apps/tandoor/main.ts",
     "isEntry": true,
     "css": [
-      "assets/main-g3hspULu.css"
+      "assets/main-BiQ-D_PZ.css"
     ],
     "assets": [
-      "assets/brand_logo-D4X97p3N.svg",
+      "assets/brand_logo-B3nCJMk0.svg",
       "assets/fa-brands-400-C99Yv4gD.woff2",
       "assets/fa-brands-400-DtZKBM2a.ttf",
       "assets/fa-regular-400-OOsPf1xj.woff2",
@@ -76,7 +76,7 @@
     ]
   },
   "src/assets/brand_logo.svg": {
-    "file": "assets/brand_logo-D4X97p3N.svg",
+    "file": "assets/brand_logo-B3nCJMk0.svg",
     "src": "src/assets/brand_logo.svg"
   }
 }
