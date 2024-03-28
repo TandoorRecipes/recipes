@@ -3,15 +3,14 @@ name: Continuous Integration
 on: [push, pull_request]
 
 jobs:
-  build:
-    if: github.repository_owner == 'TandoorRecipes'
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ['3.12']
-        node-version: ['20']
-
+    build:
+        if: github.repository_owner == 'TandoorRecipes'
+        runs-on: ubuntu-latest
+        strategy:
+            max-parallel: 4
+            matrix:
+                python-version: ["3.10"]
+                node-version: ["18"]
         steps:
             - uses: actions/checkout@v4
             - uses: awalsh128/cache-apt-pkgs-action@v1.4.1
