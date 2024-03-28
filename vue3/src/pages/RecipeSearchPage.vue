@@ -25,11 +25,12 @@ import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindo
 import {DateTime} from "luxon";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue";
+import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 
 
 export default defineComponent({
     name: "RecipeSearchPage",
-    components: {HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
+    components: {MealPlanDialog, HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
     computed: {
 
         meal_plan_grid: function () {

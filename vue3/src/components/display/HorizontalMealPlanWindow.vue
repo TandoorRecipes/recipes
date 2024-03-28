@@ -19,7 +19,10 @@
                                             {{ mealPlanGridItem.date_label }}
                                         </div>
                                         <div class="align-self-center">
-                                            <v-btn variant="flat" icon="fas fa-plus" size="small"></v-btn>
+                                            <v-btn variant="flat" icon="">
+                                                <i class="fas fa-plus"></i>
+                                                <meal-plan-dialog></meal-plan-dialog>
+                                            </v-btn>
                                         </div>
                                     </div>
 
@@ -37,6 +40,7 @@
                                     <v-list-item-subtitle>
                                         {{ p.mealType.name }}
                                     </v-list-item-subtitle>
+                                    <meal-plan-dialog></meal-plan-dialog>
                                 </v-list-item>
 
                             </v-list>
@@ -57,6 +61,7 @@ import {useDisplay} from "vuetify";
 import {MealPlan, Recipe, RecipeOverview} from "@/openapi";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {DateTime} from "luxon";
+import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 
 const {mdAndUp} = useDisplay()
 const loading = ref(false)
