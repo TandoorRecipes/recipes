@@ -80,7 +80,6 @@ data/
 /docker-compose.override.yml
 vue/node_modules
 /recipes/plugins
-.vscode/
 vetur.config.js
 cookbook/static/vue
 vue/webpack-stats.json

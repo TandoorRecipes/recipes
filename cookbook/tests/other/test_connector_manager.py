@@ -3,8 +3,8 @@ from django.contrib import auth
 from mock.mock import Mock
 
 from cookbook.connectors.connector import Connector
-from cookbook.connectors.connector_manager import run_connectors, ActionType
-from cookbook.models import ShoppingListEntry, Food
+from cookbook.connectors.connector_manager import ActionType, run_connectors
+from cookbook.models import Food, ShoppingListEntry
 
 
 @pytest.fixture()
@@ -13,7 +13,7 @@ def obj_1(space_1, u1_s1):
     return e
 
 
-@pytest.mark.timeout(10)
+@pytest.mark.timeout(10)  # TODO this mark doesn't exist
 @pytest.mark.asyncio
 async def test_run_connectors(space_1, u1_s1, obj_1) -> None:
     connector_mock = Mock(spec=Connector)

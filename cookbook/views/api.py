@@ -631,7 +631,7 @@ class FoodViewSet(TreeMixin):
         food.properties_food_unit = Unit.objects.get_or_create(
             base_unit__iexact='g',
             space=self.request.space,
-            defaults={ 'name': 'g', 'base_unit': 'g', 'space': self.request.space}
+            defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space}
         )[0]
 
         food.save()
@@ -776,6 +776,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
 
 class AutoPlanViewSet(viewsets.ViewSet):
+    http_method_names = ['post', 'options']
 
     def create(self, request):
         serializer = AutoMealPlanSerializer(data=request.data)
@@ -1693,6 +1694,7 @@ def share_link(request, pk):
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
+# TODO does this need to be seperate from the Cooklog API?
 @group_required('user')
 @ajax_request
 def log_cooking(request, recipe_id):
