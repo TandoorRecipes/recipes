@@ -61,9 +61,10 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
-            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
+
         const consumes: runtime.Consume[] = [
             { contentType: 'application/x-www-form-urlencoded' },
             { contentType: 'multipart/form-data' },

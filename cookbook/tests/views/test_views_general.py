@@ -119,3 +119,13 @@ def test_markdown_doc(arg, request, ext_recipe_1_s1):
 def test_api_info(arg, request, ext_recipe_1_s1):
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse('docs_api')).status_code == arg[1]
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_api_swagger(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('docs_api')).status_code == arg[1]

@@ -417,7 +417,6 @@ class ConnectorConfig(models.Model, PermissionModelMixin):
     objects = ScopedManager(space='space')
 
 
-
 class UserPreference(models.Model, PermissionModelMixin):
     # Themes
     BOOTSTRAP = 'BOOTSTRAP'

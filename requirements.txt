@@ -1,5 +1,5 @@
 Django==4.2.11
-cryptography===42.0.4
+cryptography===42.0.5
 django-annoying==0.10.6
 django-cleanup==8.0.0
 django-crispy-forms==2.0
@@ -12,7 +12,7 @@ drf-spectacular-sidecar==2024.2.1
 django-oauth-toolkit==2.3.0
 django-debug-toolbar==4.2.0
 bleach==6.0.0
-gunicorn==20.1.0
+gunicorn==21.2.0
 lxml==5.1.0
 Markdown==3.5.1
 Pillow==10.2.0
@@ -35,7 +35,7 @@ django-allauth==0.61.1
 recipe-scrapers==14.52.0
 django-scopes==2.0.0
 django-treebeard==4.7
-django-cors-headers==4.2.0
+django-cors-headers==4.3.1
 django-storages==1.14.2
 boto3==1.28.75
 django-prometheus==2.2.0
@@ -56,3 +56,4 @@ pytest-factoryboy==2.6.0
 pytest-html==4.1.1
 pytest-asyncio==0.23.5
 pytest-xdist==3.5.0
+django-vite==3.0.3

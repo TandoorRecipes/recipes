@@ -2,9 +2,8 @@ from pydoc import locate
 
 from django.urls import include, path
 from django.views.generic import TemplateView
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
-from rest_framework import permissions, routers
-from rest_framework.schemas import get_schema_view
+from drf_spectacular.views import SpectacularAPIView
+from rest_framework import routers
 
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
@@ -16,7 +15,7 @@ from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keywor
 
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
-import datetime
+
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
@@ -137,17 +136,15 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/search/', views.search_info, name='docs_search'),
-    path('docs/api/',  SpectacularRedocView.as_view(url_name='openapi-schema'), name='docs_api'),
-
+    path('docs/api/',  views.Redoc.as_view(url_name='openapi-schema'), name='docs_api'),
+    path('docs/swagger/',  views.Swagger.as_view(url_name='openapi-schema'), name='docs_swagger'),
     path('openapi/', SpectacularAPIView.as_view(api_version=TANDOOR_VERSION), name='openapi-schema'),
-
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
     path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript',
-                                                    )), name='service_worker'),
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 ]
 

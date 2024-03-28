@@ -415,7 +415,7 @@
     "plan_share_desc": "Novo Plano de Refeição será automaticamente compartilhado com os usuários selecionados.",
     "Create Recipe": "Criar Receita",
     "Import Recipe": "Importar Receita",
-    "App": "App",
+    "App": "Aplicação",
     "Default_Unit": "Unidade Padrão",
     "Use_Fractions": "Usar Frações",
     "Use_Fractions_Help": "Automaticamente converter decimais para frações quando visualizando uma receita.",
@@ -501,5 +501,6 @@
     "Alignment": "Alinhamento",
     "Auto_Sort_Help": "Mover todos os ingredientes para o passo mais indicado.",
     "Ingredient Overview": "Ingredientes - Visão Geral",
-    "Cosmetic": "Aparência"
+    "Cosmetic": "Aparência",
+    "err_importing_recipe": "Não existem erros ao importar a receita!"
 }
