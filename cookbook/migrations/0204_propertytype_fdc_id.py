@@ -17,4 +17,9 @@ class Migration(migrations.Migration):
             name='fdc_id',
             field=models.CharField(blank=True, default=None, max_length=128, null=True),
         ),
+        migrations.AddField(
+            model_name="userpreference",
+            name="ingredient_context",
+            field=models.BooleanField(default=False),
+        ),
     ]
