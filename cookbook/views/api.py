@@ -628,13 +628,11 @@ class FoodViewSet(TreeMixin):
                                 json_dumps_params={'indent': 4})
 
         food.properties_food_amount = 100
-        food.properties_food_unit = Unit.objects.get_or_create(base_unit__iexact='g',
-                                                               space=self.request.space,
-                                                               defaults={
-                                                                   'name': 'g',
-                                                                   'base_unit': 'g',
-                                                                   'space': self.request.space
-                                                               })[0]
+        food.properties_food_unit = Unit.objects.get_or_create(
+            base_unit__iexact='g',
+            space=self.request.space,
+            defaults={ 'name': 'g', 'base_unit': 'g', 'space': self.request.space}
+        )[0]
 
         food.save()
 
@@ -930,39 +928,15 @@ class RecipePagination(PageNumberPagination):
     OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int),
     OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int),
     OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int),
-    OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. ['
-                                                    'true'
-                                                    '/'
-                                                    '<b>false</b>'
-                                                    ']')),
-    OpenApiParameter(name='random', description=_('Returns the results in randomized order. ['
-                                                  'true'
-                                                  '/'
-                                                  '<b>false</b>'
-                                                  ']')),
-    OpenApiParameter(name='new', description=_('Returns new results first in search results. ['
-                                               'true'
-                                               '/'
-                                               '<b>false</b>'
-                                               ']')),
+    OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), type=int),
-    OpenApiParameter(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending '
-                                                    '-'
-                                                    ' filters on or before date.')),
-    OpenApiParameter(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending '
-                                                     '-'
-                                                     ' filters on or before date.')),
-    OpenApiParameter(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending '
-                                                     '-'
-                                                     ' filters on or before date.')),
-    OpenApiParameter(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending '
-                                                    '-'
-                                                    ' filters on or before date.')),
-    OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. ['
-                                                   'true'
-                                                   '/'
-                                                   '<b>false</b>'
-                                                   ']')),
+    OpenApiParameter(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+    OpenApiParameter(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+    OpenApiParameter(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+    OpenApiParameter(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
+    OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
 ]))
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects
@@ -1153,21 +1127,13 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
-    OpenApiParameter(name='checked',
-                     description=_('Filter shopping list entries on checked.  ['
-                                   'true'
-                                   ', '
-                                   'false'
-                                   ', '
-                                   'both'
-                                   ', '
-                                   '<b>recent</b>'
-                                   ']<br>  \
-                            - '
-                                   'recent'
-                                   ' includes unchecked items and recently completed items.')),
-    OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
+            OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
+            OpenApiParameter(
+                name='checked',
+                description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
+                            - ''recent'' includes unchecked items and recently completed items.')
+            ),
+            OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
 ]))
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
@@ -1344,7 +1310,8 @@ class AutomationViewSet(StandardFilterModelViewSet):
     }
 
     @extend_schema(
-        parameters=[OpenApiParameter(name='automation_type', description=_('Return the Automations matching the automation type.  Multiple values allowed.'), type=str)])
+        parameters=[OpenApiParameter(name='automation_type', description=_('Return the Automations matching the automation type.  Multiple values allowed.'), type=str)]
+    )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -1507,7 +1474,7 @@ class RecipeUrlImportView(APIView):
                     'recipe_json': helper.get_from_scraper(scrape, request),
                     'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
                 },
-                                status=status.HTTP_200_OK)
+                    status=status.HTTP_200_OK)
 
             else:
                 return Response({'error': True, 'msg': _('No usable data could be found.')}, status=status.HTTP_400_BAD_REQUEST)
@@ -1718,7 +1685,7 @@ def sync_all(request):
 # @schema(AutoSchema()) #TODO add proper schema
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
-    if request.space.allow_sharing and has_group_permission(request.user, ('user', )):
+    if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk, space=request.space)
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})

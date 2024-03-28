@@ -294,6 +294,73 @@ export interface ConnectorConfigConfig {
 /**
  * 
  * @export
+ * @interface ConnectorConfigConfig
+ */
+export interface ConnectorConfigConfig {
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectorConfigConfig
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    token?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    todo_entity?: string | null;
+    /**
+     * Is Connector Enabled
+     * @type {boolean}
+     * @memberof ConnectorConfigConfig
+     */
+    enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfig
+     */
+    on_shopping_list_entry_created_enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfig
+     */
+    on_shopping_list_entry_updated_enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfig
+     */
+    on_shopping_list_entry_deleted_enabled?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    created_by?: string;
+}
+/**
+ * 
+ * @export
  * @interface CookLog
  */
 export interface CookLog {
@@ -2206,6 +2273,12 @@ export interface PatchedImportLog {
     id?: number;
     /**
      * 
+     * @type {OpenDataUnitVersion}
+     * @memberof OpenDataConversion
+     */
+    version: OpenDataUnitVersion;
+    /**
+     * 
      * @type {string}
      * @memberof PatchedImportLog
      */
@@ -2352,6 +2425,12 @@ export interface PatchedInviteLink {
     id?: number;
     /**
      * 
+     * @type {OpenDataUnitVersion}
+     * @memberof OpenDataConversionFoodPreferredUnitMetric
+     */
+    version: OpenDataUnitVersion;
+    /**
+     * 
      * @type {string}
      * @memberof PatchedInviteLink
      */
@@ -2419,6 +2498,12 @@ export interface PatchedKeyword {
     id?: number;
     /**
      * 
+     * @type {OpenDataUnitVersion}
+     * @memberof OpenDataConversionFoodPropertiesFoodUnit
+     */
+    version: OpenDataUnitVersion;
+    /**
+     * 
      * @type {string}
      * @memberof PatchedKeyword
      */
@@ -2447,6 +2532,12 @@ export interface PatchedKeyword {
      * @memberof PatchedKeyword
      */
     numchild?: number;
+    /**
+     * 
+     * @type {OpenDataUnitVersion}
+     * @memberof OpenDataConversionFoodProperty
+     */
+    version: OpenDataUnitVersion;
     /**
      * 
      * @type {string}
@@ -2721,13 +2812,13 @@ export interface PatchedRecipe {
      * @type {number}
      * @memberof PatchedRecipe
      */
-    working_time?: number;
+    description?: string;
     /**
      * 
      * @type {number}
      * @memberof PatchedRecipe
      */
-    waiting_time?: number;
+    comment?: string;
     /**
      * 
      * @type {number}
@@ -2739,13 +2830,13 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    created_at?: string;
+    id?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipe
      */
-    updated_at?: string;
+    category: OpenDataStoreCategory;
     /**
      * 
      * @type {string}
@@ -2757,7 +2848,7 @@ export interface PatchedRecipe {
      * @type {boolean}
      * @memberof PatchedRecipe
      */
-    internal?: boolean;
+    store: number;
     /**
      * 
      * @type {boolean}
@@ -2787,7 +2878,14 @@ export interface PatchedRecipe {
      * @type {number}
      * @memberof PatchedRecipe
      */
-    servings?: number;
+    order?: number;
+}
+/**
+ * 
+ * @export
+ * @interface OpenDataUnit
+ */
+export interface OpenDataUnit {
     /**
      * 
      * @type {string}
@@ -2799,19 +2897,19 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    servings_text?: string;
+    id?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipe
      */
-    rating?: string | null;
+    version: OpenDataUnitVersion;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipe
      */
-    last_cooked?: string | null;
+    slug: string;
     /**
      * 
      * @type {boolean}
@@ -2836,7 +2934,7 @@ export interface PatchedRecipeBook {
      * @type {number}
      * @memberof PatchedRecipeBook
      */
-    id?: number;
+    base_unit?: OpenDataUnitBaseUnitEnum;
     /**
      * 
      * @type {string}
@@ -2874,6 +2972,7 @@ export interface PatchedRecipeBook {
      */
     order?: number;
 }
+
 /**
  * 
  * @export
@@ -3274,6 +3373,13 @@ export interface PatchedStep {
      * @memberof PatchedStep
      */
     order?: number;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeBookEntry
+ */
+export interface RecipeBookEntry {
     /**
      * 
      * @type {boolean}
@@ -3514,6 +3620,18 @@ export interface PatchedUnit {
      * @memberof PatchedUnit
      */
     id?: number;
+    /**
+     * 
+     * @type {IngredientFood}
+     * @memberof RecipeIngredients
+     */
+    food: IngredientFood | null;
+    /**
+     * 
+     * @type {FoodPropertiesFoodUnit}
+     * @memberof RecipeIngredients
+     */
+    unit: FoodPropertiesFoodUnit | null;
     /**
      * 
      * @type {string}
@@ -4612,7 +4730,7 @@ export interface Space {
      * @type {string}
      * @memberof Space
      */
-    name?: string;
+    waiting_time?: number;
     /**
      * 
      * @type {number}
@@ -4622,15 +4740,15 @@ export interface Space {
     /**
      * 
      * @type {string}
-     * @memberof Space
+     * @memberof RecipeOverview
      */
     created_at: string;
     /**
      * 
      * @type {string}
-     * @memberof Space
+     * @memberof RecipeOverview
      */
-    message?: string;
+    updated_at?: string;
     /**
      * 
      * @type {number}
@@ -4646,19 +4764,19 @@ export interface Space {
     /**
      * 
      * @type {number}
-     * @memberof Space
+     * @memberof RecipeOverview
      */
     max_users: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof Space
+     * @type {string}
+     * @memberof RecipeOverview
      */
     allow_sharing: boolean;
     /**
      * 
-     * @type {boolean}
-     * @memberof Space
+     * @type {string}
+     * @memberof RecipeOverview
      */
     demo: boolean;
     /**
@@ -4670,19 +4788,19 @@ export interface Space {
     /**
      * 
      * @type {string}
-     * @memberof Space
+     * @memberof RecipeOverview
      */
     user_count: string;
     /**
      * 
      * @type {string}
-     * @memberof Space
+     * @memberof RecipeOverview
      */
     recipe_count: string;
     /**
      * 
-     * @type {string}
-     * @memberof Space
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
      */
     file_size_mb: string;
     /**
@@ -4712,9 +4830,9 @@ export interface Space {
     /**
      * 
      * @type {string}
-     * @memberof Space
+     * @memberof RecipeSimple
      */
-    nav_bg_color?: string;
+    name: string;
     /**
      * 
      * @type {SpaceNavTextColorEnum}
@@ -4793,25 +4911,25 @@ export enum SpaceThemeEnum {
 /**
  * Adds nested create feature
  * @export
- * @interface Step
+ * @interface RecipeSteps
  */
-export interface Step {
+export interface RecipeSteps {
     /**
      * 
      * @type {number}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     instruction?: string;
     /**
@@ -4829,19 +4947,19 @@ export interface Step {
     /**
      * 
      * @type {number}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     time?: number;
     /**
      * 
      * @type {number}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     show_as_header?: boolean;
     /**
@@ -4853,46 +4971,46 @@ export interface Step {
     /**
      * 
      * @type {number}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     step_recipe?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     step_recipe_data: string;
     /**
      * 
      * @type {string}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     numrecipe: string;
     /**
      * 
      * @type {boolean}
-     * @memberof Step
+     * @memberof RecipeSteps
      */
     show_ingredients_table?: boolean;
 }
 /**
  * 
  * @export
- * @interface Storage
+ * @interface ShoppingList
  */
-export interface Storage {
+export interface ShoppingList {
     /**
      * 
      * @type {number}
-     * @memberof Storage
+     * @memberof ShoppingList
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof Storage
+     * @memberof ShoppingList
      */
-    name: string;
+    uuid?: string;
     /**
      * 
      * @type {MethodEnum}
@@ -4901,22 +5019,34 @@ export interface Storage {
     method?: MethodEnum;
     /**
      * 
-     * @type {string}
-     * @memberof Storage
+     * @type {Array<ShoppingListRecipes>}
+     * @memberof ShoppingList
      */
-    username?: string | null;
+    recipes: Array<ShoppingListRecipes> | null;
     /**
      * 
-     * @type {string}
-     * @memberof Storage
+     * @type {Array<ShoppingListEntries>}
+     * @memberof ShoppingList
      */
-    password?: string | null;
+    entries: Array<ShoppingListEntries> | null;
     /**
      * 
-     * @type {string}
-     * @memberof Storage
+     * @type {Array<CustomFilterShared>}
+     * @memberof ShoppingList
      */
-    token?: string | null;
+    shared: Array<CustomFilterShared>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShoppingList
+     */
+    finished?: boolean;
+    /**
+     * 
+     * @type {ShoppingListSupermarket}
+     * @memberof ShoppingList
+     */
+    supermarket: ShoppingListSupermarket | null;
     /**
      * 
      * @type {number}
@@ -4927,27 +5057,27 @@ export interface Storage {
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
- * @interface Supermarket
+ * @interface ShoppingListEntries
  */
-export interface Supermarket {
+export interface ShoppingListEntries {
     /**
      * 
      * @type {number}
-     * @memberof Supermarket
+     * @memberof ShoppingListEntries
      */
     id: number;
     /**
      * 
-     * @type {string}
-     * @memberof Supermarket
+     * @type {number}
+     * @memberof ShoppingListEntries
      */
-    name: string;
+    list_recipe?: number | null;
     /**
      * 
-     * @type {string}
-     * @memberof Supermarket
+     * @type {IngredientFood}
+     * @memberof ShoppingListEntries
      */
-    description?: string | null;
+    food: IngredientFood | null;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -4957,7 +5087,7 @@ export interface Supermarket {
     /**
      * 
      * @type {string}
-     * @memberof Supermarket
+     * @memberof ShoppingListEntries
      */
     open_data_slug?: string | null;
 }
@@ -4970,19 +5100,19 @@ export interface SupermarketCategory {
     /**
      * 
      * @type {number}
-     * @memberof SupermarketCategory
+     * @memberof ShoppingListEntries
      */
     id: number;
     /**
      * 
-     * @type {string}
-     * @memberof SupermarketCategory
+     * @type {boolean}
+     * @memberof ShoppingListEntries
      */
-    name: string;
+    checked?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof SupermarketCategory
+     * @type {ShoppingListRecipeMealplan}
+     * @memberof ShoppingListEntries
      */
     description?: string | null;
 }
@@ -4994,8 +5124,8 @@ export interface SupermarketCategory {
 export interface SupermarketCategoryRelation {
     /**
      * 
-     * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @type {CookLogCreatedBy}
+     * @memberof ShoppingListEntries
      */
     id: number;
     /**
@@ -5006,100 +5136,137 @@ export interface SupermarketCategoryRelation {
     category: SupermarketCategory;
     /**
      * 
-     * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @type {string}
+     * @memberof ShoppingListEntries
      */
-    supermarket: number;
+    updated_at?: string;
     /**
      * 
-     * @type {number}
-     * @memberof SupermarketCategoryRelation
+     * @type {string}
+     * @memberof ShoppingListEntries
      */
-    order?: number;
+    completed_at?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntries
+     */
+    delay_until?: string | null;
 }
 /**
  * 
  * @export
- * @interface Sync
+ * @interface ShoppingListEntry
  */
-export interface Sync {
+export interface ShoppingListEntry {
     /**
      * 
      * @type {number}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
     id: number;
     /**
      * 
      * @type {number}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
-    storage: number;
+    list_recipe?: number | null;
+    /**
+     * 
+     * @type {IngredientFood}
+     * @memberof ShoppingListEntry
+     */
+    food: IngredientFood | null;
+    /**
+     * 
+     * @type {FoodPropertiesFoodUnit}
+     * @memberof ShoppingListEntry
+     */
+    unit?: FoodPropertiesFoodUnit | null;
     /**
      * 
      * @type {string}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
-    path?: string;
+    amount: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntry
+     */
+    order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
-    active?: boolean;
+    checked?: boolean;
+    /**
+     * 
+     * @type {ShoppingListRecipeMealplan}
+     * @memberof ShoppingListEntry
+     */
+    recipe_mealplan?: ShoppingListRecipeMealplan;
+    /**
+     * 
+     * @type {CookLogCreatedBy}
+     * @memberof ShoppingListEntry
+     */
+    created_by?: CookLogCreatedBy;
     /**
      * 
      * @type {string}
-     * @memberof Sync
-     */
-    last_checked?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
     created_at: string;
     /**
      * 
      * @type {string}
-     * @memberof Sync
+     * @memberof ShoppingListEntry
      */
     updated_at: string;
 }
 /**
  * 
  * @export
- * @interface SyncLog
+ * @interface ShoppingListEntryBulk
  */
-export interface SyncLog {
+export interface ShoppingListEntryBulk {
     /**
      * 
-     * @type {number}
-     * @memberof SyncLog
+     * @type {Array<any>}
+     * @memberof ShoppingListEntryBulk
      */
     id: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ShoppingListEntryBulk
+     */
+    checked: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface ShoppingListRecipe
+ */
+export interface ShoppingListRecipe {
+    /**
+     * 
      * @type {number}
-     * @memberof SyncLog
+     * @memberof ShoppingListRecipe
      */
-    sync: number;
+    id?: number;
     /**
      * 
      * @type {string}
-     * @memberof SyncLog
+     * @memberof ShoppingListRecipe
      */
-    status: string;
+    recipe_name?: string;
     /**
      * 
      * @type {string}
-     * @memberof SyncLog
-     */
-    msg?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof SyncLog
+     * @memberof ShoppingListRecipe
      */
     created_at: string;
 }
@@ -5144,64 +5311,64 @@ export interface Unit {
     /**
      * 
      * @type {number}
-     * @memberof Unit
+     * @memberof ShoppingListRecipe
      */
     id: number;
     /**
      * 
-     * @type {string}
-     * @memberof Unit
+     * @type {number}
+     * @memberof ShoppingListRecipe
      */
-    name: string;
+    mealplan?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof Unit
+     * @memberof ShoppingListRecipe
      */
-    plural_name?: string | null;
+    servings: string;
     /**
      * 
      * @type {string}
-     * @memberof Unit
+     * @memberof ShoppingListRecipe
      */
-    description?: string | null;
+    mealplan_note?: string;
     /**
      * 
      * @type {string}
-     * @memberof Unit
+     * @memberof ShoppingListRecipe
      */
-    base_unit?: string | null;
+    mealplan_from_date?: string;
     /**
      * 
      * @type {string}
-     * @memberof Unit
+     * @memberof ShoppingListRecipe
      */
-    open_data_slug?: string | null;
+    mealplan_type?: string;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface UnitConversion
+ * @interface ShoppingListRecipeMealplan
  */
-export interface UnitConversion {
+export interface ShoppingListRecipeMealplan {
     /**
      * 
      * @type {number}
-     * @memberof UnitConversion
+     * @memberof ShoppingListRecipeMealplan
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof UnitConversion
+     * @memberof ShoppingListRecipeMealplan
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof UnitConversion
+     * @memberof ShoppingListRecipeMealplan
      */
-    base_amount: string;
+    name?: string;
     /**
      * 
      * @type {Unit}
@@ -5231,61 +5398,67 @@ export interface UnitConversion {
      * @type {string}
      * @memberof UnitConversion
      */
-    open_data_slug?: string | null;
+    mealplan_from_date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListRecipes
+     */
+    mealplan_type?: string;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface User
+ * @interface ShoppingListSupermarket
  */
-export interface User {
+export interface ShoppingListSupermarket {
     /**
      * 
      * @type {number}
-     * @memberof User
+     * @memberof ShoppingListSupermarket
      */
     id: number;
     /**
-     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+     * 
      * @type {string}
-     * @memberof User
+     * @memberof ShoppingListSupermarket
      */
     username: string;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof ShoppingListSupermarket
      */
-    first_name?: string;
+    description?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListSupermarketCategoryToSupermarket>}
+     * @memberof ShoppingListSupermarket
+     */
+    category_to_supermarket?: Array<ShoppingListSupermarketCategoryToSupermarket>;
     /**
      * 
      * @type {string}
-     * @memberof User
-     */
-    last_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
+     * @memberof ShoppingListSupermarket
      */
     display_name: string;
 }
 /**
  * 
  * @export
- * @interface UserFile
+ * @interface ShoppingListSupermarketCategory
  */
-export interface UserFile {
+export interface ShoppingListSupermarketCategory {
     /**
      * 
      * @type {number}
-     * @memberof UserFile
+     * @memberof ShoppingListSupermarketCategory
      */
     id: number;
     /**
      * 
      * @type {string}
-     * @memberof UserFile
+     * @memberof ShoppingListSupermarketCategory
      */
     name: string;
     /**
@@ -5297,7 +5470,7 @@ export interface UserFile {
     /**
      * 
      * @type {string}
-     * @memberof UserFile
+     * @memberof ShoppingListSupermarketCategory
      */
     file_download: string;
     /**
@@ -5349,13 +5522,13 @@ export interface UserFileView {
  * @export
  * @interface UserPreference
  */
-export interface UserPreference {
+export interface ShoppingListSupermarketCategoryToSupermarket {
     /**
      * 
      * @type {number}
-     * @memberof UserPreference
+     * @memberof ShoppingListSupermarketCategoryToSupermarket
      */
-    user: number;
+    id?: number;
     /**
      * 
      * @type {UserFileView}
@@ -5370,13 +5543,744 @@ export interface UserPreference {
     theme?: ThemeEnum;
     /**
      * 
+     * @type {number}
+     * @memberof ShoppingListSupermarketCategoryToSupermarket
+     */
+    order?: number;
+}
+/**
+ * 
+ * @export
+ * @interface Space
+ */
+export interface Space {
+    /**
+     * 
+     * @type {UserPreferenceNavTextColorEnum}
+     * @memberof UserPreference
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    created_by?: string | null;
+    /**
+     * 
+     * @type {DefaultPageEnum}
+     * @memberof UserPreference
+     */
+    default_page?: DefaultPageEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    message?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    max_recipes?: number;
+    /**
+     * 
+     * @type {Array<User>}
+     * @memberof UserPreference
+     */
+    plan_share?: Array<User> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    max_users?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    allow_sharing?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Space
+     */
+    demo?: boolean;
+    /**
+     * 
+     * @type {Array<FoodInheritFields>}
+     * @memberof Space
+     */
+    food_inherit: Array<FoodInheritFields>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    user_count?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    food_inherit_default: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserPreference
+     */
+    default_delay?: number;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    image?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    nav_logo?: RecipeFile | null;
+    /**
+     * 
+     * @type {Array<User>}
+     * @memberof UserPreference
+     */
+    shopping_share?: Array<User> | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    custom_space_theme?: RecipeFile | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    nav_bg_color?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Space
+     */
+    nav_text_color?: SpaceNavTextColorEnum;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    logo_color_32?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    logo_color_128?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    logo_color_144?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    logo_color_180?: RecipeFile | null;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof Space
+     */
+    food_children_exist: string;
+}
+/**
+ * * `LIGHT` - Light * `DARK` - Dark
+ * @export
+ * @enum {string}
+ */
+export enum UserPreferenceNavTextColorEnum {
+    Light = 'LIGHT',
+    Dark = 'DARK'
+}
+
+/**
+ * Adds nested create feature
+ * @export
+ * @interface Step
+ */
+export interface Step {
+    /**
+     * 
+     * @type {number}
+     * @memberof Step
+     */
+    id: number;
+    /**
+     * 
+     * @type {User}
+     * @memberof UserSpace
+     */
+    user: User;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserSpace
+     */
+    space: number;
+    /**
+     * 
+     * @type {Array<Group>}
+     * @memberof UserSpace
+     */
+    groups: Array<Group>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Step
+     */
+    instructions_markdown?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Step
+     */
+    time?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserSpace
+     */
+    invite_link: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Step
+     */
+    created_at: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Step
+     */
+    step_recipe_data?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Step
+     */
+    numrecipe?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Step
+     */
+    show_ingredients_table?: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface Storage
+ */
+export interface Storage {
+    /**
+     * 
+     * @type {number}
+     * @memberof Storage
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    method?: StorageMethodEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    username?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    password?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    token?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    created_by?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum StorageMethodEnum {
+    Db = 'DB',
+    Nextcloud = 'NEXTCLOUD',
+    Local = 'LOCAL'
+}
+
+/**
+ * 
+ * @export
+ * @interface Supermarket
+ */
+export interface Supermarket {
+    /**
+     * 
+     * @type {number}
+     * @memberof Supermarket
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Supermarket
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Supermarket
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListSupermarketCategoryToSupermarket>}
+     * @memberof Supermarket
+     */
+    category_to_supermarket?: Array<ShoppingListSupermarketCategoryToSupermarket>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Supermarket
+     */
+    open_data_slug?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface SupermarketCategory
+ */
+export interface SupermarketCategory {
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategory
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategory
+     */
+    description?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface SupermarketCategoryRelation
+ */
+export interface SupermarketCategoryRelation {
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelation
+     */
+    id?: number;
+    /**
+     * 
+     * @type {ShoppingListSupermarketCategory}
+     * @memberof SupermarketCategoryRelation
+     */
+    category: ShoppingListSupermarketCategory;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelation
+     */
+    supermarket: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelation
+     */
+    order?: number;
+}
+/**
+ * 
+ * @export
+ * @interface Sync
+ */
+export interface Sync {
+    /**
+     * 
+     * @type {number}
+     * @memberof Sync
+     */
+    id?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Sync
+     */
+    storage: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Sync
+     */
+    path?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Sync
+     */
+    active?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Sync
+     */
+    last_checked?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Sync
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Sync
+     */
+    updated_at: string;
+}
+/**
+ * 
+ * @export
+ * @interface SyncLog
+ */
+export interface SyncLog {
+    /**
+     * 
+     * @type {number}
+     * @memberof SyncLog
+     */
+    id: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SyncLog
+     */
+    sync: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ViewLog
+     */
+    created_by: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SyncLog
+     */
+    msg?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SyncLog
+     */
+    created_at: string;
+}
+/**
+ * 
+ * @export
+ * @interface Unit
+ */
+export interface Unit {
+    /**
+     * 
+     * @type {number}
+     * @memberof Unit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    base_unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Unit
+     */
+    open_data_slug?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UnitConversion
+ */
+export interface UnitConversion {
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitConversion
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversion
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversion
+     */
+    base_amount: string;
+    /**
+     * 
+     * @type {UnitConversionBaseUnit}
+     * @memberof UnitConversion
+     */
+    base_unit: UnitConversionBaseUnit;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversion
+     */
+    converted_amount: string;
+    /**
+     * 
+     * @type {UnitConversionBaseUnit}
+     * @memberof UnitConversion
+     */
+    converted_unit: UnitConversionBaseUnit;
+    /**
+     * 
+     * @type {IngredientFood}
+     * @memberof UnitConversion
+     */
+    food?: IngredientFood | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversion
+     */
+    open_data_slug?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UnitConversionBaseUnit
+ */
+export interface UnitConversionBaseUnit {
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitConversionBaseUnit
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionBaseUnit
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionBaseUnit
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionBaseUnit
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionBaseUnit
+     */
+    base_unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionBaseUnit
+     */
+    open_data_slug?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface User
+ */
+export interface User {
+    /**
+     * 
+     * @type {number}
+     * @memberof User
+     */
+    id?: number;
+    /**
+     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+     * @type {string}
+     * @memberof User
+     */
+    username?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    first_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    last_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof User
+     */
+    display_name?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserFile
+ */
+export interface UserFile {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFile
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    name: string;
+    /**
+     * 
+     * @type {any}
+     * @memberof UserFile
+     */
+    file: any;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    file_download?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    preview?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFile
+     */
+    file_size_kb?: number;
+}
+/**
+ * 
+ * @export
+ * @interface UserPreference
+ */
+export interface UserPreference {
+    /**
+     * 
+     * @type {number}
+     * @memberof UserPreference
+     */
+    user: number;
+    /**
+     * 
+     * @type {RecipeFile}
+     * @memberof UserPreference
+     */
+    image?: RecipeFile | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserPreference
+     */
+    theme?: UserPreferenceThemeEnum;
+    /**
+     * 
      * @type {string}
      * @memberof UserPreference
      */
     nav_bg_color?: string;
     /**
      * 
-     * @type {UserPreferenceNavTextColorEnum}
+     * @type {string}
      * @memberof UserPreference
      */
     nav_text_color?: UserPreferenceNavTextColorEnum;
@@ -5394,10 +6298,10 @@ export interface UserPreference {
     default_unit?: string;
     /**
      * 
-     * @type {DefaultPageEnum}
+     * @type {string}
      * @memberof UserPreference
      */
-    default_page?: DefaultPageEnum;
+    default_page?: UserPreferenceDefaultPageEnum;
     /**
      * 
      * @type {boolean}
@@ -5412,10 +6316,10 @@ export interface UserPreference {
     use_kj?: boolean;
     /**
      * 
-     * @type {Array<User>}
+     * @type {Array<CustomFilterShared>}
      * @memberof UserPreference
      */
-    plan_share?: Array<User> | null;
+    plan_share?: Array<CustomFilterShared> | null;
     /**
      * 
      * @type {boolean}
@@ -5451,13 +6355,13 @@ export interface UserPreference {
      * @type {string}
      * @memberof UserPreference
      */
-    food_inherit_default: string;
+    food_inherit_default?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof UserPreference
      */
-    default_delay?: number;
+    default_delay?: string;
     /**
      * 
      * @type {boolean}
@@ -5472,10 +6376,10 @@ export interface UserPreference {
     mealplan_autoexclude_onhand?: boolean;
     /**
      * 
-     * @type {Array<User>}
+     * @type {Array<CustomFilterShared>}
      * @memberof UserPreference
      */
-    shopping_share?: Array<User> | null;
+    shopping_share?: Array<CustomFilterShared> | null;
     /**
      * 
      * @type {number}
@@ -5523,20 +6427,41 @@ export interface UserPreference {
      * @type {string}
      * @memberof UserPreference
      */
-    food_children_exist: string;
+    food_children_exist?: string;
+}
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum UserPreferenceThemeEnum {
+    Tandoor = 'TANDOOR',
+    Bootstrap = 'BOOTSTRAP',
+    Darkly = 'DARKLY',
+    Flatly = 'FLATLY',
+    Superhero = 'SUPERHERO',
+    TandoorDark = 'TANDOOR_DARK'
 }
 /**
- * * `LIGHT` - Light * `DARK` - Dark
- * @export
- * @enum {string}
- */
+    * @export
+    * @enum {string}
+    */
 export enum UserPreferenceNavTextColorEnum {
     Light = 'LIGHT',
     Dark = 'DARK'
 }
+/**
+    * @export
+    * @enum {string}
+    */
+export enum UserPreferenceDefaultPageEnum {
+    Search = 'SEARCH',
+    Plan = 'PLAN',
+    Books = 'BOOKS'
+}
 
 /**
- * Adds nested create feature
+ * 
  * @export
  * @interface UserSpace
  */
@@ -5546,25 +6471,25 @@ export interface UserSpace {
      * @type {number}
      * @memberof UserSpace
      */
-    id: number;
+    id?: number;
     /**
      * 
-     * @type {User}
+     * @type {CookLogCreatedBy}
      * @memberof UserSpace
      */
-    user: User;
+    user?: CookLogCreatedBy;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof UserSpace
      */
-    space: number;
+    space?: string;
     /**
      * 
-     * @type {Array<Group>}
+     * @type {Array<InviteLinkGroup>}
      * @memberof UserSpace
      */
-    groups: Array<Group>;
+    groups: Array<InviteLinkGroup>;
     /**
      * 
      * @type {boolean}
@@ -5579,22 +6504,22 @@ export interface UserSpace {
     internal_note?: string | null;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof UserSpace
      */
-    invite_link: number | null;
+    invite_link?: string | null;
     /**
      * 
      * @type {string}
      * @memberof UserSpace
      */
-    created_at: string;
+    created_at?: string;
     /**
      * 
      * @type {string}
      * @memberof UserSpace
      */
-    updated_at: string;
+    updated_at?: string;
 }
 /**
  * 
@@ -5607,7 +6532,7 @@ export interface ViewLog {
      * @type {number}
      * @memberof ViewLog
      */
-    id: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -5616,16 +6541,16 @@ export interface ViewLog {
     recipe: number;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof ViewLog
      */
-    created_by: number;
+    created_by?: string;
     /**
      * 
      * @type {string}
      * @memberof ViewLog
      */
-    created_at: string;
+    created_at?: string;
 }
 
 /**
@@ -5634,6 +6559,1393 @@ export interface ViewLog {
  */
 export const ApiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {ShoppingListEntryBulk} [shoppingListEntryBulk] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        bulkShoppingListEntry: async (shoppingListEntryBulk?: ShoppingListEntryBulk, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shopping-list-entry/bulk/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryBulk, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAccessToken: async (accessToken?: AccessToken, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/access-token/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutoPlanViewSet: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/auto-plan/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Automation} [automation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createAutomation: async (automation?: Automation, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/automation/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {BookmarkletImport} [bookmarkletImport] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBookmarkletImport: async (bookmarkletImport?: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/bookmarklet-import/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ConnectorConfigConfig} [connectorConfigConfig] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createConnectorConfig: async (connectorConfigConfig?: ConnectorConfigConfig, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/connector-config/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(connectorConfigConfig, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CookLog} [cookLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCookLog: async (cookLog?: CookLog, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/cook-log/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CustomFilter} [customFilter] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createCustomFilter: async (customFilter?: CustomFilter, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/custom-filter/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ExportLog} [exportLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createExportLog: async (exportLog?: ExportLog, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/export-log/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Food} [food] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createFood: async (food?: Food, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ImportLog} [importLog] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createImportLog: async (importLog?: ImportLog, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/import-log/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(importLog, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Ingredient} [ingredient] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createIngredient: async (ingredient?: Ingredient, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/ingredient/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {InviteLink} [inviteLink] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createInviteLink: async (inviteLink?: InviteLink, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/invite-link/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Keyword} [keyword] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createKeyword: async (keyword?: Keyword, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/keyword/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {MealPlan} [mealPlan] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createMealPlan: async (mealPlan?: MealPlan, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/meal-plan/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(mealPlan, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {MealType} [mealType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createMealType: async (mealType?: MealType, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/meal-type/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(mealType, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataCategory} [openDataCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataCategory: async (openDataCategory?: OpenDataCategory, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-category/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataConversion} [openDataConversion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataConversion: async (openDataConversion?: OpenDataConversion, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-conversion/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataConversion, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataFood} [openDataFood] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataFood: async (openDataFood?: OpenDataFood, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-food/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataFood, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataProperty} [openDataProperty] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataProperty: async (openDataProperty?: OpenDataProperty, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-property/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataProperty, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataStore} [openDataStore] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataStore: async (openDataStore?: OpenDataStore, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-store/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataStore, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataUnit} [openDataUnit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataUnit: async (openDataUnit?: OpenDataUnit, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-unit/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataUnit, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {OpenDataVersion} [openDataVersion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createOpenDataVersion: async (openDataVersion?: OpenDataVersion, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/open-data-version/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(openDataVersion, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Property} [property] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createProperty: async (property?: Property, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-property/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(property, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {PropertyType} [propertyType] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPropertyType: async (propertyType?: PropertyType, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/food-property-type/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(propertyType, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Recipe} [recipe] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipe: async (recipe?: Recipe, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {RecipeBook} [recipeBook] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipeBook: async (recipeBook?: RecipeBook, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-book/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBook, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {RecipeBookEntry} [recipeBookEntry] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipeBookEntry: async (recipeBookEntry?: RecipeBookEntry, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-book-entry/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookEntry, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * function to retrieve a recipe from a given url or source string :param request: standard request with additional post parameters         - url: url to use for importing recipe         - data: if no url is given recipe is imported from provided source data         - (optional) bookmarklet: id of bookmarklet import to use, overrides URL and data attributes :return: JsonResponse containing the parsed json and images
+         * @param {any} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRecipeUrlImport: async (body?: any, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/recipe-from-source/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ShoppingList} [shoppingList] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createShoppingList: async (shoppingList?: ShoppingList, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shopping-list/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingList, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ShoppingListEntry} [shoppingListEntry] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createShoppingListEntry: async (shoppingListEntry?: ShoppingListEntry, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shopping-list-entry/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntry, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ShoppingListRecipe} [shoppingListRecipe] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createShoppingListRecipe: async (shoppingListRecipe?: ShoppingListRecipe, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/shopping-list-recipe/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipe, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Step} [step] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createStep: async (step?: Step, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/step/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(step, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Storage} [storage] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createStorage: async (storage?: Storage, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/storage/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(storage, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Supermarket} [supermarket] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarket: async (supermarket?: Supermarket, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarket, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {SupermarketCategory} [supermarketCategory] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategory: async (supermarketCategory?: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {SupermarketCategoryRelation} [supermarketCategoryRelation] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSupermarketCategoryRelation: async (supermarketCategoryRelation?: SupermarketCategoryRelation, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/supermarket-category-relation/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRelation, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Sync} [sync] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSync: async (sync?: Sync, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/sync/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(sync, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {Unit} [unit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUnit: async (unit?: Unit, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/unit/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UnitConversion} [unitConversion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUnitConversion: async (unitConversion?: UnitConversion, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/unit-conversion/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(unitConversion, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} name 
+         * @param {any} file 
+         * @param {number} [id] 
+         * @param {string} [fileDownload] 
+         * @param {string} [preview] 
+         * @param {number} [fileSizeKb] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createUserFile: async (name: string, file: any, id?: number, fileDownload?: string, preview?: string, fileSizeKb?: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('createUserFile', 'name', name)
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('createUserFile', 'file', file)
+            const localVarPath = `/api/user-file/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+
+            if (id !== undefined) { 
+                localVarFormParams.append('id', id as any);
+            }
+    
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileDownload !== undefined) { 
+                localVarFormParams.append('file_download', fileDownload as any);
+            }
+    
+            if (preview !== undefined) { 
+                localVarFormParams.append('preview', preview as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @param {AccessToken} accessToken 
@@ -5768,8 +8080,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this automation.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyAutomation: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyAutomation', 'id', id)
+            const localVarPath = `/api/automation/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5804,7 +8147,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -5846,8 +8188,39 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} id A unique integer value identifying this custom filter.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        destroyCustomFilter: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('destroyCustomFilter', 'id', id)
+            const localVarPath = `/api/custom-filter/{id}/`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -5872,13 +8245,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -5907,7 +8279,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -5916,8 +8288,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6039,8 +8409,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6117,8 +8485,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6146,7 +8512,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6155,8 +8521,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6192,7 +8556,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6223,7 +8586,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6263,8 +8625,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6299,7 +8659,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6341,8 +8700,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6370,7 +8727,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6379,8 +8736,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6416,7 +8771,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -6447,7 +8801,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6487,8 +8840,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6523,7 +8874,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6565,8 +8915,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6594,7 +8942,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6603,8 +8951,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6639,7 +8985,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6726,8 +9071,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6762,7 +9105,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6804,8 +9146,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6833,7 +9173,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -6842,8 +9182,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -6878,7 +9216,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6980,8 +9317,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -7058,8 +9393,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -7094,7 +9427,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -7213,9 +9545,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7283,15 +9618,27 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
+            if (image !== undefined) { 
+                localVarFormParams.append('image', image as any);
+            }
+    
+            if (imageUrl !== undefined) { 
+                localVarFormParams.append('image_url', imageUrl as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7396,7 +9743,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -7784,7 +10131,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -7966,7 +10313,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -8378,13 +10725,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -8420,6 +10766,9 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (query !== undefined) {
+                localVarQueryParameter['query'] = query;
+            }
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -8460,10 +10809,9 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            if (cookedon !== undefined) {
+                localVarQueryParameter['cookedon'] = cookedon;
+            }
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8486,9 +10834,9 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
+            if (updatedon !== undefined) {
+                localVarQueryParameter['updatedon'] = updatedon;
+            }
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
@@ -9404,7 +11752,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9413,9 +11761,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9529,9 +11880,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9555,7 +11909,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9576,9 +11930,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9602,7 +11959,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9623,9 +11980,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9690,7 +12050,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9699,9 +12059,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9815,9 +12178,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9838,7 +12204,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9847,9 +12213,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9914,7 +12283,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -9923,9 +12292,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9996,7 +12368,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -10005,9 +12377,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11034,7 +13409,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarket, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11178,7 +13553,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11258,6 +13633,32 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             }
 
 
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
+            }
+    
+            if (name !== undefined) { 
+                localVarFormParams.append('name', name as any);
+            }
+    
+            if (file !== undefined) { 
+                localVarFormParams.append('file', file as any);
+            }
+    
+            if (fileDownload !== undefined) { 
+                localVarFormParams.append('file_download', fileDownload as any);
+            }
+    
+            if (preview !== undefined) { 
+                localVarFormParams.append('preview', preview as any);
+            }
+    
+            if (fileSizeKb !== undefined) { 
+                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            }
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -11412,8 +13813,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -11449,7 +13848,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -11481,7 +13879,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -11511,7 +13908,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -11520,8 +13917,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -11556,7 +13951,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -11631,7 +14025,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -11661,7 +14054,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -11670,8 +14063,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -11706,7 +14097,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
