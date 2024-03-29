@@ -1,7 +1,8 @@
 <template>
-    <v-container>
+<v-container>
 
-    </v-container>
+</v-container>
+
 
 
 </template>
@@ -18,7 +19,9 @@ export default defineComponent({
     components: {ModelSelect, RecipeCard},
     data() {
         return {
-
+            test: {
+                text: String,
+            },
         }
     },
     mounted() {

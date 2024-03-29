@@ -11,6 +11,7 @@
   "dependencies": {
     "@mdi/font": "7.2.96",
     "@types/luxon": "^3.4.2",
+    "@vueform/vueform": "^1.9.2",
     "@vueuse/core": "^10.9.0",
     "luxon": "^3.4.4",
     "mavon-editor": "^3.0.1",

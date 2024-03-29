@@ -40,7 +40,7 @@
                                     <v-list-item-subtitle>
                                         {{ p.mealType.name }}
                                     </v-list-item-subtitle>
-                                    <meal-plan-dialog></meal-plan-dialog>
+                                    <meal-plan-dialog :meal-plan="p"></meal-plan-dialog>
                                 </v-list-item>
 
                             </v-list>
