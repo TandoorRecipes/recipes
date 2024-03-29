@@ -5,9 +5,7 @@
                 <v-card-title>Meal Plan Edit <i class="mt-2 float-right fas fa-times" @click="isActive.value = false"></i></v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    {{mutableMealPlan}}
-                    {{props.mealPlan}}
-                    <Vueform v-model="mutableMealPlan">
+                    <Vueform v-model="mutableMealPlan" sync>
                         <TextElement name="title" :columns="{ sm: 12, md : 6}" label="Title"></TextElement>
                         <SelectElement name="recipe" :columns="{ sm: 12, md : 6}" label="Recipe"></SelectElement>
                         <DateElement name="fromDate" :columns="{ sm: 12, md : 6}" label="From Date">
@@ -26,14 +24,30 @@
                                 </v-btn-group>
                             </template>
                         </DateElement>
+
                         <GroupElement name="container_1">
                             <GroupElement name="container_1_col_1" :columns="{ sm: 12, md : 6}">
-                                <TextElement name="mealType" label="Meal Type"></TextElement>
+                                <SelectElement
+                                    name="mealType"
+                                    :default="mealPlan?.mealType"
+                                    label="Meal Type"
+                                    label-prop="name"
+                                    value-prop="id"
+                                    :strict="false"
+                                    :search="true"
+                                    :items="mealTypeSearch"
+                                    :delay="300"
+                                    rules="required"
+
+                                >
+                                </SelectElement>
                                 <TextElement name="servings" label="Servings"></TextElement>
                                 <TextElement name="share" label="Share"></TextElement>
                             </GroupElement>
-                            <GroupElement name="container_1_col_1" :columns="{ sm: 12, md : 6}">
-                                <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan.recipe"></recipe-card>
+                            <GroupElement name="container_1_col_2" :columns="{ sm: 12, md : 6}">
+                                <StaticElement name="static_1" :remove-class="['vf-contains-link']">
+                                    <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
+                                </StaticElement>
                             </GroupElement>
                         </GroupElement>
                         <TextareaElement name="note" label="Note"></TextareaElement>
@@ -54,8 +68,8 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, ref} from "vue";
-import {MealPlan} from "@/openapi";
+import {onMounted, PropType, ref, watchEffect} from "vue";
+import {ApiApi, MealPlan} from "@/openapi";
 import {DateTime} from "luxon";
 import RecipeCard from "@/components/display/RecipeCard.vue";
 
@@ -65,21 +79,29 @@ const props = defineProps(
     }
 )
 
-let mutableMealPlan = ref({} as MealPlan)
+let mutableMealPlan = ref(props.mealPlan)
 
-onMounted(() => {
+watchEffect(() => {
     if (props.mealPlan != undefined) {
-        console.log('got prop', props.mealPlan)
         mutableMealPlan.value = props.mealPlan
-    } else {
-        console.log('loading default')
-        mutableMealPlan.value = {
-            fromDate: DateTime.now().toJSDate(),
-            toDate: DateTime.now().toJSDate(),
-        } as MealPlan
-    }
-})
 
+    } else {
+        mutableMealPlan.value = newMealPlan()
+    }
+});
+
+function newMealPlan() {
+    return {
+        fromDate: DateTime.now().toJSDate(),
+        toDate: DateTime.now().toJSDate(),
+    } as MealPlan
+}
+
+async function mealTypeSearch(searchQuery: string) {
+    console.log('called search')
+    const api = new ApiApi()
+    return await api.apiMealTypeList()
+}
 
 </script>
 

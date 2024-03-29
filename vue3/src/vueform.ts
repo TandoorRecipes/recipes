@@ -10,9 +10,9 @@ export default defineConfig({
   locales: { en },
   locale: 'en',
   overrideClasses: {
-    // ElementAddon: {
-    //   container: 'vf-addon ps-0 pe-0',
-    // }
+    ElementAddon: {
+      container: 'vf-addon ps-0 pe-0',
+    }
   },
 
 })
