@@ -24,7 +24,7 @@ export interface RecipeSimple {
      * @type {number}
      * @memberof RecipeSimple
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -43,7 +43,6 @@ export interface RecipeSimple {
  * Check if a given object implements the RecipeSimple interface.
  */
 export function instanceOfRecipeSimple(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('url' in value)) return false;
     return true;
@@ -59,7 +58,7 @@ export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'url': json['url'],
     };
@@ -71,6 +70,7 @@ export function RecipeSimpleToJSON(value?: RecipeSimple | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
     };
 }

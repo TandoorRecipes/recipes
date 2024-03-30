@@ -31,7 +31,7 @@ export interface SupermarketCategoryRelation {
      * @type {number}
      * @memberof SupermarketCategoryRelation
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {SupermarketCategory}
@@ -56,7 +56,6 @@ export interface SupermarketCategoryRelation {
  * Check if a given object implements the SupermarketCategoryRelation interface.
  */
 export function instanceOfSupermarketCategoryRelation(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('category' in value)) return false;
     if (!('supermarket' in value)) return false;
     return true;
@@ -72,7 +71,7 @@ export function SupermarketCategoryRelationFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'category': SupermarketCategoryFromJSON(json['category']),
         'supermarket': json['supermarket'],
         'order': json['order'] == null ? undefined : json['order'],
@@ -85,6 +84,7 @@ export function SupermarketCategoryRelationToJSON(value?: SupermarketCategoryRel
     }
     return {
         
+        'id': value['id'],
         'category': SupermarketCategoryToJSON(value['category']),
         'supermarket': value['supermarket'],
         'order': value['order'],

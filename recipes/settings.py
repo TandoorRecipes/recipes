@@ -310,10 +310,15 @@ REST_FRAMEWORK = {
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
+
+
+
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tandoor',
     'DESCRIPTION': 'Tandoor API Docs',
     'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
     'ENUM_ADD_EXPLICIT_BLANK_NULL_CHOICE': False,
     "AUTHENTICATION_WHITELIST": [],
     "APPEND_COMPONENTS": {
@@ -325,7 +330,7 @@ SPECTACULAR_SETTINGS = {
             }
         }
     },
-    "SECURITY": [{ "ApiKeyAuth": [] }],
+    "SECURITY": [{"ApiKeyAuth": []}],
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
@@ -345,6 +350,10 @@ SPECTACULAR_SETTINGS = {
         'schemaExpansionLevel': 'all',
         'showExtensions': True
     },
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums',
+        'cookbook.helper.drf_spectacular_hooks.custom_postprocessing_hook'
+    ]
 }
 
 ROOT_URLCONF = 'recipes.urls'

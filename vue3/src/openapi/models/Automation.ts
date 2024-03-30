@@ -31,7 +31,7 @@ export interface Automation {
      * @type {number}
      * @memberof Automation
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {AutomationTypeEnum}
@@ -92,7 +92,6 @@ export interface Automation {
  * Check if a given object implements the Automation interface.
  */
 export function instanceOfAutomation(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('type' in value)) return false;
     if (!('createdBy' in value)) return false;
     return true;
@@ -108,7 +107,7 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'type': AutomationTypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -127,6 +126,7 @@ export function AutomationToJSON(value?: Automation | null): any {
     }
     return {
         
+        'id': value['id'],
         'type': AutomationTypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],

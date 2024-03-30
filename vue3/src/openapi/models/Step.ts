@@ -37,7 +37,7 @@ export interface Step {
      * @type {number}
      * @memberof Step
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -116,7 +116,6 @@ export interface Step {
  * Check if a given object implements the Step interface.
  */
 export function instanceOfStep(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('ingredients' in value)) return false;
     if (!('instructionsMarkdown' in value)) return false;
     if (!('stepRecipeData' in value)) return false;
@@ -134,7 +133,7 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'instruction': json['instruction'] == null ? undefined : json['instruction'],
         'ingredients': ((json['ingredients'] as Array<any>).map(IngredientFromJSON)),
@@ -156,6 +155,7 @@ export function StepToJSON(value?: Step | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'instruction': value['instruction'],
         'ingredients': ((value['ingredients'] as Array<any>).map(IngredientToJSON)),
