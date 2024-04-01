@@ -23,7 +23,7 @@ whitenoise==6.6.0
 icalendar==5.0.11
 pyyaml==6.0.1
 uritemplate==4.1.1
-beautifulsoup4==4.12.2
+beautifulsoup4==4.12.3
 microdata==0.8.0
 mock==5.1.0
 Jinja2==3.1.3
