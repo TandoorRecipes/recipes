@@ -2,7 +2,7 @@ Django==4.2.11
 cryptography===42.0.5
 django-annoying==0.10.6
 django-cleanup==8.0.0
-django-crispy-forms==2.0
+django-crispy-forms==2.1
 crispy-bootstrap4==2022.1
 django-tables2==2.7.0
 djangorestframework==3.14.0
