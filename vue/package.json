@@ -42,7 +42,7 @@
     "vue-sanitize": "^0.2.2",
     "vue-simple-calendar": "TandoorRecipes/vue-simple-calendar#lastvue2",
     "vue-template-compiler": "2.7.14",
-    "vue2-touch-events": "^3.2.2",
+    "vue2-touch-events": "^3.2.3",
     "vuedraggable": "^2.24.3",
     "workbox-webpack-plugin": "^7.0.0",
     "workbox-window": "^7.0.0"
