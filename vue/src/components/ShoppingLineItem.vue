@@ -54,7 +54,7 @@
                     text-field="name"
                     value-field="id"
                     v-model="food.supermarket_category"
-                    @change="detail_modal_visible = false; updateFoodCategory(food)"
+                    @input="detail_modal_visible = false; updateFoodCategory(food)"
                 ></b-form-select>
 
                 <b-button variant="info" block
