@@ -63,6 +63,8 @@ Modify the below to match your environment and add it to your `docker-compose.ym
 ``` yaml
   pgbackup:
     container_name: pgbackup
+    env_file:
+      - ./.env
     environment:
       BACKUP_KEEP_DAYS: "8"
       BACKUP_KEEP_MONTHS: "6"

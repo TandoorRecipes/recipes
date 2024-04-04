@@ -296,16 +296,21 @@ def system(request):
 
         from django.db import connection
 
-        postgres_ver = divmod(connection.pg_version, 10000)
-        if postgres_ver >= postgres_current:
-            database_status = 'success'
-            database_message = _('Everything is fine!')
-        elif postgres_ver < postgres_current - 2:
+        try:
+            postgres_ver = divmod(connection.pg_version, 10000)[0]
+            if postgres_ver >= postgres_current:
+                database_status = 'success'
+                database_message = _('Everything is fine!')
+            elif postgres_ver < postgres_current - 2:
+                database_status = 'danger'
+                database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {'v': postgres_ver}
+            else:
+                database_status = 'info'
+                database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {'v1': postgres_ver, 'v2': postgres_current}
+        except Exception as e:
+            print(f"Error determining PostgreSQL version: {e}")
             database_status = 'danger'
-            database_message = _('PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!') % {'v': postgres_ver}
-        else:
-            database_status = 'info'
-            database_message = _('You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended') % {'v1': postgres_ver, 'v2': postgres_current}
+            database_message = _('Unable to determine PostgreSQL version.')
     else:
         database_status = 'info'
         database_message = _(

@@ -105,7 +105,7 @@ MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages',
-    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_prometheus', 'django_tables2', 'corsheaders', 'crispy_forms',
+    'django.contrib.sites', 'django.contrib.staticfiles', 'django.contrib.postgres', 'oauth2_provider', 'django_tables2', 'corsheaders', 'crispy_forms',
     'crispy_bootstrap4', 'rest_framework', 'rest_framework.authtoken', 'django_cleanup.apps.CleanupConfig', 'webpack_loader', 'django_js_reverse', 'hcaptcha', 'allauth',
     'allauth.account', 'allauth.socialaccount', 'cookbook.apps.CookbookConfig', 'treebeard',
 ]
@@ -195,6 +195,7 @@ if bool(int(os.getenv('SQL_DEBUG', False))):
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
+    INSTALLED_APPS += 'django_prometheus',
 
 # Auth related settings
 AUTHENTICATION_BACKENDS = []
@@ -292,68 +293,70 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 
 # Database
 # Load settings from env files
-if os.getenv('DATABASE_URL'):
-    match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?',
-                     os.getenv('DATABASE_URL'))
-    settings = match.groupdict()
-    schema = settings['schema']
-    if schema.startswith('postgres'):
-        engine = 'django.db.backends.postgresql'
-    elif schema == 'sqlite':
-        if not os.path.exists(db_path := os.path.dirname(settings['database'])):
-            os.makedirs(db_path)
-        engine = 'django.db.backends.sqlite3'
+DATABASE_URL = os.getenv('DATABASE_URL') or None
+DB_OPTIONS = os.getenv('DB_OPTIONS') or None
+DB_ENGINE = os.getenv('DB_ENGINE') or None
+POSTGRES_HOST = os.getenv('POSTGRES_HOST') or None
+POSTGRES_PORT = os.getenv('POSTGRES_PORT') or None
+POSTGRES_USER = os.getenv('POSTGRES_USER') or None
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD') or None
+POSTGRES_DB = os.getenv('POSTGRES_DB') or None
+
+
+def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
+    global DATABASE_URL, DB_ENGINE, DB_OPTIONS, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+
+    DATABASE_URL = db_url or DATABASE_URL
+    DB_OPTIONS = db_options or DB_OPTIONS
+    DB_ENGINE = db_engine or DB_ENGINE
+    POSTGRES_HOST = pg_host or POSTGRES_HOST
+    POSTGRES_PORT = pg_port or POSTGRES_PORT
+    POSTGRES_USER = pg_user or POSTGRES_USER
+    POSTGRES_PASSWORD = pg_password or POSTGRES_PASSWORD
+    POSTGRES_DB = pg_db or POSTGRES_DB
+
+    if DATABASE_URL:
+        match = re.match(r'(?P<schema>\w+):\/\/(?:(?P<user>[\w\d_-]+)(?::(?P<password>[^@]+))?@)?(?P<host>[^:/]+)(?::(?P<port>\d+))?(?:/(?P<database>[\w\d/._-]+))?', DATABASE_URL)
+        settings = match.groupdict()
+        schema = settings['schema']
+        if schema.startswith('postgres'):
+            engine = 'django.db.backends.postgresql'
+        elif schema == 'sqlite':
+            if (db_path := os.path.dirname(settings['database'])) and not os.path.exists(db_path):
+                os.makedirs(db_path)
+            engine = 'django.db.backends.sqlite3'
+        else:
+            raise Exception("Unsupported database schema: '%s'" % schema)
+
+        DATABASES = {
+            'default': {
+                'ENGINE': engine,
+                'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
+                'HOST': settings['host'],
+                'PORT': settings['port'],
+                'USER': settings['user'],
+                'PASSWORD': settings['password'],
+                'NAME': settings['database'],
+                'CONN_MAX_AGE': 600,
+            }
+        }
     else:
-        raise Exception("Unsupported database schema: '%s'" % schema)
-
-    DATABASES = {
-        'default': {
-            'ENGINE': engine,
-            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-            'HOST': settings['host'],
-            'PORT': settings['port'],
-            'USER': settings['user'],
-            'PASSWORD': settings['password'],
-            'NAME': settings['database'],
-            'CONN_MAX_AGE': 600,
+        DATABASES = {
+            'default': {
+                'ENGINE': DB_ENGINE if DB_ENGINE else 'django.db.backends.sqlite3',
+                'OPTIONS': ast.literal_eval(DB_OPTIONS) if DB_OPTIONS else {},
+                'HOST': POSTGRES_HOST,
+                'PORT': POSTGRES_PORT,
+                'USER': POSTGRES_USER,
+                'PASSWORD': POSTGRES_PASSWORD,
+                'NAME': POSTGRES_DB if POSTGRES_DB else 'db.sqlite3',
+                'CONN_MAX_AGE': 60,
+            }
         }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE') if os.getenv('DB_ENGINE') else 'django.db.backends.sqlite3',
-            'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-            'HOST': os.getenv('POSTGRES_HOST'),
-            'PORT': os.getenv('POSTGRES_PORT'),
-            'USER': os.getenv('POSTGRES_USER'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-            'NAME': os.getenv('POSTGRES_DB') if os.getenv('POSTGRES_DB') else 'db.sqlite3',
-            'CONN_MAX_AGE': 60,
-        }
-    }
+    return DATABASES
 
-# Local testing DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'HOST': 'localhost',
-#         'PORT': 5432,
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',  # set to local pw
-#         'NAME': 'tandoor_app',
-#         'CONN_MAX_AGE': 600,
-#     }
-# }
 
-# SQLite testing DB
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'OPTIONS': ast.literal_eval(os.getenv('DB_OPTIONS')) if os.getenv('DB_OPTIONS') else {},
-#         'NAME': 'db.sqlite3',
-#         'CONN_MAX_AGE': 600,
-#     }
-# }
+DATABASES = setup_database()
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'default', }}
 
@@ -440,8 +443,6 @@ else:
 
 # Serve static files with gzip
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-TEST_RUNNER = "cookbook.helper.CustomTestRunner.CustomTestRunner"
 
 # settings for cross site origin (CORS)
 # all origins allowed to support bookmarklet
