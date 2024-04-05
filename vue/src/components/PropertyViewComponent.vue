@@ -67,7 +67,7 @@
                                 <i class="text-warning fas fa-exclamation-triangle"></i>
                             </template>
                             <template v-else>
-                                {{ f.value }} {{ selected_property.unit }}
+                                {{ roundDecimals(f.value) }} {{ selected_property.unit }}
                             </template>
                         </td>
                     </tr>
