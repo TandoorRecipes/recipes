@@ -156,6 +156,7 @@ def test_url_import_regex_replace(u1_s1):
 
     if 'cookbook' in os.getcwd():
         test_file = os.path.join(os.getcwd(), 'other', 'test_data', recipe)
+        # TODO this catch doesn't really work depending on from where you start the test, must check for duplicate path sections
     else:
         test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', recipe)
     with open(test_file, 'r', encoding='UTF-8') as d:
