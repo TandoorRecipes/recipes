@@ -62,12 +62,14 @@ import {MealPlan, Recipe, RecipeOverview} from "@/openapi";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {DateTime} from "luxon";
 import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
+import {homePageCols} from "@/utils/breakpoint_utils";
 
-const {mdAndUp} = useDisplay()
+
 const loading = ref(false)
 
 let numberOfCols = computed(() => {
-    return mdAndUp.value ? 5 : 2
+    const {name} = useDisplay()
+    return homePageCols(name.value)
 })
 
 type MealPlanGridItem = {

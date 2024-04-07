@@ -18,7 +18,7 @@ import vueform from '@/vueform'
 import SearchPage from "@/pages/SearchPage.vue";
 
 const routes = [
-    {path: '/', component: StartPage, name: 'view_start'},
+    {path: '/', component: StartPage, name: 'view_home'},
     {path: '/search', component: SearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},

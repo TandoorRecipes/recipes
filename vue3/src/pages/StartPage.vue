@@ -3,7 +3,6 @@
 
         <horizontal-meal-plan-window></horizontal-meal-plan-window>
 
-
         <!--TODO ideas for "start page": new recipes, meal plan, "last year/month/cooked long ago", high rated, random keyword -->
         <!--TODO if nothing comes up for a category, hide the element, probably move fetch logic into component -->
         <horizontal-recipe-scroller title="New Recipes" :skeletons="4" :recipes="new_recipes" icon="fas fa-calendar-alt"></horizontal-recipe-scroller>
@@ -31,27 +30,7 @@ import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 export default defineComponent({
     name: "StartPage",
     components: {MealPlanDialog, HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
-    computed: {
-
-        meal_plan_grid: function () {
-            let grid = []
-
-            if (useMealPlanStore().plan_list.length > 0) {
-                console.log('found plans')
-                for (const x of Array(4).keys()) {
-                    let grid_day_date = DateTime.now().plus({days: x})
-                    console.log('going trough days ', x, grid_day_date)
-                    grid.push({
-                        date: grid_day_date,
-                        create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
-                        date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
-                        plan_entries: useMealPlanStore().plan_list.filter(m => (DateTime.fromJSDate(m.fromDate) <= grid_day_date && DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate) >= grid_day_date)),
-                    })
-                }
-            }
-            return grid
-        },
-    },
+    computed: { },
     data() {
         return {
             recipes: [] as Recipe[],
