@@ -19,6 +19,7 @@
     "vue": "^3.4.15",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "4",
+    "vue-simple-calendar": "^7.1.0",
     "vuedraggable": "^4.1.0",
     "vuetify": "^3.5.10"
   },

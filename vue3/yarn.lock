@@ -1140,6 +1140,13 @@ vue-router@4:
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
+vue-simple-calendar@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/vue-simple-calendar/-/vue-simple-calendar-7.1.0.tgz#d850eb834bdb7a257bb43781908fcbb9a5af56c2"
+  integrity sha512-WNbvRVGQQJlStaLPvvpe2ZsB/E1n8eFgUh4hD931ljp2czPA8xT81i4jGD5+jKZT1OHDFpON5mNn0KwO2QC9rA==
+  dependencies:
+    vue "^3.4.15"
+
 vue-template-compiler@^2.7.14:
   version "2.7.16"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.7.16.tgz#c81b2d47753264c77ac03b9966a46637482bb03b"

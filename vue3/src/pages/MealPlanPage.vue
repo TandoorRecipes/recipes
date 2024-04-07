@@ -1,9 +1,13 @@
 <template>
 
-    <v-calendar view-mode="month" :events="calendarEvents" show-adjacent-months>
+    <v-row class="h-100">
+        <v-col >
+            <CalendarView
+                class="theme-default ">
 
-    </v-calendar>
-
+            </CalendarView>
+        </v-col>
+    </v-row>
 </template>
 
 <script lang="ts">
@@ -12,19 +16,14 @@ import {defineComponent} from 'vue'
 import {VCalendar} from 'vuetify/labs/VCalendar'
 import {ApiApi, MealPlan} from "@/openapi";
 
+import {CalendarView, CalendarViewHeader} from "vue-simple-calendar"
+import "vue-simple-calendar/dist/style.css"
+import "vue-simple-calendar/dist/css/default.css"
 
 export default defineComponent({
     name: "MealPlanPage",
-    components: {VCalendar},
-    computed: {
-        calendarEvents: function(){
-            let events = []
-            this.mealPlans.forEach(mp => {
-                events.push({start: mp.fromDate, end: mp.toDate, title: (mp.recipe != undefined) ? mp.recipe.name : mp.title})
-            })
-            return events
-        }
-    },
+    components: {VCalendar, CalendarView, CalendarViewHeader},
+    computed: {},
     data() {
         return {
             mealPlans: [] as MealPlan[]
