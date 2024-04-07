@@ -8,7 +8,7 @@
             <td><span v-if="ingredient.unit != null">{{ ingredient.unit.name }}</span></td>
             <td><span v-if="ingredient.food != null">{{ ingredient.food.name }}</span></td>
             <td v-if="showNotes">
-                <v-icon class="far fa-comment float-right" v-if="ingredient.note != ''" @click="show_tooltip = !show_tooltip">
+                <v-icon class="far fa-comment float-right" v-if="ingredient.note != '' && ingredient.note != undefined" @click="show_tooltip = !show_tooltip">
                     <v-tooltip v-model="show_tooltip" activator="parent" location="start">{{ ingredient.note }}</v-tooltip>
                 </v-icon>
             </td>

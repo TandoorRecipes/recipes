@@ -44,8 +44,8 @@
             <StepsOverview :steps="recipe.steps"></StepsOverview>
         </v-card>
 
-        <v-card class="mt-1" v-for="s in recipe.steps" :key="s.id">
-            <Step :step="s" :ingredient_factor="ingredient_factor"></Step>
+        <v-card class="mt-1" v-for="(step, index)  in recipe.steps" :key="step.id">
+            <Step :step="step" :step-number="index+1" :ingredient_factor="ingredient_factor"></Step>
         </v-card>
 
         <!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->

@@ -16,7 +16,7 @@
         </v-main>
 
         <v-bottom-navigation grow>
-            <v-btn value="recent" to="/search">
+            <v-btn value="recent" to="/">
                 <v-icon icon="fas fa-book"/>
                 <span>Recipes</span>
             </v-btn>
@@ -33,9 +33,9 @@
                 <span>Shopping</span>
             </v-btn>
             <v-btn value="nearby" to="/books">
-                <v-icon icon="fas fa-book-open"></v-icon>
+                <v-icon icon="fas fa-bars"></v-icon>
 
-                <span>Books</span>
+                <span>More</span>
             </v-btn>
         </v-bottom-navigation>
 
