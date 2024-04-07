@@ -1,55 +1,105 @@
 <template>
 
-    <v-container>
-        <v-row>
-            <v-col>
-                <h2>Activity</h2>
-                <v-timeline side="end" align="start">
-                    <v-timeline-item dot-color="grey" size="xsmall" v-for="c in cook_logs" :key="c.id">
-                        <v-card>
-                            <v-card-text class="bg-primary"><small>{{ c.createdAt }} by {{ c.createdBy.displayName }}</small></v-card-text>
+    <v-card class="mt-1">
+        <v-card-title>Activity</v-card-title>
+        <v-card-text>
 
-                            <v-rating density="compact" size="small" color="tandoor" v-model="c.rating"></v-rating>
-                            <span v-if="c.servings != null && c.servings > 0">{{ c.servings }} {{ recipe.servingsText }}</span>
-                            <p>
-                                {{ c.comment }}
-                            </p>
-                        </v-card>
+            <v-card v-for="c in cookLogs" :key="c.id" class="mt-1">
+                <v-card-text>
+                    <v-rating density="comfortable" size="x-small" color="tandoor" v-model="c.rating"></v-rating>
+                    <br/>
+                    <span v-if="c.servings != null && c.servings > 0">{{ c.servings }} <span v-if="recipe.servingsText != ''">{{ recipe.servingsText }}</span><span v-else>Servings</span></span> <br/>
 
-                    </v-timeline-item>
-                </v-timeline>
-            </v-col>
-        </v-row>
+                    {{ c.comment }}
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-subtitle>
+                    {{ DateTime.fromJSDate(c.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }} by {{ c.createdBy.displayName }}
+                </v-card-subtitle>
+            </v-card>
 
 
-    </v-container>
+            <Vueform :endpoint="false" @submit="createCookLog" class="mt-2">
+                <textarea-element name="comment" label="Comment"></textarea-element>
+                <text-element type="number" name="rating" label="Rating" :default="5">
+                    <template #addon-before>
+                        <v-btn-group class="rounded-0">
+
+                            <v-btn color="secondary">-</v-btn>
+                        </v-btn-group>
+                    </template>
+                    <template #addon-after>
+                        <v-btn-group class="rounded-0">
+                            <v-btn color="primary">+</v-btn>
+                        </v-btn-group>
+                    </template>
+                </text-element>
+                <text-element type="number" name="servings" label="Servings" :default="recipe.servings">
+                    <template #addon-before>
+                        <v-btn-group class="rounded-0">
+
+                            <v-btn color="secondary">-</v-btn>
+                        </v-btn-group>
+                    </template>
+                    <template #addon-after>
+                        <v-btn-group class="rounded-0">
+                            <v-btn color="primary">+</v-btn>
+                        </v-btn-group>
+                    </template>
+                </text-element>
+                <button-element name="submit" :submits="true" button-label="Submit"></button-element>
+            </Vueform>
+
+        </v-card-text>
+    </v-card>
+
+
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from 'vue'
-import {ApiApi, CookLog, Recipe} from "@/openapi";
+<script setup lang="ts">
 
-export default defineComponent({
-    name: "RecipeActivity",
-    props: {
-        recipe: {
-            type: Object as PropType<Recipe>,
-            required: true
-        },
-    },
-    data() {
-        return {
-            cook_logs: [] as CookLog[]
-        }
-    },
-    mounted() {
-        const api = new ApiApi()
-        api.listCookLogs({recipe: this.recipe.id}).then(r => {
-            // TODO pagination
-            this.cook_logs = r.results
-        })
+import {onMounted, PropType, ref} from "vue";
+import {ApiApi, CookLog, Recipe} from "@/openapi";
+import {DateTime} from "luxon";
+
+const props = defineProps({
+    recipe: {
+        type: Object as PropType<Recipe>,
+        required: true
     },
 })
+
+const cookLogs = ref([] as CookLog[])
+
+function refreshActivity() {
+    const api = new ApiApi()
+    api.apiCookLogList({recipe: props.recipe.id}).then(r => {
+        // TODO pagination
+        if (r.results) {
+            cookLogs.value = r.results
+        }
+    })
+}
+
+function createCookLog(form: any) {
+    const api = new ApiApi()
+    let cookLog = {
+        recipe: props.recipe.id,
+        comment: form.data.comment,
+        servings: form.data.servings,
+        rating: form.data.rating,
+    } as CookLog
+    api.apiCookLogCreate({cookLogRequest: cookLog}).then(r => {
+        console.log('success', r)
+    }).catch(err => {
+        console.log('error', err)
+    })
+}
+
+onMounted(() => {
+    refreshActivity()
+})
+
 </script>
 
 <style scoped>

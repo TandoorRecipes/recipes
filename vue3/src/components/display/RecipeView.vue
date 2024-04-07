@@ -2,8 +2,9 @@
 
     <template v-if="recipe.name != undefined">
 
-        <v-card class="mt-md-4">
+        <v-card class="mt-md-4 rounded-0">
             <v-img max-height="25vh" cover lazy :src="recipe.image" v-if="recipe.image != undefined" class="align-end">
+                <v-chip  class="ms-2" color="primary" variant="flat" size="x-small">by {{ recipe.createdBy}}</v-chip>
                 <KeywordsComponent variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></KeywordsComponent>
             </v-img>
 
@@ -48,7 +49,7 @@
             <Step :step="step" :step-number="index+1" :ingredient_factor="ingredient_factor"></Step>
         </v-card>
 
-        <!--    <RecipeActivity :recipe="recipe"></RecipeActivity>-->
+        <recipe-activity :recipe="recipe"></recipe-activity>
     </template>
 </template>
 
