@@ -1,41 +1,42 @@
 <template>
-    <v-container>
-        <v-btn @click="testApi">Test API</v-btn>
-    </v-container>
 
+    <v-calendar view-mode="month" :events="calendarEvents" show-adjacent-months>
+
+    </v-calendar>
 
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import RecipeCard from "@/components/display/RecipeCard.vue";
-import {ApiApi, Recipe, RecipeOverview} from "@/openapi";
+
+import {VCalendar} from 'vuetify/labs/VCalendar'
+import {ApiApi, MealPlan} from "@/openapi";
 
 
 export default defineComponent({
     name: "MealPlanPage",
-    components: {ModelSelect, RecipeCard},
+    components: {VCalendar},
+    computed: {
+        calendarEvents: function(){
+            let events = []
+            this.mealPlans.forEach(mp => {
+                events.push({start: mp.fromDate, end: mp.toDate, title: (mp.recipe != undefined) ? mp.recipe.name : mp.title})
+            })
+            return events
+        }
+    },
     data() {
         return {
-            test: {
-                text: String,
-            },
+            mealPlans: [] as MealPlan[]
         }
     },
     mounted() {
-
+        let api = new ApiApi()
+        api.apiMealPlanList().then(r => {
+            this.mealPlans = r
+        })
     },
-    methods: {
-        testApi: function () {
-            const api = new ApiApi()
-            api.apiMealPlanList().then(r => {
-                if (r.length > 0 && r[0].id != undefined) {
-                    api.apiMealPlanUpdate({id: r[0].id, mealPlanRequest: r[0]})
-                }
-            })
-        }
-    }
+    methods: {}
 
 })
 </script>

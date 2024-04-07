@@ -1,5 +1,8 @@
 <template>
 
+    <v-container>
+        <v-btn @click="testApi">Test API</v-btn>
+    </v-container>
 
 </template>
 
@@ -24,7 +27,14 @@ export default defineComponent({
 
     },
     methods: {
-
+        testApi: function () {
+            const api = new ApiApi()
+            api.apiMealPlanList().then(r => {
+                if (r.length > 0 && r[0].id != undefined) {
+                    api.apiMealPlanUpdate({id: r[0].id, mealPlanRequest: r[0]})
+                }
+            })
+        }
     }
 
 })

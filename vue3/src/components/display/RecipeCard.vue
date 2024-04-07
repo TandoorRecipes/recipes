@@ -21,6 +21,8 @@
                                 class="float-start ms-1 mt-1" v-if="recipe.waitingTime != undefined && recipe.waitingTime > 0">
                             {{ recipe.waitingTime }}
                         </v-chip>
+
+                        <keywords-component variant="flat" :keywords="recipe.keywords"></keywords-component>
                     </v-img>
                     <v-divider class="p-0" v-if="recipe.image == null"></v-divider>
 
@@ -34,22 +36,22 @@
                 <v-card-title>
                              {{ recipe.name }}
                             <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>
-
                 </v-card-title>
+                <v-card-subtitle>by {{ recipe.createdBy}}</v-card-subtitle>
 
 
-                <v-card-subtitle v-if="show_keywords">
-                    <KeywordsComponent :keywords="recipe.keywords"></KeywordsComponent>
-                </v-card-subtitle>
-                <v-rating
-                    v-if="recipe.rating != null"
-                    v-model="recipe.rating"
-                    color="amber"
-                    density="comfortable"
-                    half-increments
-                    readonly
-                    size="x-small"
-                ></v-rating>
+<!--                <v-card-subtitle v-if="show_keywords">-->
+<!--                    <keywords-component :keywords="recipe.keywords"></keywords-component>-->
+<!--                </v-card-subtitle>-->
+<!--                <v-rating-->
+<!--                    v-if="recipe.rating != null"-->
+<!--                    v-model="recipe.rating"-->
+<!--                    color="amber"-->
+<!--                    density="comfortable"-->
+<!--                    half-increments-->
+<!--                    readonly-->
+<!--                    size="x-small"-->
+<!--                ></v-rating>-->
 
             </v-card-item>
 
