@@ -94,7 +94,7 @@ export default defineComponent({
             dialog: false,
             recipes: [] as Recipe[],
             flat_recipes: [] as RecipeFlat[],
-            search_query: null,
+            search_query: null as string|null,
             selected_result: 0,
         }
     },

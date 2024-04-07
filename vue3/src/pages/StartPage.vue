@@ -1,10 +1,6 @@
 <template>
     <v-container>
 
-        <v-btn>
-            <meal-plan-dialog></meal-plan-dialog>
-        </v-btn>
-
         <horizontal-meal-plan-window></horizontal-meal-plan-window>
 
 
@@ -33,7 +29,7 @@ import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 
 
 export default defineComponent({
-    name: "RecipeSearchPage",
+    name: "StartPage",
     components: {MealPlanDialog, HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
     computed: {
 

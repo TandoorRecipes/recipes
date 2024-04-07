@@ -2,7 +2,7 @@
     <v-app >
 
         <v-app-bar color="tandoor" flat density="comfortable">
-            <router-link :to="{name: 'view_search', params: {}}">
+            <router-link :to="{name: 'view_start', params: {}}">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
             </router-link>
             <global-search-dialog></global-search-dialog>
