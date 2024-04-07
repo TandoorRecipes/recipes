@@ -2,45 +2,35 @@
 
     <template v-if="recipe.name != undefined">
 
-
         <v-card class="mt-md-4">
-
             <v-img max-height="25vh" cover lazy :src="recipe.image" v-if="recipe.image != undefined" class="align-end">
                 <KeywordsComponent variant="flat" class="ms-1 mb-2" :keywords="recipe.keywords"></KeywordsComponent>
             </v-img>
 
             <v-card>
                 <v-sheet class="d-flex align-center">
-                    <span class="ps-2 text-h5 text-truncate flex-grow-1">{{ recipe.name }}</span>
+                    <span class="ps-2 text-h5  flex-grow-1" :class="{'text-truncate': !showFullRecipeName}" @click="showFullRecipeName = !showFullRecipeName">{{ recipe.name }}</span>
                     <recipe-context-menu :recipe="recipe"></recipe-context-menu>
                 </v-sheet>
             </v-card>
-
-            <!--        <v-card class="mt-1">-->
-            <!--            <v-sheet class="d-flex ">-->
-            <!--                <span class="ps-2 text-h5 flex-grow-1">{{ recipe.name }}</span>-->
-            <!--                <recipe-context-menu :recipe="recipe"></recipe-context-menu>-->
-            <!--            </v-sheet>-->
-            <!--        </v-card>-->
-
         </v-card>
 
         <v-card class="mt-1">
             <v-container>
                 <v-row class="text-center text-body-2">
                     <v-col class="pt-1 pb-1">
-                        <i class="fas fa-cogs"></i> {{ recipe.workingTime }} min<br/>
+                        <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
                         <div class="text-grey">Working Time</div>
                     </v-col>
                     <v-col class="pt-1 pb-1">
-                        <div><i class="fas fa-hourglass-half"></i> {{ recipe.waitingTime }} min</div>
+                        <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
                         <div class="text-grey">Waiting Time</div>
                     </v-col>
                     <v-col class="pt-1 pb-1">
                         <NumberScalerDialog :number="servings" @change="servings = $event.number" title="Servings">
                             <template #activator>
                                 <div class="cursor-pointer">
-                                    <i class="fas fa-calendar-alt"></i> {{ servings }} <br/>
+                                    <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                     <div class="text-grey"><span v-if="recipe?.servingsText">{{ recipe.servingsText }}</span><span v-else>Servings</span></div>
                                 </div>
                             </template>
@@ -86,6 +76,7 @@ export default defineComponent({
     data() {
         return {
             servings: 1,
+            showFullRecipeName: false,
         }
     },
     watch: {
