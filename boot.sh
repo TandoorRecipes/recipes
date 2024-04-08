@@ -68,12 +68,16 @@ echo "Migrating database"
 python manage.py migrate
 
 if [[ "${DOCKER}" == "true" ]]; then
-    echo "Copying cached static files from docker build"
+    if [[ -d "/opt/recipes/staticfiles-collect" ]]; then
+        echo "Copying cached static files from docker build"
 
-    mkdir -p /opt/recipes/staticfiles
-    rm -rf /opt/recipes/staticfiles/*
-    mv /opt/recipes/staticfiles-collect/* /opt/recipes/staticfiles
-    rm -rf /opt/recipes/staticfiles-collect
+        mkdir -p /opt/recipes/staticfiles
+        rm -rf /opt/recipes/staticfiles/*
+        mv /opt/recipes/staticfiles-collect/* /opt/recipes/staticfiles
+        rm -rf /opt/recipes/staticfiles-collect
+    else
+        echo "Static files are already up to date"
+    fi
 else
     echo "Collecting static files, this may take a while..."
 
