@@ -1,14 +1,12 @@
 [tool.yapf]
 column_limit = 179
 based_on_style = "pep8"
-# each_dict_entry_on_separate_line = true
 DISABLE_ENDING_COMMA_HEURISTIC = false
 COALESCE_BRACKETS = true
 DEDENT_CLOSING_BRACKETS = true
 FORCE_MULTILINE_DICT = false
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
+multi_line_output = 5
 skip = [".gitignore", ".dockerignore"]
 line_length = 179
