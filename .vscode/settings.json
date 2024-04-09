@@ -8,5 +8,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[python]": {
         "editor.defaultFormatter": "eeyore.yapf",
-    }
+    },
+    "yapf.args": [],
+    "isort.args": []
 }
