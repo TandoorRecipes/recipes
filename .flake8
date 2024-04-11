@@ -1,0 +1,22 @@
+[flake8]
+extend-ignore =
+    # Whitespace before ':' - Required for black compatibility
+    E203,
+    # Line break occurred before a binary operator - Required for black compatibility
+    W503,
+    # Comparison to False should be 'if cond is False:' or 'if not cond:'
+    E712
+exclude =
+    .git,
+    **/__pycache__,
+        **/.git,
+        **/.svn,
+        **/.hg,
+        **/CVS,
+        **/.DS_Store,
+        .vscode,
+        **/*.pyc
+per-file-ignores=
+    cookbook/apps.py:F401
+max-line-length = 179
+

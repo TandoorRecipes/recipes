@@ -210,10 +210,18 @@ ENABLE_PDF_EXPORT = bool(int(os.getenv('ENABLE_PDF_EXPORT', False)))
 EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', 'django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware', 'cookbook.helper.scope_middleware.ScopeMiddleware', 'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cookbook.helper.scope_middleware.ScopeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 if DEBUG_TOOLBAR:
@@ -244,7 +252,11 @@ if LDAP_AUTH:
     AUTH_LDAP_START_TLS = bool(int(os.getenv('AUTH_LDAP_START_TLS', False)))
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
     AUTH_LDAP_BIND_PASSWORD = os.getenv('AUTH_LDAP_BIND_PASSWORD')
-    AUTH_LDAP_USER_SEARCH = LDAPSearch(os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'), ldap.SCOPE_SUBTREE, os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'), )
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(
+        os.getenv('AUTH_LDAP_USER_SEARCH_BASE_DN'),
+        ldap.SCOPE_SUBTREE,
+        os.getenv('AUTH_LDAP_USER_SEARCH_FILTER_STR', '(uid=%(user)s)'),
+    )
     AUTH_LDAP_USER_ATTR_MAP = ast.literal_eval(os.getenv('AUTH_LDAP_USER_ATTR_MAP')) if os.getenv('AUTH_LDAP_USER_ATTR_MAP') else {
         'first_name': 'givenName',
         'last_name': 'sn',
@@ -271,7 +283,10 @@ if LDAP_AUTH:
             },
         }
 
-AUTHENTICATION_BACKENDS += ['django.contrib.auth.backends.ModelBackend', 'allauth.account.auth_backends.AuthenticationBackend', ]
+AUTHENTICATION_BACKENDS += [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # django allauth site id
 SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
@@ -285,15 +300,20 @@ if REMOTE_USER_AUTH:
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [{
-    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-}, {
-    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-}, {
-    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-}, {
-    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-}, ]
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -358,17 +378,23 @@ SPECTACULAR_SETTINGS = {
 
 ROOT_URLCONF = 'recipes.urls'
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'cookbook', 'templates')],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': [
-            'django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth',
-            'django.contrib.messages.context_processors.messages', 'django.template.context_processors.media', 'cookbook.helper.context_processors.context_settings',
-        ],
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'cookbook', 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
+                'cookbook.helper.context_processors.context_settings',
+            ],
+        },
     },
-}, ]
+]
 
 WSGI_APPLICATION = 'recipes.wsgi.application'
 
@@ -439,7 +465,12 @@ def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, p
 
 DATABASES = setup_database()
 
-CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache', 'LOCATION': 'default', }}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'default',
+    }
+}
 
 # Vue webpack settings
 VUE_DIR = os.path.join(BASE_DIR, 'vue')
@@ -502,9 +533,25 @@ USE_L10N = True
 
 USE_TZ = True
 
-LANGUAGES = [('hy', _('Armenian ')), ('bg', _('Bulgarian')), ('ca', _('Catalan')), ('cs', _('Czech')), ('da', _('Danish')), ('nl', _('Dutch')), ('en', _('English')),
-             ('fr', _('French')), ('de', _('German')), ('hu', _('Hungarian')), ('it', _('Italian')), ('lv', _('Latvian')), ('nb', _('Norwegian ')), ('pl', _('Polish')),
-             ('ru', _('Russian')), ('es', _('Spanish')), ('sv', _('Swedish')), ]
+LANGUAGES = [
+    ('hy', _('Armenian ')),
+    ('bg', _('Bulgarian')),
+    ('ca', _('Catalan')),
+    ('cs', _('Czech')),
+    ('da', _('Danish')),
+    ('nl', _('Dutch')),
+    ('en', _('English')),
+    ('fr', _('French')),
+    ('de', _('German')),
+    ('hu', _('Hungarian')),
+    ('it', _('Italian')),
+    ('lv', _('Latvian')),
+    ('nb', _('Norwegian ')),
+    ('pl', _('Polish')),
+    ('ru', _('Russian')),
+    ('es', _('Spanish')),
+    ('sv', _('Swedish')),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -562,7 +609,13 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tando
 ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
 
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
-ACCOUNT_RATE_LIMITS = {"change_password": "1/m/user", "reset_password": "1/m/ip,1/m/key", "reset_password_from_key": "1/m/ip", "signup": "5/m/ip", "login": "5/m/ip", }
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
 
 DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', False)))
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
