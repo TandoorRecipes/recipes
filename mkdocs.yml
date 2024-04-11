@@ -36,6 +36,7 @@ nav:
       - TrueNAS Portainer: install/truenas_portainer.md
       - WSL: install/wsl.md
       - ArchLinux: install/archlinux.md
+      - HomeAssistant: install/homeassistant.md
       - Manual: install/manual.md
       - Other setups: install/other.md
   - Features:
@@ -46,10 +47,21 @@ nav:
       - Connectors: features/connectors.md
       - Storages and Sync: features/external_recipes.md
       - Import/Export: features/import_export.md
+      - Telegram bot: features/telegram_bot.md
   - System:
       - Configuration: system/configuration.md
       - Updating: system/updating.md
+      - Migrate sqlite to postgres: system/migration_sqlite-postgres.md
       - Permission System: system/permissions.md
       - Backup: system/backup.md
-  - Contributing: contribute.md
+  - Contributing:
+      - Overview: contribute/contribute.md
+      - Translations: contribute/translations.md
+      - Documentation: contribute/documentation.md
+      - Code: contribute/guidelines.md
+      - Installation: contribute/installation.md
+      - IDE Setup:
+          - VSCode: contribute/vscode.md
+          - PyCharm: contribute/pycharm.md
+      - Related Projects: contribute/related.md
   - FAQ: faq.md
