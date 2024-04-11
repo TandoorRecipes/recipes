@@ -1,7 +1,0 @@
-{
-    "printWidth": 179,
-    "trailingComma": "es5",
-    "tabWidth": 2,
-    "semi": false,
-    "experimentalTernaries": true
-}
