@@ -47,11 +47,6 @@ docs/reports/**
 
 # Django stuff:
 *.log
-mediafiles/
-*.sqlite3*
-staticfiles/
-postgresql/
-data/
 
 # Sphinx documentation
 docs/_build/
@@ -64,23 +59,32 @@ target/
 
 \.idea/dataSources\.local\.xml
 
+venv/
+
+mediafiles/
+
+*.sqlite3*
+
 \.idea/workspace\.xml
 
 \.idea/misc\.xml
 
 # Deployment
-\.env
 
-cookbook/static/vue
-vue/webpack-stats.json
+\.env
+staticfiles/
+postgresql/
+data/
+
+
 /docker-compose.override.yml
 vue/node_modules
 plugins
-vue3/node_modules
+vetur.config.js
+cookbook/static/vue
+vue/webpack-stats.json
 cookbook/templates/sw.js
+.prettierignore
 vue/.yarn
 vue3/.vite
-
-# Configs
-vetur.config.js
-venv/
+vue3/node_modules

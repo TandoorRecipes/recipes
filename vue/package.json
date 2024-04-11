@@ -98,5 +98,12 @@
   "resolutions": {
     "@vue/cli-plugin-pwa/workbox-webpack-plugin": "^5.1.3",
     "coa": "2.0.2"
+  },
+  "prettier": {
+    "printWidth": 179,
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "experimentalTernaries": true
   }
 }
