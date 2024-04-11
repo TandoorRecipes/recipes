@@ -1,0 +1,13 @@
+# generated files
+api.ts
+vue/src/apps/*.js
+vue/node_modules
+staticfiles/
+docs/reports/
+/vue3/src/openapi/
+
+# ignored files - prettier interferes with django templates and github actions
+*.html
+*.yml
+*.yaml
+
