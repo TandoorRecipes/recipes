@@ -15,12 +15,9 @@ from cookbook.models import Automation, Keyword, PropertyType
 
 
 def get_from_scraper(scrape, request):
-    # converting the scrape_me object to the existing json format based on ld+json
+    # converting the scrape_html object to the existing json format based on ld+json
 
-    recipe_json = {
-        'steps': [],
-        'internal': True
-    }
+    recipe_json = {'steps': [], 'internal': True}
     keywords = []
 
     # assign source URL
@@ -157,11 +154,18 @@ def get_from_scraper(scrape, request):
     # assign steps
     try:
         for i in parse_instructions(scrape.instructions()):
-            recipe_json['steps'].append({'instruction': i, 'ingredients': [], 'show_ingredients_table': request.user.userpreference.show_step_ingredients, })
+            recipe_json['steps'].append({
+                'instruction': i,
+                'ingredients': [],
+                'show_ingredients_table': request.user.userpreference.show_step_ingredients,
+            })
     except Exception:
         pass
     if len(recipe_json['steps']) == 0:
-        recipe_json['steps'].append({'instruction': '', 'ingredients': [], })
+        recipe_json['steps'].append({
+            'instruction': '',
+            'ingredients': [],
+        })
 
     recipe_json['description'] = recipe_json['description'][:512]
     if len(recipe_json['description']) > 256:  # split at 256 as long descriptions don't look good on recipe cards
@@ -182,20 +186,20 @@ def get_from_scraper(scrape, request):
                         'original_text': x
                     }
                     if unit:
-                        ingredient['unit'] = {'name': unit, }
+                        ingredient['unit'] = {
+                            'name': unit,
+                        }
                     recipe_json['steps'][0]['ingredients'].append(ingredient)
                 except Exception:
-                    recipe_json['steps'][0]['ingredients'].append(
-                        {
-                            'amount': 0,
-                            'unit': None,
-                            'food': {
-                                'name': x,
-                            },
-                            'note': '',
-                            'original_text': x
-                        }
-                    )
+                    recipe_json['steps'][0]['ingredients'].append({
+                        'amount': 0,
+                        'unit': None,
+                        'food': {
+                            'name': x,
+                        },
+                        'note': '',
+                        'original_text': x
+                    })
     except Exception:
         pass
 
@@ -248,14 +252,16 @@ def get_from_youtube_scraper(url, request):
         'working_time': 0,
         'waiting_time': 0,
         'image': "",
-        'keywords': [{'name': kw.name, 'label': kw.name, 'id': kw.pk}],
+        'keywords': [{
+            'name': kw.name,
+            'label': kw.name,
+            'id': kw.pk
+        }],
         'source_url': url,
-        'steps': [
-            {
-                'ingredients': [],
-                'instruction': ''
-            }
-        ]
+        'steps': [{
+            'ingredients': [],
+            'instruction': ''
+        }]
     }
 
     try:
@@ -452,10 +458,7 @@ def normalize_string(string):
 
 
 def iso_duration_to_minutes(string):
-    match = re.match(
-        r'P((?P<years>\d+)Y)?((?P<months>\d+)M)?((?P<weeks>\d+)W)?((?P<days>\d+)D)?T((?P<hours>\d+)H)?((?P<minutes>\d+)M)?((?P<seconds>\d+)S)?',
-        string
-    ).groupdict()
+    match = re.match(r'P((?P<years>\d+)Y)?((?P<months>\d+)M)?((?P<weeks>\d+)W)?((?P<days>\d+)D)?T((?P<hours>\d+)H)?((?P<minutes>\d+)M)?((?P<seconds>\d+)S)?', string).groupdict()
     return int(match['days'] or 0) * 24 * 60 + int(match['hours'] or 0) * 60 + int(match['minutes'] or 0)
 
 
