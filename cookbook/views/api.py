@@ -35,7 +35,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
-from recipe_scrapers import scrape_me
+from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
@@ -1437,8 +1437,8 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validators.url(url, public=True):
-                            scrape = scrape_me(url_path=url, wild_mode=True)
-
+                            html = requests.get(url).content
+                            scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
                             return Response({'error': True, 'msg': _('Invalid Url')}, status=status.HTTP_400_BAD_REQUEST)
                     except NoSchemaFoundInWildMode:
