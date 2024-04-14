@@ -14,6 +14,7 @@ from zipfile import ZipFile
 
 import requests
 import validators
+from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
 from django.contrib import messages
@@ -183,8 +184,8 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
         if query is not None and query not in ["''", '']:
             if fuzzy and (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                 if (
-                    self.request.user.is_authenticated
-                    and any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)])
+                        self.request.user.is_authenticated
+                        and any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)])
                 ):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
                 else:
@@ -616,8 +617,8 @@ class FoodViewSet(TreeMixin):
             return JsonResponse(
                 {
                     'msg':
-                    'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
-                            Configure your key in Tandoor using environment FDC_API_KEY variable.'
+                        'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
+                                Configure your key in Tandoor using environment FDC_API_KEY variable.'
                 },
                 status=429,
                 json_dumps_params={'indent': 4})
@@ -630,7 +631,7 @@ class FoodViewSet(TreeMixin):
         food.properties_food_unit = Unit.objects.get_or_create(
             base_unit__iexact='g',
             space=self.request.space,
-            defaults={ 'name': 'g', 'base_unit': 'g', 'space': self.request.space}
+            defaults={'name': 'g', 'base_unit': 'g', 'space': self.request.space}
         )[0]
 
         food.save()
@@ -662,13 +663,13 @@ class FoodViewSet(TreeMixin):
                                      space=self.request.space,
                                      ))
 
-            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type', ))
+            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type',))
 
             property_food_relation_list = []
             for p in properties:
                 property_food_relation_list.append(Food.properties.through(food_id=food.id, property_id=p.pk))
 
-            FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id', ))
+            FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
 
             return self.retrieve(request, pk)
         except Exception:
@@ -1126,13 +1127,13 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-            OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
-            OpenApiParameter(
-                name='checked',
-                description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
+    OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
+    OpenApiParameter(
+        name='checked',
+        description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
                             - ''recent'' includes unchecked items and recently completed items.')
-            ),
-            OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
+    ),
+    OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
 ]))
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
