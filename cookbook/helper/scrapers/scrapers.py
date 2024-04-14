@@ -30,7 +30,7 @@ def text_scraper(text, url=None):
             html=None,
             url=None,
         ):
-            self.wild_mode = False
+            self.supported_only = False
             self.meta_http_equiv = False
             self.soup = BeautifulSoup(html, "html.parser")
             self.url = url
