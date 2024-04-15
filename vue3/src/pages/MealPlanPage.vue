@@ -5,7 +5,9 @@
             <CalendarView
                 :items="planItems"
                 class="theme-default"
-            :item-content-height="calendarItemHeight">
+                :item-content-height="calendarItemHeight"
+            :enable-drag-drop="true"
+            @dropOnDate="dropCalendarItemOnDate">
                 <template #item="{ value, weekStartDate, top }">
                     <meal-plan-calendar-item :item-height="calendarItemHeight" :value="value" :item-top="top"></meal-plan-calendar-item>
                 </template>
@@ -24,7 +26,8 @@ import {CalendarView, CalendarViewHeader} from "vue-simple-calendar"
 import "vue-simple-calendar/dist/style.css"
 import "vue-simple-calendar/dist/css/default.css"
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
-import {IMealPlanCalendarItem} from "@/types/MealPlan";
+import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
+import {DateTime} from "luxon";
 
 
 export default defineComponent({
@@ -58,7 +61,28 @@ export default defineComponent({
             this.mealPlans = r
         })
     },
-    methods: {}
+    methods: {
+        dropCalendarItemOnDate(item: IMealPlanNormalizedCalendarItem, targetDate: Date, event: DragEvent){
+            console.log(item, targetDate, event)
+            //TODO item is undefined because we have a custom item that does not set the state correctly
+            this.mealPlans.forEach(mealPlan => {
+                if (mealPlan.id == item.originalItem.mealPlan.id){
+                    let fromToDiff = DateTime.fromJSDate(mealPlan.fromDate).diff(DateTime.fromJSDate(mealPlan.toDate), 'days')
+
+                    if (event.ctrlKey) {
+                        let new_entry = Object.assign({}, mealPlan)
+                        new_entry.fromDate = targetDate
+                        new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                        //this.createEntry(new_entry)
+                    } else {
+                        mealPlan.fromDate = targetDate
+                        mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                        //this.saveEntry(entry)
+                    }
+                }
+            })
+        }
+    }
 
 })
 </script>

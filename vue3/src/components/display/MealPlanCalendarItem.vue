@@ -1,21 +1,20 @@
 <template>
     <v-card class="card cv-item pa-0" hover
             :style="{'top': itemTop, 'height': itemHeight, 'border-color': mealPlan.mealType.color}"
+            :draggable="true"
             :key="value.id"
-            :class="value.classes"
-    >
+            @dragstart="emit('onDragStart', value, $event)"
+            :class="value.classes">
         <v-card-text class="pa-0">
             <div class="d-flex flex-row align-items-center">
                 <div class="flex-column">
                     <recipe-image :height="itemHeight" :width="itemHeight" :recipe="mealPlan.recipe"></recipe-image>
                 </div>
-                <div class="flex-column flex-grow-0">
-                    <div class="card-body pl-1 pa-1">
-
+                <div class="flex-column flex-grow-0 pa-1">
                     <span class="font-light" :class="{'two-line-text': detailedItems,'one-line-text': !detailedItems,}">
                        <i class="fas fa-shopping-cart fa-xs float-left" v-if="mealPlan.shopping"/>
-                        {{ itemTitle }}</span>
-                    </div>
+                        {{ itemTitle }}
+                    </span>
                 </div>
             </div>
 
@@ -30,6 +29,12 @@ import {computed, PropType} from "vue";
 import {IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 
+const emit = defineEmits({
+    onDragStart: (value: IMealPlanNormalizedCalendarItem, event: DragEvent) => {
+        console.log(value, event)
+        return true
+    },
+})
 
 let props = defineProps({
     value: {type: {} as PropType<IMealPlanNormalizedCalendarItem>, required: true},
@@ -52,26 +57,10 @@ const itemTitle = computed(() => {
     }
 })
 
-const itemImage = computed(() => {
-    if (mealPlan.value.recipe != undefined && mealPlan.value.recipe.image != undefined && props.detailedItems){
-        return mealPlan.value.recipe.image
-    } else {
-        return recipeDefaultImage
-    }
-})
 
 </script>
 
 <style scoped>
-.meal-plan-card {
-    background-color: #fff;
-}
-
-@media (max-width: 767.9px) {
-    .meal-plan-card {
-        font-size: 13px;
-    }
-}
 
 .two-line-text {
     display: -webkit-box;
