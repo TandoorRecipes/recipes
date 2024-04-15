@@ -11,5 +11,6 @@ export interface IMealPlanNormalizedCalendarItem extends ICalendarItem {
 	endDate: Date
 	originalItem: IMealPlanCalendarItem
 	classes: string[]
-	itemRow?: number
+	itemRow?: number,
+	id: string,
 }
