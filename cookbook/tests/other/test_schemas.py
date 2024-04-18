@@ -1,43 +1,53 @@
 import pytest
+from django.urls.resolvers import URLPattern, URLResolver
+from drf_spectacular.openapi import AutoSchema
+from rest_framework.viewsets import ModelViewSet
 
-from cookbook.urls import router
-
-exclude_endpoints = []
-
-
-@pytest.mark.parametrize("route", router.registry)
-def test_pagination_exists(route):
-    # route[0] = name
-    # route[1] = ViewSet class
-    # route[2] = reverse name
-
-    assert ('get' not in route[1].http_method_names
-            or 'get' in route[1].http_method_names and hasattr(route[1], 'pagination_class') and route[1].pagination_class is not None), f"API {route[0]} is not paginated."
+from cookbook.urls import urlpatterns
 
 
-def test_list_schema_completeness():
-    pass
+def has_choice_field(model):
+    model_fields = model._meta.get_fields()
+    return any(field.get_internal_type() == 'CharField' and hasattr(field, 'choices') and field.choices for field in model_fields)
 
 
-def test_get_schema_completeness():
-    pass
+# generates list of all api enpoints
+def enumerate_urlpatterns(urlpatterns, base_url=''):
+    for i, url_pattern in enumerate(urlpatterns):
+        # if the url pattern starts with 'api/' it is an api endpoint and should be part of the list
+        if isinstance(url_pattern, URLPattern):
+            pattern = f"{base_url}{str(url_pattern.pattern)}"
+            # DRF endpoints generate two patterns, no need to test both
+            if pattern[:4] == 'api/' and pattern[-25:] != '.(?P<format>[a-z0-9]+)/?$':
+                api_endpoints.append(url_pattern)
+        # if the pattern is a URLResolver then it is a list of URLPatterns and needs to be enumerated again, prepending the url_pattern
+        elif isinstance(url_pattern, URLResolver):
+            base_url_resolver = f"{base_url}{str(url_pattern.pattern)}/"
+            enumerate_urlpatterns(url_pattern.url_patterns, base_url_resolver)
 
 
-def test_create_schema_completeness():
-    pass
+api_endpoints = []
+enumerate_urlpatterns(urlpatterns)
+# filtered list of api_endpoints that only includes the LIST (or detail=False) endpoints
+list_api_endpoints = [a for a in api_endpoints if hasattr(a.callback, 'initkwargs') and a.callback.initkwargs.get('detail') == False]
+# filtered list of api_endpoints that only includes endpoints that have type ModelViewSet and a Choice CharField
+enum_api_endpoints = [
+    a for a in list_api_endpoints if hasattr(a.callback, 'cls') and issubclass(a.callback.cls, ModelViewSet) and has_choice_field(a.callback.cls.serializer_class.Meta.model)
+]
 
 
-def test_update_schema_completeness():
-    pass
+@pytest.mark.parametrize("api", list_api_endpoints, ids=lambda api: api.name)
+def test_pagination_exists(api):
+    assert hasattr(api.callback.cls, 'pagination_class') and api.callback.cls.pagination_class is not None, f"API {api.name} is not paginated."
 
 
-def test_partialupdate_schema_completeness():
-    pass
+@pytest.mark.parametrize("api", api_endpoints, ids=lambda api: api.name)
+def test_autoschema_exists(api):
+    assert issubclass(api.callback.cls.schema.__class__, AutoSchema)
 
 
-def test_destroy_schema_completeness():
-    pass
-
-
-def test_trace_schema_completeness():
-    pass
+#
+# @pytest.mark.parametrize("api", enum_api_endpoints, ids=lambda api: api.name)
+# def test_schema_enum(api):
+#     model = api.callback.cls.serializer_class.Meta.model
+#     has_choice_field = any(field.get_internal_type() == 'CharField' and hasattr(field, 'choices') and field.choices for field in model.get_fields())
