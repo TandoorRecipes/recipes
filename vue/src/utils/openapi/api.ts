@@ -527,10 +527,10 @@ export interface Food {
     properties?: Array<Property> | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    properties_food_amount?: string;
+    properties_food_amount?: number;
     /**
      * 
      * @type {Unit}
@@ -545,10 +545,10 @@ export interface Food {
     fdc_id?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    food_onhand?: string | null;
+    food_onhand?: boolean | null;
     /**
      * 
      * @type {SupermarketCategory}
@@ -557,10 +557,10 @@ export interface Food {
     supermarket_category?: SupermarketCategory | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    parent: string;
+    parent: number;
     /**
      * 
      * @type {number}
@@ -574,7 +574,7 @@ export interface Food {
      */
     inherit_fields?: Array<FoodInheritField> | null;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof Food
      */
@@ -605,10 +605,10 @@ export interface Food {
     substitute_children?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    substitute_onhand: string;
+    substitute_onhand: boolean;
     /**
      * 
      * @type {Array<FoodInheritField>}
@@ -809,16 +809,16 @@ export interface Ingredient {
     unit: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Ingredient
      */
-    amount: string;
+    amount: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    conversions: string;
+    conversions: Array<any>;
     /**
      * 
      * @type {string}
@@ -851,10 +851,10 @@ export interface Ingredient {
     original_text?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    used_in_recipes: string;
+    used_in_recipes: Array<any>;
     /**
      * 
      * @type {boolean}
@@ -967,10 +967,10 @@ export interface Keyword {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Keyword
      */
-    parent: string;
+    parent: number;
     /**
      * 
      * @type {number}
@@ -990,7 +990,7 @@ export interface Keyword {
      */
     updated_at: string;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof Keyword
      */
@@ -1041,10 +1041,10 @@ export interface MealPlan {
     recipe?: RecipeOverview | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof MealPlan
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}
@@ -1101,10 +1101,10 @@ export interface MealPlan {
     meal_type_name: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof MealPlan
      */
-    shopping: string;
+    shopping: boolean;
 }
 /**
  * Adds nested create feature
@@ -1174,28 +1174,28 @@ export interface NutritionInformation {
     id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    carbohydrates: string;
+    carbohydrates: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    fats: string;
+    fats: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    proteins: string;
+    proteins: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    calories: string;
+    calories: number;
     /**
      * 
      * @type {string}
@@ -2097,10 +2097,10 @@ export interface PatchedFood {
     properties?: Array<Property> | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedFood
      */
-    properties_food_amount?: string;
+    properties_food_amount?: number;
     /**
      * 
      * @type {Unit}
@@ -2115,10 +2115,10 @@ export interface PatchedFood {
     fdc_id?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedFood
      */
-    food_onhand?: string | null;
+    food_onhand?: boolean | null;
     /**
      * 
      * @type {SupermarketCategory}
@@ -2127,10 +2127,10 @@ export interface PatchedFood {
     supermarket_category?: SupermarketCategory | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedFood
      */
-    parent?: string;
+    parent?: number;
     /**
      * 
      * @type {number}
@@ -2144,7 +2144,7 @@ export interface PatchedFood {
      */
     inherit_fields?: Array<FoodInheritField> | null;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof PatchedFood
      */
@@ -2175,10 +2175,10 @@ export interface PatchedFood {
     substitute_children?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedFood
      */
-    substitute_onhand?: string;
+    substitute_onhand?: boolean;
     /**
      * 
      * @type {Array<FoodInheritField>}
@@ -2279,16 +2279,16 @@ export interface PatchedIngredient {
     unit?: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedIngredient
      */
-    amount?: string;
+    amount?: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof PatchedIngredient
      */
-    conversions?: string;
+    conversions?: Array<any>;
     /**
      * 
      * @type {string}
@@ -2321,10 +2321,10 @@ export interface PatchedIngredient {
     original_text?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof PatchedIngredient
      */
-    used_in_recipes?: string;
+    used_in_recipes?: Array<any>;
     /**
      * 
      * @type {boolean}
@@ -2437,10 +2437,10 @@ export interface PatchedKeyword {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedKeyword
      */
-    parent?: string;
+    parent?: number;
     /**
      * 
      * @type {number}
@@ -2460,7 +2460,7 @@ export interface PatchedKeyword {
      */
     updated_at?: string;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof PatchedKeyword
      */
@@ -2492,10 +2492,10 @@ export interface PatchedMealPlan {
     recipe?: RecipeOverview | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedMealPlan
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {string}
@@ -2552,10 +2552,10 @@ export interface PatchedMealPlan {
     meal_type_name?: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedMealPlan
      */
-    shopping?: string;
+    shopping?: boolean;
 }
 /**
  * Adds nested create feature
@@ -2614,10 +2614,10 @@ export interface PatchedProperty {
     id?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedProperty
      */
-    property_amount?: string | null;
+    property_amount?: number | null;
     /**
      * 
      * @type {PropertyType}
@@ -2778,10 +2778,10 @@ export interface PatchedRecipe {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof PatchedRecipe
      */
-    food_properties?: string;
+    food_properties?: any | null;
     /**
      * 
      * @type {number}
@@ -2802,10 +2802,10 @@ export interface PatchedRecipe {
     servings_text?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedRecipe
      */
-    rating?: string | null;
+    rating?: number | null;
     /**
      * 
      * @type {string}
@@ -2894,10 +2894,10 @@ export interface PatchedRecipeBookEntry {
     book?: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeBook}
      * @memberof PatchedRecipeBookEntry
      */
-    book_content?: string;
+    book_content?: RecipeBook;
     /**
      * 
      * @type {number}
@@ -2906,10 +2906,10 @@ export interface PatchedRecipeBookEntry {
     recipe?: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeOverview}
      * @memberof PatchedRecipeBookEntry
      */
-    recipe_content?: string;
+    recipe_content?: RecipeOverview;
 }
 /**
  * Adds nested create feature
@@ -2943,10 +2943,10 @@ export interface PatchedShoppingListEntry {
     unit?: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListEntry
      */
-    amount?: string;
+    amount?: number;
     /**
      * 
      * @type {number}
@@ -3034,10 +3034,10 @@ export interface PatchedShoppingListRecipe {
     mealplan?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {string}
@@ -3131,22 +3131,22 @@ export interface PatchedSpace {
     food_inherit?: Array<FoodInheritField>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    user_count?: string;
+    user_count?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    recipe_count?: string;
+    recipe_count?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    file_size_mb?: string;
+    file_size_mb?: number;
     /**
      * 
      * @type {UserFileView}
@@ -3294,16 +3294,16 @@ export interface PatchedStep {
     step_recipe?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof PatchedStep
      */
-    step_recipe_data?: string;
+    step_recipe_data?: any | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedStep
      */
-    numrecipe?: string;
+    numrecipe?: number;
     /**
      * 
      * @type {boolean}
@@ -3565,10 +3565,10 @@ export interface PatchedUnitConversion {
     name?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversion
      */
-    base_amount?: string;
+    base_amount?: number;
     /**
      * 
      * @type {Unit}
@@ -3577,10 +3577,10 @@ export interface PatchedUnitConversion {
     base_unit?: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversion
      */
-    converted_amount?: string;
+    converted_amount?: number;
     /**
      * 
      * @type {Unit}
@@ -3741,10 +3741,10 @@ export interface PatchedUserPreference {
     mealplan_autoadd_shopping?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {FoodInheritField}
      * @memberof PatchedUserPreference
      */
-    food_inherit_default?: string;
+    food_inherit_default?: FoodInheritField;
     /**
      * 
      * @type {number}
@@ -3813,10 +3813,10 @@ export interface PatchedUserPreference {
     show_step_ingredients?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedUserPreference
      */
-    food_children_exist?: string;
+    food_children_exist?: boolean;
 }
 /**
  * Adds nested create feature
@@ -3924,10 +3924,10 @@ export interface Property {
     id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Property
      */
-    property_amount: string | null;
+    property_amount: number | null;
     /**
      * 
      * @type {PropertyType}
@@ -4088,10 +4088,10 @@ export interface Recipe {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Recipe
      */
-    food_properties: string;
+    food_properties: any | null;
     /**
      * 
      * @type {number}
@@ -4112,10 +4112,10 @@ export interface Recipe {
     servings_text?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Recipe
      */
-    rating: string | null;
+    rating: number | null;
     /**
      * 
      * @type {string}
@@ -4204,10 +4204,10 @@ export interface RecipeBookEntry {
     book: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeBook}
      * @memberof RecipeBookEntry
      */
-    book_content: string;
+    book_content: RecipeBook;
     /**
      * 
      * @type {number}
@@ -4216,10 +4216,10 @@ export interface RecipeBookEntry {
     recipe: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeOverview}
      * @memberof RecipeBookEntry
      */
-    recipe_content: string;
+    recipe_content: RecipeOverview;
 }
 /**
  * Adds nested create feature
@@ -4351,10 +4351,10 @@ export interface RecipeOverview {
     servings_text: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof RecipeOverview
      */
-    rating: string | null;
+    rating: number | null;
     /**
      * 
      * @type {string}
@@ -4363,10 +4363,10 @@ export interface RecipeOverview {
     last_cooked: string | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof RecipeOverview
      */
-    _new: string;
+    _new: boolean;
     /**
      * 
      * @type {string}
@@ -4462,10 +4462,10 @@ export interface ShoppingListEntry {
     unit?: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntry
      */
-    amount: string;
+    amount: number;
     /**
      * 
      * @type {number}
@@ -4572,10 +4572,10 @@ export interface ShoppingListRecipe {
     mealplan?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListRecipe
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}
@@ -4669,22 +4669,22 @@ export interface Space {
     food_inherit: Array<FoodInheritField>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    user_count: string;
+    user_count: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    recipe_count: string;
+    recipe_count: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    file_size_mb: string;
+    file_size_mb: number;
     /**
      * 
      * @type {UserFileView}
@@ -4858,16 +4858,16 @@ export interface Step {
     step_recipe?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Step
      */
-    step_recipe_data: string;
+    step_recipe_data: any | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Step
      */
-    numrecipe: string;
+    numrecipe: number;
     /**
      * 
      * @type {boolean}
@@ -5198,10 +5198,10 @@ export interface UnitConversion {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    base_amount: string;
+    base_amount: number;
     /**
      * 
      * @type {Unit}
@@ -5210,10 +5210,10 @@ export interface UnitConversion {
     base_unit: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    converted_amount: string;
+    converted_amount: number;
     /**
      * 
      * @type {Unit}
@@ -5448,10 +5448,10 @@ export interface UserPreference {
     mealplan_autoadd_shopping?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {FoodInheritField}
      * @memberof UserPreference
      */
-    food_inherit_default: string;
+    food_inherit_default: FoodInheritField;
     /**
      * 
      * @type {number}
@@ -5520,10 +5520,10 @@ export interface UserPreference {
     show_step_ingredients?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof UserPreference
      */
-    food_children_exist: string;
+    food_children_exist: boolean;
 }
 /**
  * * `LIGHT` - Light * `DARK` - Dark
@@ -5891,7 +5891,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5929,7 +5929,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5965,14 +5965,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationList: async (automationType?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiAutomationList: async (page?: number, pageSize?: number, type?: 'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE', options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/automation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5988,16 +5988,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (automationType !== undefined) {
-                localVarQueryParameter['automation_type'] = automationType;
-            }
-
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
 
@@ -6012,7 +6012,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {PatchedAutomation} [patchedAutomation] 
          * @param {*} [options] Override http request option.
@@ -6052,7 +6052,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6088,7 +6088,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
@@ -7532,7 +7532,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7599,12 +7599,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMergeUpdate: async (id: number, target: string, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodMergeUpdate: async (id: number, target: number, food: Food, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
@@ -7645,12 +7645,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMoveUpdate: async (id: number, parent: string, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodMoveUpdate: async (id: number, parent: number, food: Food, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodMoveUpdate', 'id', id)
             // verify required parameter 'parent' is not null or undefined
@@ -9190,7 +9190,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9257,12 +9257,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMergeUpdate: async (id: number, target: string, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordMergeUpdate: async (id: number, target: number, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
@@ -9303,12 +9303,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMoveUpdate: async (id: number, parent: string, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordMoveUpdate: async (id: number, parent: number, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordMoveUpdate', 'id', id)
             // verify required parameter 'parent' is not null or undefined
@@ -12315,12 +12315,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {SupermarketCategory} supermarketCategory 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryMergeUpdate: async (id: number, target: string, supermarketCategory: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryMergeUpdate: async (id: number, target: number, supermarketCategory: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
@@ -13680,12 +13680,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Unit} unit 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitMergeUpdate: async (id: number, target: string, unit: Unit, options: any = {}): Promise<RequestArgs> => {
+        apiUnitMergeUpdate: async (id: number, target: number, unit: Unit, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
@@ -14880,7 +14880,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14890,7 +14890,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14900,19 +14900,19 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedAutomationList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationList(automationType, page, pageSize, options);
+        async apiAutomationList(page?: number, pageSize?: number, type?: 'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE', options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedAutomationList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationList(page, pageSize, type, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {PatchedAutomation} [patchedAutomation] 
          * @param {*} [options] Override http request option.
@@ -14923,7 +14923,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14933,7 +14933,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
@@ -15327,7 +15327,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15339,24 +15339,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+        async apiFoodMergeUpdate(id: number, target: number, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMergeUpdate(id, target, food, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+        async apiFoodMoveUpdate(id: number, parent: number, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMoveUpdate(id, parent, food, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -15772,7 +15772,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15784,24 +15784,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+        async apiKeywordMergeUpdate(id: number, target: number, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMergeUpdate(id, target, keyword, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+        async apiKeywordMoveUpdate(id: number, parent: number, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMoveUpdate(id, parent, keyword, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -16598,12 +16598,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {SupermarketCategory} supermarketCategory 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+        async apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategory: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -16963,12 +16963,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Unit} unit 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
+        async apiUnitMergeUpdate(id: number, target: number, unit: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitMergeUpdate(id, target, unit, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -17323,7 +17323,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutoPlanCreate(options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17332,7 +17332,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationCreate(automation, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17341,18 +17341,18 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedAutomationList> {
-            return localVarFp.apiAutomationList(automationType, page, pageSize, options).then((request) => request(axios, basePath));
+        apiAutomationList(page?: number, pageSize?: number, type?: 'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE', options?: any): AxiosPromise<PaginatedAutomationList> {
+            return localVarFp.apiAutomationList(page, pageSize, type, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {PatchedAutomation} [patchedAutomation] 
          * @param {*} [options] Override http request option.
@@ -17362,7 +17362,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationPartialUpdate(id, patchedAutomation, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17371,7 +17371,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {Automation} automation 
          * @param {*} [options] Override http request option.
@@ -17728,7 +17728,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17739,23 +17739,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any): AxiosPromise<Food> {
+        apiFoodMergeUpdate(id: number, target: number, food: Food, options?: any): AxiosPromise<Food> {
             return localVarFp.apiFoodMergeUpdate(id, target, food, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Food} food 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any): AxiosPromise<Food> {
+        apiFoodMoveUpdate(id: number, parent: number, food: Food, options?: any): AxiosPromise<Food> {
             return localVarFp.apiFoodMoveUpdate(id, parent, food, options).then((request) => request(axios, basePath));
         },
         /**
@@ -18131,7 +18131,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18142,23 +18142,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
+        apiKeywordMergeUpdate(id: number, target: number, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
             return localVarFp.apiKeywordMergeUpdate(id, target, keyword, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
+         * @param {number} parent The ID of the desired parent of the {obj}.
          * @param {Keyword} keyword 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
+        apiKeywordMoveUpdate(id: number, parent: number, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
             return localVarFp.apiKeywordMoveUpdate(id, parent, keyword, options).then((request) => request(axios, basePath));
         },
         /**
@@ -18881,12 +18881,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {SupermarketCategory} supermarketCategory 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
+        apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategory: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
             return localVarFp.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options).then((request) => request(axios, basePath));
         },
         /**
@@ -19212,12 +19212,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
+         * @param {number} target The ID of the {obj} you want to merge with.
          * @param {Unit} unit 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any): AxiosPromise<Unit> {
+        apiUnitMergeUpdate(id: number, target: number, unit: Unit, options?: any): AxiosPromise<Unit> {
             return localVarFp.apiUnitMergeUpdate(id, target, unit, options).then((request) => request(axios, basePath));
         },
         /**
@@ -19560,7 +19560,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {Automation} automation 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -19571,7 +19571,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -19582,20 +19582,20 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-     * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+     * 
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
+     * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiAutomationList(automationType, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAutomationList(page?: number, pageSize?: number, type?: 'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE', options?: any) {
+        return ApiApiFp(this.configuration).apiAutomationList(page, pageSize, type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {PatchedAutomation} [patchedAutomation] 
      * @param {*} [options] Override http request option.
@@ -19607,7 +19607,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -19618,7 +19618,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {Automation} automation 
      * @param {*} [options] Override http request option.
@@ -20049,7 +20049,7 @@ export class ApiApi extends BaseAPI {
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-     * @param {number} [tree] Return all self and children of {} with ID [int].
+     * @param {number} [tree] Return all self and children of {obj} with ID [int].
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20062,26 +20062,26 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {string} target 
+     * @param {number} target The ID of the {obj} you want to merge with.
      * @param {Food} food 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any) {
+    public apiFoodMergeUpdate(id: number, target: number, food: Food, options?: any) {
         return ApiApiFp(this.configuration).apiFoodMergeUpdate(id, target, food, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {string} parent 
+     * @param {number} parent The ID of the desired parent of the {obj}.
      * @param {Food} food 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any) {
+    public apiFoodMoveUpdate(id: number, parent: number, food: Food, options?: any) {
         return ApiApiFp(this.configuration).apiFoodMoveUpdate(id, parent, food, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -20536,7 +20536,7 @@ export class ApiApi extends BaseAPI {
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-     * @param {number} [tree] Return all self and children of {} with ID [int].
+     * @param {number} [tree] Return all self and children of {obj} with ID [int].
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20549,26 +20549,26 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {string} target 
+     * @param {number} target The ID of the {obj} you want to merge with.
      * @param {Keyword} keyword 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any) {
+    public apiKeywordMergeUpdate(id: number, target: number, keyword: Keyword, options?: any) {
         return ApiApiFp(this.configuration).apiKeywordMergeUpdate(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {string} parent 
+     * @param {number} parent The ID of the desired parent of the {obj}.
      * @param {Keyword} keyword 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any) {
+    public apiKeywordMoveUpdate(id: number, parent: number, keyword: Keyword, options?: any) {
         return ApiApiFp(this.configuration).apiKeywordMoveUpdate(id, parent, keyword, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -21438,13 +21438,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category.
-     * @param {string} target 
+     * @param {number} target The ID of the {obj} you want to merge with.
      * @param {SupermarketCategory} supermarketCategory 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any) {
+    public apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategory: SupermarketCategory, options?: any) {
         return ApiApiFp(this.configuration).apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -21837,13 +21837,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this unit.
-     * @param {string} target 
+     * @param {number} target The ID of the {obj} you want to merge with.
      * @param {Unit} unit 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any) {
+    public apiUnitMergeUpdate(id: number, target: number, unit: Unit, options?: any) {
         return ApiApiFp(this.configuration).apiUnitMergeUpdate(id, target, unit, options).then((request) => request(this.axios, this.basePath));
     }
 
