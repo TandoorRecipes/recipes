@@ -33,7 +33,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
 from PIL import UnidentifiedImageError
@@ -52,6 +52,7 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.viewsets import ViewSetMixin
+from rest_framework.serializers import CharField, IntegerField, UUIDField, FileField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.forms import ImportForm
@@ -60,7 +61,7 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomRecipePermission,
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomIsGuest, CustomRecipePermission,
                                                CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required,
                                                has_group_permission, is_space_owner, switch_user_active_space,
                                                )
@@ -388,7 +389,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str),
+    OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
 ]))
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects
@@ -748,7 +749,7 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet):
 MealPlanViewQueryParameters = [
     OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive).'), type=str, examples=[DateExample]),
     OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive).'), type=str, examples=[DateExample]),
-    OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
+    OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str, many=True),
 ]
 
 
@@ -892,7 +893,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), type=int),
+    OpenApiParameter(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), type=int, many=True),
     OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against object name.'), type=str),
 ]))
 class StepViewSet(viewsets.ModelViewSet):
@@ -927,23 +928,23 @@ class RecipePagination(PageNumberPagination):
 
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.'), type=str),
-    OpenApiParameter(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int),
-    OpenApiParameter(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), type=int),
-    OpenApiParameter(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), type=int),
-    OpenApiParameter(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), type=int),
-    OpenApiParameter(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), type=int),
-    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), type=int),
-    OpenApiParameter(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int),
-    OpenApiParameter(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int),
-    OpenApiParameter(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int),
-    OpenApiParameter(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int),
+    OpenApiParameter(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int, many=True),
+    OpenApiParameter(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), type=int, many=True),
+    OpenApiParameter(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int, many=True),
+    OpenApiParameter(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int, many=True),
     OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
     OpenApiParameter(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), type=int),
-    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'), type=int),
-    OpenApiParameter(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int),
-    OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int),
-    OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int),
-    OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int),
+    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int, many=True),
+    OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int, many=True),
     OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
@@ -1138,6 +1139,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
             name='category',
             description=_('Return the PropertyTypes matching the property category.  Repeat for multiple.'),
             type=str,
+            many=True,
             enum=[m[0] for m in PropertyType.CHOICES])
         ]
     ))
@@ -1179,7 +1181,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-            OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
+            OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int, many=True),
             OpenApiParameter(
                 name='checked',
                 description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
@@ -1337,6 +1339,7 @@ class AutomationViewSet(StandardFilterModelViewSet):
             name='type',
             description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
             type=str,
+            many=True,
             enum=[a[0] for a in Automation.automation_types])
         ]
     )
@@ -1376,6 +1379,7 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
             name='type',
             description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
             type=str,
+            many=True,
             enum=[m[0] for m in CustomFilter.MODELS])
         ]
     ))
@@ -1668,25 +1672,28 @@ def get_recipe_provider(recipe):
         raise Exception('Provider not implemented')
 
 
-# TODO implement proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
-def update_recipe_links(recipe):
-    if not recipe.link:
-        # TODO response validation in apis
-        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
-
-    recipe.save()
-
-
-@group_required('user')
+# TODO update so that link is provided as part of serializer
+@extend_schema(
+    request=inline_serializer(name="RecipePKSerializer", fields={'pk': IntegerField()}),
+    responses=None,
+)
+@api_view(['GET'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def get_external_file_link(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if not recipe.link:
-        update_recipe_links(recipe)
+        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
+        recipe.save()
 
     return HttpResponse(recipe.link)
 
 
-@group_required('guest')
+@extend_schema(
+    request=inline_serializer(name="RecipePKSerializer", fields={'pk': IntegerField()}),
+    responses=None,
+)
+@api_view(['GET'])
+@permission_classes([CustomIsGuest & CustomTokenHasReadWriteScope])
 def get_recipe_file(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
@@ -1726,6 +1733,10 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
+@extend_schema(
+    request=inline_serializer(name="ShareLinkSerializer", fields={'pk': IntegerField()}),
+    responses=inline_serializer(name="ShareLinkSerializer", fields={'pk': IntegerField(), 'share': UUIDField(), 'link': CharField()})
+)
 @api_view(['GET'])
 # @schema(AutoSchema()) #TODO add proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
@@ -1738,27 +1749,14 @@ def share_link(request, pk):
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
-# TODO does this need to be seperate from the Cooklog API?
-@group_required('user')
-@ajax_request
-def log_cooking(request, recipe_id):
-    recipe = get_object_or_None(Recipe, id=recipe_id)
-    if recipe:
-        log = CookLog.objects.create(created_by=request.user, recipe=recipe, space=request.space)
-        servings = request.GET['s'] if 's' in request.GET else None
-        if servings and re.match(r'^([1-9])+$', servings):
-            log.servings = int(servings)
-
-        rating = request.GET['r'] if 'r' in request.GET else None
-        if rating and re.match(r'^([1-9])+$', rating):
-            log.rating = int(rating)
-        log.save()
-        return {'msg': 'updated successfully'}
-
-    return {'error': 'recipe does not exist'}
-
-
-# TODO implement proper schema
+@extend_schema(
+    request=inline_serializer(name="PlanIcalSerializer", fields={'from_date': CharField(), 'to_date': CharField()}),
+    responses=None,
+    parameters=[
+        OpenApiParameter(name='from_date', location=OpenApiParameter.PATH, description=_('Get meal plans from date (inclusive).'), type=str, examples=[DateExample]),
+        OpenApiParameter(name='to_date', location=OpenApiParameter.PATH, description=_('Get meal plans to date (inclusive).'), type=str, examples=[DateExample]),
+    ]
+)
 @api_view(['GET'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
@@ -1795,13 +1793,12 @@ def meal_plans_to_ical(queryset, filename):
     return response
 
 
-@group_required('admin')
-def get_backup(request):
-    if not request.user.is_superuser:
-        return HttpResponse('', status=403)
-
-
-@group_required('user')
+@extend_schema(
+    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
+    responses=inline_serializer(name="ParsedIngredientSerializer", fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(), 'note': CharField()})
+)
+@api_view(['POST'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def ingredient_from_string(request):
     text = request.POST['text']
 
