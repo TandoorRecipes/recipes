@@ -7427,11 +7427,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {'FOOD' | 'KEYWORD' | 'RECIPE'} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiCustomFilterList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: 'FOOD' | 'KEYWORD' | 'RECIPE', updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/custom-filter/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7465,6 +7466,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (random !== undefined) {
                 localVarQueryParameter['random'] = random;
+            }
+
+            if (type !== undefined) {
+                localVarQueryParameter['type'] = type;
             }
 
             if (updatedAt !== undefined) {
@@ -8526,12 +8531,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyTypeList: async (category?: 'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE', page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-property-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8546,6 +8552,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (category !== undefined) {
+                localVarQueryParameter['category'] = category;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -10115,9 +10125,9 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -10162,11 +10172,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -15810,12 +15820,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {'FOOD' | 'KEYWORD' | 'RECIPE'} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedCustomFilterList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options);
+        async apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: 'FOOD' | 'KEYWORD' | 'RECIPE', updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedCustomFilterList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16099,13 +16110,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyTypeList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(page, pageSize, options);
+        async apiFoodPropertyTypeList(category?: 'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE', page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyTypeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(category, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16522,9 +16534,9 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -16534,11 +16546,11 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -18249,12 +18261,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {'FOOD' | 'KEYWORD' | 'RECIPE'} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedCustomFilterList> {
-            return localVarFp.apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: 'FOOD' | 'KEYWORD' | 'RECIPE', updatedAt?: string, options?: any): AxiosPromise<PaginatedCustomFilterList> {
+            return localVarFp.apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18511,13 +18524,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyTypeList> {
-            return localVarFp.apiFoodPropertyTypeList(page, pageSize, options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypeList(category?: 'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE', page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyTypeList> {
+            return localVarFp.apiFoodPropertyTypeList(category, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18895,9 +18909,9 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -18906,11 +18920,11 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -20562,13 +20576,14 @@ export class ApiApi extends BaseAPI {
      * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
+     * @param {'FOOD' | 'KEYWORD' | 'RECIPE'} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: 'FOOD' | 'KEYWORD' | 'RECIPE', updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20878,14 +20893,15 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypeList(category?: 'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE', page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(category, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21340,9 +21356,9 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+     * @param {string} [fromDate] Filter meal plans from date (inclusive).
      * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-     * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+     * @param {string} [toDate] Filter meal plans to date (inclusive).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
@@ -21353,11 +21369,11 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
+     * @param {string} [fromDate] Filter meal plans from date (inclusive).
      * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
-     * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+     * @param {string} [toDate] Filter meal plans to date (inclusive).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi

@@ -16,9 +16,9 @@
 import * as runtime from '../runtime';
 import type {
   AccessToken,
+  AutoMealPlan,
   Automation,
   BookmarkletImport,
-  BookmarkletImportList,
   ConnectorConfigConfig,
   CookLog,
   CustomFilter,
@@ -34,18 +34,33 @@ import type {
   MealPlan,
   MealType,
   PaginatedAutomationList,
+  PaginatedBookmarkletImportListList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedImportLogList,
   PaginatedIngredientList,
+  PaginatedInviteLinkList,
   PaginatedKeywordList,
+  PaginatedMealPlanList,
+  PaginatedMealTypeList,
+  PaginatedPropertyList,
+  PaginatedPropertyTypeList,
+  PaginatedRecipeBookEntryList,
+  PaginatedRecipeBookList,
   PaginatedRecipeOverviewList,
+  PaginatedShoppingListEntryList,
+  PaginatedShoppingListRecipeList,
   PaginatedStepList,
+  PaginatedSupermarketCategoryList,
   PaginatedSupermarketCategoryRelationList,
+  PaginatedSupermarketList,
+  PaginatedSyncList,
   PaginatedSyncLogList,
+  PaginatedUnitConversionList,
   PaginatedUnitList,
+  PaginatedUserFileList,
   PaginatedUserSpaceList,
   PaginatedViewLogList,
   PatchedAccessToken,
@@ -113,12 +128,12 @@ import type {
 import {
     AccessTokenFromJSON,
     AccessTokenToJSON,
+    AutoMealPlanFromJSON,
+    AutoMealPlanToJSON,
     AutomationFromJSON,
     AutomationToJSON,
     BookmarkletImportFromJSON,
     BookmarkletImportToJSON,
-    BookmarkletImportListFromJSON,
-    BookmarkletImportListToJSON,
     ConnectorConfigConfigFromJSON,
     ConnectorConfigConfigToJSON,
     CookLogFromJSON,
@@ -149,6 +164,8 @@ import {
     MealTypeToJSON,
     PaginatedAutomationListFromJSON,
     PaginatedAutomationListToJSON,
+    PaginatedBookmarkletImportListListFromJSON,
+    PaginatedBookmarkletImportListListToJSON,
     PaginatedCookLogListFromJSON,
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
@@ -161,18 +178,46 @@ import {
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
     PaginatedIngredientListToJSON,
+    PaginatedInviteLinkListFromJSON,
+    PaginatedInviteLinkListToJSON,
     PaginatedKeywordListFromJSON,
     PaginatedKeywordListToJSON,
+    PaginatedMealPlanListFromJSON,
+    PaginatedMealPlanListToJSON,
+    PaginatedMealTypeListFromJSON,
+    PaginatedMealTypeListToJSON,
+    PaginatedPropertyListFromJSON,
+    PaginatedPropertyListToJSON,
+    PaginatedPropertyTypeListFromJSON,
+    PaginatedPropertyTypeListToJSON,
+    PaginatedRecipeBookEntryListFromJSON,
+    PaginatedRecipeBookEntryListToJSON,
+    PaginatedRecipeBookListFromJSON,
+    PaginatedRecipeBookListToJSON,
     PaginatedRecipeOverviewListFromJSON,
     PaginatedRecipeOverviewListToJSON,
+    PaginatedShoppingListEntryListFromJSON,
+    PaginatedShoppingListEntryListToJSON,
+    PaginatedShoppingListRecipeListFromJSON,
+    PaginatedShoppingListRecipeListToJSON,
     PaginatedStepListFromJSON,
     PaginatedStepListToJSON,
+    PaginatedSupermarketCategoryListFromJSON,
+    PaginatedSupermarketCategoryListToJSON,
     PaginatedSupermarketCategoryRelationListFromJSON,
     PaginatedSupermarketCategoryRelationListToJSON,
+    PaginatedSupermarketListFromJSON,
+    PaginatedSupermarketListToJSON,
+    PaginatedSyncListFromJSON,
+    PaginatedSyncListToJSON,
     PaginatedSyncLogListFromJSON,
     PaginatedSyncLogListToJSON,
+    PaginatedUnitConversionListFromJSON,
+    PaginatedUnitConversionListToJSON,
     PaginatedUnitListFromJSON,
     PaginatedUnitListToJSON,
+    PaginatedUserFileListFromJSON,
+    PaginatedUserFileListToJSON,
     PaginatedUserSpaceListFromJSON,
     PaginatedUserSpaceListToJSON,
     PaginatedViewLogListFromJSON,
@@ -323,6 +368,10 @@ export interface ApiAccessTokenUpdateRequest {
     accessToken: Omit<AccessToken, 'id'|'token'|'created'|'updated'>;
 }
 
+export interface ApiAutoPlanCreateRequest {
+    autoMealPlan: AutoMealPlan;
+}
+
 export interface ApiAutomationCreateRequest {
     automation: Omit<Automation, 'id'|'created_by'>;
 }
@@ -357,6 +406,11 @@ export interface ApiBookmarkletImportCreateRequest {
 
 export interface ApiBookmarkletImportDestroyRequest {
     id: number;
+}
+
+export interface ApiBookmarkletImportListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiBookmarkletImportPartialUpdateRequest {
@@ -437,6 +491,7 @@ export interface ApiCustomFilterListRequest {
     pageSize?: number;
     query?: string;
     random?: string;
+    type?: ApiCustomFilterListTypeEnum;
     updatedAt?: string;
 }
 
@@ -538,6 +593,11 @@ export interface ApiFoodPropertyDestroyRequest {
     id: number;
 }
 
+export interface ApiFoodPropertyListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiFoodPropertyPartialUpdateRequest {
     id: number;
     patchedProperty?: Omit<PatchedProperty, 'id'>;
@@ -553,6 +613,12 @@ export interface ApiFoodPropertyTypeCreateRequest {
 
 export interface ApiFoodPropertyTypeDestroyRequest {
     id: number;
+}
+
+export interface ApiFoodPropertyTypeListRequest {
+    category?: ApiFoodPropertyTypeListCategoryEnum;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiFoodPropertyTypePartialUpdateRequest {
@@ -628,8 +694,10 @@ export interface ApiIngredientDestroyRequest {
 }
 
 export interface ApiIngredientListRequest {
+    food?: number;
     page?: number;
     pageSize?: number;
+    unit?: number;
 }
 
 export interface ApiIngredientPartialUpdateRequest {
@@ -655,7 +723,10 @@ export interface ApiInviteLinkDestroyRequest {
 }
 
 export interface ApiInviteLinkListRequest {
+    internalNote?: string;
     limit?: string;
+    page?: number;
+    pageSize?: number;
     query?: string;
     random?: string;
     updatedAt?: string;
@@ -737,6 +808,8 @@ export interface ApiMealPlanIcalRetrieveRequest {
 export interface ApiMealPlanListRequest {
     fromDate?: string;
     mealType?: string;
+    page?: number;
+    pageSize?: number;
     toDate?: string;
 }
 
@@ -760,6 +833,11 @@ export interface ApiMealTypeCreateRequest {
 
 export interface ApiMealTypeDestroyRequest {
     id: number;
+}
+
+export interface ApiMealTypeListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiMealTypePartialUpdateRequest {
@@ -797,6 +875,13 @@ export interface ApiRecipeBookEntryDestroyRequest {
     id: number;
 }
 
+export interface ApiRecipeBookEntryListRequest {
+    book?: number;
+    page?: number;
+    pageSize?: number;
+    recipe?: number;
+}
+
 export interface ApiRecipeBookEntryPartialUpdateRequest {
     id: number;
     patchedRecipeBookEntry?: Omit<PatchedRecipeBookEntry, 'id'|'book_content'|'recipe_content'>;
@@ -813,6 +898,10 @@ export interface ApiRecipeBookEntryUpdateRequest {
 
 export interface ApiRecipeBookListRequest {
     limit?: string;
+    orderDirection?: ApiRecipeBookListOrderDirectionEnum;
+    orderField?: ApiRecipeBookListOrderFieldEnum;
+    page?: number;
+    pageSize?: number;
     query?: string;
     random?: string;
     updatedAt?: string;
@@ -847,7 +936,7 @@ export interface ApiRecipeImageUpdateRequest {
 }
 
 export interface ApiRecipeListRequest {
-    books?: string;
+    books?: number;
     booksAnd?: number;
     booksAndNot?: number;
     booksOr?: number;
@@ -859,13 +948,13 @@ export interface ApiRecipeListRequest {
     foodsAndNot?: number;
     foodsOr?: number;
     foodsOrNot?: number;
-    internal?: string;
+    internal?: boolean;
     keywords?: number;
     keywordsAnd?: number;
     keywordsAndNot?: number;
     keywordsOr?: number;
     keywordsOrNot?: number;
-    makenow?: string;
+    makenow?: boolean;
     _new?: string;
     page?: number;
     pageSize?: number;
@@ -920,6 +1009,8 @@ export interface ApiShoppingListEntryDestroyRequest {
 export interface ApiShoppingListEntryListRequest {
     checked?: string;
     id?: number;
+    page?: number;
+    pageSize?: number;
     supermarket?: number;
 }
 
@@ -943,6 +1034,11 @@ export interface ApiShoppingListRecipeCreateRequest {
 
 export interface ApiShoppingListRecipeDestroyRequest {
     id: number;
+}
+
+export interface ApiShoppingListRecipeListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
@@ -1029,6 +1125,8 @@ export interface ApiSupermarketCategoryDestroyRequest {
 
 export interface ApiSupermarketCategoryListRequest {
     limit?: string;
+    page?: number;
+    pageSize?: number;
     query?: string;
     random?: string;
     updatedAt?: string;
@@ -1095,6 +1193,8 @@ export interface ApiSupermarketDestroyRequest {
 
 export interface ApiSupermarketListRequest {
     limit?: string;
+    page?: number;
+    pageSize?: number;
     query?: string;
     random?: string;
     updatedAt?: string;
@@ -1124,6 +1224,11 @@ export interface ApiSyncCreateRequest {
 
 export interface ApiSyncDestroyRequest {
     id: number;
+}
+
+export interface ApiSyncListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSyncLogListRequest {
@@ -1159,6 +1264,8 @@ export interface ApiUnitConversionDestroyRequest {
 
 export interface ApiUnitConversionListRequest {
     foodId?: number;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiUnitConversionPartialUpdateRequest {
@@ -1227,6 +1334,8 @@ export interface ApiUserFileDestroyRequest {
 
 export interface ApiUserFileListRequest {
     limit?: string;
+    page?: number;
+    pageSize?: number;
     query?: string;
     random?: string;
     updatedAt?: string;
@@ -1256,6 +1365,10 @@ export interface ApiUserFileUpdateRequest {
     fileSizeKb: number;
 }
 
+export interface ApiUserListRequest {
+    filterList?: string;
+}
+
 export interface ApiUserPartialUpdateRequest {
     id: number;
     patchedUser?: Omit<PatchedUser, 'id'|'username'|'display_name'>;
@@ -1279,6 +1392,7 @@ export interface ApiUserSpaceDestroyRequest {
 }
 
 export interface ApiUserSpaceListRequest {
+    internalNote?: string;
     page?: number;
     pageSize?: number;
 }
@@ -1544,10 +1658,19 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiAutoPlanCreateRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async apiAutoPlanCreateRaw(requestParameters: ApiAutoPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AutoMealPlan>> {
+        if (requestParameters['autoMealPlan'] == null) {
+            throw new runtime.RequiredError(
+                'autoMealPlan',
+                'Required parameter "autoMealPlan" was null or undefined when calling apiAutoPlanCreate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
 
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
@@ -1558,15 +1681,17 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: AutoMealPlanToJSON(requestParameters['autoMealPlan']),
         }, initOverrides);
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => AutoMealPlanFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiAutoPlanCreate(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiAutoPlanCreateRaw(initOverrides);
+    async apiAutoPlanCreate(requestParameters: ApiAutoPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AutoMealPlan> {
+        const response = await this.apiAutoPlanCreateRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**
@@ -1873,8 +1998,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiBookmarkletImportListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<BookmarkletImportList>>> {
+    async apiBookmarkletImportListRaw(requestParameters: ApiBookmarkletImportListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedBookmarkletImportListList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1889,13 +2022,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(BookmarkletImportListFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedBookmarkletImportListListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiBookmarkletImportList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<BookmarkletImportList>> {
-        const response = await this.apiBookmarkletImportListRaw(initOverrides);
+    async apiBookmarkletImportList(requestParameters: ApiBookmarkletImportListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedBookmarkletImportListList> {
+        const response = await this.apiBookmarkletImportListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -2560,6 +2693,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['random'] != null) {
             queryParameters['random'] = requestParameters['random'];
+        }
+
+        if (requestParameters['type'] != null) {
+            queryParameters['type'] = requestParameters['type'];
         }
 
         if (requestParameters['updatedAt'] != null) {
@@ -3427,8 +3564,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiFoodPropertyListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Property>>> {
+    async apiFoodPropertyListRaw(requestParameters: ApiFoodPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3443,13 +3588,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PropertyFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiFoodPropertyList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Property>> {
-        const response = await this.apiFoodPropertyListRaw(initOverrides);
+    async apiFoodPropertyList(requestParameters: ApiFoodPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyList> {
+        const response = await this.apiFoodPropertyListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -3600,8 +3745,20 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiFoodPropertyTypeListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<PropertyType>>> {
+    async apiFoodPropertyTypeListRaw(requestParameters: ApiFoodPropertyTypeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyTypeList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['category'] != null) {
+            queryParameters['category'] = requestParameters['category'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -3616,13 +3773,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(PropertyTypeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyTypeListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiFoodPropertyTypeList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<PropertyType>> {
-        const response = await this.apiFoodPropertyTypeListRaw(initOverrides);
+    async apiFoodPropertyTypeList(requestParameters: ApiFoodPropertyTypeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyTypeList> {
+        const response = await this.apiFoodPropertyTypeListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -4309,12 +4466,20 @@ export class ApiApi extends runtime.BaseAPI {
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
         const queryParameters: any = {};
 
+        if (requestParameters['food'] != null) {
+            queryParameters['food'] = requestParameters['food'];
+        }
+
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
         }
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['unit'] != null) {
+            queryParameters['unit'] = requestParameters['unit'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -4532,11 +4697,23 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiInviteLinkListRaw(requestParameters: ApiInviteLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<InviteLink>>> {
+    async apiInviteLinkListRaw(requestParameters: ApiInviteLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInviteLinkList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['internalNote'] != null) {
+            queryParameters['internal_note'] = requestParameters['internalNote'];
+        }
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['query'] != null) {
@@ -4564,12 +4741,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(InviteLinkFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInviteLinkListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiInviteLinkList(requestParameters: ApiInviteLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<InviteLink>> {
+    async apiInviteLinkList(requestParameters: ApiInviteLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInviteLinkList> {
         const response = await this.apiInviteLinkListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -5047,7 +5224,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanCreateRaw(requestParameters: ApiMealPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['mealPlan'] == null) {
@@ -5079,7 +5255,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanCreate(requestParameters: ApiMealPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanCreateRaw(requestParameters, initOverrides);
@@ -5087,7 +5262,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanDestroyRaw(requestParameters: ApiMealPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -5116,14 +5290,12 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanDestroy(requestParameters: ApiMealPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiMealPlanDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanIcalRetrieveRaw(requestParameters: ApiMealPlanIcalRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         const queryParameters: any = {};
@@ -5161,7 +5333,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanIcalRetrieve(requestParameters: ApiMealPlanIcalRetrieveRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
         const response = await this.apiMealPlanIcalRetrieveRaw(requestParameters, initOverrides);
@@ -5169,9 +5340,8 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
-    async apiMealPlanListRaw(requestParameters: ApiMealPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<MealPlan>>> {
+    async apiMealPlanListRaw(requestParameters: ApiMealPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedMealPlanList>> {
         const queryParameters: any = {};
 
         if (requestParameters['fromDate'] != null) {
@@ -5180,6 +5350,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['mealType'] != null) {
             queryParameters['meal_type'] = requestParameters['mealType'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['toDate'] != null) {
@@ -5199,19 +5377,17 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(MealPlanFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedMealPlanListFromJSON(jsonValue));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
-    async apiMealPlanList(requestParameters: ApiMealPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<MealPlan>> {
+    async apiMealPlanList(requestParameters: ApiMealPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedMealPlanList> {
         const response = await this.apiMealPlanListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanPartialUpdateRaw(requestParameters: ApiMealPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5243,7 +5419,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanPartialUpdate(requestParameters: ApiMealPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanPartialUpdateRaw(requestParameters, initOverrides);
@@ -5251,7 +5426,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanRetrieveRaw(requestParameters: ApiMealPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5280,7 +5454,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanRetrieve(requestParameters: ApiMealPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanRetrieveRaw(requestParameters, initOverrides);
@@ -5288,7 +5461,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanUpdateRaw(requestParameters: ApiMealPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5327,7 +5499,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
      */
     async apiMealPlanUpdate(requestParameters: ApiMealPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanUpdateRaw(requestParameters, initOverrides);
@@ -5413,8 +5584,16 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
      */
-    async apiMealTypeListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<MealType>>> {
+    async apiMealTypeListRaw(requestParameters: ApiMealTypeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedMealTypeList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -5429,14 +5608,14 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(MealTypeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedMealTypeListFromJSON(jsonValue));
     }
 
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
      */
-    async apiMealTypeList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<MealType>> {
-        const response = await this.apiMealTypeListRaw(initOverrides);
+    async apiMealTypeList(requestParameters: ApiMealTypeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedMealTypeList> {
+        const response = await this.apiMealTypeListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -5678,7 +5857,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryCreateRaw(requestParameters: ApiRecipeBookEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['recipeBookEntry'] == null) {
@@ -5710,7 +5888,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryCreate(requestParameters: ApiRecipeBookEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryCreateRaw(requestParameters, initOverrides);
@@ -5718,7 +5895,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryDestroyRaw(requestParameters: ApiRecipeBookEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -5747,17 +5923,31 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryDestroy(requestParameters: ApiRecipeBookEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiRecipeBookEntryDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
-    async apiRecipeBookEntryListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeBookEntry>>> {
+    async apiRecipeBookEntryListRaw(requestParameters: ApiRecipeBookEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeBookEntryList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['book'] != null) {
+            queryParameters['book'] = requestParameters['book'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['recipe'] != null) {
+            queryParameters['recipe'] = requestParameters['recipe'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -5772,19 +5962,17 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(RecipeBookEntryFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedRecipeBookEntryListFromJSON(jsonValue));
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
-    async apiRecipeBookEntryList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeBookEntry>> {
-        const response = await this.apiRecipeBookEntryListRaw(initOverrides);
+    async apiRecipeBookEntryList(requestParameters: ApiRecipeBookEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeBookEntryList> {
+        const response = await this.apiRecipeBookEntryListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryPartialUpdateRaw(requestParameters: ApiRecipeBookEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -5816,7 +6004,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryPartialUpdate(requestParameters: ApiRecipeBookEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryPartialUpdateRaw(requestParameters, initOverrides);
@@ -5824,7 +6011,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryRetrieveRaw(requestParameters: ApiRecipeBookEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -5853,7 +6039,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryRetrieve(requestParameters: ApiRecipeBookEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryRetrieveRaw(requestParameters, initOverrides);
@@ -5861,7 +6046,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryUpdateRaw(requestParameters: ApiRecipeBookEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -5900,7 +6084,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
      */
     async apiRecipeBookEntryUpdate(requestParameters: ApiRecipeBookEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryUpdateRaw(requestParameters, initOverrides);
@@ -5909,11 +6092,27 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiRecipeBookListRaw(requestParameters: ApiRecipeBookListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeBook>>> {
+    async apiRecipeBookListRaw(requestParameters: ApiRecipeBookListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeBookList>> {
         const queryParameters: any = {};
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['orderDirection'] != null) {
+            queryParameters['order_direction'] = requestParameters['orderDirection'];
+        }
+
+        if (requestParameters['orderField'] != null) {
+            queryParameters['order_field'] = requestParameters['orderField'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['query'] != null) {
@@ -5941,12 +6140,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(RecipeBookFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedRecipeBookListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiRecipeBookList(requestParameters: ApiRecipeBookListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeBook>> {
+    async apiRecipeBookList(requestParameters: ApiRecipeBookListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeBookList> {
         const response = await this.apiRecipeBookListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -6766,7 +6965,7 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiShoppingListEntryListRaw(requestParameters: ApiShoppingListEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ShoppingListEntry>>> {
+    async apiShoppingListEntryListRaw(requestParameters: ApiShoppingListEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListEntryList>> {
         const queryParameters: any = {};
 
         if (requestParameters['checked'] != null) {
@@ -6775,6 +6974,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['id'] != null) {
             queryParameters['id'] = requestParameters['id'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['supermarket'] != null) {
@@ -6794,12 +7001,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ShoppingListEntryFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedShoppingListEntryListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiShoppingListEntryList(requestParameters: ApiShoppingListEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ShoppingListEntry>> {
+    async apiShoppingListEntryList(requestParameters: ApiShoppingListEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListEntryList> {
         const response = await this.apiShoppingListEntryListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -6996,8 +7203,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiShoppingListRecipeListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ShoppingListRecipe>>> {
+    async apiShoppingListRecipeListRaw(requestParameters: ApiShoppingListRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListRecipeList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -7012,13 +7227,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(ShoppingListRecipeFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedShoppingListRecipeListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiShoppingListRecipeList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ShoppingListRecipe>> {
-        const response = await this.apiShoppingListRecipeListRaw(initOverrides);
+    async apiShoppingListRecipeList(requestParameters: ApiShoppingListRecipeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListRecipeList> {
+        const response = await this.apiShoppingListRecipeListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -7137,34 +7352,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiShoppingListRecipeUpdate(requestParameters: ApiShoppingListRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiSpaceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Space>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/space/`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SpaceFromJSON));
-    }
-
-    /**
-     */
-    async apiSpaceList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Space>> {
-        const response = await this.apiSpaceListRaw(initOverrides);
         return await response.value();
     }
 
@@ -7767,11 +7954,19 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiSupermarketCategoryListRaw(requestParameters: ApiSupermarketCategoryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<SupermarketCategory>>> {
+    async apiSupermarketCategoryListRaw(requestParameters: ApiSupermarketCategoryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSupermarketCategoryList>> {
         const queryParameters: any = {};
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['query'] != null) {
@@ -7799,12 +7994,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SupermarketCategoryFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedSupermarketCategoryListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiSupermarketCategoryList(requestParameters: ApiSupermarketCategoryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<SupermarketCategory>> {
+    async apiSupermarketCategoryList(requestParameters: ApiSupermarketCategoryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSupermarketCategoryList> {
         const response = await this.apiSupermarketCategoryListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -8295,11 +8490,19 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiSupermarketListRaw(requestParameters: ApiSupermarketListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Supermarket>>> {
+    async apiSupermarketListRaw(requestParameters: ApiSupermarketListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSupermarketList>> {
         const queryParameters: any = {};
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['query'] != null) {
@@ -8327,12 +8530,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SupermarketFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedSupermarketListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiSupermarketList(requestParameters: ApiSupermarketListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Supermarket>> {
+    async apiSupermarketList(requestParameters: ApiSupermarketListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSupermarketList> {
         const response = await this.apiSupermarketListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -8565,8 +8768,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiSyncListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Sync>>> {
+    async apiSyncListRaw(requestParameters: ApiSyncListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSyncList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -8581,13 +8792,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SyncFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedSyncListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiSyncList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Sync>> {
-        const response = await this.apiSyncListRaw(initOverrides);
+    async apiSyncList(requestParameters: ApiSyncListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSyncList> {
+        const response = await this.apiSyncListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8854,11 +9065,19 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiUnitConversionListRaw(requestParameters: ApiUnitConversionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UnitConversion>>> {
+    async apiUnitConversionListRaw(requestParameters: ApiUnitConversionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUnitConversionList>> {
         const queryParameters: any = {};
 
         if (requestParameters['foodId'] != null) {
             queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -8874,12 +9093,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UnitConversionFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUnitConversionListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiUnitConversionList(requestParameters: ApiUnitConversionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UnitConversion>> {
+    async apiUnitConversionList(requestParameters: ApiUnitConversionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUnitConversionList> {
         const response = await this.apiUnitConversionListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -9441,11 +9660,19 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiUserFileListRaw(requestParameters: ApiUserFileListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserFile>>> {
+    async apiUserFileListRaw(requestParameters: ApiUserFileListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserFileList>> {
         const queryParameters: any = {};
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
         }
 
         if (requestParameters['query'] != null) {
@@ -9473,12 +9700,12 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserFileFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserFileListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiUserFileList(requestParameters: ApiUserFileListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserFile>> {
+    async apiUserFileList(requestParameters: ApiUserFileListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserFileList> {
         const response = await this.apiUserFileListRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -9709,10 +9936,13 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
-    async apiUserListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<User>>> {
+    async apiUserListRaw(requestParameters: ApiUserListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<User>>> {
         const queryParameters: any = {};
+
+        if (requestParameters['filterList'] != null) {
+            queryParameters['filter_list'] = requestParameters['filterList'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -9731,15 +9961,13 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
-    async apiUserList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<User>> {
-        const response = await this.apiUserListRaw(initOverrides);
+    async apiUserList(requestParameters: ApiUserListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<User>> {
+        const response = await this.apiUserListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
     async apiUserPartialUpdateRaw(requestParameters: ApiUserPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
         if (requestParameters['id'] == null) {
@@ -9771,38 +9999,9 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
     async apiUserPartialUpdate(requestParameters: ApiUserPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.apiUserPartialUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiUserPreferenceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserPreference>>> {
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/user-preference/`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserPreferenceFromJSON));
-    }
-
-    /**
-     */
-    async apiUserPreferenceList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserPreference>> {
-        const response = await this.apiUserPreferenceListRaw(initOverrides);
         return await response.value();
     }
 
@@ -9880,7 +10079,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
     async apiUserRetrieveRaw(requestParameters: ApiUserRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
         if (requestParameters['id'] == null) {
@@ -9909,7 +10107,6 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
      */
     async apiUserRetrieve(requestParameters: ApiUserRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.apiUserRetrieveRaw(requestParameters, initOverrides);
@@ -9954,6 +10151,10 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserSpaceListRaw(requestParameters: ApiUserSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['internalNote'] != null) {
+            queryParameters['internal_note'] = requestParameters['internalNote'];
+        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -10303,3 +10504,40 @@ export const ApiAutomationListTypeEnum = {
     UnitReplace: 'UNIT_REPLACE'
 } as const;
 export type ApiAutomationListTypeEnum = typeof ApiAutomationListTypeEnum[keyof typeof ApiAutomationListTypeEnum];
+/**
+ * @export
+ */
+export const ApiCustomFilterListTypeEnum = {
+    Food: 'FOOD',
+    Keyword: 'KEYWORD',
+    Recipe: 'RECIPE'
+} as const;
+export type ApiCustomFilterListTypeEnum = typeof ApiCustomFilterListTypeEnum[keyof typeof ApiCustomFilterListTypeEnum];
+/**
+ * @export
+ */
+export const ApiFoodPropertyTypeListCategoryEnum = {
+    Allergen: 'ALLERGEN',
+    Goal: 'GOAL',
+    Nutrition: 'NUTRITION',
+    Other: 'OTHER',
+    Price: 'PRICE'
+} as const;
+export type ApiFoodPropertyTypeListCategoryEnum = typeof ApiFoodPropertyTypeListCategoryEnum[keyof typeof ApiFoodPropertyTypeListCategoryEnum];
+/**
+ * @export
+ */
+export const ApiRecipeBookListOrderDirectionEnum = {
+    Asc: 'asc',
+    Desc: 'desc'
+} as const;
+export type ApiRecipeBookListOrderDirectionEnum = typeof ApiRecipeBookListOrderDirectionEnum[keyof typeof ApiRecipeBookListOrderDirectionEnum];
+/**
+ * @export
+ */
+export const ApiRecipeBookListOrderFieldEnum = {
+    Id: 'id',
+    Name: 'name',
+    Order: 'order'
+} as const;
+export type ApiRecipeBookListOrderFieldEnum = typeof ApiRecipeBookListOrderFieldEnum[keyof typeof ApiRecipeBookListOrderFieldEnum];

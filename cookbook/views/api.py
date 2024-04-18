@@ -91,13 +91,13 @@ from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
 
 
-DateExample = OpenApiExample('Date Format: YYYY-MM-DD', value='1972-12-05', request_only=True)
-BeforeDateExample = OpenApiExample('Date Format: -YYYY-MM-DD', value='-1972-12-05', request_only=True)
+DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
+BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
-    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str, examples=[DateExample]),  # TODO format hint
+    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str, examples=[DateExample]),
     OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
     OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
 ]))
@@ -746,8 +746,8 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet):
 
 
 MealPlanViewQueryParameters = [
-    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), type=str, examples=[DateExample]),
-    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), type=str, examples=[DateExample]),
+    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive).'), type=str, examples=[DateExample]),
+    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive).'), type=str, examples=[DateExample]),
     OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
 ]
 
@@ -1133,6 +1133,14 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
+@extend_schema_view(list=extend_schema(
+        parameters=[OpenApiParameter(
+            name='category',
+            description=_('Return the PropertyTypes matching the property category.  Repeat for multiple.'),
+            type=str,
+            enum=[m[0] for m in PropertyType.CHOICES])
+        ]
+    ))
 class PropertyTypeViewSet(viewsets.ModelViewSet):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
@@ -1140,6 +1148,10 @@ class PropertyTypeViewSet(viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        # TODO add tests for filter
+        category = self.request.query_params.getlist('category', [])
+        if category:
+            self.queryset.filter(category__in=category)
         return self.queryset.filter(space=self.request.space)
 
 
@@ -1359,6 +1371,14 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
             return None
 
 
+@extend_schema_view(list=extend_schema(
+        parameters=[OpenApiParameter(
+            name='type',
+            description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
+            type=str,
+            enum=[m[0] for m in CustomFilter.MODELS])
+        ]
+    ))
 class CustomFilterViewSet(StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
@@ -1366,6 +1386,10 @@ class CustomFilterViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        # TODO add tests for filter
+        filter_type = self.request.query_params.getlist('type', [])
+        if filter_type:
+            self.queryset.filter(type__in=filter_type)
         return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
 
 

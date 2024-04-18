@@ -61,7 +61,7 @@ def test_autoschema_exists(api):
     assert issubclass(api.callback.cls.schema.__class__, AutoSchema)
 
 
-#
+
 # @pytest.mark.parametrize("api", enum_api_endpoints, ids=lambda api: api.name)
 # def test_schema_enum(api):
 #     model = api.callback.cls.serializer_class.Meta.model
