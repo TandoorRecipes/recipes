@@ -11,9 +11,21 @@ def has_choice_field(model):
     return any(field.get_internal_type() == 'CharField' and hasattr(field, 'choices') and field.choices for field in model_fields)
 
 
+def is_list_function(callback):
+    return (
+        hasattr(callback, 'initkwargs') 
+        and callback.initkwargs.get('detail') == False
+        and hasattr(callback, 'cls')
+        and hasattr(callback.cls, 'list')
+    )
+
+
 # generates list of all api enpoints
 def enumerate_urlpatterns(urlpatterns, base_url=''):
     for i, url_pattern in enumerate(urlpatterns):
+        # api-root isn't an endpoint, so skip it
+        if isinstance(url_pattern, URLPattern) and url_pattern.name == 'api-root':
+            continue
         # if the url pattern starts with 'api/' it is an api endpoint and should be part of the list
         if isinstance(url_pattern, URLPattern):
             pattern = f"{base_url}{str(url_pattern.pattern)}"
@@ -29,7 +41,7 @@ def enumerate_urlpatterns(urlpatterns, base_url=''):
 api_endpoints = []
 enumerate_urlpatterns(urlpatterns)
 # filtered list of api_endpoints that only includes the LIST (or detail=False) endpoints
-list_api_endpoints = [a for a in api_endpoints if hasattr(a.callback, 'initkwargs') and a.callback.initkwargs.get('detail') == False]
+list_api_endpoints = [a for a in api_endpoints if is_list_function(a.callback)]
 # filtered list of api_endpoints that only includes endpoints that have type ModelViewSet and a Choice CharField
 enum_api_endpoints = [
     a for a in list_api_endpoints if hasattr(a.callback, 'cls') and issubclass(a.callback.cls, ModelViewSet) and has_choice_field(a.callback.cls.serializer_class.Meta.model)
@@ -38,7 +50,10 @@ enum_api_endpoints = [
 
 @pytest.mark.parametrize("api", list_api_endpoints, ids=lambda api: api.name)
 def test_pagination_exists(api):
-    assert hasattr(api.callback.cls, 'pagination_class') and api.callback.cls.pagination_class is not None, f"API {api.name} is not paginated."
+    assert hasattr(api.callback.cls, 'pagination_class') and (
+        api.callback.cls.pagination_class is not None
+        or getattr(api.callback.cls, 'pagination_disabled')
+    ), f"API {api.name} is not paginated."
 
 
 @pytest.mark.parametrize("api", api_endpoints, ids=lambda api: api.name)

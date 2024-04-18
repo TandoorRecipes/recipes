@@ -92,6 +92,55 @@ export interface AuthToken {
 /**
  * 
  * @export
+ * @interface AutoMealPlan
+ */
+export interface AutoMealPlan {
+    /**
+     * 
+     * @type {string}
+     * @memberof AutoMealPlan
+     */
+    start_date: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutoMealPlan
+     */
+    end_date: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlan
+     */
+    meal_type_id: number;
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof AutoMealPlan
+     */
+    keyword_ids: Array<any>;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlan
+     */
+    servings: number;
+    /**
+     * 
+     * @type {Array<User>}
+     * @memberof AutoMealPlan
+     */
+    shared?: Array<User> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AutoMealPlan
+     */
+    addshopping: boolean;
+}
+/**
+ * 
+ * @export
  * @interface Automation
  */
 export interface Automation {
@@ -1237,6 +1286,37 @@ export interface PaginatedAutomationList {
 /**
  * 
  * @export
+ * @interface PaginatedBookmarkletImportListList
+ */
+export interface PaginatedBookmarkletImportListList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<BookmarkletImportList>}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    results?: Array<BookmarkletImportList>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedCookLogList
  */
 export interface PaginatedCookLogList {
@@ -1423,6 +1503,37 @@ export interface PaginatedIngredientList {
 /**
  * 
  * @export
+ * @interface PaginatedInviteLinkList
+ */
+export interface PaginatedInviteLinkList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedInviteLinkList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedInviteLinkList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedInviteLinkList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<InviteLink>}
+     * @memberof PaginatedInviteLinkList
+     */
+    results?: Array<InviteLink>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedKeywordList
  */
 export interface PaginatedKeywordList {
@@ -1450,6 +1561,192 @@ export interface PaginatedKeywordList {
      * @memberof PaginatedKeywordList
      */
     results?: Array<Keyword>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedMealPlanList
+ */
+export interface PaginatedMealPlanList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedMealPlanList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealPlanList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealPlanList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<MealPlan>}
+     * @memberof PaginatedMealPlanList
+     */
+    results?: Array<MealPlan>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedMealTypeList
+ */
+export interface PaginatedMealTypeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedMealTypeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealTypeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealTypeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<MealType>}
+     * @memberof PaginatedMealTypeList
+     */
+    results?: Array<MealType>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedPropertyList
+ */
+export interface PaginatedPropertyList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedPropertyList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof PaginatedPropertyList
+     */
+    results?: Array<Property>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedPropertyTypeList
+ */
+export interface PaginatedPropertyTypeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedPropertyTypeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyTypeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyTypeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<PropertyType>}
+     * @memberof PaginatedPropertyTypeList
+     */
+    results?: Array<PropertyType>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedRecipeBookEntryList
+ */
+export interface PaginatedRecipeBookEntryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeBookEntry>}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    results?: Array<RecipeBookEntry>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedRecipeBookList
+ */
+export interface PaginatedRecipeBookList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedRecipeBookList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeBook>}
+     * @memberof PaginatedRecipeBookList
+     */
+    results?: Array<RecipeBook>;
 }
 /**
  * 
@@ -1485,6 +1782,68 @@ export interface PaginatedRecipeOverviewList {
 /**
  * 
  * @export
+ * @interface PaginatedShoppingListEntryList
+ */
+export interface PaginatedShoppingListEntryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListEntry>}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    results?: Array<ShoppingListEntry>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedShoppingListRecipeList
+ */
+export interface PaginatedShoppingListRecipeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListRecipe>}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    results?: Array<ShoppingListRecipe>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedStepList
  */
 export interface PaginatedStepList {
@@ -1512,6 +1871,37 @@ export interface PaginatedStepList {
      * @memberof PaginatedStepList
      */
     results?: Array<Step>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedSupermarketCategoryList
+ */
+export interface PaginatedSupermarketCategoryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<SupermarketCategory>}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    results?: Array<SupermarketCategory>;
 }
 /**
  * 
@@ -1547,6 +1937,68 @@ export interface PaginatedSupermarketCategoryRelationList {
 /**
  * 
  * @export
+ * @interface PaginatedSupermarketList
+ */
+export interface PaginatedSupermarketList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSupermarketList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Supermarket>}
+     * @memberof PaginatedSupermarketList
+     */
+    results?: Array<Supermarket>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedSyncList
+ */
+export interface PaginatedSyncList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSyncList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSyncList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSyncList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Sync>}
+     * @memberof PaginatedSyncList
+     */
+    results?: Array<Sync>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedSyncLogList
  */
 export interface PaginatedSyncLogList {
@@ -1578,6 +2030,37 @@ export interface PaginatedSyncLogList {
 /**
  * 
  * @export
+ * @interface PaginatedUnitConversionList
+ */
+export interface PaginatedUnitConversionList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedUnitConversionList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUnitConversionList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUnitConversionList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<UnitConversion>}
+     * @memberof PaginatedUnitConversionList
+     */
+    results?: Array<UnitConversion>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedUnitList
  */
 export interface PaginatedUnitList {
@@ -1605,6 +2088,37 @@ export interface PaginatedUnitList {
      * @memberof PaginatedUnitList
      */
     results?: Array<Unit>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedUserFileList
+ */
+export interface PaginatedUserFileList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedUserFileList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUserFileList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUserFileList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<UserFile>}
+     * @memberof PaginatedUserFileList
+     */
+    results?: Array<UserFile>;
 }
 /**
  * 
@@ -5860,10 +6374,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {AutoMealPlan} autoMealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutoPlanCreate: async (options: any = {}): Promise<RequestArgs> => {
+        apiAutoPlanCreate: async (autoMealPlan: AutoMealPlan, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'autoMealPlan' is not null or undefined
+            assertParamExists('apiAutoPlanCreate', 'autoMealPlan', autoMealPlan)
             const localVarPath = `/api/auto-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5881,9 +6398,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(autoMealPlan, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6205,10 +6725,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportList: async (options: any = {}): Promise<RequestArgs> => {
+        apiBookmarkletImportList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/bookmarklet-import/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6223,6 +6745,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -7804,10 +8334,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyList: async (options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-property/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7822,6 +8354,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -7986,10 +8526,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyTypeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-property-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8004,6 +8546,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -8941,13 +9491,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiInviteLinkList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/invite-link/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8965,6 +9517,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -9465,7 +10025,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9503,7 +10063,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9539,7 +10099,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
@@ -9586,14 +10146,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanList: async (fromDate?: string, mealType?: string, toDate?: string, options: any = {}): Promise<RequestArgs> => {
+        apiMealPlanList: async (fromDate?: string, mealType?: string, page?: number, pageSize?: number, toDate?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9617,6 +10179,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['meal_type'] = mealType;
             }
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
             if (toDate !== undefined) {
                 localVarQueryParameter['to_date'] = toDate;
             }
@@ -9633,7 +10203,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {PatchedMealPlan} [patchedMealPlan] 
          * @param {*} [options] Override http request option.
@@ -9673,7 +10243,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9709,7 +10279,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
@@ -9826,10 +10396,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiMealTypeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9844,6 +10416,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -10089,7 +10669,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10127,7 +10707,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10163,11 +10743,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryList: async (options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookEntryList: async (book?: number, page?: number, pageSize?: number, recipe?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe-book-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10183,6 +10767,22 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (book !== undefined) {
+                localVarQueryParameter['book'] = book;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (recipe !== undefined) {
+                localVarQueryParameter['recipe'] = recipe;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -10195,7 +10795,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
          * @param {*} [options] Override http request option.
@@ -10235,7 +10835,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10271,7 +10871,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
@@ -10315,13 +10915,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe-book/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10339,6 +10941,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -10672,7 +11282,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {number} [books] ID of book a recipe should be in. For multiple repeat parameter.
          * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
          * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
@@ -10684,13 +11294,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
          * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
          * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -10704,7 +11314,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeList: async (books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeList: async (books?: number, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: boolean, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11225,11 +11835,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryList: async (checked?: string, id?: number, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListEntryList: async (checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11251,6 +11863,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (id !== undefined) {
                 localVarQueryParameter['id'] = id;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (supermarket !== undefined) {
@@ -11462,10 +12082,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListRecipeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11480,6 +12102,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -11604,38 +12234,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipe, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiSpaceList: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/space/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12263,13 +12861,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket-category/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12287,6 +12887,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -12807,13 +13415,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12831,6 +13441,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -13086,10 +13704,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncList: async (options: any = {}): Promise<RequestArgs> => {
+        apiSyncList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/sync/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13104,6 +13724,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -13389,10 +14017,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionList: async (foodId?: number, options: any = {}): Promise<RequestArgs> => {
+        apiUnitConversionList: async (foodId?: number, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/unit-conversion/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13410,6 +14040,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (foodId !== undefined) {
                 localVarQueryParameter['food_id'] = foodId;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
 
@@ -13958,13 +14596,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiUserFileList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13982,6 +14622,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -14196,11 +14844,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {string} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserList: async (options: any = {}): Promise<RequestArgs> => {
+        apiUserList: async (filterList?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14216,6 +14865,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (filterList !== undefined) {
+                localVarQueryParameter['filter_list'] = filterList;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -14228,7 +14881,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {PatchedUser} [patchedUser] 
          * @param {*} [options] Override http request option.
@@ -14261,38 +14914,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(patchedUser, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiUserPreferenceList: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/user-preference/`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14376,7 +14997,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14872,11 +15493,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {AutoMealPlan} autoMealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutoPlanCreate(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutoPlanCreate(options);
+        async apiAutoPlanCreate(autoMealPlan: AutoMealPlan, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutoMealPlan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutoPlanCreate(autoMealPlan, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14965,11 +15587,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBookmarkletImportList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BookmarkletImportList>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportList(options);
+        async apiBookmarkletImportList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedBookmarkletImportListList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15393,11 +16017,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Property>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyList(options);
+        async apiFoodPropertyList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15443,11 +16069,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PropertyType>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(options);
+        async apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyTypeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15702,14 +16330,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteLink>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(limit, query, random, updatedAt, options);
+        async apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedInviteLinkList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15838,7 +16468,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15848,7 +16478,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15858,7 +16488,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
@@ -15870,19 +16500,21 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealPlan>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanList(fromDate, mealType, toDate, options);
+        async apiMealPlanList(fromDate?: string, mealType?: string, page?: number, pageSize?: number, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedMealPlanList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {PatchedMealPlan} [patchedMealPlan] 
          * @param {*} [options] Override http request option.
@@ -15893,7 +16525,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15903,7 +16535,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
@@ -15935,11 +16567,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealTypeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealType>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeList(options);
+        async apiMealTypeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedMealTypeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16006,7 +16640,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16016,7 +16650,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16026,16 +16660,20 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookEntryList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RecipeBookEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryList(options);
+        async apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookEntryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryList(book, page, pageSize, recipe, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
          * @param {*} [options] Override http request option.
@@ -16046,7 +16684,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16056,7 +16694,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
@@ -16069,14 +16707,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RecipeBook>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, query, random, updatedAt, options);
+        async apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16163,7 +16803,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {number} [books] ID of book a recipe should be in. For multiple repeat parameter.
          * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
          * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
@@ -16175,13 +16815,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
          * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
          * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -16195,7 +16835,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeOverviewList>> {
+        async apiRecipeList(books?: number, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: boolean, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeOverviewList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -16305,12 +16945,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryList(checked, id, supermarket, options);
+        async apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedShoppingListEntryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16367,11 +17009,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListRecipeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListRecipe>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeList(options);
+        async apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedShoppingListRecipeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16404,15 +17048,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeUpdate(id, shoppingListRecipe, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiSpaceList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Space>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSpaceList(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16585,14 +17220,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryList(limit, query, random, updatedAt, options);
+        async apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSupermarketCategoryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16729,14 +17366,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Supermarket>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketList(limit, query, random, updatedAt, options);
+        async apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSupermarketList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16803,11 +17442,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSyncList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Sync>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncList(options);
+        async apiSyncList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSyncList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16886,11 +17527,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitConversionList(foodId?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UnitConversion>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionList(foodId, options);
+        async apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUnitConversionList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionList(foodId, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17032,14 +17675,16 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserFile>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileList(limit, query, random, updatedAt, options);
+        async apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserFileList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17085,16 +17730,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {string} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserList(options);
+        async apiUserList(filterList?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserList(filterList, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {PatchedUser} [patchedUser] 
          * @param {*} [options] Override http request option.
@@ -17102,15 +17748,6 @@ export const ApiApiFp = function(configuration?: Configuration) {
          */
         async apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPartialUpdate(id, patchedUser, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiUserPreferenceList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserPreference>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPreferenceList(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17135,7 +17772,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17316,11 +17953,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {AutoMealPlan} autoMealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutoPlanCreate(options?: any): AxiosPromise<void> {
-            return localVarFp.apiAutoPlanCreate(options).then((request) => request(axios, basePath));
+        apiAutoPlanCreate(autoMealPlan: AutoMealPlan, options?: any): AxiosPromise<AutoMealPlan> {
+            return localVarFp.apiAutoPlanCreate(autoMealPlan, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17400,11 +18038,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportList(options?: any): AxiosPromise<Array<BookmarkletImportList>> {
-            return localVarFp.apiBookmarkletImportList(options).then((request) => request(axios, basePath));
+        apiBookmarkletImportList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedBookmarkletImportListList> {
+            return localVarFp.apiBookmarkletImportList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17788,11 +18428,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyList(options?: any): AxiosPromise<Array<Property>> {
-            return localVarFp.apiFoodPropertyList(options).then((request) => request(axios, basePath));
+        apiFoodPropertyList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyList> {
+            return localVarFp.apiFoodPropertyList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17833,11 +18475,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList(options?: any): AxiosPromise<Array<PropertyType>> {
-            return localVarFp.apiFoodPropertyTypeList(options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyTypeList> {
+            return localVarFp.apiFoodPropertyTypeList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18067,14 +18711,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<InviteLink>> {
-            return localVarFp.apiInviteLinkList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedInviteLinkList> {
+            return localVarFp.apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18191,7 +18837,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiKeywordUpdate(id, keyword, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18200,7 +18846,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanCreate(mealPlan, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18209,7 +18855,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
@@ -18220,18 +18866,20 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanIcalRetrieve(fromDate, mealType, toDate, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
          * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any): AxiosPromise<Array<MealPlan>> {
-            return localVarFp.apiMealPlanList(fromDate, mealType, toDate, options).then((request) => request(axios, basePath));
+        apiMealPlanList(fromDate?: string, mealType?: string, page?: number, pageSize?: number, toDate?: string, options?: any): AxiosPromise<PaginatedMealPlanList> {
+            return localVarFp.apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {PatchedMealPlan} [patchedMealPlan] 
          * @param {*} [options] Override http request option.
@@ -18241,7 +18889,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanPartialUpdate(id, patchedMealPlan, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18250,7 +18898,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {MealPlan} mealPlan 
          * @param {*} [options] Override http request option.
@@ -18279,11 +18927,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeList(options?: any): AxiosPromise<Array<MealType>> {
-            return localVarFp.apiMealTypeList(options).then((request) => request(axios, basePath));
+        apiMealTypeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedMealTypeList> {
+            return localVarFp.apiMealTypeList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
@@ -18343,7 +18993,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18352,7 +19002,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryCreate(recipeBookEntry, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18361,15 +19011,19 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryList(options?: any): AxiosPromise<Array<RecipeBookEntry>> {
-            return localVarFp.apiRecipeBookEntryList(options).then((request) => request(axios, basePath));
+        apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any): AxiosPromise<PaginatedRecipeBookEntryList> {
+            return localVarFp.apiRecipeBookEntryList(book, page, pageSize, recipe, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
          * @param {*} [options] Override http request option.
@@ -18379,7 +19033,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntry, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18388,7 +19042,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {RecipeBookEntry} recipeBookEntry 
          * @param {*} [options] Override http request option.
@@ -18400,14 +19054,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<RecipeBook>> {
-            return localVarFp.apiRecipeBookList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedRecipeBookList> {
+            return localVarFp.apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18485,7 +19141,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {number} [books] ID of book a recipe should be in. For multiple repeat parameter.
          * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
          * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
          * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
@@ -18497,13 +19153,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
          * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
          * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
          * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
          * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
          * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
          * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -18517,7 +19173,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): AxiosPromise<PaginatedRecipeOverviewList> {
+        apiRecipeList(books?: number, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: boolean, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): AxiosPromise<PaginatedRecipeOverviewList> {
             return localVarFp.apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options).then((request) => request(axios, basePath));
         },
         /**
@@ -18616,12 +19272,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any): AxiosPromise<Array<ShoppingListEntry>> {
-            return localVarFp.apiShoppingListEntryList(checked, id, supermarket, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any): AxiosPromise<PaginatedShoppingListEntryList> {
+            return localVarFp.apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18672,11 +19330,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeList(options?: any): AxiosPromise<Array<ShoppingListRecipe>> {
-            return localVarFp.apiShoppingListRecipeList(options).then((request) => request(axios, basePath));
+        apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedShoppingListRecipeList> {
+            return localVarFp.apiShoppingListRecipeList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18706,14 +19366,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any): AxiosPromise<ShoppingListRecipe> {
             return localVarFp.apiShoppingListRecipeUpdate(id, shoppingListRecipe, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiSpaceList(options?: any): AxiosPromise<Array<Space>> {
-            return localVarFp.apiSpaceList(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18869,14 +19521,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<SupermarketCategory>> {
-            return localVarFp.apiSupermarketCategoryList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedSupermarketCategoryList> {
+            return localVarFp.apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19000,14 +19654,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<Supermarket>> {
-            return localVarFp.apiSupermarketList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedSupermarketList> {
+            return localVarFp.apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19067,11 +19723,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncList(options?: any): AxiosPromise<Array<Sync>> {
-            return localVarFp.apiSyncList(options).then((request) => request(axios, basePath));
+        apiSyncList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedSyncList> {
+            return localVarFp.apiSyncList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19142,11 +19800,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionList(foodId?: number, options?: any): AxiosPromise<Array<UnitConversion>> {
-            return localVarFp.apiUnitConversionList(foodId, options).then((request) => request(axios, basePath));
+        apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUnitConversionList> {
+            return localVarFp.apiUnitConversionList(foodId, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19275,14 +19935,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<UserFile>> {
-            return localVarFp.apiUserFileList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedUserFileList> {
+            return localVarFp.apiUserFileList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19324,15 +19986,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiUserFileUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {string} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserList(options?: any): AxiosPromise<Array<User>> {
-            return localVarFp.apiUserList(options).then((request) => request(axios, basePath));
+        apiUserList(filterList?: string, options?: any): AxiosPromise<Array<User>> {
+            return localVarFp.apiUserList(filterList, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {PatchedUser} [patchedUser] 
          * @param {*} [options] Override http request option.
@@ -19340,14 +20003,6 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          */
         apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any): AxiosPromise<User> {
             return localVarFp.apiUserPartialUpdate(id, patchedUser, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiUserPreferenceList(options?: any): AxiosPromise<Array<UserPreference>> {
-            return localVarFp.apiUserPreferenceList(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19369,7 +20024,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiUserPreferenceRetrieve(user, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -19551,12 +20206,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {AutoMealPlan} autoMealPlan 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutoPlanCreate(options?: any) {
-        return ApiApiFp(this.configuration).apiAutoPlanCreate(options).then((request) => request(this.axios, this.basePath));
+    public apiAutoPlanCreate(autoMealPlan: AutoMealPlan, options?: any) {
+        return ApiApiFp(this.configuration).apiAutoPlanCreate(autoMealPlan, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19653,12 +20309,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiBookmarkletImportList(options?: any) {
-        return ApiApiFp(this.configuration).apiBookmarkletImportList(options).then((request) => request(this.axios, this.basePath));
+    public apiBookmarkletImportList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiBookmarkletImportList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20121,12 +20779,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyList(options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyList(options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20176,12 +20836,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypeList(options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypeList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20460,6 +21122,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -20467,8 +21131,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20608,7 +21272,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {MealPlan} mealPlan 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20619,7 +21283,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20630,7 +21294,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
      * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
      * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
@@ -20643,20 +21307,22 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
      * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiMealPlanList(fromDate, mealType, toDate, options).then((request) => request(this.axios, this.basePath));
+    public apiMealPlanList(fromDate?: string, mealType?: string, page?: number, pageSize?: number, toDate?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {PatchedMealPlan} [patchedMealPlan] 
      * @param {*} [options] Override http request option.
@@ -20668,7 +21334,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20679,7 +21345,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {MealPlan} mealPlan 
      * @param {*} [options] Override http request option.
@@ -20714,12 +21380,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealTypeList(options?: any) {
-        return ApiApiFp(this.configuration).apiMealTypeList(options).then((request) => request(this.axios, this.basePath));
+    public apiMealTypeList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiMealTypeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20792,7 +21460,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {RecipeBookEntry} recipeBookEntry 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20803,7 +21471,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20814,17 +21482,21 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
+     * @param {number} [book] id of book - only return recipes in that book
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {number} [recipe] id of recipe - only return books for that recipe
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookEntryList(options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookEntryList(options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookEntryList(book, page, pageSize, recipe, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
      * @param {*} [options] Override http request option.
@@ -20836,7 +21508,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20847,7 +21519,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {RecipeBookEntry} recipeBookEntry 
      * @param {*} [options] Override http request option.
@@ -20861,6 +21533,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -20868,8 +21542,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20964,7 +21638,7 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
+     * @param {number} [books] ID of book a recipe should be in. For multiple repeat parameter.
      * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
      * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
      * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
@@ -20976,13 +21650,13 @@ export class ApiApi extends BaseAPI {
      * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
      * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
      * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-     * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
      * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
      * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
      * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
      * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-     * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -20997,7 +21671,7 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any) {
+    public apiRecipeList(books?: number, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: boolean, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any) {
         return ApiApiFp(this.configuration).apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -21117,13 +21791,15 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
      * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryList(checked, id, supermarket, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21185,12 +21861,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListRecipeList(options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListRecipeList(options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListRecipeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21226,16 +21904,6 @@ export class ApiApi extends BaseAPI {
      */
     public apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any) {
         return ApiApiFp(this.configuration).apiShoppingListRecipeUpdate(id, shoppingListRecipe, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public apiSpaceList(options?: any) {
-        return ApiApiFp(this.configuration).apiSpaceList(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21424,6 +22092,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21431,8 +22101,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21581,6 +22251,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21588,8 +22260,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21662,12 +22334,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSyncList(options?: any) {
-        return ApiApiFp(this.configuration).apiSyncList(options).then((request) => request(this.axios, this.basePath));
+    public apiSyncList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiSyncList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21753,12 +22427,14 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} [foodId] ID of food to filter for
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitConversionList(foodId?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitConversionList(foodId, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitConversionList(foodId, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21912,6 +22588,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21919,8 +22597,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiUserFileList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiUserFileList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21969,17 +22647,18 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
+     * @param {string} [filterList] User IDs, repeat for multiple
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserList(options?: any) {
-        return ApiApiFp(this.configuration).apiUserList(options).then((request) => request(this.axios, this.basePath));
+    public apiUserList(filterList?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiUserList(filterList, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
      * @param {number} id A unique integer value identifying this user.
      * @param {PatchedUser} [patchedUser] 
      * @param {*} [options] Override http request option.
@@ -21988,16 +22667,6 @@ export class ApiApi extends BaseAPI {
      */
     public apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any) {
         return ApiApiFp(this.configuration).apiUserPartialUpdate(id, patchedUser, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public apiUserPreferenceList(options?: any) {
-        return ApiApiFp(this.configuration).apiUserPreferenceList(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22024,7 +22693,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
      * @param {number} id A unique integer value identifying this user.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
