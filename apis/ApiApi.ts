@@ -692,8 +692,10 @@ export interface ApiIngredientDestroyRequest {
 }
 
 export interface ApiIngredientListRequest {
+    food?: number;
     page?: number;
     pageSize?: number;
+    unit?: number;
 }
 
 export interface ApiIngredientPartialUpdateRequest {
@@ -719,6 +721,7 @@ export interface ApiInviteLinkDestroyRequest {
 }
 
 export interface ApiInviteLinkListRequest {
+    internalNote?: string;
     limit?: string;
     page?: number;
     pageSize?: number;
@@ -893,6 +896,8 @@ export interface ApiRecipeBookEntryUpdateRequest {
 
 export interface ApiRecipeBookListRequest {
     limit?: string;
+    orderDirection?: ApiRecipeBookListOrderDirectionEnum;
+    orderField?: ApiRecipeBookListOrderFieldEnum;
     page?: number;
     pageSize?: number;
     query?: string;
@@ -1385,6 +1390,7 @@ export interface ApiUserSpaceDestroyRequest {
 }
 
 export interface ApiUserSpaceListRequest {
+    internalNote?: string;
     page?: number;
     pageSize?: number;
 }
@@ -4204,12 +4210,20 @@ export class ApiApi extends runtime.BaseAPI {
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
         const queryParameters: any = {};
 
+        if (requestParameters.food !== undefined) {
+            queryParameters['food'] = requestParameters.food;
+        }
+
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
 
         if (requestParameters.pageSize !== undefined) {
             queryParameters['page_size'] = requestParameters.pageSize;
+        }
+
+        if (requestParameters.unit !== undefined) {
+            queryParameters['unit'] = requestParameters.unit;
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -4411,6 +4425,10 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiInviteLinkListRaw(requestParameters: ApiInviteLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInviteLinkList>> {
         const queryParameters: any = {};
+
+        if (requestParameters.internalNote !== undefined) {
+            queryParameters['internal_note'] = requestParameters.internalNote;
+        }
 
         if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
@@ -5687,6 +5705,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters.limit !== undefined) {
             queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.orderDirection !== undefined) {
+            queryParameters['order_direction'] = requestParameters.orderDirection;
+        }
+
+        if (requestParameters.orderField !== undefined) {
+            queryParameters['order_field'] = requestParameters.orderField;
         }
 
         if (requestParameters.page !== undefined) {
@@ -9416,6 +9442,10 @@ export class ApiApi extends runtime.BaseAPI {
     async apiUserSpaceListRaw(requestParameters: ApiUserSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
         const queryParameters: any = {};
 
+        if (requestParameters.internalNote !== undefined) {
+            queryParameters['internal_note'] = requestParameters.internalNote;
+        }
+
         if (requestParameters.page !== undefined) {
             queryParameters['page'] = requestParameters.page;
         }
@@ -9740,3 +9770,20 @@ export const ApiAutomationListTypeEnum = {
     UnitReplace: 'UNIT_REPLACE'
 } as const;
 export type ApiAutomationListTypeEnum = typeof ApiAutomationListTypeEnum[keyof typeof ApiAutomationListTypeEnum];
+/**
+ * @export
+ */
+export const ApiRecipeBookListOrderDirectionEnum = {
+    Asc: 'asc',
+    Desc: 'desc'
+} as const;
+export type ApiRecipeBookListOrderDirectionEnum = typeof ApiRecipeBookListOrderDirectionEnum[keyof typeof ApiRecipeBookListOrderDirectionEnum];
+/**
+ * @export
+ */
+export const ApiRecipeBookListOrderFieldEnum = {
+    Id: 'id',
+    Name: 'name',
+    Order: 'order'
+} as const;
+export type ApiRecipeBookListOrderFieldEnum = typeof ApiRecipeBookListOrderFieldEnum[keyof typeof ApiRecipeBookListOrderFieldEnum];

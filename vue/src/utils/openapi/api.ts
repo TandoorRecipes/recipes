@@ -6488,7 +6488,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -9256,12 +9256,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [food] ID of food to filter for
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiIngredientList: async (food?: number, page?: number, pageSize?: number, unit?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/ingredient/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9277,12 +9279,20 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (food !== undefined) {
+                localVarQueryParameter['food'] = food;
+            }
+
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (unit !== undefined) {
+                localVarQueryParameter['unit'] = unit;
             }
 
 
@@ -9490,6 +9500,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -9499,7 +9510,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiInviteLinkList: async (internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/invite-link/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9514,6 +9525,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (internalNote !== undefined) {
+                localVarQueryParameter['internal_note'] = internalNote;
+            }
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
@@ -10915,6 +10930,8 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
@@ -10923,7 +10940,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookList: async (limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe-book/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10941,6 +10958,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['order_direction'] = orderDirection;
+            }
+
+            if (orderField !== undefined) {
+                localVarQueryParameter['order_field'] = orderField;
             }
 
             if (page !== undefined) {
@@ -15070,12 +15095,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpaceList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiUserSpaceList: async (internalNote?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-space/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -15090,6 +15116,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (internalNote !== undefined) {
+                localVarQueryParameter['internal_note'] = internalNote;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -15525,7 +15555,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -16266,13 +16296,15 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [food] ID of food to filter for
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiIngredientList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedIngredientList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientList(page, pageSize, options);
+        async apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedIngredientList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientList(food, page, pageSize, unit, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16329,6 +16361,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -16338,8 +16371,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedInviteLinkList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options);
+        async apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedInviteLinkList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16707,6 +16740,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
@@ -16715,8 +16750,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options);
+        async apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17793,13 +17828,14 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserSpaceList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserSpaceList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpaceList(page, pageSize, options);
+        async apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserSpaceList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpaceList(internalNote, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17982,7 +18018,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
-         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
+         * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -18653,13 +18689,15 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [food] ID of food to filter for
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedIngredientList> {
-            return localVarFp.apiIngredientList(page, pageSize, options).then((request) => request(axios, basePath));
+        apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any): AxiosPromise<PaginatedIngredientList> {
+            return localVarFp.apiIngredientList(food, page, pageSize, unit, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18710,6 +18748,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -18719,8 +18758,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedInviteLinkList> {
-            return localVarFp.apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedInviteLinkList> {
+            return localVarFp.apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19054,6 +19093,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
@@ -19062,8 +19103,8 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedRecipeBookList> {
-            return localVarFp.apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedRecipeBookList> {
+            return localVarFp.apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20043,13 +20084,14 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpaceList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUserSpaceList> {
-            return localVarFp.apiUserSpaceList(page, pageSize, options).then((request) => request(axios, basePath));
+        apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUserSpaceList> {
+            return localVarFp.apiUserSpaceList(internalNote, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -20241,7 +20283,7 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
-     * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Multiple values allowed.
+     * @param {'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'} [type] Return the Automations matching the automation type.  Repeat for multiple.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
@@ -21052,14 +21094,16 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [food] ID of food to filter for
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
+     * @param {number} [unit] ID of unit to filter for
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiIngredientList(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiIngredientList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientList(food, page, pageSize, unit, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21121,6 +21165,7 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [internalNote] I have no idea what internal_note is for.
      * @param {string} [limit] limit number of entries to return
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -21131,8 +21176,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21533,6 +21578,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+     * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
@@ -21542,8 +21589,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22716,14 +22763,15 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [internalNote] I have no idea what this is
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserSpaceList(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUserSpaceList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUserSpaceList(internalNote, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

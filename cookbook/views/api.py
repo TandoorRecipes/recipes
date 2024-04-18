@@ -427,6 +427,10 @@ class SpaceViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.
         return self.queryset.filter(id=self.request.space.id)
 
 
+# TODO what is internal_note for?
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='internal_note', description='I have no idea what this is', type=str),
+]))
 class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
@@ -509,8 +513,7 @@ class SupermarketViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space)
-        return super().get_queryset()
+        return self.queryset.filter(space=self.request.space)
 
 
 # TODO does supermarket category have settings to support fuzzy filtering and/or merge?
@@ -522,8 +525,7 @@ class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
-        return super().get_queryset()
+        return self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
 
 
 class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
@@ -533,8 +535,7 @@ class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(supermarket__space=self.request.space).order_by('order')
-        return super().get_queryset()
+        return self.queryset.filter(supermarket__space=self.request.space).order_by('order')
 
 
 class KeywordViewSet(TreeMixin):
@@ -561,8 +562,7 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         # exclude fields not yet implemented
-        self.queryset = Food.inheritable_fields
-        return super().get_queryset()
+        return Food.inheritable_fields
 
 
 class FoodViewSet(TreeMixin):
@@ -701,6 +701,10 @@ class FoodViewSet(TreeMixin):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='order_field', description='Field to order recipe books on', type=str, enum=['id', 'name', 'order']),
+    OpenApiParameter(name='order_direction', description='Order ascending or descending', type=str, enum=['asc', 'desc']),
+]))
 class RecipeBookViewSet(StandardFilterModelViewSet):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
@@ -715,9 +719,7 @@ class RecipeBookViewSet(StandardFilterModelViewSet):
             order_field = 'id'
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
-
-        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().order_by(ordering)
-        return super().get_queryset()
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().order_by(ordering)
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -861,6 +863,10 @@ class MealTypeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='food', description='ID of food to filter for', type=int),
+    OpenApiParameter(name='unit', description='ID of unit to filter for', type=int),
+]))
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
@@ -1165,7 +1171,8 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 name='checked',
                 description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
-                            - ''recent'' includes unchecked items and recently completed items.')
+                            - ''recent'' includes unchecked items and recently completed items.'),
+                type=str
             ),
             OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
 ]))
@@ -1304,8 +1311,7 @@ class UserFileViewSet(StandardFilterModelViewSet):
     parser_classes = [MultiPartParser]
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+        return self.queryset.filter(space=self.request.space).all()
 
 
 class AutomationViewSet(StandardFilterModelViewSet):
@@ -1317,7 +1323,7 @@ class AutomationViewSet(StandardFilterModelViewSet):
     @extend_schema(
         parameters=[OpenApiParameter(
             name='type',
-            description=_('Return the Automations matching the automation type.  Multiple values allowed.'),
+            description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
             type=str,
             enum=[a[0] for a in Automation.automation_types])
         ]
@@ -1329,10 +1335,13 @@ class AutomationViewSet(StandardFilterModelViewSet):
         automation_type = self.request.query_params.getlist('type', [])
         if automation_type:
             self.queryset = self.queryset.filter(type__in=automation_type)
-        self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+        return self.queryset.filter(space=self.request.space).all()
 
 
+# TODO explain what internal_note is for
+@extend_schema_view(list=extend_schema(parameters=[
+            OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
+]))
 class InviteLinkViewSet(StandardFilterModelViewSet):
     queryset = InviteLink.objects
     serializer_class = InviteLinkSerializer
@@ -1340,14 +1349,12 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-
         internal_note = self.request.query_params.get('internal_note', None)
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
         if is_space_owner(self.request.user, self.request.space):
-            self.queryset = self.queryset.filter(space=self.request.space).all()
-            return super().get_queryset()
+            return self.queryset.filter(space=self.request.space).all()
         else:
             return None
 
@@ -1359,8 +1366,7 @@ class CustomFilterViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
-        return super().get_queryset()
+        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
 
 
 class AccessTokenViewSet(viewsets.ModelViewSet):
