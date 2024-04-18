@@ -126,7 +126,7 @@ class TreeModel(MP_Node):
         return None
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         """
         Returns a string representation of a tree node and it's ancestors,
         e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -1461,19 +1461,21 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     UNIT_REPLACE = 'UNIT_REPLACE'
     NAME_REPLACE = 'NAME_REPLACE'
 
+    automation_types = (
+        (FOOD_ALIAS, _('Food Alias')),
+        (UNIT_ALIAS, _('Unit Alias')),
+        (KEYWORD_ALIAS, _('Keyword Alias')),
+        (DESCRIPTION_REPLACE, _('Description Replace')),
+        (INSTRUCTION_REPLACE, _('Instruction Replace')),
+        (NEVER_UNIT, _('Never Unit')),
+        (TRANSPOSE_WORDS, _('Transpose Words')),
+        (FOOD_REPLACE, _('Food Replace')),
+        (UNIT_REPLACE, _('Unit Replace')),
+        (NAME_REPLACE, _('Name Replace')),
+    )
+
     type = models.CharField(max_length=128,
-                            choices=(
-                                (FOOD_ALIAS, _('Food Alias')),
-                                (UNIT_ALIAS, _('Unit Alias')),
-                                (KEYWORD_ALIAS, _('Keyword Alias')),
-                                (DESCRIPTION_REPLACE, _('Description Replace')),
-                                (INSTRUCTION_REPLACE, _('Instruction Replace')),
-                                (NEVER_UNIT, _('Never Unit')),
-                                (TRANSPOSE_WORDS, _('Transpose Words')),
-                                (FOOD_REPLACE, _('Food Replace')),
-                                (UNIT_REPLACE, _('Unit Replace')),
-                                (NAME_REPLACE, _('Name Replace')),
-                            ))
+                            choices=automation_types)
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 

@@ -17,7 +17,6 @@ import re
 import socket
 import sys
 import traceback
-import socket
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -325,7 +324,7 @@ SPECTACULAR_SETTINGS = {
             }
         }
     },
-    "SECURITY": [{ "ApiKeyAuth": [] }],
+    "SECURITY": [{"ApiKeyAuth": []}],
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
@@ -473,7 +472,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if DEBUG:
             print("Vite Dev Server is running")
             DJANGO_VITE['default']['dev_mode'] = True
-    except:
+    except Exception:
         print("Running django-vite in production mode (no HMR)")
 
 # Internationalization

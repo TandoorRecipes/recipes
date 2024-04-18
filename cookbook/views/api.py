@@ -223,9 +223,12 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
 
 class MergeMixin(ViewSetMixin):
 
+    @extend_schema(parameters=[
+        OpenApiParameter(name="target", description='The ID of the {obj} you want to merge with.', type=OpenApiTypes.INT, location=OpenApiParameter.PATH)
+    ])
     @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def merge(self, request, pk, target):
+    def merge(self, request, pk, target: int):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
 
         try:
@@ -294,12 +297,16 @@ class MergeMixin(ViewSetMixin):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='root', description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.', type=int),
-    OpenApiParameter(name='tree', description='Return all self and children of {} with ID [int].', type=int),
-]))
+@extend_schema_view(
+    list=extend_schema(parameters=[
+        OpenApiParameter(name='root', description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.', type=int),
+        OpenApiParameter(name='tree', description='Return all self and children of {obj} with ID [int].', type=int),
+    ]),
+    move=extend_schema(parameters=[
+        OpenApiParameter(name="parent", description='The ID of the desired parent of the {obj}.', type=OpenApiTypes.INT, location=OpenApiParameter.PATH)
+    ])
+)
 class TreeMixin(MergeMixin, FuzzyFilterMixin):
-    # schema = TreeSchema()
     model = None
 
     def get_queryset(self):
@@ -329,9 +336,10 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
         return self.annotate_recipe(queryset=self.queryset, request=self.request, serializer=self.serializer_class, tree=True)
 
+
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def move(self, request, pk, parent):
+    def move(self, request, pk, parent: int):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
         if self.model.node_order_by:
             node_location = 'sorted'
@@ -775,6 +783,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
 
 
+# TODO create proper schema
 class AutoPlanViewSet(viewsets.ViewSet):
     http_method_names = ['post', 'options']
 
@@ -1273,25 +1282,6 @@ class UserFileViewSet(StandardFilterModelViewSet):
 
 
 class AutomationViewSet(StandardFilterModelViewSet):
-    """
-    list:
-    optional parameters
-
-    - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.
-
-    *Automation Types:*
-    - FS: Food Alias
-    - UA: Unit Alias
-    - KA: Keyword Alias
-    - DR: Description Replace
-    - IR: Instruction Replace
-    - NU: Never Unit
-    - TW: Transpose Words
-    - FR: Food Replace
-    - UR: Unit Replace
-    - NR: Name Replace
-    """
-
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1311,15 +1301,20 @@ class AutomationViewSet(StandardFilterModelViewSet):
     }
 
     @extend_schema(
-        parameters=[OpenApiParameter(name='automation_type', description=_('Return the Automations matching the automation type.  Multiple values allowed.'), type=str)]
+        parameters=[OpenApiParameter(
+            name='type',
+            description=_('Return the Automations matching the automation type.  Multiple values allowed.'),
+            type=str,
+            enum=[a[0] for a in Automation.automation_types])
+        ]
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
-        automation_type = self.request.query_params.getlist('automation_type', [])
+        automation_type = self.request.query_params.getlist('type', [])
         if automation_type:
-            self.queryset = self.queryset.filter(type__in=[self.auto_type[x.upper()] for x in automation_type])
+            self.queryset = self.queryset.filter(type__in=automation_type)
         self.queryset = self.queryset.filter(space=self.request.space).all()
         return super().get_queryset()
 
@@ -1397,6 +1392,7 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
+# TODO implement proper schema  https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class RecipeUrlImportView(APIView):
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1575,6 +1571,7 @@ def import_files(request):
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# TODO implement schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class ImportOpenData(APIView):
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
@@ -1625,6 +1622,7 @@ def get_recipe_provider(recipe):
         raise Exception('Provider not implemented')
 
 
+# TODO implement proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 def update_recipe_links(recipe):
     if not recipe.link:
         # TODO response validation in apis
@@ -1683,7 +1681,7 @@ def sync_all(request):
 
 
 @api_view(['GET'])
-# @schema(AutoSchema()) #TODO add proper schema
+# @schema(AutoSchema()) #TODO add proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
@@ -1714,6 +1712,7 @@ def log_cooking(request, recipe_id):
     return {'error': 'recipe does not exist'}
 
 
+# TODO implement proper schema
 @api_view(['GET'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
