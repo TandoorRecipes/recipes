@@ -14,8 +14,6 @@ from zipfile import ZipFile
 
 import requests
 import validators
-from annoying.decorators import ajax_request
-from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -52,7 +50,7 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.viewsets import ViewSetMixin
-from rest_framework.serializers import CharField, IntegerField, UUIDField, FileField
+from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.forms import ImportForm
@@ -63,7 +61,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
 from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomIsGuest, CustomRecipePermission,
                                                CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required,
-                                               has_group_permission, is_space_owner, switch_user_active_space,
+                                               has_group_permission, is_space_owner, switch_user_active_space
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -72,7 +70,7 @@ from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helpe
 from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, FoodProperty, ImportLog, Ingredient,
                              InviteLink, Keyword, MealPlan, MealType, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog,
+                             UserFile, UserPreference, UserSpace, ViewLog
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -85,7 +83,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  RecipeOverviewSerializer, RecipeSerializer, RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListEntryBulkSerializer,
                                  ShoppingListEntrySerializer, ShoppingListRecipeSerializer, SpaceSerializer, StepSerializer, StorageSerializer,
                                  SupermarketCategoryRelationSerializer, SupermarketCategorySerializer, SupermarketSerializer, SyncLogSerializer, SyncSerializer,
-                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer,
+                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer
                                  )
 from cookbook.views.import_export import get_integration
 from recipes import settings
@@ -514,7 +512,8 @@ class SupermarketViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        self.queryset = self.queryset.filter(space=self.request.space)
+        return super().get_queryset()
 
 
 # TODO does supermarket category have settings to support fuzzy filtering and/or merge?
@@ -526,7 +525,8 @@ class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
+        self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
+        return super().get_queryset()
 
 
 class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
@@ -536,7 +536,8 @@ class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(supermarket__space=self.request.space).order_by('order')
+        self.queryset = self.queryset.filter(supermarket__space=self.request.space).order_by('order')
+        return super().get_queryset()
 
 
 class KeywordViewSet(TreeMixin):
@@ -563,7 +564,8 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         # exclude fields not yet implemented
-        return Food.inheritable_fields
+        self.queryset = Food.inheritable_fields
+        return super().get_queryset()
 
 
 class FoodViewSet(TreeMixin):
@@ -720,7 +722,9 @@ class RecipeBookViewSet(StandardFilterModelViewSet):
             order_field = 'id'
 
         ordering = f"{'' if order_direction == 'asc' else '-'}{order_field}"
-        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().order_by(ordering)
+
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().order_by(ordering)
+        return super().get_queryset()
 
 
 @extend_schema_view(list=extend_schema(parameters=[
@@ -957,7 +961,7 @@ class RecipePagination(PageNumberPagination):
     ),
     OpenApiParameter(
         name='createdon',
-        description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),\
+        description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
         type=str,
         examples=[DateExample, BeforeDateExample]
     ),
@@ -1325,7 +1329,8 @@ class UserFileViewSet(StandardFilterModelViewSet):
     parser_classes = [MultiPartParser]
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space).all()
+        self.queryset = self.queryset.filter(space=self.request.space).all()
+        return super().get_queryset()
 
 
 class AutomationViewSet(StandardFilterModelViewSet):
@@ -1369,7 +1374,8 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
             self.queryset = self.queryset.filter(internal_note=internal_note)
 
         if is_space_owner(self.request.user, self.request.space):
-            return self.queryset.filter(space=self.request.space).all()
+            self.queryset = self.queryset.filter(space=self.request.space).all()
+            return super().get_queryset()
         else:
             return None
 
@@ -1394,7 +1400,8 @@ class CustomFilterViewSet(StandardFilterModelViewSet):
         filter_type = self.request.query_params.getlist('type', [])
         if filter_type:
             self.queryset.filter(type__in=filter_type)
-        return self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
+        self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
+        return super().get_queryset()
 
 
 class AccessTokenViewSet(viewsets.ModelViewSet):
@@ -1693,7 +1700,7 @@ def get_external_file_link(request, recipe_id):
     responses=None,
 )
 @api_view(['GET'])
-@permission_classes([CustomIsGuest & CustomTokenHasReadWriteScope])
+@permission_classes([(CustomIsGuest | CustomIsUser) & CustomTokenHasReadWriteScope])
 def get_recipe_file(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
@@ -1771,7 +1778,7 @@ def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
 
     return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
 
-
+# TODO is this replaced now?
 def meal_plans_to_ical(queryset, filename):
     cal = Calendar()
 

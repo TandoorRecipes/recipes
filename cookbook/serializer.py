@@ -168,7 +168,6 @@ class CustomOnHandField(serializers.Field):
 
 
 class SpaceFilterSerializer(serializers.ListSerializer):
-
     def to_representation(self, data):
         if self.context.get('request', None) is None:
             return
