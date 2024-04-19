@@ -171,18 +171,19 @@ class SpaceFilterSerializer(serializers.ListSerializer):
     def to_representation(self, data):
         if self.context.get('request', None) is None:
             return
-        if (isinstance(data, QuerySet) and data.query.is_sliced):
+
+        # Don't return User details to anonymous users
+        if self.child.Meta.model == User and isinstance(self.context['request'].user, AnonymousUser):
+            data = []
+
+        # paginated data is provided as a list, otherwise as a Queryset
+        if isinstance(data, QuerySet):
             # if query is sliced it came from api request not nested serializer
-            return super().to_representation(data)
-        if self.child.Meta.model == User:
-            if isinstance(self.context['request'].user, AnonymousUser):
-                data = []
-        #     else:
-        #         # data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
-                
-        # else:
-            # data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
-        data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
+            if data.query.is_sliced:
+                return super().to_representation(data)
+            data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()    
+        elif isinstance(data, list):
+            data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         return super().to_representation(data)
 
 
