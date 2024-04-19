@@ -177,10 +177,12 @@ class SpaceFilterSerializer(serializers.ListSerializer):
         if self.child.Meta.model == User:
             if isinstance(self.context['request'].user, AnonymousUser):
                 data = []
-            else:
-                data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
-        else:
-            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+        #     else:
+        #         # data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+                
+        # else:
+            # data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+        data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         return super().to_representation(data)
 
 
