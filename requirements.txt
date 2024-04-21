@@ -12,7 +12,7 @@ drf-spectacular-sidecar==2024.2.1
 django-oauth-toolkit==2.3.0
 django-debug-toolbar==4.3.0
 bleach==6.0.0
-gunicorn==21.2.0
+gunicorn==22.0.0
 lxml==5.1.0
 Markdown==3.5.1
 Pillow==10.3.0
@@ -45,8 +45,8 @@ django-auth-ldap==4.6.0
 pyppeteer==2.0.0
 validators==0.20.0
 pytube==15.0.0
+aiohttp==3.9.4
 django-vite==3.0.3
-aiohttp==3.9.3
 
 # Development
 pytest==8.0.0
