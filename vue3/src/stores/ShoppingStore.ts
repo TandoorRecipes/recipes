@@ -44,7 +44,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let structure = {} as IShoppingList
         structure.categories = new Map<number, IShoppingListCategory>
 
-        let ordered_structure = []
+        let ordered_structure = [] as IShoppingListCategory[]
 
         // build structure
         for (let i in entries.value.keys()) {
@@ -103,12 +103,17 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
         // ordering
 
-        // if (UNDEFINED_CATEGORY in structure) {
-        //     ordered_structure.push(structure[this.UNDEFINED_CATEGORY])
-        //     Vue.delete(structure, this.UNDEFINED_CATEGORY)
-        // }
-        //
-        // if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && useUserPreferenceStore().device_settings.shopping_selected_supermarket !== null) {
+        if (structure.categories.has(UNDEFINED_CATEGORY)) {
+            ordered_structure.push(structure.categories.get(UNDEFINED_CATEGORY))
+            structure.categories.delete(UNDEFINED_CATEGORY)
+        }
+
+        structure.categories.forEach(category => {
+            ordered_structure.push(category)
+        })
+
+        // TODO implement ordering
+        // if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && 'useUserPreferenceStore().device_settings.shopping_selected_supermarket' !== null) {
         //     for (let c of useUserPreferenceStore().device_settings.shopping_selected_supermarket.category_to_supermarket) {
         //         if (c.category.name in structure) {
         //             ordered_structure.push(structure[c.category.name])
@@ -126,7 +131,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         //     }
         // }
 
-        return structure
+        return ordered_structure
     })
 
     /**

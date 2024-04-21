@@ -13,11 +13,11 @@
                     <v-col>
                         <v-list lines="two" density="compact">
 
-                            <template v-for="(value, key) in useShoppingStore().getEntriesByGroup.categories.entries()">
-                                <v-list-subheader>{{ value[0] }}</v-list-subheader>
+                            <template v-for="category in useShoppingStore().getEntriesByGroup">
+                                <v-list-subheader>{{ category.name }}</v-list-subheader>
+                                <v-divider></v-divider>
 
-                                <template v-for="item in value[1].foods">
-                           
+                                <template v-for="item in category.foods">
                                     <v-list-item>
                                         {{ item[1].food.name }}
 
@@ -29,7 +29,6 @@
                                             ></v-btn>
                                         </template>
                                     </v-list-item>
-
                                 </template>
                             </template>
                         </v-list>
