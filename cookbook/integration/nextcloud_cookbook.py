@@ -65,7 +65,10 @@ class NextcloudCookbook(Integration):
             if ingredients_added == False:
                 for ingredient in recipe_json['recipeIngredient']:
                     ingredients_added = True
-                    if ingredient.find('##') == -1:
+                    if ingredient.startswith('##'):
+                        subheader = ingredient.replace('##', '', 1)
+                        step.ingredients.add(Ingredient.objects.create(note=subheader, is_header=True, no_amount=True, space=self.request.space))
+                    else:
                         amount, unit, food, note = ingredient_parser.parse(ingredient)
                         f = ingredient_parser.get_food(food)
                         u = ingredient_parser.get_unit(unit)
