@@ -7,7 +7,7 @@
             :class="value.classes">
         <v-card-text class="pa-0">
             <div class="d-flex flex-row align-items-center">
-                <div class="flex-column">
+                <div class="flex-column" v-if="detailedItems">
                     <recipe-image :height="itemHeight" :width="itemHeight" :recipe="mealPlan.recipe"></recipe-image>
                 </div>
                 <div class="flex-column flex-grow-0 pa-1">
@@ -31,7 +31,6 @@ import RecipeImage from "@/components/display/RecipeImage.vue";
 
 const emit = defineEmits({
     onDragStart: (value: IMealPlanNormalizedCalendarItem, event: DragEvent) => {
-        console.log(value, event)
         return true
     },
 })

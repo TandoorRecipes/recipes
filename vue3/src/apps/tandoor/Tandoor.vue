@@ -14,7 +14,7 @@
             <router-view></router-view>
         </v-main>
 
-        <v-navigation-drawer>
+        <v-navigation-drawer v-if="lgAndUp">
             <v-list-item title="My Application" subtitle="Vuetify"></v-list-item>
             <v-divider></v-divider>
             <v-list-item prepend-icon="fas fa-book" title="Home" :to="{name: 'view_home', params: {}}"></v-list-item>
@@ -23,7 +23,7 @@
             <v-list-item prepend-icon="fas fa-bars" title="More" :to="{name: 'view_books', params: {}}"></v-list-item> <!-- TODO link -->
         </v-navigation-drawer>
 
-        <v-bottom-navigation grow class="d-lg-none">
+        <v-bottom-navigation grow v-if="!lgAndUp">
             <v-btn value="recent" :to="{name: 'view_home', params: {}}">
                 <v-icon icon="fa-fw fas fa-book "/>
                 <span>Recipes</span>
@@ -51,26 +51,18 @@
     </v-app>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 
-import {defineComponent} from 'vue'
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue";
+import {ref} from "vue";
+import {useDisplay} from "vuetify";
 
-export default defineComponent({
-    components: {GlobalSearchDialog},
-    mixins: [],
-    data() {
-        return {
-            drawer: true,
-            rail: true,
-            overlay: false
-        }
-    },
-    mounted() {
+const {lgAndUp} = useDisplay()
 
-    },
-    methods: {},
-})
+const drawer = ref(true)
+const rail = ref(true)
+const overlay = ref(false)
+
 
 </script>
 
