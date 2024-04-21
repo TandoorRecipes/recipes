@@ -1,44 +1,39 @@
 <template>
-    <v-table density="compact" v-if="ingredients.length > 0">
+    <v-table density="compact" v-if="props.ingredients.length > 0">
 
         <tbody>
-        <IngredientsTableRow v-for="i in ingredients" :ingredient="i" :key="i.id" :show-notes="showNotes" :draggable="draggable"></IngredientsTableRow>
+        <IngredientsTableRow v-for="i in props.ingredients" :ingredient="i" :key="i.id" :show-notes="props.showNotes" :draggable="props.draggable"></IngredientsTableRow>
         </tbody>
 
     </v-table>
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from 'vue'
-import {Ingredient, Step} from "@/openapi";
+<script lang="ts" setup>
+import {onMounted, PropType, ref} from 'vue'
+import {Ingredient} from "@/openapi";
 import IngredientsTableRow from "@/components/display/IngredientsTableRow.vue";
 import draggable from 'vuedraggable'
 
-export default defineComponent({
-    name: "IngredientsTable",
-    components: {IngredientsTableRow, draggable},
-    props: {
-        ingredients: {
-            type: Array as PropType<Array<Ingredient>>,
-            default: [],
-        },
-        showNotes: {
-            type: Boolean,
-            default: true
-        },
-        draggable: {
-            type: Boolean,
-        },
+const props = defineProps({
+    ingredients: {
+        type: Array as PropType<Array<Ingredient>>,
+        default: [],
     },
-    data() {
-        return {
-            mutable_ingredients: [] as Ingredient[]
-        }
+    showNotes: {
+        type: Boolean,
+        default: true
     },
-    mounted() {
-        this.mutable_ingredients = this.ingredients
-    }
+    draggable: {
+        type: Boolean,
+    },
 })
+
+const mutable_ingredients = ref([] as Ingredient[])
+
+onMounted(() => {
+    mutable_ingredients.value = props.ingredients
+})
+
 </script>
 
 

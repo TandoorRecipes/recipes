@@ -11,7 +11,7 @@
 
                 <v-card-text>
 
-                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')" control-variant="split" :min="0" >
+                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')"  control-variant="split" :min="0" >
                     </v-number-input>
 
                     <v-btn-group divided class="d-flex">
@@ -53,7 +53,8 @@ export default defineComponent({
     data() {
         return {
             dialog: false,
-            mutable_number: 0
+            mutable_number: 0,
+            someNumber: 12
         }
     },
     watch: {
@@ -82,7 +83,7 @@ export default defineComponent({
             if (operation === 'sub') {
                 this.mutable_number = this.number - 1
             }
-
+            console.log(operation, this.mutable_number)
             this.$emit('change', {number: this.mutable_number})
         }
     },
