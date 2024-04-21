@@ -6,10 +6,8 @@ import {DateTime} from "luxon";
 
 const _STORE_ID = "meal_plan_store"
 const _LOCAL_STORAGE_KEY = "MEAL_PLAN_CLIENT_SETTINGS"
-/*
- * test store to play around with pinia and see if it can work for my usecases
- * dont trust that all mealplans are in store as there is no cache validation logic, its just a shared data holder
- * */
+
+
 export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     let plans = ref(new Map<number, MealPlan>)
