@@ -14,21 +14,19 @@
 
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType} from 'vue'
+<script setup lang="ts">
+import {PropType} from 'vue'
 import {Recipe, RecipeFlat, RecipeOverview} from "@/openapi";
+import {useRouter} from "vue-router";
 
-export default defineComponent({
-    name: "RecipeContextMenu",
-    props: {
-        recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true}
-    },
-    methods: {
-        openRecipe: function () {
-            this.$router.push({name: 'edit_recipe', params: {recipe_id: this.recipe.id}})
-        }
-    }
+const router = useRouter()
+const props = defineProps({
+    recipe: {type: Object as PropType<Recipe | RecipeFlat | RecipeOverview>, required: true}
 })
+
+function openRecipe() {
+    router.push({name: 'edit_recipe', params: {recipe_id: props.recipe.id}})
+}
 </script>
 
 

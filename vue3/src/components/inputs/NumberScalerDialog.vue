@@ -11,11 +11,11 @@
 
                 <v-card-text>
 
-                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')"  control-variant="split" :min="0" >
+                    <v-number-input v-model="mutable_number" @update:modelValue="updateNumber('set')" control-variant="split" :min="0">
                     </v-number-input>
 
                     <v-btn-group divided class="d-flex">
-                        <v-btn  variant="tonal" class="flex-grow-1" @click="updateNumber( 'half')">
+                        <v-btn variant="tonal" class="flex-grow-1" @click="updateNumber( 'half')">
                             <i class="fas fa-divide"></i> 2
                         </v-btn>
                         <v-btn variant="tonal" class="flex-grow-1" @click="updateNumber('double')">
@@ -34,60 +34,53 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 
-import {defineComponent} from 'vue'
+import {defineComponent, onMounted, ref, watch} from 'vue'
 import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
-export default defineComponent({
-    name: "NumberScalerDialog",
-    components: {VNumberInput},
-    emits: {
-        change(payload: { number: number }) {
-            return payload
-        }
-    },
-    props: {
-        number: {type: Number, default: 0},
-        title: {type: String, default: 'Number'}
-    },
-    data() {
-        return {
-            dialog: false,
-            mutable_number: 0,
-            someNumber: 12
-        }
-    },
-    watch: {
-        number: function (newVal) {
-            this.mutable_number = newVal
-        }
-    },
-    mounted() {
-        this.mutable_number = this.number
-    },
-    methods: {
-        /**
-         * perform given operation on linked number
-         * @param operation update mode
-         */
-        updateNumber: function (operation: string) {
-            if (operation === 'half') {
-                this.mutable_number = this.number / 2
-            }
-            if (operation === 'double') {
-                this.mutable_number = this.number * 2
-            }
-            if (operation === 'add') {
-                this.mutable_number = this.number + 1
-            }
-            if (operation === 'sub') {
-                this.mutable_number = this.number - 1
-            }
-            console.log(operation, this.mutable_number)
-            this.$emit('change', {number: this.mutable_number})
-        }
-    },
+
+const emit = defineEmits({
+    change(payload: { number: number }) {
+        return payload
+    }
 })
+
+const props = defineProps({
+    number: {type: Number, default: 0},
+    title: {type: String, default: 'Number'}
+})
+
+const dialog = ref(false)
+const mutable_number = ref(0)
+
+watch(() => props.number, (newVal) => {
+    mutable_number.value = newVal
+})
+
+onMounted(() => {
+    mutable_number.value = props.number
+})
+
+/**
+ * perform given operation on linked number
+ * @param operation update mode
+ */
+function updateNumber(operation: string) {
+    if (operation === 'half') {
+        mutable_number.value = props.number / 2
+    }
+    if (operation === 'double') {
+        mutable_number.value = props.number * 2
+    }
+    if (operation === 'add') {
+        mutable_number.value = props.number + 1
+    }
+    if (operation === 'sub') {
+        mutable_number.value = props.number - 1
+    }
+    console.log(operation, mutable_number.value)
+    emit('change', {number: mutable_number.value})
+}
 </script>
 
 
