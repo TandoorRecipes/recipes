@@ -60,25 +60,17 @@ class NextcloudCookbook(Integration):
                 step = Step.objects.create(
                     instruction=s, space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
                 )
-            step.name = re.search(r'(\w+):\\n', s)
-            
 
-
-
-            if not ingredients_added:
-                if len(recipe_json['description'].strip()) > 500:
-                    step.instruction = recipe_json['description'].strip() + '\n\n' + step.instruction
-
-                ingredients_added = True
-
-                ingredient_parser = IngredientParser(self.request, True)
+            ingredient_parser = IngredientParser(self.request, True)
+            if ingredients_added == False:
                 for ingredient in recipe_json['recipeIngredient']:
-                    amount, unit, food, note = ingredient_parser.parse(ingredient)
-                    f = ingredient_parser.get_food(food)
-                    u = ingredient_parser.get_unit(unit)
-                    step.ingredients.add(Ingredient.objects.create(
-                        food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
-                    ))
+                    ingredients_added = True
+                    if ingredient.find('##') == -1:
+                        amount, unit, food, note = ingredient_parser.parse(ingredient)
+                        f = ingredient_parser.get_food(food)
+                        u = ingredient_parser.get_unit(unit)
+                        step.ingredients.add(Ingredient.objects.create(
+                            food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,))
             recipe.steps.add(step)
 
         if 'nutrition' in recipe_json:
