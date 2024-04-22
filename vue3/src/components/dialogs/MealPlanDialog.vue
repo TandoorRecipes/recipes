@@ -1,5 +1,5 @@
 <template>
-    <v-dialog activator="parent">
+    <v-dialog activator="parent" v-model="dialog">
         <template v-slot:default="{ isActive }">
             <v-card style="overflow: auto">
                 <v-card-title>Meal Plan Edit <i class="mt-2 float-right fas fa-times" @click="isActive.value = false"></i></v-card-title>
@@ -20,7 +20,6 @@
                             :items="recipeSearch"
                             :delay="300"
                             rules="required"
-
                         ></SelectElement>
                         <DateElement name="fromDate" :columns="{ sm: 12, md : 6}" label="From Date">
                             <template #addon-after>
@@ -74,6 +73,12 @@
                             </GroupElement>
                         </GroupElement>
                         <TextareaElement name="note" label="Note"></TextareaElement>
+                        <ButtonElement
+                            name="submit"
+                            button-label="Save"
+                            :submits="true"
+                        />
+                        <ButtonElement name="btn_delete" type="button" columns="1" @click="1">Delete</ButtonElement>
                     </Vueform>
                 </v-card-text>
                 <v-divider></v-divider>
@@ -95,6 +100,8 @@ import {onMounted, PropType, ref, watchEffect} from "vue";
 import {ApiApi, MealPlan, RecipeOverview} from "@/openapi";
 import {DateTime} from "luxon";
 import RecipeCard from "@/components/display/RecipeCard.vue";
+import {useMealPlanStore} from "@/stores/MealPlanStore";
+
 
 const props = defineProps(
     {
@@ -102,6 +109,7 @@ const props = defineProps(
     }
 )
 
+const dialog = ref(false)
 let mutableMealPlan = ref(props.mealPlan)
 
 watchEffect(() => {
@@ -114,11 +122,15 @@ watchEffect(() => {
 });
 
 function saveMealPlan() {
-    const api = new ApiApi()
-    if (mutableMealPlan.value) {
-        console.log('UPDATING ', mutableMealPlan.value)
+
+    if (mutableMealPlan.value != undefined) {
         mutableMealPlan.value.recipe = mutableMealPlan.value.recipe as RecipeOverview
-        api.apiMealPlanUpdate({id: mutableMealPlan.value.id, mealPlan: mutableMealPlan.value})
+        console.log('calling save method')
+        useMealPlanStore().createOrUpdate(mutableMealPlan.value).catch(err => {
+            // TODO handle error
+        }).finally(() => {
+            dialog.value = false
+        })
     }
 }
 

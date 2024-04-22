@@ -4,6 +4,7 @@ import { defineConfig } from '@vueform/vueform'
 
 // You might place these anywhere else in your project
 import '@vueform/vueform/dist/material.css';
+import './assets/vueform.css'
 
 export default defineConfig({
   theme: material,
