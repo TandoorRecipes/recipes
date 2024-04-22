@@ -68,6 +68,12 @@ export interface PatchedUnitConversionRequest {
      * @memberof PatchedUnitConversionRequest
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitConversionRequest
+     */
+    id?: number;
 }
 
 /**
@@ -93,6 +99,7 @@ export function PatchedUnitConversionRequestFromJSONTyped(json: any, ignoreDiscr
         'convertedUnit': json['converted_unit'] == null ? undefined : UnitRequestFromJSON(json['converted_unit']),
         'food': json['food'] == null ? undefined : FoodRequestFromJSON(json['food']),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -108,6 +115,7 @@ export function PatchedUnitConversionRequestToJSON(value?: PatchedUnitConversion
         'converted_unit': UnitRequestToJSON(value['convertedUnit']),
         'food': FoodRequestToJSON(value['food']),
         'open_data_slug': value['openDataSlug'],
+        'id': value['id'],
     };
 }
 

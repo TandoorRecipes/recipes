@@ -80,6 +80,12 @@ export interface ShoppingListEntryRequest {
      * @memberof ShoppingListEntryRequest
      */
     delayUntil?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -109,6 +115,7 @@ export function ShoppingListEntryRequestFromJSONTyped(json: any, ignoreDiscrimin
         'checked': json['checked'] == null ? undefined : json['checked'],
         'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
         'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -126,6 +133,7 @@ export function ShoppingListEntryRequestToJSON(value?: ShoppingListEntryRequest 
         'checked': value['checked'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
+        'id': value['id'],
     };
 }
 

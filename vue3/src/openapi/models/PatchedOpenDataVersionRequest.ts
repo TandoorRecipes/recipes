@@ -71,6 +71,12 @@ export interface PatchedOpenDataVersionRequest {
      * @memberof PatchedOpenDataVersionRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataVersionRequest
+     */
+    id?: number;
 }
 
 /**
@@ -93,6 +99,7 @@ export function PatchedOpenDataVersionRequestFromJSONTyped(json: any, ignoreDisc
         'name': json['name'] == null ? undefined : json['name'],
         'code': json['code'] == null ? undefined : json['code'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -105,6 +112,7 @@ export function PatchedOpenDataVersionRequestToJSON(value?: PatchedOpenDataVersi
         'name': value['name'],
         'code': value['code'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

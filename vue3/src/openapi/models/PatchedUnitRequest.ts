@@ -83,6 +83,12 @@ export interface PatchedUnitRequest {
      * @memberof PatchedUnitRequest
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitRequest
+     */
+    id?: number;
 }
 
 /**
@@ -107,6 +113,7 @@ export function PatchedUnitRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -121,6 +128,7 @@ export function PatchedUnitRequestToJSON(value?: PatchedUnitRequest | null): any
         'description': value['description'],
         'base_unit': value['baseUnit'],
         'open_data_slug': value['openDataSlug'],
+        'id': value['id'],
     };
 }
 

@@ -92,6 +92,12 @@ export interface OpenDataConversionRequest {
      * @memberof OpenDataConversionRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataConversionRequest
+     */
+    id?: number;
 }
 
 /**
@@ -128,6 +134,7 @@ export function OpenDataConversionRequestFromJSONTyped(json: any, ignoreDiscrimi
         'convertedUnit': OpenDataUnitRequestFromJSON(json['converted_unit']),
         'source': json['source'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -146,6 +153,7 @@ export function OpenDataConversionRequestToJSON(value?: OpenDataConversionReques
         'converted_unit': OpenDataUnitRequestToJSON(value['convertedUnit']),
         'source': value['source'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

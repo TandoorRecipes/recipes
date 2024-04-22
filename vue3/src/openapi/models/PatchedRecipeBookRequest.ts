@@ -62,6 +62,12 @@ export interface PatchedRecipeBookRequest {
      * @memberof PatchedRecipeBookRequest
      */
     order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookRequest
+     */
+    id?: number;
 }
 
 /**
@@ -86,6 +92,7 @@ export function PatchedRecipeBookRequestFromJSONTyped(json: any, ignoreDiscrimin
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
         'filter': json['filter'] == null ? undefined : CustomFilterRequestFromJSON(json['filter']),
         'order': json['order'] == null ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -100,6 +107,7 @@ export function PatchedRecipeBookRequestToJSON(value?: PatchedRecipeBookRequest 
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
         'filter': CustomFilterRequestToJSON(value['filter']),
         'order': value['order'],
+        'id': value['id'],
     };
 }
 

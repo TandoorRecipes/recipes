@@ -24,13 +24,14 @@ export interface RecipeShoppingUpdate {
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    id?: number;
+    readonly id: number;
 }
 
 /**
  * Check if a given object implements the RecipeShoppingUpdate interface.
  */
 export function instanceOfRecipeShoppingUpdate(value: object): boolean {
+    if (!('id' in value)) return false;
     return true;
 }
 
@@ -44,7 +45,7 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
     };
 }
 
@@ -54,7 +55,6 @@ export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null):
     }
     return {
         
-        'id': value['id'],
     };
 }
 

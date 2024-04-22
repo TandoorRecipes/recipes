@@ -31,6 +31,12 @@ export interface PatchedRecipeBookEntryRequest {
      * @memberof PatchedRecipeBookEntryRequest
      */
     recipe?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookEntryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -52,6 +58,7 @@ export function PatchedRecipeBookEntryRequestFromJSONTyped(json: any, ignoreDisc
         
         'book': json['book'] == null ? undefined : json['book'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -63,6 +70,7 @@ export function PatchedRecipeBookEntryRequestToJSON(value?: PatchedRecipeBookEnt
         
         'book': value['book'],
         'recipe': value['recipe'],
+        'id': value['id'],
     };
 }
 

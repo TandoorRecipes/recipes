@@ -31,6 +31,12 @@ export interface PatchedBookmarkletImportRequest {
      * @memberof PatchedBookmarkletImportRequest
      */
     html?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedBookmarkletImportRequest
+     */
+    id?: number;
 }
 
 /**
@@ -52,6 +58,7 @@ export function PatchedBookmarkletImportRequestFromJSONTyped(json: any, ignoreDi
         
         'url': json['url'] == null ? undefined : json['url'],
         'html': json['html'] == null ? undefined : json['html'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -63,6 +70,7 @@ export function PatchedBookmarkletImportRequestToJSON(value?: PatchedBookmarklet
         
         'url': value['url'],
         'html': value['html'],
+        'id': value['id'],
     };
 }
 

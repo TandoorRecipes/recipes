@@ -92,6 +92,12 @@ export interface PatchedIngredientRequest {
      * @memberof PatchedIngredientRequest
      */
     alwaysUsePluralFood?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedIngredientRequest
+     */
+    id?: number;
 }
 
 /**
@@ -121,6 +127,7 @@ export function PatchedIngredientRequestFromJSONTyped(json: any, ignoreDiscrimin
         'originalText': json['original_text'] == null ? undefined : json['original_text'],
         'alwaysUsePluralUnit': json['always_use_plural_unit'] == null ? undefined : json['always_use_plural_unit'],
         'alwaysUsePluralFood': json['always_use_plural_food'] == null ? undefined : json['always_use_plural_food'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -140,6 +147,7 @@ export function PatchedIngredientRequestToJSON(value?: PatchedIngredientRequest 
         'original_text': value['originalText'],
         'always_use_plural_unit': value['alwaysUsePluralUnit'],
         'always_use_plural_food': value['alwaysUsePluralFood'],
+        'id': value['id'],
     };
 }
 

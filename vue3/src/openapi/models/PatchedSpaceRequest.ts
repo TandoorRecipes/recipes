@@ -140,6 +140,12 @@ export interface PatchedSpaceRequest {
      * @memberof PatchedSpaceRequest
      */
     logoColorSvg?: UserFileViewRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpaceRequest
+     */
+    id?: number;
 }
 
 /**
@@ -175,6 +181,7 @@ export function PatchedSpaceRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'logoColor192': json['logo_color_192'] == null ? undefined : UserFileViewRequestFromJSON(json['logo_color_192']),
         'logoColor512': json['logo_color_512'] == null ? undefined : UserFileViewRequestFromJSON(json['logo_color_512']),
         'logoColorSvg': json['logo_color_svg'] == null ? undefined : UserFileViewRequestFromJSON(json['logo_color_svg']),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -200,6 +207,7 @@ export function PatchedSpaceRequestToJSON(value?: PatchedSpaceRequest | null): a
         'logo_color_192': UserFileViewRequestToJSON(value['logoColor192']),
         'logo_color_512': UserFileViewRequestToJSON(value['logoColor512']),
         'logo_color_svg': UserFileViewRequestToJSON(value['logoColorSvg']),
+        'id': value['id'],
     };
 }
 

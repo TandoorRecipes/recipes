@@ -67,6 +67,12 @@ export interface PatchedConnectorConfigConfigRequest {
      * @memberof PatchedConnectorConfigConfigRequest
      */
     onShoppingListEntryDeletedEnabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedConnectorConfigConfigRequest
+     */
+    id?: number;
 }
 
 /**
@@ -94,6 +100,7 @@ export function PatchedConnectorConfigConfigRequestFromJSONTyped(json: any, igno
         'onShoppingListEntryCreatedEnabled': json['on_shopping_list_entry_created_enabled'] == null ? undefined : json['on_shopping_list_entry_created_enabled'],
         'onShoppingListEntryUpdatedEnabled': json['on_shopping_list_entry_updated_enabled'] == null ? undefined : json['on_shopping_list_entry_updated_enabled'],
         'onShoppingListEntryDeletedEnabled': json['on_shopping_list_entry_deleted_enabled'] == null ? undefined : json['on_shopping_list_entry_deleted_enabled'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -111,6 +118,7 @@ export function PatchedConnectorConfigConfigRequestToJSON(value?: PatchedConnect
         'on_shopping_list_entry_created_enabled': value['onShoppingListEntryCreatedEnabled'],
         'on_shopping_list_entry_updated_enabled': value['onShoppingListEntryUpdatedEnabled'],
         'on_shopping_list_entry_deleted_enabled': value['onShoppingListEntryDeletedEnabled'],
+        'id': value['id'],
     };
 }
 

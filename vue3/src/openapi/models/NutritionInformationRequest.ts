@@ -49,6 +49,12 @@ export interface NutritionInformationRequest {
      * @memberof NutritionInformationRequest
      */
     source?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    id?: number;
 }
 
 /**
@@ -77,6 +83,7 @@ export function NutritionInformationRequestFromJSONTyped(json: any, ignoreDiscri
         'proteins': json['proteins'],
         'calories': json['calories'],
         'source': json['source'] == null ? undefined : json['source'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -91,6 +98,7 @@ export function NutritionInformationRequestToJSON(value?: NutritionInformationRe
         'proteins': value['proteins'],
         'calories': value['calories'],
         'source': value['source'],
+        'id': value['id'],
     };
 }
 

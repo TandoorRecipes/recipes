@@ -44,6 +44,12 @@ export interface OpenDataStoreCategoryRequest {
      * @memberof OpenDataStoreCategoryRequest
      */
     order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataStoreCategoryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -68,6 +74,7 @@ export function OpenDataStoreCategoryRequestFromJSONTyped(json: any, ignoreDiscr
         'category': OpenDataCategoryRequestFromJSON(json['category']),
         'store': json['store'],
         'order': json['order'] == null ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -80,6 +87,7 @@ export function OpenDataStoreCategoryRequestToJSON(value?: OpenDataStoreCategory
         'category': OpenDataCategoryRequestToJSON(value['category']),
         'store': value['store'],
         'order': value['order'],
+        'id': value['id'],
     };
 }
 

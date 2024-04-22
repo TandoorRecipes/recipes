@@ -74,6 +74,12 @@ export interface AutomationRequest {
      * @memberof AutomationRequest
      */
     disabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutomationRequest
+     */
+    id?: number;
 }
 
 /**
@@ -102,6 +108,7 @@ export function AutomationRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         'param3': json['param_3'] == null ? undefined : json['param_3'],
         'order': json['order'] == null ? undefined : json['order'],
         'disabled': json['disabled'] == null ? undefined : json['disabled'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -119,6 +126,7 @@ export function AutomationRequestToJSON(value?: AutomationRequest | null): any {
         'param_3': value['param3'],
         'order': value['order'],
         'disabled': value['disabled'],
+        'id': value['id'],
     };
 }
 

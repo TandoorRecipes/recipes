@@ -56,6 +56,12 @@ export interface StorageRequest {
      * @memberof StorageRequest
      */
     token?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof StorageRequest
+     */
+    id?: number;
 }
 
 /**
@@ -81,6 +87,7 @@ export function StorageRequestFromJSONTyped(json: any, ignoreDiscriminator: bool
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -95,6 +102,7 @@ export function StorageRequestToJSON(value?: StorageRequest | null): any {
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
+        'id': value['id'],
     };
 }
 

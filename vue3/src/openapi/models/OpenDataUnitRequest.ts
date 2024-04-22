@@ -114,6 +114,12 @@ export interface OpenDataUnitRequest {
      * @memberof OpenDataUnitRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataUnitRequest
+     */
+    id?: number;
 }
 
 /**
@@ -144,6 +150,7 @@ export function OpenDataUnitRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'baseUnit': json['base_unit'] == null ? undefined : BaseUnitEnumFromJSON(json['base_unit']),
         'type': OpenDataUnitTypeEnumFromJSON(json['type']),
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -160,6 +167,7 @@ export function OpenDataUnitRequestToJSON(value?: OpenDataUnitRequest | null): a
         'base_unit': BaseUnitEnumToJSON(value['baseUnit']),
         'type': OpenDataUnitTypeEnumToJSON(value['type']),
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

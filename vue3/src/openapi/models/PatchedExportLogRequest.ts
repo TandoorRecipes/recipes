@@ -61,6 +61,12 @@ export interface PatchedExportLogRequest {
      * @memberof PatchedExportLogRequest
      */
     possiblyNotExpired?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedExportLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function PatchedExportLogRequestFromJSONTyped(json: any, ignoreDiscrimina
         'exportedRecipes': json['exported_recipes'] == null ? undefined : json['exported_recipes'],
         'cacheDuration': json['cache_duration'] == null ? undefined : json['cache_duration'],
         'possiblyNotExpired': json['possibly_not_expired'] == null ? undefined : json['possibly_not_expired'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -103,6 +110,7 @@ export function PatchedExportLogRequestToJSON(value?: PatchedExportLogRequest | 
         'exported_recipes': value['exportedRecipes'],
         'cache_duration': value['cacheDuration'],
         'possibly_not_expired': value['possiblyNotExpired'],
+        'id': value['id'],
     };
 }
 

@@ -37,7 +37,7 @@ export interface RecipeBook {
      * @type {number}
      * @memberof RecipeBook
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -80,6 +80,7 @@ export interface RecipeBook {
  * Check if a given object implements the RecipeBook interface.
  */
 export function instanceOfRecipeBook(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('shared' in value)) return false;
     if (!('createdBy' in value)) return false;
@@ -96,7 +97,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'shared': ((json['shared'] as Array<any>).map(UserFromJSON)),
@@ -112,7 +113,6 @@ export function RecipeBookToJSON(value?: RecipeBook | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'shared': ((value['shared'] as Array<any>).map(UserToJSON)),

@@ -24,7 +24,7 @@ export interface ConnectorConfigConfig {
      * @type {number}
      * @memberof ConnectorConfigConfig
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -79,6 +79,7 @@ export interface ConnectorConfigConfig {
  * Check if a given object implements the ConnectorConfigConfig interface.
  */
 export function instanceOfConnectorConfigConfig(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('createdBy' in value)) return false;
     return true;
@@ -94,7 +95,7 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'url': json['url'] == null ? undefined : json['url'],
         'todoEntity': json['todo_entity'] == null ? undefined : json['todo_entity'],
@@ -112,7 +113,6 @@ export function ConnectorConfigConfigToJSON(value?: ConnectorConfigConfig | null
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'url': value['url'],
         'todo_entity': value['todoEntity'],

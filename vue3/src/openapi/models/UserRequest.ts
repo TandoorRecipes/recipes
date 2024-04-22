@@ -31,6 +31,12 @@ export interface UserRequest {
      * @memberof UserRequest
      */
     lastName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserRequest
+     */
+    id?: number;
 }
 
 /**
@@ -52,6 +58,7 @@ export function UserRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -63,6 +70,7 @@ export function UserRequestToJSON(value?: UserRequest | null): any {
         
         'first_name': value['firstName'],
         'last_name': value['lastName'],
+        'id': value['id'],
     };
 }
 

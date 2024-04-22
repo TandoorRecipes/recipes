@@ -65,6 +65,12 @@ export interface PatchedKeywordRequest {
      * @memberof PatchedKeywordRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedKeywordRequest
+     */
+    id?: number;
 }
 
 /**
@@ -86,6 +92,7 @@ export function PatchedKeywordRequestFromJSONTyped(json: any, ignoreDiscriminato
         
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -97,6 +104,7 @@ export function PatchedKeywordRequestToJSON(value?: PatchedKeywordRequest | null
         
         'name': value['name'],
         'description': value['description'],
+        'id': value['id'],
     };
 }
 

@@ -146,6 +146,12 @@ export interface RecipeRequest {
      * @memberof RecipeRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -183,6 +189,7 @@ export function RecipeRequestFromJSONTyped(json: any, ignoreDiscriminator: boole
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
         '_private': json['private'] == null ? undefined : json['private'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -208,6 +215,7 @@ export function RecipeRequestToJSON(value?: RecipeRequest | null): any {
         'servings_text': value['servingsText'],
         'private': value['_private'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

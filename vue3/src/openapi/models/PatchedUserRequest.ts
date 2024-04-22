@@ -31,6 +31,12 @@ export interface PatchedUserRequest {
      * @memberof PatchedUserRequest
      */
     lastName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserRequest
+     */
+    id?: number;
 }
 
 /**
@@ -52,6 +58,7 @@ export function PatchedUserRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -63,6 +70,7 @@ export function PatchedUserRequestToJSON(value?: PatchedUserRequest | null): any
         
         'first_name': value['firstName'],
         'last_name': value['lastName'],
+        'id': value['id'],
     };
 }
 

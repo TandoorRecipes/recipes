@@ -43,6 +43,12 @@ export interface PatchedSyncRequest {
      * @memberof PatchedSyncRequest
      */
     lastChecked?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSyncRequest
+     */
+    id?: number;
 }
 
 /**
@@ -66,6 +72,7 @@ export function PatchedSyncRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'path': json['path'] == null ? undefined : json['path'],
         'active': json['active'] == null ? undefined : json['active'],
         'lastChecked': json['last_checked'] == null ? undefined : (new Date(json['last_checked'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -79,6 +86,7 @@ export function PatchedSyncRequestToJSON(value?: PatchedSyncRequest | null): any
         'path': value['path'],
         'active': value['active'],
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
+        'id': value['id'],
     };
 }
 

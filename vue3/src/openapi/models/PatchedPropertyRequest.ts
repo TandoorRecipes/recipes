@@ -72,6 +72,12 @@ export interface PatchedPropertyRequest {
      * @memberof PatchedPropertyRequest
      */
     propertyType?: PropertyTypeRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyRequest
+     */
+    id?: number;
 }
 
 /**
@@ -93,6 +99,7 @@ export function PatchedPropertyRequestFromJSONTyped(json: any, ignoreDiscriminat
         
         'propertyAmount': json['property_amount'] == null ? undefined : json['property_amount'],
         'propertyType': json['property_type'] == null ? undefined : PropertyTypeRequestFromJSON(json['property_type']),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -104,6 +111,7 @@ export function PatchedPropertyRequestToJSON(value?: PatchedPropertyRequest | nu
         
         'property_amount': value['propertyAmount'],
         'property_type': PropertyTypeRequestToJSON(value['propertyType']),
+        'id': value['id'],
     };
 }
 

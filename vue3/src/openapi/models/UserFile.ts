@@ -24,7 +24,7 @@ export interface UserFile {
      * @type {number}
      * @memberof UserFile
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -55,6 +55,7 @@ export interface UserFile {
  * Check if a given object implements the UserFile interface.
  */
 export function instanceOfUserFile(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('fileDownload' in value)) return false;
     if (!('preview' in value)) return false;
@@ -72,7 +73,7 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'fileDownload': json['file_download'],
         'preview': json['preview'],
@@ -86,7 +87,6 @@ export function UserFileToJSON(value?: UserFile | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
     };
 }

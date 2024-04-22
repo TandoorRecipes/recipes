@@ -90,6 +90,12 @@ export interface OpenDataCategoryRequest {
      * @memberof OpenDataCategoryRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataCategoryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -117,6 +123,7 @@ export function OpenDataCategoryRequestFromJSONTyped(json: any, ignoreDiscrimina
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -131,6 +138,7 @@ export function OpenDataCategoryRequestToJSON(value?: OpenDataCategoryRequest | 
         'name': value['name'],
         'description': value['description'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

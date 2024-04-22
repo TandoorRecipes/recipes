@@ -49,6 +49,12 @@ export interface PatchedImportLogRequest {
      * @memberof PatchedImportLogRequest
      */
     importedRecipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedImportLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -73,6 +79,7 @@ export function PatchedImportLogRequestFromJSONTyped(json: any, ignoreDiscrimina
         'running': json['running'] == null ? undefined : json['running'],
         'totalRecipes': json['total_recipes'] == null ? undefined : json['total_recipes'],
         'importedRecipes': json['imported_recipes'] == null ? undefined : json['imported_recipes'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -87,6 +94,7 @@ export function PatchedImportLogRequestToJSON(value?: PatchedImportLogRequest | 
         'running': value['running'],
         'total_recipes': value['totalRecipes'],
         'imported_recipes': value['importedRecipes'],
+        'id': value['id'],
     };
 }
 

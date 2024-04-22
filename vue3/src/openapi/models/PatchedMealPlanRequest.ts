@@ -86,6 +86,12 @@ export interface PatchedMealPlanRequest {
      * @memberof PatchedMealPlanRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedMealPlanRequest
+     */
+    id?: number;
 }
 
 /**
@@ -113,6 +119,7 @@ export function PatchedMealPlanRequestFromJSONTyped(json: any, ignoreDiscriminat
         'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
         'mealType': json['meal_type'] == null ? undefined : MealTypeRequestFromJSON(json['meal_type']),
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -130,6 +137,7 @@ export function PatchedMealPlanRequestToJSON(value?: PatchedMealPlanRequest | nu
         'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString().substring(0,10)),
         'meal_type': MealTypeRequestToJSON(value['mealType']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

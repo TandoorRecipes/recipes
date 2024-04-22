@@ -86,6 +86,12 @@ export interface MealPlanRequest {
      * @memberof MealPlanRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRequest
+     */
+    id?: number;
 }
 
 /**
@@ -116,6 +122,7 @@ export function MealPlanRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
         'mealType': MealTypeRequestFromJSON(json['meal_type']),
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -133,6 +140,7 @@ export function MealPlanRequestToJSON(value?: MealPlanRequest | null): any {
         'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString().substring(0,10)),
         'meal_type': MealTypeRequestToJSON(value['mealType']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

@@ -1535,6 +1535,7 @@ export interface ApiUnitUpdateRequest {
 export interface ApiUserFileCreateRequest {
     name: string;
     file: Blob;
+    id?: number;
 }
 
 export interface ApiUserFileDestroyRequest {
@@ -1552,6 +1553,7 @@ export interface ApiUserFilePartialUpdateRequest {
     id: number;
     name?: string;
     file?: Blob;
+    id2?: number;
 }
 
 export interface ApiUserFileRetrieveRequest {
@@ -1562,6 +1564,7 @@ export interface ApiUserFileUpdateRequest {
     id: number;
     name: string;
     file: Blob;
+    id2?: number;
 }
 
 export interface ApiUserPartialUpdateRequest {
@@ -11254,6 +11257,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file', requestParameters['file'] as any);
         }
 
+        if (requestParameters['id'] != null) {
+            formParams.append('id', requestParameters['id'] as any);
+        }
+
         const response = await this.request({
             path: `/api/user-file/`,
             method: 'POST',
@@ -11392,6 +11399,10 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file', requestParameters['file'] as any);
         }
 
+        if (requestParameters['id2'] != null) {
+            formParams.append('id', requestParameters['id2'] as any);
+        }
+
         const response = await this.request({
             path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
@@ -11499,6 +11510,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
+        }
+
+        if (requestParameters['id2'] != null) {
+            formParams.append('id', requestParameters['id2'] as any);
         }
 
         const response = await this.request({

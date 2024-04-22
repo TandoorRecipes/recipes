@@ -49,6 +49,12 @@ export interface CookLogRequest {
      * @memberof CookLogRequest
      */
     createdAt?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof CookLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -74,6 +80,7 @@ export function CookLogRequestFromJSONTyped(json: any, ignoreDiscriminator: bool
         'rating': json['rating'] == null ? undefined : json['rating'],
         'comment': json['comment'] == null ? undefined : json['comment'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -88,6 +95,7 @@ export function CookLogRequestToJSON(value?: CookLogRequest | null): any {
         'rating': value['rating'],
         'comment': value['comment'],
         'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
+        'id': value['id'],
     };
 }
 

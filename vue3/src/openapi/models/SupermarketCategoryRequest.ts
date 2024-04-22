@@ -65,6 +65,12 @@ export interface SupermarketCategoryRequest {
      * @memberof SupermarketCategoryRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function SupermarketCategoryRequestFromJSONTyped(json: any, ignoreDiscrim
         
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -98,6 +105,7 @@ export function SupermarketCategoryRequestToJSON(value?: SupermarketCategoryRequ
         
         'name': value['name'],
         'description': value['description'],
+        'id': value['id'],
     };
 }
 

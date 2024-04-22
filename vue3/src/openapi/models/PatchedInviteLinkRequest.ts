@@ -62,6 +62,12 @@ export interface PatchedInviteLinkRequest {
      * @memberof PatchedInviteLinkRequest
      */
     internalNote?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedInviteLinkRequest
+     */
+    id?: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function PatchedInviteLinkRequestFromJSONTyped(json: any, ignoreDiscrimin
         'usedBy': json['used_by'] == null ? undefined : json['used_by'],
         'reusable': json['reusable'] == null ? undefined : json['reusable'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -102,6 +109,7 @@ export function PatchedInviteLinkRequestToJSON(value?: PatchedInviteLinkRequest 
         'used_by': value['usedBy'],
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
+        'id': value['id'],
     };
 }
 

@@ -31,6 +31,12 @@ export interface AccessTokenRequest {
      * @memberof AccessTokenRequest
      */
     scope?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccessTokenRequest
+     */
+    id?: number;
 }
 
 /**
@@ -53,6 +59,7 @@ export function AccessTokenRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         
         'expires': (new Date(json['expires'])),
         'scope': json['scope'] == null ? undefined : json['scope'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -64,6 +71,7 @@ export function AccessTokenRequestToJSON(value?: AccessTokenRequest | null): any
         
         'expires': ((value['expires']).toISOString()),
         'scope': value['scope'],
+        'id': value['id'],
     };
 }
 

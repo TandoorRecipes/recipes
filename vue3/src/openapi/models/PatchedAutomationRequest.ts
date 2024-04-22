@@ -74,6 +74,12 @@ export interface PatchedAutomationRequest {
      * @memberof PatchedAutomationRequest
      */
     disabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedAutomationRequest
+     */
+    id?: number;
 }
 
 /**
@@ -101,6 +107,7 @@ export function PatchedAutomationRequestFromJSONTyped(json: any, ignoreDiscrimin
         'param3': json['param_3'] == null ? undefined : json['param_3'],
         'order': json['order'] == null ? undefined : json['order'],
         'disabled': json['disabled'] == null ? undefined : json['disabled'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -118,6 +125,7 @@ export function PatchedAutomationRequestToJSON(value?: PatchedAutomationRequest 
         'param_3': value['param3'],
         'order': value['order'],
         'disabled': value['disabled'],
+        'id': value['id'],
     };
 }
 

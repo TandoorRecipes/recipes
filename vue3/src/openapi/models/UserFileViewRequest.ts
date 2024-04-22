@@ -25,6 +25,12 @@ export interface UserFileViewRequest {
      * @memberof UserFileViewRequest
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFileViewRequest
+     */
+    id?: number;
 }
 
 /**
@@ -46,6 +52,7 @@ export function UserFileViewRequestFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'name': json['name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -56,6 +63,7 @@ export function UserFileViewRequestToJSON(value?: UserFileViewRequest | null): a
     return {
         
         'name': value['name'],
+        'id': value['id'],
     };
 }
 

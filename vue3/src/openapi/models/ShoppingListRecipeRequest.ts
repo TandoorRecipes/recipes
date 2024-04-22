@@ -37,6 +37,12 @@ export interface ShoppingListRecipeRequest {
      * @memberof ShoppingListRecipeRequest
      */
     servings: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -60,6 +66,7 @@ export function ShoppingListRecipeRequestFromJSONTyped(json: any, ignoreDiscrimi
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'servings': json['servings'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -72,6 +79,7 @@ export function ShoppingListRecipeRequestToJSON(value?: ShoppingListRecipeReques
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],
+        'id': value['id'],
     };
 }
 

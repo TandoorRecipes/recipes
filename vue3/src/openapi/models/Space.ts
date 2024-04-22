@@ -49,7 +49,7 @@ export interface Space {
      * @type {number}
      * @memberof Space
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -212,6 +212,7 @@ export interface Space {
  * Check if a given object implements the Space interface.
  */
 export function instanceOfSpace(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('createdBy' in value)) return false;
     if (!('createdAt' in value)) return false;
     if (!('maxRecipes' in value)) return false;
@@ -236,7 +237,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
@@ -272,7 +273,6 @@ export function SpaceToJSON(value?: Space | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'message': value['message'],
         'food_inherit': ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),

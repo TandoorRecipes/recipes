@@ -37,7 +37,7 @@ export interface UnitConversion {
      * @type {number}
      * @memberof UnitConversion
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -86,6 +86,7 @@ export interface UnitConversion {
  * Check if a given object implements the UnitConversion interface.
  */
 export function instanceOfUnitConversion(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('baseAmount' in value)) return false;
     if (!('baseUnit' in value)) return false;
@@ -104,7 +105,7 @@ export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'baseAmount': json['base_amount'],
         'baseUnit': UnitFromJSON(json['base_unit']),
@@ -121,7 +122,6 @@ export function UnitConversionToJSON(value?: UnitConversion | null): any {
     }
     return {
         
-        'id': value['id'],
         'base_amount': value['baseAmount'],
         'base_unit': UnitToJSON(value['baseUnit']),
         'converted_amount': value['convertedAmount'],

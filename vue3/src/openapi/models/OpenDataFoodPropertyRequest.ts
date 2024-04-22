@@ -38,6 +38,12 @@ export interface OpenDataFoodPropertyRequest {
      * @memberof OpenDataFoodPropertyRequest
      */
     propertyAmount: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataFoodPropertyRequest
+     */
+    id?: number;
 }
 
 /**
@@ -61,6 +67,7 @@ export function OpenDataFoodPropertyRequestFromJSONTyped(json: any, ignoreDiscri
         
         'property': OpenDataPropertyRequestFromJSON(json['property']),
         'propertyAmount': json['property_amount'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -72,6 +79,7 @@ export function OpenDataFoodPropertyRequestToJSON(value?: OpenDataFoodPropertyRe
         
         'property': OpenDataPropertyRequestToJSON(value['property']),
         'property_amount': value['propertyAmount'],
+        'id': value['id'],
     };
 }
 

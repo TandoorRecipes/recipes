@@ -80,6 +80,12 @@ export interface PatchedShoppingListEntryRequest {
      * @memberof PatchedShoppingListEntryRequest
      */
     delayUntil?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedShoppingListEntryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -107,6 +113,7 @@ export function PatchedShoppingListEntryRequestFromJSONTyped(json: any, ignoreDi
         'checked': json['checked'] == null ? undefined : json['checked'],
         'completedAt': json['completed_at'] == null ? undefined : (new Date(json['completed_at'])),
         'delayUntil': json['delay_until'] == null ? undefined : (new Date(json['delay_until'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -124,6 +131,7 @@ export function PatchedShoppingListEntryRequestToJSON(value?: PatchedShoppingLis
         'checked': value['checked'],
         'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
+        'id': value['id'],
     };
 }
 

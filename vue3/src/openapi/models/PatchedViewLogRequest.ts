@@ -25,6 +25,12 @@ export interface PatchedViewLogRequest {
      * @memberof PatchedViewLogRequest
      */
     recipe?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedViewLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -45,6 +51,7 @@ export function PatchedViewLogRequestFromJSONTyped(json: any, ignoreDiscriminato
     return {
         
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -55,6 +62,7 @@ export function PatchedViewLogRequestToJSON(value?: PatchedViewLogRequest | null
     return {
         
         'recipe': value['recipe'],
+        'id': value['id'],
     };
 }
 

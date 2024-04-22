@@ -43,6 +43,12 @@ export interface SyncRequest {
      * @memberof SyncRequest
      */
     lastChecked?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof SyncRequest
+     */
+    id?: number;
 }
 
 /**
@@ -67,6 +73,7 @@ export function SyncRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'path': json['path'] == null ? undefined : json['path'],
         'active': json['active'] == null ? undefined : json['active'],
         'lastChecked': json['last_checked'] == null ? undefined : (new Date(json['last_checked'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -80,6 +87,7 @@ export function SyncRequestToJSON(value?: SyncRequest | null): any {
         'path': value['path'],
         'active': value['active'],
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
+        'id': value['id'],
     };
 }
 

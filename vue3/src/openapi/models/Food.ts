@@ -95,7 +95,7 @@ export interface Food {
      * @type {number}
      * @memberof Food
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -240,6 +240,7 @@ export interface Food {
  * Check if a given object implements the Food interface.
  */
 export function instanceOfFood(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('shopping' in value)) return false;
     if (!('parent' in value)) return false;
@@ -259,7 +260,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -292,7 +293,6 @@ export function FoodToJSON(value?: Food | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'plural_name': value['pluralName'],
         'description': value['description'],

@@ -56,6 +56,12 @@ export interface PatchedStorageRequest {
      * @memberof PatchedStorageRequest
      */
     token?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedStorageRequest
+     */
+    id?: number;
 }
 
 /**
@@ -80,6 +86,7 @@ export function PatchedStorageRequestFromJSONTyped(json: any, ignoreDiscriminato
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -94,6 +101,7 @@ export function PatchedStorageRequestToJSON(value?: PatchedStorageRequest | null
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
+        'id': value['id'],
     };
 }
 

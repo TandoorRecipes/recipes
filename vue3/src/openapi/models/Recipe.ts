@@ -55,7 +55,7 @@ export interface Recipe {
      * @type {number}
      * @memberof Recipe
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -200,6 +200,7 @@ export interface Recipe {
  * Check if a given object implements the Recipe interface.
  */
 export function instanceOfRecipe(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('image' in value)) return false;
     if (!('steps' in value)) return false;
@@ -222,7 +223,7 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'],
@@ -255,7 +256,6 @@ export function RecipeToJSON(value?: Recipe | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'keywords': value['keywords'] == null ? undefined : ((value['keywords'] as Array<any>).map(KeywordToJSON)),

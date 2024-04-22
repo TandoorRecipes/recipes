@@ -43,6 +43,12 @@ export interface PatchedMealTypeRequest {
      * @memberof PatchedMealTypeRequest
      */
     _default?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedMealTypeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -66,6 +72,7 @@ export function PatchedMealTypeRequestFromJSONTyped(json: any, ignoreDiscriminat
         'order': json['order'] == null ? undefined : json['order'],
         'color': json['color'] == null ? undefined : json['color'],
         '_default': json['default'] == null ? undefined : json['default'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -79,6 +86,7 @@ export function PatchedMealTypeRequestToJSON(value?: PatchedMealTypeRequest | nu
         'order': value['order'],
         'color': value['color'],
         'default': value['_default'],
+        'id': value['id'],
     };
 }
 

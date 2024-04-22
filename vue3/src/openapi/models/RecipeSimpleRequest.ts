@@ -25,6 +25,12 @@ export interface RecipeSimpleRequest {
      * @memberof RecipeSimpleRequest
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeSimpleRequest
+     */
+    id?: number;
 }
 
 /**
@@ -46,6 +52,7 @@ export function RecipeSimpleRequestFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'name': json['name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -56,6 +63,7 @@ export function RecipeSimpleRequestToJSON(value?: RecipeSimpleRequest | null): a
     return {
         
         'name': value['name'],
+        'id': value['id'],
     };
 }
 

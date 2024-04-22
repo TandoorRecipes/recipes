@@ -65,6 +65,12 @@ export interface FoodInheritFieldRequest {
      * @memberof FoodInheritFieldRequest
      */
     field?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodInheritFieldRequest
+     */
+    id?: number;
 }
 
 /**
@@ -86,6 +92,7 @@ export function FoodInheritFieldRequestFromJSONTyped(json: any, ignoreDiscrimina
         
         'name': json['name'] == null ? undefined : json['name'],
         'field': json['field'] == null ? undefined : json['field'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -97,6 +104,7 @@ export function FoodInheritFieldRequestToJSON(value?: FoodInheritFieldRequest | 
         
         'name': value['name'],
         'field': value['field'],
+        'id': value['id'],
     };
 }
 

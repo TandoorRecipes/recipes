@@ -43,6 +43,12 @@ export interface MealTypeRequest {
      * @memberof MealTypeRequest
      */
     _default?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealTypeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -67,6 +73,7 @@ export function MealTypeRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         'order': json['order'] == null ? undefined : json['order'],
         'color': json['color'] == null ? undefined : json['color'],
         '_default': json['default'] == null ? undefined : json['default'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -80,6 +87,7 @@ export function MealTypeRequestToJSON(value?: MealTypeRequest | null): any {
         'order': value['order'],
         'color': value['color'],
         'default': value['_default'],
+        'id': value['id'],
     };
 }
 

@@ -62,6 +62,12 @@ export interface OpenDataStoreRequest {
      * @memberof OpenDataStoreRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataStoreRequest
+     */
+    id?: number;
 }
 
 /**
@@ -90,6 +96,7 @@ export function OpenDataStoreRequestFromJSONTyped(json: any, ignoreDiscriminator
         'name': json['name'],
         'categoryToStore': (json['category_to_store'] == null ? null : (json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryRequestFromJSON)),
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -104,6 +111,7 @@ export function OpenDataStoreRequestToJSON(value?: OpenDataStoreRequest | null):
         'name': value['name'],
         'category_to_store': (value['categoryToStore'] == null ? null : (value['categoryToStore'] as Array<any>).map(OpenDataStoreCategoryRequestToJSON)),
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

@@ -31,6 +31,12 @@ export interface RecipeOverviewRequest {
      * @memberof RecipeOverviewRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeOverviewRequest
+     */
+    id?: number;
 }
 
 /**
@@ -53,6 +59,7 @@ export function RecipeOverviewRequestFromJSONTyped(json: any, ignoreDiscriminato
         
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -64,6 +71,7 @@ export function RecipeOverviewRequestToJSON(value?: RecipeOverviewRequest | null
         
         'name': value['name'],
         'description': value['description'],
+        'id': value['id'],
     };
 }
 

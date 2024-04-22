@@ -37,6 +37,12 @@ export interface PatchedShoppingListRecipeRequest {
      * @memberof PatchedShoppingListRecipeRequest
      */
     servings?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedShoppingListRecipeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -59,6 +65,7 @@ export function PatchedShoppingListRecipeRequestFromJSONTyped(json: any, ignoreD
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
         'mealplan': json['mealplan'] == null ? undefined : json['mealplan'],
         'servings': json['servings'] == null ? undefined : json['servings'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -71,6 +78,7 @@ export function PatchedShoppingListRecipeRequestToJSON(value?: PatchedShoppingLi
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],
+        'id': value['id'],
     };
 }
 

@@ -114,6 +114,12 @@ export interface PatchedOpenDataUnitRequest {
      * @memberof PatchedOpenDataUnitRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataUnitRequest
+     */
+    id?: number;
 }
 
 /**
@@ -140,6 +146,7 @@ export function PatchedOpenDataUnitRequestFromJSONTyped(json: any, ignoreDiscrim
         'baseUnit': json['base_unit'] == null ? undefined : BaseUnitEnumFromJSON(json['base_unit']),
         'type': json['type'] == null ? undefined : OpenDataUnitTypeEnumFromJSON(json['type']),
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -156,6 +163,7 @@ export function PatchedOpenDataUnitRequestToJSON(value?: PatchedOpenDataUnitRequ
         'base_unit': BaseUnitEnumToJSON(value['baseUnit']),
         'type': OpenDataUnitTypeEnumToJSON(value['type']),
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

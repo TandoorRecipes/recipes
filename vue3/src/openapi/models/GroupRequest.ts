@@ -59,6 +59,12 @@ export interface GroupRequest {
      * @memberof GroupRequest
      */
     name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof GroupRequest
+     */
+    id?: number;
 }
 
 /**
@@ -80,6 +86,7 @@ export function GroupRequestFromJSONTyped(json: any, ignoreDiscriminator: boolea
     return {
         
         'name': json['name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -90,6 +97,7 @@ export function GroupRequestToJSON(value?: GroupRequest | null): any {
     return {
         
         'name': value['name'],
+        'id': value['id'],
     };
 }
 

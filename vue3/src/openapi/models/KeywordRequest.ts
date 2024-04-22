@@ -65,6 +65,12 @@ export interface KeywordRequest {
      * @memberof KeywordRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof KeywordRequest
+     */
+    id?: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function KeywordRequestFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -98,6 +105,7 @@ export function KeywordRequestToJSON(value?: KeywordRequest | null): any {
         
         'name': value['name'],
         'description': value['description'],
+        'id': value['id'],
     };
 }
 

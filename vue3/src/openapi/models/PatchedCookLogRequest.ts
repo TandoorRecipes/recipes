@@ -49,6 +49,12 @@ export interface PatchedCookLogRequest {
      * @memberof PatchedCookLogRequest
      */
     createdAt?: Date;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedCookLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -73,6 +79,7 @@ export function PatchedCookLogRequestFromJSONTyped(json: any, ignoreDiscriminato
         'rating': json['rating'] == null ? undefined : json['rating'],
         'comment': json['comment'] == null ? undefined : json['comment'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -87,6 +94,7 @@ export function PatchedCookLogRequestToJSON(value?: PatchedCookLogRequest | null
         'rating': value['rating'],
         'comment': value['comment'],
         'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
+        'id': value['id'],
     };
 }
 

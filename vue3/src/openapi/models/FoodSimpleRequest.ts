@@ -31,6 +31,12 @@ export interface FoodSimpleRequest {
      * @memberof FoodSimpleRequest
      */
     pluralName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodSimpleRequest
+     */
+    id?: number;
 }
 
 /**
@@ -53,6 +59,7 @@ export function FoodSimpleRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         
         'name': json['name'],
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -64,6 +71,7 @@ export function FoodSimpleRequestToJSON(value?: FoodSimpleRequest | null): any {
         
         'name': value['name'],
         'plural_name': value['pluralName'],
+        'id': value['id'],
     };
 }
 

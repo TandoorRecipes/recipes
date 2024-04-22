@@ -65,7 +65,7 @@ export interface OpenDataProperty {
      * @type {number}
      * @memberof OpenDataProperty
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -114,6 +114,7 @@ export interface OpenDataProperty {
  * Check if a given object implements the OpenDataProperty interface.
  */
 export function instanceOfOpenDataProperty(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('version' in value)) return false;
     if (!('slug' in value)) return false;
     if (!('name' in value)) return false;
@@ -131,7 +132,7 @@ export function OpenDataPropertyFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
@@ -148,7 +149,6 @@ export function OpenDataPropertyToJSON(value?: OpenDataProperty | null): any {
     }
     return {
         
-        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

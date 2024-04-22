@@ -198,6 +198,12 @@ export interface FoodRequest {
      * @memberof FoodRequest
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodRequest
+     */
+    id?: number;
 }
 
 /**
@@ -236,6 +242,7 @@ export function FoodRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'substituteChildren': json['substitute_children'] == null ? undefined : json['substitute_children'],
         'childInheritFields': json['child_inherit_fields'] == null ? undefined : ((json['child_inherit_fields'] as Array<any>).map(FoodInheritFieldRequestFromJSON)),
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -263,6 +270,7 @@ export function FoodRequestToJSON(value?: FoodRequest | null): any {
         'substitute_children': value['substituteChildren'],
         'child_inherit_fields': value['childInheritFields'] == null ? undefined : ((value['childInheritFields'] as Array<any>).map(FoodInheritFieldRequestToJSON)),
         'open_data_slug': value['openDataSlug'],
+        'id': value['id'],
     };
 }
 

@@ -44,6 +44,12 @@ export interface PatchedCustomFilterRequest {
      * @memberof PatchedCustomFilterRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedCustomFilterRequest
+     */
+    id?: number;
 }
 
 /**
@@ -66,6 +72,7 @@ export function PatchedCustomFilterRequestFromJSONTyped(json: any, ignoreDiscrim
         'name': json['name'] == null ? undefined : json['name'],
         'search': json['search'] == null ? undefined : json['search'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -78,6 +85,7 @@ export function PatchedCustomFilterRequestToJSON(value?: PatchedCustomFilterRequ
         'name': value['name'],
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

@@ -58,7 +58,7 @@ export interface FoodInheritField {
      * @type {number}
      * @memberof FoodInheritField
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -77,6 +77,7 @@ export interface FoodInheritField {
  * Check if a given object implements the FoodInheritField interface.
  */
 export function instanceOfFoodInheritField(value: object): boolean {
+    if (!('id' in value)) return false;
     return true;
 }
 
@@ -90,7 +91,7 @@ export function FoodInheritFieldFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'field': json['field'] == null ? undefined : json['field'],
     };
@@ -102,7 +103,6 @@ export function FoodInheritFieldToJSON(value?: FoodInheritField | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'field': value['field'],
     };

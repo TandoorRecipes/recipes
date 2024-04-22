@@ -49,6 +49,12 @@ export interface ImportLogRequest {
      * @memberof ImportLogRequest
      */
     importedRecipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -74,6 +80,7 @@ export function ImportLogRequestFromJSONTyped(json: any, ignoreDiscriminator: bo
         'running': json['running'] == null ? undefined : json['running'],
         'totalRecipes': json['total_recipes'] == null ? undefined : json['total_recipes'],
         'importedRecipes': json['imported_recipes'] == null ? undefined : json['imported_recipes'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -88,6 +95,7 @@ export function ImportLogRequestToJSON(value?: ImportLogRequest | null): any {
         'running': value['running'],
         'total_recipes': value['totalRecipes'],
         'imported_recipes': value['importedRecipes'],
+        'id': value['id'],
     };
 }
 

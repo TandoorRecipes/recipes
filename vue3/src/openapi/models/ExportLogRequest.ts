@@ -61,6 +61,12 @@ export interface ExportLogRequest {
      * @memberof ExportLogRequest
      */
     possiblyNotExpired?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -88,6 +94,7 @@ export function ExportLogRequestFromJSONTyped(json: any, ignoreDiscriminator: bo
         'exportedRecipes': json['exported_recipes'] == null ? undefined : json['exported_recipes'],
         'cacheDuration': json['cache_duration'] == null ? undefined : json['cache_duration'],
         'possiblyNotExpired': json['possibly_not_expired'] == null ? undefined : json['possibly_not_expired'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -104,6 +111,7 @@ export function ExportLogRequestToJSON(value?: ExportLogRequest | null): any {
         'exported_recipes': value['exportedRecipes'],
         'cache_duration': value['cacheDuration'],
         'possibly_not_expired': value['possiblyNotExpired'],
+        'id': value['id'],
     };
 }
 

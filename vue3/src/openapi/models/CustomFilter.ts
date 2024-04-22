@@ -31,7 +31,7 @@ export interface CustomFilter {
      * @type {number}
      * @memberof CustomFilter
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -62,6 +62,7 @@ export interface CustomFilter {
  * Check if a given object implements the CustomFilter interface.
  */
 export function instanceOfCustomFilter(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('search' in value)) return false;
     if (!('createdBy' in value)) return false;
@@ -78,7 +79,7 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'search': json['search'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
@@ -92,7 +93,6 @@ export function CustomFilterToJSON(value?: CustomFilter | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),

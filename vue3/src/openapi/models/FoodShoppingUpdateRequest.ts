@@ -46,6 +46,12 @@ export interface FoodShoppingUpdateRequest {
      * @memberof FoodShoppingUpdateRequest
      */
     _delete: DeleteEnum | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodShoppingUpdateRequest
+     */
+    id?: number;
 }
 
 /**
@@ -69,6 +75,7 @@ export function FoodShoppingUpdateRequestFromJSONTyped(json: any, ignoreDiscrimi
         'amount': json['amount'] == null ? undefined : json['amount'],
         'unit': json['unit'] == null ? undefined : json['unit'],
         '_delete': DeleteEnumFromJSON(json['delete']),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -81,6 +88,7 @@ export function FoodShoppingUpdateRequestToJSON(value?: FoodShoppingUpdateReques
         'amount': value['amount'],
         'unit': value['unit'],
         'delete': DeleteEnumToJSON(value['_delete']),
+        'id': value['id'],
     };
 }
 

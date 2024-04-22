@@ -44,6 +44,12 @@ export interface PatchedUserSpaceRequest {
      * @memberof PatchedUserSpaceRequest
      */
     internalNote?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserSpaceRequest
+     */
+    id?: number;
 }
 
 /**
@@ -66,6 +72,7 @@ export function PatchedUserSpaceRequestFromJSONTyped(json: any, ignoreDiscrimina
         'groups': json['groups'] == null ? undefined : ((json['groups'] as Array<any>).map(GroupRequestFromJSON)),
         'active': json['active'] == null ? undefined : json['active'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -78,6 +85,7 @@ export function PatchedUserSpaceRequestToJSON(value?: PatchedUserSpaceRequest | 
         'groups': value['groups'] == null ? undefined : ((value['groups'] as Array<any>).map(GroupRequestToJSON)),
         'active': value['active'],
         'internal_note': value['internalNote'],
+        'id': value['id'],
     };
 }
 

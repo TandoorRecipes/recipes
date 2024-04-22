@@ -25,6 +25,12 @@ export interface ViewLogRequest {
      * @memberof ViewLogRequest
      */
     recipe: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ViewLogRequest
+     */
+    id?: number;
 }
 
 /**
@@ -46,6 +52,7 @@ export function ViewLogRequestFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'recipe': json['recipe'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -56,6 +63,7 @@ export function ViewLogRequestToJSON(value?: ViewLogRequest | null): any {
     return {
         
         'recipe': value['recipe'],
+        'id': value['id'],
     };
 }
 

@@ -83,6 +83,12 @@ export interface UnitRequest {
      * @memberof UnitRequest
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitRequest
+     */
+    id?: number;
 }
 
 /**
@@ -108,6 +114,7 @@ export function UnitRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'description': json['description'] == null ? undefined : json['description'],
         'baseUnit': json['base_unit'] == null ? undefined : json['base_unit'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -122,6 +129,7 @@ export function UnitRequestToJSON(value?: UnitRequest | null): any {
         'description': value['description'],
         'base_unit': value['baseUnit'],
         'open_data_slug': value['openDataSlug'],
+        'id': value['id'],
     };
 }
 

@@ -58,7 +58,7 @@ export interface Keyword {
      * @type {number}
      * @memberof Keyword
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -113,6 +113,7 @@ export interface Keyword {
  * Check if a given object implements the Keyword interface.
  */
 export function instanceOfKeyword(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('label' in value)) return false;
     if (!('parent' in value)) return false;
@@ -133,7 +134,7 @@ export function KeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): K
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'label': json['label'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -151,7 +152,6 @@ export function KeywordToJSON(value?: Keyword | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
     };

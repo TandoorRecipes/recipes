@@ -86,6 +86,12 @@ export interface PatchedStepRequest {
      * @memberof PatchedStepRequest
      */
     showIngredientsTable?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedStepRequest
+     */
+    id?: number;
 }
 
 /**
@@ -114,6 +120,7 @@ export function PatchedStepRequestFromJSONTyped(json: any, ignoreDiscriminator: 
         'file': json['file'] == null ? undefined : UserFileViewRequestFromJSON(json['file']),
         'stepRecipe': json['step_recipe'] == null ? undefined : json['step_recipe'],
         'showIngredientsTable': json['show_ingredients_table'] == null ? undefined : json['show_ingredients_table'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -132,6 +139,7 @@ export function PatchedStepRequestToJSON(value?: PatchedStepRequest | null): any
         'file': UserFileViewRequestToJSON(value['file']),
         'step_recipe': value['stepRecipe'],
         'show_ingredients_table': value['showIngredientsTable'],
+        'id': value['id'],
     };
 }
 

@@ -71,6 +71,12 @@ export interface OpenDataVersionRequest {
      * @memberof OpenDataVersionRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataVersionRequest
+     */
+    id?: number;
 }
 
 /**
@@ -95,6 +101,7 @@ export function OpenDataVersionRequestFromJSONTyped(json: any, ignoreDiscriminat
         'name': json['name'],
         'code': json['code'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -107,6 +114,7 @@ export function OpenDataVersionRequestToJSON(value?: OpenDataVersionRequest | nu
         'name': value['name'],
         'code': value['code'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

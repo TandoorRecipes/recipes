@@ -44,6 +44,12 @@ export interface SupermarketCategoryRelationRequest {
      * @memberof SupermarketCategoryRelationRequest
      */
     order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelationRequest
+     */
+    id?: number;
 }
 
 /**
@@ -68,6 +74,7 @@ export function SupermarketCategoryRelationRequestFromJSONTyped(json: any, ignor
         'category': SupermarketCategoryRequestFromJSON(json['category']),
         'supermarket': json['supermarket'],
         'order': json['order'] == null ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -80,6 +87,7 @@ export function SupermarketCategoryRelationRequestToJSON(value?: SupermarketCate
         'category': SupermarketCategoryRequestToJSON(value['category']),
         'supermarket': value['supermarket'],
         'order': value['order'],
+        'id': value['id'],
     };
 }
 

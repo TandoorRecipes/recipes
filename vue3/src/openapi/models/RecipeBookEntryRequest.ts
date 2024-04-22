@@ -31,6 +31,12 @@ export interface RecipeBookEntryRequest {
      * @memberof RecipeBookEntryRequest
      */
     recipe: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookEntryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -54,6 +60,7 @@ export function RecipeBookEntryRequestFromJSONTyped(json: any, ignoreDiscriminat
         
         'book': json['book'],
         'recipe': json['recipe'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -65,6 +72,7 @@ export function RecipeBookEntryRequestToJSON(value?: RecipeBookEntryRequest | nu
         
         'book': value['book'],
         'recipe': value['recipe'],
+        'id': value['id'],
     };
 }
 

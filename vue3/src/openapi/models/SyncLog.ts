@@ -24,7 +24,7 @@ export interface SyncLog {
      * @type {number}
      * @memberof SyncLog
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {number}
@@ -55,6 +55,7 @@ export interface SyncLog {
  * Check if a given object implements the SyncLog interface.
  */
 export function instanceOfSyncLog(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('sync' in value)) return false;
     if (!('status' in value)) return false;
     if (!('createdAt' in value)) return false;
@@ -71,7 +72,7 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'sync': json['sync'],
         'status': json['status'],
         'msg': json['msg'] == null ? undefined : json['msg'],
@@ -85,7 +86,6 @@ export function SyncLogToJSON(value?: SyncLog | null): any {
     }
     return {
         
-        'id': value['id'],
         'sync': value['sync'],
         'status': value['status'],
         'msg': value['msg'],

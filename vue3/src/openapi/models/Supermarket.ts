@@ -65,7 +65,7 @@ export interface Supermarket {
      * @type {number}
      * @memberof Supermarket
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -96,6 +96,7 @@ export interface Supermarket {
  * Check if a given object implements the Supermarket interface.
  */
 export function instanceOfSupermarket(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('categoryToSupermarket' in value)) return false;
     return true;
@@ -111,7 +112,7 @@ export function SupermarketFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'categoryToSupermarket': ((json['category_to_supermarket'] as Array<any>).map(SupermarketCategoryRelationFromJSON)),
@@ -125,7 +126,6 @@ export function SupermarketToJSON(value?: Supermarket | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'open_data_slug': value['openDataSlug'],

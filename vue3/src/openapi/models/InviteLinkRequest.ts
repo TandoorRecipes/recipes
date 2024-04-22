@@ -62,6 +62,12 @@ export interface InviteLinkRequest {
      * @memberof InviteLinkRequest
      */
     internalNote?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLinkRequest
+     */
+    id?: number;
 }
 
 /**
@@ -88,6 +94,7 @@ export function InviteLinkRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         'usedBy': json['used_by'] == null ? undefined : json['used_by'],
         'reusable': json['reusable'] == null ? undefined : json['reusable'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -103,6 +110,7 @@ export function InviteLinkRequestToJSON(value?: InviteLinkRequest | null): any {
         'used_by': value['usedBy'],
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
+        'id': value['id'],
     };
 }
 

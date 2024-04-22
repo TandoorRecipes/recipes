@@ -168,6 +168,12 @@ export interface OpenDataFoodRequest {
      * @memberof OpenDataFoodRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof OpenDataFoodRequest
+     */
+    id?: number;
 }
 
 /**
@@ -210,6 +216,7 @@ export function OpenDataFoodRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'propertiesSource': json['properties_source'] == null ? undefined : json['properties_source'],
         'fdcId': json['fdc_id'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -234,6 +241,7 @@ export function OpenDataFoodRequestToJSON(value?: OpenDataFoodRequest | null): a
         'properties_source': value['propertiesSource'],
         'fdc_id': value['fdcId'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

@@ -24,7 +24,7 @@ export interface RecipeFlat {
      * @type {number}
      * @memberof RecipeFlat
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -43,6 +43,7 @@ export interface RecipeFlat {
  * Check if a given object implements the RecipeFlat interface.
  */
 export function instanceOfRecipeFlat(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     return true;
 }
@@ -57,7 +58,7 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'image': json['image'] == null ? undefined : json['image'],
     };
@@ -69,7 +70,6 @@ export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'image': value['image'],
     };

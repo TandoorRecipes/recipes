@@ -24,7 +24,7 @@ export interface ShoppingListRecipe {
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -79,6 +79,7 @@ export interface ShoppingListRecipe {
  * Check if a given object implements the ShoppingListRecipe interface.
  */
 export function instanceOfShoppingListRecipe(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('recipeName' in value)) return false;
     if (!('name' in value)) return false;
     if (!('servings' in value)) return false;
@@ -98,7 +99,7 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'recipeName': json['recipe_name'],
         'name': json['name'],
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
@@ -116,7 +117,6 @@ export function ShoppingListRecipeToJSON(value?: ShoppingListRecipe | null): any
     }
     return {
         
-        'id': value['id'],
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],

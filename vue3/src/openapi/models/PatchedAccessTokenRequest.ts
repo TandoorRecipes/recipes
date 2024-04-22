@@ -31,6 +31,12 @@ export interface PatchedAccessTokenRequest {
      * @memberof PatchedAccessTokenRequest
      */
     scope?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedAccessTokenRequest
+     */
+    id?: number;
 }
 
 /**
@@ -52,6 +58,7 @@ export function PatchedAccessTokenRequestFromJSONTyped(json: any, ignoreDiscrimi
         
         'expires': json['expires'] == null ? undefined : (new Date(json['expires'])),
         'scope': json['scope'] == null ? undefined : json['scope'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -63,6 +70,7 @@ export function PatchedAccessTokenRequestToJSON(value?: PatchedAccessTokenReques
         
         'expires': value['expires'] == null ? undefined : ((value['expires']).toISOString()),
         'scope': value['scope'],
+        'id': value['id'],
     };
 }
 

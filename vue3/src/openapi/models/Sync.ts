@@ -24,7 +24,7 @@ export interface Sync {
      * @type {number}
      * @memberof Sync
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {number}
@@ -67,6 +67,7 @@ export interface Sync {
  * Check if a given object implements the Sync interface.
  */
 export function instanceOfSync(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('storage' in value)) return false;
     if (!('createdAt' in value)) return false;
     if (!('updatedAt' in value)) return false;
@@ -83,7 +84,7 @@ export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'storage': json['storage'],
         'path': json['path'] == null ? undefined : json['path'],
         'active': json['active'] == null ? undefined : json['active'],
@@ -99,7 +100,6 @@ export function SyncToJSON(value?: Sync | null): any {
     }
     return {
         
-        'id': value['id'],
         'storage': value['storage'],
         'path': value['path'],
         'active': value['active'],

@@ -24,7 +24,7 @@ export interface PropertyType {
      * @type {number}
      * @memberof PropertyType
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -67,6 +67,7 @@ export interface PropertyType {
  * Check if a given object implements the PropertyType interface.
  */
 export function instanceOfPropertyType(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     return true;
 }
@@ -81,7 +82,7 @@ export function PropertyTypeFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'unit': json['unit'] == null ? undefined : json['unit'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -97,7 +98,6 @@ export function PropertyTypeToJSON(value?: PropertyType | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'unit': value['unit'],
         'description': value['description'],

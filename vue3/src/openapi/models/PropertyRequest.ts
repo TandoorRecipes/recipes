@@ -72,6 +72,12 @@ export interface PropertyRequest {
      * @memberof PropertyRequest
      */
     propertyType: PropertyTypeRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyRequest
+     */
+    id?: number;
 }
 
 /**
@@ -95,6 +101,7 @@ export function PropertyRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'propertyAmount': json['property_amount'],
         'propertyType': PropertyTypeRequestFromJSON(json['property_type']),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -106,6 +113,7 @@ export function PropertyRequestToJSON(value?: PropertyRequest | null): any {
         
         'property_amount': value['propertyAmount'],
         'property_type': PropertyTypeRequestToJSON(value['propertyType']),
+        'id': value['id'],
     };
 }
 

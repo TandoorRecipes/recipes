@@ -44,6 +44,12 @@ export interface CustomFilterRequest {
      * @memberof CustomFilterRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof CustomFilterRequest
+     */
+    id?: number;
 }
 
 /**
@@ -68,6 +74,7 @@ export function CustomFilterRequestFromJSONTyped(json: any, ignoreDiscriminator:
         'name': json['name'],
         'search': json['search'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -80,6 +87,7 @@ export function CustomFilterRequestToJSON(value?: CustomFilterRequest | null): a
         'name': value['name'],
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

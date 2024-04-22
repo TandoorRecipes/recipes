@@ -146,6 +146,12 @@ export interface PatchedRecipeRequest {
      * @memberof PatchedRecipeRequest
      */
     shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeRequest
+     */
+    id?: number;
 }
 
 /**
@@ -181,6 +187,7 @@ export function PatchedRecipeRequestFromJSONTyped(json: any, ignoreDiscriminator
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
         '_private': json['private'] == null ? undefined : json['private'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -206,6 +213,7 @@ export function PatchedRecipeRequestToJSON(value?: PatchedRecipeRequest | null):
         'servings_text': value['servingsText'],
         'private': value['_private'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserRequestToJSON)),
+        'id': value['id'],
     };
 }
 

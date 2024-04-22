@@ -62,6 +62,12 @@ export interface RecipeBookRequest {
      * @memberof RecipeBookRequest
      */
     order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookRequest
+     */
+    id?: number;
 }
 
 /**
@@ -88,6 +94,7 @@ export function RecipeBookRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         'shared': ((json['shared'] as Array<any>).map(UserRequestFromJSON)),
         'filter': json['filter'] == null ? undefined : CustomFilterRequestFromJSON(json['filter']),
         'order': json['order'] == null ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -102,6 +109,7 @@ export function RecipeBookRequestToJSON(value?: RecipeBookRequest | null): any {
         'shared': ((value['shared'] as Array<any>).map(UserRequestToJSON)),
         'filter': CustomFilterRequestToJSON(value['filter']),
         'order': value['order'],
+        'id': value['id'],
     };
 }
 

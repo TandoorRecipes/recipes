@@ -96,6 +96,12 @@ export interface PatchedOpenDataPropertyRequest {
      * @memberof PatchedOpenDataPropertyRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataPropertyRequest
+     */
+    id?: number;
 }
 
 /**
@@ -121,6 +127,7 @@ export function PatchedOpenDataPropertyRequestFromJSONTyped(json: any, ignoreDis
         'unit': json['unit'] == null ? undefined : json['unit'],
         'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -136,6 +143,7 @@ export function PatchedOpenDataPropertyRequestToJSON(value?: PatchedOpenDataProp
         'unit': value['unit'],
         'fdc_id': value['fdcId'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

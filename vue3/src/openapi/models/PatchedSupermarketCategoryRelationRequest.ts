@@ -44,6 +44,12 @@ export interface PatchedSupermarketCategoryRelationRequest {
      * @memberof PatchedSupermarketCategoryRelationRequest
      */
     order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSupermarketCategoryRelationRequest
+     */
+    id?: number;
 }
 
 /**
@@ -66,6 +72,7 @@ export function PatchedSupermarketCategoryRelationRequestFromJSONTyped(json: any
         'category': json['category'] == null ? undefined : SupermarketCategoryRequestFromJSON(json['category']),
         'supermarket': json['supermarket'] == null ? undefined : json['supermarket'],
         'order': json['order'] == null ? undefined : json['order'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -78,6 +85,7 @@ export function PatchedSupermarketCategoryRelationRequestToJSON(value?: PatchedS
         'category': SupermarketCategoryRequestToJSON(value['category']),
         'supermarket': value['supermarket'],
         'order': value['order'],
+        'id': value['id'],
     };
 }
 

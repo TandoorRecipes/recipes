@@ -65,6 +65,12 @@ export interface PatchedSupermarketCategoryRequest {
      * @memberof PatchedSupermarketCategoryRequest
      */
     description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSupermarketCategoryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -86,6 +92,7 @@ export function PatchedSupermarketCategoryRequestFromJSONTyped(json: any, ignore
         
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -97,6 +104,7 @@ export function PatchedSupermarketCategoryRequestToJSON(value?: PatchedSupermark
         
         'name': value['name'],
         'description': value['description'],
+        'id': value['id'],
     };
 }
 

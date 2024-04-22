@@ -62,6 +62,12 @@ export interface PatchedOpenDataStoreRequest {
      * @memberof PatchedOpenDataStoreRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataStoreRequest
+     */
+    id?: number;
 }
 
 /**
@@ -86,6 +92,7 @@ export function PatchedOpenDataStoreRequestFromJSONTyped(json: any, ignoreDiscri
         'name': json['name'] == null ? undefined : json['name'],
         'categoryToStore': json['category_to_store'] == null ? undefined : ((json['category_to_store'] as Array<any>).map(OpenDataStoreCategoryRequestFromJSON)),
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -100,6 +107,7 @@ export function PatchedOpenDataStoreRequestToJSON(value?: PatchedOpenDataStoreRe
         'name': value['name'],
         'category_to_store': value['categoryToStore'] == null ? undefined : ((value['categoryToStore'] as Array<any>).map(OpenDataStoreCategoryRequestToJSON)),
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

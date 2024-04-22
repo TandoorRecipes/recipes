@@ -24,13 +24,14 @@ export interface FoodShoppingUpdate {
      * @type {number}
      * @memberof FoodShoppingUpdate
      */
-    id?: number;
+    readonly id: number;
 }
 
 /**
  * Check if a given object implements the FoodShoppingUpdate interface.
  */
 export function instanceOfFoodShoppingUpdate(value: object): boolean {
+    if (!('id' in value)) return false;
     return true;
 }
 
@@ -44,7 +45,7 @@ export function FoodShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
     };
 }
 
@@ -54,7 +55,6 @@ export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any
     }
     return {
         
-        'id': value['id'],
     };
 }
 

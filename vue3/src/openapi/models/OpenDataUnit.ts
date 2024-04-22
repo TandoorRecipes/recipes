@@ -77,7 +77,7 @@ export interface OpenDataUnit {
      * @type {number}
      * @memberof OpenDataUnit
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -132,6 +132,7 @@ export interface OpenDataUnit {
  * Check if a given object implements the OpenDataUnit interface.
  */
 export function instanceOfOpenDataUnit(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('version' in value)) return false;
     if (!('slug' in value)) return false;
     if (!('name' in value)) return false;
@@ -150,7 +151,7 @@ export function OpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
@@ -168,7 +169,6 @@ export function OpenDataUnitToJSON(value?: OpenDataUnit | null): any {
     }
     return {
         
-        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

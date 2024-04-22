@@ -71,6 +71,12 @@ export interface PatchedSupermarketRequest {
      * @memberof PatchedSupermarketRequest
      */
     openDataSlug?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSupermarketRequest
+     */
+    id?: number;
 }
 
 /**
@@ -93,6 +99,7 @@ export function PatchedSupermarketRequestFromJSONTyped(json: any, ignoreDiscrimi
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'openDataSlug': json['open_data_slug'] == null ? undefined : json['open_data_slug'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -105,6 +112,7 @@ export function PatchedSupermarketRequestToJSON(value?: PatchedSupermarketReques
         'name': value['name'],
         'description': value['description'],
         'open_data_slug': value['openDataSlug'],
+        'id': value['id'],
     };
 }
 

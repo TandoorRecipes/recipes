@@ -31,6 +31,12 @@ export interface BookmarkletImportRequest {
      * @memberof BookmarkletImportRequest
      */
     html: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof BookmarkletImportRequest
+     */
+    id?: number;
 }
 
 /**
@@ -53,6 +59,7 @@ export function BookmarkletImportRequestFromJSONTyped(json: any, ignoreDiscrimin
         
         'url': json['url'] == null ? undefined : json['url'],
         'html': json['html'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -64,6 +71,7 @@ export function BookmarkletImportRequestToJSON(value?: BookmarkletImportRequest 
         
         'url': value['url'],
         'html': value['html'],
+        'id': value['id'],
     };
 }
 

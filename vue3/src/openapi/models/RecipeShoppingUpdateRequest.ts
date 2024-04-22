@@ -37,6 +37,12 @@ export interface RecipeShoppingUpdateRequest {
      * @memberof RecipeShoppingUpdateRequest
      */
     servings?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeShoppingUpdateRequest
+     */
+    id?: number;
 }
 
 /**
@@ -59,6 +65,7 @@ export function RecipeShoppingUpdateRequestFromJSONTyped(json: any, ignoreDiscri
         'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
         'ingredients': json['ingredients'] == null ? undefined : json['ingredients'],
         'servings': json['servings'] == null ? undefined : json['servings'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -71,6 +78,7 @@ export function RecipeShoppingUpdateRequestToJSON(value?: RecipeShoppingUpdateRe
         'list_recipe': value['listRecipe'],
         'ingredients': value['ingredients'],
         'servings': value['servings'],
+        'id': value['id'],
     };
 }
 

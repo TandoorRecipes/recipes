@@ -168,6 +168,12 @@ export interface PatchedOpenDataFoodRequest {
      * @memberof PatchedOpenDataFoodRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataFoodRequest
+     */
+    id?: number;
 }
 
 /**
@@ -202,6 +208,7 @@ export function PatchedOpenDataFoodRequestFromJSONTyped(json: any, ignoreDiscrim
         'propertiesSource': json['properties_source'] == null ? undefined : json['properties_source'],
         'fdcId': json['fdc_id'] == null ? undefined : json['fdc_id'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -226,6 +233,7 @@ export function PatchedOpenDataFoodRequestToJSON(value?: PatchedOpenDataFoodRequ
         'properties_source': value['propertiesSource'],
         'fdc_id': value['fdcId'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

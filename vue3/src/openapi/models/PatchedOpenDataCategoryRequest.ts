@@ -90,6 +90,12 @@ export interface PatchedOpenDataCategoryRequest {
      * @memberof PatchedOpenDataCategoryRequest
      */
     comment?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedOpenDataCategoryRequest
+     */
+    id?: number;
 }
 
 /**
@@ -114,6 +120,7 @@ export function PatchedOpenDataCategoryRequestFromJSONTyped(json: any, ignoreDis
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'comment': json['comment'] == null ? undefined : json['comment'],
+        'id': json['id'] == null ? undefined : json['id'],
     };
 }
 
@@ -128,6 +135,7 @@ export function PatchedOpenDataCategoryRequestToJSON(value?: PatchedOpenDataCate
         'name': value['name'],
         'description': value['description'],
         'comment': value['comment'],
+        'id': value['id'],
     };
 }
 

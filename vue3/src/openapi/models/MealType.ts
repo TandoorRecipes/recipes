@@ -24,7 +24,7 @@ export interface MealType {
      * @type {number}
      * @memberof MealType
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -61,6 +61,7 @@ export interface MealType {
  * Check if a given object implements the MealType interface.
  */
 export function instanceOfMealType(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('createdBy' in value)) return false;
     return true;
@@ -76,7 +77,7 @@ export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'order': json['order'] == null ? undefined : json['order'],
         'color': json['color'] == null ? undefined : json['color'],
@@ -91,7 +92,6 @@ export function MealTypeToJSON(value?: MealType | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'order': value['order'],
         'color': value['color'],

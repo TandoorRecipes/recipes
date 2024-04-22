@@ -37,7 +37,7 @@ export interface OpenDataStore {
      * @type {number}
      * @memberof OpenDataStore
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -80,6 +80,7 @@ export interface OpenDataStore {
  * Check if a given object implements the OpenDataStore interface.
  */
 export function instanceOfOpenDataStore(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('version' in value)) return false;
     if (!('slug' in value)) return false;
     if (!('name' in value)) return false;
@@ -98,7 +99,7 @@ export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
@@ -114,7 +115,6 @@ export function OpenDataStoreToJSON(value?: OpenDataStore | null): any {
     }
     return {
         
-        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

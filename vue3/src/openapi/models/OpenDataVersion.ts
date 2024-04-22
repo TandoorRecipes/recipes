@@ -58,7 +58,7 @@ export interface OpenDataVersion {
      * @type {number}
      * @memberof OpenDataVersion
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -83,6 +83,7 @@ export interface OpenDataVersion {
  * Check if a given object implements the OpenDataVersion interface.
  */
 export function instanceOfOpenDataVersion(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('code' in value)) return false;
     return true;
@@ -98,7 +99,7 @@ export function OpenDataVersionFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'code': json['code'],
         'comment': json['comment'] == null ? undefined : json['comment'],
@@ -111,7 +112,6 @@ export function OpenDataVersionToJSON(value?: OpenDataVersion | null): any {
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'code': value['code'],
         'comment': value['comment'],

@@ -58,7 +58,7 @@ export interface SupermarketCategory {
      * @type {number}
      * @memberof SupermarketCategory
      */
-    id?: number;
+    readonly id: number;
     /**
      * 
      * @type {string}
@@ -77,6 +77,7 @@ export interface SupermarketCategory {
  * Check if a given object implements the SupermarketCategory interface.
  */
 export function instanceOfSupermarketCategory(value: object): boolean {
+    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     return true;
 }
@@ -91,7 +92,7 @@ export function SupermarketCategoryFromJSONTyped(json: any, ignoreDiscriminator:
     }
     return {
         
-        'id': json['id'] == null ? undefined : json['id'],
+        'id': json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
     };
@@ -103,7 +104,6 @@ export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): a
     }
     return {
         
-        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
     };
