@@ -412,7 +412,7 @@
   resolved "https://registry.yarnpkg.com/@vue/tsconfig/-/tsconfig-0.4.0.tgz#f01e2f6089b5098136fb084a0dd0cdd4533b72b0"
   integrity sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==
 
-"@vueform/multiselect@^2.6.3":
+"@vueform/multiselect@^2.6.3", "@vueform/multiselect@^2.6.7":
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/@vueform/multiselect/-/multiselect-2.6.7.tgz#12e38719de428389378fd4af2e5143442707e6fd"
   integrity sha512-d0iwfzsj+N27o/JPE1KXbf0rVtwIe33dqlkQcOPxOP0RS6mW9umQG1hcuFEpdqNajuryHB9N4zo0rEcGmN20xQ==

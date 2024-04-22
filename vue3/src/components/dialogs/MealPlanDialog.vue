@@ -5,81 +5,39 @@
                 <v-card-title>Meal Plan Edit <i class="mt-2 float-right fas fa-times" @click="isActive.value = false"></i></v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <Vueform v-model="mutableMealPlan" sync>
-                        <HiddenElement meta input-type="number" name="id"></HiddenElement>
-                        <TextElement name="title" :columns="{ sm: 12, md : 6}" label="Title"></TextElement>
-                        <SelectElement
-                            name="recipe"
-                            :columns="{ sm: 12, md : 6}"
-                            label="Recipe"
-                            label-prop="name"
-                            value-prop="id"
-                            :object="true"
-                            :strict="false"
-                            :search="true"
-                            :items="recipeSearch"
-                            :delay="300"
-                            rules="required"
-                        ></SelectElement>
-                        <DateElement name="fromDate" :columns="{ sm: 12, md : 6}" label="From Date">
-                            <template #addon-after>
-                                <v-btn-group style="border-radius: 0">
-                                    <v-btn color="secondary">-</v-btn>
-                                    <v-btn color="primary">+</v-btn>
-                                </v-btn-group>
-                            </template>
-                        </DateElement>
-                        <DateElement name="toDate" :columns="{ sm: 12, md : 6}" label="To Date">
-                            <template #addon-after>
-                                <v-btn-group style="border-radius: 0">
-                                    <v-btn color="secondary">-</v-btn>
-                                    <v-btn color="primary">+</v-btn>
-                                </v-btn-group>
-                            </template>
-                        </DateElement>
-
-                        <GroupElement name="container_1">
-                            <GroupElement name="container_1_col_1" :columns="{ sm: 12, md : 6}">
-                                <SelectElement
-                                    name="mealType"
-                                    label="Meal Type"
+                    <v-form>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <v-text-field label="Title"></v-text-field>
+                                <v-text-field label="From Date" type="date"></v-text-field>
+                                <v-text-field label="Meal Type"></v-text-field>
+                                <v-number-input control-variant="split" :min="0"></v-number-input>
+                                <v-text-field label="Share"></v-text-field>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <Multiselect
+                                    name="recipe"
+                                    :columns="{ sm: 12, md : 6}"
+                                    label="Recipe"
                                     label-prop="name"
                                     value-prop="id"
                                     :object="true"
                                     :strict="false"
                                     :search="true"
-                                    :items="mealTypeSearch"
+                                    :items="recipeSearch"
                                     :delay="300"
                                     rules="required"
-                                >
-                                </SelectElement>
-                                <TextElement name="servings" label="Servings"></TextElement>
-                                <TagsElement
-                                    name="share"
-                                    label="Share"
-                                    label-prop="displayName"
-                                    value-prop="id"
-                                    :object="true"
-                                    :strict="false"
-                                    :search="true"
-                                    :items="shareUserSearch"
-                                    :delay="300"
-                                ></TagsElement>
-                            </GroupElement>
-                            <GroupElement name="container_1_col_2" :columns="{ sm: 12, md : 6}">
-                                <StaticElement name="static_1" :remove-class="['vf-contains-link']">
-                                    <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
-                                </StaticElement>
-                            </GroupElement>
-                        </GroupElement>
-                        <TextareaElement name="note" label="Note"></TextareaElement>
-                        <ButtonElement
-                            name="submit"
-                            button-label="Save"
-                            :submits="true"
-                        />
-                        <ButtonElement name="btn_delete" type="button" columns="1" @click="1">Delete</ButtonElement>
-                    </Vueform>
+                                ></Multiselect>
+                                <v-text-field label="To Date" type="date"></v-text-field>
+                                <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-textarea label="Note"></v-textarea>
+                            </v-col>
+                        </v-row>
+                    </v-form>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -101,7 +59,8 @@ import {ApiApi, MealPlan, RecipeOverview} from "@/openapi";
 import {DateTime} from "luxon";
 import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
-
+import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
+import Multiselect from '@vueform/multiselect'
 
 const props = defineProps(
     {
@@ -160,6 +119,8 @@ async function recipeSearch(searchQuery: string) {
 }
 
 </script>
+
+<style src="@vueform/multiselect/themes/default.css"></style>
 
 <style scoped>
 
