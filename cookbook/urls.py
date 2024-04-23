@@ -19,7 +19,6 @@ from .views.api import CustomAuthToken, ImportOpenData
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
-
     def extend(self, r):
         self.registry.extend(r.registry)
 
@@ -121,7 +120,7 @@ urlpatterns = [
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
 
-    path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
+    # path('api/plan-ical/<slug:from_date>/<slug:to_date>/', api.get_plan_ical, name='api_get_plan_ical'),
 
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),

@@ -211,7 +211,7 @@ def test_add_with_shopping(u1_s1, meal_type):
 
 
 @pytest.mark.parametrize("arg", [
-    [f'', 2],
+    ['', 2],
     [f'?from_date={datetime.now().strftime("%Y-%m-%d")}', 1],
     [
         f'?to_date={(datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")}',

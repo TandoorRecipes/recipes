@@ -44,6 +44,7 @@ def test_permissions(arg, request):
     to_date_slug = (datetime.now()+timedelta(days=1)).strftime("%Y-%m-%d")
     assert c.get(reverse(BOUND_URL, kwargs={'from_date': from_date_slug, 'to_date': to_date_slug})).status_code == arg[1]
 
+
 def test_bound(obj_1, obj_2, obj_3, u1_s1):
     from_date_slug = (datetime.now()+timedelta(days=-1)).strftime("%Y-%m-%d")
     to_date_slug = (datetime.now()+timedelta(days=1)).strftime("%Y-%m-%d")

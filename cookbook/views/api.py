@@ -416,10 +416,11 @@ class GroupViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', ]
 
 
-class SpaceViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
     permission_classes = [IsReadOnlyDRF & CustomIsUser | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
@@ -453,10 +454,11 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user, space=self.request.space)
 
 
-class UserPreferenceViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
@@ -1756,29 +1758,30 @@ def share_link(request, pk):
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
 
 
-@extend_schema(
-    request=inline_serializer(name="PlanIcalSerializer", fields={'from_date': CharField(), 'to_date': CharField()}),
-    responses=None,
-    parameters=[
-        OpenApiParameter(name='from_date', location=OpenApiParameter.PATH, description=_('Get meal plans from date (inclusive).'), type=str, examples=[DateExample]),
-        OpenApiParameter(name='to_date', location=OpenApiParameter.PATH, description=_('Get meal plans to date (inclusive).'), type=str, examples=[DateExample]),
-    ]
-)
-@api_view(['GET'])
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
-    queryset = MealPlan.objects.filter(Q(created_by=request.user)
-                                       | Q(shared=request.user)).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
+# NOTE: I think this was replaced by icalMealPlanApi?
+# @extend_schema(
+#     request=inline_serializer(name="PlanIcalSerializer", fields={'from_date': CharField(), 'to_date': CharField()}),
+#     responses=None,
+#     parameters=[
+#         OpenApiParameter(name='from_date', location=OpenApiParameter.PATH, description=_('Get meal plans from date (inclusive).'), type=str, examples=[DateExample]),
+#         OpenApiParameter(name='to_date', location=OpenApiParameter.PATH, description=_('Get meal plans to date (inclusive).'), type=str, examples=[DateExample]),
+#     ]
+# )
+# @api_view(['GET'])
+# @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
+# def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
+#     queryset = MealPlan.objects.filter(Q(created_by=request.user)
+#                                        | Q(shared=request.user)).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
 
-    if from_date is not None:
-        queryset = queryset.filter(from_date__gte=from_date)
+#     if from_date is not None:
+#         queryset = queryset.filter(from_date__gte=from_date)
 
-    if to_date is not None:
-        queryset = queryset.filter(to_date__lte=to_date)
+#     if to_date is not None:
+#         queryset = queryset.filter(to_date__lte=to_date)
 
-    return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
+#     return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
 
-# TODO is this replaced now?
+
 def meal_plans_to_ical(queryset, filename):
     cal = Calendar()
 

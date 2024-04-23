@@ -131,22 +131,20 @@ def test_makenow_sibling_substitute(recipes, makenow_recipe, user1, space_1):
     request = type('', (object,), {'space': space_1, 'user': user1})()
     search = RecipeSearch(request, makenow='true')
     with scope(space=space_1):
-        food = Food.objects.filter(
-            ingredient__step__recipe=makenow_recipe.id).first()
+        food = Food.objects.filter(ingredient__step__recipe=makenow_recipe.id).first()
         onhand_user = food.onhand_users.first()
         food.onhand_users.clear()
         food.substitute_siblings = True
         food.save()
         assert search.get_queryset(Recipe.objects.all()).count() == 0
         new_parent = FoodFactory.create(space=space_1)
-        new_sibling = FoodFactory.create(
-            space=space_1, onhand_users=[onhand_user])
+        new_sibling = FoodFactory.create(space=space_1, onhand_users=[onhand_user])
         new_sibling.move(new_parent, node_location)
         food.move(new_parent, node_location)
-        assert Food.objects.filter(
-            ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
-        assert Food.objects.filter(
-            ingredient__step__recipe=makenow_recipe.id, depth=2).count() == 1
+        # force refresh from database, treebeard bypasses ORM
+        food = Food.objects.get(id=food.id)
+        assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, onhand_users__isnull=False).count() == 9
+        assert Food.objects.filter(ingredient__step__recipe=makenow_recipe.id, depth=2).count() == 1
         search = search.get_queryset(Recipe.objects.all())
         assert search.count() == 1
         assert search.first().id == makenow_recipe.id
