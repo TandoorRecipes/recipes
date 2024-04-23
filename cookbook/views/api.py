@@ -1538,10 +1538,15 @@ class RecipeUrlImportView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-# @schema(AutoSchema()) #TODO add proper schema
+@extend_schema(
+    request=None,
+    responses=None,
+)
+@api_view(['POST'])
 @permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
+# TODO add api tests
+# TODO initial request should include some sort of data, inadvertently doing a naked POST could make changes that weren't intended
 def reset_food_inheritance(request):
     """
     function to reset inheritance from api, see food method for docs
@@ -1712,6 +1717,8 @@ def get_recipe_file(request, recipe_id):
 
 
 @group_required('user')
+# TODO add rate limiting
+# TODO change to some sort of asynchronous trigger
 def sync_all(request):
     if request.space.demo or settings.HOSTED:
         messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
