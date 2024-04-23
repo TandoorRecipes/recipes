@@ -25,24 +25,6 @@ export interface RecipeShoppingUpdate {
      * @memberof RecipeShoppingUpdate
      */
     readonly id: number;
-    /**
-     * Existing shopping list to update
-     * @type {number}
-     * @memberof RecipeShoppingUpdate
-     */
-    listRecipe?: number;
-    /**
-     * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
-     * @type {number}
-     * @memberof RecipeShoppingUpdate
-     */
-    ingredients?: number;
-    /**
-     * Providing a list_recipe ID and servings of 0 will delete that shopping list.
-     * @type {number}
-     * @memberof RecipeShoppingUpdate
-     */
-    servings?: number;
 }
 
 /**
@@ -64,9 +46,6 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
     return {
         
         'id': json['id'],
-        'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
-        'ingredients': json['ingredients'] == null ? undefined : json['ingredients'],
-        'servings': json['servings'] == null ? undefined : json['servings'],
     };
 }
 
@@ -76,9 +55,6 @@ export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null):
     }
     return {
         
-        'list_recipe': value['listRecipe'],
-        'ingredients': value['ingredients'],
-        'servings': value['servings'],
     };
 }
 

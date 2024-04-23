@@ -37,13 +37,13 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    readonly name: string;
+    name: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
-    readonly description: string | null;
+    description?: string;
     /**
      * 
      * @type {string}
@@ -136,7 +136,6 @@ export interface RecipeOverview {
 export function instanceOfRecipeOverview(value: object): boolean {
     if (!('id' in value)) return false;
     if (!('name' in value)) return false;
-    if (!('description' in value)) return false;
     if (!('image' in value)) return false;
     if (!('keywords' in value)) return false;
     if (!('workingTime' in value)) return false;
@@ -166,7 +165,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
         
         'id': json['id'],
         'name': json['name'],
-        'description': json['description'],
+        'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'],
         'keywords': ((json['keywords'] as Array<any>).map(KeywordLabelFromJSON)),
         'workingTime': json['working_time'],
@@ -190,6 +189,8 @@ export function RecipeOverviewToJSON(value?: RecipeOverview | null): any {
     }
     return {
         
+        'name': value['name'],
+        'description': value['description'],
     };
 }
 

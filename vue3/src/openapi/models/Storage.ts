@@ -52,18 +52,6 @@ export interface Storage {
     username?: string;
     /**
      * 
-     * @type {string}
-     * @memberof Storage
-     */
-    password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Storage
-     */
-    token?: string;
-    /**
-     * 
      * @type {number}
      * @memberof Storage
      */
@@ -94,8 +82,6 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
         'name': json['name'],
         'method': json['method'] == null ? undefined : MethodEnumFromJSON(json['method']),
         'username': json['username'] == null ? undefined : json['username'],
-        'password': json['password'] == null ? undefined : json['password'],
-        'token': json['token'] == null ? undefined : json['token'],
         'createdBy': json['created_by'],
     };
 }
@@ -109,8 +95,6 @@ export function StorageToJSON(value?: Storage | null): any {
         'name': value['name'],
         'method': MethodEnumToJSON(value['method']),
         'username': value['username'],
-        'password': value['password'],
-        'token': value['token'],
     };
 }
 

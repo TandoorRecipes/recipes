@@ -42,12 +42,6 @@ export interface ConnectorConfigConfig {
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    token?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectorConfigConfig
-     */
     todoEntity?: string;
     /**
      * Is Connector Enabled
@@ -104,7 +98,6 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
         'id': json['id'],
         'name': json['name'],
         'url': json['url'] == null ? undefined : json['url'],
-        'token': json['token'] == null ? undefined : json['token'],
         'todoEntity': json['todo_entity'] == null ? undefined : json['todo_entity'],
         'enabled': json['enabled'] == null ? undefined : json['enabled'],
         'onShoppingListEntryCreatedEnabled': json['on_shopping_list_entry_created_enabled'] == null ? undefined : json['on_shopping_list_entry_created_enabled'],
@@ -122,7 +115,6 @@ export function ConnectorConfigConfigToJSON(value?: ConnectorConfigConfig | null
         
         'name': value['name'],
         'url': value['url'],
-        'token': value['token'],
         'todo_entity': value['todoEntity'],
         'enabled': value['enabled'],
         'on_shopping_list_entry_created_enabled': value['onShoppingListEntryCreatedEnabled'],

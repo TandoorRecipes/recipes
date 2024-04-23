@@ -975,7 +975,12 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
             'waiting_time', 'created_by', 'created_at', 'updated_at',
             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent'
         )
-        read_only_fields = ['id', 'name', 'description', 'image', 'keywords', 'working_time',
+        # TODO having these readonly fields makes "RecipeOverview.ts" (API Client) not generate the RecipeOverviewToJSON second else block which leads to errors when using the api
+        # TODO find a solution (maybe trough a custom schema) to have these fields readonly (to save performance) and generate a proper client (two serializers would probably do the trick)
+        # read_only_fields = ['id', 'name', 'description', 'image', 'keywords', 'working_time',
+        #                     'waiting_time', 'created_by', 'created_at', 'updated_at',
+        #                     'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent']
+        read_only_fields = ['image', 'keywords', 'working_time',
                             'waiting_time', 'created_by', 'created_at', 'updated_at',
                             'internal', 'servings', 'servings_text', 'rating', 'last_cooked', 'new', 'recent']
 

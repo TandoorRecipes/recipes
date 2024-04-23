@@ -8,15 +8,18 @@ import mavonEditor from 'mavon-editor'
 import 'vite/modulepreload-polyfill';
 import vuetify from "@/vuetify";
 import ShoppingListPage from "@/pages/ShoppingListPage.vue";
-import RecipeSearchPage from "@/pages/RecipeSearchPage.vue";
+import StartPage from "@/pages/StartPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 import luxonPlugin from "@/plugins/luxonPlugin";
 import RecipeEditPage from "@/pages/RecipeEditPage.vue";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
+import Vueform from '@vueform/vueform'
+import vueform from '@/vueform'
+import SearchPage from "@/pages/SearchPage.vue";
 
 const routes = [
-    {path: '/', redirect: '/search', name: 'index'},
-    {path: '/search', component: RecipeSearchPage, name: 'view_search'},
+    {path: '/', component: StartPage, name: 'view_home'},
+    {path: '/search', component: SearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
     {path: '/books', component: ShoppingListPage, name: 'view_books'},
@@ -25,8 +28,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    // 4. Provide the history implementation to use. We
-    // are using the hash history for simplicity here.
+    // TODO configure proper history mode
     history: createWebHashHistory(),
     routes,
 })
@@ -37,6 +39,7 @@ app.use(createPinia())
 app.use(vuetify)
 app.use(router)
 app.use(luxonPlugin)
+app.use(Vueform, vueform)
 app.use(mavonEditor) // TODO only use on pages that need it
 
 app.mount('#app')

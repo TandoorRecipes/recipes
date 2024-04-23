@@ -11,15 +11,19 @@
   "dependencies": {
     "@mdi/font": "7.2.96",
     "@types/luxon": "^3.4.2",
+    "@vueform/multiselect": "^2.6.7",
+    "@vueform/vueform": "^1.9.2",
     "@vueuse/core": "^10.9.0",
     "luxon": "^3.4.4",
     "mavon-editor": "^3.0.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
+    "vue-i18n": "9",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "4",
+    "vue-simple-calendar": "^7.1.0",
     "vuedraggable": "^4.1.0",
-    "vuetify": "^3.5.10"
+    "vuetify": "^3.5.16"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",

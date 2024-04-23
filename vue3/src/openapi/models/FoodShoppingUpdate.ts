@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { DeleteEnum } from './DeleteEnum';
-import {
-    DeleteEnumFromJSON,
-    DeleteEnumFromJSONTyped,
-    DeleteEnumToJSON,
-} from './DeleteEnum';
-
 /**
  * 
  * @export
@@ -32,26 +25,6 @@ export interface FoodShoppingUpdate {
      * @memberof FoodShoppingUpdate
      */
     readonly id: number;
-    /**
-     * Amount of food to add to the shopping list
-     * @type {number}
-     * @memberof FoodShoppingUpdate
-     */
-    amount?: number;
-    /**
-     * ID of unit to use for the shopping list
-     * @type {number}
-     * @memberof FoodShoppingUpdate
-     */
-    unit?: number;
-    /**
-     * When set to true will delete all food from active shopping lists.
-     * 
-     * * `true` - true
-     * @type {DeleteEnum}
-     * @memberof FoodShoppingUpdate
-     */
-    _delete: DeleteEnum | null;
 }
 
 /**
@@ -59,7 +32,6 @@ export interface FoodShoppingUpdate {
  */
 export function instanceOfFoodShoppingUpdate(value: object): boolean {
     if (!('id' in value)) return false;
-    if (!('_delete' in value)) return false;
     return true;
 }
 
@@ -74,9 +46,6 @@ export function FoodShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator: 
     return {
         
         'id': json['id'],
-        'amount': json['amount'] == null ? undefined : json['amount'],
-        'unit': json['unit'] == null ? undefined : json['unit'],
-        '_delete': DeleteEnumFromJSON(json['delete']),
     };
 }
 
@@ -86,9 +55,6 @@ export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any
     }
     return {
         
-        'amount': value['amount'],
-        'unit': value['unit'],
-        'delete': DeleteEnumToJSON(value['_delete']),
     };
 }
 

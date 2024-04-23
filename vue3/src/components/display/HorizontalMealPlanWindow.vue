@@ -19,7 +19,10 @@
                                             {{ mealPlanGridItem.date_label }}
                                         </div>
                                         <div class="align-self-center">
-                                            <v-btn variant="flat" icon="fas fa-plus" size="small"></v-btn>
+                                            <v-btn variant="flat" icon="">
+                                                <i class="fas fa-plus"></i>
+                                                <meal-plan-dialog></meal-plan-dialog>
+                                            </v-btn>
                                         </div>
                                     </div>
 
@@ -37,6 +40,7 @@
                                     <v-list-item-subtitle>
                                         {{ p.mealType.name }}
                                     </v-list-item-subtitle>
+                                    <meal-plan-dialog :meal-plan="p"></meal-plan-dialog>
                                 </v-list-item>
 
                             </v-list>
@@ -57,12 +61,15 @@ import {useDisplay} from "vuetify";
 import {MealPlan, Recipe, RecipeOverview} from "@/openapi";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {DateTime} from "luxon";
+import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
+import {homePageCols} from "@/utils/breakpoint_utils";
 
-const {mdAndUp} = useDisplay()
+
 const loading = ref(false)
 
 let numberOfCols = computed(() => {
-    return mdAndUp.value ? 5 : 2
+    const {name} = useDisplay()
+    return homePageCols(name.value)
 })
 
 type MealPlanGridItem = {
@@ -75,19 +82,17 @@ type MealPlanGridItem = {
 const meal_plan_grid = computed(() => {
     let grid = [] as MealPlanGridItem[]
 
-    if (useMealPlanStore().plan_list.length > 0) {
-        console.log('found plans')
-        for (const x of Array(4).keys()) {
-            let grid_day_date = DateTime.now().plus({days: x})
-            console.log('going trough days ', x, grid_day_date)
-            grid.push({
-                date: grid_day_date,
-                create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
-                date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
-                plan_entries: useMealPlanStore().plan_list.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
-            } as MealPlanGridItem)
-        }
+    for (const x of Array(4).keys()) {
+        let grid_day_date = DateTime.now().plus({days: x})
+        console.log('going trough days ', x, grid_day_date)
+        grid.push({
+            date: grid_day_date,
+            create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
+            date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
+            plan_entries: useMealPlanStore().plan_list.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
+        } as MealPlanGridItem)
     }
+
     return grid
 })
 

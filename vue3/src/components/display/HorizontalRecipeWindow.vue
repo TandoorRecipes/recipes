@@ -1,7 +1,7 @@
 <template>
     <v-row justify="space-between">
         <v-col>
-            <h2><i v-if="icon != 'undefined'" :class="icon + ' fa-fw'"></i>  {{ title }}</h2>
+            <h2><i v-if="icon != 'undefined'" :class="icon + ' fa-fw'"></i> {{ title }}</h2>
         </v-col>
     </v-row>
 
@@ -20,7 +20,7 @@
     </v-row>
     <v-row v-if="recipeWindows.length == 0 && skeletons > 0">
         <v-col>
-            <v-window >
+            <v-window>
                 <v-window-item>
                     <v-row>
                         <v-col v-for="n in skeletons">
@@ -38,14 +38,14 @@
 <script lang="ts" setup>
 import {computed, PropType, toRefs} from 'vue'
 import RecipeCard from "@/components/display/RecipeCard.vue";
-import {useDisplay} from "vuetify";
+import {DisplayBreakpoint, useDisplay} from "vuetify";
 import {Recipe, RecipeOverview} from "@/openapi";
+import {homePageCols} from "@/utils/breakpoint_utils";
 
-const {mdAndUp} = useDisplay()
 
 const props = defineProps(
     {
-        title: {type: String as PropType<undefined|String>, required: true},
+        title: {type: String as PropType<undefined | String>, required: true},
         icon: {type: String, required: false},
         skeletons: {type: Number, default: 0},
         recipes: {
@@ -57,7 +57,8 @@ const props = defineProps(
 const {title, recipes} = toRefs(props)
 
 let numberOfCols = computed(() => {
-    return mdAndUp.value ? 4 : 2
+    const {name} = useDisplay()
+    return homePageCols(name.value)
 })
 
 type CustomWindow = {

@@ -1,4 +1,4 @@
-import {defineStore} from "pinia"
+import {acceptHMRUpdate, defineStore} from "pinia"
 import {ApiApi, MealPlan} from "@/openapi";
 import {computed, ref} from "vue";
 import {DateTime} from "luxon";
@@ -6,10 +6,8 @@ import {DateTime} from "luxon";
 
 const _STORE_ID = "meal_plan_store"
 const _LOCAL_STORAGE_KEY = "MEAL_PLAN_CLIENT_SETTINGS"
-/*
- * test store to play around with pinia and see if it can work for my usecases
- * dont trust that all mealplans are in store as there is no cache validation logic, its just a shared data holder
- * */
+
+
 export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     let plans = ref(new Map<number, MealPlan>)
@@ -62,12 +60,21 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
                 currently_updating.value = [new Date(0), new Date(0)]
             })
         }
-        return new Promise(() => {})
+        return new Promise(() => {
+        })
+    }
+
+    function createOrUpdate(object: MealPlan) {
+        if(object.id == undefined){
+            return createObject(object)
+        } else {
+            return updateObject(object)
+        }
     }
 
     function createObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanCreate({mealPlan: object}).then((r) => {
+        return api.apiMealPlanCreate({mealPlanRequest: object}).then((r) => {
             //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
             plans.value.set(r.id, r)
             return r
@@ -78,7 +85,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     function updateObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanUpdate({id: object.id, mealPlan: object}).then((r) => {
+        return api.apiMealPlanUpdate({id: object.id, mealPlanRequest: object}).then((r) => {
             //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
             plans.value.set(r.id, r)
         }).catch((err) => {
@@ -114,5 +121,10 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, plan_list, refreshFromAPI, createObject, updateObject, deleteObject}
+    return {plans, currently_updating, plan_list, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
 })
+
+// enable hot reload for store
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useMealPlanStore, import.meta.hot))
+}

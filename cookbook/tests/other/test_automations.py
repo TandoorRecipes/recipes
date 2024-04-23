@@ -4,10 +4,10 @@ import pytest
 from django.contrib import auth
 from django.test import RequestFactory
 from django_scopes import scope
+from recipe_scrapers import scrape_html
 
 from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.helper.recipe_url_import import get_from_scraper
-from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.models import Automation
 
 DATA_DIR = "cookbook/tests/other/test_data/"
@@ -73,12 +73,14 @@ def test_unit_automation(u1_s1, arg):
         assert (automation.apply_unit_automation(arg[0]) == target_name) is True
 
 
-@pytest.mark.parametrize("arg", [
-    [[1, 'egg', 'white'], '', [1, '', 'egg', 'white']],
-    [[1, 'Egg', 'white'], '', [1, '', 'Egg', 'white']],
-    [[1, 'êgg', 'white'], '', [1, 'êgg', 'white']],
-    [[1, 'egg', 'white'], 'whole', [1, 'whole', 'egg', 'white']],
-])
+@pytest.mark.parametrize(
+    "arg", [
+        [[1, 'egg', 'white'], '', [1, '', 'egg', 'white']],
+        [[1, 'Egg', 'white'], '', [1, '', 'Egg', 'white']],
+        [[1, 'êgg', 'white'], '', [1, 'êgg', 'white']],
+        [[1, 'egg', 'white'], 'whole', [1, 'whole', 'egg', 'white']],
+    ]
+)
 def test_never_unit_automation(u1_s1, arg):
     user = auth.get_user(u1_s1)
     space = user.userspace_set.first().space
@@ -97,13 +99,15 @@ def test_never_unit_automation(u1_s1, arg):
     ['.*allrecipes.*', True],
     ['.*google.*', False],
 ])
-@pytest.mark.parametrize("arg", [
-    [Automation.DESCRIPTION_REPLACE],
-    [Automation.INSTRUCTION_REPLACE],
-    [Automation.NAME_REPLACE],
-    [Automation.FOOD_REPLACE],
-    [Automation.UNIT_REPLACE],
-])
+@pytest.mark.parametrize(
+    "arg", [
+        [Automation.DESCRIPTION_REPLACE],
+        [Automation.INSTRUCTION_REPLACE],
+        [Automation.NAME_REPLACE],
+        [Automation.FOOD_REPLACE],
+        [Automation.UNIT_REPLACE],
+    ]
+)
 def test_regex_automation(u1_s1, arg, source):
     user = auth.get_user(u1_s1)
     space = user.userspace_set.first().space
@@ -124,11 +128,13 @@ def test_regex_automation(u1_s1, arg, source):
         assert (automation.apply_regex_replace_automation(fail, arg[0]) == target) == False
 
 
-@pytest.mark.parametrize("arg", [
-    ['second first', 'first second'],
-    ['longer string second first longer string', 'longer string first second longer string'],
-    ['second fails first', 'second fails first'],
-])
+@pytest.mark.parametrize(
+    "arg", [
+        ['second first', 'first second'],
+        ['longer string second first longer string', 'longer string first second longer string'],
+        ['second fails first', 'second fails first'],
+    ]
+)
 def test_transpose_automation(u1_s1, arg):
     user = auth.get_user(u1_s1)
     space = user.userspace_set.first().space
@@ -156,10 +162,11 @@ def test_url_import_regex_replace(u1_s1):
 
     if 'cookbook' in os.getcwd():
         test_file = os.path.join(os.getcwd(), 'other', 'test_data', recipe)
+        # TODO this catch doesn't really work depending on from where you start the test, must check for duplicate path sections
     else:
         test_file = os.path.join(os.getcwd(), 'cookbook', 'tests', 'other', 'test_data', recipe)
     with open(test_file, 'r', encoding='UTF-8') as d:
-        scrape = text_scraper(text=d.read(), url="https://www.allrecipes.com")
+        scrape = scrape_html(html=d.read(), org_url="https://testrecipe.test", supported_only=False)
     with scope(space=space):
         for t in types:
             Automation.objects.get_or_create(name=t, type=t, param_1='.*', param_2=find_text, param_3='', created_by=user, space=space)

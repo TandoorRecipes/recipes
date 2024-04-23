@@ -14,6 +14,7 @@ from zipfile import ZipFile
 
 import requests
 import validators
+from PIL import UnidentifiedImageError
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -34,8 +35,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
-from PIL import UnidentifiedImageError
-from recipe_scrapers import scrape_me
+from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
@@ -59,9 +59,9 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomIsGuest, CustomRecipePermission,
-                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required,
-                                               has_group_permission, is_space_owner, switch_user_active_space
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomIsGuest,
+                                               CustomRecipePermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit,
+                                               group_required, has_group_permission, is_space_owner, switch_user_active_space
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -188,8 +188,8 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
         if query is not None and query not in ["''", '']:
             if fuzzy and (settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql'):
                 if (
-                    self.request.user.is_authenticated
-                    and any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)])
+                        self.request.user.is_authenticated
+                        and any([self.model.__name__.lower() in x for x in self.request.user.searchpreference.unaccent.values_list('field', flat=True)])
                 ):
                     self.queryset = self.queryset.annotate(trigram=TrigramSimilarity('name__unaccent', query))
                 else:
@@ -639,8 +639,8 @@ class FoodViewSet(TreeMixin):
             return JsonResponse(
                 {
                     'msg':
-                    'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
-                            Configure your key in Tandoor using environment FDC_API_KEY variable.'
+                        'API Key Rate Limit reached/exceeded, see https://api.data.gov/docs/rate-limits/ for more information. \
+                                Configure your key in Tandoor using environment FDC_API_KEY variable.'
                 },
                 status=429,
                 json_dumps_params={'indent': 4})
@@ -685,13 +685,13 @@ class FoodViewSet(TreeMixin):
                                      space=self.request.space,
                                      ))
 
-            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type', ))
+            properties = Property.objects.bulk_create(food_property_list, unique_fields=('space', 'property_type',))
 
             property_food_relation_list = []
             for p in properties:
                 property_food_relation_list.append(Food.properties.through(food_id=food.id, property_id=p.pk))
 
-            FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id', ))
+            FoodProperty.objects.bulk_create(property_food_relation_list, ignore_conflicts=True, unique_fields=('food_id', 'property_id',))
 
             return self.retrieve(request, pk)
         except Exception:
@@ -1187,14 +1187,13 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-            OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int, many=True),
-            OpenApiParameter(
-                name='checked',
-                description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
-                            - ''recent'' includes unchecked items and recently completed items.'),
-                type=str
-            ),
-            OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
+    OpenApiParameter(name='id', description=_('Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
+    OpenApiParameter(
+        name='checked',
+        description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
+                            - ''recent'' includes unchecked items and recently completed items.')
+    ),
+    OpenApiParameter(name='supermarket', description=_('Returns the shopping list entries sorted by supermarket category order.'), type=int),
 ]))
 class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
@@ -1501,8 +1500,8 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validators.url(url, public=True):
-                            scrape = scrape_me(url_path=url, wild_mode=True)
-
+                            html = requests.get(url).content
+                            scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
                             return Response({'error': True, 'msg': _('Invalid Url')}, status=status.HTTP_400_BAD_REQUEST)
                     except NoSchemaFoundInWildMode:

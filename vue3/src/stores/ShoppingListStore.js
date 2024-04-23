@@ -7,10 +7,7 @@ import {DateTime} from "luxon";
 
 
 const _STORE_ID = "shopping_list_store"
-/*
- * test store to play around with pinia and see if it can work for my use cases
- * don't trust that all shopping list entries are in store as there is no cache validation logic, its just a shared data holder
- * */
+
 export const useShoppingListStore = defineStore(_STORE_ID, {
     state: () => ({
         // shopping data
