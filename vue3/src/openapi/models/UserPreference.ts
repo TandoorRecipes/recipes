@@ -19,6 +19,12 @@ import {
     DefaultPageEnumFromJSONTyped,
     DefaultPageEnumToJSON,
 } from './DefaultPageEnum';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
 import type { ThemeEnum } from './ThemeEnum';
 import {
     ThemeEnumFromJSON,
@@ -148,10 +154,10 @@ export interface UserPreference {
     mealplanAutoaddShopping?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {FoodInheritField}
      * @memberof UserPreference
      */
-    readonly foodInheritDefault: string;
+    readonly foodInheritDefault: FoodInheritField;
     /**
      * 
      * @type {number}
@@ -220,10 +226,10 @@ export interface UserPreference {
     showStepIngredients?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof UserPreference
      */
-    readonly foodChildrenExist: string;
+    readonly foodChildrenExist: boolean;
 }
 
 /**
@@ -262,7 +268,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
         'comments': json['comments'] == null ? undefined : json['comments'],
         'shoppingAutoSync': json['shopping_auto_sync'] == null ? undefined : json['shopping_auto_sync'],
         'mealplanAutoaddShopping': json['mealplan_autoadd_shopping'] == null ? undefined : json['mealplan_autoadd_shopping'],
-        'foodInheritDefault': json['food_inherit_default'],
+        'foodInheritDefault': FoodInheritFieldFromJSON(json['food_inherit_default']),
         'defaultDelay': json['default_delay'] == null ? undefined : json['default_delay'],
         'mealplanAutoincludeRelated': json['mealplan_autoinclude_related'] == null ? undefined : json['mealplan_autoinclude_related'],
         'mealplanAutoexcludeOnhand': json['mealplan_autoexclude_onhand'] == null ? undefined : json['mealplan_autoexclude_onhand'],

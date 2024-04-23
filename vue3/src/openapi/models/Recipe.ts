@@ -148,10 +148,10 @@ export interface Recipe {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Recipe
      */
-    readonly foodProperties: string;
+    readonly foodProperties: any | null;
     /**
      * 
      * @type {number}
@@ -172,10 +172,10 @@ export interface Recipe {
     servingsText?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Recipe
      */
-    readonly rating: string | null;
+    readonly rating: number | null;
     /**
      * 
      * @type {Date}

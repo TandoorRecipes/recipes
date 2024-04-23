@@ -13,12 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
-import type { AutomationTypeEnum } from './AutomationTypeEnum';
+import type { TypeEnum } from './TypeEnum';
 import {
-    AutomationTypeEnumFromJSON,
-    AutomationTypeEnumFromJSONTyped,
-    AutomationTypeEnumToJSON,
-} from './AutomationTypeEnum';
+    TypeEnumFromJSON,
+    TypeEnumFromJSONTyped,
+    TypeEnumToJSON,
+} from './TypeEnum';
 
 /**
  * 
@@ -28,10 +28,10 @@ import {
 export interface PatchedAutomationRequest {
     /**
      * 
-     * @type {AutomationTypeEnum}
+     * @type {TypeEnum}
      * @memberof PatchedAutomationRequest
      */
-    type?: AutomationTypeEnum;
+    type?: TypeEnum;
     /**
      * 
      * @type {string}
@@ -99,7 +99,7 @@ export function PatchedAutomationRequestFromJSONTyped(json: any, ignoreDiscrimin
     }
     return {
         
-        'type': json['type'] == null ? undefined : AutomationTypeEnumFromJSON(json['type']),
+        'type': json['type'] == null ? undefined : TypeEnumFromJSON(json['type']),
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'param1': json['param_1'] == null ? undefined : json['param_1'],
@@ -117,7 +117,7 @@ export function PatchedAutomationRequestToJSON(value?: PatchedAutomationRequest 
     }
     return {
         
-        'type': AutomationTypeEnumToJSON(value['type']),
+        'type': TypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],
         'param_1': value['param1'],

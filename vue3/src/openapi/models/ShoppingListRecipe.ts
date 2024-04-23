@@ -51,10 +51,10 @@ export interface ShoppingListRecipe {
     mealplan?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListRecipe
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}

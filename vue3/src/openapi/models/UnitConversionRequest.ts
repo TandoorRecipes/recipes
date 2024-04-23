@@ -34,10 +34,10 @@ import {
 export interface UnitConversionRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversionRequest
      */
-    baseAmount: string;
+    baseAmount: number;
     /**
      * 
      * @type {UnitRequest}
@@ -46,10 +46,10 @@ export interface UnitConversionRequest {
     baseUnit: UnitRequest;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversionRequest
      */
-    convertedAmount: string;
+    convertedAmount: number;
     /**
      * 
      * @type {UnitRequest}

@@ -46,10 +46,10 @@ export interface UnitConversion {
     readonly name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    baseAmount: string;
+    baseAmount: number;
     /**
      * 
      * @type {Unit}
@@ -58,10 +58,10 @@ export interface UnitConversion {
     baseUnit: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    convertedAmount: string;
+    convertedAmount: number;
     /**
      * 
      * @type {Unit}

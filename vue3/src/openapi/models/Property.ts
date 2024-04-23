@@ -68,10 +68,10 @@ export interface Property {
     readonly id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Property
      */
-    propertyAmount: string | null;
+    propertyAmount: number | null;
     /**
      * 
      * @type {PropertyType}

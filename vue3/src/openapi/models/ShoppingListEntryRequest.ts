@@ -52,10 +52,10 @@ export interface ShoppingListEntryRequest {
     unit?: UnitRequest;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntryRequest
      */
-    amount: string;
+    amount: number;
     /**
      * 
      * @type {number}

@@ -34,10 +34,10 @@ import {
 export interface PatchedUnitConversionRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversionRequest
      */
-    baseAmount?: string;
+    baseAmount?: number;
     /**
      * 
      * @type {UnitRequest}
@@ -46,10 +46,10 @@ export interface PatchedUnitConversionRequest {
     baseUnit?: UnitRequest;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversionRequest
      */
-    convertedAmount?: string;
+    convertedAmount?: number;
     /**
      * 
      * @type {UnitRequest}

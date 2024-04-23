@@ -79,10 +79,10 @@ export interface Keyword {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Keyword
      */
-    readonly parent: string;
+    readonly parent: number;
     /**
      * 
      * @type {number}
@@ -102,7 +102,8 @@ export interface Keyword {
      */
     readonly updatedAt: Date;
     /**
-     * 
+     * Returns a string representation of a tree node and it's ancestors,
+     * e.g. 'Cuisine > Asian > Chinese > Catonese'.
      * @type {string}
      * @memberof Keyword
      */

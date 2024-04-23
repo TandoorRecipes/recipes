@@ -58,10 +58,10 @@ export interface MealPlan {
     recipe?: RecipeOverview;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof MealPlan
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}
@@ -118,10 +118,10 @@ export interface MealPlan {
     readonly mealTypeName: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof MealPlan
      */
-    readonly shopping: string;
+    readonly shopping: boolean;
 }
 
 /**

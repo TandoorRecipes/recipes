@@ -128,10 +128,10 @@ export interface FoodRequest {
     properties?: Array<PropertyRequest>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof FoodRequest
      */
-    propertiesFoodAmount?: string;
+    propertiesFoodAmount?: number;
     /**
      * 
      * @type {UnitRequest}
@@ -146,10 +146,10 @@ export interface FoodRequest {
     fdcId?: number;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof FoodRequest
      */
-    foodOnhand?: string;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategoryRequest}

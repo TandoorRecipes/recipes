@@ -554,8 +554,13 @@ def test_inherit(request, obj_tree_1, field, inherit, new_val, u1_s1):
 
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
-      'substitute_children': True, 'substitute_siblings': True}),
+    ({
+        'has_category': True,
+        'inherit': False,
+        'ignore_shopping': True,
+        'substitute_children': True,
+        'substitute_siblings': True,
+    }),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("global_reset", [True, False])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
@@ -575,12 +580,10 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
 
         if global_reset:
             # set default inherit fields
-            space_1.food_inherit.add(
-                *Food.inheritable_fields.values_list('id', flat=True))
+            space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))
             parent.reset_inheritance(space=space_1)
         else:
-            obj_tree_1.child_inherit_fields.set(
-                Food.inheritable_fields.values_list('id', flat=True))
+            obj_tree_1.child_inherit_fields.set(Food.inheritable_fields.values_list('id', flat=True))
             obj_tree_1.save()
             parent.reset_inheritance(space=space_1, food=obj_tree_1)
         # djangotree bypasses ORM and need to be retrieved again
@@ -588,14 +591,18 @@ def test_reset_inherit_space_fields(obj_tree_1, space_1, global_reset, field):
         parent = Food.objects.get(id=parent.id)
         child = Food.objects.get(id=child.id)
 
-        assert (getattr(parent, field) == getattr(
-            obj_tree_1, field)) == global_reset
+        assert (getattr(parent, field) == getattr(obj_tree_1, field)) == global_reset
         assert getattr(obj_tree_1, field) == getattr(child, field)
 
 
 @pytest.mark.parametrize("obj_tree_1", [
-    ({'has_category': True, 'inherit': False, 'ignore_shopping': True,
-      'substitute_children': True, 'substitute_siblings': True}),
+    ({
+        'has_category': True,
+        'inherit': False,
+        'ignore_shopping': True,
+        'substitute_children': True,
+        'substitute_siblings': True,
+    }),
 ], indirect=['obj_tree_1'])
 @pytest.mark.parametrize("field", ['ignore_shopping', 'substitute_children', 'substitute_siblings', 'supermarket_category'])
 def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
@@ -604,8 +611,7 @@ def test_reset_inherit_no_food_instances(obj_tree_1, space_1, field):
         Food.objects.all().delete()
 
         # set default inherit fields
-        space_1.food_inherit.add(
-            *Food.inheritable_fields.values_list('id', flat=True))
+        space_1.food_inherit.add(*Food.inheritable_fields.values_list('id', flat=True))
         parent.reset_inheritance(space=space_1)
 
 
