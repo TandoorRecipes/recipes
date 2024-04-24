@@ -39,6 +39,10 @@ Tandoor is also actively soliciting contribors willing to setup vue3 testing. If
 
 ## API Client
 
+<!-- prettier-ignore -->
+!!! note "JAVA required"
+     The OpenAPI Generator is a Java project. You must have the java binary executable available on your PATH for this to work.
+
 Tandoor uses [django-rest-framework](https://www.django-rest-framework.org/) for API implementation. Making contributions that impact the API requires an understanding of
 Viewsets and Serializers.
 
