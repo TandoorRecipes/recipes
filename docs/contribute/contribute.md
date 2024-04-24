@@ -1,8 +1,10 @@
 If you like this application and want it to give back, there are many ways to contribute.
 
+<!-- prettier-ignore-start -->
 !!! success "Contribution List"
-If you help bring this project forward you deserve to be credited for it.
-Feel free to add yourself to `CONTRIBUTERS.md` or message me to add you if you have contributed anything.
+     If you help bring this project forward you deserve to be credited for it.
+     Feel free to add yourself to `CONTRIBUTERS.md` or message me to add you if you have contributed anything.
+<!-- prettier-ignore-end -->
 
 ## Translations
 
@@ -11,23 +13,23 @@ Improve the translations for any of the existing languages.
 
 Add a new language to the long list of existing translations.
 
--   Armenian
--   Bulgarian
--   Catalan
--   Czech
--   Danish
--   Dutch
--   English
--   French
--   German
--   Hungarian
--   Italian
--   Latvian
--   Norwegian
--   Polish
--   Russian
--   Spanish
--   Swedish
+- Armenian
+- Bulgarian
+- Catalan
+- Czech
+- Danish
+- Dutch
+- English
+- French
+- German
+- Hungarian
+- Italian
+- Latvian
+- Norwegian
+- Polish
+- Russian
+- Spanish
+- Swedish
 
 See [here](/contribute/translations) for further information on how to contribute translation to Tandoor.
 
