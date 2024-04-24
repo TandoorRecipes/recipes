@@ -2,19 +2,26 @@ import pytest
 from django.urls import reverse
 
 
-def test_index():
-    # TODO add appropriate test
-    pass
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 302],
+    ['u1_s1', 302],
+    ['a1_s1', 302],
+])
+def test_index(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('index')).status_code == arg[1]
 
 
-def test_search():
-    # TODO add appropriate test
-    pass
-
-
-def test_view():
-    # TODO add appropriate test
-    pass
+@pytest.mark.parametrize("arg", [
+    ['a_u', 302],
+    ['g1_s1', 200],
+    ['u1_s1', 200],
+    ['a1_s1', 200],
+])
+def test_search(arg, request, ext_recipe_1_s1):
+    c = request.getfixturevalue(arg[0])
+    assert c.get(reverse('view_search')).status_code == arg[1]
 
 
 @pytest.mark.parametrize("arg", [
@@ -37,11 +44,6 @@ def test_books(arg, request, ext_recipe_1_s1):
 def test_plan(arg, request, ext_recipe_1_s1):
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse('view_plan')).status_code == arg[1]
-
-
-def test_plan_entry():
-    # TODO add appropriate test
-    pass
 
 
 @pytest.mark.parametrize("arg", [
@@ -119,6 +121,7 @@ def test_markdown_doc(arg, request, ext_recipe_1_s1):
 def test_api_info(arg, request, ext_recipe_1_s1):
     c = request.getfixturevalue(arg[0])
     assert c.get(reverse('docs_api')).status_code == arg[1]
+
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 302],
