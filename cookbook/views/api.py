@@ -40,7 +40,7 @@ from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import APIException, PermissionDenied
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
@@ -784,7 +784,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
         return queryset
 
-    @action(detail=False)
+    @decorators.action(detail=False)
     def ical(self, request):
         from_date = self.request.query_params.get('from_date', None)
         to_date = self.request.query_params.get('to_date', None)

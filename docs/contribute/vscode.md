@@ -31,6 +31,10 @@ VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=esbenp.
 
 ## VSCode Tasks
 
+<!-- prettier-ignore -->
+!!! note
+     In order to debug vue yarn and vite servers must be started before starting the django server.
+
 There are a number of built in tasks that are available. Here are a few of the key ones:
 
 - `Setup Dev Server` - Runs all the prerequisite steps so that the dev server can be run inside VSCode.

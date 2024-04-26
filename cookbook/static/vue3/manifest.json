@@ -52,11 +52,12 @@
     "src": "node_modules/mavon-editor/dist/font/fontello.woff2"
   },
   "src/apps/tandoor/main.ts": {
-    "file": "assets/main-CnbWi3Kc.js",
+    "file": "assets/main-MtGxR7il.js",
+    "name": "main",
     "src": "src/apps/tandoor/main.ts",
     "isEntry": true,
     "css": [
-      "assets/main-BiQ-D_PZ.css"
+      "assets/main-CNHK5kQT.css"
     ],
     "assets": [
       "assets/brand_logo-B3nCJMk0.svg",

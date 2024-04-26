@@ -224,14 +224,14 @@ MIDDLEWARE = [
 ]
 
 if DEBUG_TOOLBAR:
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware', )
+    INSTALLED_APPS += ('debug_toolbar', )
 
 SORT_TREE_BY_NAME = bool(int(os.getenv('SORT_TREE_BY_NAME', False)))
 DISABLE_TREE_FIX_STARTUP = bool(int(os.getenv('DISABLE_TREE_FIX_STARTUP', False)))
 
 if bool(int(os.getenv('SQL_DEBUG', False))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware', )
 
 if ENABLE_METRICS:
     MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
@@ -271,13 +271,13 @@ if LDAP_AUTH:
             "disable_existing_loggers": False,
             "handlers": {
                 "console": {
-                    "class": "logging.StreamHandler"
+                    "class": "logging.StreamHandler",
                 }
             },
             "loggers": {
                 "django_auth_ldap": {
                     "level": "DEBUG",
-                    "handlers": ["console"]
+                    "handlers": ["console"],
                 }
             },
         }
@@ -301,16 +301,16 @@ if REMOTE_USER_AUTH:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
     },
 ]
 
@@ -320,18 +320,23 @@ OAUTH2_PROVIDER = {'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'boo
 READ_SCOPE = 'read'
 WRITE_SCOPE = 'write'
 
+##################################################################
+####### change DEFAULT_SCHEMA_CLASS below to regenerate legacy API
+##################################################################
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':
-        ('rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication',
-         ),
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication', 'oauth2_provider.contrib.rest_framework.OAuth2Authentication', 'rest_framework.authentication.BasicAuthentication'
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # 'DEFAULT_SCHEMA_CLASS': 'cookbook.helper.drf_spectacular_hooks.LegacySchema',
     'COERCE_DECIMAL_TO_STRING': False,
 }
 
-
-
-
+##################################################################
+####### change DEFAULT_SCHEMA_CLASS above to regenerate legacy API
+##################################################################
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Tandoor',
@@ -349,7 +354,9 @@ SPECTACULAR_SETTINGS = {
             }
         }
     },
-    "SECURITY": [{"ApiKeyAuth": []}],
+    "SECURITY": [{
+        "ApiKeyAuth": []
+    }],
     'SWAGGER_UI_DIST': 'SIDECAR',
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
@@ -369,10 +376,7 @@ SPECTACULAR_SETTINGS = {
         'schemaExpansionLevel': 'all',
         'showExtensions': True
     },
-    'POSTPROCESSING_HOOKS': [
-        'drf_spectacular.hooks.postprocess_schema_enums',
-        'cookbook.helper.drf_spectacular_hooks.custom_postprocessing_hook'
-    ]
+    'POSTPROCESSING_HOOKS': ['drf_spectacular.hooks.postprocess_schema_enums', 'cookbook.helper.drf_spectacular_hooks.custom_postprocessing_hook']
 }
 
 ROOT_URLCONF = 'recipes.urls'
@@ -620,10 +624,7 @@ DISABLE_EXTERNAL_CONNECTORS = bool(int(os.getenv('DISABLE_EXTERNAL_CONNECTORS', 
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))
 
 # ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
-ACCOUNT_FORMS = {
-    'signup': 'cookbook.forms.AllAuthSignupForm',
-    'reset_password': 'cookbook.forms.CustomPasswordResetForm'
-}
+ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
 
 ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
 ACCOUNT_RATE_LIMITS = {
