@@ -52,10 +52,10 @@ export interface PatchedShoppingListEntryRequest {
     unit?: UnitRequest;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListEntryRequest
      */
-    amount?: string;
+    amount?: number;
     /**
      * 
      * @type {number}

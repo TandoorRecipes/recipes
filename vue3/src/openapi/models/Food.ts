@@ -140,10 +140,10 @@ export interface Food {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    propertiesFoodAmount?: string;
+    propertiesFoodAmount?: number;
     /**
      * 
      * @type {Unit}
@@ -158,10 +158,10 @@ export interface Food {
     fdcId?: number;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    foodOnhand?: string;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategory}
@@ -170,10 +170,10 @@ export interface Food {
     supermarketCategory?: SupermarketCategory;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    readonly parent: string;
+    readonly parent: number;
     /**
      * 
      * @type {number}
@@ -187,7 +187,8 @@ export interface Food {
      */
     inheritFields?: Array<FoodInheritField>;
     /**
-     * 
+     * Returns a string representation of a tree node and it's ancestors,
+     * e.g. 'Cuisine > Asian > Chinese > Catonese'.
      * @type {string}
      * @memberof Food
      */
@@ -218,10 +219,10 @@ export interface Food {
     substituteChildren?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    readonly substituteOnhand: string;
+    readonly substituteOnhand: boolean;
     /**
      * 
      * @type {Array<FoodInheritField>}

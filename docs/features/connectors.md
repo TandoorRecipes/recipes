@@ -1,3 +1,4 @@
+<!-- prettier-ignore -->
 !!! warning
     Connectors are currently in a beta stage.
 
@@ -6,6 +7,7 @@
 Connectors are a powerful add-on component to TandoorRecipes.
 They allow for certain actions to be translated to api calls to external services.
 
+<!-- prettier-ignore -->
 !!! danger
     In order for this application to push data to external providers it needs to store authentication information.
     Please use read only/separate accounts or app passwords wherever possible.

@@ -27,28 +27,28 @@ export interface NutritionInformation {
     readonly id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    carbohydrates: string;
+    carbohydrates: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    fats: string;
+    fats: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    proteins: string;
+    proteins: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    calories: string;
+    calories: number;
     /**
      * 
      * @type {string}

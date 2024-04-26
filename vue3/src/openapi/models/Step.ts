@@ -94,16 +94,16 @@ export interface Step {
     stepRecipe?: number;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Step
      */
-    readonly stepRecipeData: string;
+    readonly stepRecipeData: any | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Step
      */
-    readonly numrecipe: string;
+    readonly numrecipe: number;
     /**
      * 
      * @type {boolean}

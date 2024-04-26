@@ -106,10 +106,10 @@ export interface RecipeOverview {
     readonly servingsText: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof RecipeOverview
      */
-    readonly rating: string | null;
+    readonly rating: number | null;
     /**
      * 
      * @type {Date}
@@ -118,10 +118,10 @@ export interface RecipeOverview {
     readonly lastCooked: Date | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof RecipeOverview
      */
-    readonly _new: string;
+    readonly _new: boolean;
     /**
      * 
      * @type {string}

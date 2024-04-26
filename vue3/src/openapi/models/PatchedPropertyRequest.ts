@@ -62,10 +62,10 @@ import {
 export interface PatchedPropertyRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedPropertyRequest
      */
-    propertyAmount?: string;
+    propertyAmount?: number;
     /**
      * 
      * @type {PropertyTypeRequest}

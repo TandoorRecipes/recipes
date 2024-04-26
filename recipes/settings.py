@@ -17,7 +17,6 @@ import re
 import socket
 import sys
 import traceback
-import socket
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -513,7 +512,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if DEBUG:
             print("Vite Dev Server is running")
             DJANGO_VITE['default']['dev_mode'] = True
-    except:
+    except Exception:
         print("Running django-vite in production mode (no HMR)")
 
 # Internationalization

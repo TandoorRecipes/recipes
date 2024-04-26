@@ -13,6 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { RecipeBook } from './RecipeBook';
+import {
+    RecipeBookFromJSON,
+    RecipeBookFromJSONTyped,
+    RecipeBookToJSON,
+} from './RecipeBook';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+} from './RecipeOverview';
+
 /**
  * 
  * @export
@@ -33,10 +46,10 @@ export interface RecipeBookEntry {
     book: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeBook}
      * @memberof RecipeBookEntry
      */
-    readonly bookContent: string;
+    readonly bookContent: RecipeBook;
     /**
      * 
      * @type {number}
@@ -45,10 +58,10 @@ export interface RecipeBookEntry {
     recipe: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeOverview}
      * @memberof RecipeBookEntry
      */
-    readonly recipeContent: string;
+    readonly recipeContent: RecipeOverview;
 }
 
 /**
@@ -75,9 +88,9 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'id': json['id'],
         'book': json['book'],
-        'bookContent': json['book_content'],
+        'bookContent': RecipeBookFromJSON(json['book_content']),
         'recipe': json['recipe'],
-        'recipeContent': json['recipe_content'],
+        'recipeContent': RecipeOverviewFromJSON(json['recipe_content']),
     };
 }
 

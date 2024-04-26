@@ -70,10 +70,10 @@ export interface ShoppingListEntry {
     unit?: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntry
      */
-    amount: string;
+    amount: number;
     /**
      * 
      * @type {number}

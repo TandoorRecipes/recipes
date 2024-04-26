@@ -67,6 +67,31 @@ export interface AccessToken {
 /**
  * 
  * @export
+ * @interface AccessTokenRequest
+ */
+export interface AccessTokenRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessTokenRequest
+     */
+    expires: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AccessTokenRequest
+     */
+    scope?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AccessTokenRequest
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
  * @interface AuthToken
  */
 export interface AuthToken {
@@ -75,19 +100,124 @@ export interface AuthToken {
      * @type {string}
      * @memberof AuthToken
      */
+    token: string;
+}
+/**
+ * 
+ * @export
+ * @interface AuthTokenRequest
+ */
+export interface AuthTokenRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthTokenRequest
+     */
     username: string;
     /**
      * 
      * @type {string}
-     * @memberof AuthToken
+     * @memberof AuthTokenRequest
      */
     password: string;
+}
+/**
+ * 
+ * @export
+ * @interface AutoMealPlan
+ */
+export interface AutoMealPlan {
     /**
      * 
      * @type {string}
-     * @memberof AuthToken
+     * @memberof AutoMealPlan
      */
-    token: string;
+    start_date: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutoMealPlan
+     */
+    end_date: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlan
+     */
+    meal_type_id: number;
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof AutoMealPlan
+     */
+    keyword_ids: Array<any>;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlan
+     */
+    servings: number;
+    /**
+     * 
+     * @type {Array<User>}
+     * @memberof AutoMealPlan
+     */
+    shared?: Array<User> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AutoMealPlan
+     */
+    addshopping: boolean;
+}
+/**
+ * 
+ * @export
+ * @interface AutoMealPlanRequest
+ */
+export interface AutoMealPlanRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof AutoMealPlanRequest
+     */
+    start_date: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutoMealPlanRequest
+     */
+    end_date: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlanRequest
+     */
+    meal_type_id: number;
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof AutoMealPlanRequest
+     */
+    keyword_ids: Array<any>;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutoMealPlanRequest
+     */
+    servings: number;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof AutoMealPlanRequest
+     */
+    shared?: Array<UserRequest> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AutoMealPlanRequest
+     */
+    addshopping: boolean;
 }
 /**
  * 
@@ -155,6 +285,67 @@ export interface Automation {
      * @memberof Automation
      */
     created_by: number;
+}
+/**
+ * 
+ * @export
+ * @interface AutomationRequest
+ */
+export interface AutomationRequest {
+    /**
+     * 
+     * @type {TypeEnum}
+     * @memberof AutomationRequest
+     */
+    type: TypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutomationRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutomationRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutomationRequest
+     */
+    param_1?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutomationRequest
+     */
+    param_2?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AutomationRequest
+     */
+    param_3?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutomationRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof AutomationRequest
+     */
+    disabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof AutomationRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -227,6 +418,31 @@ export interface BookmarkletImportList {
 /**
  * 
  * @export
+ * @interface BookmarkletImportRequest
+ */
+export interface BookmarkletImportRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImportRequest
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof BookmarkletImportRequest
+     */
+    html: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof BookmarkletImportRequest
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
  * @interface ConnectorConfigConfig
  */
 export interface ConnectorConfigConfig {
@@ -248,12 +464,6 @@ export interface ConnectorConfigConfig {
      * @memberof ConnectorConfigConfig
      */
     url?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ConnectorConfigConfig
-     */
-    token?: string | null;
     /**
      * 
      * @type {string}
@@ -290,6 +500,67 @@ export interface ConnectorConfigConfig {
      * @memberof ConnectorConfigConfig
      */
     created_by: number;
+}
+/**
+ * 
+ * @export
+ * @interface ConnectorConfigConfigRequest
+ */
+export interface ConnectorConfigConfigRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    token?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    todo_entity?: string | null;
+    /**
+     * Is Connector Enabled
+     * @type {boolean}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    on_shopping_list_entry_created_enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    on_shopping_list_entry_updated_enabled?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    on_shopping_list_entry_deleted_enabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ConnectorConfigConfigRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -347,6 +618,49 @@ export interface CookLog {
     updated_at: string;
 }
 /**
+ * 
+ * @export
+ * @interface CookLogRequest
+ */
+export interface CookLogRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof CookLogRequest
+     */
+    recipe: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CookLogRequest
+     */
+    servings?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CookLogRequest
+     */
+    rating?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CookLogRequest
+     */
+    comment?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CookLogRequest
+     */
+    created_at?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CookLogRequest
+     */
+    id?: number;
+}
+/**
  * Adds nested create feature
  * @export
  * @interface CustomFilter
@@ -382,6 +696,37 @@ export interface CustomFilter {
      * @memberof CustomFilter
      */
     created_by: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface CustomFilterRequest
+ */
+export interface CustomFilterRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilterRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomFilterRequest
+     */
+    search: string;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof CustomFilterRequest
+     */
+    shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof CustomFilterRequest
+     */
+    id?: number;
 }
 /**
  * * `SEARCH` - Search * `PLAN` - Meal-Plan * `BOOKS` - Books * `SHOPPING` - Shopping
@@ -472,6 +817,61 @@ export interface ExportLog {
     created_at: string;
 }
 /**
+ * 
+ * @export
+ * @interface ExportLogRequest
+ */
+export interface ExportLogRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLogRequest
+     */
+    type: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExportLogRequest
+     */
+    msg?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ExportLogRequest
+     */
+    running?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLogRequest
+     */
+    total_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLogRequest
+     */
+    exported_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLogRequest
+     */
+    cache_duration?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ExportLogRequest
+     */
+    possibly_not_expired?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ExportLogRequest
+     */
+    id?: number;
+}
+/**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface Food
@@ -527,10 +927,10 @@ export interface Food {
     properties?: Array<Property> | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    properties_food_amount?: string;
+    properties_food_amount?: number;
     /**
      * 
      * @type {Unit}
@@ -545,10 +945,10 @@ export interface Food {
     fdc_id?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    food_onhand?: string | null;
+    food_onhand?: boolean | null;
     /**
      * 
      * @type {SupermarketCategory}
@@ -557,10 +957,10 @@ export interface Food {
     supermarket_category?: SupermarketCategory | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Food
      */
-    parent: string;
+    parent: number;
     /**
      * 
      * @type {number}
@@ -574,7 +974,7 @@ export interface Food {
      */
     inherit_fields?: Array<FoodInheritField> | null;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof Food
      */
@@ -605,10 +1005,10 @@ export interface Food {
     substitute_children?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof Food
      */
-    substitute_onhand: string;
+    substitute_onhand: boolean;
     /**
      * 
      * @type {Array<FoodInheritField>}
@@ -648,6 +1048,152 @@ export interface FoodInheritField {
     field?: string | null;
 }
 /**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface FoodInheritFieldRequest
+ */
+export interface FoodInheritFieldRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritFieldRequest
+     */
+    name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodInheritFieldRequest
+     */
+    field?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodInheritFieldRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface FoodRequest
+ */
+export interface FoodRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodRequest
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodRequest
+     */
+    description?: string;
+    /**
+     * 
+     * @type {RecipeSimpleRequest}
+     * @memberof FoodRequest
+     */
+    recipe?: RecipeSimpleRequest | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodRequest
+     */
+    url?: string | null;
+    /**
+     * 
+     * @type {Array<PropertyRequest>}
+     * @memberof FoodRequest
+     */
+    properties?: Array<PropertyRequest> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodRequest
+     */
+    properties_food_amount?: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof FoodRequest
+     */
+    properties_food_unit?: UnitRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodRequest
+     */
+    fdc_id?: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FoodRequest
+     */
+    food_onhand?: boolean | null;
+    /**
+     * 
+     * @type {SupermarketCategoryRequest}
+     * @memberof FoodRequest
+     */
+    supermarket_category?: SupermarketCategoryRequest | null;
+    /**
+     * 
+     * @type {Array<FoodInheritFieldRequest>}
+     * @memberof FoodRequest
+     */
+    inherit_fields?: Array<FoodInheritFieldRequest> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FoodRequest
+     */
+    ignore_shopping?: boolean;
+    /**
+     * 
+     * @type {Array<FoodSimpleRequest>}
+     * @memberof FoodRequest
+     */
+    substitute?: Array<FoodSimpleRequest> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FoodRequest
+     */
+    substitute_siblings?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof FoodRequest
+     */
+    substitute_children?: boolean;
+    /**
+     * 
+     * @type {Array<FoodInheritFieldRequest>}
+     * @memberof FoodRequest
+     */
+    child_inherit_fields?: Array<FoodInheritFieldRequest> | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodRequest
+     */
+    id?: number;
+}
+/**
  * 
  * @export
  * @interface FoodShoppingUpdate
@@ -659,24 +1205,37 @@ export interface FoodShoppingUpdate {
      * @memberof FoodShoppingUpdate
      */
     id: number;
+}
+/**
+ * 
+ * @export
+ * @interface FoodShoppingUpdateRequest
+ */
+export interface FoodShoppingUpdateRequest {
     /**
      * Amount of food to add to the shopping list
      * @type {number}
-     * @memberof FoodShoppingUpdate
+     * @memberof FoodShoppingUpdateRequest
      */
     amount?: number | null;
     /**
      * ID of unit to use for the shopping list
      * @type {number}
-     * @memberof FoodShoppingUpdate
+     * @memberof FoodShoppingUpdateRequest
      */
     unit?: number | null;
     /**
      * When set to true will delete all food from active shopping lists.  * `true` - true
      * @type {DeleteEnum}
-     * @memberof FoodShoppingUpdate
+     * @memberof FoodShoppingUpdateRequest
      */
     _delete: DeleteEnum | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodShoppingUpdateRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -704,6 +1263,31 @@ export interface FoodSimple {
     plural_name?: string | null;
 }
 /**
+ * 
+ * @export
+ * @interface FoodSimpleRequest
+ */
+export interface FoodSimpleRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodSimpleRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof FoodSimpleRequest
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof FoodSimpleRequest
+     */
+    id?: number;
+}
+/**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface Group
@@ -721,6 +1305,25 @@ export interface Group {
      * @memberof Group
      */
     name: string;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface GroupRequest
+ */
+export interface GroupRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof GroupRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof GroupRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -784,6 +1387,49 @@ export interface ImportLog {
     created_at: string;
 }
 /**
+ * 
+ * @export
+ * @interface ImportLogRequest
+ */
+export interface ImportLogRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogRequest
+     */
+    type: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ImportLogRequest
+     */
+    msg?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ImportLogRequest
+     */
+    running?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLogRequest
+     */
+    total_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLogRequest
+     */
+    imported_recipes?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ImportLogRequest
+     */
+    id?: number;
+}
+/**
  * Adds nested create feature
  * @export
  * @interface Ingredient
@@ -809,16 +1455,16 @@ export interface Ingredient {
     unit: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Ingredient
      */
-    amount: string;
+    amount: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    conversions: string;
+    conversions: Array<any>;
     /**
      * 
      * @type {string}
@@ -851,10 +1497,10 @@ export interface Ingredient {
     original_text?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    used_in_recipes: string;
+    used_in_recipes: Array<any>;
     /**
      * 
      * @type {boolean}
@@ -867,6 +1513,92 @@ export interface Ingredient {
      * @memberof Ingredient
      */
     always_use_plural_food?: boolean;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface IngredientRequest
+ */
+export interface IngredientRequest {
+    /**
+     * 
+     * @type {FoodRequest}
+     * @memberof IngredientRequest
+     */
+    food: FoodRequest | null;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof IngredientRequest
+     */
+    unit: UnitRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientRequest
+     */
+    amount: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientRequest
+     */
+    note?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientRequest
+     */
+    is_header?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientRequest
+     */
+    no_amount?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientRequest
+     */
+    original_text?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientRequest
+     */
+    always_use_plural_unit?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof IngredientRequest
+     */
+    always_use_plural_food?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof IngredientRequest
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
+ * @interface IngredientStringRequest
+ */
+export interface IngredientStringRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof IngredientStringRequest
+     */
+    text: string;
 }
 /**
  * Adds nested create feature
@@ -936,6 +1668,55 @@ export interface InviteLink {
     created_at: string;
 }
 /**
+ * Adds nested create feature
+ * @export
+ * @interface InviteLinkRequest
+ */
+export interface InviteLinkRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLinkRequest
+     */
+    email?: string;
+    /**
+     * 
+     * @type {GroupRequest}
+     * @memberof InviteLinkRequest
+     */
+    group: GroupRequest;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLinkRequest
+     */
+    valid_until?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLinkRequest
+     */
+    used_by?: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InviteLinkRequest
+     */
+    reusable?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteLinkRequest
+     */
+    internal_note?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof InviteLinkRequest
+     */
+    id?: number;
+}
+/**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
  * @interface Keyword
@@ -967,10 +1748,10 @@ export interface Keyword {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Keyword
      */
-    parent: string;
+    parent: number;
     /**
      * 
      * @type {number}
@@ -990,7 +1771,7 @@ export interface Keyword {
      */
     updated_at: string;
     /**
-     * 
+     * Returns a string representation of a tree node and it\'s ancestors, e.g. \'Cuisine > Asian > Chinese > Catonese\'.
      * @type {string}
      * @memberof Keyword
      */
@@ -1014,6 +1795,31 @@ export interface KeywordLabel {
      * @memberof KeywordLabel
      */
     label: string;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface KeywordRequest
+ */
+export interface KeywordRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof KeywordRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof KeywordRequest
+     */
+    description?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof KeywordRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -1041,10 +1847,10 @@ export interface MealPlan {
     recipe?: RecipeOverview | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof MealPlan
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}
@@ -1101,10 +1907,71 @@ export interface MealPlan {
     meal_type_name: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof MealPlan
      */
-    shopping: string;
+    shopping: boolean;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface MealPlanRequest
+ */
+export interface MealPlanRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRequest
+     */
+    title?: string;
+    /**
+     * 
+     * @type {RecipeOverviewRequest}
+     * @memberof MealPlanRequest
+     */
+    recipe?: RecipeOverviewRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRequest
+     */
+    servings: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRequest
+     */
+    note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRequest
+     */
+    from_date: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealPlanRequest
+     */
+    to_date?: string;
+    /**
+     * 
+     * @type {MealTypeRequest}
+     * @memberof MealPlanRequest
+     */
+    meal_type: MealTypeRequest;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof MealPlanRequest
+     */
+    shared?: Array<UserRequest> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealPlanRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -1150,6 +2017,43 @@ export interface MealType {
     created_by: number;
 }
 /**
+ * Adds nested create feature
+ * @export
+ * @interface MealTypeRequest
+ */
+export interface MealTypeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof MealTypeRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealTypeRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealTypeRequest
+     */
+    color?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof MealTypeRequest
+     */
+    _default?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof MealTypeRequest
+     */
+    id?: number;
+}
+/**
  * * `DB` - Dropbox * `NEXTCLOUD` - Nextcloud * `LOCAL` - Local
  * @export
  * @enum {string}
@@ -1174,34 +2078,77 @@ export interface NutritionInformation {
     id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    carbohydrates: string;
+    carbohydrates: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    fats: string;
+    fats: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    proteins: string;
+    proteins: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformation
      */
-    calories: string;
+    calories: number;
     /**
      * 
      * @type {string}
      * @memberof NutritionInformation
      */
     source?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface NutritionInformationRequest
+ */
+export interface NutritionInformationRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    carbohydrates: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    fats: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    proteins: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    calories: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof NutritionInformationRequest
+     */
+    source?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof NutritionInformationRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -1233,6 +2180,37 @@ export interface PaginatedAutomationList {
      * @memberof PaginatedAutomationList
      */
     results?: Array<Automation>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedBookmarkletImportListList
+ */
+export interface PaginatedBookmarkletImportListList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<BookmarkletImportList>}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    results?: Array<BookmarkletImportList>;
 }
 /**
  * 
@@ -1423,6 +2401,37 @@ export interface PaginatedIngredientList {
 /**
  * 
  * @export
+ * @interface PaginatedInviteLinkList
+ */
+export interface PaginatedInviteLinkList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedInviteLinkList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedInviteLinkList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedInviteLinkList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<InviteLink>}
+     * @memberof PaginatedInviteLinkList
+     */
+    results?: Array<InviteLink>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedKeywordList
  */
 export interface PaginatedKeywordList {
@@ -1450,6 +2459,192 @@ export interface PaginatedKeywordList {
      * @memberof PaginatedKeywordList
      */
     results?: Array<Keyword>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedMealPlanList
+ */
+export interface PaginatedMealPlanList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedMealPlanList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealPlanList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealPlanList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<MealPlan>}
+     * @memberof PaginatedMealPlanList
+     */
+    results?: Array<MealPlan>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedMealTypeList
+ */
+export interface PaginatedMealTypeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedMealTypeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealTypeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedMealTypeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<MealType>}
+     * @memberof PaginatedMealTypeList
+     */
+    results?: Array<MealType>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedPropertyList
+ */
+export interface PaginatedPropertyList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedPropertyList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Property>}
+     * @memberof PaginatedPropertyList
+     */
+    results?: Array<Property>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedPropertyTypeList
+ */
+export interface PaginatedPropertyTypeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedPropertyTypeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyTypeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedPropertyTypeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<PropertyType>}
+     * @memberof PaginatedPropertyTypeList
+     */
+    results?: Array<PropertyType>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedRecipeBookEntryList
+ */
+export interface PaginatedRecipeBookEntryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeBookEntry>}
+     * @memberof PaginatedRecipeBookEntryList
+     */
+    results?: Array<RecipeBookEntry>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedRecipeBookList
+ */
+export interface PaginatedRecipeBookList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedRecipeBookList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedRecipeBookList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<RecipeBook>}
+     * @memberof PaginatedRecipeBookList
+     */
+    results?: Array<RecipeBook>;
 }
 /**
  * 
@@ -1485,6 +2680,68 @@ export interface PaginatedRecipeOverviewList {
 /**
  * 
  * @export
+ * @interface PaginatedShoppingListEntryList
+ */
+export interface PaginatedShoppingListEntryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListEntry>}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    results?: Array<ShoppingListEntry>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedShoppingListRecipeList
+ */
+export interface PaginatedShoppingListRecipeList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<ShoppingListRecipe>}
+     * @memberof PaginatedShoppingListRecipeList
+     */
+    results?: Array<ShoppingListRecipe>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedStepList
  */
 export interface PaginatedStepList {
@@ -1512,6 +2769,37 @@ export interface PaginatedStepList {
      * @memberof PaginatedStepList
      */
     results?: Array<Step>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedSupermarketCategoryList
+ */
+export interface PaginatedSupermarketCategoryList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<SupermarketCategory>}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    results?: Array<SupermarketCategory>;
 }
 /**
  * 
@@ -1547,6 +2835,68 @@ export interface PaginatedSupermarketCategoryRelationList {
 /**
  * 
  * @export
+ * @interface PaginatedSupermarketList
+ */
+export interface PaginatedSupermarketList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSupermarketList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSupermarketList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Supermarket>}
+     * @memberof PaginatedSupermarketList
+     */
+    results?: Array<Supermarket>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedSyncList
+ */
+export interface PaginatedSyncList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedSyncList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSyncList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedSyncList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<Sync>}
+     * @memberof PaginatedSyncList
+     */
+    results?: Array<Sync>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedSyncLogList
  */
 export interface PaginatedSyncLogList {
@@ -1578,6 +2928,37 @@ export interface PaginatedSyncLogList {
 /**
  * 
  * @export
+ * @interface PaginatedUnitConversionList
+ */
+export interface PaginatedUnitConversionList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedUnitConversionList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUnitConversionList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUnitConversionList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<UnitConversion>}
+     * @memberof PaginatedUnitConversionList
+     */
+    results?: Array<UnitConversion>;
+}
+/**
+ * 
+ * @export
  * @interface PaginatedUnitList
  */
 export interface PaginatedUnitList {
@@ -1605,6 +2986,37 @@ export interface PaginatedUnitList {
      * @memberof PaginatedUnitList
      */
     results?: Array<Unit>;
+}
+/**
+ * 
+ * @export
+ * @interface PaginatedUserFileList
+ */
+export interface PaginatedUserFileList {
+    /**
+     * 
+     * @type {number}
+     * @memberof PaginatedUserFileList
+     */
+    count?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUserFileList
+     */
+    next?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PaginatedUserFileList
+     */
+    previous?: string | null;
+    /**
+     * 
+     * @type {Array<UserFile>}
+     * @memberof PaginatedUserFileList
+     */
+    results?: Array<UserFile>;
 }
 /**
  * 
@@ -1671,2244 +3083,1765 @@ export interface PaginatedViewLogList {
 /**
  * 
  * @export
- * @interface PatchedAccessToken
+ * @interface ParsedIngredient
  */
-export interface PatchedAccessToken {
+export interface ParsedIngredient {
     /**
      * 
      * @type {number}
-     * @memberof PatchedAccessToken
+     * @memberof ParsedIngredient
      */
-    id?: number;
+    amount: number;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAccessToken
+     * @memberof ParsedIngredient
      */
-    token?: string;
+    unit: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAccessToken
+     * @memberof ParsedIngredient
+     */
+    food: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParsedIngredient
+     */
+    note: string;
+}
+/**
+ * 
+ * @export
+ * @interface PatchedAccessTokenRequest
+ */
+export interface PatchedAccessTokenRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedAccessTokenRequest
      */
     expires?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAccessToken
+     * @memberof PatchedAccessTokenRequest
      */
     scope?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedAccessToken
+     * @type {number}
+     * @memberof PatchedAccessTokenRequest
      */
-    created?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedAccessToken
-     */
-    updated?: string;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedAutomation
+ * @interface PatchedAutomationRequest
  */
-export interface PatchedAutomation {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedAutomation
-     */
-    id?: number;
+export interface PatchedAutomationRequest {
     /**
      * 
      * @type {TypeEnum}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     type?: TypeEnum;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     description?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     param_1?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     param_2?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     param_3?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
     disabled?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof PatchedAutomation
+     * @memberof PatchedAutomationRequest
      */
-    created_by?: number;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedBookmarkletImport
+ * @interface PatchedBookmarkletImportRequest
  */
-export interface PatchedBookmarkletImport {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedBookmarkletImport
-     */
-    id?: number;
+export interface PatchedBookmarkletImportRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedBookmarkletImport
+     * @memberof PatchedBookmarkletImportRequest
      */
     url?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedBookmarkletImport
+     * @memberof PatchedBookmarkletImportRequest
      */
     html?: string;
     /**
      * 
      * @type {number}
-     * @memberof PatchedBookmarkletImport
+     * @memberof PatchedBookmarkletImportRequest
      */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedBookmarkletImport
-     */
-    created_at?: string;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedConnectorConfigConfig
+ * @interface PatchedConnectorConfigConfigRequest
  */
-export interface PatchedConnectorConfigConfig {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedConnectorConfigConfig
-     */
-    id?: number;
+export interface PatchedConnectorConfigConfigRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     url?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     token?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     todo_entity?: string | null;
     /**
      * Is Connector Enabled
      * @type {boolean}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     enabled?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     on_shopping_list_entry_created_enabled?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     on_shopping_list_entry_updated_enabled?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
     on_shopping_list_entry_deleted_enabled?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof PatchedConnectorConfigConfig
+     * @memberof PatchedConnectorConfigConfigRequest
      */
-    created_by?: number;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedCookLog
+ * @interface PatchedCookLogRequest
  */
-export interface PatchedCookLog {
+export interface PatchedCookLogRequest {
     /**
      * 
      * @type {number}
-     * @memberof PatchedCookLog
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedCookLog
+     * @memberof PatchedCookLogRequest
      */
     recipe?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedCookLog
+     * @memberof PatchedCookLogRequest
      */
     servings?: number | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedCookLog
+     * @memberof PatchedCookLogRequest
      */
     rating?: number | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCookLog
+     * @memberof PatchedCookLogRequest
      */
     comment?: string | null;
     /**
      * 
-     * @type {User}
-     * @memberof PatchedCookLog
-     */
-    created_by?: User;
-    /**
-     * 
      * @type {string}
-     * @memberof PatchedCookLog
+     * @memberof PatchedCookLogRequest
      */
     created_at?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedCookLog
+     * @type {number}
+     * @memberof PatchedCookLogRequest
      */
-    updated_at?: string;
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedCustomFilter
+ * @interface PatchedCustomFilterRequest
  */
-export interface PatchedCustomFilter {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedCustomFilter
-     */
-    id?: number;
+export interface PatchedCustomFilterRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedCustomFilter
+     * @memberof PatchedCustomFilterRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCustomFilter
+     * @memberof PatchedCustomFilterRequest
      */
     search?: string;
     /**
      * 
-     * @type {Array<User>}
-     * @memberof PatchedCustomFilter
+     * @type {Array<UserRequest>}
+     * @memberof PatchedCustomFilterRequest
      */
-    shared?: Array<User>;
+    shared?: Array<UserRequest>;
     /**
      * 
      * @type {number}
-     * @memberof PatchedCustomFilter
+     * @memberof PatchedCustomFilterRequest
      */
-    created_by?: number;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedExportLog
+ * @interface PatchedExportLogRequest
  */
-export interface PatchedExportLog {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedExportLog
-     */
-    id?: number;
+export interface PatchedExportLogRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     type?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     msg?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     running?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     total_recipes?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     exported_recipes?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     cache_duration?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
     possibly_not_expired?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof PatchedExportLog
+     * @memberof PatchedExportLogRequest
      */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedExportLog
-     */
-    created_at?: string;
+    id?: number;
 }
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
- * @interface PatchedFood
+ * @interface PatchedFoodRequest
  */
-export interface PatchedFood {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedFood
-     */
-    id?: number;
+export interface PatchedFoodRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     plural_name?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     description?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedFood
+     * @type {RecipeSimpleRequest}
+     * @memberof PatchedFoodRequest
      */
-    shopping?: string;
-    /**
-     * 
-     * @type {RecipeSimple}
-     * @memberof PatchedFood
-     */
-    recipe?: RecipeSimple | null;
+    recipe?: RecipeSimpleRequest | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     url?: string | null;
     /**
      * 
-     * @type {Array<Property>}
-     * @memberof PatchedFood
+     * @type {Array<PropertyRequest>}
+     * @memberof PatchedFoodRequest
      */
-    properties?: Array<Property> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedFood
-     */
-    properties_food_amount?: string;
-    /**
-     * 
-     * @type {Unit}
-     * @memberof PatchedFood
-     */
-    properties_food_unit?: Unit | null;
+    properties?: Array<PropertyRequest> | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
+     */
+    properties_food_amount?: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof PatchedFoodRequest
+     */
+    properties_food_unit?: UnitRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedFoodRequest
      */
     fdc_id?: number | null;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedFood
+     * @type {boolean}
+     * @memberof PatchedFoodRequest
      */
-    food_onhand?: string | null;
+    food_onhand?: boolean | null;
     /**
      * 
-     * @type {SupermarketCategory}
-     * @memberof PatchedFood
+     * @type {SupermarketCategoryRequest}
+     * @memberof PatchedFoodRequest
      */
-    supermarket_category?: SupermarketCategory | null;
+    supermarket_category?: SupermarketCategoryRequest | null;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedFood
+     * @type {Array<FoodInheritFieldRequest>}
+     * @memberof PatchedFoodRequest
      */
-    parent?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedFood
-     */
-    numchild?: number;
-    /**
-     * 
-     * @type {Array<FoodInheritField>}
-     * @memberof PatchedFood
-     */
-    inherit_fields?: Array<FoodInheritField> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedFood
-     */
-    full_name?: string;
+    inherit_fields?: Array<FoodInheritFieldRequest> | null;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     ignore_shopping?: boolean;
     /**
      * 
-     * @type {Array<FoodSimple>}
-     * @memberof PatchedFood
+     * @type {Array<FoodSimpleRequest>}
+     * @memberof PatchedFoodRequest
      */
-    substitute?: Array<FoodSimple> | null;
+    substitute?: Array<FoodSimpleRequest> | null;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     substitute_siblings?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     substitute_children?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedFood
+     * @type {Array<FoodInheritFieldRequest>}
+     * @memberof PatchedFoodRequest
      */
-    substitute_onhand?: string;
-    /**
-     * 
-     * @type {Array<FoodInheritField>}
-     * @memberof PatchedFood
-     */
-    child_inherit_fields?: Array<FoodInheritField> | null;
+    child_inherit_fields?: Array<FoodInheritFieldRequest> | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedFood
+     * @memberof PatchedFoodRequest
      */
     open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedFoodRequest
+     */
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedImportLog
+ * @interface PatchedImportLogRequest
  */
-export interface PatchedImportLog {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedImportLog
-     */
-    id?: number;
+export interface PatchedImportLogRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
     type?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
     msg?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
     running?: boolean;
     /**
      * 
-     * @type {Keyword}
-     * @memberof PatchedImportLog
-     */
-    keyword?: Keyword;
-    /**
-     * 
      * @type {number}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
     total_recipes?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
     imported_recipes?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedImportLog
+     * @memberof PatchedImportLogRequest
      */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedImportLog
-     */
-    created_at?: string;
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedIngredient
+ * @interface PatchedIngredientRequest
  */
-export interface PatchedIngredient {
+export interface PatchedIngredientRequest {
+    /**
+     * 
+     * @type {FoodRequest}
+     * @memberof PatchedIngredientRequest
+     */
+    food?: FoodRequest | null;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof PatchedIngredientRequest
+     */
+    unit?: UnitRequest | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
-    id?: number;
-    /**
-     * 
-     * @type {Food}
-     * @memberof PatchedIngredient
-     */
-    food?: Food | null;
-    /**
-     * 
-     * @type {Unit}
-     * @memberof PatchedIngredient
-     */
-    unit?: Unit | null;
+    amount?: number;
     /**
      * 
      * @type {string}
-     * @memberof PatchedIngredient
-     */
-    amount?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedIngredient
-     */
-    conversions?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     note?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     is_header?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     no_amount?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     original_text?: string | null;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedIngredient
-     */
-    used_in_recipes?: string;
-    /**
-     * 
      * @type {boolean}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     always_use_plural_unit?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedIngredient
+     * @memberof PatchedIngredientRequest
      */
     always_use_plural_food?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedIngredientRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedInviteLink
+ * @interface PatchedInviteLinkRequest
  */
-export interface PatchedInviteLink {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedInviteLink
-     */
-    id?: number;
+export interface PatchedInviteLinkRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedInviteLink
-     */
-    uuid?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
     email?: string;
     /**
      * 
-     * @type {Group}
-     * @memberof PatchedInviteLink
+     * @type {GroupRequest}
+     * @memberof PatchedInviteLinkRequest
      */
-    group?: Group;
+    group?: GroupRequest;
     /**
      * 
      * @type {string}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
     valid_until?: string;
     /**
      * 
      * @type {number}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
     used_by?: number | null;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
     reusable?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
     internal_note?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedInviteLink
+     * @memberof PatchedInviteLinkRequest
      */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedInviteLink
-     */
-    created_at?: string;
+    id?: number;
 }
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
- * @interface PatchedKeyword
+ * @interface PatchedKeywordRequest
  */
-export interface PatchedKeyword {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedKeyword
-     */
-    id?: number;
+export interface PatchedKeywordRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedKeyword
+     * @memberof PatchedKeywordRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedKeyword
-     */
-    label?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedKeyword
+     * @memberof PatchedKeywordRequest
      */
     description?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedKeyword
-     */
-    parent?: string;
-    /**
-     * 
      * @type {number}
-     * @memberof PatchedKeyword
+     * @memberof PatchedKeywordRequest
      */
-    numchild?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedKeyword
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedKeyword
-     */
-    updated_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedKeyword
-     */
-    full_name?: string;
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedMealPlan
+ * @interface PatchedMealPlanRequest
  */
-export interface PatchedMealPlan {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedMealPlan
-     */
-    id?: number;
+export interface PatchedMealPlanRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedMealPlan
+     * @memberof PatchedMealPlanRequest
      */
     title?: string;
     /**
      * 
-     * @type {RecipeOverview}
-     * @memberof PatchedMealPlan
+     * @type {RecipeOverviewRequest}
+     * @memberof PatchedMealPlanRequest
      */
-    recipe?: RecipeOverview | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    servings?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    note?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    note_markdown?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    from_date?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    to_date?: string;
-    /**
-     * 
-     * @type {MealType}
-     * @memberof PatchedMealPlan
-     */
-    meal_type?: MealType;
+    recipe?: RecipeOverviewRequest | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedMealPlan
-     */
-    created_by?: number;
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof PatchedMealPlan
-     */
-    shared?: Array<User> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    recipe_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    meal_type_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealPlan
-     */
-    shopping?: string;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedMealType
- */
-export interface PatchedMealType {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedMealType
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealType
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedMealType
-     */
-    order?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedMealType
-     */
-    color?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedMealType
-     */
-    _default?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedMealType
-     */
-    created_by?: number;
-}
-/**
- * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
- * @export
- * @interface PatchedProperty
- */
-export interface PatchedProperty {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedProperty
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedProperty
-     */
-    property_amount?: string | null;
-    /**
-     * 
-     * @type {PropertyType}
-     * @memberof PatchedProperty
-     */
-    property_type?: PropertyType;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedPropertyType
- */
-export interface PatchedPropertyType {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedPropertyType
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedPropertyType
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedPropertyType
-     */
-    unit?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedPropertyType
-     */
-    description?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedPropertyType
-     */
-    order?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedPropertyType
-     */
-    open_data_slug?: string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedPropertyType
-     */
-    fdc_id?: number | null;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedRecipe
- */
-export interface PatchedRecipe {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipe
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    description?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    image?: string | null;
-    /**
-     * 
-     * @type {Array<Keyword>}
-     * @memberof PatchedRecipe
-     */
-    keywords?: Array<Keyword>;
-    /**
-     * 
-     * @type {Array<Step>}
-     * @memberof PatchedRecipe
-     */
-    steps?: Array<Step>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipe
-     */
-    working_time?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipe
-     */
-    waiting_time?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipe
-     */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    updated_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    source_url?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedRecipe
-     */
-    internal?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedRecipe
-     */
-    show_ingredient_overview?: boolean;
-    /**
-     * 
-     * @type {NutritionInformation}
-     * @memberof PatchedRecipe
-     */
-    nutrition?: NutritionInformation | null;
-    /**
-     * 
-     * @type {Array<Property>}
-     * @memberof PatchedRecipe
-     */
-    properties?: Array<Property>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    food_properties?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipe
+     * @memberof PatchedMealPlanRequest
      */
     servings?: number;
     /**
      * 
      * @type {string}
-     * @memberof PatchedRecipe
+     * @memberof PatchedMealPlanRequest
+     */
+    note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedMealPlanRequest
+     */
+    from_date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedMealPlanRequest
+     */
+    to_date?: string;
+    /**
+     * 
+     * @type {MealTypeRequest}
+     * @memberof PatchedMealPlanRequest
+     */
+    meal_type?: MealTypeRequest;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof PatchedMealPlanRequest
+     */
+    shared?: Array<UserRequest> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedMealPlanRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedMealTypeRequest
+ */
+export interface PatchedMealTypeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedMealTypeRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedMealTypeRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedMealTypeRequest
+     */
+    color?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedMealTypeRequest
+     */
+    _default?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedMealTypeRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface PatchedPropertyRequest
+ */
+export interface PatchedPropertyRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyRequest
+     */
+    property_amount?: number | null;
+    /**
+     * 
+     * @type {PropertyTypeRequest}
+     * @memberof PatchedPropertyRequest
+     */
+    property_type?: PropertyTypeRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedPropertyTypeRequest
+ */
+export interface PatchedPropertyTypeRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedPropertyTypeRequest
+     */
+    fdc_id?: number | null;
+}
+/**
+ * 
+ * @export
+ * @interface PatchedRecipeBookEntryRequest
+ */
+export interface PatchedRecipeBookEntryRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookEntryRequest
+     */
+    book?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookEntryRequest
+     */
+    recipe?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookEntryRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedRecipeBookRequest
+ */
+export interface PatchedRecipeBookRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeBookRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeBookRequest
+     */
+    description?: string;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof PatchedRecipeBookRequest
+     */
+    shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {CustomFilterRequest}
+     * @memberof PatchedRecipeBookRequest
+     */
+    filter?: CustomFilterRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBookRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedRecipeRequest
+ */
+export interface PatchedRecipeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {Array<KeywordRequest>}
+     * @memberof PatchedRecipeRequest
+     */
+    keywords?: Array<KeywordRequest>;
+    /**
+     * 
+     * @type {Array<StepRequest>}
+     * @memberof PatchedRecipeRequest
+     */
+    steps?: Array<StepRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeRequest
+     */
+    working_time?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeRequest
+     */
+    waiting_time?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeRequest
+     */
+    source_url?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedRecipeRequest
+     */
+    internal?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedRecipeRequest
+     */
+    show_ingredient_overview?: boolean;
+    /**
+     * 
+     * @type {NutritionInformationRequest}
+     * @memberof PatchedRecipeRequest
+     */
+    nutrition?: NutritionInformationRequest | null;
+    /**
+     * 
+     * @type {Array<PropertyRequest>}
+     * @memberof PatchedRecipeRequest
+     */
+    properties?: Array<PropertyRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeRequest
+     */
+    servings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedRecipeRequest
      */
     file_path?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedRecipe
+     * @memberof PatchedRecipeRequest
      */
     servings_text?: string;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    rating?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipe
-     */
-    last_cooked?: string | null;
-    /**
-     * 
      * @type {boolean}
-     * @memberof PatchedRecipe
+     * @memberof PatchedRecipeRequest
      */
     _private?: boolean;
     /**
      * 
-     * @type {Array<User>}
-     * @memberof PatchedRecipe
+     * @type {Array<UserRequest>}
+     * @memberof PatchedRecipeRequest
      */
-    shared?: Array<User>;
+    shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedRecipeBook
+ * @interface PatchedShoppingListEntryRequest
  */
-export interface PatchedRecipeBook {
+export interface PatchedShoppingListEntryRequest {
     /**
      * 
      * @type {number}
-     * @memberof PatchedRecipeBook
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipeBook
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipeBook
-     */
-    description?: string;
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof PatchedRecipeBook
-     */
-    shared?: Array<User>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeBook
-     */
-    created_by?: number;
-    /**
-     * 
-     * @type {CustomFilter}
-     * @memberof PatchedRecipeBook
-     */
-    filter?: CustomFilter | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeBook
-     */
-    order?: number;
-}
-/**
- * 
- * @export
- * @interface PatchedRecipeBookEntry
- */
-export interface PatchedRecipeBookEntry {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeBookEntry
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeBookEntry
-     */
-    book?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipeBookEntry
-     */
-    book_content?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeBookEntry
-     */
-    recipe?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedRecipeBookEntry
-     */
-    recipe_content?: string;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedShoppingListEntry
- */
-export interface PatchedShoppingListEntry {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedShoppingListEntry
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedShoppingListEntry
+     * @memberof PatchedShoppingListEntryRequest
      */
     list_recipe?: number | null;
     /**
      * 
-     * @type {Food}
-     * @memberof PatchedShoppingListEntry
+     * @type {FoodRequest}
+     * @memberof PatchedShoppingListEntryRequest
      */
-    food?: Food | null;
+    food?: FoodRequest | null;
     /**
      * 
-     * @type {Unit}
-     * @memberof PatchedShoppingListEntry
+     * @type {UnitRequest}
+     * @memberof PatchedShoppingListEntryRequest
      */
-    unit?: Unit | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListEntry
-     */
-    amount?: string;
+    unit?: UnitRequest | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedShoppingListEntry
+     * @memberof PatchedShoppingListEntryRequest
+     */
+    amount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedShoppingListEntryRequest
      */
     order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedShoppingListEntry
+     * @memberof PatchedShoppingListEntryRequest
      */
     checked?: boolean;
     /**
      * 
-     * @type {ShoppingListRecipe}
-     * @memberof PatchedShoppingListEntry
-     */
-    recipe_mealplan?: ShoppingListRecipe;
-    /**
-     * 
-     * @type {User}
-     * @memberof PatchedShoppingListEntry
-     */
-    created_by?: User;
-    /**
-     * 
      * @type {string}
-     * @memberof PatchedShoppingListEntry
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListEntry
-     */
-    updated_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListEntry
+     * @memberof PatchedShoppingListEntryRequest
      */
     completed_at?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedShoppingListEntry
+     * @memberof PatchedShoppingListEntryRequest
      */
     delay_until?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedShoppingListEntryRequest
+     */
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedShoppingListRecipe
+ * @interface PatchedShoppingListRecipeRequest
  */
-export interface PatchedShoppingListRecipe {
+export interface PatchedShoppingListRecipeRequest {
     /**
      * 
      * @type {number}
-     * @memberof PatchedShoppingListRecipe
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    recipe_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    name?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedShoppingListRecipe
+     * @memberof PatchedShoppingListRecipeRequest
      */
     recipe?: number | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedShoppingListRecipe
+     * @memberof PatchedShoppingListRecipeRequest
      */
     mealplan?: number | null;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
+     * @type {number}
+     * @memberof PatchedShoppingListRecipeRequest
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
+     * @type {number}
+     * @memberof PatchedShoppingListRecipeRequest
      */
-    mealplan_note?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    mealplan_from_date?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedShoppingListRecipe
-     */
-    mealplan_type?: string;
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedSpace
+ * @interface PatchedSpaceRequest
  */
-export interface PatchedSpace {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedSpace
-     */
-    id?: number;
+export interface PatchedSpaceRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedSpace
+     * @memberof PatchedSpaceRequest
      */
     name?: string;
     /**
      * 
-     * @type {number}
-     * @memberof PatchedSpace
-     */
-    created_by?: number | null;
-    /**
-     * 
      * @type {string}
-     * @memberof PatchedSpace
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSpace
+     * @memberof PatchedSpaceRequest
      */
     message?: string;
     /**
      * 
-     * @type {number}
-     * @memberof PatchedSpace
+     * @type {Array<FoodInheritFieldRequest>}
+     * @memberof PatchedSpaceRequest
      */
-    max_recipes?: number;
-    /**
-     * Maximum file storage for space in MB. 0 for unlimited, -1 to disable file upload.
-     * @type {number}
-     * @memberof PatchedSpace
-     */
-    max_file_storage_mb?: number;
+    food_inherit?: Array<FoodInheritFieldRequest>;
     /**
      * 
-     * @type {number}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    max_users?: number;
+    image?: UserFileViewRequest | null;
     /**
      * 
-     * @type {boolean}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    allow_sharing?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedSpace
-     */
-    demo?: boolean;
-    /**
-     * 
-     * @type {Array<FoodInheritField>}
-     * @memberof PatchedSpace
-     */
-    food_inherit?: Array<FoodInheritField>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSpace
-     */
-    user_count?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSpace
-     */
-    recipe_count?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSpace
-     */
-    file_size_mb?: string;
-    /**
-     * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
-     */
-    image?: UserFileView | null;
-    /**
-     * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
-     */
-    nav_logo?: UserFileView | null;
+    nav_logo?: UserFileViewRequest | null;
     /**
      * 
      * @type {SpaceThemeEnum}
-     * @memberof PatchedSpace
+     * @memberof PatchedSpaceRequest
      */
     space_theme?: SpaceThemeEnum;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    custom_space_theme?: UserFileView | null;
+    custom_space_theme?: UserFileViewRequest | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedSpace
+     * @memberof PatchedSpaceRequest
      */
     nav_bg_color?: string;
     /**
      * 
      * @type {SpaceNavTextColorEnum}
-     * @memberof PatchedSpace
+     * @memberof PatchedSpaceRequest
      */
     nav_text_color?: SpaceNavTextColorEnum;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_32?: UserFileView | null;
+    logo_color_32?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_128?: UserFileView | null;
+    logo_color_128?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_144?: UserFileView | null;
+    logo_color_144?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_180?: UserFileView | null;
+    logo_color_180?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_192?: UserFileView | null;
+    logo_color_192?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_512?: UserFileView | null;
+    logo_color_512?: UserFileViewRequest | null;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedSpace
+     * @type {UserFileViewRequest}
+     * @memberof PatchedSpaceRequest
      */
-    logo_color_svg?: UserFileView | null;
+    logo_color_svg?: UserFileViewRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpaceRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedStep
+ * @interface PatchedStepRequest
  */
-export interface PatchedStep {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedStep
-     */
-    id?: number;
+export interface PatchedStepRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     instruction?: string;
     /**
      * 
-     * @type {Array<Ingredient>}
-     * @memberof PatchedStep
+     * @type {Array<IngredientRequest>}
+     * @memberof PatchedStepRequest
      */
-    ingredients?: Array<Ingredient>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedStep
-     */
-    instructions_markdown?: string;
+    ingredients?: Array<IngredientRequest>;
     /**
      * 
      * @type {number}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     time?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     order?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     show_as_header?: boolean;
     /**
      * 
-     * @type {UserFileView}
-     * @memberof PatchedStep
+     * @type {UserFileViewRequest}
+     * @memberof PatchedStepRequest
      */
-    file?: UserFileView | null;
+    file?: UserFileViewRequest | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     step_recipe?: number | null;
     /**
      * 
-     * @type {string}
-     * @memberof PatchedStep
-     */
-    step_recipe_data?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedStep
-     */
-    numrecipe?: string;
-    /**
-     * 
      * @type {boolean}
-     * @memberof PatchedStep
+     * @memberof PatchedStepRequest
      */
     show_ingredients_table?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedStepRequest
+     */
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedStorage
+ * @interface PatchedStorageRequest
  */
-export interface PatchedStorage {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedStorage
-     */
-    id?: number;
+export interface PatchedStorageRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedStorage
+     * @memberof PatchedStorageRequest
      */
     name?: string;
     /**
      * 
      * @type {MethodEnum}
-     * @memberof PatchedStorage
+     * @memberof PatchedStorageRequest
      */
     method?: MethodEnum;
     /**
      * 
      * @type {string}
-     * @memberof PatchedStorage
+     * @memberof PatchedStorageRequest
      */
     username?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedStorage
+     * @memberof PatchedStorageRequest
      */
     password?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedStorage
+     * @memberof PatchedStorageRequest
      */
     token?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedStorage
-     */
-    created_by?: number;
-}
-/**
- * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
- * @export
- * @interface PatchedSupermarket
- */
-export interface PatchedSupermarket {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedSupermarket
+     * @memberof PatchedStorageRequest
      */
     id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSupermarket
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSupermarket
-     */
-    description?: string | null;
-    /**
-     * 
-     * @type {Array<SupermarketCategoryRelation>}
-     * @memberof PatchedSupermarket
-     */
-    category_to_supermarket?: Array<SupermarketCategoryRelation>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSupermarket
-     */
-    open_data_slug?: string | null;
-}
-/**
- * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
- * @export
- * @interface PatchedSupermarketCategory
- */
-export interface PatchedSupermarketCategory {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedSupermarketCategory
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSupermarketCategory
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSupermarketCategory
-     */
-    description?: string | null;
 }
 /**
  * Adds nested create feature
  * @export
- * @interface PatchedSupermarketCategoryRelation
+ * @interface PatchedSupermarketCategoryRelationRequest
  */
-export interface PatchedSupermarketCategoryRelation {
+export interface PatchedSupermarketCategoryRelationRequest {
+    /**
+     * 
+     * @type {SupermarketCategoryRequest}
+     * @memberof PatchedSupermarketCategoryRelationRequest
+     */
+    category?: SupermarketCategoryRequest;
     /**
      * 
      * @type {number}
-     * @memberof PatchedSupermarketCategoryRelation
-     */
-    id?: number;
-    /**
-     * 
-     * @type {SupermarketCategory}
-     * @memberof PatchedSupermarketCategoryRelation
-     */
-    category?: SupermarketCategory;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedSupermarketCategoryRelation
+     * @memberof PatchedSupermarketCategoryRelationRequest
      */
     supermarket?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedSupermarketCategoryRelation
+     * @memberof PatchedSupermarketCategoryRelationRequest
      */
     order?: number;
-}
-/**
- * 
- * @export
- * @interface PatchedSync
- */
-export interface PatchedSync {
     /**
      * 
      * @type {number}
-     * @memberof PatchedSync
+     * @memberof PatchedSupermarketCategoryRelationRequest
      */
     id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedSync
-     */
-    storage?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSync
-     */
-    path?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedSync
-     */
-    active?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSync
-     */
-    last_checked?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSync
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedSync
-     */
-    updated_at?: string;
 }
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
  * @export
- * @interface PatchedUnit
+ * @interface PatchedSupermarketCategoryRequest
  */
-export interface PatchedUnit {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUnit
-     */
-    id?: number;
+export interface PatchedSupermarketCategoryRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedUnit
+     * @memberof PatchedSupermarketCategoryRequest
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedUnit
+     * @memberof PatchedSupermarketCategoryRequest
      */
-    plural_name?: string | null;
+    description?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSupermarketCategoryRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface PatchedSupermarketRequest
+ */
+export interface PatchedSupermarketRequest {
     /**
      * 
      * @type {string}
-     * @memberof PatchedUnit
+     * @memberof PatchedSupermarketRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedSupermarketRequest
      */
     description?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedUnit
-     */
-    base_unit?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUnit
+     * @memberof PatchedSupermarketRequest
      */
     open_data_slug?: string | null;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedUnitConversion
- */
-export interface PatchedUnitConversion {
     /**
      * 
      * @type {number}
-     * @memberof PatchedUnitConversion
+     * @memberof PatchedSupermarketRequest
      */
     id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUnitConversion
-     */
-    name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUnitConversion
-     */
-    base_amount?: string;
-    /**
-     * 
-     * @type {Unit}
-     * @memberof PatchedUnitConversion
-     */
-    base_unit?: Unit;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUnitConversion
-     */
-    converted_amount?: string;
-    /**
-     * 
-     * @type {Unit}
-     * @memberof PatchedUnitConversion
-     */
-    converted_unit?: Unit;
-    /**
-     * 
-     * @type {Food}
-     * @memberof PatchedUnitConversion
-     */
-    food?: Food | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUnitConversion
-     */
-    open_data_slug?: string | null;
 }
 /**
- * Adds nested create feature
+ * 
  * @export
- * @interface PatchedUser
+ * @interface PatchedSyncRequest
  */
-export interface PatchedUser {
+export interface PatchedSyncRequest {
     /**
      * 
      * @type {number}
-     * @memberof PatchedUser
+     * @memberof PatchedSyncRequest
      */
-    id?: number;
-    /**
-     * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-     * @type {string}
-     * @memberof PatchedUser
-     */
-    username?: string;
+    storage?: number;
     /**
      * 
      * @type {string}
-     * @memberof PatchedUser
+     * @memberof PatchedSyncRequest
      */
-    first_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUser
-     */
-    last_name?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUser
-     */
-    display_name?: string;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedUserPreference
- */
-export interface PatchedUserPreference {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserPreference
-     */
-    user?: number;
-    /**
-     * 
-     * @type {UserFileView}
-     * @memberof PatchedUserPreference
-     */
-    image?: UserFileView | null;
-    /**
-     * 
-     * @type {ThemeEnum}
-     * @memberof PatchedUserPreference
-     */
-    theme?: ThemeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    nav_bg_color?: string;
-    /**
-     * 
-     * @type {UserPreferenceNavTextColorEnum}
-     * @memberof PatchedUserPreference
-     */
-    nav_text_color?: UserPreferenceNavTextColorEnum;
+    path?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    nav_show_logo?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    default_unit?: string;
-    /**
-     * 
-     * @type {DefaultPageEnum}
-     * @memberof PatchedUserPreference
-     */
-    default_page?: DefaultPageEnum;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    use_fractions?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    use_kj?: boolean;
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof PatchedUserPreference
-     */
-    plan_share?: Array<User> | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    nav_sticky?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserPreference
-     */
-    ingredient_decimals?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    comments?: boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserPreference
-     */
-    shopping_auto_sync?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    mealplan_autoadd_shopping?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    food_inherit_default?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserPreference
-     */
-    default_delay?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    mealplan_autoinclude_related?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    mealplan_autoexclude_onhand?: boolean;
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof PatchedUserPreference
-     */
-    shopping_share?: Array<User> | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserPreference
-     */
-    shopping_recent_days?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    csv_delim?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    csv_prefix?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    filter_to_supermarket?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    shopping_add_onhand?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    left_handed?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserPreference
-     */
-    show_step_ingredients?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserPreference
-     */
-    food_children_exist?: string;
-}
-/**
- * Adds nested create feature
- * @export
- * @interface PatchedUserSpace
- */
-export interface PatchedUserSpace {
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserSpace
-     */
-    id?: number;
-    /**
-     * 
-     * @type {User}
-     * @memberof PatchedUserSpace
-     */
-    user?: User;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedUserSpace
-     */
-    space?: number;
-    /**
-     * 
-     * @type {Array<Group>}
-     * @memberof PatchedUserSpace
-     */
-    groups?: Array<Group>;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedUserSpace
+     * @memberof PatchedSyncRequest
      */
     active?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof PatchedUserSpace
+     * @memberof PatchedSyncRequest
+     */
+    last_checked?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSyncRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedUnitConversionRequest
+ */
+export interface PatchedUnitConversionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitConversionRequest
+     */
+    base_amount?: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof PatchedUnitConversionRequest
+     */
+    base_unit?: UnitRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitConversionRequest
+     */
+    converted_amount?: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof PatchedUnitConversionRequest
+     */
+    converted_unit?: UnitRequest;
+    /**
+     * 
+     * @type {FoodRequest}
+     * @memberof PatchedUnitConversionRequest
+     */
+    food?: FoodRequest | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitConversionRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitConversionRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface PatchedUnitRequest
+ */
+export interface PatchedUnitRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitRequest
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitRequest
+     */
+    base_unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUnitRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUnitRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedUserPreferenceRequest
+ */
+export interface PatchedUserPreferenceRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    user?: number;
+    /**
+     * 
+     * @type {UserFileViewRequest}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    image?: UserFileViewRequest | null;
+    /**
+     * 
+     * @type {ThemeEnum}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    theme?: ThemeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    nav_bg_color?: string;
+    /**
+     * 
+     * @type {UserPreferenceNavTextColorEnum}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    nav_text_color?: UserPreferenceNavTextColorEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    nav_show_logo?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    default_unit?: string;
+    /**
+     * 
+     * @type {DefaultPageEnum}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    default_page?: DefaultPageEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    use_fractions?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    use_kj?: boolean;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    plan_share?: Array<UserRequest> | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    nav_sticky?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    ingredient_decimals?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    comments?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    shopping_auto_sync?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    mealplan_autoadd_shopping?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    default_delay?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    mealplan_autoinclude_related?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    mealplan_autoexclude_onhand?: boolean;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    shopping_share?: Array<UserRequest> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    shopping_recent_days?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    csv_delim?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    csv_prefix?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    filter_to_supermarket?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    shopping_add_onhand?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    left_handed?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserPreferenceRequest
+     */
+    show_step_ingredients?: boolean;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedUserRequest
+ */
+export interface PatchedUserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserRequest
+     */
+    first_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserRequest
+     */
+    last_name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PatchedUserSpaceRequest
+ */
+export interface PatchedUserSpaceRequest {
+    /**
+     * 
+     * @type {Array<GroupRequest>}
+     * @memberof PatchedUserSpaceRequest
+     */
+    groups?: Array<GroupRequest>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PatchedUserSpaceRequest
+     */
+    active?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof PatchedUserSpaceRequest
      */
     internal_note?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof PatchedUserSpace
+     * @memberof PatchedUserSpaceRequest
      */
-    invite_link?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserSpace
-     */
-    created_at?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedUserSpace
-     */
-    updated_at?: string;
+    id?: number;
 }
 /**
  * 
  * @export
- * @interface PatchedViewLog
+ * @interface PatchedViewLogRequest
  */
-export interface PatchedViewLog {
+export interface PatchedViewLogRequest {
     /**
      * 
      * @type {number}
-     * @memberof PatchedViewLog
-     */
-    id?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedViewLog
+     * @memberof PatchedViewLogRequest
      */
     recipe?: number;
     /**
      * 
      * @type {number}
-     * @memberof PatchedViewLog
+     * @memberof PatchedViewLogRequest
      */
-    created_by?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedViewLog
-     */
-    created_at?: string;
+    id?: number;
 }
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
@@ -3924,16 +4857,41 @@ export interface Property {
     id: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Property
      */
-    property_amount: string | null;
+    property_amount: number | null;
     /**
      * 
      * @type {PropertyType}
      * @memberof Property
      */
     property_type: PropertyType;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface PropertyRequest
+ */
+export interface PropertyRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyRequest
+     */
+    property_amount: number | null;
+    /**
+     * 
+     * @type {PropertyTypeRequest}
+     * @memberof PropertyRequest
+     */
+    property_type: PropertyTypeRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -3946,7 +4904,7 @@ export interface PropertyType {
      * @type {number}
      * @memberof PropertyType
      */
-    id?: number;
+    id: number;
     /**
      * 
      * @type {string}
@@ -3981,6 +4939,55 @@ export interface PropertyType {
      * 
      * @type {number}
      * @memberof PropertyType
+     */
+    fdc_id?: number | null;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface PropertyTypeRequest
+ */
+export interface PropertyTypeRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyTypeRequest
+     */
+    id?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PropertyTypeRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PropertyTypeRequest
+     */
+    unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PropertyTypeRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyTypeRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PropertyTypeRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PropertyTypeRequest
      */
     fdc_id?: number | null;
 }
@@ -4088,10 +5095,10 @@ export interface Recipe {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Recipe
      */
-    food_properties: string;
+    food_properties: any | null;
     /**
      * 
      * @type {number}
@@ -4112,10 +5119,10 @@ export interface Recipe {
     servings_text?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Recipe
      */
-    rating: string | null;
+    rating: number | null;
     /**
      * 
      * @type {string}
@@ -4204,10 +5211,10 @@ export interface RecipeBookEntry {
     book: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeBook}
      * @memberof RecipeBookEntry
      */
-    book_content: string;
+    book_content: RecipeBook;
     /**
      * 
      * @type {number}
@@ -4216,10 +5223,78 @@ export interface RecipeBookEntry {
     recipe: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeOverview}
      * @memberof RecipeBookEntry
      */
-    recipe_content: string;
+    recipe_content: RecipeOverview;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeBookEntryRequest
+ */
+export interface RecipeBookEntryRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookEntryRequest
+     */
+    book: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookEntryRequest
+     */
+    recipe: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookEntryRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface RecipeBookRequest
+ */
+export interface RecipeBookRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeBookRequest
+     */
+    description?: string;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof RecipeBookRequest
+     */
+    shared: Array<UserRequest>;
+    /**
+     * 
+     * @type {CustomFilterRequest}
+     * @memberof RecipeBookRequest
+     */
+    filter?: CustomFilterRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBookRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -4288,7 +5363,7 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    description: string | null;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -4351,10 +5426,10 @@ export interface RecipeOverview {
     servings_text: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof RecipeOverview
      */
-    rating: string | null;
+    rating: number | null;
     /**
      * 
      * @type {string}
@@ -4363,16 +5438,150 @@ export interface RecipeOverview {
     last_cooked: string | null;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof RecipeOverview
      */
-    _new: string;
+    _new: boolean;
     /**
      * 
      * @type {string}
      * @memberof RecipeOverview
      */
     recent: string;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface RecipeOverviewRequest
+ */
+export interface RecipeOverviewRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverviewRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeOverviewRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeOverviewRequest
+     */
+    id?: number;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface RecipeRequest
+ */
+export interface RecipeRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {Array<KeywordRequest>}
+     * @memberof RecipeRequest
+     */
+    keywords?: Array<KeywordRequest>;
+    /**
+     * 
+     * @type {Array<StepRequest>}
+     * @memberof RecipeRequest
+     */
+    steps: Array<StepRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeRequest
+     */
+    working_time?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeRequest
+     */
+    waiting_time?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeRequest
+     */
+    source_url?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeRequest
+     */
+    internal?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeRequest
+     */
+    show_ingredient_overview?: boolean;
+    /**
+     * 
+     * @type {NutritionInformationRequest}
+     * @memberof RecipeRequest
+     */
+    nutrition?: NutritionInformationRequest | null;
+    /**
+     * 
+     * @type {Array<PropertyRequest>}
+     * @memberof RecipeRequest
+     */
+    properties?: Array<PropertyRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeRequest
+     */
+    servings?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeRequest
+     */
+    file_path?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeRequest
+     */
+    servings_text?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RecipeRequest
+     */
+    _private?: boolean;
+    /**
+     * 
+     * @type {Array<UserRequest>}
+     * @memberof RecipeRequest
+     */
+    shared?: Array<UserRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -4386,24 +5595,37 @@ export interface RecipeShoppingUpdate {
      * @memberof RecipeShoppingUpdate
      */
     id: number;
+}
+/**
+ * 
+ * @export
+ * @interface RecipeShoppingUpdateRequest
+ */
+export interface RecipeShoppingUpdateRequest {
     /**
      * Existing shopping list to update
      * @type {number}
-     * @memberof RecipeShoppingUpdate
+     * @memberof RecipeShoppingUpdateRequest
      */
     list_recipe?: number | null;
     /**
      * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
      * @type {number}
-     * @memberof RecipeShoppingUpdate
+     * @memberof RecipeShoppingUpdateRequest
      */
     ingredients?: number | null;
     /**
      * Providing a list_recipe ID and servings of 0 will delete that shopping list.
      * @type {number}
-     * @memberof RecipeShoppingUpdate
+     * @memberof RecipeShoppingUpdateRequest
      */
     servings?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeShoppingUpdateRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -4429,6 +5651,50 @@ export interface RecipeSimple {
      * @memberof RecipeSimple
      */
     url: string;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface RecipeSimpleRequest
+ */
+export interface RecipeSimpleRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof RecipeSimpleRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeSimpleRequest
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ShareLink
+ */
+export interface ShareLink {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShareLink
+     */
+    pk: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareLink
+     */
+    share: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareLink
+     */
+    link: string;
 }
 /**
  * Adds nested create feature
@@ -4462,10 +5728,10 @@ export interface ShoppingListEntry {
     unit?: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListEntry
      */
-    amount: string;
+    amount: number;
     /**
      * 
      * @type {number}
@@ -4537,6 +5803,86 @@ export interface ShoppingListEntryBulk {
 /**
  * 
  * @export
+ * @interface ShoppingListEntryBulkRequest
+ */
+export interface ShoppingListEntryBulkRequest {
+    /**
+     * 
+     * @type {Array<any>}
+     * @memberof ShoppingListEntryBulkRequest
+     */
+    ids: Array<any>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShoppingListEntryBulkRequest
+     */
+    checked: boolean;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface ShoppingListEntryRequest
+ */
+export interface ShoppingListEntryRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntryRequest
+     */
+    list_recipe?: number | null;
+    /**
+     * 
+     * @type {FoodRequest}
+     * @memberof ShoppingListEntryRequest
+     */
+    food: FoodRequest | null;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof ShoppingListEntryRequest
+     */
+    unit?: UnitRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntryRequest
+     */
+    amount: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntryRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ShoppingListEntryRequest
+     */
+    checked?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntryRequest
+     */
+    completed_at?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShoppingListEntryRequest
+     */
+    delay_until?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListEntryRequest
+     */
+    id?: number;
+}
+/**
+ * 
+ * @export
  * @interface ShoppingListRecipe
  */
 export interface ShoppingListRecipe {
@@ -4572,10 +5918,10 @@ export interface ShoppingListRecipe {
     mealplan?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof ShoppingListRecipe
      */
-    servings: string;
+    servings: number;
     /**
      * 
      * @type {string}
@@ -4594,6 +5940,37 @@ export interface ShoppingListRecipe {
      * @memberof ShoppingListRecipe
      */
     mealplan_type: string;
+}
+/**
+ * 
+ * @export
+ * @interface ShoppingListRecipeRequest
+ */
+export interface ShoppingListRecipeRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeRequest
+     */
+    recipe?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeRequest
+     */
+    mealplan?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeRequest
+     */
+    servings: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ShoppingListRecipeRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -4669,22 +6046,22 @@ export interface Space {
     food_inherit: Array<FoodInheritField>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    user_count: string;
+    user_count: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    recipe_count: string;
+    recipe_count: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    file_size_mb: string;
+    file_size_mb: number;
     /**
      * 
      * @type {UserFileView}
@@ -4858,22 +6235,89 @@ export interface Step {
     step_recipe?: number | null;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof Step
      */
-    step_recipe_data: string;
+    step_recipe_data: any | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Step
      */
-    numrecipe: string;
+    numrecipe: number;
     /**
      * 
      * @type {boolean}
      * @memberof Step
      */
     show_ingredients_table?: boolean;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface StepRequest
+ */
+export interface StepRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof StepRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StepRequest
+     */
+    instruction?: string;
+    /**
+     * 
+     * @type {Array<IngredientRequest>}
+     * @memberof StepRequest
+     */
+    ingredients: Array<IngredientRequest>;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepRequest
+     */
+    time?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StepRequest
+     */
+    show_as_header?: boolean;
+    /**
+     * 
+     * @type {UserFileViewRequest}
+     * @memberof StepRequest
+     */
+    file?: UserFileViewRequest | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepRequest
+     */
+    step_recipe?: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof StepRequest
+     */
+    show_ingredients_table?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof StepRequest
+     */
+    id?: number;
 }
 /**
  * 
@@ -4907,22 +6351,53 @@ export interface Storage {
     username?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Storage
+     */
+    created_by: number;
+}
+/**
+ * 
+ * @export
+ * @interface StorageRequest
+ */
+export interface StorageRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof StorageRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {MethodEnum}
+     * @memberof StorageRequest
+     */
+    method?: MethodEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof StorageRequest
+     */
+    username?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof StorageRequest
      */
     password?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof Storage
+     * @memberof StorageRequest
      */
     token?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof Storage
+     * @memberof StorageRequest
      */
-    created_by: number;
+    id?: number;
 }
 /**
  * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
@@ -5018,6 +6493,93 @@ export interface SupermarketCategoryRelation {
     order?: number;
 }
 /**
+ * Adds nested create feature
+ * @export
+ * @interface SupermarketCategoryRelationRequest
+ */
+export interface SupermarketCategoryRelationRequest {
+    /**
+     * 
+     * @type {SupermarketCategoryRequest}
+     * @memberof SupermarketCategoryRelationRequest
+     */
+    category: SupermarketCategoryRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelationRequest
+     */
+    supermarket: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelationRequest
+     */
+    order?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRelationRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface SupermarketCategoryRequest
+ */
+export interface SupermarketCategoryRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategoryRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketCategoryRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketCategoryRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface SupermarketRequest
+ */
+export interface SupermarketRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof SupermarketRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof SupermarketRequest
+     */
+    id?: number;
+}
+/**
  * 
  * @export
  * @interface Sync
@@ -5102,6 +6664,43 @@ export interface SyncLog {
      * @memberof SyncLog
      */
     created_at: string;
+}
+/**
+ * 
+ * @export
+ * @interface SyncRequest
+ */
+export interface SyncRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof SyncRequest
+     */
+    storage: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SyncRequest
+     */
+    path?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SyncRequest
+     */
+    active?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof SyncRequest
+     */
+    last_checked?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof SyncRequest
+     */
+    id?: number;
 }
 /**
  * * `TANDOOR` - Tandoor * `BOOTSTRAP` - Bootstrap * `DARKLY` - Darkly * `FLATLY` - Flatly * `SUPERHERO` - Superhero * `TANDOOR_DARK` - Tandoor Dark (INCOMPLETE)
@@ -5198,10 +6797,10 @@ export interface UnitConversion {
     name: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    base_amount: string;
+    base_amount: number;
     /**
      * 
      * @type {Unit}
@@ -5210,10 +6809,10 @@ export interface UnitConversion {
     base_unit: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof UnitConversion
      */
-    converted_amount: string;
+    converted_amount: number;
     /**
      * 
      * @type {Unit}
@@ -5232,6 +6831,98 @@ export interface UnitConversion {
      * @memberof UnitConversion
      */
     open_data_slug?: string | null;
+}
+/**
+ * Adds nested create feature
+ * @export
+ * @interface UnitConversionRequest
+ */
+export interface UnitConversionRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitConversionRequest
+     */
+    base_amount: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof UnitConversionRequest
+     */
+    base_unit: UnitRequest;
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitConversionRequest
+     */
+    converted_amount: number;
+    /**
+     * 
+     * @type {UnitRequest}
+     * @memberof UnitConversionRequest
+     */
+    converted_unit: UnitRequest;
+    /**
+     * 
+     * @type {FoodRequest}
+     * @memberof UnitConversionRequest
+     */
+    food?: FoodRequest | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitConversionRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitConversionRequest
+     */
+    id?: number;
+}
+/**
+ * Moves `UniqueValidator`\'s from the validation stage to the save stage. It solves the problem with nested validation for unique fields on update.  If you want more details, you can read related issues and articles: https://github.com/beda-software/drf-writable-nested/issues/1 http://www.django-rest-framework.org/api-guide/validators/#updating-nested-serializers  Example of usage: ```     class Child(models.Model):     field = models.CharField(unique=True)   class Parent(models.Model):     child = models.ForeignKey(\'Child\')   class ChildSerializer(UniqueFieldsMixin, serializers.ModelSerializer):     class Meta:         model = Child   class ParentSerializer(NestedUpdateMixin, serializers.ModelSerializer):     child = ChildSerializer()      class Meta:         model = Parent ```  Note: `UniqueFieldsMixin` must be applied only on the serializer which has unique fields.  Note: When you are using both mixins (`UniqueFieldsMixin` and `NestedCreateMixin` or `NestedUpdateMixin`) you should put `UniqueFieldsMixin` ahead.
+ * @export
+ * @interface UnitRequest
+ */
+export interface UnitRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitRequest
+     */
+    plural_name?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitRequest
+     */
+    description?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitRequest
+     */
+    base_unit?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitRequest
+     */
+    open_data_slug?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UnitRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -5293,12 +6984,6 @@ export interface UserFile {
      * @type {string}
      * @memberof UserFile
      */
-    file: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserFile
-     */
     file_download: string;
     /**
      * 
@@ -5343,6 +7028,25 @@ export interface UserFileView {
      * @memberof UserFileView
      */
     preview: string;
+}
+/**
+ * 
+ * @export
+ * @interface UserFileViewRequest
+ */
+export interface UserFileViewRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFileViewRequest
+     */
+    name: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserFileViewRequest
+     */
+    id?: number;
 }
 /**
  * Adds nested create feature
@@ -5448,10 +7152,10 @@ export interface UserPreference {
     mealplan_autoadd_shopping?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {FoodInheritField}
      * @memberof UserPreference
      */
-    food_inherit_default: string;
+    food_inherit_default: FoodInheritField;
     /**
      * 
      * @type {number}
@@ -5520,10 +7224,10 @@ export interface UserPreference {
     show_step_ingredients?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof UserPreference
      */
-    food_children_exist: string;
+    food_children_exist: boolean;
 }
 /**
  * * `LIGHT` - Light * `DARK` - Dark
@@ -5535,6 +7239,31 @@ export enum UserPreferenceNavTextColorEnum {
     Dark = 'DARK'
 }
 
+/**
+ * Adds nested create feature
+ * @export
+ * @interface UserRequest
+ */
+export interface UserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRequest
+     */
+    first_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRequest
+     */
+    last_name?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserRequest
+     */
+    id?: number;
+}
 /**
  * Adds nested create feature
  * @export
@@ -5627,6 +7356,25 @@ export interface ViewLog {
      */
     created_at: string;
 }
+/**
+ * 
+ * @export
+ * @interface ViewLogRequest
+ */
+export interface ViewLogRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof ViewLogRequest
+     */
+    recipe: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ViewLogRequest
+     */
+    id?: number;
+}
 
 /**
  * ApiApi - axios parameter creator
@@ -5636,13 +7384,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
     return {
         /**
          * 
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenCreate: async (accessToken: AccessToken, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'accessToken' is not null or undefined
-            assertParamExists('apiAccessTokenCreate', 'accessToken', accessToken)
+        apiAccessTokenCreate: async (accessTokenRequest: AccessTokenRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'accessTokenRequest' is not null or undefined
+            assertParamExists('apiAccessTokenCreate', 'accessTokenRequest', accessTokenRequest)
             const localVarPath = `/api/access-token/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5665,7 +7413,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(accessTokenRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5743,11 +7491,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {PatchedAccessToken} [patchedAccessToken] 
+         * @param {PatchedAccessTokenRequest} [patchedAccessTokenRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenPartialUpdate: async (id: number, patchedAccessToken?: PatchedAccessToken, options: any = {}): Promise<RequestArgs> => {
+        apiAccessTokenPartialUpdate: async (id: number, patchedAccessTokenRequest?: PatchedAccessTokenRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAccessTokenPartialUpdate', 'id', id)
             const localVarPath = `/api/access-token/{id}/`
@@ -5773,7 +7521,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedAccessToken, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedAccessTokenRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5819,15 +7567,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenUpdate: async (id: number, accessToken: AccessToken, options: any = {}): Promise<RequestArgs> => {
+        apiAccessTokenUpdate: async (id: number, accessTokenRequest: AccessTokenRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAccessTokenUpdate', 'id', id)
-            // verify required parameter 'accessToken' is not null or undefined
-            assertParamExists('apiAccessTokenUpdate', 'accessToken', accessToken)
+            // verify required parameter 'accessTokenRequest' is not null or undefined
+            assertParamExists('apiAccessTokenUpdate', 'accessTokenRequest', accessTokenRequest)
             const localVarPath = `/api/access-token/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -5851,7 +7599,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(accessToken, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(accessTokenRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5860,10 +7608,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {AutoMealPlanRequest} autoMealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutoPlanCreate: async (options: any = {}): Promise<RequestArgs> => {
+        apiAutoPlanCreate: async (autoMealPlanRequest: AutoMealPlanRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'autoMealPlanRequest' is not null or undefined
+            assertParamExists('apiAutoPlanCreate', 'autoMealPlanRequest', autoMealPlanRequest)
             const localVarPath = `/api/auto-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5881,9 +7632,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(autoMealPlanRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5891,14 +7645,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {Automation} automation 
+         * 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationCreate: async (automation: Automation, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'automation' is not null or undefined
-            assertParamExists('apiAutomationCreate', 'automation', automation)
+        apiAutomationCreate: async (automationRequest: AutomationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'automationRequest' is not null or undefined
+            assertParamExists('apiAutomationCreate', 'automationRequest', automationRequest)
             const localVarPath = `/api/automation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5921,7 +7675,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(automationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5929,7 +7683,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -5965,14 +7719,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationList: async (automationType?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiAutomationList: async (page?: number, pageSize?: number, type?: Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/automation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5988,16 +7742,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (automationType !== undefined) {
-                localVarQueryParameter['automation_type'] = automationType;
-            }
-
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (type) {
+                localVarQueryParameter['type'] = type;
             }
 
 
@@ -6012,13 +7766,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {PatchedAutomation} [patchedAutomation] 
+         * @param {PatchedAutomationRequest} [patchedAutomationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationPartialUpdate: async (id: number, patchedAutomation?: PatchedAutomation, options: any = {}): Promise<RequestArgs> => {
+        apiAutomationPartialUpdate: async (id: number, patchedAutomationRequest?: PatchedAutomationRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAutomationPartialUpdate', 'id', id)
             const localVarPath = `/api/automation/{id}/`
@@ -6044,7 +7798,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedAutomation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedAutomationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6052,7 +7806,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -6088,17 +7842,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {Automation} automation 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationUpdate: async (id: number, automation: Automation, options: any = {}): Promise<RequestArgs> => {
+        apiAutomationUpdate: async (id: number, automationRequest: AutomationRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiAutomationUpdate', 'id', id)
-            // verify required parameter 'automation' is not null or undefined
-            assertParamExists('apiAutomationUpdate', 'automation', automation)
+            // verify required parameter 'automationRequest' is not null or undefined
+            assertParamExists('apiAutomationUpdate', 'automationRequest', automationRequest)
             const localVarPath = `/api/automation/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6122,7 +7876,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(automation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(automationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6131,13 +7885,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportCreate: async (bookmarkletImport: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bookmarkletImport' is not null or undefined
-            assertParamExists('apiBookmarkletImportCreate', 'bookmarkletImport', bookmarkletImport)
+        apiBookmarkletImportCreate: async (bookmarkletImportRequest: BookmarkletImportRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'bookmarkletImportRequest' is not null or undefined
+            assertParamExists('apiBookmarkletImportCreate', 'bookmarkletImportRequest', bookmarkletImportRequest)
             const localVarPath = `/api/bookmarklet-import/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6160,7 +7914,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImportRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6205,10 +7959,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportList: async (options: any = {}): Promise<RequestArgs> => {
+        apiBookmarkletImportList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/bookmarklet-import/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6224,6 +7980,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -6238,11 +8002,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {PatchedBookmarkletImport} [patchedBookmarkletImport] 
+         * @param {PatchedBookmarkletImportRequest} [patchedBookmarkletImportRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportPartialUpdate: async (id: number, patchedBookmarkletImport?: PatchedBookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+        apiBookmarkletImportPartialUpdate: async (id: number, patchedBookmarkletImportRequest?: PatchedBookmarkletImportRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiBookmarkletImportPartialUpdate', 'id', id)
             const localVarPath = `/api/bookmarklet-import/{id}/`
@@ -6268,7 +8032,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedBookmarkletImport, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedBookmarkletImportRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6314,15 +8078,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportUpdate: async (id: number, bookmarkletImport: BookmarkletImport, options: any = {}): Promise<RequestArgs> => {
+        apiBookmarkletImportUpdate: async (id: number, bookmarkletImportRequest: BookmarkletImportRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiBookmarkletImportUpdate', 'id', id)
-            // verify required parameter 'bookmarkletImport' is not null or undefined
-            assertParamExists('apiBookmarkletImportUpdate', 'bookmarkletImport', bookmarkletImport)
+            // verify required parameter 'bookmarkletImportRequest' is not null or undefined
+            assertParamExists('apiBookmarkletImportUpdate', 'bookmarkletImportRequest', bookmarkletImportRequest)
             const localVarPath = `/api/bookmarklet-import/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6346,7 +8110,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImport, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(bookmarkletImportRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6355,13 +8119,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigCreate: async (connectorConfigConfig: ConnectorConfigConfig, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'connectorConfigConfig' is not null or undefined
-            assertParamExists('apiConnectorConfigCreate', 'connectorConfigConfig', connectorConfigConfig)
+        apiConnectorConfigCreate: async (connectorConfigConfigRequest: ConnectorConfigConfigRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'connectorConfigConfigRequest' is not null or undefined
+            assertParamExists('apiConnectorConfigCreate', 'connectorConfigConfigRequest', connectorConfigConfigRequest)
             const localVarPath = `/api/connector-config/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6384,7 +8148,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(connectorConfigConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(connectorConfigConfigRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6462,11 +8226,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {PatchedConnectorConfigConfig} [patchedConnectorConfigConfig] 
+         * @param {PatchedConnectorConfigConfigRequest} [patchedConnectorConfigConfigRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigPartialUpdate: async (id: number, patchedConnectorConfigConfig?: PatchedConnectorConfigConfig, options: any = {}): Promise<RequestArgs> => {
+        apiConnectorConfigPartialUpdate: async (id: number, patchedConnectorConfigConfigRequest?: PatchedConnectorConfigConfigRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiConnectorConfigPartialUpdate', 'id', id)
             const localVarPath = `/api/connector-config/{id}/`
@@ -6492,7 +8256,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedConnectorConfigConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedConnectorConfigConfigRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6538,15 +8302,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigUpdate: async (id: number, connectorConfigConfig: ConnectorConfigConfig, options: any = {}): Promise<RequestArgs> => {
+        apiConnectorConfigUpdate: async (id: number, connectorConfigConfigRequest: ConnectorConfigConfigRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiConnectorConfigUpdate', 'id', id)
-            // verify required parameter 'connectorConfigConfig' is not null or undefined
-            assertParamExists('apiConnectorConfigUpdate', 'connectorConfigConfig', connectorConfigConfig)
+            // verify required parameter 'connectorConfigConfigRequest' is not null or undefined
+            assertParamExists('apiConnectorConfigUpdate', 'connectorConfigConfigRequest', connectorConfigConfigRequest)
             const localVarPath = `/api/connector-config/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6570,7 +8334,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(connectorConfigConfig, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(connectorConfigConfigRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6579,13 +8343,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogCreate: async (cookLog: CookLog, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'cookLog' is not null or undefined
-            assertParamExists('apiCookLogCreate', 'cookLog', cookLog)
+        apiCookLogCreate: async (cookLogRequest: CookLogRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'cookLogRequest' is not null or undefined
+            assertParamExists('apiCookLogCreate', 'cookLogRequest', cookLogRequest)
             const localVarPath = `/api/cook-log/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6608,7 +8372,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(cookLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6701,11 +8465,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {PatchedCookLog} [patchedCookLog] 
+         * @param {PatchedCookLogRequest} [patchedCookLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogPartialUpdate: async (id: number, patchedCookLog?: PatchedCookLog, options: any = {}): Promise<RequestArgs> => {
+        apiCookLogPartialUpdate: async (id: number, patchedCookLogRequest?: PatchedCookLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiCookLogPartialUpdate', 'id', id)
             const localVarPath = `/api/cook-log/{id}/`
@@ -6731,7 +8495,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedCookLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedCookLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6777,15 +8541,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogUpdate: async (id: number, cookLog: CookLog, options: any = {}): Promise<RequestArgs> => {
+        apiCookLogUpdate: async (id: number, cookLogRequest: CookLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiCookLogUpdate', 'id', id)
-            // verify required parameter 'cookLog' is not null or undefined
-            assertParamExists('apiCookLogUpdate', 'cookLog', cookLog)
+            // verify required parameter 'cookLogRequest' is not null or undefined
+            assertParamExists('apiCookLogUpdate', 'cookLogRequest', cookLogRequest)
             const localVarPath = `/api/cook-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -6809,7 +8573,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(cookLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(cookLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6818,13 +8582,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterCreate: async (customFilter: CustomFilter, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'customFilter' is not null or undefined
-            assertParamExists('apiCustomFilterCreate', 'customFilter', customFilter)
+        apiCustomFilterCreate: async (customFilterRequest: CustomFilterRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'customFilterRequest' is not null or undefined
+            assertParamExists('apiCustomFilterCreate', 'customFilterRequest', customFilterRequest)
             const localVarPath = `/api/custom-filter/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6847,7 +8611,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilterRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6897,11 +8661,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {Array<'FOOD' | 'KEYWORD' | 'RECIPE'>} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiCustomFilterList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: Array<'FOOD' | 'KEYWORD' | 'RECIPE'>, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/custom-filter/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -6937,6 +8702,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['random'] = random;
             }
 
+            if (type) {
+                localVarQueryParameter['type'] = type;
+            }
+
             if (updatedAt !== undefined) {
                 localVarQueryParameter['updated_at'] = updatedAt;
             }
@@ -6955,11 +8724,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {PatchedCustomFilter} [patchedCustomFilter] 
+         * @param {PatchedCustomFilterRequest} [patchedCustomFilterRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterPartialUpdate: async (id: number, patchedCustomFilter?: PatchedCustomFilter, options: any = {}): Promise<RequestArgs> => {
+        apiCustomFilterPartialUpdate: async (id: number, patchedCustomFilterRequest?: PatchedCustomFilterRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiCustomFilterPartialUpdate', 'id', id)
             const localVarPath = `/api/custom-filter/{id}/`
@@ -6985,7 +8754,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedCustomFilter, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedCustomFilterRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7031,15 +8800,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterUpdate: async (id: number, customFilter: CustomFilter, options: any = {}): Promise<RequestArgs> => {
+        apiCustomFilterUpdate: async (id: number, customFilterRequest: CustomFilterRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiCustomFilterUpdate', 'id', id)
-            // verify required parameter 'customFilter' is not null or undefined
-            assertParamExists('apiCustomFilterUpdate', 'customFilter', customFilter)
+            // verify required parameter 'customFilterRequest' is not null or undefined
+            assertParamExists('apiCustomFilterUpdate', 'customFilterRequest', customFilterRequest)
             const localVarPath = `/api/custom-filter/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -7063,7 +8832,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(customFilter, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(customFilterRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7108,13 +8877,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogCreate: async (exportLog: ExportLog, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'exportLog' is not null or undefined
-            assertParamExists('apiExportLogCreate', 'exportLog', exportLog)
+        apiExportLogCreate: async (exportLogRequest: ExportLogRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'exportLogRequest' is not null or undefined
+            assertParamExists('apiExportLogCreate', 'exportLogRequest', exportLogRequest)
             const localVarPath = `/api/export-log/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7137,7 +8906,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7225,11 +8994,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {PatchedExportLog} [patchedExportLog] 
+         * @param {PatchedExportLogRequest} [patchedExportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogPartialUpdate: async (id: number, patchedExportLog?: PatchedExportLog, options: any = {}): Promise<RequestArgs> => {
+        apiExportLogPartialUpdate: async (id: number, patchedExportLogRequest?: PatchedExportLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiExportLogPartialUpdate', 'id', id)
             const localVarPath = `/api/export-log/{id}/`
@@ -7255,7 +9024,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedExportLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedExportLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7301,15 +9070,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogUpdate: async (id: number, exportLog: ExportLog, options: any = {}): Promise<RequestArgs> => {
+        apiExportLogUpdate: async (id: number, exportLogRequest: ExportLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiExportLogUpdate', 'id', id)
-            // verify required parameter 'exportLog' is not null or undefined
-            assertParamExists('apiExportLogUpdate', 'exportLog', exportLog)
+            // verify required parameter 'exportLogRequest' is not null or undefined
+            assertParamExists('apiExportLogUpdate', 'exportLogRequest', exportLogRequest)
             const localVarPath = `/api/export-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -7333,7 +9102,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(exportLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(exportLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7342,13 +9111,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodCreate: async (food: Food, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'food' is not null or undefined
-            assertParamExists('apiFoodCreate', 'food', food)
+        apiFoodCreate: async (foodRequest: FoodRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'foodRequest' is not null or undefined
+            assertParamExists('apiFoodCreate', 'foodRequest', foodRequest)
             const localVarPath = `/api/food/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7371,7 +9140,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7417,15 +9186,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodFdcCreate: async (id: number, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodFdcCreate: async (id: number, foodRequest: FoodRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodFdcCreate', 'id', id)
-            // verify required parameter 'food' is not null or undefined
-            assertParamExists('apiFoodFdcCreate', 'food', food)
+            // verify required parameter 'foodRequest' is not null or undefined
+            assertParamExists('apiFoodFdcCreate', 'foodRequest', foodRequest)
             const localVarPath = `/api/food/{id}/fdc/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -7449,7 +9218,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7532,7 +9301,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -7599,18 +9368,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
-         * @param {Food} food 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMergeUpdate: async (id: number, target: string, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodMergeUpdate: async (id: number, target: number, foodRequest: FoodRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
             assertParamExists('apiFoodMergeUpdate', 'target', target)
-            // verify required parameter 'food' is not null or undefined
-            assertParamExists('apiFoodMergeUpdate', 'food', food)
+            // verify required parameter 'foodRequest' is not null or undefined
+            assertParamExists('apiFoodMergeUpdate', 'foodRequest', foodRequest)
             const localVarPath = `/api/food/{id}/merge/{target}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"target"}}`, encodeURIComponent(String(target)));
@@ -7635,7 +9404,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7645,18 +9414,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
-         * @param {Food} food 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMoveUpdate: async (id: number, parent: string, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodMoveUpdate: async (id: number, parent: number, foodRequest: FoodRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodMoveUpdate', 'id', id)
             // verify required parameter 'parent' is not null or undefined
             assertParamExists('apiFoodMoveUpdate', 'parent', parent)
-            // verify required parameter 'food' is not null or undefined
-            assertParamExists('apiFoodMoveUpdate', 'food', food)
+            // verify required parameter 'foodRequest' is not null or undefined
+            assertParamExists('apiFoodMoveUpdate', 'foodRequest', foodRequest)
             const localVarPath = `/api/food/{id}/move/{parent}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
@@ -7681,7 +9450,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7691,11 +9460,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {PatchedFood} [patchedFood] 
+         * @param {PatchedFoodRequest} [patchedFoodRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPartialUpdate: async (id: number, patchedFood?: PatchedFood, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPartialUpdate: async (id: number, patchedFoodRequest?: PatchedFoodRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodPartialUpdate', 'id', id)
             const localVarPath = `/api/food/{id}/`
@@ -7721,7 +9490,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedFood, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedFoodRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7730,13 +9499,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyCreate: async (property: Property, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'property' is not null or undefined
-            assertParamExists('apiFoodPropertyCreate', 'property', property)
+        apiFoodPropertyCreate: async (propertyRequest: PropertyRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'propertyRequest' is not null or undefined
+            assertParamExists('apiFoodPropertyCreate', 'propertyRequest', propertyRequest)
             const localVarPath = `/api/food-property/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7759,7 +9528,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(property, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(propertyRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7804,10 +9573,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyList: async (options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-property/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7823,6 +9594,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -7837,11 +9616,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {PatchedProperty} [patchedProperty] 
+         * @param {PatchedPropertyRequest} [patchedPropertyRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyPartialUpdate: async (id: number, patchedProperty?: PatchedProperty, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyPartialUpdate: async (id: number, patchedPropertyRequest?: PatchedPropertyRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodPropertyPartialUpdate', 'id', id)
             const localVarPath = `/api/food-property/{id}/`
@@ -7867,7 +9646,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedProperty, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedPropertyRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7912,13 +9691,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeCreate: async (propertyType: PropertyType, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'propertyType' is not null or undefined
-            assertParamExists('apiFoodPropertyTypeCreate', 'propertyType', propertyType)
+        apiFoodPropertyTypeCreate: async (propertyTypeRequest: PropertyTypeRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'propertyTypeRequest' is not null or undefined
+            assertParamExists('apiFoodPropertyTypeCreate', 'propertyTypeRequest', propertyTypeRequest)
             const localVarPath = `/api/food-property-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -7941,7 +9720,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(propertyType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(propertyTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7986,10 +9765,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyTypeList: async (category?: Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/food-property-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8005,6 +9787,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (category) {
+                localVarQueryParameter['category'] = category;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -8019,11 +9813,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PatchedPropertyType} [patchedPropertyType] 
+         * @param {PatchedPropertyTypeRequest} [patchedPropertyTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypePartialUpdate: async (id: number, patchedPropertyType?: PatchedPropertyType, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyTypePartialUpdate: async (id: number, patchedPropertyTypeRequest?: PatchedPropertyTypeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodPropertyTypePartialUpdate', 'id', id)
             const localVarPath = `/api/food-property-type/{id}/`
@@ -8049,7 +9843,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedPropertyType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedPropertyTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8095,15 +9889,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeUpdate: async (id: number, propertyType: PropertyType, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyTypeUpdate: async (id: number, propertyTypeRequest: PropertyTypeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodPropertyTypeUpdate', 'id', id)
-            // verify required parameter 'propertyType' is not null or undefined
-            assertParamExists('apiFoodPropertyTypeUpdate', 'propertyType', propertyType)
+            // verify required parameter 'propertyTypeRequest' is not null or undefined
+            assertParamExists('apiFoodPropertyTypeUpdate', 'propertyTypeRequest', propertyTypeRequest)
             const localVarPath = `/api/food-property-type/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8127,7 +9921,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(propertyType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(propertyTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8137,15 +9931,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyUpdate: async (id: number, property: Property, options: any = {}): Promise<RequestArgs> => {
+        apiFoodPropertyUpdate: async (id: number, propertyRequest: PropertyRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodPropertyUpdate', 'id', id)
-            // verify required parameter 'property' is not null or undefined
-            assertParamExists('apiFoodPropertyUpdate', 'property', property)
+            // verify required parameter 'propertyRequest' is not null or undefined
+            assertParamExists('apiFoodPropertyUpdate', 'propertyRequest', propertyRequest)
             const localVarPath = `/api/food-property/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8169,7 +9963,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(property, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(propertyRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8215,15 +10009,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {FoodShoppingUpdate} foodShoppingUpdate 
+         * @param {FoodShoppingUpdateRequest} foodShoppingUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodShoppingUpdate: async (id: number, foodShoppingUpdate: FoodShoppingUpdate, options: any = {}): Promise<RequestArgs> => {
+        apiFoodShoppingUpdate: async (id: number, foodShoppingUpdateRequest: FoodShoppingUpdateRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodShoppingUpdate', 'id', id)
-            // verify required parameter 'foodShoppingUpdate' is not null or undefined
-            assertParamExists('apiFoodShoppingUpdate', 'foodShoppingUpdate', foodShoppingUpdate)
+            // verify required parameter 'foodShoppingUpdateRequest' is not null or undefined
+            assertParamExists('apiFoodShoppingUpdate', 'foodShoppingUpdateRequest', foodShoppingUpdateRequest)
             const localVarPath = `/api/food/{id}/shopping/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8247,7 +10041,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(foodShoppingUpdate, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodShoppingUpdateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8257,15 +10051,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodUpdate: async (id: number, food: Food, options: any = {}): Promise<RequestArgs> => {
+        apiFoodUpdate: async (id: number, foodRequest: FoodRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiFoodUpdate', 'id', id)
-            // verify required parameter 'food' is not null or undefined
-            assertParamExists('apiFoodUpdate', 'food', food)
+            // verify required parameter 'foodRequest' is not null or undefined
+            assertParamExists('apiFoodUpdate', 'foodRequest', foodRequest)
             const localVarPath = `/api/food/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8289,7 +10083,79 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(food, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(foodRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiGetExternalFileLinkRetrieve: async (recipeId: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'recipeId' is not null or undefined
+            assertParamExists('apiGetExternalFileLinkRetrieve', 'recipeId', recipeId)
+            const localVarPath = `/api/get_external_file_link/{recipeId}/`
+                .replace(`{${"recipeId"}}`, encodeURIComponent(String(recipeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiGetRecipeFileRetrieve: async (recipeId: number, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'recipeId' is not null or undefined
+            assertParamExists('apiGetRecipeFileRetrieve', 'recipeId', recipeId)
+            const localVarPath = `/api/get_recipe_file/{recipeId}/`
+                .replace(`{${"recipeId"}}`, encodeURIComponent(String(recipeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8398,13 +10264,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogCreate: async (importLog: ImportLog, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'importLog' is not null or undefined
-            assertParamExists('apiImportLogCreate', 'importLog', importLog)
+        apiImportLogCreate: async (importLogRequest: ImportLogRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'importLogRequest' is not null or undefined
+            assertParamExists('apiImportLogCreate', 'importLogRequest', importLogRequest)
             const localVarPath = `/api/import-log/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8427,7 +10293,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(importLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(importLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8515,11 +10381,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {PatchedImportLog} [patchedImportLog] 
+         * @param {PatchedImportLogRequest} [patchedImportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogPartialUpdate: async (id: number, patchedImportLog?: PatchedImportLog, options: any = {}): Promise<RequestArgs> => {
+        apiImportLogPartialUpdate: async (id: number, patchedImportLogRequest?: PatchedImportLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiImportLogPartialUpdate', 'id', id)
             const localVarPath = `/api/import-log/{id}/`
@@ -8545,7 +10411,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedImportLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedImportLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8591,15 +10457,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogUpdate: async (id: number, importLog: ImportLog, options: any = {}): Promise<RequestArgs> => {
+        apiImportLogUpdate: async (id: number, importLogRequest: ImportLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiImportLogUpdate', 'id', id)
-            // verify required parameter 'importLog' is not null or undefined
-            assertParamExists('apiImportLogUpdate', 'importLog', importLog)
+            // verify required parameter 'importLogRequest' is not null or undefined
+            assertParamExists('apiImportLogUpdate', 'importLogRequest', importLogRequest)
             const localVarPath = `/api/import-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8623,7 +10489,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(importLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(importLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8632,13 +10498,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientCreate: async (ingredient: Ingredient, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'ingredient' is not null or undefined
-            assertParamExists('apiIngredientCreate', 'ingredient', ingredient)
+        apiIngredientCreate: async (ingredientRequest: IngredientRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ingredientRequest' is not null or undefined
+            assertParamExists('apiIngredientCreate', 'ingredientRequest', ingredientRequest)
             const localVarPath = `/api/ingredient/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8661,7 +10527,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(ingredientRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8706,12 +10572,52 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {number} [page] A page number within the paginated result set.
-         * @param {number} [pageSize] Number of results to return per page.
+         * @param {IngredientStringRequest} ingredientStringRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiIngredientFromStringCreate: async (ingredientStringRequest: IngredientStringRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ingredientStringRequest' is not null or undefined
+            assertParamExists('apiIngredientFromStringCreate', 'ingredientStringRequest', ingredientStringRequest)
+            const localVarPath = `/api/ingredient-from-string/`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication ApiKeyAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ingredientStringRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiIngredientList: async (food?: number, page?: number, pageSize?: number, unit?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/ingredient/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8727,12 +10633,20 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (food !== undefined) {
+                localVarQueryParameter['food'] = food;
+            }
+
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
             }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (unit !== undefined) {
+                localVarQueryParameter['unit'] = unit;
             }
 
 
@@ -8749,11 +10663,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {PatchedIngredient} [patchedIngredient] 
+         * @param {PatchedIngredientRequest} [patchedIngredientRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientPartialUpdate: async (id: number, patchedIngredient?: PatchedIngredient, options: any = {}): Promise<RequestArgs> => {
+        apiIngredientPartialUpdate: async (id: number, patchedIngredientRequest?: PatchedIngredientRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiIngredientPartialUpdate', 'id', id)
             const localVarPath = `/api/ingredient/{id}/`
@@ -8779,7 +10693,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedIngredient, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedIngredientRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8825,15 +10739,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientUpdate: async (id: number, ingredient: Ingredient, options: any = {}): Promise<RequestArgs> => {
+        apiIngredientUpdate: async (id: number, ingredientRequest: IngredientRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiIngredientUpdate', 'id', id)
-            // verify required parameter 'ingredient' is not null or undefined
-            assertParamExists('apiIngredientUpdate', 'ingredient', ingredient)
+            // verify required parameter 'ingredientRequest' is not null or undefined
+            assertParamExists('apiIngredientUpdate', 'ingredientRequest', ingredientRequest)
             const localVarPath = `/api/ingredient/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -8857,7 +10771,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(ingredient, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(ingredientRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8866,13 +10780,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkCreate: async (inviteLink: InviteLink, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'inviteLink' is not null or undefined
-            assertParamExists('apiInviteLinkCreate', 'inviteLink', inviteLink)
+        apiInviteLinkCreate: async (inviteLinkRequest: InviteLinkRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'inviteLinkRequest' is not null or undefined
+            assertParamExists('apiInviteLinkCreate', 'inviteLinkRequest', inviteLinkRequest)
             const localVarPath = `/api/invite-link/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8895,7 +10809,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLinkRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -8940,14 +10854,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiInviteLinkList: async (internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/invite-link/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -8963,8 +10880,20 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (internalNote !== undefined) {
+                localVarQueryParameter['internal_note'] = internalNote;
+            }
+
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -8993,11 +10922,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {PatchedInviteLink} [patchedInviteLink] 
+         * @param {PatchedInviteLinkRequest} [patchedInviteLinkRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkPartialUpdate: async (id: number, patchedInviteLink?: PatchedInviteLink, options: any = {}): Promise<RequestArgs> => {
+        apiInviteLinkPartialUpdate: async (id: number, patchedInviteLinkRequest?: PatchedInviteLinkRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiInviteLinkPartialUpdate', 'id', id)
             const localVarPath = `/api/invite-link/{id}/`
@@ -9023,7 +10952,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedInviteLink, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedInviteLinkRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9069,15 +10998,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkUpdate: async (id: number, inviteLink: InviteLink, options: any = {}): Promise<RequestArgs> => {
+        apiInviteLinkUpdate: async (id: number, inviteLinkRequest: InviteLinkRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiInviteLinkUpdate', 'id', id)
-            // verify required parameter 'inviteLink' is not null or undefined
-            assertParamExists('apiInviteLinkUpdate', 'inviteLink', inviteLink)
+            // verify required parameter 'inviteLinkRequest' is not null or undefined
+            assertParamExists('apiInviteLinkUpdate', 'inviteLinkRequest', inviteLinkRequest)
             const localVarPath = `/api/invite-link/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -9101,7 +11030,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(inviteLink, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(inviteLinkRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9110,13 +11039,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordCreate: async (keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'keyword' is not null or undefined
-            assertParamExists('apiKeywordCreate', 'keyword', keyword)
+        apiKeywordCreate: async (keywordRequest: KeywordRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'keywordRequest' is not null or undefined
+            assertParamExists('apiKeywordCreate', 'keywordRequest', keywordRequest)
             const localVarPath = `/api/keyword/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9139,7 +11068,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(keywordRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9190,7 +11119,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9257,18 +11186,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} keyword 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMergeUpdate: async (id: number, target: string, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordMergeUpdate: async (id: number, target: number, keywordRequest: KeywordRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
             assertParamExists('apiKeywordMergeUpdate', 'target', target)
-            // verify required parameter 'keyword' is not null or undefined
-            assertParamExists('apiKeywordMergeUpdate', 'keyword', keyword)
+            // verify required parameter 'keywordRequest' is not null or undefined
+            assertParamExists('apiKeywordMergeUpdate', 'keywordRequest', keywordRequest)
             const localVarPath = `/api/keyword/{id}/merge/{target}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"target"}}`, encodeURIComponent(String(target)));
@@ -9293,7 +11222,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(keywordRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9303,18 +11232,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} keyword 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMoveUpdate: async (id: number, parent: string, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordMoveUpdate: async (id: number, parent: number, keywordRequest: KeywordRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordMoveUpdate', 'id', id)
             // verify required parameter 'parent' is not null or undefined
             assertParamExists('apiKeywordMoveUpdate', 'parent', parent)
-            // verify required parameter 'keyword' is not null or undefined
-            assertParamExists('apiKeywordMoveUpdate', 'keyword', keyword)
+            // verify required parameter 'keywordRequest' is not null or undefined
+            assertParamExists('apiKeywordMoveUpdate', 'keywordRequest', keywordRequest)
             const localVarPath = `/api/keyword/{id}/move/{parent}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
@@ -9339,7 +11268,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(keywordRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9349,11 +11278,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {PatchedKeyword} [patchedKeyword] 
+         * @param {PatchedKeywordRequest} [patchedKeywordRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordPartialUpdate: async (id: number, patchedKeyword?: PatchedKeyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordPartialUpdate: async (id: number, patchedKeywordRequest?: PatchedKeywordRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordPartialUpdate', 'id', id)
             const localVarPath = `/api/keyword/{id}/`
@@ -9379,7 +11308,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedKeyword, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedKeywordRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9425,15 +11354,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordUpdate: async (id: number, keyword: Keyword, options: any = {}): Promise<RequestArgs> => {
+        apiKeywordUpdate: async (id: number, keywordRequest: KeywordRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiKeywordUpdate', 'id', id)
-            // verify required parameter 'keyword' is not null or undefined
-            assertParamExists('apiKeywordUpdate', 'keyword', keyword)
+            // verify required parameter 'keywordRequest' is not null or undefined
+            assertParamExists('apiKeywordUpdate', 'keywordRequest', keywordRequest)
             const localVarPath = `/api/keyword/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -9457,7 +11386,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(keyword, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(keywordRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9465,14 +11394,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {MealPlan} mealPlan 
+         * 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanCreate: async (mealPlan: MealPlan, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'mealPlan' is not null or undefined
-            assertParamExists('apiMealPlanCreate', 'mealPlan', mealPlan)
+        apiMealPlanCreate: async (mealPlanRequest: MealPlanRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'mealPlanRequest' is not null or undefined
+            assertParamExists('apiMealPlanCreate', 'mealPlanRequest', mealPlanRequest)
             const localVarPath = `/api/meal-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9495,7 +11424,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(mealPlan, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mealPlanRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9503,7 +11432,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9539,14 +11468,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanIcalRetrieve: async (fromDate?: string, mealType?: string, toDate?: string, options: any = {}): Promise<RequestArgs> => {
+        apiMealPlanIcalRetrieve: async (fromDate?: string, mealType?: Array<string>, toDate?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-plan/ical/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9566,7 +11495,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['from_date'] = fromDate;
             }
 
-            if (mealType !== undefined) {
+            if (mealType) {
                 localVarQueryParameter['meal_type'] = mealType;
             }
 
@@ -9586,14 +11515,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanList: async (fromDate?: string, mealType?: string, toDate?: string, options: any = {}): Promise<RequestArgs> => {
+        apiMealPlanList: async (fromDate?: string, mealType?: Array<string>, page?: number, pageSize?: number, toDate?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-plan/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9613,8 +11544,16 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['from_date'] = fromDate;
             }
 
-            if (mealType !== undefined) {
+            if (mealType) {
                 localVarQueryParameter['meal_type'] = mealType;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (toDate !== undefined) {
@@ -9633,13 +11572,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {PatchedMealPlan} [patchedMealPlan] 
+         * @param {PatchedMealPlanRequest} [patchedMealPlanRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanPartialUpdate: async (id: number, patchedMealPlan?: PatchedMealPlan, options: any = {}): Promise<RequestArgs> => {
+        apiMealPlanPartialUpdate: async (id: number, patchedMealPlanRequest?: PatchedMealPlanRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiMealPlanPartialUpdate', 'id', id)
             const localVarPath = `/api/meal-plan/{id}/`
@@ -9665,7 +11604,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedMealPlan, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedMealPlanRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9673,7 +11612,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -9709,17 +11648,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {MealPlan} mealPlan 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanUpdate: async (id: number, mealPlan: MealPlan, options: any = {}): Promise<RequestArgs> => {
+        apiMealPlanUpdate: async (id: number, mealPlanRequest: MealPlanRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiMealPlanUpdate', 'id', id)
-            // verify required parameter 'mealPlan' is not null or undefined
-            assertParamExists('apiMealPlanUpdate', 'mealPlan', mealPlan)
+            // verify required parameter 'mealPlanRequest' is not null or undefined
+            assertParamExists('apiMealPlanUpdate', 'mealPlanRequest', mealPlanRequest)
             const localVarPath = `/api/meal-plan/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -9743,7 +11682,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(mealPlan, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mealPlanRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9752,13 +11691,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeCreate: async (mealType: MealType, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'mealType' is not null or undefined
-            assertParamExists('apiMealTypeCreate', 'mealType', mealType)
+        apiMealTypeCreate: async (mealTypeRequest: MealTypeRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'mealTypeRequest' is not null or undefined
+            assertParamExists('apiMealTypeCreate', 'mealTypeRequest', mealTypeRequest)
             const localVarPath = `/api/meal-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9781,7 +11720,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(mealType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mealTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9826,10 +11765,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiMealTypeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/meal-type/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -9845,6 +11786,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -9859,11 +11808,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {PatchedMealType} [patchedMealType] 
+         * @param {PatchedMealTypeRequest} [patchedMealTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypePartialUpdate: async (id: number, patchedMealType?: PatchedMealType, options: any = {}): Promise<RequestArgs> => {
+        apiMealTypePartialUpdate: async (id: number, patchedMealTypeRequest?: PatchedMealTypeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiMealTypePartialUpdate', 'id', id)
             const localVarPath = `/api/meal-type/{id}/`
@@ -9889,7 +11838,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedMealType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedMealTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9935,15 +11884,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeUpdate: async (id: number, mealType: MealType, options: any = {}): Promise<RequestArgs> => {
+        apiMealTypeUpdate: async (id: number, mealTypeRequest: MealTypeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiMealTypeUpdate', 'id', id)
-            // verify required parameter 'mealType' is not null or undefined
-            assertParamExists('apiMealTypeUpdate', 'mealType', mealType)
+            // verify required parameter 'mealTypeRequest' is not null or undefined
+            assertParamExists('apiMealTypeUpdate', 'mealTypeRequest', mealTypeRequest)
             const localVarPath = `/api/meal-type/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -9967,7 +11916,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(mealType, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(mealTypeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -9976,53 +11925,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} fromDate 
-         * @param {string} toDate 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPlanIcalRetrieve: async (fromDate: string, toDate: string, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'fromDate' is not null or undefined
-            assertParamExists('apiPlanIcalRetrieve', 'fromDate', fromDate)
-            // verify required parameter 'toDate' is not null or undefined
-            assertParamExists('apiPlanIcalRetrieve', 'toDate', toDate)
-            const localVarPath = `/api/plan-ical/{fromDate}/{toDate}/`
-                .replace(`{${"fromDate"}}`, encodeURIComponent(String(fromDate)))
-                .replace(`{${"toDate"}}`, encodeURIComponent(String(toDate)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication ApiKeyAuth required
-            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {RecipeBook} recipeBook 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiRecipeBookCreate: async (recipeBook: RecipeBook, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'recipeBook' is not null or undefined
-            assertParamExists('apiRecipeBookCreate', 'recipeBook', recipeBook)
+        apiRecipeBookCreate: async (recipeBookRequest: RecipeBookRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'recipeBookRequest' is not null or undefined
+            assertParamExists('apiRecipeBookCreate', 'recipeBookRequest', recipeBookRequest)
             const localVarPath = `/api/recipe-book/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10045,7 +11954,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeBook, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10089,14 +11998,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryCreate: async (recipeBookEntry: RecipeBookEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'recipeBookEntry' is not null or undefined
-            assertParamExists('apiRecipeBookEntryCreate', 'recipeBookEntry', recipeBookEntry)
+        apiRecipeBookEntryCreate: async (recipeBookEntryRequest: RecipeBookEntryRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'recipeBookEntryRequest' is not null or undefined
+            assertParamExists('apiRecipeBookEntryCreate', 'recipeBookEntryRequest', recipeBookEntryRequest)
             const localVarPath = `/api/recipe-book-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10119,7 +12028,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10127,7 +12036,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10163,11 +12072,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryList: async (options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookEntryList: async (book?: number, page?: number, pageSize?: number, recipe?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe-book-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10183,6 +12096,22 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (book !== undefined) {
+                localVarQueryParameter['book'] = book;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
+            if (recipe !== undefined) {
+                localVarQueryParameter['recipe'] = recipe;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -10195,13 +12124,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
+         * @param {PatchedRecipeBookEntryRequest} [patchedRecipeBookEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryPartialUpdate: async (id: number, patchedRecipeBookEntry?: PatchedRecipeBookEntry, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookEntryPartialUpdate: async (id: number, patchedRecipeBookEntryRequest?: PatchedRecipeBookEntryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeBookEntryPartialUpdate', 'id', id)
             const localVarPath = `/api/recipe-book-entry/{id}/`
@@ -10227,7 +12156,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipeBookEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipeBookEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10235,7 +12164,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -10271,17 +12200,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryUpdate: async (id: number, recipeBookEntry: RecipeBookEntry, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookEntryUpdate: async (id: number, recipeBookEntryRequest: RecipeBookEntryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeBookEntryUpdate', 'id', id)
-            // verify required parameter 'recipeBookEntry' is not null or undefined
-            assertParamExists('apiRecipeBookEntryUpdate', 'recipeBookEntry', recipeBookEntry)
+            // verify required parameter 'recipeBookEntryRequest' is not null or undefined
+            assertParamExists('apiRecipeBookEntryUpdate', 'recipeBookEntryRequest', recipeBookEntryRequest)
             const localVarPath = `/api/recipe-book-entry/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -10305,7 +12234,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10315,13 +12244,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookList: async (limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe-book/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10339,6 +12272,22 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (orderDirection !== undefined) {
+                localVarQueryParameter['order_direction'] = orderDirection;
+            }
+
+            if (orderField !== undefined) {
+                localVarQueryParameter['order_field'] = orderField;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -10367,11 +12316,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {PatchedRecipeBook} [patchedRecipeBook] 
+         * @param {PatchedRecipeBookRequest} [patchedRecipeBookRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookPartialUpdate: async (id: number, patchedRecipeBook?: PatchedRecipeBook, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookPartialUpdate: async (id: number, patchedRecipeBookRequest?: PatchedRecipeBookRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeBookPartialUpdate', 'id', id)
             const localVarPath = `/api/recipe-book/{id}/`
@@ -10397,7 +12346,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipeBook, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipeBookRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10443,15 +12392,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {RecipeBook} recipeBook 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookUpdate: async (id: number, recipeBook: RecipeBook, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeBookUpdate: async (id: number, recipeBookRequest: RecipeBookRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeBookUpdate', 'id', id)
-            // verify required parameter 'recipeBook' is not null or undefined
-            assertParamExists('apiRecipeBookUpdate', 'recipeBook', recipeBook)
+            // verify required parameter 'recipeBookRequest' is not null or undefined
+            assertParamExists('apiRecipeBookUpdate', 'recipeBookRequest', recipeBookRequest)
             const localVarPath = `/api/recipe-book/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -10475,7 +12424,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeBook, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeBookRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10484,13 +12433,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeCreate: async (recipe: Recipe, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'recipe' is not null or undefined
-            assertParamExists('apiRecipeCreate', 'recipe', recipe)
+        apiRecipeCreate: async (recipeRequest: RecipeRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'recipeRequest' is not null or undefined
+            assertParamExists('apiRecipeCreate', 'recipeRequest', recipeRequest)
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10513,7 +12462,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10623,12 +12572,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {string} [image] 
+         * @param {any} [image] 
          * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeImageUpdate: async (id: number, image?: string, imageUrl?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeImageUpdate: async (id: number, image?: any, imageUrl?: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeImageUpdate', 'id', id)
             const localVarPath = `/api/recipe/{id}/image/`
@@ -10672,25 +12621,25 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
-         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
-         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
-         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {Array<number>} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {Array<number>} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {Array<number>} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
+         * @param {Array<number>} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {Array<number>} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
          * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
-         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
-         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
-         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
-         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
-         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
-         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
-         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
-         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {Array<number>} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {Array<number>} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
+         * @param {Array<number>} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {Array<number>} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {Array<number>} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {Array<number>} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
+         * @param {Array<number>} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {Array<number>} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -10704,7 +12653,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeList: async (books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeList: async (books?: Array<number>, booksAnd?: Array<number>, booksAndNot?: Array<number>, booksOr?: Array<number>, booksOrNot?: Array<number>, cookedon?: string, createdon?: string, foods?: Array<number>, foodsAnd?: Array<number>, foodsAndNot?: Array<number>, foodsOr?: Array<number>, foodsOrNot?: Array<number>, internal?: boolean, keywords?: Array<number>, keywordsAnd?: Array<number>, keywordsAndNot?: Array<number>, keywordsOr?: Array<number>, keywordsOrNot?: Array<number>, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10720,23 +12669,23 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (books !== undefined) {
+            if (books) {
                 localVarQueryParameter['books'] = books;
             }
 
-            if (booksAnd !== undefined) {
+            if (booksAnd) {
                 localVarQueryParameter['books_and'] = booksAnd;
             }
 
-            if (booksAndNot !== undefined) {
+            if (booksAndNot) {
                 localVarQueryParameter['books_and_not'] = booksAndNot;
             }
 
-            if (booksOr !== undefined) {
+            if (booksOr) {
                 localVarQueryParameter['books_or'] = booksOr;
             }
 
-            if (booksOrNot !== undefined) {
+            if (booksOrNot) {
                 localVarQueryParameter['books_or_not'] = booksOrNot;
             }
 
@@ -10748,23 +12697,23 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['createdon'] = createdon;
             }
 
-            if (foods !== undefined) {
+            if (foods) {
                 localVarQueryParameter['foods'] = foods;
             }
 
-            if (foodsAnd !== undefined) {
+            if (foodsAnd) {
                 localVarQueryParameter['foods_and'] = foodsAnd;
             }
 
-            if (foodsAndNot !== undefined) {
+            if (foodsAndNot) {
                 localVarQueryParameter['foods_and_not'] = foodsAndNot;
             }
 
-            if (foodsOr !== undefined) {
+            if (foodsOr) {
                 localVarQueryParameter['foods_or'] = foodsOr;
             }
 
-            if (foodsOrNot !== undefined) {
+            if (foodsOrNot) {
                 localVarQueryParameter['foods_or_not'] = foodsOrNot;
             }
 
@@ -10772,23 +12721,23 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['internal'] = internal;
             }
 
-            if (keywords !== undefined) {
+            if (keywords) {
                 localVarQueryParameter['keywords'] = keywords;
             }
 
-            if (keywordsAnd !== undefined) {
+            if (keywordsAnd) {
                 localVarQueryParameter['keywords_and'] = keywordsAnd;
             }
 
-            if (keywordsAndNot !== undefined) {
+            if (keywordsAndNot) {
                 localVarQueryParameter['keywords_and_not'] = keywordsAndNot;
             }
 
-            if (keywordsOr !== undefined) {
+            if (keywordsOr) {
                 localVarQueryParameter['keywords_or'] = keywordsOr;
             }
 
-            if (keywordsOrNot !== undefined) {
+            if (keywordsOrNot) {
                 localVarQueryParameter['keywords_or_not'] = keywordsOrNot;
             }
 
@@ -10850,11 +12799,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {PatchedRecipe} [patchedRecipe] 
+         * @param {PatchedRecipeRequest} [patchedRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipePartialUpdate: async (id: number, patchedRecipe?: PatchedRecipe, options: any = {}): Promise<RequestArgs> => {
+        apiRecipePartialUpdate: async (id: number, patchedRecipeRequest?: PatchedRecipeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipePartialUpdate', 'id', id)
             const localVarPath = `/api/recipe/{id}/`
@@ -10880,7 +12829,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedRecipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10962,11 +12911,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {RecipeShoppingUpdateRequest} [recipeShoppingUpdateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeShoppingUpdate: async (id: number, recipeShoppingUpdate?: RecipeShoppingUpdate, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeShoppingUpdate: async (id: number, recipeShoppingUpdateRequest?: RecipeShoppingUpdateRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeShoppingUpdate', 'id', id)
             const localVarPath = `/api/recipe/{id}/shopping/`
@@ -10992,7 +12941,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipeShoppingUpdate, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeShoppingUpdateRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11002,15 +12951,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeUpdate: async (id: number, recipe: Recipe, options: any = {}): Promise<RequestArgs> => {
+        apiRecipeUpdate: async (id: number, recipeRequest: RecipeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiRecipeUpdate', 'id', id)
-            // verify required parameter 'recipe' is not null or undefined
-            assertParamExists('apiRecipeUpdate', 'recipe', recipe)
+            // verify required parameter 'recipeRequest' is not null or undefined
+            assertParamExists('apiRecipeUpdate', 'recipeRequest', recipeRequest)
             const localVarPath = `/api/recipe/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -11034,7 +12983,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(recipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(recipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11046,7 +12995,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiResetFoodInheritanceRetrieve: async (options: any = {}): Promise<RequestArgs> => {
+        apiResetFoodInheritanceCreate: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/reset-food-inheritance/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11055,7 +13004,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -11111,13 +13060,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ShoppingListEntryBulk} shoppingListEntryBulk 
+         * @param {ShoppingListEntryBulkRequest} shoppingListEntryBulkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryBulkCreate: async (shoppingListEntryBulk: ShoppingListEntryBulk, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'shoppingListEntryBulk' is not null or undefined
-            assertParamExists('apiShoppingListEntryBulkCreate', 'shoppingListEntryBulk', shoppingListEntryBulk)
+        apiShoppingListEntryBulkCreate: async (shoppingListEntryBulkRequest: ShoppingListEntryBulkRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shoppingListEntryBulkRequest' is not null or undefined
+            assertParamExists('apiShoppingListEntryBulkCreate', 'shoppingListEntryBulkRequest', shoppingListEntryBulkRequest)
             const localVarPath = `/api/shopping-list-entry/bulk/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11140,7 +13089,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryBulk, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryBulkRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11149,13 +13098,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryCreate: async (shoppingListEntry: ShoppingListEntry, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'shoppingListEntry' is not null or undefined
-            assertParamExists('apiShoppingListEntryCreate', 'shoppingListEntry', shoppingListEntry)
+        apiShoppingListEntryCreate: async (shoppingListEntryRequest: ShoppingListEntryRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shoppingListEntryRequest' is not null or undefined
+            assertParamExists('apiShoppingListEntryCreate', 'shoppingListEntryRequest', shoppingListEntryRequest)
             const localVarPath = `/api/shopping-list-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11178,7 +13127,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11225,11 +13174,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryList: async (checked?: string, id?: number, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListEntryList: async (checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-entry/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11253,6 +13204,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['id'] = id;
             }
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
             if (supermarket !== undefined) {
                 localVarQueryParameter['supermarket'] = supermarket;
             }
@@ -11271,11 +13230,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {PatchedShoppingListEntry} [patchedShoppingListEntry] 
+         * @param {PatchedShoppingListEntryRequest} [patchedShoppingListEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryPartialUpdate: async (id: number, patchedShoppingListEntry?: PatchedShoppingListEntry, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListEntryPartialUpdate: async (id: number, patchedShoppingListEntryRequest?: PatchedShoppingListEntryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiShoppingListEntryPartialUpdate', 'id', id)
             const localVarPath = `/api/shopping-list-entry/{id}/`
@@ -11301,7 +13260,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedShoppingListEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedShoppingListEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11347,15 +13306,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryUpdate: async (id: number, shoppingListEntry: ShoppingListEntry, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListEntryUpdate: async (id: number, shoppingListEntryRequest: ShoppingListEntryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiShoppingListEntryUpdate', 'id', id)
-            // verify required parameter 'shoppingListEntry' is not null or undefined
-            assertParamExists('apiShoppingListEntryUpdate', 'shoppingListEntry', shoppingListEntry)
+            // verify required parameter 'shoppingListEntryRequest' is not null or undefined
+            assertParamExists('apiShoppingListEntryUpdate', 'shoppingListEntryRequest', shoppingListEntryRequest)
             const localVarPath = `/api/shopping-list-entry/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -11379,7 +13338,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntry, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListEntryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11388,13 +13347,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeCreate: async (shoppingListRecipe: ShoppingListRecipe, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'shoppingListRecipe' is not null or undefined
-            assertParamExists('apiShoppingListRecipeCreate', 'shoppingListRecipe', shoppingListRecipe)
+        apiShoppingListRecipeCreate: async (shoppingListRecipeRequest: ShoppingListRecipeRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'shoppingListRecipeRequest' is not null or undefined
+            assertParamExists('apiShoppingListRecipeCreate', 'shoppingListRecipeRequest', shoppingListRecipeRequest)
             const localVarPath = `/api/shopping-list-recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11417,7 +13376,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11462,10 +13421,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeList: async (options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListRecipeList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/shopping-list-recipe/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11481,6 +13442,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -11495,11 +13464,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {PatchedShoppingListRecipe} [patchedShoppingListRecipe] 
+         * @param {PatchedShoppingListRecipeRequest} [patchedShoppingListRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipePartialUpdate: async (id: number, patchedShoppingListRecipe?: PatchedShoppingListRecipe, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListRecipePartialUpdate: async (id: number, patchedShoppingListRecipeRequest?: PatchedShoppingListRecipeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiShoppingListRecipePartialUpdate', 'id', id)
             const localVarPath = `/api/shopping-list-recipe/{id}/`
@@ -11525,7 +13494,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedShoppingListRecipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedShoppingListRecipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11571,15 +13540,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeUpdate: async (id: number, shoppingListRecipe: ShoppingListRecipe, options: any = {}): Promise<RequestArgs> => {
+        apiShoppingListRecipeUpdate: async (id: number, shoppingListRecipeRequest: ShoppingListRecipeRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiShoppingListRecipeUpdate', 'id', id)
-            // verify required parameter 'shoppingListRecipe' is not null or undefined
-            assertParamExists('apiShoppingListRecipeUpdate', 'shoppingListRecipe', shoppingListRecipe)
+            // verify required parameter 'shoppingListRecipeRequest' is not null or undefined
+            assertParamExists('apiShoppingListRecipeUpdate', 'shoppingListRecipeRequest', shoppingListRecipeRequest)
             const localVarPath = `/api/shopping-list-recipe/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -11603,7 +13572,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipe, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(shoppingListRecipeRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11645,11 +13614,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this space.
-         * @param {PatchedSpace} [patchedSpace] 
+         * @param {PatchedSpaceRequest} [patchedSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSpacePartialUpdate: async (id: number, patchedSpace?: PatchedSpace, options: any = {}): Promise<RequestArgs> => {
+        apiSpacePartialUpdate: async (id: number, patchedSpaceRequest?: PatchedSpaceRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSpacePartialUpdate', 'id', id)
             const localVarPath = `/api/space/{id}/`
@@ -11675,7 +13644,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedSpace, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedSpaceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11720,13 +13689,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepCreate: async (step: Step, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'step' is not null or undefined
-            assertParamExists('apiStepCreate', 'step', step)
+        apiStepCreate: async (stepRequest: StepRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'stepRequest' is not null or undefined
+            assertParamExists('apiStepCreate', 'stepRequest', stepRequest)
             const localVarPath = `/api/step/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11749,7 +13718,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(step, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(stepRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11797,11 +13766,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] Query string matched (fuzzy) against object name.
-         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
+         * @param {Array<number>} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepList: async (page?: number, pageSize?: number, query?: string, recipe?: number, options: any = {}): Promise<RequestArgs> => {
+        apiStepList: async (page?: number, pageSize?: number, query?: string, recipe?: Array<number>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/step/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11829,7 +13798,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['query'] = query;
             }
 
-            if (recipe !== undefined) {
+            if (recipe) {
                 localVarQueryParameter['recipe'] = recipe;
             }
 
@@ -11847,11 +13816,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {PatchedStep} [patchedStep] 
+         * @param {PatchedStepRequest} [patchedStepRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepPartialUpdate: async (id: number, patchedStep?: PatchedStep, options: any = {}): Promise<RequestArgs> => {
+        apiStepPartialUpdate: async (id: number, patchedStepRequest?: PatchedStepRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiStepPartialUpdate', 'id', id)
             const localVarPath = `/api/step/{id}/`
@@ -11877,7 +13846,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedStep, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedStepRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11923,15 +13892,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepUpdate: async (id: number, step: Step, options: any = {}): Promise<RequestArgs> => {
+        apiStepUpdate: async (id: number, stepRequest: StepRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiStepUpdate', 'id', id)
-            // verify required parameter 'step' is not null or undefined
-            assertParamExists('apiStepUpdate', 'step', step)
+            // verify required parameter 'stepRequest' is not null or undefined
+            assertParamExists('apiStepUpdate', 'stepRequest', stepRequest)
             const localVarPath = `/api/step/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -11955,7 +13924,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(step, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(stepRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11964,13 +13933,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStorageCreate: async (storage: Storage, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'storage' is not null or undefined
-            assertParamExists('apiStorageCreate', 'storage', storage)
+        apiStorageCreate: async (storageRequest: StorageRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'storageRequest' is not null or undefined
+            assertParamExists('apiStorageCreate', 'storageRequest', storageRequest)
             const localVarPath = `/api/storage/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -11993,7 +13962,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(storage, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(storageRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12071,11 +14040,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {PatchedStorage} [patchedStorage] 
+         * @param {PatchedStorageRequest} [patchedStorageRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStoragePartialUpdate: async (id: number, patchedStorage?: PatchedStorage, options: any = {}): Promise<RequestArgs> => {
+        apiStoragePartialUpdate: async (id: number, patchedStorageRequest?: PatchedStorageRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiStoragePartialUpdate', 'id', id)
             const localVarPath = `/api/storage/{id}/`
@@ -12101,7 +14070,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedStorage, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedStorageRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12147,15 +14116,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStorageUpdate: async (id: number, storage: Storage, options: any = {}): Promise<RequestArgs> => {
+        apiStorageUpdate: async (id: number, storageRequest: StorageRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiStorageUpdate', 'id', id)
-            // verify required parameter 'storage' is not null or undefined
-            assertParamExists('apiStorageUpdate', 'storage', storage)
+            // verify required parameter 'storageRequest' is not null or undefined
+            assertParamExists('apiStorageUpdate', 'storageRequest', storageRequest)
             const localVarPath = `/api/storage/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -12179,7 +14148,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(storage, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(storageRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12188,13 +14157,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryCreate: async (supermarketCategory: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'supermarketCategory' is not null or undefined
-            assertParamExists('apiSupermarketCategoryCreate', 'supermarketCategory', supermarketCategory)
+        apiSupermarketCategoryCreate: async (supermarketCategoryRequest: SupermarketCategoryRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'supermarketCategoryRequest' is not null or undefined
+            assertParamExists('apiSupermarketCategoryCreate', 'supermarketCategoryRequest', supermarketCategoryRequest)
             const localVarPath = `/api/supermarket-category/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12217,7 +14186,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12263,13 +14232,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket-category/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12287,6 +14258,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -12315,18 +14294,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryMergeUpdate: async (id: number, target: string, supermarketCategory: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryMergeUpdate: async (id: number, target: number, supermarketCategoryRequest: SupermarketCategoryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
             assertParamExists('apiSupermarketCategoryMergeUpdate', 'target', target)
-            // verify required parameter 'supermarketCategory' is not null or undefined
-            assertParamExists('apiSupermarketCategoryMergeUpdate', 'supermarketCategory', supermarketCategory)
+            // verify required parameter 'supermarketCategoryRequest' is not null or undefined
+            assertParamExists('apiSupermarketCategoryMergeUpdate', 'supermarketCategoryRequest', supermarketCategoryRequest)
             const localVarPath = `/api/supermarket-category/{id}/merge/{target}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"target"}}`, encodeURIComponent(String(target)));
@@ -12351,7 +14330,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12361,11 +14340,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {PatchedSupermarketCategory} [patchedSupermarketCategory] 
+         * @param {PatchedSupermarketCategoryRequest} [patchedSupermarketCategoryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryPartialUpdate: async (id: number, patchedSupermarketCategory?: PatchedSupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryPartialUpdate: async (id: number, patchedSupermarketCategoryRequest?: PatchedSupermarketCategoryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryPartialUpdate', 'id', id)
             const localVarPath = `/api/supermarket-category/{id}/`
@@ -12391,7 +14370,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarketCategory, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarketCategoryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12400,13 +14379,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationCreate: async (supermarketCategoryRelation: SupermarketCategoryRelation, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'supermarketCategoryRelation' is not null or undefined
-            assertParamExists('apiSupermarketCategoryRelationCreate', 'supermarketCategoryRelation', supermarketCategoryRelation)
+        apiSupermarketCategoryRelationCreate: async (supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'supermarketCategoryRelationRequest' is not null or undefined
+            assertParamExists('apiSupermarketCategoryRelationCreate', 'supermarketCategoryRelationRequest', supermarketCategoryRelationRequest)
             const localVarPath = `/api/supermarket-category-relation/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12429,7 +14408,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRelation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRelationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12537,11 +14516,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {PatchedSupermarketCategoryRelation} [patchedSupermarketCategoryRelation] 
+         * @param {PatchedSupermarketCategoryRelationRequest} [patchedSupermarketCategoryRelationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationPartialUpdate: async (id: number, patchedSupermarketCategoryRelation?: PatchedSupermarketCategoryRelation, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryRelationPartialUpdate: async (id: number, patchedSupermarketCategoryRelationRequest?: PatchedSupermarketCategoryRelationRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryRelationPartialUpdate', 'id', id)
             const localVarPath = `/api/supermarket-category-relation/{id}/`
@@ -12567,7 +14546,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarketCategoryRelation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarketCategoryRelationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12613,15 +14592,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationUpdate: async (id: number, supermarketCategoryRelation: SupermarketCategoryRelation, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryRelationUpdate: async (id: number, supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryRelationUpdate', 'id', id)
-            // verify required parameter 'supermarketCategoryRelation' is not null or undefined
-            assertParamExists('apiSupermarketCategoryRelationUpdate', 'supermarketCategoryRelation', supermarketCategoryRelation)
+            // verify required parameter 'supermarketCategoryRelationRequest' is not null or undefined
+            assertParamExists('apiSupermarketCategoryRelationUpdate', 'supermarketCategoryRelationRequest', supermarketCategoryRelationRequest)
             const localVarPath = `/api/supermarket-category-relation/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -12645,7 +14624,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRelation, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRelationRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12691,15 +14670,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryUpdate: async (id: number, supermarketCategory: SupermarketCategory, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketCategoryUpdate: async (id: number, supermarketCategoryRequest: SupermarketCategoryRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketCategoryUpdate', 'id', id)
-            // verify required parameter 'supermarketCategory' is not null or undefined
-            assertParamExists('apiSupermarketCategoryUpdate', 'supermarketCategory', supermarketCategory)
+            // verify required parameter 'supermarketCategoryRequest' is not null or undefined
+            assertParamExists('apiSupermarketCategoryUpdate', 'supermarketCategoryRequest', supermarketCategoryRequest)
             const localVarPath = `/api/supermarket-category/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -12723,7 +14702,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategory, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketCategoryRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12732,13 +14711,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCreate: async (supermarket: Supermarket, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'supermarket' is not null or undefined
-            assertParamExists('apiSupermarketCreate', 'supermarket', supermarket)
+        apiSupermarketCreate: async (supermarketRequest: SupermarketRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'supermarketRequest' is not null or undefined
+            assertParamExists('apiSupermarketCreate', 'supermarketRequest', supermarketRequest)
             const localVarPath = `/api/supermarket/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12761,7 +14740,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarket, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12807,13 +14786,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/supermarket/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -12831,6 +14812,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -12859,11 +14848,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {PatchedSupermarket} [patchedSupermarket] 
+         * @param {PatchedSupermarketRequest} [patchedSupermarketRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketPartialUpdate: async (id: number, patchedSupermarket?: PatchedSupermarket, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketPartialUpdate: async (id: number, patchedSupermarketRequest?: PatchedSupermarketRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketPartialUpdate', 'id', id)
             const localVarPath = `/api/supermarket/{id}/`
@@ -12889,7 +14878,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarket, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedSupermarketRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12935,15 +14924,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketUpdate: async (id: number, supermarket: Supermarket, options: any = {}): Promise<RequestArgs> => {
+        apiSupermarketUpdate: async (id: number, supermarketRequest: SupermarketRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSupermarketUpdate', 'id', id)
-            // verify required parameter 'supermarket' is not null or undefined
-            assertParamExists('apiSupermarketUpdate', 'supermarket', supermarket)
+            // verify required parameter 'supermarketRequest' is not null or undefined
+            assertParamExists('apiSupermarketUpdate', 'supermarketRequest', supermarketRequest)
             const localVarPath = `/api/supermarket/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -12967,7 +14956,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(supermarket, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(supermarketRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13012,13 +15001,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncCreate: async (sync: Sync, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'sync' is not null or undefined
-            assertParamExists('apiSyncCreate', 'sync', sync)
+        apiSyncCreate: async (syncRequest: SyncRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'syncRequest' is not null or undefined
+            assertParamExists('apiSyncCreate', 'syncRequest', syncRequest)
             const localVarPath = `/api/sync/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13041,7 +15030,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(sync, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(syncRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13086,10 +15075,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncList: async (options: any = {}): Promise<RequestArgs> => {
+        apiSyncList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/sync/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13104,6 +15095,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -13197,11 +15196,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {PatchedSync} [patchedSync] 
+         * @param {PatchedSyncRequest} [patchedSyncRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncPartialUpdate: async (id: number, patchedSync?: PatchedSync, options: any = {}): Promise<RequestArgs> => {
+        apiSyncPartialUpdate: async (id: number, patchedSyncRequest?: PatchedSyncRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSyncPartialUpdate', 'id', id)
             const localVarPath = `/api/sync/{id}/`
@@ -13227,7 +15226,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedSync, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedSyncRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13273,15 +15272,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncUpdate: async (id: number, sync: Sync, options: any = {}): Promise<RequestArgs> => {
+        apiSyncUpdate: async (id: number, syncRequest: SyncRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiSyncUpdate', 'id', id)
-            // verify required parameter 'sync' is not null or undefined
-            assertParamExists('apiSyncUpdate', 'sync', sync)
+            // verify required parameter 'syncRequest' is not null or undefined
+            assertParamExists('apiSyncUpdate', 'syncRequest', syncRequest)
             const localVarPath = `/api/sync/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -13305,7 +15304,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(sync, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(syncRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13314,13 +15313,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionCreate: async (unitConversion: UnitConversion, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'unitConversion' is not null or undefined
-            assertParamExists('apiUnitConversionCreate', 'unitConversion', unitConversion)
+        apiUnitConversionCreate: async (unitConversionRequest: UnitConversionRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'unitConversionRequest' is not null or undefined
+            assertParamExists('apiUnitConversionCreate', 'unitConversionRequest', unitConversionRequest)
             const localVarPath = `/api/unit-conversion/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13343,7 +15342,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(unitConversion, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unitConversionRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13389,10 +15388,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionList: async (foodId?: number, options: any = {}): Promise<RequestArgs> => {
+        apiUnitConversionList: async (foodId?: number, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/unit-conversion/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13412,6 +15413,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarQueryParameter['food_id'] = foodId;
             }
 
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -13426,11 +15435,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {PatchedUnitConversion} [patchedUnitConversion] 
+         * @param {PatchedUnitConversionRequest} [patchedUnitConversionRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionPartialUpdate: async (id: number, patchedUnitConversion?: PatchedUnitConversion, options: any = {}): Promise<RequestArgs> => {
+        apiUnitConversionPartialUpdate: async (id: number, patchedUnitConversionRequest?: PatchedUnitConversionRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitConversionPartialUpdate', 'id', id)
             const localVarPath = `/api/unit-conversion/{id}/`
@@ -13456,7 +15465,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedUnitConversion, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedUnitConversionRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13502,15 +15511,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionUpdate: async (id: number, unitConversion: UnitConversion, options: any = {}): Promise<RequestArgs> => {
+        apiUnitConversionUpdate: async (id: number, unitConversionRequest: UnitConversionRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitConversionUpdate', 'id', id)
-            // verify required parameter 'unitConversion' is not null or undefined
-            assertParamExists('apiUnitConversionUpdate', 'unitConversion', unitConversion)
+            // verify required parameter 'unitConversionRequest' is not null or undefined
+            assertParamExists('apiUnitConversionUpdate', 'unitConversionRequest', unitConversionRequest)
             const localVarPath = `/api/unit-conversion/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -13534,7 +15543,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(unitConversion, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unitConversionRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13543,13 +15552,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitCreate: async (unit: Unit, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'unit' is not null or undefined
-            assertParamExists('apiUnitCreate', 'unit', unit)
+        apiUnitCreate: async (unitRequest: UnitRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'unitRequest' is not null or undefined
+            assertParamExists('apiUnitCreate', 'unitRequest', unitRequest)
             const localVarPath = `/api/unit/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13572,7 +15581,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unitRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13680,18 +15689,18 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
-         * @param {Unit} unit 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitMergeUpdate: async (id: number, target: string, unit: Unit, options: any = {}): Promise<RequestArgs> => {
+        apiUnitMergeUpdate: async (id: number, target: number, unitRequest: UnitRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitMergeUpdate', 'id', id)
             // verify required parameter 'target' is not null or undefined
             assertParamExists('apiUnitMergeUpdate', 'target', target)
-            // verify required parameter 'unit' is not null or undefined
-            assertParamExists('apiUnitMergeUpdate', 'unit', unit)
+            // verify required parameter 'unitRequest' is not null or undefined
+            assertParamExists('apiUnitMergeUpdate', 'unitRequest', unitRequest)
             const localVarPath = `/api/unit/{id}/merge/{target}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)))
                 .replace(`{${"target"}}`, encodeURIComponent(String(target)));
@@ -13716,7 +15725,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unitRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13726,11 +15735,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {PatchedUnit} [patchedUnit] 
+         * @param {PatchedUnitRequest} [patchedUnitRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitPartialUpdate: async (id: number, patchedUnit?: PatchedUnit, options: any = {}): Promise<RequestArgs> => {
+        apiUnitPartialUpdate: async (id: number, patchedUnitRequest?: PatchedUnitRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitPartialUpdate', 'id', id)
             const localVarPath = `/api/unit/{id}/`
@@ -13756,7 +15765,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedUnit, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedUnitRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13802,15 +15811,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitUpdate: async (id: number, unit: Unit, options: any = {}): Promise<RequestArgs> => {
+        apiUnitUpdate: async (id: number, unitRequest: UnitRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUnitUpdate', 'id', id)
-            // verify required parameter 'unit' is not null or undefined
-            assertParamExists('apiUnitUpdate', 'unit', unit)
+            // verify required parameter 'unitRequest' is not null or undefined
+            assertParamExists('apiUnitUpdate', 'unitRequest', unitRequest)
             const localVarPath = `/api/unit/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -13834,7 +15843,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(unit, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(unitRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -13843,28 +15852,17 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {number} id 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileCreate: async (id: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('apiUserFileCreate', 'id', id)
+        apiUserFileCreate: async (name: string, file: any, id?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
             assertParamExists('apiUserFileCreate', 'name', name)
             // verify required parameter 'file' is not null or undefined
             assertParamExists('apiUserFileCreate', 'file', file)
-            // verify required parameter 'fileDownload' is not null or undefined
-            assertParamExists('apiUserFileCreate', 'fileDownload', fileDownload)
-            // verify required parameter 'preview' is not null or undefined
-            assertParamExists('apiUserFileCreate', 'preview', preview)
-            // verify required parameter 'fileSizeKb' is not null or undefined
-            assertParamExists('apiUserFileCreate', 'fileSizeKb', fileSizeKb)
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13882,10 +15880,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
-            if (id !== undefined) { 
-                localVarFormParams.append('id', id as any);
-            }
-    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -13894,16 +15888,8 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileDownload !== undefined) { 
-                localVarFormParams.append('file_download', fileDownload as any);
-            }
-    
-            if (preview !== undefined) { 
-                localVarFormParams.append('preview', preview as any);
-            }
-    
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (id !== undefined) { 
+                localVarFormParams.append('id', id as any);
             }
     
     
@@ -13958,13 +15944,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileList: async (limit?: string, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
+        apiUserFileList: async (limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-file/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -13982,6 +15970,14 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             if (limit !== undefined) {
                 localVarQueryParameter['limit'] = limit;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
             if (query !== undefined) {
@@ -14010,16 +16006,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} [id2] 
          * @param {string} [name] 
-         * @param {string} [file] 
-         * @param {string} [fileDownload] 
-         * @param {string} [preview] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} [file] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFilePartialUpdate: async (id: number, id2?: number, name?: string, file?: string, fileDownload?: string, preview?: string, fileSizeKb?: number, options: any = {}): Promise<RequestArgs> => {
+        apiUserFilePartialUpdate: async (id: number, name?: string, file?: any, id2?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUserFilePartialUpdate', 'id', id)
             const localVarPath = `/api/user-file/{id}/`
@@ -14040,10 +16033,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
-            if (id2 !== undefined) { 
-                localVarFormParams.append('id', id2 as any);
-            }
-    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -14052,16 +16041,8 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileDownload !== undefined) { 
-                localVarFormParams.append('file_download', fileDownload as any);
-            }
-    
-            if (preview !== undefined) { 
-                localVarFormParams.append('preview', preview as any);
-            }
-    
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
             }
     
     
@@ -14116,30 +16097,19 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} id2 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileUpdate: async (id: number, id2: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options: any = {}): Promise<RequestArgs> => {
+        apiUserFileUpdate: async (id: number, name: string, file: any, id2?: number, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUserFileUpdate', 'id', id)
-            // verify required parameter 'id2' is not null or undefined
-            assertParamExists('apiUserFileUpdate', 'id2', id2)
             // verify required parameter 'name' is not null or undefined
             assertParamExists('apiUserFileUpdate', 'name', name)
             // verify required parameter 'file' is not null or undefined
             assertParamExists('apiUserFileUpdate', 'file', file)
-            // verify required parameter 'fileDownload' is not null or undefined
-            assertParamExists('apiUserFileUpdate', 'fileDownload', fileDownload)
-            // verify required parameter 'preview' is not null or undefined
-            assertParamExists('apiUserFileUpdate', 'preview', preview)
-            // verify required parameter 'fileSizeKb' is not null or undefined
-            assertParamExists('apiUserFileUpdate', 'fileSizeKb', fileSizeKb)
             const localVarPath = `/api/user-file/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -14158,10 +16128,6 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
 
-            if (id2 !== undefined) { 
-                localVarFormParams.append('id', id2 as any);
-            }
-    
             if (name !== undefined) { 
                 localVarFormParams.append('name', name as any);
             }
@@ -14170,16 +16136,8 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
                 localVarFormParams.append('file', file as any);
             }
     
-            if (fileDownload !== undefined) { 
-                localVarFormParams.append('file_download', fileDownload as any);
-            }
-    
-            if (preview !== undefined) { 
-                localVarFormParams.append('preview', preview as any);
-            }
-    
-            if (fileSizeKb !== undefined) { 
-                localVarFormParams.append('file_size_kb', fileSizeKb as any);
+            if (id2 !== undefined) { 
+                localVarFormParams.append('id', id2 as any);
             }
     
     
@@ -14196,11 +16154,12 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {Array<string>} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserList: async (options: any = {}): Promise<RequestArgs> => {
+        apiUserList: async (filterList?: Array<string>, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14216,6 +16175,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
+            if (filterList) {
+                localVarQueryParameter['filter_list'] = filterList;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
@@ -14228,13 +16191,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
-         * @param {PatchedUser} [patchedUser] 
+         * @param {PatchedUserRequest} [patchedUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserPartialUpdate: async (id: number, patchedUser?: PatchedUser, options: any = {}): Promise<RequestArgs> => {
+        apiUserPartialUpdate: async (id: number, patchedUserRequest?: PatchedUserRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUserPartialUpdate', 'id', id)
             const localVarPath = `/api/user/{id}/`
@@ -14260,7 +16223,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedUser, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedUserRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14302,11 +16265,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} user A unique value identifying this user preference.
-         * @param {PatchedUserPreference} [patchedUserPreference] 
+         * @param {PatchedUserPreferenceRequest} [patchedUserPreferenceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserPreferencePartialUpdate: async (user: number, patchedUserPreference?: PatchedUserPreference, options: any = {}): Promise<RequestArgs> => {
+        apiUserPreferencePartialUpdate: async (user: number, patchedUserPreferenceRequest?: PatchedUserPreferenceRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'user' is not null or undefined
             assertParamExists('apiUserPreferencePartialUpdate', 'user', user)
             const localVarPath = `/api/user-preference/{user}/`
@@ -14332,7 +16295,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedUserPreference, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedUserPreferenceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14376,7 +16339,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             };
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14449,12 +16412,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpaceList: async (page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
+        apiUserSpaceList: async (internalNote?: string, page?: number, pageSize?: number, options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/user-space/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14469,6 +16433,10 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
 
             // authentication ApiKeyAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+            if (internalNote !== undefined) {
+                localVarQueryParameter['internal_note'] = internalNote;
+            }
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -14492,11 +16460,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this user space.
-         * @param {PatchedUserSpace} [patchedUserSpace] 
+         * @param {PatchedUserSpaceRequest} [patchedUserSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpacePartialUpdate: async (id: number, patchedUserSpace?: PatchedUserSpace, options: any = {}): Promise<RequestArgs> => {
+        apiUserSpacePartialUpdate: async (id: number, patchedUserSpaceRequest?: PatchedUserSpaceRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiUserSpacePartialUpdate', 'id', id)
             const localVarPath = `/api/user-space/{id}/`
@@ -14522,7 +16490,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedUserSpace, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedUserSpaceRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14567,13 +16535,13 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         },
         /**
          * 
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogCreate: async (viewLog: ViewLog, options: any = {}): Promise<RequestArgs> => {
-            // verify required parameter 'viewLog' is not null or undefined
-            assertParamExists('apiViewLogCreate', 'viewLog', viewLog)
+        apiViewLogCreate: async (viewLogRequest: ViewLogRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'viewLogRequest' is not null or undefined
+            assertParamExists('apiViewLogCreate', 'viewLogRequest', viewLogRequest)
             const localVarPath = `/api/view-log/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -14596,7 +16564,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(viewLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(viewLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14684,11 +16652,11 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {PatchedViewLog} [patchedViewLog] 
+         * @param {PatchedViewLogRequest} [patchedViewLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogPartialUpdate: async (id: number, patchedViewLog?: PatchedViewLog, options: any = {}): Promise<RequestArgs> => {
+        apiViewLogPartialUpdate: async (id: number, patchedViewLogRequest?: PatchedViewLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiViewLogPartialUpdate', 'id', id)
             const localVarPath = `/api/view-log/{id}/`
@@ -14714,7 +16682,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchedViewLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchedViewLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14760,15 +16728,15 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogUpdate: async (id: number, viewLog: ViewLog, options: any = {}): Promise<RequestArgs> => {
+        apiViewLogUpdate: async (id: number, viewLogRequest: ViewLogRequest, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('apiViewLogUpdate', 'id', id)
-            // verify required parameter 'viewLog' is not null or undefined
-            assertParamExists('apiViewLogUpdate', 'viewLog', viewLog)
+            // verify required parameter 'viewLogRequest' is not null or undefined
+            assertParamExists('apiViewLogUpdate', 'viewLogRequest', viewLogRequest)
             const localVarPath = `/api/view-log/{id}/`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -14792,7 +16760,7 @@ export const ApiApiAxiosParamCreator = function (configuration?: Configuration) 
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(viewLog, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(viewLogRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -14811,12 +16779,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccessTokenCreate(accessToken: AccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenCreate(accessToken, options);
+        async apiAccessTokenCreate(accessTokenRequest: AccessTokenRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenCreate(accessTokenRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14841,12 +16809,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {PatchedAccessToken} [patchedAccessToken] 
+         * @param {PatchedAccessTokenRequest} [patchedAccessTokenRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccessTokenPartialUpdate(id: number, patchedAccessToken?: PatchedAccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenPartialUpdate(id, patchedAccessToken, options);
+        async apiAccessTokenPartialUpdate(id: number, patchedAccessTokenRequest?: PatchedAccessTokenRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenPartialUpdate(id, patchedAccessTokenRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14862,35 +16830,36 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccessTokenUpdate(id: number, accessToken: AccessToken, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenUpdate(id, accessToken, options);
+        async apiAccessTokenUpdate(id: number, accessTokenRequest: AccessTokenRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AccessToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAccessTokenUpdate(id, accessTokenRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
+         * @param {AutoMealPlanRequest} autoMealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutoPlanCreate(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutoPlanCreate(options);
+        async apiAutoPlanCreate(autoMealPlanRequest: AutoMealPlanRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AutoMealPlan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutoPlanCreate(autoMealPlanRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {Automation} automation 
+         * 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutomationCreate(automation: Automation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationCreate(automation, options);
+        async apiAutomationCreate(automationRequest: AutomationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationCreate(automationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14900,30 +16869,30 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedAutomationList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationList(automationType, page, pageSize, options);
+        async apiAutomationList(page?: number, pageSize?: number, type?: Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedAutomationList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationList(page, pageSize, type, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {PatchedAutomation} [patchedAutomation] 
+         * @param {PatchedAutomationRequest} [patchedAutomationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutomationPartialUpdate(id: number, patchedAutomation?: PatchedAutomation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationPartialUpdate(id, patchedAutomation, options);
+        async apiAutomationPartialUpdate(id: number, patchedAutomationRequest?: PatchedAutomationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationPartialUpdate(id, patchedAutomationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -14933,24 +16902,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {Automation} automation 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAutomationUpdate(id: number, automation: Automation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationUpdate(id, automation, options);
+        async apiAutomationUpdate(id: number, automationRequest: AutomationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Automation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiAutomationUpdate(id, automationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBookmarkletImportCreate(bookmarkletImport: BookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportCreate(bookmarkletImport, options);
+        async apiBookmarkletImportCreate(bookmarkletImportRequest: BookmarkletImportRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportCreate(bookmarkletImportRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14965,22 +16934,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBookmarkletImportList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<BookmarkletImportList>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportList(options);
+        async apiBookmarkletImportList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedBookmarkletImportListList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {PatchedBookmarkletImport} [patchedBookmarkletImport] 
+         * @param {PatchedBookmarkletImportRequest} [patchedBookmarkletImportRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImport?: PatchedBookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImport, options);
+        async apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImportRequest?: PatchedBookmarkletImportRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImportRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -14996,22 +16967,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBookmarkletImportUpdate(id: number, bookmarkletImport: BookmarkletImport, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportUpdate(id, bookmarkletImport, options);
+        async apiBookmarkletImportUpdate(id: number, bookmarkletImportRequest: BookmarkletImportRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BookmarkletImport>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiBookmarkletImportUpdate(id, bookmarkletImportRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiConnectorConfigCreate(connectorConfigConfig: ConnectorConfigConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigCreate(connectorConfigConfig, options);
+        async apiConnectorConfigCreate(connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigCreate(connectorConfigConfigRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15036,12 +17007,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {PatchedConnectorConfigConfig} [patchedConnectorConfigConfig] 
+         * @param {PatchedConnectorConfigConfigRequest} [patchedConnectorConfigConfigRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfig?: PatchedConnectorConfigConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfig, options);
+        async apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfigRequest?: PatchedConnectorConfigConfigRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfigRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15057,22 +17028,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiConnectorConfigUpdate(id: number, connectorConfigConfig: ConnectorConfigConfig, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigUpdate(id, connectorConfigConfig, options);
+        async apiConnectorConfigUpdate(id: number, connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ConnectorConfigConfig>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiConnectorConfigUpdate(id, connectorConfigConfigRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCookLogCreate(cookLog: CookLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogCreate(cookLog, options);
+        async apiCookLogCreate(cookLogRequest: CookLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogCreate(cookLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15100,12 +17071,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {PatchedCookLog} [patchedCookLog] 
+         * @param {PatchedCookLogRequest} [patchedCookLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCookLogPartialUpdate(id: number, patchedCookLog?: PatchedCookLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogPartialUpdate(id, patchedCookLog, options);
+        async apiCookLogPartialUpdate(id: number, patchedCookLogRequest?: PatchedCookLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogPartialUpdate(id, patchedCookLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15121,22 +17092,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCookLogUpdate(id: number, cookLog: CookLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogUpdate(id, cookLog, options);
+        async apiCookLogUpdate(id: number, cookLogRequest: CookLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CookLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCookLogUpdate(id, cookLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCustomFilterCreate(customFilter: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterCreate(customFilter, options);
+        async apiCustomFilterCreate(customFilterRequest: CustomFilterRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterCreate(customFilterRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15156,23 +17127,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {Array<'FOOD' | 'KEYWORD' | 'RECIPE'>} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedCustomFilterList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options);
+        async apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: Array<'FOOD' | 'KEYWORD' | 'RECIPE'>, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedCustomFilterList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {PatchedCustomFilter} [patchedCustomFilter] 
+         * @param {PatchedCustomFilterRequest} [patchedCustomFilterRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCustomFilterPartialUpdate(id: number, patchedCustomFilter?: PatchedCustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterPartialUpdate(id, patchedCustomFilter, options);
+        async apiCustomFilterPartialUpdate(id: number, patchedCustomFilterRequest?: PatchedCustomFilterRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterPartialUpdate(id, patchedCustomFilterRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15188,12 +17160,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiCustomFilterUpdate(id: number, customFilter: CustomFilter, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterUpdate(id, customFilter, options);
+        async apiCustomFilterUpdate(id: number, customFilterRequest: CustomFilterRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CustomFilter>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiCustomFilterUpdate(id, customFilterRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15208,12 +17180,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiExportLogCreate(exportLog: ExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogCreate(exportLog, options);
+        async apiExportLogCreate(exportLogRequest: ExportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogCreate(exportLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15240,12 +17212,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {PatchedExportLog} [patchedExportLog] 
+         * @param {PatchedExportLogRequest} [patchedExportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiExportLogPartialUpdate(id: number, patchedExportLog?: PatchedExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogPartialUpdate(id, patchedExportLog, options);
+        async apiExportLogPartialUpdate(id: number, patchedExportLogRequest?: PatchedExportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogPartialUpdate(id, patchedExportLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15261,22 +17233,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiExportLogUpdate(id: number, exportLog: ExportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogUpdate(id, exportLog, options);
+        async apiExportLogUpdate(id: number, exportLogRequest: ExportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiExportLogUpdate(id, exportLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodCreate(food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodCreate(food, options);
+        async apiFoodCreate(foodRequest: FoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodCreate(foodRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15292,12 +17264,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodFdcCreate(id: number, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodFdcCreate(id, food, options);
+        async apiFoodFdcCreate(id: number, foodRequest: FoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodFdcCreate(id, foodRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15327,7 +17299,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15339,46 +17311,46 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
-         * @param {Food} food 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMergeUpdate(id, target, food, options);
+        async apiFoodMergeUpdate(id: number, target: number, foodRequest: FoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMergeUpdate(id, target, foodRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
-         * @param {Food} food 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMoveUpdate(id, parent, food, options);
+        async apiFoodMoveUpdate(id: number, parent: number, foodRequest: FoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodMoveUpdate(id, parent, foodRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {PatchedFood} [patchedFood] 
+         * @param {PatchedFoodRequest} [patchedFoodRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPartialUpdate(id: number, patchedFood?: PatchedFood, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPartialUpdate(id, patchedFood, options);
+        async apiFoodPartialUpdate(id: number, patchedFoodRequest?: PatchedFoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPartialUpdate(id, patchedFoodRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyCreate(property: Property, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyCreate(property, options);
+        async apiFoodPropertyCreate(propertyRequest: PropertyRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyCreate(propertyRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15393,22 +17365,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Property>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyList(options);
+        async apiFoodPropertyList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {PatchedProperty} [patchedProperty] 
+         * @param {PatchedPropertyRequest} [patchedPropertyRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyPartialUpdate(id: number, patchedProperty?: PatchedProperty, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyPartialUpdate(id, patchedProperty, options);
+        async apiFoodPropertyPartialUpdate(id: number, patchedPropertyRequest?: PatchedPropertyRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyPartialUpdate(id, patchedPropertyRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15423,12 +17397,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypeCreate(propertyType: PropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeCreate(propertyType, options);
+        async apiFoodPropertyTypeCreate(propertyTypeRequest: PropertyTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeCreate(propertyTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15443,22 +17417,25 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PropertyType>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(options);
+        async apiFoodPropertyTypeList(category?: Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedPropertyTypeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeList(category, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PatchedPropertyType} [patchedPropertyType] 
+         * @param {PatchedPropertyTypeRequest} [patchedPropertyTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyType?: PatchedPropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypePartialUpdate(id, patchedPropertyType, options);
+        async apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyTypeRequest?: PatchedPropertyTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypePartialUpdate(id, patchedPropertyTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15474,23 +17451,23 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyTypeUpdate(id: number, propertyType: PropertyType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeUpdate(id, propertyType, options);
+        async apiFoodPropertyTypeUpdate(id: number, propertyTypeRequest: PropertyTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PropertyType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyTypeUpdate(id, propertyTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodPropertyUpdate(id: number, property: Property, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyUpdate(id, property, options);
+        async apiFoodPropertyUpdate(id: number, propertyRequest: PropertyRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Property>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodPropertyUpdate(id, propertyRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15506,23 +17483,43 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {FoodShoppingUpdate} foodShoppingUpdate 
+         * @param {FoodShoppingUpdateRequest} foodShoppingUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodShoppingUpdate(id: number, foodShoppingUpdate: FoodShoppingUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodShoppingUpdate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodShoppingUpdate(id, foodShoppingUpdate, options);
+        async apiFoodShoppingUpdate(id: number, foodShoppingUpdateRequest: FoodShoppingUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FoodShoppingUpdate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodShoppingUpdate(id, foodShoppingUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiFoodUpdate(id: number, food: Food, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodUpdate(id, food, options);
+        async apiFoodUpdate(id: number, foodRequest: FoodRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Food>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiFoodUpdate(id, foodRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiGetExternalFileLinkRetrieve(recipeId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiGetExternalFileLinkRetrieve(recipeId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiGetRecipeFileRetrieve(recipeId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiGetRecipeFileRetrieve(recipeId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15555,12 +17552,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiImportLogCreate(importLog: ImportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogCreate(importLog, options);
+        async apiImportLogCreate(importLogRequest: ImportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogCreate(importLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15587,12 +17584,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {PatchedImportLog} [patchedImportLog] 
+         * @param {PatchedImportLogRequest} [patchedImportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiImportLogPartialUpdate(id: number, patchedImportLog?: PatchedImportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogPartialUpdate(id, patchedImportLog, options);
+        async apiImportLogPartialUpdate(id: number, patchedImportLogRequest?: PatchedImportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogPartialUpdate(id, patchedImportLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15608,22 +17605,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiImportLogUpdate(id: number, importLog: ImportLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogUpdate(id, importLog, options);
+        async apiImportLogUpdate(id: number, importLogRequest: ImportLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImportLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiImportLogUpdate(id, importLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiIngredientCreate(ingredient: Ingredient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientCreate(ingredient, options);
+        async apiIngredientCreate(ingredientRequest: IngredientRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientCreate(ingredientRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15638,24 +17635,36 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {number} [page] A page number within the paginated result set.
-         * @param {number} [pageSize] Number of results to return per page.
+         * @param {IngredientStringRequest} ingredientStringRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiIngredientList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedIngredientList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientList(page, pageSize, options);
+        async apiIngredientFromStringCreate(ingredientStringRequest: IngredientStringRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ParsedIngredient>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientFromStringCreate(ingredientStringRequest, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedIngredientList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientList(food, page, pageSize, unit, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {PatchedIngredient} [patchedIngredient] 
+         * @param {PatchedIngredientRequest} [patchedIngredientRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiIngredientPartialUpdate(id: number, patchedIngredient?: PatchedIngredient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientPartialUpdate(id, patchedIngredient, options);
+        async apiIngredientPartialUpdate(id: number, patchedIngredientRequest?: PatchedIngredientRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientPartialUpdate(id, patchedIngredientRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15671,22 +17680,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiIngredientUpdate(id: number, ingredient: Ingredient, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientUpdate(id, ingredient, options);
+        async apiIngredientUpdate(id: number, ingredientRequest: IngredientRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Ingredient>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiIngredientUpdate(id, ingredientRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkCreate(inviteLink: InviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkCreate(inviteLink, options);
+        async apiInviteLinkCreate(inviteLinkRequest: InviteLinkRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkCreate(inviteLinkRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15701,26 +17710,29 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteLink>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(limit, query, random, updatedAt, options);
+        async apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedInviteLinkList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {PatchedInviteLink} [patchedInviteLink] 
+         * @param {PatchedInviteLinkRequest} [patchedInviteLinkRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkPartialUpdate(id: number, patchedInviteLink?: PatchedInviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkPartialUpdate(id, patchedInviteLink, options);
+        async apiInviteLinkPartialUpdate(id: number, patchedInviteLinkRequest?: PatchedInviteLinkRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkPartialUpdate(id, patchedInviteLinkRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15736,22 +17748,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiInviteLinkUpdate(id: number, inviteLink: InviteLink, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkUpdate(id, inviteLink, options);
+        async apiInviteLinkUpdate(id: number, inviteLinkRequest: InviteLinkRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteLink>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiInviteLinkUpdate(id, inviteLinkRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordCreate(keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordCreate(keyword, options);
+        async apiKeywordCreate(keywordRequest: KeywordRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordCreate(keywordRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15772,7 +17784,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15784,36 +17796,36 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} keyword 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMergeUpdate(id, target, keyword, options);
+        async apiKeywordMergeUpdate(id: number, target: number, keywordRequest: KeywordRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMergeUpdate(id, target, keywordRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} keyword 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMoveUpdate(id, parent, keyword, options);
+        async apiKeywordMoveUpdate(id: number, parent: number, keywordRequest: KeywordRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordMoveUpdate(id, parent, keywordRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {PatchedKeyword} [patchedKeyword] 
+         * @param {PatchedKeywordRequest} [patchedKeywordRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordPartialUpdate(id: number, patchedKeyword?: PatchedKeyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordPartialUpdate(id, patchedKeyword, options);
+        async apiKeywordPartialUpdate(id: number, patchedKeywordRequest?: PatchedKeywordRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordPartialUpdate(id, patchedKeywordRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15829,26 +17841,26 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiKeywordUpdate(id: number, keyword: Keyword, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordUpdate(id, keyword, options);
+        async apiKeywordUpdate(id: number, keywordRequest: KeywordRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Keyword>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiKeywordUpdate(id, keywordRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {MealPlan} mealPlan 
+         * 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanCreate(mealPlan: MealPlan, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanCreate(mealPlan, options);
+        async apiMealPlanCreate(mealPlanRequest: MealPlanRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanCreate(mealPlanRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15858,42 +17870,44 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanIcalRetrieve(fromDate?: string, mealType?: string, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+        async apiMealPlanIcalRetrieve(fromDate?: string, mealType?: Array<string>, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanIcalRetrieve(fromDate, mealType, toDate, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealPlan>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanList(fromDate, mealType, toDate, options);
+        async apiMealPlanList(fromDate?: string, mealType?: Array<string>, page?: number, pageSize?: number, toDate?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedMealPlanList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {PatchedMealPlan} [patchedMealPlan] 
+         * @param {PatchedMealPlanRequest} [patchedMealPlanRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanPartialUpdate(id: number, patchedMealPlan?: PatchedMealPlan, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanPartialUpdate(id, patchedMealPlan, options);
+        async apiMealPlanPartialUpdate(id: number, patchedMealPlanRequest?: PatchedMealPlanRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanPartialUpdate(id, patchedMealPlanRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -15903,24 +17917,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {MealPlan} mealPlan 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealPlanUpdate(id: number, mealPlan: MealPlan, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanUpdate(id, mealPlan, options);
+        async apiMealPlanUpdate(id: number, mealPlanRequest: MealPlanRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealPlan>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealPlanUpdate(id, mealPlanRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealTypeCreate(mealType: MealType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeCreate(mealType, options);
+        async apiMealTypeCreate(mealTypeRequest: MealTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeCreate(mealTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15935,22 +17949,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealTypeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<MealType>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeList(options);
+        async apiMealTypeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedMealTypeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {PatchedMealType} [patchedMealType] 
+         * @param {PatchedMealTypeRequest} [patchedMealTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealTypePartialUpdate(id: number, patchedMealType?: PatchedMealType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypePartialUpdate(id, patchedMealType, options);
+        async apiMealTypePartialUpdate(id: number, patchedMealTypeRequest?: PatchedMealTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypePartialUpdate(id, patchedMealTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -15966,33 +17982,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiMealTypeUpdate(id: number, mealType: MealType, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeUpdate(id, mealType, options);
+        async apiMealTypeUpdate(id: number, mealTypeRequest: MealTypeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MealType>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiMealTypeUpdate(id, mealTypeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {string} fromDate 
-         * @param {string} toDate 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiPlanIcalRetrieve(fromDate: string, toDate: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPlanIcalRetrieve(fromDate, toDate, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @param {RecipeBook} recipeBook 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiRecipeBookCreate(recipeBook: RecipeBook, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookCreate(recipeBook, options);
+        async apiRecipeBookCreate(recipeBookRequest: RecipeBookRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookCreate(recipeBookRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16006,17 +18011,17 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookEntryCreate(recipeBookEntry: RecipeBookEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryCreate(recipeBookEntry, options);
+        async apiRecipeBookEntryCreate(recipeBookEntryRequest: RecipeBookEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryCreate(recipeBookEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16026,27 +18031,31 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookEntryList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RecipeBookEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryList(options);
+        async apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookEntryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryList(book, page, pageSize, recipe, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
+         * @param {PatchedRecipeBookEntryRequest} [patchedRecipeBookEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntry?: PatchedRecipeBookEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntry, options);
+        async apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntryRequest?: PatchedRecipeBookEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -16056,38 +18065,42 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookEntryUpdate(id: number, recipeBookEntry: RecipeBookEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryUpdate(id, recipeBookEntry, options);
+        async apiRecipeBookEntryUpdate(id: number, recipeBookEntryRequest: RecipeBookEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBookEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookEntryUpdate(id, recipeBookEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<RecipeBook>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, query, random, updatedAt, options);
+        async apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeBookList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {PatchedRecipeBook} [patchedRecipeBook] 
+         * @param {PatchedRecipeBookRequest} [patchedRecipeBookRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookPartialUpdate(id: number, patchedRecipeBook?: PatchedRecipeBook, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookPartialUpdate(id, patchedRecipeBook, options);
+        async apiRecipeBookPartialUpdate(id: number, patchedRecipeBookRequest?: PatchedRecipeBookRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookPartialUpdate(id, patchedRecipeBookRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16103,22 +18116,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {RecipeBook} recipeBook 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeBookUpdate(id: number, recipeBook: RecipeBook, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookUpdate(id, recipeBook, options);
+        async apiRecipeBookUpdate(id: number, recipeBookRequest: RecipeBookRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeBook>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeBookUpdate(id, recipeBookRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeCreate(recipe: Recipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeCreate(recipe, options);
+        async apiRecipeCreate(recipeRequest: RecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeCreate(recipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16152,36 +18165,36 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {string} [image] 
+         * @param {any} [image] 
          * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeImageUpdate(id: number, image?: string, imageUrl?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
+        async apiRecipeImageUpdate(id: number, image?: any, imageUrl?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeImage>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeImageUpdate(id, image, imageUrl, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
-         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
-         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
-         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {Array<number>} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {Array<number>} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {Array<number>} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
+         * @param {Array<number>} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {Array<number>} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
          * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
-         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
-         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
-         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
-         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
-         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
-         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
-         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
-         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {Array<number>} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {Array<number>} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
+         * @param {Array<number>} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {Array<number>} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {Array<number>} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {Array<number>} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
+         * @param {Array<number>} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {Array<number>} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -16195,19 +18208,19 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeOverviewList>> {
+        async apiRecipeList(books?: Array<number>, booksAnd?: Array<number>, booksAndNot?: Array<number>, booksOr?: Array<number>, booksOrNot?: Array<number>, cookedon?: string, createdon?: string, foods?: Array<number>, foodsAnd?: Array<number>, foodsAndNot?: Array<number>, foodsOr?: Array<number>, foodsOrNot?: Array<number>, internal?: boolean, keywords?: Array<number>, keywordsAnd?: Array<number>, keywordsAndNot?: Array<number>, keywordsOr?: Array<number>, keywordsOrNot?: Array<number>, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedRecipeOverviewList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {PatchedRecipe} [patchedRecipe] 
+         * @param {PatchedRecipeRequest} [patchedRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipePartialUpdate(id: number, patchedRecipe?: PatchedRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipePartialUpdate(id, patchedRecipe, options);
+        async apiRecipePartialUpdate(id: number, patchedRecipeRequest?: PatchedRecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipePartialUpdate(id, patchedRecipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16233,23 +18246,23 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {RecipeShoppingUpdateRequest} [recipeShoppingUpdateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeShoppingUpdate(id: number, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeShoppingUpdate>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeShoppingUpdate(id, recipeShoppingUpdate, options);
+        async apiRecipeShoppingUpdate(id: number, recipeShoppingUpdateRequest?: RecipeShoppingUpdateRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeShoppingUpdate>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeShoppingUpdate(id, recipeShoppingUpdateRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiRecipeUpdate(id: number, recipe: Recipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeUpdate(id, recipe, options);
+        async apiRecipeUpdate(id: number, recipeRequest: RecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Recipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiRecipeUpdate(id, recipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16257,8 +18270,8 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiResetFoodInheritanceRetrieve(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiResetFoodInheritanceRetrieve(options);
+        async apiResetFoodInheritanceCreate(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiResetFoodInheritanceCreate(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16267,28 +18280,28 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShareLinkRetrieve(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async apiShareLinkRetrieve(id: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShareLink>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiShareLinkRetrieve(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {ShoppingListEntryBulk} shoppingListEntryBulk 
+         * @param {ShoppingListEntryBulkRequest} shoppingListEntryBulkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryBulkCreate(shoppingListEntryBulk: ShoppingListEntryBulk, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntryBulk>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryBulkCreate(shoppingListEntryBulk, options);
+        async apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest: ShoppingListEntryBulkRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntryBulk>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryCreate(shoppingListEntry: ShoppingListEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryCreate(shoppingListEntry, options);
+        async apiShoppingListEntryCreate(shoppingListEntryRequest: ShoppingListEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryCreate(shoppingListEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16305,23 +18318,25 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryList(checked, id, supermarket, options);
+        async apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedShoppingListEntryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {PatchedShoppingListEntry} [patchedShoppingListEntry] 
+         * @param {PatchedShoppingListEntryRequest} [patchedShoppingListEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntry?: PatchedShoppingListEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntry, options);
+        async apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntryRequest?: PatchedShoppingListEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16337,22 +18352,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListEntryUpdate(id: number, shoppingListEntry: ShoppingListEntry, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryUpdate(id, shoppingListEntry, options);
+        async apiShoppingListEntryUpdate(id: number, shoppingListEntryRequest: ShoppingListEntryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListEntry>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListEntryUpdate(id, shoppingListEntryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListRecipeCreate(shoppingListRecipe: ShoppingListRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeCreate(shoppingListRecipe, options);
+        async apiShoppingListRecipeCreate(shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeCreate(shoppingListRecipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16367,22 +18382,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListRecipeList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ShoppingListRecipe>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeList(options);
+        async apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedShoppingListRecipeList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {PatchedShoppingListRecipe} [patchedShoppingListRecipe] 
+         * @param {PatchedShoppingListRecipeRequest} [patchedShoppingListRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipe?: PatchedShoppingListRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipe, options);
+        async apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipeRequest?: PatchedShoppingListRecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16398,12 +18415,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeUpdate(id, shoppingListRecipe, options);
+        async apiShoppingListRecipeUpdate(id: number, shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ShoppingListRecipe>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiShoppingListRecipeUpdate(id, shoppingListRecipeRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16418,12 +18435,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this space.
-         * @param {PatchedSpace} [patchedSpace] 
+         * @param {PatchedSpaceRequest} [patchedSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSpacePartialUpdate(id: number, patchedSpace?: PatchedSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Space>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSpacePartialUpdate(id, patchedSpace, options);
+        async apiSpacePartialUpdate(id: number, patchedSpaceRequest?: PatchedSpaceRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Space>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSpacePartialUpdate(id, patchedSpaceRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16438,12 +18455,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStepCreate(step: Step, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepCreate(step, options);
+        async apiStepCreate(stepRequest: StepRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepCreate(stepRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16461,23 +18478,23 @@ export const ApiApiFp = function(configuration?: Configuration) {
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] Query string matched (fuzzy) against object name.
-         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
+         * @param {Array<number>} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStepList(page?: number, pageSize?: number, query?: string, recipe?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedStepList>> {
+        async apiStepList(page?: number, pageSize?: number, query?: string, recipe?: Array<number>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedStepList>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepList(page, pageSize, query, recipe, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {PatchedStep} [patchedStep] 
+         * @param {PatchedStepRequest} [patchedStepRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStepPartialUpdate(id: number, patchedStep?: PatchedStep, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepPartialUpdate(id, patchedStep, options);
+        async apiStepPartialUpdate(id: number, patchedStepRequest?: PatchedStepRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepPartialUpdate(id, patchedStepRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16493,22 +18510,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStepUpdate(id: number, step: Step, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepUpdate(id, step, options);
+        async apiStepUpdate(id: number, stepRequest: StepRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Step>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStepUpdate(id, stepRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStorageCreate(storage: Storage, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStorageCreate(storage, options);
+        async apiStorageCreate(storageRequest: StorageRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStorageCreate(storageRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16533,12 +18550,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {PatchedStorage} [patchedStorage] 
+         * @param {PatchedStorageRequest} [patchedStorageRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStoragePartialUpdate(id: number, patchedStorage?: PatchedStorage, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStoragePartialUpdate(id, patchedStorage, options);
+        async apiStoragePartialUpdate(id: number, patchedStorageRequest?: PatchedStorageRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStoragePartialUpdate(id, patchedStorageRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16554,22 +18571,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiStorageUpdate(id: number, storage: Storage, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStorageUpdate(id, storage, options);
+        async apiStorageUpdate(id: number, storageRequest: StorageRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Storage>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiStorageUpdate(id, storageRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryCreate(supermarketCategory: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryCreate(supermarketCategory, options);
+        async apiSupermarketCategoryCreate(supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryCreate(supermarketCategoryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16585,47 +18602,49 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SupermarketCategory>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryList(limit, query, random, updatedAt, options);
+        async apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSupermarketCategoryList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options);
+        async apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategoryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {PatchedSupermarketCategory} [patchedSupermarketCategory] 
+         * @param {PatchedSupermarketCategoryRequest} [patchedSupermarketCategoryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategory?: PatchedSupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategory, options);
+        async apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategoryRequest?: PatchedSupermarketCategoryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategoryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryRelationCreate(supermarketCategoryRelation: SupermarketCategoryRelation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationCreate(supermarketCategoryRelation, options);
+        async apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16656,12 +18675,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {PatchedSupermarketCategoryRelation} [patchedSupermarketCategoryRelation] 
+         * @param {PatchedSupermarketCategoryRelationRequest} [patchedSupermarketCategoryRelationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelation?: PatchedSupermarketCategoryRelation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelation, options);
+        async apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelationRequest?: PatchedSupermarketCategoryRelationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16677,12 +18696,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelation: SupermarketCategoryRelation, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelation, options);
+        async apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategoryRelation>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelationRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16698,22 +18717,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCategoryUpdate(id: number, supermarketCategory: SupermarketCategory, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryUpdate(id, supermarketCategory, options);
+        async apiSupermarketCategoryUpdate(id: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SupermarketCategory>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCategoryUpdate(id, supermarketCategoryRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketCreate(supermarket: Supermarket, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCreate(supermarket, options);
+        async apiSupermarketCreate(supermarketRequest: SupermarketRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketCreate(supermarketRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16729,25 +18748,27 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Supermarket>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketList(limit, query, random, updatedAt, options);
+        async apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSupermarketList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {PatchedSupermarket} [patchedSupermarket] 
+         * @param {PatchedSupermarketRequest} [patchedSupermarketRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketPartialUpdate(id: number, patchedSupermarket?: PatchedSupermarket, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketPartialUpdate(id, patchedSupermarket, options);
+        async apiSupermarketPartialUpdate(id: number, patchedSupermarketRequest?: PatchedSupermarketRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketPartialUpdate(id, patchedSupermarketRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16763,12 +18784,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSupermarketUpdate(id: number, supermarket: Supermarket, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketUpdate(id, supermarket, options);
+        async apiSupermarketUpdate(id: number, supermarketRequest: SupermarketRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Supermarket>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSupermarketUpdate(id, supermarketRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16783,12 +18804,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSyncCreate(sync: Sync, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncCreate(sync, options);
+        async apiSyncCreate(syncRequest: SyncRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncCreate(syncRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16803,11 +18824,13 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSyncList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Sync>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncList(options);
+        async apiSyncList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedSyncList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncList(page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16834,12 +18857,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {PatchedSync} [patchedSync] 
+         * @param {PatchedSyncRequest} [patchedSyncRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSyncPartialUpdate(id: number, patchedSync?: PatchedSync, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncPartialUpdate(id, patchedSync, options);
+        async apiSyncPartialUpdate(id: number, patchedSyncRequest?: PatchedSyncRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncPartialUpdate(id, patchedSyncRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16855,22 +18878,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiSyncUpdate(id: number, sync: Sync, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncUpdate(id, sync, options);
+        async apiSyncUpdate(id: number, syncRequest: SyncRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Sync>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiSyncUpdate(id, syncRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitConversionCreate(unitConversion: UnitConversion, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionCreate(unitConversion, options);
+        async apiUnitConversionCreate(unitConversionRequest: UnitConversionRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionCreate(unitConversionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16886,22 +18909,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitConversionList(foodId?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UnitConversion>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionList(foodId, options);
+        async apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUnitConversionList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionList(foodId, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {PatchedUnitConversion} [patchedUnitConversion] 
+         * @param {PatchedUnitConversionRequest} [patchedUnitConversionRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitConversionPartialUpdate(id: number, patchedUnitConversion?: PatchedUnitConversion, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionPartialUpdate(id, patchedUnitConversion, options);
+        async apiUnitConversionPartialUpdate(id: number, patchedUnitConversionRequest?: PatchedUnitConversionRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionPartialUpdate(id, patchedUnitConversionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16917,22 +18942,22 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitConversionUpdate(id: number, unitConversion: UnitConversion, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionUpdate(id, unitConversion, options);
+        async apiUnitConversionUpdate(id: number, unitConversionRequest: UnitConversionRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UnitConversion>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitConversionUpdate(id, unitConversionRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitCreate(unit: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitCreate(unit, options);
+        async apiUnitCreate(unitRequest: UnitRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitCreate(unitRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16963,24 +18988,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
-         * @param {Unit} unit 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitMergeUpdate(id, target, unit, options);
+        async apiUnitMergeUpdate(id: number, target: number, unitRequest: UnitRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitMergeUpdate(id, target, unitRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {PatchedUnit} [patchedUnit] 
+         * @param {PatchedUnitRequest} [patchedUnitRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitPartialUpdate(id: number, patchedUnit?: PatchedUnit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitPartialUpdate(id, patchedUnit, options);
+        async apiUnitPartialUpdate(id: number, patchedUnitRequest?: PatchedUnitRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitPartialUpdate(id, patchedUnitRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -16996,27 +19021,24 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUnitUpdate(id: number, unit: Unit, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitUpdate(id, unit, options);
+        async apiUnitUpdate(id: number, unitRequest: UnitRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Unit>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUnitUpdate(id, unitRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @param {number} id 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserFileCreate(id: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileCreate(id, name, file, fileDownload, preview, fileSizeKb, options);
+        async apiUserFileCreate(name: string, file: any, id?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileCreate(name, file, id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17032,30 +19054,29 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserFile>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileList(limit, query, random, updatedAt, options);
+        async apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserFileList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileList(limit, page, pageSize, query, random, updatedAt, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} [id2] 
          * @param {string} [name] 
-         * @param {string} [file] 
-         * @param {string} [fileDownload] 
-         * @param {string} [preview] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} [file] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserFilePartialUpdate(id: number, id2?: number, name?: string, file?: string, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFilePartialUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options);
+        async apiUserFilePartialUpdate(id: number, name?: string, file?: any, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFilePartialUpdate(id, name, file, id2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17071,37 +19092,35 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} id2 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserFileUpdate(id: number, id2: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options);
+        async apiUserFileUpdate(id: number, name: string, file: any, id2?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserFile>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserFileUpdate(id, name, file, id2, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {Array<string>} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserList(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserList(options);
+        async apiUserList(filterList?: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserList(filterList, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
-         * @param {PatchedUser} [patchedUser] 
+         * @param {PatchedUserRequest} [patchedUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPartialUpdate(id, patchedUser, options);
+        async apiUserPartialUpdate(id: number, patchedUserRequest?: PatchedUserRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPartialUpdate(id, patchedUserRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17116,12 +19135,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} user A unique value identifying this user preference.
-         * @param {PatchedUserPreference} [patchedUserPreference] 
+         * @param {PatchedUserPreferenceRequest} [patchedUserPreferenceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserPreferencePartialUpdate(user: number, patchedUserPreference?: PatchedUserPreference, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPreference>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPreferencePartialUpdate(user, patchedUserPreference, options);
+        async apiUserPreferencePartialUpdate(user: number, patchedUserPreferenceRequest?: PatchedUserPreferenceRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPreference>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserPreferencePartialUpdate(user, patchedUserPreferenceRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17135,7 +19154,7 @@ export const ApiApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17156,24 +19175,25 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserSpaceList(page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserSpaceList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpaceList(page, pageSize, options);
+        async apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PaginatedUserSpaceList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpaceList(internalNote, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this user space.
-         * @param {PatchedUserSpace} [patchedUserSpace] 
+         * @param {PatchedUserSpaceRequest} [patchedUserSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserSpacePartialUpdate(id: number, patchedUserSpace?: PatchedUserSpace, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpacePartialUpdate(id, patchedUserSpace, options);
+        async apiUserSpacePartialUpdate(id: number, patchedUserSpaceRequest?: PatchedUserSpaceRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserSpace>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiUserSpacePartialUpdate(id, patchedUserSpaceRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17188,12 +19208,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiViewLogCreate(viewLog: ViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogCreate(viewLog, options);
+        async apiViewLogCreate(viewLogRequest: ViewLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogCreate(viewLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17220,12 +19240,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {PatchedViewLog} [patchedViewLog] 
+         * @param {PatchedViewLogRequest} [patchedViewLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiViewLogPartialUpdate(id: number, patchedViewLog?: PatchedViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogPartialUpdate(id, patchedViewLog, options);
+        async apiViewLogPartialUpdate(id: number, patchedViewLogRequest?: PatchedViewLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogPartialUpdate(id, patchedViewLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -17241,12 +19261,12 @@ export const ApiApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiViewLogUpdate(id: number, viewLog: ViewLog, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogUpdate(id, viewLog, options);
+        async apiViewLogUpdate(id: number, viewLogRequest: ViewLogRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ViewLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiViewLogUpdate(id, viewLogRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -17261,12 +19281,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
     return {
         /**
          * 
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenCreate(accessToken: AccessToken, options?: any): AxiosPromise<AccessToken> {
-            return localVarFp.apiAccessTokenCreate(accessToken, options).then((request) => request(axios, basePath));
+        apiAccessTokenCreate(accessTokenRequest: AccessTokenRequest, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.apiAccessTokenCreate(accessTokenRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17288,12 +19308,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {PatchedAccessToken} [patchedAccessToken] 
+         * @param {PatchedAccessTokenRequest} [patchedAccessTokenRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenPartialUpdate(id: number, patchedAccessToken?: PatchedAccessToken, options?: any): AxiosPromise<AccessToken> {
-            return localVarFp.apiAccessTokenPartialUpdate(id, patchedAccessToken, options).then((request) => request(axios, basePath));
+        apiAccessTokenPartialUpdate(id: number, patchedAccessTokenRequest?: PatchedAccessTokenRequest, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.apiAccessTokenPartialUpdate(id, patchedAccessTokenRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17307,32 +19327,33 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this access token.
-         * @param {AccessToken} accessToken 
+         * @param {AccessTokenRequest} accessTokenRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccessTokenUpdate(id: number, accessToken: AccessToken, options?: any): AxiosPromise<AccessToken> {
-            return localVarFp.apiAccessTokenUpdate(id, accessToken, options).then((request) => request(axios, basePath));
+        apiAccessTokenUpdate(id: number, accessTokenRequest: AccessTokenRequest, options?: any): AxiosPromise<AccessToken> {
+            return localVarFp.apiAccessTokenUpdate(id, accessTokenRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
+         * @param {AutoMealPlanRequest} autoMealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutoPlanCreate(options?: any): AxiosPromise<void> {
-            return localVarFp.apiAutoPlanCreate(options).then((request) => request(axios, basePath));
+        apiAutoPlanCreate(autoMealPlanRequest: AutoMealPlanRequest, options?: any): AxiosPromise<AutoMealPlan> {
+            return localVarFp.apiAutoPlanCreate(autoMealPlanRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {Automation} automation 
+         * 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationCreate(automation: Automation, options?: any): AxiosPromise<Automation> {
-            return localVarFp.apiAutomationCreate(automation, options).then((request) => request(axios, basePath));
+        apiAutomationCreate(automationRequest: AutomationRequest, options?: any): AxiosPromise<Automation> {
+            return localVarFp.apiAutomationCreate(automationRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17341,28 +19362,28 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-         * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+         * 
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
+         * @param {Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>} [type] Return the Automations matching the automation type.  Repeat for multiple.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedAutomationList> {
-            return localVarFp.apiAutomationList(automationType, page, pageSize, options).then((request) => request(axios, basePath));
+        apiAutomationList(page?: number, pageSize?: number, type?: Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>, options?: any): AxiosPromise<PaginatedAutomationList> {
+            return localVarFp.apiAutomationList(page, pageSize, type, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {PatchedAutomation} [patchedAutomation] 
+         * @param {PatchedAutomationRequest} [patchedAutomationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationPartialUpdate(id: number, patchedAutomation?: PatchedAutomation, options?: any): AxiosPromise<Automation> {
-            return localVarFp.apiAutomationPartialUpdate(id, patchedAutomation, options).then((request) => request(axios, basePath));
+        apiAutomationPartialUpdate(id: number, patchedAutomationRequest?: PatchedAutomationRequest, options?: any): AxiosPromise<Automation> {
+            return localVarFp.apiAutomationPartialUpdate(id, patchedAutomationRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17371,23 +19392,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiAutomationRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+         * 
          * @param {number} id A unique integer value identifying this automation.
-         * @param {Automation} automation 
+         * @param {AutomationRequest} automationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAutomationUpdate(id: number, automation: Automation, options?: any): AxiosPromise<Automation> {
-            return localVarFp.apiAutomationUpdate(id, automation, options).then((request) => request(axios, basePath));
+        apiAutomationUpdate(id: number, automationRequest: AutomationRequest, options?: any): AxiosPromise<Automation> {
+            return localVarFp.apiAutomationUpdate(id, automationRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportCreate(bookmarkletImport: BookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
-            return localVarFp.apiBookmarkletImportCreate(bookmarkletImport, options).then((request) => request(axios, basePath));
+        apiBookmarkletImportCreate(bookmarkletImportRequest: BookmarkletImportRequest, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.apiBookmarkletImportCreate(bookmarkletImportRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17400,21 +19421,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportList(options?: any): AxiosPromise<Array<BookmarkletImportList>> {
-            return localVarFp.apiBookmarkletImportList(options).then((request) => request(axios, basePath));
+        apiBookmarkletImportList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedBookmarkletImportListList> {
+            return localVarFp.apiBookmarkletImportList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {PatchedBookmarkletImport} [patchedBookmarkletImport] 
+         * @param {PatchedBookmarkletImportRequest} [patchedBookmarkletImportRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImport?: PatchedBookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
-            return localVarFp.apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImport, options).then((request) => request(axios, basePath));
+        apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImportRequest?: PatchedBookmarkletImportRequest, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImportRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17428,21 +19451,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this bookmarklet import.
-         * @param {BookmarkletImport} bookmarkletImport 
+         * @param {BookmarkletImportRequest} bookmarkletImportRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBookmarkletImportUpdate(id: number, bookmarkletImport: BookmarkletImport, options?: any): AxiosPromise<BookmarkletImport> {
-            return localVarFp.apiBookmarkletImportUpdate(id, bookmarkletImport, options).then((request) => request(axios, basePath));
+        apiBookmarkletImportUpdate(id: number, bookmarkletImportRequest: BookmarkletImportRequest, options?: any): AxiosPromise<BookmarkletImport> {
+            return localVarFp.apiBookmarkletImportUpdate(id, bookmarkletImportRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigCreate(connectorConfigConfig: ConnectorConfigConfig, options?: any): AxiosPromise<ConnectorConfigConfig> {
-            return localVarFp.apiConnectorConfigCreate(connectorConfigConfig, options).then((request) => request(axios, basePath));
+        apiConnectorConfigCreate(connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any): AxiosPromise<ConnectorConfigConfig> {
+            return localVarFp.apiConnectorConfigCreate(connectorConfigConfigRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17464,12 +19487,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {PatchedConnectorConfigConfig} [patchedConnectorConfigConfig] 
+         * @param {PatchedConnectorConfigConfigRequest} [patchedConnectorConfigConfigRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfig?: PatchedConnectorConfigConfig, options?: any): AxiosPromise<ConnectorConfigConfig> {
-            return localVarFp.apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfig, options).then((request) => request(axios, basePath));
+        apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfigRequest?: PatchedConnectorConfigConfigRequest, options?: any): AxiosPromise<ConnectorConfigConfig> {
+            return localVarFp.apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfigRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17483,21 +19506,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this connector config.
-         * @param {ConnectorConfigConfig} connectorConfigConfig 
+         * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiConnectorConfigUpdate(id: number, connectorConfigConfig: ConnectorConfigConfig, options?: any): AxiosPromise<ConnectorConfigConfig> {
-            return localVarFp.apiConnectorConfigUpdate(id, connectorConfigConfig, options).then((request) => request(axios, basePath));
+        apiConnectorConfigUpdate(id: number, connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any): AxiosPromise<ConnectorConfigConfig> {
+            return localVarFp.apiConnectorConfigUpdate(id, connectorConfigConfigRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogCreate(cookLog: CookLog, options?: any): AxiosPromise<CookLog> {
-            return localVarFp.apiCookLogCreate(cookLog, options).then((request) => request(axios, basePath));
+        apiCookLogCreate(cookLogRequest: CookLogRequest, options?: any): AxiosPromise<CookLog> {
+            return localVarFp.apiCookLogCreate(cookLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17522,12 +19545,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {PatchedCookLog} [patchedCookLog] 
+         * @param {PatchedCookLogRequest} [patchedCookLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogPartialUpdate(id: number, patchedCookLog?: PatchedCookLog, options?: any): AxiosPromise<CookLog> {
-            return localVarFp.apiCookLogPartialUpdate(id, patchedCookLog, options).then((request) => request(axios, basePath));
+        apiCookLogPartialUpdate(id: number, patchedCookLogRequest?: PatchedCookLogRequest, options?: any): AxiosPromise<CookLog> {
+            return localVarFp.apiCookLogPartialUpdate(id, patchedCookLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17541,21 +19564,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this cook log.
-         * @param {CookLog} cookLog 
+         * @param {CookLogRequest} cookLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCookLogUpdate(id: number, cookLog: CookLog, options?: any): AxiosPromise<CookLog> {
-            return localVarFp.apiCookLogUpdate(id, cookLog, options).then((request) => request(axios, basePath));
+        apiCookLogUpdate(id: number, cookLogRequest: CookLogRequest, options?: any): AxiosPromise<CookLog> {
+            return localVarFp.apiCookLogUpdate(id, cookLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterCreate(customFilter: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
-            return localVarFp.apiCustomFilterCreate(customFilter, options).then((request) => request(axios, basePath));
+        apiCustomFilterCreate(customFilterRequest: CustomFilterRequest, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.apiCustomFilterCreate(customFilterRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17573,22 +19596,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
+         * @param {Array<'FOOD' | 'KEYWORD' | 'RECIPE'>} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedCustomFilterList> {
-            return localVarFp.apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: Array<'FOOD' | 'KEYWORD' | 'RECIPE'>, updatedAt?: string, options?: any): AxiosPromise<PaginatedCustomFilterList> {
+            return localVarFp.apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {PatchedCustomFilter} [patchedCustomFilter] 
+         * @param {PatchedCustomFilterRequest} [patchedCustomFilterRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterPartialUpdate(id: number, patchedCustomFilter?: PatchedCustomFilter, options?: any): AxiosPromise<CustomFilter> {
-            return localVarFp.apiCustomFilterPartialUpdate(id, patchedCustomFilter, options).then((request) => request(axios, basePath));
+        apiCustomFilterPartialUpdate(id: number, patchedCustomFilterRequest?: PatchedCustomFilterRequest, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.apiCustomFilterPartialUpdate(id, patchedCustomFilterRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17602,12 +19626,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this custom filter.
-         * @param {CustomFilter} customFilter 
+         * @param {CustomFilterRequest} customFilterRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiCustomFilterUpdate(id: number, customFilter: CustomFilter, options?: any): AxiosPromise<CustomFilter> {
-            return localVarFp.apiCustomFilterUpdate(id, customFilter, options).then((request) => request(axios, basePath));
+        apiCustomFilterUpdate(id: number, customFilterRequest: CustomFilterRequest, options?: any): AxiosPromise<CustomFilter> {
+            return localVarFp.apiCustomFilterUpdate(id, customFilterRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * function to download a user file securely (wrapping as zip to prevent any context based XSS problems) temporary solution until a real file manager is implemented
@@ -17620,12 +19644,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogCreate(exportLog: ExportLog, options?: any): AxiosPromise<ExportLog> {
-            return localVarFp.apiExportLogCreate(exportLog, options).then((request) => request(axios, basePath));
+        apiExportLogCreate(exportLogRequest: ExportLogRequest, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.apiExportLogCreate(exportLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17649,12 +19673,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {PatchedExportLog} [patchedExportLog] 
+         * @param {PatchedExportLogRequest} [patchedExportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogPartialUpdate(id: number, patchedExportLog?: PatchedExportLog, options?: any): AxiosPromise<ExportLog> {
-            return localVarFp.apiExportLogPartialUpdate(id, patchedExportLog, options).then((request) => request(axios, basePath));
+        apiExportLogPartialUpdate(id: number, patchedExportLogRequest?: PatchedExportLogRequest, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.apiExportLogPartialUpdate(id, patchedExportLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17668,21 +19692,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this export log.
-         * @param {ExportLog} exportLog 
+         * @param {ExportLogRequest} exportLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiExportLogUpdate(id: number, exportLog: ExportLog, options?: any): AxiosPromise<ExportLog> {
-            return localVarFp.apiExportLogUpdate(id, exportLog, options).then((request) => request(axios, basePath));
+        apiExportLogUpdate(id: number, exportLogRequest: ExportLogRequest, options?: any): AxiosPromise<ExportLog> {
+            return localVarFp.apiExportLogUpdate(id, exportLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodCreate(food: Food, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodCreate(food, options).then((request) => request(axios, basePath));
+        apiFoodCreate(foodRequest: FoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodCreate(foodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17696,12 +19720,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodFdcCreate(id: number, food: Food, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodFdcCreate(id, food, options).then((request) => request(axios, basePath));
+        apiFoodFdcCreate(id: number, foodRequest: FoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodFdcCreate(id, foodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17728,7 +19752,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -17739,43 +19763,43 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} target 
-         * @param {Food} food 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodMergeUpdate(id, target, food, options).then((request) => request(axios, basePath));
+        apiFoodMergeUpdate(id: number, target: number, foodRequest: FoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodMergeUpdate(id, target, foodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {string} parent 
-         * @param {Food} food 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodMoveUpdate(id, parent, food, options).then((request) => request(axios, basePath));
+        apiFoodMoveUpdate(id: number, parent: number, foodRequest: FoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodMoveUpdate(id, parent, foodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {PatchedFood} [patchedFood] 
+         * @param {PatchedFoodRequest} [patchedFoodRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPartialUpdate(id: number, patchedFood?: PatchedFood, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodPartialUpdate(id, patchedFood, options).then((request) => request(axios, basePath));
+        apiFoodPartialUpdate(id: number, patchedFoodRequest?: PatchedFoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodPartialUpdate(id, patchedFoodRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyCreate(property: Property, options?: any): AxiosPromise<Property> {
-            return localVarFp.apiFoodPropertyCreate(property, options).then((request) => request(axios, basePath));
+        apiFoodPropertyCreate(propertyRequest: PropertyRequest, options?: any): AxiosPromise<Property> {
+            return localVarFp.apiFoodPropertyCreate(propertyRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17788,21 +19812,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyList(options?: any): AxiosPromise<Array<Property>> {
-            return localVarFp.apiFoodPropertyList(options).then((request) => request(axios, basePath));
+        apiFoodPropertyList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyList> {
+            return localVarFp.apiFoodPropertyList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {PatchedProperty} [patchedProperty] 
+         * @param {PatchedPropertyRequest} [patchedPropertyRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyPartialUpdate(id: number, patchedProperty?: PatchedProperty, options?: any): AxiosPromise<Property> {
-            return localVarFp.apiFoodPropertyPartialUpdate(id, patchedProperty, options).then((request) => request(axios, basePath));
+        apiFoodPropertyPartialUpdate(id: number, patchedPropertyRequest?: PatchedPropertyRequest, options?: any): AxiosPromise<Property> {
+            return localVarFp.apiFoodPropertyPartialUpdate(id, patchedPropertyRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17815,12 +19841,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeCreate(propertyType: PropertyType, options?: any): AxiosPromise<PropertyType> {
-            return localVarFp.apiFoodPropertyTypeCreate(propertyType, options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypeCreate(propertyTypeRequest: PropertyTypeRequest, options?: any): AxiosPromise<PropertyType> {
+            return localVarFp.apiFoodPropertyTypeCreate(propertyTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17833,21 +19859,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeList(options?: any): AxiosPromise<Array<PropertyType>> {
-            return localVarFp.apiFoodPropertyTypeList(options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypeList(category?: Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedPropertyTypeList> {
+            return localVarFp.apiFoodPropertyTypeList(category, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PatchedPropertyType} [patchedPropertyType] 
+         * @param {PatchedPropertyTypeRequest} [patchedPropertyTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyType?: PatchedPropertyType, options?: any): AxiosPromise<PropertyType> {
-            return localVarFp.apiFoodPropertyTypePartialUpdate(id, patchedPropertyType, options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyTypeRequest?: PatchedPropertyTypeRequest, options?: any): AxiosPromise<PropertyType> {
+            return localVarFp.apiFoodPropertyTypePartialUpdate(id, patchedPropertyTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17861,22 +19890,22 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this property type.
-         * @param {PropertyType} propertyType 
+         * @param {PropertyTypeRequest} propertyTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyTypeUpdate(id: number, propertyType: PropertyType, options?: any): AxiosPromise<PropertyType> {
-            return localVarFp.apiFoodPropertyTypeUpdate(id, propertyType, options).then((request) => request(axios, basePath));
+        apiFoodPropertyTypeUpdate(id: number, propertyTypeRequest: PropertyTypeRequest, options?: any): AxiosPromise<PropertyType> {
+            return localVarFp.apiFoodPropertyTypeUpdate(id, propertyTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this property.
-         * @param {Property} property 
+         * @param {PropertyRequest} propertyRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodPropertyUpdate(id: number, property: Property, options?: any): AxiosPromise<Property> {
-            return localVarFp.apiFoodPropertyUpdate(id, property, options).then((request) => request(axios, basePath));
+        apiFoodPropertyUpdate(id: number, propertyRequest: PropertyRequest, options?: any): AxiosPromise<Property> {
+            return localVarFp.apiFoodPropertyUpdate(id, propertyRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17890,22 +19919,40 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {FoodShoppingUpdate} foodShoppingUpdate 
+         * @param {FoodShoppingUpdateRequest} foodShoppingUpdateRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodShoppingUpdate(id: number, foodShoppingUpdate: FoodShoppingUpdate, options?: any): AxiosPromise<FoodShoppingUpdate> {
-            return localVarFp.apiFoodShoppingUpdate(id, foodShoppingUpdate, options).then((request) => request(axios, basePath));
+        apiFoodShoppingUpdate(id: number, foodShoppingUpdateRequest: FoodShoppingUpdateRequest, options?: any): AxiosPromise<FoodShoppingUpdate> {
+            return localVarFp.apiFoodShoppingUpdate(id, foodShoppingUpdateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this food.
-         * @param {Food} food 
+         * @param {FoodRequest} foodRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiFoodUpdate(id: number, food: Food, options?: any): AxiosPromise<Food> {
-            return localVarFp.apiFoodUpdate(id, food, options).then((request) => request(axios, basePath));
+        apiFoodUpdate(id: number, foodRequest: FoodRequest, options?: any): AxiosPromise<Food> {
+            return localVarFp.apiFoodUpdate(id, foodRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiGetExternalFileLinkRetrieve(recipeId: number, options?: any): AxiosPromise<void> {
+            return localVarFp.apiGetExternalFileLinkRetrieve(recipeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} recipeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiGetRecipeFileRetrieve(recipeId: number, options?: any): AxiosPromise<void> {
+            return localVarFp.apiGetRecipeFileRetrieve(recipeId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17934,12 +19981,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogCreate(importLog: ImportLog, options?: any): AxiosPromise<ImportLog> {
-            return localVarFp.apiImportLogCreate(importLog, options).then((request) => request(axios, basePath));
+        apiImportLogCreate(importLogRequest: ImportLogRequest, options?: any): AxiosPromise<ImportLog> {
+            return localVarFp.apiImportLogCreate(importLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17963,12 +20010,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {PatchedImportLog} [patchedImportLog] 
+         * @param {PatchedImportLogRequest} [patchedImportLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogPartialUpdate(id: number, patchedImportLog?: PatchedImportLog, options?: any): AxiosPromise<ImportLog> {
-            return localVarFp.apiImportLogPartialUpdate(id, patchedImportLog, options).then((request) => request(axios, basePath));
+        apiImportLogPartialUpdate(id: number, patchedImportLogRequest?: PatchedImportLogRequest, options?: any): AxiosPromise<ImportLog> {
+            return localVarFp.apiImportLogPartialUpdate(id, patchedImportLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -17982,21 +20029,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this import log.
-         * @param {ImportLog} importLog 
+         * @param {ImportLogRequest} importLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiImportLogUpdate(id: number, importLog: ImportLog, options?: any): AxiosPromise<ImportLog> {
-            return localVarFp.apiImportLogUpdate(id, importLog, options).then((request) => request(axios, basePath));
+        apiImportLogUpdate(id: number, importLogRequest: ImportLogRequest, options?: any): AxiosPromise<ImportLog> {
+            return localVarFp.apiImportLogUpdate(id, importLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientCreate(ingredient: Ingredient, options?: any): AxiosPromise<Ingredient> {
-            return localVarFp.apiIngredientCreate(ingredient, options).then((request) => request(axios, basePath));
+        apiIngredientCreate(ingredientRequest: IngredientRequest, options?: any): AxiosPromise<Ingredient> {
+            return localVarFp.apiIngredientCreate(ingredientRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18009,23 +20056,34 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {number} [page] A page number within the paginated result set.
-         * @param {number} [pageSize] Number of results to return per page.
+         * @param {IngredientStringRequest} ingredientStringRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedIngredientList> {
-            return localVarFp.apiIngredientList(page, pageSize, options).then((request) => request(axios, basePath));
+        apiIngredientFromStringCreate(ingredientStringRequest: IngredientStringRequest, options?: any): AxiosPromise<ParsedIngredient> {
+            return localVarFp.apiIngredientFromStringCreate(ingredientStringRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} [food] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [unit] ID of unit to filter for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any): AxiosPromise<PaginatedIngredientList> {
+            return localVarFp.apiIngredientList(food, page, pageSize, unit, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {PatchedIngredient} [patchedIngredient] 
+         * @param {PatchedIngredientRequest} [patchedIngredientRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientPartialUpdate(id: number, patchedIngredient?: PatchedIngredient, options?: any): AxiosPromise<Ingredient> {
-            return localVarFp.apiIngredientPartialUpdate(id, patchedIngredient, options).then((request) => request(axios, basePath));
+        apiIngredientPartialUpdate(id: number, patchedIngredientRequest?: PatchedIngredientRequest, options?: any): AxiosPromise<Ingredient> {
+            return localVarFp.apiIngredientPartialUpdate(id, patchedIngredientRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18039,21 +20097,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this ingredient.
-         * @param {Ingredient} ingredient 
+         * @param {IngredientRequest} ingredientRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiIngredientUpdate(id: number, ingredient: Ingredient, options?: any): AxiosPromise<Ingredient> {
-            return localVarFp.apiIngredientUpdate(id, ingredient, options).then((request) => request(axios, basePath));
+        apiIngredientUpdate(id: number, ingredientRequest: IngredientRequest, options?: any): AxiosPromise<Ingredient> {
+            return localVarFp.apiIngredientUpdate(id, ingredientRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkCreate(inviteLink: InviteLink, options?: any): AxiosPromise<InviteLink> {
-            return localVarFp.apiInviteLinkCreate(inviteLink, options).then((request) => request(axios, basePath));
+        apiInviteLinkCreate(inviteLinkRequest: InviteLinkRequest, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.apiInviteLinkCreate(inviteLinkRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18066,25 +20124,28 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what internal_note is for.
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<InviteLink>> {
-            return localVarFp.apiInviteLinkList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedInviteLinkList> {
+            return localVarFp.apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {PatchedInviteLink} [patchedInviteLink] 
+         * @param {PatchedInviteLinkRequest} [patchedInviteLinkRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkPartialUpdate(id: number, patchedInviteLink?: PatchedInviteLink, options?: any): AxiosPromise<InviteLink> {
-            return localVarFp.apiInviteLinkPartialUpdate(id, patchedInviteLink, options).then((request) => request(axios, basePath));
+        apiInviteLinkPartialUpdate(id: number, patchedInviteLinkRequest?: PatchedInviteLinkRequest, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.apiInviteLinkPartialUpdate(id, patchedInviteLinkRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18098,21 +20159,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this invite link.
-         * @param {InviteLink} inviteLink 
+         * @param {InviteLinkRequest} inviteLinkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiInviteLinkUpdate(id: number, inviteLink: InviteLink, options?: any): AxiosPromise<InviteLink> {
-            return localVarFp.apiInviteLinkUpdate(id, inviteLink, options).then((request) => request(axios, basePath));
+        apiInviteLinkUpdate(id: number, inviteLinkRequest: InviteLinkRequest, options?: any): AxiosPromise<InviteLink> {
+            return localVarFp.apiInviteLinkUpdate(id, inviteLinkRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordCreate(keyword: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.apiKeywordCreate(keyword, options).then((request) => request(axios, basePath));
+        apiKeywordCreate(keywordRequest: KeywordRequest, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.apiKeywordCreate(keywordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18131,7 +20192,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-         * @param {number} [tree] Return all self and children of {} with ID [int].
+         * @param {number} [tree] Return all self and children of {obj} with ID [int].
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18142,34 +20203,34 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} target 
-         * @param {Keyword} keyword 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.apiKeywordMergeUpdate(id, target, keyword, options).then((request) => request(axios, basePath));
+        apiKeywordMergeUpdate(id: number, target: number, keywordRequest: KeywordRequest, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.apiKeywordMergeUpdate(id, target, keywordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {string} parent 
-         * @param {Keyword} keyword 
+         * @param {number} parent The ID of the desired parent of the {obj}.
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.apiKeywordMoveUpdate(id, parent, keyword, options).then((request) => request(axios, basePath));
+        apiKeywordMoveUpdate(id: number, parent: number, keywordRequest: KeywordRequest, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.apiKeywordMoveUpdate(id, parent, keywordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {PatchedKeyword} [patchedKeyword] 
+         * @param {PatchedKeywordRequest} [patchedKeywordRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordPartialUpdate(id: number, patchedKeyword?: PatchedKeyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.apiKeywordPartialUpdate(id, patchedKeyword, options).then((request) => request(axios, basePath));
+        apiKeywordPartialUpdate(id: number, patchedKeywordRequest?: PatchedKeywordRequest, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.apiKeywordPartialUpdate(id, patchedKeywordRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18183,24 +20244,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this keyword.
-         * @param {Keyword} keyword 
+         * @param {KeywordRequest} keywordRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiKeywordUpdate(id: number, keyword: Keyword, options?: any): AxiosPromise<Keyword> {
-            return localVarFp.apiKeywordUpdate(id, keyword, options).then((request) => request(axios, basePath));
+        apiKeywordUpdate(id: number, keywordRequest: KeywordRequest, options?: any): AxiosPromise<Keyword> {
+            return localVarFp.apiKeywordUpdate(id, keywordRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {MealPlan} mealPlan 
+         * 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanCreate(mealPlan: MealPlan, options?: any): AxiosPromise<MealPlan> {
-            return localVarFp.apiMealPlanCreate(mealPlan, options).then((request) => request(axios, basePath));
+        apiMealPlanCreate(mealPlanRequest: MealPlanRequest, options?: any): AxiosPromise<MealPlan> {
+            return localVarFp.apiMealPlanCreate(mealPlanRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18209,39 +20270,41 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanIcalRetrieve(fromDate?: string, mealType?: string, toDate?: string, options?: any): AxiosPromise<string> {
+        apiMealPlanIcalRetrieve(fromDate?: string, mealType?: Array<string>, toDate?: string, options?: any): AxiosPromise<string> {
             return localVarFp.apiMealPlanIcalRetrieve(fromDate, mealType, toDate, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-         * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-         * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-         * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+         * 
+         * @param {string} [fromDate] Filter meal plans from date (inclusive).
+         * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {string} [toDate] Filter meal plans to date (inclusive).
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any): AxiosPromise<Array<MealPlan>> {
-            return localVarFp.apiMealPlanList(fromDate, mealType, toDate, options).then((request) => request(axios, basePath));
+        apiMealPlanList(fromDate?: string, mealType?: Array<string>, page?: number, pageSize?: number, toDate?: string, options?: any): AxiosPromise<PaginatedMealPlanList> {
+            return localVarFp.apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {PatchedMealPlan} [patchedMealPlan] 
+         * @param {PatchedMealPlanRequest} [patchedMealPlanRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanPartialUpdate(id: number, patchedMealPlan?: PatchedMealPlan, options?: any): AxiosPromise<MealPlan> {
-            return localVarFp.apiMealPlanPartialUpdate(id, patchedMealPlan, options).then((request) => request(axios, basePath));
+        apiMealPlanPartialUpdate(id: number, patchedMealPlanRequest?: PatchedMealPlanRequest, options?: any): AxiosPromise<MealPlan> {
+            return localVarFp.apiMealPlanPartialUpdate(id, patchedMealPlanRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18250,23 +20313,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiMealPlanRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+         * 
          * @param {number} id A unique integer value identifying this meal plan.
-         * @param {MealPlan} mealPlan 
+         * @param {MealPlanRequest} mealPlanRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealPlanUpdate(id: number, mealPlan: MealPlan, options?: any): AxiosPromise<MealPlan> {
-            return localVarFp.apiMealPlanUpdate(id, mealPlan, options).then((request) => request(axios, basePath));
+        apiMealPlanUpdate(id: number, mealPlanRequest: MealPlanRequest, options?: any): AxiosPromise<MealPlan> {
+            return localVarFp.apiMealPlanUpdate(id, mealPlanRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeCreate(mealType: MealType, options?: any): AxiosPromise<MealType> {
-            return localVarFp.apiMealTypeCreate(mealType, options).then((request) => request(axios, basePath));
+        apiMealTypeCreate(mealTypeRequest: MealTypeRequest, options?: any): AxiosPromise<MealType> {
+            return localVarFp.apiMealTypeCreate(mealTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
@@ -18279,21 +20342,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeList(options?: any): AxiosPromise<Array<MealType>> {
-            return localVarFp.apiMealTypeList(options).then((request) => request(axios, basePath));
+        apiMealTypeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedMealTypeList> {
+            return localVarFp.apiMealTypeList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {PatchedMealType} [patchedMealType] 
+         * @param {PatchedMealTypeRequest} [patchedMealTypeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypePartialUpdate(id: number, patchedMealType?: PatchedMealType, options?: any): AxiosPromise<MealType> {
-            return localVarFp.apiMealTypePartialUpdate(id, patchedMealType, options).then((request) => request(axios, basePath));
+        apiMealTypePartialUpdate(id: number, patchedMealTypeRequest?: PatchedMealTypeRequest, options?: any): AxiosPromise<MealType> {
+            return localVarFp.apiMealTypePartialUpdate(id, patchedMealTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
@@ -18307,31 +20372,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * returns list of meal types created by the requesting user ordered by the order field.
          * @param {number} id A unique integer value identifying this meal type.
-         * @param {MealType} mealType 
+         * @param {MealTypeRequest} mealTypeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiMealTypeUpdate(id: number, mealType: MealType, options?: any): AxiosPromise<MealType> {
-            return localVarFp.apiMealTypeUpdate(id, mealType, options).then((request) => request(axios, basePath));
+        apiMealTypeUpdate(id: number, mealTypeRequest: MealTypeRequest, options?: any): AxiosPromise<MealType> {
+            return localVarFp.apiMealTypeUpdate(id, mealTypeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} fromDate 
-         * @param {string} toDate 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPlanIcalRetrieve(fromDate: string, toDate: string, options?: any): AxiosPromise<void> {
-            return localVarFp.apiPlanIcalRetrieve(fromDate, toDate, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {RecipeBook} recipeBook 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiRecipeBookCreate(recipeBook: RecipeBook, options?: any): AxiosPromise<RecipeBook> {
-            return localVarFp.apiRecipeBookCreate(recipeBook, options).then((request) => request(axios, basePath));
+        apiRecipeBookCreate(recipeBookRequest: RecipeBookRequest, options?: any): AxiosPromise<RecipeBook> {
+            return localVarFp.apiRecipeBookCreate(recipeBookRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18343,16 +20398,16 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryCreate(recipeBookEntry: RecipeBookEntry, options?: any): AxiosPromise<RecipeBookEntry> {
-            return localVarFp.apiRecipeBookEntryCreate(recipeBookEntry, options).then((request) => request(axios, basePath));
+        apiRecipeBookEntryCreate(recipeBookEntryRequest: RecipeBookEntryRequest, options?: any): AxiosPromise<RecipeBookEntry> {
+            return localVarFp.apiRecipeBookEntryCreate(recipeBookEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18361,25 +20416,29 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryDestroy(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
+         * @param {number} [book] id of book - only return recipes in that book
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
+         * @param {number} [recipe] id of recipe - only return books for that recipe
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryList(options?: any): AxiosPromise<Array<RecipeBookEntry>> {
-            return localVarFp.apiRecipeBookEntryList(options).then((request) => request(axios, basePath));
+        apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any): AxiosPromise<PaginatedRecipeBookEntryList> {
+            return localVarFp.apiRecipeBookEntryList(book, page, pageSize, recipe, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
+         * @param {PatchedRecipeBookEntryRequest} [patchedRecipeBookEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntry?: PatchedRecipeBookEntry, options?: any): AxiosPromise<RecipeBookEntry> {
-            return localVarFp.apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntry, options).then((request) => request(axios, basePath));
+        apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntryRequest?: PatchedRecipeBookEntryRequest, options?: any): AxiosPromise<RecipeBookEntry> {
+            return localVarFp.apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -18388,36 +20447,40 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiRecipeBookEntryRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+         * 
          * @param {number} id A unique integer value identifying this recipe book entry.
-         * @param {RecipeBookEntry} recipeBookEntry 
+         * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookEntryUpdate(id: number, recipeBookEntry: RecipeBookEntry, options?: any): AxiosPromise<RecipeBookEntry> {
-            return localVarFp.apiRecipeBookEntryUpdate(id, recipeBookEntry, options).then((request) => request(axios, basePath));
+        apiRecipeBookEntryUpdate(id: number, recipeBookEntryRequest: RecipeBookEntryRequest, options?: any): AxiosPromise<RecipeBookEntry> {
+            return localVarFp.apiRecipeBookEntryUpdate(id, recipeBookEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+         * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<RecipeBook>> {
-            return localVarFp.apiRecipeBookList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedRecipeBookList> {
+            return localVarFp.apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {PatchedRecipeBook} [patchedRecipeBook] 
+         * @param {PatchedRecipeBookRequest} [patchedRecipeBookRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookPartialUpdate(id: number, patchedRecipeBook?: PatchedRecipeBook, options?: any): AxiosPromise<RecipeBook> {
-            return localVarFp.apiRecipeBookPartialUpdate(id, patchedRecipeBook, options).then((request) => request(axios, basePath));
+        apiRecipeBookPartialUpdate(id: number, patchedRecipeBookRequest?: PatchedRecipeBookRequest, options?: any): AxiosPromise<RecipeBook> {
+            return localVarFp.apiRecipeBookPartialUpdate(id, patchedRecipeBookRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18431,21 +20494,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe book.
-         * @param {RecipeBook} recipeBook 
+         * @param {RecipeBookRequest} recipeBookRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeBookUpdate(id: number, recipeBook: RecipeBook, options?: any): AxiosPromise<RecipeBook> {
-            return localVarFp.apiRecipeBookUpdate(id, recipeBook, options).then((request) => request(axios, basePath));
+        apiRecipeBookUpdate(id: number, recipeBookRequest: RecipeBookRequest, options?: any): AxiosPromise<RecipeBook> {
+            return localVarFp.apiRecipeBookUpdate(id, recipeBookRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeCreate(recipe: Recipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.apiRecipeCreate(recipe, options).then((request) => request(axios, basePath));
+        apiRecipeCreate(recipeRequest: RecipeRequest, options?: any): AxiosPromise<Recipe> {
+            return localVarFp.apiRecipeCreate(recipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18475,35 +20538,35 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {string} [image] 
+         * @param {any} [image] 
          * @param {string} [imageUrl] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeImageUpdate(id: number, image?: string, imageUrl?: string, options?: any): AxiosPromise<RecipeImage> {
+        apiRecipeImageUpdate(id: number, image?: any, imageUrl?: string, options?: any): AxiosPromise<RecipeImage> {
             return localVarFp.apiRecipeImageUpdate(id, image, imageUrl, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-         * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
-         * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
-         * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
-         * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+         * @param {Array<number>} [books] ID of book a recipe should be in. For multiple repeat parameter.
+         * @param {Array<number>} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+         * @param {Array<number>} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
+         * @param {Array<number>} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+         * @param {Array<number>} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
          * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
          * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
-         * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
-         * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
-         * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
-         * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
-         * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-         * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
-         * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
-         * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
-         * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
-         * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
-         * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-         * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [foods] ID of food a recipe should have. For multiple repeat parameter.
+         * @param {Array<number>} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+         * @param {Array<number>} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
+         * @param {Array<number>} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+         * @param {Array<number>} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+         * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+         * @param {Array<number>} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+         * @param {Array<number>} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+         * @param {Array<number>} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
+         * @param {Array<number>} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+         * @param {Array<number>} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+         * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
@@ -18517,18 +20580,18 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): AxiosPromise<PaginatedRecipeOverviewList> {
+        apiRecipeList(books?: Array<number>, booksAnd?: Array<number>, booksAndNot?: Array<number>, booksOr?: Array<number>, booksOrNot?: Array<number>, cookedon?: string, createdon?: string, foods?: Array<number>, foodsAnd?: Array<number>, foodsAndNot?: Array<number>, foodsOr?: Array<number>, foodsOrNot?: Array<number>, internal?: boolean, keywords?: Array<number>, keywordsAnd?: Array<number>, keywordsAndNot?: Array<number>, keywordsOr?: Array<number>, keywordsOrNot?: Array<number>, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any): AxiosPromise<PaginatedRecipeOverviewList> {
             return localVarFp.apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {PatchedRecipe} [patchedRecipe] 
+         * @param {PatchedRecipeRequest} [patchedRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipePartialUpdate(id: number, patchedRecipe?: PatchedRecipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.apiRecipePartialUpdate(id, patchedRecipe, options).then((request) => request(axios, basePath));
+        apiRecipePartialUpdate(id: number, patchedRecipeRequest?: PatchedRecipeRequest, options?: any): AxiosPromise<Recipe> {
+            return localVarFp.apiRecipePartialUpdate(id, patchedRecipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18551,30 +20614,30 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+         * @param {RecipeShoppingUpdateRequest} [recipeShoppingUpdateRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeShoppingUpdate(id: number, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any): AxiosPromise<RecipeShoppingUpdate> {
-            return localVarFp.apiRecipeShoppingUpdate(id, recipeShoppingUpdate, options).then((request) => request(axios, basePath));
+        apiRecipeShoppingUpdate(id: number, recipeShoppingUpdateRequest?: RecipeShoppingUpdateRequest, options?: any): AxiosPromise<RecipeShoppingUpdate> {
+            return localVarFp.apiRecipeShoppingUpdate(id, recipeShoppingUpdateRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this recipe.
-         * @param {Recipe} recipe 
+         * @param {RecipeRequest} recipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiRecipeUpdate(id: number, recipe: Recipe, options?: any): AxiosPromise<Recipe> {
-            return localVarFp.apiRecipeUpdate(id, recipe, options).then((request) => request(axios, basePath));
+        apiRecipeUpdate(id: number, recipeRequest: RecipeRequest, options?: any): AxiosPromise<Recipe> {
+            return localVarFp.apiRecipeUpdate(id, recipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * function to reset inheritance from api, see food method for docs
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiResetFoodInheritanceRetrieve(options?: any): AxiosPromise<void> {
-            return localVarFp.apiResetFoodInheritanceRetrieve(options).then((request) => request(axios, basePath));
+        apiResetFoodInheritanceCreate(options?: any): AxiosPromise<void> {
+            return localVarFp.apiResetFoodInheritanceCreate(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18582,26 +20645,26 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShareLinkRetrieve(id: number, options?: any): AxiosPromise<void> {
+        apiShareLinkRetrieve(id: number, options?: any): AxiosPromise<ShareLink> {
             return localVarFp.apiShareLinkRetrieve(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {ShoppingListEntryBulk} shoppingListEntryBulk 
+         * @param {ShoppingListEntryBulkRequest} shoppingListEntryBulkRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryBulkCreate(shoppingListEntryBulk: ShoppingListEntryBulk, options?: any): AxiosPromise<ShoppingListEntryBulk> {
-            return localVarFp.apiShoppingListEntryBulkCreate(shoppingListEntryBulk, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest: ShoppingListEntryBulkRequest, options?: any): AxiosPromise<ShoppingListEntryBulk> {
+            return localVarFp.apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryCreate(shoppingListEntry: ShoppingListEntry, options?: any): AxiosPromise<ShoppingListEntry> {
-            return localVarFp.apiShoppingListEntryCreate(shoppingListEntry, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryCreate(shoppingListEntryRequest: ShoppingListEntryRequest, options?: any): AxiosPromise<ShoppingListEntry> {
+            return localVarFp.apiShoppingListEntryCreate(shoppingListEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18616,22 +20679,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * 
          * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
          * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any): AxiosPromise<Array<ShoppingListEntry>> {
-            return localVarFp.apiShoppingListEntryList(checked, id, supermarket, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any): AxiosPromise<PaginatedShoppingListEntryList> {
+            return localVarFp.apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {PatchedShoppingListEntry} [patchedShoppingListEntry] 
+         * @param {PatchedShoppingListEntryRequest} [patchedShoppingListEntryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntry?: PatchedShoppingListEntry, options?: any): AxiosPromise<ShoppingListEntry> {
-            return localVarFp.apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntry, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntryRequest?: PatchedShoppingListEntryRequest, options?: any): AxiosPromise<ShoppingListEntry> {
+            return localVarFp.apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18645,21 +20710,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list entry.
-         * @param {ShoppingListEntry} shoppingListEntry 
+         * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListEntryUpdate(id: number, shoppingListEntry: ShoppingListEntry, options?: any): AxiosPromise<ShoppingListEntry> {
-            return localVarFp.apiShoppingListEntryUpdate(id, shoppingListEntry, options).then((request) => request(axios, basePath));
+        apiShoppingListEntryUpdate(id: number, shoppingListEntryRequest: ShoppingListEntryRequest, options?: any): AxiosPromise<ShoppingListEntry> {
+            return localVarFp.apiShoppingListEntryUpdate(id, shoppingListEntryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeCreate(shoppingListRecipe: ShoppingListRecipe, options?: any): AxiosPromise<ShoppingListRecipe> {
-            return localVarFp.apiShoppingListRecipeCreate(shoppingListRecipe, options).then((request) => request(axios, basePath));
+        apiShoppingListRecipeCreate(shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any): AxiosPromise<ShoppingListRecipe> {
+            return localVarFp.apiShoppingListRecipeCreate(shoppingListRecipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18672,21 +20737,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeList(options?: any): AxiosPromise<Array<ShoppingListRecipe>> {
-            return localVarFp.apiShoppingListRecipeList(options).then((request) => request(axios, basePath));
+        apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedShoppingListRecipeList> {
+            return localVarFp.apiShoppingListRecipeList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {PatchedShoppingListRecipe} [patchedShoppingListRecipe] 
+         * @param {PatchedShoppingListRecipeRequest} [patchedShoppingListRecipeRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipe?: PatchedShoppingListRecipe, options?: any): AxiosPromise<ShoppingListRecipe> {
-            return localVarFp.apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipe, options).then((request) => request(axios, basePath));
+        apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipeRequest?: PatchedShoppingListRecipeRequest, options?: any): AxiosPromise<ShoppingListRecipe> {
+            return localVarFp.apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18700,12 +20767,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this shopping list recipe.
-         * @param {ShoppingListRecipe} shoppingListRecipe 
+         * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any): AxiosPromise<ShoppingListRecipe> {
-            return localVarFp.apiShoppingListRecipeUpdate(id, shoppingListRecipe, options).then((request) => request(axios, basePath));
+        apiShoppingListRecipeUpdate(id: number, shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any): AxiosPromise<ShoppingListRecipe> {
+            return localVarFp.apiShoppingListRecipeUpdate(id, shoppingListRecipeRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18718,12 +20785,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this space.
-         * @param {PatchedSpace} [patchedSpace] 
+         * @param {PatchedSpaceRequest} [patchedSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSpacePartialUpdate(id: number, patchedSpace?: PatchedSpace, options?: any): AxiosPromise<Space> {
-            return localVarFp.apiSpacePartialUpdate(id, patchedSpace, options).then((request) => request(axios, basePath));
+        apiSpacePartialUpdate(id: number, patchedSpaceRequest?: PatchedSpaceRequest, options?: any): AxiosPromise<Space> {
+            return localVarFp.apiSpacePartialUpdate(id, patchedSpaceRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18736,12 +20803,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepCreate(step: Step, options?: any): AxiosPromise<Step> {
-            return localVarFp.apiStepCreate(step, options).then((request) => request(axios, basePath));
+        apiStepCreate(stepRequest: StepRequest, options?: any): AxiosPromise<Step> {
+            return localVarFp.apiStepCreate(stepRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18757,22 +20824,22 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] Query string matched (fuzzy) against object name.
-         * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
+         * @param {Array<number>} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepList(page?: number, pageSize?: number, query?: string, recipe?: number, options?: any): AxiosPromise<PaginatedStepList> {
+        apiStepList(page?: number, pageSize?: number, query?: string, recipe?: Array<number>, options?: any): AxiosPromise<PaginatedStepList> {
             return localVarFp.apiStepList(page, pageSize, query, recipe, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {PatchedStep} [patchedStep] 
+         * @param {PatchedStepRequest} [patchedStepRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepPartialUpdate(id: number, patchedStep?: PatchedStep, options?: any): AxiosPromise<Step> {
-            return localVarFp.apiStepPartialUpdate(id, patchedStep, options).then((request) => request(axios, basePath));
+        apiStepPartialUpdate(id: number, patchedStepRequest?: PatchedStepRequest, options?: any): AxiosPromise<Step> {
+            return localVarFp.apiStepPartialUpdate(id, patchedStepRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18786,21 +20853,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this step.
-         * @param {Step} step 
+         * @param {StepRequest} stepRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStepUpdate(id: number, step: Step, options?: any): AxiosPromise<Step> {
-            return localVarFp.apiStepUpdate(id, step, options).then((request) => request(axios, basePath));
+        apiStepUpdate(id: number, stepRequest: StepRequest, options?: any): AxiosPromise<Step> {
+            return localVarFp.apiStepUpdate(id, stepRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStorageCreate(storage: Storage, options?: any): AxiosPromise<Storage> {
-            return localVarFp.apiStorageCreate(storage, options).then((request) => request(axios, basePath));
+        apiStorageCreate(storageRequest: StorageRequest, options?: any): AxiosPromise<Storage> {
+            return localVarFp.apiStorageCreate(storageRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18822,12 +20889,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {PatchedStorage} [patchedStorage] 
+         * @param {PatchedStorageRequest} [patchedStorageRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStoragePartialUpdate(id: number, patchedStorage?: PatchedStorage, options?: any): AxiosPromise<Storage> {
-            return localVarFp.apiStoragePartialUpdate(id, patchedStorage, options).then((request) => request(axios, basePath));
+        apiStoragePartialUpdate(id: number, patchedStorageRequest?: PatchedStorageRequest, options?: any): AxiosPromise<Storage> {
+            return localVarFp.apiStoragePartialUpdate(id, patchedStorageRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18841,21 +20908,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this storage.
-         * @param {Storage} storage 
+         * @param {StorageRequest} storageRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiStorageUpdate(id: number, storage: Storage, options?: any): AxiosPromise<Storage> {
-            return localVarFp.apiStorageUpdate(id, storage, options).then((request) => request(axios, basePath));
+        apiStorageUpdate(id: number, storageRequest: StorageRequest, options?: any): AxiosPromise<Storage> {
+            return localVarFp.apiStorageUpdate(id, storageRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryCreate(supermarketCategory: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
-            return localVarFp.apiSupermarketCategoryCreate(supermarketCategory, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryCreate(supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.apiSupermarketCategoryCreate(supermarketCategoryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18869,44 +20936,46 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<SupermarketCategory>> {
-            return localVarFp.apiSupermarketCategoryList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedSupermarketCategoryList> {
+            return localVarFp.apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {string} target 
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
-            return localVarFp.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.apiSupermarketCategoryMergeUpdate(id, target, supermarketCategoryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {PatchedSupermarketCategory} [patchedSupermarketCategory] 
+         * @param {PatchedSupermarketCategoryRequest} [patchedSupermarketCategoryRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategory?: PatchedSupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
-            return localVarFp.apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategory, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategoryRequest?: PatchedSupermarketCategoryRequest, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategoryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationCreate(supermarketCategoryRelation: SupermarketCategoryRelation, options?: any): AxiosPromise<SupermarketCategoryRelation> {
-            return localVarFp.apiSupermarketCategoryRelationCreate(supermarketCategoryRelation, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any): AxiosPromise<SupermarketCategoryRelation> {
+            return localVarFp.apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18934,12 +21003,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {PatchedSupermarketCategoryRelation} [patchedSupermarketCategoryRelation] 
+         * @param {PatchedSupermarketCategoryRelationRequest} [patchedSupermarketCategoryRelationRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelation?: PatchedSupermarketCategoryRelation, options?: any): AxiosPromise<SupermarketCategoryRelation> {
-            return localVarFp.apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelation, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelationRequest?: PatchedSupermarketCategoryRelationRequest, options?: any): AxiosPromise<SupermarketCategoryRelation> {
+            return localVarFp.apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelationRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18953,12 +21022,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category relation.
-         * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+         * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelation: SupermarketCategoryRelation, options?: any): AxiosPromise<SupermarketCategoryRelation> {
-            return localVarFp.apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelation, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any): AxiosPromise<SupermarketCategoryRelation> {
+            return localVarFp.apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelationRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -18972,21 +21041,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket category.
-         * @param {SupermarketCategory} supermarketCategory 
+         * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCategoryUpdate(id: number, supermarketCategory: SupermarketCategory, options?: any): AxiosPromise<SupermarketCategory> {
-            return localVarFp.apiSupermarketCategoryUpdate(id, supermarketCategory, options).then((request) => request(axios, basePath));
+        apiSupermarketCategoryUpdate(id: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any): AxiosPromise<SupermarketCategory> {
+            return localVarFp.apiSupermarketCategoryUpdate(id, supermarketCategoryRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketCreate(supermarket: Supermarket, options?: any): AxiosPromise<Supermarket> {
-            return localVarFp.apiSupermarketCreate(supermarket, options).then((request) => request(axios, basePath));
+        apiSupermarketCreate(supermarketRequest: SupermarketRequest, options?: any): AxiosPromise<Supermarket> {
+            return localVarFp.apiSupermarketCreate(supermarketRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19000,24 +21069,26 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<Supermarket>> {
-            return localVarFp.apiSupermarketList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedSupermarketList> {
+            return localVarFp.apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {PatchedSupermarket} [patchedSupermarket] 
+         * @param {PatchedSupermarketRequest} [patchedSupermarketRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketPartialUpdate(id: number, patchedSupermarket?: PatchedSupermarket, options?: any): AxiosPromise<Supermarket> {
-            return localVarFp.apiSupermarketPartialUpdate(id, patchedSupermarket, options).then((request) => request(axios, basePath));
+        apiSupermarketPartialUpdate(id: number, patchedSupermarketRequest?: PatchedSupermarketRequest, options?: any): AxiosPromise<Supermarket> {
+            return localVarFp.apiSupermarketPartialUpdate(id, patchedSupermarketRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19031,12 +21102,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this supermarket.
-         * @param {Supermarket} supermarket 
+         * @param {SupermarketRequest} supermarketRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSupermarketUpdate(id: number, supermarket: Supermarket, options?: any): AxiosPromise<Supermarket> {
-            return localVarFp.apiSupermarketUpdate(id, supermarket, options).then((request) => request(axios, basePath));
+        apiSupermarketUpdate(id: number, supermarketRequest: SupermarketRequest, options?: any): AxiosPromise<Supermarket> {
+            return localVarFp.apiSupermarketUpdate(id, supermarketRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * api endpoint to switch space function
@@ -19049,12 +21120,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncCreate(sync: Sync, options?: any): AxiosPromise<Sync> {
-            return localVarFp.apiSyncCreate(sync, options).then((request) => request(axios, basePath));
+        apiSyncCreate(syncRequest: SyncRequest, options?: any): AxiosPromise<Sync> {
+            return localVarFp.apiSyncCreate(syncRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19067,11 +21138,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncList(options?: any): AxiosPromise<Array<Sync>> {
-            return localVarFp.apiSyncList(options).then((request) => request(axios, basePath));
+        apiSyncList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedSyncList> {
+            return localVarFp.apiSyncList(page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19095,12 +21168,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {PatchedSync} [patchedSync] 
+         * @param {PatchedSyncRequest} [patchedSyncRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncPartialUpdate(id: number, patchedSync?: PatchedSync, options?: any): AxiosPromise<Sync> {
-            return localVarFp.apiSyncPartialUpdate(id, patchedSync, options).then((request) => request(axios, basePath));
+        apiSyncPartialUpdate(id: number, patchedSyncRequest?: PatchedSyncRequest, options?: any): AxiosPromise<Sync> {
+            return localVarFp.apiSyncPartialUpdate(id, patchedSyncRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19114,21 +21187,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this sync.
-         * @param {Sync} sync 
+         * @param {SyncRequest} syncRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiSyncUpdate(id: number, sync: Sync, options?: any): AxiosPromise<Sync> {
-            return localVarFp.apiSyncUpdate(id, sync, options).then((request) => request(axios, basePath));
+        apiSyncUpdate(id: number, syncRequest: SyncRequest, options?: any): AxiosPromise<Sync> {
+            return localVarFp.apiSyncUpdate(id, syncRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionCreate(unitConversion: UnitConversion, options?: any): AxiosPromise<UnitConversion> {
-            return localVarFp.apiUnitConversionCreate(unitConversion, options).then((request) => request(axios, basePath));
+        apiUnitConversionCreate(unitConversionRequest: UnitConversionRequest, options?: any): AxiosPromise<UnitConversion> {
+            return localVarFp.apiUnitConversionCreate(unitConversionRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19142,21 +21215,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} [foodId] ID of food to filter for
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionList(foodId?: number, options?: any): AxiosPromise<Array<UnitConversion>> {
-            return localVarFp.apiUnitConversionList(foodId, options).then((request) => request(axios, basePath));
+        apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUnitConversionList> {
+            return localVarFp.apiUnitConversionList(foodId, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {PatchedUnitConversion} [patchedUnitConversion] 
+         * @param {PatchedUnitConversionRequest} [patchedUnitConversionRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionPartialUpdate(id: number, patchedUnitConversion?: PatchedUnitConversion, options?: any): AxiosPromise<UnitConversion> {
-            return localVarFp.apiUnitConversionPartialUpdate(id, patchedUnitConversion, options).then((request) => request(axios, basePath));
+        apiUnitConversionPartialUpdate(id: number, patchedUnitConversionRequest?: PatchedUnitConversionRequest, options?: any): AxiosPromise<UnitConversion> {
+            return localVarFp.apiUnitConversionPartialUpdate(id, patchedUnitConversionRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19170,21 +21245,21 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this unit conversion.
-         * @param {UnitConversion} unitConversion 
+         * @param {UnitConversionRequest} unitConversionRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitConversionUpdate(id: number, unitConversion: UnitConversion, options?: any): AxiosPromise<UnitConversion> {
-            return localVarFp.apiUnitConversionUpdate(id, unitConversion, options).then((request) => request(axios, basePath));
+        apiUnitConversionUpdate(id: number, unitConversionRequest: UnitConversionRequest, options?: any): AxiosPromise<UnitConversion> {
+            return localVarFp.apiUnitConversionUpdate(id, unitConversionRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitCreate(unit: Unit, options?: any): AxiosPromise<Unit> {
-            return localVarFp.apiUnitCreate(unit, options).then((request) => request(axios, basePath));
+        apiUnitCreate(unitRequest: UnitRequest, options?: any): AxiosPromise<Unit> {
+            return localVarFp.apiUnitCreate(unitRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19212,23 +21287,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {string} target 
-         * @param {Unit} unit 
+         * @param {number} target The ID of the {obj} you want to merge with.
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any): AxiosPromise<Unit> {
-            return localVarFp.apiUnitMergeUpdate(id, target, unit, options).then((request) => request(axios, basePath));
+        apiUnitMergeUpdate(id: number, target: number, unitRequest: UnitRequest, options?: any): AxiosPromise<Unit> {
+            return localVarFp.apiUnitMergeUpdate(id, target, unitRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {PatchedUnit} [patchedUnit] 
+         * @param {PatchedUnitRequest} [patchedUnitRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitPartialUpdate(id: number, patchedUnit?: PatchedUnit, options?: any): AxiosPromise<Unit> {
-            return localVarFp.apiUnitPartialUpdate(id, patchedUnit, options).then((request) => request(axios, basePath));
+        apiUnitPartialUpdate(id: number, patchedUnitRequest?: PatchedUnitRequest, options?: any): AxiosPromise<Unit> {
+            return localVarFp.apiUnitPartialUpdate(id, patchedUnitRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19242,26 +21317,23 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this unit.
-         * @param {Unit} unit 
+         * @param {UnitRequest} unitRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUnitUpdate(id: number, unit: Unit, options?: any): AxiosPromise<Unit> {
-            return localVarFp.apiUnitUpdate(id, unit, options).then((request) => request(axios, basePath));
+        apiUnitUpdate(id: number, unitRequest: UnitRequest, options?: any): AxiosPromise<Unit> {
+            return localVarFp.apiUnitUpdate(id, unitRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {number} id 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileCreate(id: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.apiUserFileCreate(id, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
+        apiUserFileCreate(name: string, file: any, id?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.apiUserFileCreate(name, file, id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19275,29 +21347,28 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {string} [limit] limit number of entries to return
+         * @param {number} [page] A page number within the paginated result set.
+         * @param {number} [pageSize] Number of results to return per page.
          * @param {string} [query] lookup if query string is contained within the name, case insensitive
          * @param {string} [random] randomly orders entries (only works together with limit)
          * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<Array<UserFile>> {
-            return localVarFp.apiUserFileList(limit, query, random, updatedAt, options).then((request) => request(axios, basePath));
+        apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any): AxiosPromise<PaginatedUserFileList> {
+            return localVarFp.apiUserFileList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} [id2] 
          * @param {string} [name] 
-         * @param {string} [file] 
-         * @param {string} [fileDownload] 
-         * @param {string} [preview] 
-         * @param {number} [fileSizeKb] 
+         * @param {any} [file] 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFilePartialUpdate(id: number, id2?: number, name?: string, file?: string, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.apiUserFilePartialUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
+        apiUserFilePartialUpdate(id: number, name?: string, file?: any, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.apiUserFilePartialUpdate(id, name, file, id2, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19311,35 +21382,33 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this user file.
-         * @param {number} id2 
          * @param {string} name 
-         * @param {string} file 
-         * @param {string} fileDownload 
-         * @param {string} preview 
-         * @param {number} fileSizeKb 
+         * @param {any} file 
+         * @param {number} [id2] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserFileUpdate(id: number, id2: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any): AxiosPromise<UserFile> {
-            return localVarFp.apiUserFileUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(axios, basePath));
+        apiUserFileUpdate(id: number, name: string, file: any, id2?: number, options?: any): AxiosPromise<UserFile> {
+            return localVarFp.apiUserFileUpdate(id, name, file, id2, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
+         * @param {Array<string>} [filterList] User IDs, repeat for multiple
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserList(options?: any): AxiosPromise<Array<User>> {
-            return localVarFp.apiUserList(options).then((request) => request(axios, basePath));
+        apiUserList(filterList?: Array<string>, options?: any): AxiosPromise<Array<User>> {
+            return localVarFp.apiUserList(filterList, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
-         * @param {PatchedUser} [patchedUser] 
+         * @param {PatchedUserRequest} [patchedUserRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any): AxiosPromise<User> {
-            return localVarFp.apiUserPartialUpdate(id, patchedUser, options).then((request) => request(axios, basePath));
+        apiUserPartialUpdate(id: number, patchedUserRequest?: PatchedUserRequest, options?: any): AxiosPromise<User> {
+            return localVarFp.apiUserPartialUpdate(id, patchedUserRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19352,12 +21421,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} user A unique value identifying this user preference.
-         * @param {PatchedUserPreference} [patchedUserPreference] 
+         * @param {PatchedUserPreferenceRequest} [patchedUserPreferenceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserPreferencePartialUpdate(user: number, patchedUserPreference?: PatchedUserPreference, options?: any): AxiosPromise<UserPreference> {
-            return localVarFp.apiUserPreferencePartialUpdate(user, patchedUserPreference, options).then((request) => request(axios, basePath));
+        apiUserPreferencePartialUpdate(user: number, patchedUserPreferenceRequest?: PatchedUserPreferenceRequest, options?: any): AxiosPromise<UserPreference> {
+            return localVarFp.apiUserPreferencePartialUpdate(user, patchedUserPreferenceRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19369,7 +21438,7 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
             return localVarFp.apiUserPreferenceRetrieve(user, options).then((request) => request(axios, basePath));
         },
         /**
-         * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+         * 
          * @param {number} id A unique integer value identifying this user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -19388,23 +21457,24 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
+         * @param {string} [internalNote] I have no idea what this is
          * @param {number} [page] A page number within the paginated result set.
          * @param {number} [pageSize] Number of results to return per page.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpaceList(page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUserSpaceList> {
-            return localVarFp.apiUserSpaceList(page, pageSize, options).then((request) => request(axios, basePath));
+        apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any): AxiosPromise<PaginatedUserSpaceList> {
+            return localVarFp.apiUserSpaceList(internalNote, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} id A unique integer value identifying this user space.
-         * @param {PatchedUserSpace} [patchedUserSpace] 
+         * @param {PatchedUserSpaceRequest} [patchedUserSpaceRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiUserSpacePartialUpdate(id: number, patchedUserSpace?: PatchedUserSpace, options?: any): AxiosPromise<UserSpace> {
-            return localVarFp.apiUserSpacePartialUpdate(id, patchedUserSpace, options).then((request) => request(axios, basePath));
+        apiUserSpacePartialUpdate(id: number, patchedUserSpaceRequest?: PatchedUserSpaceRequest, options?: any): AxiosPromise<UserSpace> {
+            return localVarFp.apiUserSpacePartialUpdate(id, patchedUserSpaceRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19417,12 +21487,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         },
         /**
          * 
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogCreate(viewLog: ViewLog, options?: any): AxiosPromise<ViewLog> {
-            return localVarFp.apiViewLogCreate(viewLog, options).then((request) => request(axios, basePath));
+        apiViewLogCreate(viewLogRequest: ViewLogRequest, options?: any): AxiosPromise<ViewLog> {
+            return localVarFp.apiViewLogCreate(viewLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19446,12 +21516,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {PatchedViewLog} [patchedViewLog] 
+         * @param {PatchedViewLogRequest} [patchedViewLogRequest] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogPartialUpdate(id: number, patchedViewLog?: PatchedViewLog, options?: any): AxiosPromise<ViewLog> {
-            return localVarFp.apiViewLogPartialUpdate(id, patchedViewLog, options).then((request) => request(axios, basePath));
+        apiViewLogPartialUpdate(id: number, patchedViewLogRequest?: PatchedViewLogRequest, options?: any): AxiosPromise<ViewLog> {
+            return localVarFp.apiViewLogPartialUpdate(id, patchedViewLogRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -19465,12 +21535,12 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
         /**
          * 
          * @param {number} id A unique integer value identifying this view log.
-         * @param {ViewLog} viewLog 
+         * @param {ViewLogRequest} viewLogRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiViewLogUpdate(id: number, viewLog: ViewLog, options?: any): AxiosPromise<ViewLog> {
-            return localVarFp.apiViewLogUpdate(id, viewLog, options).then((request) => request(axios, basePath));
+        apiViewLogUpdate(id: number, viewLogRequest: ViewLogRequest, options?: any): AxiosPromise<ViewLog> {
+            return localVarFp.apiViewLogUpdate(id, viewLogRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -19484,13 +21554,13 @@ export const ApiApiFactory = function (configuration?: Configuration, basePath?:
 export class ApiApi extends BaseAPI {
     /**
      * 
-     * @param {AccessToken} accessToken 
+     * @param {AccessTokenRequest} accessTokenRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAccessTokenCreate(accessToken: AccessToken, options?: any) {
-        return ApiApiFp(this.configuration).apiAccessTokenCreate(accessToken, options).then((request) => request(this.axios, this.basePath));
+    public apiAccessTokenCreate(accessTokenRequest: AccessTokenRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAccessTokenCreate(accessTokenRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19517,13 +21587,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this access token.
-     * @param {PatchedAccessToken} [patchedAccessToken] 
+     * @param {PatchedAccessTokenRequest} [patchedAccessTokenRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAccessTokenPartialUpdate(id: number, patchedAccessToken?: PatchedAccessToken, options?: any) {
-        return ApiApiFp(this.configuration).apiAccessTokenPartialUpdate(id, patchedAccessToken, options).then((request) => request(this.axios, this.basePath));
+    public apiAccessTokenPartialUpdate(id: number, patchedAccessTokenRequest?: PatchedAccessTokenRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAccessTokenPartialUpdate(id, patchedAccessTokenRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19540,38 +21610,39 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this access token.
-     * @param {AccessToken} accessToken 
+     * @param {AccessTokenRequest} accessTokenRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAccessTokenUpdate(id: number, accessToken: AccessToken, options?: any) {
-        return ApiApiFp(this.configuration).apiAccessTokenUpdate(id, accessToken, options).then((request) => request(this.axios, this.basePath));
+    public apiAccessTokenUpdate(id: number, accessTokenRequest: AccessTokenRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAccessTokenUpdate(id, accessTokenRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
+     * @param {AutoMealPlanRequest} autoMealPlanRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutoPlanCreate(options?: any) {
-        return ApiApiFp(this.configuration).apiAutoPlanCreate(options).then((request) => request(this.axios, this.basePath));
+    public apiAutoPlanCreate(autoMealPlanRequest: AutoMealPlanRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAutoPlanCreate(autoMealPlanRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-     * @param {Automation} automation 
+     * 
+     * @param {AutomationRequest} automationRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutomationCreate(automation: Automation, options?: any) {
-        return ApiApiFp(this.configuration).apiAutomationCreate(automation, options).then((request) => request(this.axios, this.basePath));
+    public apiAutomationCreate(automationRequest: AutomationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAutomationCreate(automationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -19582,32 +21653,32 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
-     * @param {string} [automationType] Return the Automations matching the automation type.  Multiple values allowed.
+     * 
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
+     * @param {Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>} [type] Return the Automations matching the automation type.  Repeat for multiple.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutomationList(automationType?: string, page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiAutomationList(automationType, page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiAutomationList(page?: number, pageSize?: number, type?: Array<'DESCRIPTION_REPLACE' | 'FOOD_ALIAS' | 'FOOD_REPLACE' | 'INSTRUCTION_REPLACE' | 'KEYWORD_ALIAS' | 'NAME_REPLACE' | 'NEVER_UNIT' | 'TRANSPOSE_WORDS' | 'UNIT_ALIAS' | 'UNIT_REPLACE'>, options?: any) {
+        return ApiApiFp(this.configuration).apiAutomationList(page, pageSize, type, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
-     * @param {PatchedAutomation} [patchedAutomation] 
+     * @param {PatchedAutomationRequest} [patchedAutomationRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutomationPartialUpdate(id: number, patchedAutomation?: PatchedAutomation, options?: any) {
-        return ApiApiFp(this.configuration).apiAutomationPartialUpdate(id, patchedAutomation, options).then((request) => request(this.axios, this.basePath));
+    public apiAutomationPartialUpdate(id: number, patchedAutomationRequest?: PatchedAutomationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAutomationPartialUpdate(id, patchedAutomationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -19618,26 +21689,26 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.  *Automation Types:* - FS: Food Alias - UA: Unit Alias - KA: Keyword Alias - DR: Description Replace - IR: Instruction Replace - NU: Never Unit - TW: Transpose Words - FR: Food Replace - UR: Unit Replace - NR: Name Replace
+     * 
      * @param {number} id A unique integer value identifying this automation.
-     * @param {Automation} automation 
+     * @param {AutomationRequest} automationRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiAutomationUpdate(id: number, automation: Automation, options?: any) {
-        return ApiApiFp(this.configuration).apiAutomationUpdate(id, automation, options).then((request) => request(this.axios, this.basePath));
+    public apiAutomationUpdate(id: number, automationRequest: AutomationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiAutomationUpdate(id, automationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {BookmarkletImport} bookmarkletImport 
+     * @param {BookmarkletImportRequest} bookmarkletImportRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiBookmarkletImportCreate(bookmarkletImport: BookmarkletImport, options?: any) {
-        return ApiApiFp(this.configuration).apiBookmarkletImportCreate(bookmarkletImport, options).then((request) => request(this.axios, this.basePath));
+    public apiBookmarkletImportCreate(bookmarkletImportRequest: BookmarkletImportRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiBookmarkletImportCreate(bookmarkletImportRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19653,24 +21724,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiBookmarkletImportList(options?: any) {
-        return ApiApiFp(this.configuration).apiBookmarkletImportList(options).then((request) => request(this.axios, this.basePath));
+    public apiBookmarkletImportList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiBookmarkletImportList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this bookmarklet import.
-     * @param {PatchedBookmarkletImport} [patchedBookmarkletImport] 
+     * @param {PatchedBookmarkletImportRequest} [patchedBookmarkletImportRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImport?: PatchedBookmarkletImport, options?: any) {
-        return ApiApiFp(this.configuration).apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImport, options).then((request) => request(this.axios, this.basePath));
+    public apiBookmarkletImportPartialUpdate(id: number, patchedBookmarkletImportRequest?: PatchedBookmarkletImportRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiBookmarkletImportPartialUpdate(id, patchedBookmarkletImportRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19687,24 +21760,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this bookmarklet import.
-     * @param {BookmarkletImport} bookmarkletImport 
+     * @param {BookmarkletImportRequest} bookmarkletImportRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiBookmarkletImportUpdate(id: number, bookmarkletImport: BookmarkletImport, options?: any) {
-        return ApiApiFp(this.configuration).apiBookmarkletImportUpdate(id, bookmarkletImport, options).then((request) => request(this.axios, this.basePath));
+    public apiBookmarkletImportUpdate(id: number, bookmarkletImportRequest: BookmarkletImportRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiBookmarkletImportUpdate(id, bookmarkletImportRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {ConnectorConfigConfig} connectorConfigConfig 
+     * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiConnectorConfigCreate(connectorConfigConfig: ConnectorConfigConfig, options?: any) {
-        return ApiApiFp(this.configuration).apiConnectorConfigCreate(connectorConfigConfig, options).then((request) => request(this.axios, this.basePath));
+    public apiConnectorConfigCreate(connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiConnectorConfigCreate(connectorConfigConfigRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19731,13 +21804,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this connector config.
-     * @param {PatchedConnectorConfigConfig} [patchedConnectorConfigConfig] 
+     * @param {PatchedConnectorConfigConfigRequest} [patchedConnectorConfigConfigRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfig?: PatchedConnectorConfigConfig, options?: any) {
-        return ApiApiFp(this.configuration).apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfig, options).then((request) => request(this.axios, this.basePath));
+    public apiConnectorConfigPartialUpdate(id: number, patchedConnectorConfigConfigRequest?: PatchedConnectorConfigConfigRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiConnectorConfigPartialUpdate(id, patchedConnectorConfigConfigRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19754,24 +21827,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this connector config.
-     * @param {ConnectorConfigConfig} connectorConfigConfig 
+     * @param {ConnectorConfigConfigRequest} connectorConfigConfigRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiConnectorConfigUpdate(id: number, connectorConfigConfig: ConnectorConfigConfig, options?: any) {
-        return ApiApiFp(this.configuration).apiConnectorConfigUpdate(id, connectorConfigConfig, options).then((request) => request(this.axios, this.basePath));
+    public apiConnectorConfigUpdate(id: number, connectorConfigConfigRequest: ConnectorConfigConfigRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiConnectorConfigUpdate(id, connectorConfigConfigRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {CookLog} cookLog 
+     * @param {CookLogRequest} cookLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCookLogCreate(cookLog: CookLog, options?: any) {
-        return ApiApiFp(this.configuration).apiCookLogCreate(cookLog, options).then((request) => request(this.axios, this.basePath));
+    public apiCookLogCreate(cookLogRequest: CookLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCookLogCreate(cookLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19801,13 +21874,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this cook log.
-     * @param {PatchedCookLog} [patchedCookLog] 
+     * @param {PatchedCookLogRequest} [patchedCookLogRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCookLogPartialUpdate(id: number, patchedCookLog?: PatchedCookLog, options?: any) {
-        return ApiApiFp(this.configuration).apiCookLogPartialUpdate(id, patchedCookLog, options).then((request) => request(this.axios, this.basePath));
+    public apiCookLogPartialUpdate(id: number, patchedCookLogRequest?: PatchedCookLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCookLogPartialUpdate(id, patchedCookLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19824,24 +21897,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this cook log.
-     * @param {CookLog} cookLog 
+     * @param {CookLogRequest} cookLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCookLogUpdate(id: number, cookLog: CookLog, options?: any) {
-        return ApiApiFp(this.configuration).apiCookLogUpdate(id, cookLog, options).then((request) => request(this.axios, this.basePath));
+    public apiCookLogUpdate(id: number, cookLogRequest: CookLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCookLogUpdate(id, cookLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {CustomFilter} customFilter 
+     * @param {CustomFilterRequest} customFilterRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCustomFilterCreate(customFilter: CustomFilter, options?: any) {
-        return ApiApiFp(this.configuration).apiCustomFilterCreate(customFilter, options).then((request) => request(this.axios, this.basePath));
+    public apiCustomFilterCreate(customFilterRequest: CustomFilterRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCustomFilterCreate(customFilterRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19862,25 +21935,26 @@ export class ApiApi extends BaseAPI {
      * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
+     * @param {Array<'FOOD' | 'KEYWORD' | 'RECIPE'>} [type] Return the CustomFilters matching the model type.  Repeat for multiple.
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiCustomFilterList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiCustomFilterList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, type?: Array<'FOOD' | 'KEYWORD' | 'RECIPE'>, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiCustomFilterList(limit, page, pageSize, query, random, type, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this custom filter.
-     * @param {PatchedCustomFilter} [patchedCustomFilter] 
+     * @param {PatchedCustomFilterRequest} [patchedCustomFilterRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCustomFilterPartialUpdate(id: number, patchedCustomFilter?: PatchedCustomFilter, options?: any) {
-        return ApiApiFp(this.configuration).apiCustomFilterPartialUpdate(id, patchedCustomFilter, options).then((request) => request(this.axios, this.basePath));
+    public apiCustomFilterPartialUpdate(id: number, patchedCustomFilterRequest?: PatchedCustomFilterRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCustomFilterPartialUpdate(id, patchedCustomFilterRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19897,13 +21971,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this custom filter.
-     * @param {CustomFilter} customFilter 
+     * @param {CustomFilterRequest} customFilterRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiCustomFilterUpdate(id: number, customFilter: CustomFilter, options?: any) {
-        return ApiApiFp(this.configuration).apiCustomFilterUpdate(id, customFilter, options).then((request) => request(this.axios, this.basePath));
+    public apiCustomFilterUpdate(id: number, customFilterRequest: CustomFilterRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiCustomFilterUpdate(id, customFilterRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19919,13 +21993,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {ExportLog} exportLog 
+     * @param {ExportLogRequest} exportLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiExportLogCreate(exportLog: ExportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiExportLogCreate(exportLog, options).then((request) => request(this.axios, this.basePath));
+    public apiExportLogCreate(exportLogRequest: ExportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiExportLogCreate(exportLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19954,13 +22028,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this export log.
-     * @param {PatchedExportLog} [patchedExportLog] 
+     * @param {PatchedExportLogRequest} [patchedExportLogRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiExportLogPartialUpdate(id: number, patchedExportLog?: PatchedExportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiExportLogPartialUpdate(id, patchedExportLog, options).then((request) => request(this.axios, this.basePath));
+    public apiExportLogPartialUpdate(id: number, patchedExportLogRequest?: PatchedExportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiExportLogPartialUpdate(id, patchedExportLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -19977,24 +22051,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this export log.
-     * @param {ExportLog} exportLog 
+     * @param {ExportLogRequest} exportLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiExportLogUpdate(id: number, exportLog: ExportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiExportLogUpdate(id, exportLog, options).then((request) => request(this.axios, this.basePath));
+    public apiExportLogUpdate(id: number, exportLogRequest: ExportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiExportLogUpdate(id, exportLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Food} food 
+     * @param {FoodRequest} foodRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodCreate(food: Food, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodCreate(food, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodCreate(foodRequest: FoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodCreate(foodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20011,13 +22085,13 @@ export class ApiApi extends BaseAPI {
     /**
      * updates the food with all possible data from the FDC Api if properties with a fdc_id already exist they will be overridden, if existing properties don\'t have a fdc_id they won\'t be changed
      * @param {number} id A unique integer value identifying this food.
-     * @param {Food} food 
+     * @param {FoodRequest} foodRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodFdcCreate(id: number, food: Food, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodFdcCreate(id, food, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodFdcCreate(id: number, foodRequest: FoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodFdcCreate(id, foodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20049,7 +22123,7 @@ export class ApiApi extends BaseAPI {
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-     * @param {number} [tree] Return all self and children of {} with ID [int].
+     * @param {number} [tree] Return all self and children of {obj} with ID [int].
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20062,50 +22136,50 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {string} target 
-     * @param {Food} food 
+     * @param {number} target The ID of the {obj} you want to merge with.
+     * @param {FoodRequest} foodRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodMergeUpdate(id: number, target: string, food: Food, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodMergeUpdate(id, target, food, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodMergeUpdate(id: number, target: number, foodRequest: FoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodMergeUpdate(id, target, foodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {string} parent 
-     * @param {Food} food 
+     * @param {number} parent The ID of the desired parent of the {obj}.
+     * @param {FoodRequest} foodRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodMoveUpdate(id: number, parent: string, food: Food, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodMoveUpdate(id, parent, food, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodMoveUpdate(id: number, parent: number, foodRequest: FoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodMoveUpdate(id, parent, foodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {PatchedFood} [patchedFood] 
+     * @param {PatchedFoodRequest} [patchedFoodRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPartialUpdate(id: number, patchedFood?: PatchedFood, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPartialUpdate(id, patchedFood, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPartialUpdate(id: number, patchedFoodRequest?: PatchedFoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPartialUpdate(id, patchedFoodRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Property} property 
+     * @param {PropertyRequest} propertyRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyCreate(property: Property, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyCreate(property, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyCreate(propertyRequest: PropertyRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyCreate(propertyRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20121,24 +22195,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyList(options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyList(options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this property.
-     * @param {PatchedProperty} [patchedProperty] 
+     * @param {PatchedPropertyRequest} [patchedPropertyRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyPartialUpdate(id: number, patchedProperty?: PatchedProperty, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyPartialUpdate(id, patchedProperty, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyPartialUpdate(id: number, patchedPropertyRequest?: PatchedPropertyRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyPartialUpdate(id, patchedPropertyRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20154,13 +22230,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {PropertyType} propertyType 
+     * @param {PropertyTypeRequest} propertyTypeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypeCreate(propertyType: PropertyType, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypeCreate(propertyType, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypeCreate(propertyTypeRequest: PropertyTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypeCreate(propertyTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20176,24 +22252,27 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>} [category] Return the PropertyTypes matching the property category.  Repeat for multiple.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypeList(options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypeList(category?: Array<'ALLERGEN' | 'GOAL' | 'NUTRITION' | 'OTHER' | 'PRICE'>, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypeList(category, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this property type.
-     * @param {PatchedPropertyType} [patchedPropertyType] 
+     * @param {PatchedPropertyTypeRequest} [patchedPropertyTypeRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyType?: PatchedPropertyType, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypePartialUpdate(id, patchedPropertyType, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypePartialUpdate(id: number, patchedPropertyTypeRequest?: PatchedPropertyTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypePartialUpdate(id, patchedPropertyTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20210,25 +22289,25 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this property type.
-     * @param {PropertyType} propertyType 
+     * @param {PropertyTypeRequest} propertyTypeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyTypeUpdate(id: number, propertyType: PropertyType, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyTypeUpdate(id, propertyType, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyTypeUpdate(id: number, propertyTypeRequest: PropertyTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyTypeUpdate(id, propertyTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this property.
-     * @param {Property} property 
+     * @param {PropertyRequest} propertyRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodPropertyUpdate(id: number, property: Property, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodPropertyUpdate(id, property, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodPropertyUpdate(id: number, propertyRequest: PropertyRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodPropertyUpdate(id, propertyRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20245,25 +22324,47 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {FoodShoppingUpdate} foodShoppingUpdate 
+     * @param {FoodShoppingUpdateRequest} foodShoppingUpdateRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodShoppingUpdate(id: number, foodShoppingUpdate: FoodShoppingUpdate, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodShoppingUpdate(id, foodShoppingUpdate, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodShoppingUpdate(id: number, foodShoppingUpdateRequest: FoodShoppingUpdateRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodShoppingUpdate(id, foodShoppingUpdateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this food.
-     * @param {Food} food 
+     * @param {FoodRequest} foodRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiFoodUpdate(id: number, food: Food, options?: any) {
-        return ApiApiFp(this.configuration).apiFoodUpdate(id, food, options).then((request) => request(this.axios, this.basePath));
+    public apiFoodUpdate(id: number, foodRequest: FoodRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiFoodUpdate(id, foodRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} recipeId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public apiGetExternalFileLinkRetrieve(recipeId: number, options?: any) {
+        return ApiApiFp(this.configuration).apiGetExternalFileLinkRetrieve(recipeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} recipeId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public apiGetRecipeFileRetrieve(recipeId: number, options?: any) {
+        return ApiApiFp(this.configuration).apiGetRecipeFileRetrieve(recipeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20299,13 +22400,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {ImportLog} importLog 
+     * @param {ImportLogRequest} importLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiImportLogCreate(importLog: ImportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiImportLogCreate(importLog, options).then((request) => request(this.axios, this.basePath));
+    public apiImportLogCreate(importLogRequest: ImportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiImportLogCreate(importLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20334,13 +22435,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this import log.
-     * @param {PatchedImportLog} [patchedImportLog] 
+     * @param {PatchedImportLogRequest} [patchedImportLogRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiImportLogPartialUpdate(id: number, patchedImportLog?: PatchedImportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiImportLogPartialUpdate(id, patchedImportLog, options).then((request) => request(this.axios, this.basePath));
+    public apiImportLogPartialUpdate(id: number, patchedImportLogRequest?: PatchedImportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiImportLogPartialUpdate(id, patchedImportLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20357,24 +22458,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this import log.
-     * @param {ImportLog} importLog 
+     * @param {ImportLogRequest} importLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiImportLogUpdate(id: number, importLog: ImportLog, options?: any) {
-        return ApiApiFp(this.configuration).apiImportLogUpdate(id, importLog, options).then((request) => request(this.axios, this.basePath));
+    public apiImportLogUpdate(id: number, importLogRequest: ImportLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiImportLogUpdate(id, importLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Ingredient} ingredient 
+     * @param {IngredientRequest} ingredientRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiIngredientCreate(ingredient: Ingredient, options?: any) {
-        return ApiApiFp(this.configuration).apiIngredientCreate(ingredient, options).then((request) => request(this.axios, this.basePath));
+    public apiIngredientCreate(ingredientRequest: IngredientRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientCreate(ingredientRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20390,26 +22491,39 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {number} [page] A page number within the paginated result set.
-     * @param {number} [pageSize] Number of results to return per page.
+     * @param {IngredientStringRequest} ingredientStringRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiIngredientList(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiIngredientList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiIngredientFromStringCreate(ingredientStringRequest: IngredientStringRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientFromStringCreate(ingredientStringRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} [food] ID of food to filter for
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {number} [unit] ID of unit to filter for
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiApi
+     */
+    public apiIngredientList(food?: number, page?: number, pageSize?: number, unit?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientList(food, page, pageSize, unit, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this ingredient.
-     * @param {PatchedIngredient} [patchedIngredient] 
+     * @param {PatchedIngredientRequest} [patchedIngredientRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiIngredientPartialUpdate(id: number, patchedIngredient?: PatchedIngredient, options?: any) {
-        return ApiApiFp(this.configuration).apiIngredientPartialUpdate(id, patchedIngredient, options).then((request) => request(this.axios, this.basePath));
+    public apiIngredientPartialUpdate(id: number, patchedIngredientRequest?: PatchedIngredientRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientPartialUpdate(id, patchedIngredientRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20426,24 +22540,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this ingredient.
-     * @param {Ingredient} ingredient 
+     * @param {IngredientRequest} ingredientRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiIngredientUpdate(id: number, ingredient: Ingredient, options?: any) {
-        return ApiApiFp(this.configuration).apiIngredientUpdate(id, ingredient, options).then((request) => request(this.axios, this.basePath));
+    public apiIngredientUpdate(id: number, ingredientRequest: IngredientRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiIngredientUpdate(id, ingredientRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {InviteLink} inviteLink 
+     * @param {InviteLinkRequest} inviteLinkRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkCreate(inviteLink: InviteLink, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkCreate(inviteLink, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkCreate(inviteLinkRequest: InviteLinkRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkCreate(inviteLinkRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20459,7 +22573,10 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [internalNote] I have no idea what internal_note is for.
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -20467,20 +22584,20 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkList(internalNote?: string, limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkList(internalNote, limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this invite link.
-     * @param {PatchedInviteLink} [patchedInviteLink] 
+     * @param {PatchedInviteLinkRequest} [patchedInviteLinkRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkPartialUpdate(id: number, patchedInviteLink?: PatchedInviteLink, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkPartialUpdate(id, patchedInviteLink, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkPartialUpdate(id: number, patchedInviteLinkRequest?: PatchedInviteLinkRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkPartialUpdate(id, patchedInviteLinkRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20497,24 +22614,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this invite link.
-     * @param {InviteLink} inviteLink 
+     * @param {InviteLinkRequest} inviteLinkRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiInviteLinkUpdate(id: number, inviteLink: InviteLink, options?: any) {
-        return ApiApiFp(this.configuration).apiInviteLinkUpdate(id, inviteLink, options).then((request) => request(this.axios, this.basePath));
+    public apiInviteLinkUpdate(id: number, inviteLinkRequest: InviteLinkRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiInviteLinkUpdate(id, inviteLinkRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Keyword} keyword 
+     * @param {KeywordRequest} keywordRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordCreate(keyword: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).apiKeywordCreate(keyword, options).then((request) => request(this.axios, this.basePath));
+    public apiKeywordCreate(keywordRequest: KeywordRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiKeywordCreate(keywordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20536,7 +22653,7 @@ export class ApiApi extends BaseAPI {
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {number} [root] Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.
-     * @param {number} [tree] Return all self and children of {} with ID [int].
+     * @param {number} [tree] Return all self and children of {obj} with ID [int].
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20549,39 +22666,39 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {string} target 
-     * @param {Keyword} keyword 
+     * @param {number} target The ID of the {obj} you want to merge with.
+     * @param {KeywordRequest} keywordRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordMergeUpdate(id: number, target: string, keyword: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).apiKeywordMergeUpdate(id, target, keyword, options).then((request) => request(this.axios, this.basePath));
+    public apiKeywordMergeUpdate(id: number, target: number, keywordRequest: KeywordRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiKeywordMergeUpdate(id, target, keywordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {string} parent 
-     * @param {Keyword} keyword 
+     * @param {number} parent The ID of the desired parent of the {obj}.
+     * @param {KeywordRequest} keywordRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordMoveUpdate(id: number, parent: string, keyword: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).apiKeywordMoveUpdate(id, parent, keyword, options).then((request) => request(this.axios, this.basePath));
+    public apiKeywordMoveUpdate(id: number, parent: number, keywordRequest: KeywordRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiKeywordMoveUpdate(id, parent, keywordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {PatchedKeyword} [patchedKeyword] 
+     * @param {PatchedKeywordRequest} [patchedKeywordRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordPartialUpdate(id: number, patchedKeyword?: PatchedKeyword, options?: any) {
-        return ApiApiFp(this.configuration).apiKeywordPartialUpdate(id, patchedKeyword, options).then((request) => request(this.axios, this.basePath));
+    public apiKeywordPartialUpdate(id: number, patchedKeywordRequest?: PatchedKeywordRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiKeywordPartialUpdate(id, patchedKeywordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20598,28 +22715,28 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this keyword.
-     * @param {Keyword} keyword 
+     * @param {KeywordRequest} keywordRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiKeywordUpdate(id: number, keyword: Keyword, options?: any) {
-        return ApiApiFp(this.configuration).apiKeywordUpdate(id, keyword, options).then((request) => request(this.axios, this.basePath));
+    public apiKeywordUpdate(id: number, keywordRequest: KeywordRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiKeywordUpdate(id, keywordRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-     * @param {MealPlan} mealPlan 
+     * 
+     * @param {MealPlanRequest} mealPlanRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanCreate(mealPlan: MealPlan, options?: any) {
-        return ApiApiFp(this.configuration).apiMealPlanCreate(mealPlan, options).then((request) => request(this.axios, this.basePath));
+    public apiMealPlanCreate(mealPlanRequest: MealPlanRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealPlanCreate(mealPlanRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20630,45 +22747,47 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-     * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-     * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-     * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+     * 
+     * @param {string} [fromDate] Filter meal plans from date (inclusive).
+     * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+     * @param {string} [toDate] Filter meal plans to date (inclusive).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanIcalRetrieve(fromDate?: string, mealType?: string, toDate?: string, options?: any) {
+    public apiMealPlanIcalRetrieve(fromDate?: string, mealType?: Array<string>, toDate?: string, options?: any) {
         return ApiApiFp(this.configuration).apiMealPlanIcalRetrieve(fromDate, mealType, toDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
-     * @param {string} [fromDate] Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.
-     * @param {string} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
-     * @param {string} [toDate] Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.
+     * 
+     * @param {string} [fromDate] Filter meal plans from date (inclusive).
+     * @param {Array<string>} [mealType] Filter meal plans with MealType ID. For multiple repeat parameter.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {string} [toDate] Filter meal plans to date (inclusive).
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanList(fromDate?: string, mealType?: string, toDate?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiMealPlanList(fromDate, mealType, toDate, options).then((request) => request(this.axios, this.basePath));
+    public apiMealPlanList(fromDate?: string, mealType?: Array<string>, page?: number, pageSize?: number, toDate?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiMealPlanList(fromDate, mealType, page, pageSize, toDate, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
-     * @param {PatchedMealPlan} [patchedMealPlan] 
+     * @param {PatchedMealPlanRequest} [patchedMealPlanRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanPartialUpdate(id: number, patchedMealPlan?: PatchedMealPlan, options?: any) {
-        return ApiApiFp(this.configuration).apiMealPlanPartialUpdate(id, patchedMealPlan, options).then((request) => request(this.axios, this.basePath));
+    public apiMealPlanPartialUpdate(id: number, patchedMealPlanRequest?: PatchedMealPlanRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealPlanPartialUpdate(id, patchedMealPlanRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20679,26 +22798,26 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **from_date**: filter from (inclusive) a certain date onward - **to_date**: filter upward to (inclusive) certain date - **meal_type**: filter meal plans based on meal_type ID
+     * 
      * @param {number} id A unique integer value identifying this meal plan.
-     * @param {MealPlan} mealPlan 
+     * @param {MealPlanRequest} mealPlanRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealPlanUpdate(id: number, mealPlan: MealPlan, options?: any) {
-        return ApiApiFp(this.configuration).apiMealPlanUpdate(id, mealPlan, options).then((request) => request(this.axios, this.basePath));
+    public apiMealPlanUpdate(id: number, mealPlanRequest: MealPlanRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealPlanUpdate(id, mealPlanRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
-     * @param {MealType} mealType 
+     * @param {MealTypeRequest} mealTypeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealTypeCreate(mealType: MealType, options?: any) {
-        return ApiApiFp(this.configuration).apiMealTypeCreate(mealType, options).then((request) => request(this.axios, this.basePath));
+    public apiMealTypeCreate(mealTypeRequest: MealTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealTypeCreate(mealTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20714,24 +22833,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealTypeList(options?: any) {
-        return ApiApiFp(this.configuration).apiMealTypeList(options).then((request) => request(this.axios, this.basePath));
+    public apiMealTypeList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiMealTypeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
      * @param {number} id A unique integer value identifying this meal type.
-     * @param {PatchedMealType} [patchedMealType] 
+     * @param {PatchedMealTypeRequest} [patchedMealTypeRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealTypePartialUpdate(id: number, patchedMealType?: PatchedMealType, options?: any) {
-        return ApiApiFp(this.configuration).apiMealTypePartialUpdate(id, patchedMealType, options).then((request) => request(this.axios, this.basePath));
+    public apiMealTypePartialUpdate(id: number, patchedMealTypeRequest?: PatchedMealTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealTypePartialUpdate(id, patchedMealTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20748,36 +22869,24 @@ export class ApiApi extends BaseAPI {
     /**
      * returns list of meal types created by the requesting user ordered by the order field.
      * @param {number} id A unique integer value identifying this meal type.
-     * @param {MealType} mealType 
+     * @param {MealTypeRequest} mealTypeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiMealTypeUpdate(id: number, mealType: MealType, options?: any) {
-        return ApiApiFp(this.configuration).apiMealTypeUpdate(id, mealType, options).then((request) => request(this.axios, this.basePath));
+    public apiMealTypeUpdate(id: number, mealTypeRequest: MealTypeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiMealTypeUpdate(id, mealTypeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} fromDate 
-     * @param {string} toDate 
+     * @param {RecipeBookRequest} recipeBookRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiPlanIcalRetrieve(fromDate: string, toDate: string, options?: any) {
-        return ApiApiFp(this.configuration).apiPlanIcalRetrieve(fromDate, toDate, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @param {RecipeBook} recipeBook 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ApiApi
-     */
-    public apiRecipeBookCreate(recipeBook: RecipeBook, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookCreate(recipeBook, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookCreate(recipeBookRequest: RecipeBookRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookCreate(recipeBookRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20792,18 +22901,18 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
-     * @param {RecipeBookEntry} recipeBookEntry 
+     * 
+     * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookEntryCreate(recipeBookEntry: RecipeBookEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookEntryCreate(recipeBookEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookEntryCreate(recipeBookEntryRequest: RecipeBookEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookEntryCreate(recipeBookEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20814,29 +22923,33 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
+     * @param {number} [book] id of book - only return recipes in that book
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
+     * @param {number} [recipe] id of recipe - only return books for that recipe
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookEntryList(options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookEntryList(options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookEntryList(book?: number, page?: number, pageSize?: number, recipe?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookEntryList(book, page, pageSize, recipe, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
-     * @param {PatchedRecipeBookEntry} [patchedRecipeBookEntry] 
+     * @param {PatchedRecipeBookEntryRequest} [patchedRecipeBookEntryRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntry?: PatchedRecipeBookEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookEntryPartialUpdate(id: number, patchedRecipeBookEntryRequest?: PatchedRecipeBookEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookEntryPartialUpdate(id, patchedRecipeBookEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -20847,20 +22960,24 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **recipe**: id of recipe - only return books for that recipe - **book**: id of book - only return recipes in that book
+     * 
      * @param {number} id A unique integer value identifying this recipe book entry.
-     * @param {RecipeBookEntry} recipeBookEntry 
+     * @param {RecipeBookEntryRequest} recipeBookEntryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookEntryUpdate(id: number, recipeBookEntry: RecipeBookEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookEntryUpdate(id, recipeBookEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookEntryUpdate(id: number, recipeBookEntryRequest: RecipeBookEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookEntryUpdate(id, recipeBookEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {'asc' | 'desc'} [orderDirection] Order ascending or descending
+     * @param {'id' | 'name' | 'order'} [orderField] Field to order recipe books on
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -20868,20 +22985,20 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookList(limit?: string, orderDirection?: 'asc' | 'desc', orderField?: 'id' | 'name' | 'order', page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookList(limit, orderDirection, orderField, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe book.
-     * @param {PatchedRecipeBook} [patchedRecipeBook] 
+     * @param {PatchedRecipeBookRequest} [patchedRecipeBookRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookPartialUpdate(id: number, patchedRecipeBook?: PatchedRecipeBook, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookPartialUpdate(id, patchedRecipeBook, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookPartialUpdate(id: number, patchedRecipeBookRequest?: PatchedRecipeBookRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookPartialUpdate(id, patchedRecipeBookRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20898,24 +23015,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe book.
-     * @param {RecipeBook} recipeBook 
+     * @param {RecipeBookRequest} recipeBookRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeBookUpdate(id: number, recipeBook: RecipeBook, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeBookUpdate(id, recipeBook, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeBookUpdate(id: number, recipeBookRequest: RecipeBookRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeBookUpdate(id, recipeBookRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Recipe} recipe 
+     * @param {RecipeRequest} recipeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeCreate(recipe: Recipe, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeCreate(recipe, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeCreate(recipeRequest: RecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeCreate(recipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -20952,37 +23069,37 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe.
-     * @param {string} [image] 
+     * @param {any} [image] 
      * @param {string} [imageUrl] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeImageUpdate(id: number, image?: string, imageUrl?: string, options?: any) {
+    public apiRecipeImageUpdate(id: number, image?: any, imageUrl?: string, options?: any) {
         return ApiApiFp(this.configuration).apiRecipeImageUpdate(id, image, imageUrl, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} [books] ID of book a recipe should be in. For multiple repeat parameter.
-     * @param {number} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
-     * @param {number} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
-     * @param {number} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
-     * @param {number} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
+     * @param {Array<number>} [books] ID of book a recipe should be in. For multiple repeat parameter.
+     * @param {Array<number>} [booksAnd] Book IDs, repeat for multiple. Return recipes with all of the books.
+     * @param {Array<number>} [booksAndNot] Book IDs, repeat for multiple. Exclude recipes with all of the books.
+     * @param {Array<number>} [booksOr] Book IDs, repeat for multiple. Return recipes with any of the books
+     * @param {Array<number>} [booksOrNot] Book IDs, repeat for multiple. Exclude recipes with any of the books.
      * @param {string} [cookedon] Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on or before date.
      * @param {string} [createdon] Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or before date.
-     * @param {number} [foods] ID of food a recipe should have. For multiple repeat parameter.
-     * @param {number} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
-     * @param {number} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
-     * @param {number} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
-     * @param {number} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
-     * @param {string} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
-     * @param {number} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
-     * @param {number} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
-     * @param {number} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
-     * @param {number} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
-     * @param {number} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
-     * @param {string} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {Array<number>} [foods] ID of food a recipe should have. For multiple repeat parameter.
+     * @param {Array<number>} [foodsAnd] Food IDs, repeat for multiple. Return recipes with all of the foods.
+     * @param {Array<number>} [foodsAndNot] Food IDs, repeat for multiple. Exclude recipes with all of the foods.
+     * @param {Array<number>} [foodsOr] Food IDs, repeat for multiple. Return recipes with any of the foods
+     * @param {Array<number>} [foodsOrNot] Food IDs, repeat for multiple. Exclude recipes with any of the foods.
+     * @param {boolean} [internal] If only internal recipes should be returned. [true/&lt;b&gt;false&lt;/b&gt;]
+     * @param {Array<number>} [keywords] ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or
+     * @param {Array<number>} [keywordsAnd] Keyword IDs, repeat for multiple. Return recipes with all of the keywords.
+     * @param {Array<number>} [keywordsAndNot] Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.
+     * @param {Array<number>} [keywordsOr] Keyword IDs, repeat for multiple. Return recipes with any of the keywords
+     * @param {Array<number>} [keywordsOrNot] Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.
+     * @param {boolean} [makenow] Filter recipes that can be made with OnHand food. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {string} [_new] Returns new results first in search results. [true/&lt;b&gt;false&lt;/b&gt;]
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
@@ -20997,20 +23114,20 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeList(books?: string, booksAnd?: number, booksAndNot?: number, booksOr?: number, booksOrNot?: number, cookedon?: string, createdon?: string, foods?: number, foodsAnd?: number, foodsAndNot?: number, foodsOr?: number, foodsOrNot?: number, internal?: string, keywords?: number, keywordsAnd?: number, keywordsAndNot?: number, keywordsOr?: number, keywordsOrNot?: number, makenow?: string, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any) {
+    public apiRecipeList(books?: Array<number>, booksAnd?: Array<number>, booksAndNot?: Array<number>, booksOr?: Array<number>, booksOrNot?: Array<number>, cookedon?: string, createdon?: string, foods?: Array<number>, foodsAnd?: Array<number>, foodsAndNot?: Array<number>, foodsOr?: Array<number>, foodsOrNot?: Array<number>, internal?: boolean, keywords?: Array<number>, keywordsAnd?: Array<number>, keywordsAndNot?: Array<number>, keywordsOr?: Array<number>, keywordsOrNot?: Array<number>, makenow?: boolean, _new?: string, page?: number, pageSize?: number, query?: string, random?: string, rating?: number, timescooked?: number, units?: number, updatedon?: string, viewedon?: string, options?: any) {
         return ApiApiFp(this.configuration).apiRecipeList(books, booksAnd, booksAndNot, booksOr, booksOrNot, cookedon, createdon, foods, foodsAnd, foodsAndNot, foodsOr, foodsOrNot, internal, keywords, keywordsAnd, keywordsAndNot, keywordsOr, keywordsOrNot, makenow, _new, page, pageSize, query, random, rating, timescooked, units, updatedon, viewedon, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe.
-     * @param {PatchedRecipe} [patchedRecipe] 
+     * @param {PatchedRecipeRequest} [patchedRecipeRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipePartialUpdate(id: number, patchedRecipe?: PatchedRecipe, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipePartialUpdate(id, patchedRecipe, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipePartialUpdate(id: number, patchedRecipeRequest?: PatchedRecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipePartialUpdate(id, patchedRecipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21038,25 +23155,25 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe.
-     * @param {RecipeShoppingUpdate} [recipeShoppingUpdate] 
+     * @param {RecipeShoppingUpdateRequest} [recipeShoppingUpdateRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeShoppingUpdate(id: number, recipeShoppingUpdate?: RecipeShoppingUpdate, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeShoppingUpdate(id, recipeShoppingUpdate, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeShoppingUpdate(id: number, recipeShoppingUpdateRequest?: RecipeShoppingUpdateRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeShoppingUpdate(id, recipeShoppingUpdateRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this recipe.
-     * @param {Recipe} recipe 
+     * @param {RecipeRequest} recipeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiRecipeUpdate(id: number, recipe: Recipe, options?: any) {
-        return ApiApiFp(this.configuration).apiRecipeUpdate(id, recipe, options).then((request) => request(this.axios, this.basePath));
+    public apiRecipeUpdate(id: number, recipeRequest: RecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiRecipeUpdate(id, recipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21065,8 +23182,8 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiResetFoodInheritanceRetrieve(options?: any) {
-        return ApiApiFp(this.configuration).apiResetFoodInheritanceRetrieve(options).then((request) => request(this.axios, this.basePath));
+    public apiResetFoodInheritanceCreate(options?: any) {
+        return ApiApiFp(this.configuration).apiResetFoodInheritanceCreate(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21082,24 +23199,24 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {ShoppingListEntryBulk} shoppingListEntryBulk 
+     * @param {ShoppingListEntryBulkRequest} shoppingListEntryBulkRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryBulkCreate(shoppingListEntryBulk: ShoppingListEntryBulk, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryBulkCreate(shoppingListEntryBulk, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest: ShoppingListEntryBulkRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryBulkCreate(shoppingListEntryBulkRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {ShoppingListEntry} shoppingListEntry 
+     * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryCreate(shoppingListEntry: ShoppingListEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryCreate(shoppingListEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryCreate(shoppingListEntryRequest: ShoppingListEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryCreate(shoppingListEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21117,25 +23234,27 @@ export class ApiApi extends BaseAPI {
      * 
      * @param {string} [checked] Filter shopping list entries on checked.  [true, false, both, &lt;b&gt;recent&lt;/b&gt;]&lt;br&gt;                              - recent includes unchecked items and recently completed items.
      * @param {number} [id] Returns the shopping list entry with a primary key of id.  Multiple values allowed.
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {number} [supermarket] Returns the shopping list entries sorted by supermarket category order.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryList(checked?: string, id?: number, supermarket?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryList(checked, id, supermarket, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryList(checked?: string, id?: number, page?: number, pageSize?: number, supermarket?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryList(checked, id, page, pageSize, supermarket, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this shopping list entry.
-     * @param {PatchedShoppingListEntry} [patchedShoppingListEntry] 
+     * @param {PatchedShoppingListEntryRequest} [patchedShoppingListEntryRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntry?: PatchedShoppingListEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryPartialUpdate(id: number, patchedShoppingListEntryRequest?: PatchedShoppingListEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryPartialUpdate(id, patchedShoppingListEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21152,24 +23271,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this shopping list entry.
-     * @param {ShoppingListEntry} shoppingListEntry 
+     * @param {ShoppingListEntryRequest} shoppingListEntryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListEntryUpdate(id: number, shoppingListEntry: ShoppingListEntry, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListEntryUpdate(id, shoppingListEntry, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListEntryUpdate(id: number, shoppingListEntryRequest: ShoppingListEntryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListEntryUpdate(id, shoppingListEntryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {ShoppingListRecipe} shoppingListRecipe 
+     * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListRecipeCreate(shoppingListRecipe: ShoppingListRecipe, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListRecipeCreate(shoppingListRecipe, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListRecipeCreate(shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListRecipeCreate(shoppingListRecipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21185,24 +23304,26 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListRecipeList(options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListRecipeList(options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListRecipeList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListRecipeList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this shopping list recipe.
-     * @param {PatchedShoppingListRecipe} [patchedShoppingListRecipe] 
+     * @param {PatchedShoppingListRecipeRequest} [patchedShoppingListRecipeRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipe?: PatchedShoppingListRecipe, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipe, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListRecipePartialUpdate(id: number, patchedShoppingListRecipeRequest?: PatchedShoppingListRecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListRecipePartialUpdate(id, patchedShoppingListRecipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21219,13 +23340,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this shopping list recipe.
-     * @param {ShoppingListRecipe} shoppingListRecipe 
+     * @param {ShoppingListRecipeRequest} shoppingListRecipeRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiShoppingListRecipeUpdate(id: number, shoppingListRecipe: ShoppingListRecipe, options?: any) {
-        return ApiApiFp(this.configuration).apiShoppingListRecipeUpdate(id, shoppingListRecipe, options).then((request) => request(this.axios, this.basePath));
+    public apiShoppingListRecipeUpdate(id: number, shoppingListRecipeRequest: ShoppingListRecipeRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiShoppingListRecipeUpdate(id, shoppingListRecipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21241,13 +23362,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this space.
-     * @param {PatchedSpace} [patchedSpace] 
+     * @param {PatchedSpaceRequest} [patchedSpaceRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSpacePartialUpdate(id: number, patchedSpace?: PatchedSpace, options?: any) {
-        return ApiApiFp(this.configuration).apiSpacePartialUpdate(id, patchedSpace, options).then((request) => request(this.axios, this.basePath));
+    public apiSpacePartialUpdate(id: number, patchedSpaceRequest?: PatchedSpaceRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSpacePartialUpdate(id, patchedSpaceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21263,13 +23384,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {Step} step 
+     * @param {StepRequest} stepRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStepCreate(step: Step, options?: any) {
-        return ApiApiFp(this.configuration).apiStepCreate(step, options).then((request) => request(this.axios, this.basePath));
+    public apiStepCreate(stepRequest: StepRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStepCreate(stepRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21288,25 +23409,25 @@ export class ApiApi extends BaseAPI {
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] Query string matched (fuzzy) against object name.
-     * @param {number} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
+     * @param {Array<number>} [recipe] ID of recipe a step is part of. For multiple repeat parameter.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStepList(page?: number, pageSize?: number, query?: string, recipe?: number, options?: any) {
+    public apiStepList(page?: number, pageSize?: number, query?: string, recipe?: Array<number>, options?: any) {
         return ApiApiFp(this.configuration).apiStepList(page, pageSize, query, recipe, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this step.
-     * @param {PatchedStep} [patchedStep] 
+     * @param {PatchedStepRequest} [patchedStepRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStepPartialUpdate(id: number, patchedStep?: PatchedStep, options?: any) {
-        return ApiApiFp(this.configuration).apiStepPartialUpdate(id, patchedStep, options).then((request) => request(this.axios, this.basePath));
+    public apiStepPartialUpdate(id: number, patchedStepRequest?: PatchedStepRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStepPartialUpdate(id, patchedStepRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21323,24 +23444,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this step.
-     * @param {Step} step 
+     * @param {StepRequest} stepRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStepUpdate(id: number, step: Step, options?: any) {
-        return ApiApiFp(this.configuration).apiStepUpdate(id, step, options).then((request) => request(this.axios, this.basePath));
+    public apiStepUpdate(id: number, stepRequest: StepRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStepUpdate(id, stepRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Storage} storage 
+     * @param {StorageRequest} storageRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStorageCreate(storage: Storage, options?: any) {
-        return ApiApiFp(this.configuration).apiStorageCreate(storage, options).then((request) => request(this.axios, this.basePath));
+    public apiStorageCreate(storageRequest: StorageRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStorageCreate(storageRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21367,13 +23488,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this storage.
-     * @param {PatchedStorage} [patchedStorage] 
+     * @param {PatchedStorageRequest} [patchedStorageRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStoragePartialUpdate(id: number, patchedStorage?: PatchedStorage, options?: any) {
-        return ApiApiFp(this.configuration).apiStoragePartialUpdate(id, patchedStorage, options).then((request) => request(this.axios, this.basePath));
+    public apiStoragePartialUpdate(id: number, patchedStorageRequest?: PatchedStorageRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStoragePartialUpdate(id, patchedStorageRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21390,24 +23511,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this storage.
-     * @param {Storage} storage 
+     * @param {StorageRequest} storageRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiStorageUpdate(id: number, storage: Storage, options?: any) {
-        return ApiApiFp(this.configuration).apiStorageUpdate(id, storage, options).then((request) => request(this.axios, this.basePath));
+    public apiStorageUpdate(id: number, storageRequest: StorageRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiStorageUpdate(id, storageRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {SupermarketCategory} supermarketCategory 
+     * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryCreate(supermarketCategory: SupermarketCategory, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryCreate(supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryCreate(supermarketCategoryRequest: SupermarketCategoryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryCreate(supermarketCategoryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21424,6 +23545,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21431,44 +23554,44 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category.
-     * @param {string} target 
-     * @param {SupermarketCategory} supermarketCategory 
+     * @param {number} target The ID of the {obj} you want to merge with.
+     * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryMergeUpdate(id: number, target: string, supermarketCategory: SupermarketCategory, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryMergeUpdate(id, target, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryMergeUpdate(id: number, target: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryMergeUpdate(id, target, supermarketCategoryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category.
-     * @param {PatchedSupermarketCategory} [patchedSupermarketCategory] 
+     * @param {PatchedSupermarketCategoryRequest} [patchedSupermarketCategoryRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategory?: PatchedSupermarketCategory, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryPartialUpdate(id: number, patchedSupermarketCategoryRequest?: PatchedSupermarketCategoryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryPartialUpdate(id, patchedSupermarketCategoryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+     * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryRelationCreate(supermarketCategoryRelation: SupermarketCategoryRelation, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationCreate(supermarketCategoryRelation, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationCreate(supermarketCategoryRelationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21501,13 +23624,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category relation.
-     * @param {PatchedSupermarketCategoryRelation} [patchedSupermarketCategoryRelation] 
+     * @param {PatchedSupermarketCategoryRelationRequest} [patchedSupermarketCategoryRelationRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelation?: PatchedSupermarketCategoryRelation, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelation, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryRelationPartialUpdate(id: number, patchedSupermarketCategoryRelationRequest?: PatchedSupermarketCategoryRelationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationPartialUpdate(id, patchedSupermarketCategoryRelationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21524,13 +23647,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category relation.
-     * @param {SupermarketCategoryRelation} supermarketCategoryRelation 
+     * @param {SupermarketCategoryRelationRequest} supermarketCategoryRelationRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelation: SupermarketCategoryRelation, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelation, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryRelationUpdate(id: number, supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryRelationUpdate(id, supermarketCategoryRelationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21547,24 +23670,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket category.
-     * @param {SupermarketCategory} supermarketCategory 
+     * @param {SupermarketCategoryRequest} supermarketCategoryRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCategoryUpdate(id: number, supermarketCategory: SupermarketCategory, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCategoryUpdate(id, supermarketCategory, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCategoryUpdate(id: number, supermarketCategoryRequest: SupermarketCategoryRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCategoryUpdate(id, supermarketCategoryRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Supermarket} supermarket 
+     * @param {SupermarketRequest} supermarketRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketCreate(supermarket: Supermarket, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketCreate(supermarket, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketCreate(supermarketRequest: SupermarketRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketCreate(supermarketRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21581,6 +23704,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21588,20 +23713,20 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket.
-     * @param {PatchedSupermarket} [patchedSupermarket] 
+     * @param {PatchedSupermarketRequest} [patchedSupermarketRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketPartialUpdate(id: number, patchedSupermarket?: PatchedSupermarket, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketPartialUpdate(id, patchedSupermarket, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketPartialUpdate(id: number, patchedSupermarketRequest?: PatchedSupermarketRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketPartialUpdate(id, patchedSupermarketRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21618,13 +23743,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this supermarket.
-     * @param {Supermarket} supermarket 
+     * @param {SupermarketRequest} supermarketRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSupermarketUpdate(id: number, supermarket: Supermarket, options?: any) {
-        return ApiApiFp(this.configuration).apiSupermarketUpdate(id, supermarket, options).then((request) => request(this.axios, this.basePath));
+    public apiSupermarketUpdate(id: number, supermarketRequest: SupermarketRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSupermarketUpdate(id, supermarketRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21640,13 +23765,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {Sync} sync 
+     * @param {SyncRequest} syncRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSyncCreate(sync: Sync, options?: any) {
-        return ApiApiFp(this.configuration).apiSyncCreate(sync, options).then((request) => request(this.axios, this.basePath));
+    public apiSyncCreate(syncRequest: SyncRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSyncCreate(syncRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21662,12 +23787,14 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSyncList(options?: any) {
-        return ApiApiFp(this.configuration).apiSyncList(options).then((request) => request(this.axios, this.basePath));
+    public apiSyncList(page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiSyncList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21696,13 +23823,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this sync.
-     * @param {PatchedSync} [patchedSync] 
+     * @param {PatchedSyncRequest} [patchedSyncRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSyncPartialUpdate(id: number, patchedSync?: PatchedSync, options?: any) {
-        return ApiApiFp(this.configuration).apiSyncPartialUpdate(id, patchedSync, options).then((request) => request(this.axios, this.basePath));
+    public apiSyncPartialUpdate(id: number, patchedSyncRequest?: PatchedSyncRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSyncPartialUpdate(id, patchedSyncRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21719,24 +23846,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this sync.
-     * @param {Sync} sync 
+     * @param {SyncRequest} syncRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiSyncUpdate(id: number, sync: Sync, options?: any) {
-        return ApiApiFp(this.configuration).apiSyncUpdate(id, sync, options).then((request) => request(this.axios, this.basePath));
+    public apiSyncUpdate(id: number, syncRequest: SyncRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiSyncUpdate(id, syncRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {UnitConversion} unitConversion 
+     * @param {UnitConversionRequest} unitConversionRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitConversionCreate(unitConversion: UnitConversion, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitConversionCreate(unitConversion, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitConversionCreate(unitConversionRequest: UnitConversionRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitConversionCreate(unitConversionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21753,24 +23880,26 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} [foodId] ID of food to filter for
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitConversionList(foodId?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitConversionList(foodId, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitConversionList(foodId?: number, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitConversionList(foodId, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this unit conversion.
-     * @param {PatchedUnitConversion} [patchedUnitConversion] 
+     * @param {PatchedUnitConversionRequest} [patchedUnitConversionRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitConversionPartialUpdate(id: number, patchedUnitConversion?: PatchedUnitConversion, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitConversionPartialUpdate(id, patchedUnitConversion, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitConversionPartialUpdate(id: number, patchedUnitConversionRequest?: PatchedUnitConversionRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitConversionPartialUpdate(id, patchedUnitConversionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21787,24 +23916,24 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this unit conversion.
-     * @param {UnitConversion} unitConversion 
+     * @param {UnitConversionRequest} unitConversionRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitConversionUpdate(id: number, unitConversion: UnitConversion, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitConversionUpdate(id, unitConversion, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitConversionUpdate(id: number, unitConversionRequest: UnitConversionRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitConversionUpdate(id, unitConversionRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {Unit} unit 
+     * @param {UnitRequest} unitRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitCreate(unit: Unit, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitCreate(unit, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitCreate(unitRequest: UnitRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitCreate(unitRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21837,26 +23966,26 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this unit.
-     * @param {string} target 
-     * @param {Unit} unit 
+     * @param {number} target The ID of the {obj} you want to merge with.
+     * @param {UnitRequest} unitRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitMergeUpdate(id: number, target: string, unit: Unit, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitMergeUpdate(id, target, unit, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitMergeUpdate(id: number, target: number, unitRequest: UnitRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitMergeUpdate(id, target, unitRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this unit.
-     * @param {PatchedUnit} [patchedUnit] 
+     * @param {PatchedUnitRequest} [patchedUnitRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitPartialUpdate(id: number, patchedUnit?: PatchedUnit, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitPartialUpdate(id, patchedUnit, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitPartialUpdate(id: number, patchedUnitRequest?: PatchedUnitRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitPartialUpdate(id, patchedUnitRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21873,29 +24002,26 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this unit.
-     * @param {Unit} unit 
+     * @param {UnitRequest} unitRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUnitUpdate(id: number, unit: Unit, options?: any) {
-        return ApiApiFp(this.configuration).apiUnitUpdate(id, unit, options).then((request) => request(this.axios, this.basePath));
+    public apiUnitUpdate(id: number, unitRequest: UnitRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUnitUpdate(id, unitRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {number} id 
      * @param {string} name 
-     * @param {string} file 
-     * @param {string} fileDownload 
-     * @param {string} preview 
-     * @param {number} fileSizeKb 
+     * @param {any} file 
+     * @param {number} [id] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserFileCreate(id: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUserFileCreate(id, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
+    public apiUserFileCreate(name: string, file: any, id?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUserFileCreate(name, file, id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21912,6 +24038,8 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {string} [limit] limit number of entries to return
+     * @param {number} [page] A page number within the paginated result set.
+     * @param {number} [pageSize] Number of results to return per page.
      * @param {string} [query] lookup if query string is contained within the name, case insensitive
      * @param {string} [random] randomly orders entries (only works together with limit)
      * @param {string} [updatedAt] if model has an updated_at timestamp, filter only models updated at or after datetime
@@ -21919,25 +24047,22 @@ export class ApiApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserFileList(limit?: string, query?: string, random?: string, updatedAt?: string, options?: any) {
-        return ApiApiFp(this.configuration).apiUserFileList(limit, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
+    public apiUserFileList(limit?: string, page?: number, pageSize?: number, query?: string, random?: string, updatedAt?: string, options?: any) {
+        return ApiApiFp(this.configuration).apiUserFileList(limit, page, pageSize, query, random, updatedAt, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this user file.
-     * @param {number} [id2] 
      * @param {string} [name] 
-     * @param {string} [file] 
-     * @param {string} [fileDownload] 
-     * @param {string} [preview] 
-     * @param {number} [fileSizeKb] 
+     * @param {any} [file] 
+     * @param {number} [id2] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserFilePartialUpdate(id: number, id2?: number, name?: string, file?: string, fileDownload?: string, preview?: string, fileSizeKb?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUserFilePartialUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
+    public apiUserFilePartialUpdate(id: number, name?: string, file?: any, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUserFilePartialUpdate(id, name, file, id2, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -21954,40 +24079,38 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this user file.
-     * @param {number} id2 
      * @param {string} name 
-     * @param {string} file 
-     * @param {string} fileDownload 
-     * @param {string} preview 
-     * @param {number} fileSizeKb 
+     * @param {any} file 
+     * @param {number} [id2] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserFileUpdate(id: number, id2: number, name: string, file: string, fileDownload: string, preview: string, fileSizeKb: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUserFileUpdate(id, id2, name, file, fileDownload, preview, fileSizeKb, options).then((request) => request(this.axios, this.basePath));
+    public apiUserFileUpdate(id: number, name: string, file: any, id2?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUserFileUpdate(id, name, file, id2, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
+     * @param {Array<string>} [filterList] User IDs, repeat for multiple
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserList(options?: any) {
-        return ApiApiFp(this.configuration).apiUserList(options).then((request) => request(this.axios, this.basePath));
+    public apiUserList(filterList?: Array<string>, options?: any) {
+        return ApiApiFp(this.configuration).apiUserList(filterList, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
      * @param {number} id A unique integer value identifying this user.
-     * @param {PatchedUser} [patchedUser] 
+     * @param {PatchedUserRequest} [patchedUserRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserPartialUpdate(id: number, patchedUser?: PatchedUser, options?: any) {
-        return ApiApiFp(this.configuration).apiUserPartialUpdate(id, patchedUser, options).then((request) => request(this.axios, this.basePath));
+    public apiUserPartialUpdate(id: number, patchedUserRequest?: PatchedUserRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUserPartialUpdate(id, patchedUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22003,13 +24126,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} user A unique value identifying this user preference.
-     * @param {PatchedUserPreference} [patchedUserPreference] 
+     * @param {PatchedUserPreferenceRequest} [patchedUserPreferenceRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserPreferencePartialUpdate(user: number, patchedUserPreference?: PatchedUserPreference, options?: any) {
-        return ApiApiFp(this.configuration).apiUserPreferencePartialUpdate(user, patchedUserPreference, options).then((request) => request(this.axios, this.basePath));
+    public apiUserPreferencePartialUpdate(user: number, patchedUserPreferenceRequest?: PatchedUserPreferenceRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUserPreferencePartialUpdate(user, patchedUserPreferenceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22024,7 +24147,7 @@ export class ApiApi extends BaseAPI {
     }
 
     /**
-     * list: optional parameters  - **filter_list**: array of user id\'s to get names for
+     * 
      * @param {number} id A unique integer value identifying this user.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -22047,26 +24170,27 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [internalNote] I have no idea what this is
      * @param {number} [page] A page number within the paginated result set.
      * @param {number} [pageSize] Number of results to return per page.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserSpaceList(page?: number, pageSize?: number, options?: any) {
-        return ApiApiFp(this.configuration).apiUserSpaceList(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public apiUserSpaceList(internalNote?: string, page?: number, pageSize?: number, options?: any) {
+        return ApiApiFp(this.configuration).apiUserSpaceList(internalNote, page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @param {number} id A unique integer value identifying this user space.
-     * @param {PatchedUserSpace} [patchedUserSpace] 
+     * @param {PatchedUserSpaceRequest} [patchedUserSpaceRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiUserSpacePartialUpdate(id: number, patchedUserSpace?: PatchedUserSpace, options?: any) {
-        return ApiApiFp(this.configuration).apiUserSpacePartialUpdate(id, patchedUserSpace, options).then((request) => request(this.axios, this.basePath));
+    public apiUserSpacePartialUpdate(id: number, patchedUserSpaceRequest?: PatchedUserSpaceRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiUserSpacePartialUpdate(id, patchedUserSpaceRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22082,13 +24206,13 @@ export class ApiApi extends BaseAPI {
 
     /**
      * 
-     * @param {ViewLog} viewLog 
+     * @param {ViewLogRequest} viewLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiViewLogCreate(viewLog: ViewLog, options?: any) {
-        return ApiApiFp(this.configuration).apiViewLogCreate(viewLog, options).then((request) => request(this.axios, this.basePath));
+    public apiViewLogCreate(viewLogRequest: ViewLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiViewLogCreate(viewLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22117,13 +24241,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this view log.
-     * @param {PatchedViewLog} [patchedViewLog] 
+     * @param {PatchedViewLogRequest} [patchedViewLogRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiViewLogPartialUpdate(id: number, patchedViewLog?: PatchedViewLog, options?: any) {
-        return ApiApiFp(this.configuration).apiViewLogPartialUpdate(id, patchedViewLog, options).then((request) => request(this.axios, this.basePath));
+    public apiViewLogPartialUpdate(id: number, patchedViewLogRequest?: PatchedViewLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiViewLogPartialUpdate(id, patchedViewLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -22140,13 +24264,13 @@ export class ApiApi extends BaseAPI {
     /**
      * 
      * @param {number} id A unique integer value identifying this view log.
-     * @param {ViewLog} viewLog 
+     * @param {ViewLogRequest} viewLogRequest 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiApi
      */
-    public apiViewLogUpdate(id: number, viewLog: ViewLog, options?: any) {
-        return ApiApiFp(this.configuration).apiViewLogUpdate(id, viewLog, options).then((request) => request(this.axios, this.basePath));
+    public apiViewLogUpdate(id: number, viewLogRequest: ViewLogRequest, options?: any) {
+        return ApiApiFp(this.configuration).apiViewLogUpdate(id, viewLogRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -22317,17 +24441,14 @@ export const ApiTokenAuthApiAxiosParamCreator = function (configuration?: Config
          * 
          * @param {string} username 
          * @param {string} password 
-         * @param {string} token 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiTokenAuthCreate: async (username: string, password: string, token: string, options: any = {}): Promise<RequestArgs> => {
+        apiTokenAuthCreate: async (username: string, password: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'username' is not null or undefined
             assertParamExists('apiTokenAuthCreate', 'username', username)
             // verify required parameter 'password' is not null or undefined
             assertParamExists('apiTokenAuthCreate', 'password', password)
-            // verify required parameter 'token' is not null or undefined
-            assertParamExists('apiTokenAuthCreate', 'token', token)
             const localVarPath = `/api-token-auth/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -22351,10 +24472,6 @@ export const ApiTokenAuthApiAxiosParamCreator = function (configuration?: Config
     
             if (password !== undefined) { 
                 localVarFormParams.append('password', password as any);
-            }
-    
-            if (token !== undefined) { 
-                localVarFormParams.append('token', token as any);
             }
     
     
@@ -22384,12 +24501,11 @@ export const ApiTokenAuthApiFp = function(configuration?: Configuration) {
          * 
          * @param {string} username 
          * @param {string} password 
-         * @param {string} token 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiTokenAuthCreate(username: string, password: string, token: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthToken>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiTokenAuthCreate(username, password, token, options);
+        async apiTokenAuthCreate(username: string, password: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AuthToken>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.apiTokenAuthCreate(username, password, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -22406,12 +24522,11 @@ export const ApiTokenAuthApiFactory = function (configuration?: Configuration, b
          * 
          * @param {string} username 
          * @param {string} password 
-         * @param {string} token 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiTokenAuthCreate(username: string, password: string, token: string, options?: any): AxiosPromise<AuthToken> {
-            return localVarFp.apiTokenAuthCreate(username, password, token, options).then((request) => request(axios, basePath));
+        apiTokenAuthCreate(username: string, password: string, options?: any): AxiosPromise<AuthToken> {
+            return localVarFp.apiTokenAuthCreate(username, password, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -22427,13 +24542,12 @@ export class ApiTokenAuthApi extends BaseAPI {
      * 
      * @param {string} username 
      * @param {string} password 
-     * @param {string} token 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiTokenAuthApi
      */
-    public apiTokenAuthCreate(username: string, password: string, token: string, options?: any) {
-        return ApiTokenAuthApiFp(this.configuration).apiTokenAuthCreate(username, password, token, options).then((request) => request(this.axios, this.basePath));
+    public apiTokenAuthCreate(username: string, password: string, options?: any) {
+        return ApiTokenAuthApiFp(this.configuration).apiTokenAuthCreate(username, password, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

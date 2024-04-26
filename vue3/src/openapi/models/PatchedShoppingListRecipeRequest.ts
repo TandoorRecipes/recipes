@@ -33,10 +33,10 @@ export interface PatchedShoppingListRecipeRequest {
     mealplan?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListRecipeRequest
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {number}

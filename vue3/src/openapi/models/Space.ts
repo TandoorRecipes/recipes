@@ -112,22 +112,22 @@ export interface Space {
     foodInherit: Array<FoodInheritField>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    readonly userCount: string;
+    readonly userCount: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    readonly recipeCount: string;
+    readonly recipeCount: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Space
      */
-    readonly fileSizeMb: string;
+    readonly fileSizeMb: number;
     /**
      * 
      * @type {UserFileView}

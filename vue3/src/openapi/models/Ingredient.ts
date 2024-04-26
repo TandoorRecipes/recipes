@@ -52,16 +52,16 @@ export interface Ingredient {
     unit: Unit | null;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof Ingredient
      */
-    amount: string;
+    amount: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    readonly conversions: string;
+    readonly conversions: Array<any>;
     /**
      * 
      * @type {string}
@@ -94,10 +94,10 @@ export interface Ingredient {
     originalText?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof Ingredient
      */
-    readonly usedInRecipes: string;
+    readonly usedInRecipes: Array<any>;
     /**
      * 
      * @type {boolean}

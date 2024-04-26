@@ -21,28 +21,28 @@ import { mapValues } from '../runtime';
 export interface NutritionInformationRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformationRequest
      */
-    carbohydrates: string;
+    carbohydrates: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformationRequest
      */
-    fats: string;
+    fats: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformationRequest
      */
-    proteins: string;
+    proteins: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NutritionInformationRequest
      */
-    calories: string;
+    calories: number;
     /**
      * 
      * @type {string}

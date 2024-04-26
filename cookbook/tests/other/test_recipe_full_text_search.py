@@ -3,7 +3,6 @@ import json
 from datetime import timedelta, datetime
 
 import pytest
-import pytz
 from django.conf import settings
 from django.contrib import auth
 from django.urls import reverse
@@ -294,6 +293,7 @@ def test_fuzzy_lookup(found_recipe, recipes, param_type, user1, space_1):
                        f'?{param2}&limit=10').content)
         assert len([x['id'] for x in r['results'] if x['id'] in [
                    found_recipe[3].id, found_recipe[4].id]]) == user1[2]
+
 
 # commenting this out for general use - it is really slow
 # it should be run on occasion to ensure everything still works

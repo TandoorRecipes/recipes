@@ -15,8 +15,6 @@ from zipfile import ZipFile
 import requests
 import validators
 from PIL import UnidentifiedImageError
-from annoying.decorators import ajax_request
-from annoying.functions import get_object_or_None
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -34,7 +32,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
+from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
@@ -50,7 +48,9 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.views import APIView
+from rest_framework import mixins
 from rest_framework.viewsets import ViewSetMixin
+from rest_framework.serializers import CharField, IntegerField, UUIDField
 from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathOverflow
 
 from cookbook.forms import ImportForm
@@ -59,9 +59,9 @@ from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
-from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomRecipePermission,
-                                               CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required,
-                                               has_group_permission, is_space_owner, switch_user_active_space,
+from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomIsGuest,
+                                               CustomRecipePermission, CustomTokenHasReadWriteScope, CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit,
+                                               group_required, has_group_permission, is_space_owner, switch_user_active_space
                                                )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -70,7 +70,7 @@ from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helpe
 from cookbook.models import (Automation, BookmarkletImport, ConnectorConfig, CookLog, CustomFilter, ExportLog, Food, FoodInheritField, FoodProperty, ImportLog, Ingredient,
                              InviteLink, Keyword, MealPlan, MealType, Property, PropertyType, Recipe, RecipeBook, RecipeBookEntry, ShareLink, ShoppingListEntry,
                              ShoppingListRecipe, Space, Step, Storage, Supermarket, SupermarketCategory, SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
-                             UserFile, UserPreference, UserSpace, ViewLog,
+                             UserFile, UserPreference, UserSpace, ViewLog
                              )
 from cookbook.provider.dropbox import Dropbox
 from cookbook.provider.local import Local
@@ -83,16 +83,20 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  RecipeOverviewSerializer, RecipeSerializer, RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListEntryBulkSerializer,
                                  ShoppingListEntrySerializer, ShoppingListRecipeSerializer, SpaceSerializer, StepSerializer, StorageSerializer,
                                  SupermarketCategoryRelationSerializer, SupermarketCategorySerializer, SupermarketSerializer, SyncLogSerializer, SyncSerializer,
-                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer,
+                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer
                                  )
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
 
 
+DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
+BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
+
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive', type=str),
-    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str),  # TODO format hint
+    OpenApiParameter(name='updated_at', description='if model has an updated_at timestamp, filter only models updated at or after datetime', type=str, examples=[DateExample]),
     OpenApiParameter(name='limit', description='limit number of entries to return', type=str),
     OpenApiParameter(name='random', description='randomly orders entries (only works together with limit)', type=str),
 ]))
@@ -223,9 +227,12 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
 
 class MergeMixin(ViewSetMixin):
 
+    @extend_schema(parameters=[
+        OpenApiParameter(name="target", description='The ID of the {obj} you want to merge with.', type=OpenApiTypes.INT, location=OpenApiParameter.PATH)
+    ])
     @decorators.action(detail=True, url_path='merge/(?P<target>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def merge(self, request, pk, target):
+    def merge(self, request, pk, target: int):
         self.description = f"Merge {self.basename} onto target {self.basename} with ID of [int]."
 
         try:
@@ -294,12 +301,16 @@ class MergeMixin(ViewSetMixin):
                 return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
-@extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='root', description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.', type=int),
-    OpenApiParameter(name='tree', description='Return all self and children of {} with ID [int].', type=int),
-]))
+@extend_schema_view(
+    list=extend_schema(parameters=[
+        OpenApiParameter(name='root', description='Return first level children of {obj} with ID [int].  Integer 0 will return root {obj}s.', type=int),
+        OpenApiParameter(name='tree', description='Return all self and children of {obj} with ID [int].', type=int),
+    ]),
+    move=extend_schema(parameters=[
+        OpenApiParameter(name="parent", description='The ID of the desired parent of the {obj}.', type=OpenApiTypes.INT, location=OpenApiParameter.PATH)
+    ])
+)
 class TreeMixin(MergeMixin, FuzzyFilterMixin):
-    # schema = TreeSchema()
     model = None
 
     def get_queryset(self):
@@ -331,7 +342,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 
     @decorators.action(detail=True, url_path='move/(?P<parent>[^/.]+)', methods=['PUT'], )
     @decorators.renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-    def move(self, request, pk, parent):
+    def move(self, request, pk, parent: int):
         self.description = f"Move {self.basename} to be a child of {self.basename} with ID of [int].  Use ID: 0 to move {self.basename} to the root."
         if self.model.node_order_by:
             node_location = 'sorted'
@@ -375,16 +386,14 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
+]))
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    list:
-    optional parameters
-
-    - **filter_list**: array of user id's to get names for
-    """
     queryset = User.objects
     serializer_class = UserSerializer
     permission_classes = [CustomUserPermission & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
@@ -403,6 +412,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', ]
 
 
@@ -410,12 +420,17 @@ class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
     permission_classes = [IsReadOnlyDRF & CustomIsUser | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
         return self.queryset.filter(id=self.request.space.id)
 
 
+# TODO what is internal_note for?
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='internal_note', description='I have no idea what this is', type=str),
+]))
 class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
@@ -443,6 +458,7 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
     http_method_names = ['get', 'patch', ]
 
     def get_queryset(self):
@@ -455,6 +471,7 @@ class StorageViewSet(viewsets.ModelViewSet):
     queryset = Storage.objects
     serializer_class = StorageSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -464,6 +481,7 @@ class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
     queryset = ConnectorConfig.objects
     serializer_class = ConnectorConfigConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -473,6 +491,7 @@ class SyncViewSet(viewsets.ModelViewSet):
     queryset = Sync.objects
     serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -492,6 +511,7 @@ class SupermarketViewSet(StandardFilterModelViewSet):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
@@ -504,6 +524,7 @@ class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space).order_by(Lower('name').asc())
@@ -541,6 +562,7 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = FoodInheritField.objects
     serializer_class = FoodInheritFieldSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
 
     def get_queryset(self):
         # exclude fields not yet implemented
@@ -684,10 +706,15 @@ class FoodViewSet(TreeMixin):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='order_field', description='Field to order recipe books on', type=str, enum=['id', 'name', 'order']),
+    OpenApiParameter(name='order_direction', description='Order ascending or descending', type=str, enum=['asc', 'desc']),
+]))
 class RecipeBookViewSet(StandardFilterModelViewSet):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         order_field = self.request.GET.get('order_field')
@@ -702,18 +729,15 @@ class RecipeBookViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
-    """
-        list:
-        optional parameters
-
-        - **recipe**: id of recipe - only return books for that recipe
-        - **book**: id of book - only return recipes in that book
-
-    """
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='recipe', description='id of recipe - only return books for that recipe', type=int),
+    OpenApiParameter(name='book', description='id of book - only return recipes in that book', type=int),
+]))
+class RecipeBookEntryViewSet(viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(book__created_by=self.request.user) | Q(book__shared=self.request.user)).filter(book__space=self.request.space).distinct()
@@ -729,27 +753,19 @@ class RecipeBookEntryViewSet(viewsets.ModelViewSet, viewsets.GenericViewSet):
 
 
 MealPlanViewQueryParameters = [
-    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive) in the format of YYYY-MM-DD.'), type=str),
-    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive) in the format of YYYY-MM-DD.'), type=str),
-    OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str),
+    OpenApiParameter(name='from_date', description=_('Filter meal plans from date (inclusive).'), type=str, examples=[DateExample]),
+    OpenApiParameter(name='to_date', description=_('Filter meal plans to date (inclusive).'), type=str, examples=[DateExample]),
+    OpenApiParameter(name='meal_type', description=_('Filter meal plans with MealType ID. For multiple repeat parameter.'), type=str, many=True),
 ]
 
 
 @extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters),
                     ical=extend_schema(parameters=MealPlanViewQueryParameters, responses={(200, 'text/calendar'): OpenApiTypes.STR}))
 class MealPlanViewSet(viewsets.ModelViewSet):
-    """
-    list:
-    optional parameters
-
-    - **from_date**: filter from (inclusive) a certain date onward
-    - **to_date**: filter upward to (inclusive) certain date
-    - **meal_type**: filter meal plans based on meal_type ID
-
-    """
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct().all()
@@ -775,7 +791,9 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
 
 
-class AutoPlanViewSet(viewsets.ViewSet):
+class AutoPlanViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    serializer_class = AutoMealPlanSerializer
+    http_method_names = ['post', 'options']
 
     def create(self, request):
         serializer = AutoMealPlanSerializer(data=request.data)
@@ -845,12 +863,17 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     queryset = MealType.objects
     serializer_class = MealTypeSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(space=self.request.space).all()
         return queryset
 
 
+@extend_schema_view(list=extend_schema(parameters=[
+    OpenApiParameter(name='food', description='ID of food to filter for', type=int),
+    OpenApiParameter(name='unit', description='ID of unit to filter for', type=int),
+]))
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
@@ -876,7 +899,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), type=int),
+    OpenApiParameter(name='recipe', description=_('ID of recipe a step is part of. For multiple repeat parameter.'), type=int, many=True),
     OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against object name.'), type=str),
 ]))
 class StepViewSet(viewsets.ModelViewSet):
@@ -910,33 +933,53 @@ class RecipePagination(PageNumberPagination):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.')),
-    OpenApiParameter(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int),
-    OpenApiParameter(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), type=int),
-    OpenApiParameter(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), type=int),
-    OpenApiParameter(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), type=int),
-    OpenApiParameter(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), type=int),
-    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), type=int),
-    OpenApiParameter(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int),
-    OpenApiParameter(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int),
-    OpenApiParameter(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int),
-    OpenApiParameter(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int),
+    OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against recipe name. In the future also fulltext search.'), type=str),
+    OpenApiParameter(name='keywords', description=_('ID of keyword a recipe should have. For multiple repeat parameter. Equivalent to keywords_or'), type=int, many=True),
+    OpenApiParameter(name='keywords_or', description=_('Keyword IDs, repeat for multiple. Return recipes with any of the keywords'), type=int, many=True),
+    OpenApiParameter(name='keywords_and', description=_('Keyword IDs, repeat for multiple. Return recipes with all of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_or_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='keywords_and_not', description=_('Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords.'), type=int, many=True),
+    OpenApiParameter(name='foods', description=_('ID of food a recipe should have. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='foods_or', description=_('Food IDs, repeat for multiple. Return recipes with any of the foods'), type=int, many=True),
+    OpenApiParameter(name='foods_and', description=_('Food IDs, repeat for multiple. Return recipes with all of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_or_not', description=_('Food IDs, repeat for multiple. Exclude recipes with any of the foods.'), type=int, many=True),
+    OpenApiParameter(name='foods_and_not', description=_('Food IDs, repeat for multiple. Exclude recipes with all of the foods.'), type=int, many=True),
     OpenApiParameter(name='units', description=_('ID of unit a recipe should have.'), type=int),
     OpenApiParameter(name='rating', description=_('Rating a recipe should have or greater. [0 - 5] Negative value filters rating less than.'), type=int),
-    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.')),
-    OpenApiParameter(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int),
-    OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int),
-    OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int),
-    OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int),
-    OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(name='books', description=_('ID of book a recipe should be in. For multiple repeat parameter.'), type=int, many=True),
+    OpenApiParameter(name='books_or', description=_('Book IDs, repeat for multiple. Return recipes with any of the books'), type=int, many=True),
+    OpenApiParameter(name='books_and', description=_('Book IDs, repeat for multiple. Return recipes with all of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_or_not', description=_('Book IDs, repeat for multiple. Exclude recipes with any of the books.'), type=int, many=True),
+    OpenApiParameter(name='books_and_not', description=_('Book IDs, repeat for multiple. Exclude recipes with all of the books.'), type=int, many=True),
+    OpenApiParameter(name='internal', description=_('If only internal recipes should be returned. [''true''/''<b>false</b>'']'), type=bool),
     OpenApiParameter(name='random', description=_('Returns the results in randomized order. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='new', description=_('Returns new results first in search results. [''true''/''<b>false</b>'']')),
     OpenApiParameter(name='timescooked', description=_('Filter recipes cooked X times or more.  Negative values returns cooked less than X times'), type=int),
-    OpenApiParameter(name='cookedon', description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
-    OpenApiParameter(name='createdon', description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
-    OpenApiParameter(name='updatedon', description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
-    OpenApiParameter(name='viewedon', description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.')),
-    OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']')),
+    OpenApiParameter(
+        name='cookedon',
+        description=_('Filter recipes last cooked on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
+        type=str,
+        examples=[DateExample, BeforeDateExample]
+    ),
+    OpenApiParameter(
+        name='createdon',
+        description=_('Filter recipes created on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
+        type=str,
+        examples=[DateExample, BeforeDateExample]
+    ),
+    OpenApiParameter(
+        name='updatedon',
+        description=_('Filter recipes updated on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
+        type=str,
+        examples=[DateExample, BeforeDateExample]
+    ),
+    OpenApiParameter(
+        name='viewedon',
+        description=_('Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending ''-'' filters on or before date.'),
+        type=str,
+        examples=[DateExample, BeforeDateExample]
+    ),
+    OpenApiParameter(name='makenow', description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'), type=bool),
 ]))
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects
@@ -1087,6 +1130,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
     queryset = UnitConversion.objects
     serializer_class = UnitConversionSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         food_id = self.request.query_params.get('food_id', None)
@@ -1096,12 +1140,26 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
+@extend_schema_view(list=extend_schema(
+        parameters=[OpenApiParameter(
+            name='category',
+            description=_('Return the PropertyTypes matching the property category.  Repeat for multiple.'),
+            type=str,
+            many=True,
+            enum=[m[0] for m in PropertyType.CHOICES])
+        ]
+    ))
 class PropertyTypeViewSet(viewsets.ModelViewSet):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
+        # TODO add tests for filter
+        category = self.request.query_params.getlist('category', [])
+        if category:
+            self.queryset.filter(category__in=category)
         return self.queryset.filter(space=self.request.space)
 
 
@@ -1109,6 +1167,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects
     serializer_class = PropertySerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return self.queryset.filter(space=self.request.space)
@@ -1118,6 +1177,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(Q(entries__space=self.request.space) | Q(recipe__space=self.request.space))
@@ -1139,6 +1199,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(space=self.request.space)
@@ -1249,6 +1310,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
     permission_classes = [CustomIsUser & CustomTokenHasScope]
+    pagination_class = DefaultPagination
     required_scopes = ['bookmarklet']
 
     def get_serializer_class(self):
@@ -1264,6 +1326,7 @@ class UserFileViewSet(StandardFilterModelViewSet):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
     parser_classes = [MultiPartParser]
 
     def get_queryset(self):
@@ -1272,64 +1335,41 @@ class UserFileViewSet(StandardFilterModelViewSet):
 
 
 class AutomationViewSet(StandardFilterModelViewSet):
-    """
-    list:
-    optional parameters
-
-    - **automation_type**: Return the Automations matching the automation type.  Multiple values allowed.
-
-    *Automation Types:*
-    - FS: Food Alias
-    - UA: Unit Alias
-    - KA: Keyword Alias
-    - DR: Description Replace
-    - IR: Instruction Replace
-    - NU: Never Unit
-    - TW: Transpose Words
-    - FR: Food Replace
-    - UR: Unit Replace
-    - NR: Name Replace
-    """
-
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
-    auto_type = {
-        'FS': 'FOOD_ALIAS',
-        'UA': 'UNIT_ALIAS',
-        'KA': 'KEYWORD_ALIAS',
-        'DR': 'DESCRIPTION_REPLACE',
-        'IR': 'INSTRUCTION_REPLACE',
-        'NU': 'NEVER_UNIT',
-        'TW': 'TRANSPOSE_WORDS',
-        'FR': 'FOOD_REPLACE',
-        'UR': 'UNIT_REPLACE',
-        'NR': 'NAME_REPLACE'
-    }
-
     @extend_schema(
-        parameters=[OpenApiParameter(name='automation_type', description=_('Return the Automations matching the automation type.  Multiple values allowed.'), type=str)]
+        parameters=[OpenApiParameter(
+            name='type',
+            description=_('Return the Automations matching the automation type.  Repeat for multiple.'),
+            type=str,
+            many=True,
+            enum=[a[0] for a in Automation.automation_types])
+        ]
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self):
-        automation_type = self.request.query_params.getlist('automation_type', [])
+        automation_type = self.request.query_params.getlist('type', [])
         if automation_type:
-            self.queryset = self.queryset.filter(type__in=[self.auto_type[x.upper()] for x in automation_type])
-        self.queryset = self.queryset.filter(space=self.request.space).all()
-        return super().get_queryset()
+            self.queryset = self.queryset.filter(type__in=automation_type)
+        return self.queryset.filter(space=self.request.space).all()
 
 
+# TODO explain what internal_note is for
+@extend_schema_view(list=extend_schema(parameters=[
+            OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
+]))
 class InviteLinkViewSet(StandardFilterModelViewSet):
     queryset = InviteLink.objects
     serializer_class = InviteLinkSerializer
     permission_classes = [CustomIsSpaceOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
-
         internal_note = self.request.query_params.get('internal_note', None)
         if internal_note is not None:
             self.queryset = self.queryset.filter(internal_note=internal_note)
@@ -1341,6 +1381,15 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
             return None
 
 
+@extend_schema_view(list=extend_schema(
+        parameters=[OpenApiParameter(
+            name='type',
+            description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
+            type=str,
+            many=True,
+            enum=[m[0] for m in CustomFilter.MODELS])
+        ]
+    ))
 class CustomFilterViewSet(StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
@@ -1348,6 +1397,10 @@ class CustomFilterViewSet(StandardFilterModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        # TODO add tests for filter
+        filter_type = self.request.query_params.getlist('type', [])
+        if filter_type:
+            self.queryset.filter(type__in=filter_type)
         self.queryset = self.queryset.filter(Q(created_by=self.request.user) | Q(shared=self.request.user)).filter(space=self.request.space).distinct()
         return super().get_queryset()
 
@@ -1356,6 +1409,7 @@ class AccessTokenViewSet(viewsets.ModelViewSet):
     queryset = AccessToken.objects
     serializer_class = AccessTokenSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
+    pagination_disabled = True
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
@@ -1396,6 +1450,7 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
+# TODO implement proper schema  https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class RecipeUrlImportView(APIView):
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1482,10 +1537,15 @@ class RecipeUrlImportView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-# @schema(AutoSchema()) #TODO add proper schema
+@extend_schema(
+    request=None,
+    responses=None,
+)
+@api_view(['POST'])
 @permission_classes([CustomIsAdmin & CustomTokenHasReadWriteScope])
 # TODO add rate limiting
+# TODO add api tests
+# TODO initial request should include some sort of data, inadvertently doing a naked POST could make changes that weren't intended
 def reset_food_inheritance(request):
     """
     function to reset inheritance from api, see food method for docs
@@ -1574,6 +1634,7 @@ def import_files(request):
         return Response({'error': True, 'msg': form.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# TODO implement schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 class ImportOpenData(APIView):
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
 
@@ -1624,24 +1685,28 @@ def get_recipe_provider(recipe):
         raise Exception('Provider not implemented')
 
 
-def update_recipe_links(recipe):
-    if not recipe.link:
-        # TODO response validation in apis
-        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
-
-    recipe.save()
-
-
-@group_required('user')
+# TODO update so that link is provided as part of serializer
+@extend_schema(
+    request=inline_serializer(name="RecipePKSerializer", fields={'pk': IntegerField()}),
+    responses=None,
+)
+@api_view(['GET'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def get_external_file_link(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if not recipe.link:
-        update_recipe_links(recipe)
+        recipe.link = get_recipe_provider(recipe).get_share_link(recipe)
+        recipe.save()
 
     return HttpResponse(recipe.link)
 
 
-@group_required('guest')
+@extend_schema(
+    request=inline_serializer(name="RecipePKSerializer", fields={'pk': IntegerField()}),
+    responses=None,
+)
+@api_view(['GET'])
+@permission_classes([(CustomIsGuest | CustomIsUser) & CustomTokenHasReadWriteScope])
 def get_recipe_file(request, recipe_id):
     recipe = get_object_or_404(Recipe, pk=recipe_id, space=request.space)
     if recipe.storage:
@@ -1651,6 +1716,8 @@ def get_recipe_file(request, recipe_id):
 
 
 @group_required('user')
+# TODO add rate limiting
+# TODO change to some sort of asynchronous trigger
 def sync_all(request):
     if request.space.demo or settings.HOSTED:
         messages.add_message(request, messages.ERROR, _('This feature is not yet available in the hosted version of tandoor!'))
@@ -1681,8 +1748,12 @@ def sync_all(request):
         return redirect('list_recipe_import')
 
 
+@extend_schema(
+    request=inline_serializer(name="ShareLinkSerializer", fields={'pk': IntegerField()}),
+    responses=inline_serializer(name="ShareLinkSerializer", fields={'pk': IntegerField(), 'share': UUIDField(), 'link': CharField()})
+)
 @api_view(['GET'])
-# @schema(AutoSchema()) #TODO add proper schema
+# @schema(AutoSchema()) #TODO add proper schema https://drf-spectacular.readthedocs.io/en/latest/customization.html#replace-views-with-openapiviewextension
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request.user, ('user',)):
@@ -1691,40 +1762,6 @@ def share_link(request, pk):
         return JsonResponse({'pk': pk, 'share': link.uuid, 'link': request.build_absolute_uri(reverse('view_recipe', args=[pk, link.uuid]))})
     else:
         return JsonResponse({'error': 'sharing_disabled'}, status=403)
-
-
-@group_required('user')
-@ajax_request
-def log_cooking(request, recipe_id):
-    recipe = get_object_or_None(Recipe, id=recipe_id)
-    if recipe:
-        log = CookLog.objects.create(created_by=request.user, recipe=recipe, space=request.space)
-        servings = request.GET['s'] if 's' in request.GET else None
-        if servings and re.match(r'^([1-9])+$', servings):
-            log.servings = int(servings)
-
-        rating = request.GET['r'] if 'r' in request.GET else None
-        if rating and re.match(r'^([1-9])+$', rating):
-            log.rating = int(rating)
-        log.save()
-        return {'msg': 'updated successfully'}
-
-    return {'error': 'recipe does not exist'}
-
-
-@api_view(['GET'])
-@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
-def get_plan_ical(request, from_date=datetime.date.today(), to_date=None):
-    queryset = MealPlan.objects.filter(Q(created_by=request.user)
-                                       | Q(shared=request.user)).filter(space=request.user.userspace_set.filter(active=1).first().space).distinct().all()
-
-    if from_date is not None:
-        queryset = queryset.filter(from_date__gte=from_date)
-
-    if to_date is not None:
-        queryset = queryset.filter(to_date__lte=to_date)
-
-    return meal_plans_to_ical(queryset, f'meal_plan_{from_date}-{to_date}.ics')
 
 
 def meal_plans_to_ical(queryset, filename):
@@ -1748,13 +1785,12 @@ def meal_plans_to_ical(queryset, filename):
     return response
 
 
-@group_required('admin')
-def get_backup(request):
-    if not request.user.is_superuser:
-        return HttpResponse('', status=403)
-
-
-@group_required('user')
+@extend_schema(
+    request=inline_serializer(name="IngredientStringSerializer", fields={'text': CharField()}),
+    responses=inline_serializer(name="ParsedIngredientSerializer", fields={'amount': IntegerField(), 'unit': CharField(), 'food': CharField(), 'note': CharField()})
+)
+@api_view(['POST'])
+@permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def ingredient_from_string(request):
     text = request.POST['text']
 

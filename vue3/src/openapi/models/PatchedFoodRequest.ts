@@ -128,10 +128,10 @@ export interface PatchedFoodRequest {
     properties?: Array<PropertyRequest>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedFoodRequest
      */
-    propertiesFoodAmount?: string;
+    propertiesFoodAmount?: number;
     /**
      * 
      * @type {UnitRequest}
@@ -146,10 +146,10 @@ export interface PatchedFoodRequest {
     fdcId?: number;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedFoodRequest
      */
-    foodOnhand?: string;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategoryRequest}

@@ -126,7 +126,7 @@ class TreeModel(MP_Node):
         return None
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         """
         Returns a string representation of a tree node and it's ancestors,
         e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -911,12 +911,19 @@ class PropertyType(models.Model, PermissionModelMixin, MergeModelMixin):
     GOAL = 'GOAL'
     OTHER = 'OTHER'
 
+    CHOICES = (
+        (NUTRITION, _('Nutrition')),
+        (ALLERGEN, _('Allergen')),
+        (PRICE, _('Price')),
+        (GOAL, _('Goal')),
+        (OTHER, _('Other')),
+    )
+
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=64, blank=True, null=True)
     order = models.IntegerField(default=0)
     description = models.CharField(max_length=512, blank=True, null=True)
-    category = models.CharField(max_length=64, choices=((NUTRITION, _('Nutrition')), (ALLERGEN, _('Allergen')),
-                                                        (PRICE, _('Price')), (GOAL, _('Goal')), (OTHER, _('Other'))), null=True, blank=True)
+    category = models.CharField(max_length=64, choices=CHOICES, null=True, blank=True)
     open_data_slug = models.CharField(max_length=128, null=True, blank=True, default=None)
 
     fdc_id = models.IntegerField(null=True, default=None, blank=True)
@@ -1461,19 +1468,21 @@ class Automation(ExportModelOperationsMixin('automations'), models.Model, Permis
     UNIT_REPLACE = 'UNIT_REPLACE'
     NAME_REPLACE = 'NAME_REPLACE'
 
+    automation_types = (
+        (FOOD_ALIAS, _('Food Alias')),
+        (UNIT_ALIAS, _('Unit Alias')),
+        (KEYWORD_ALIAS, _('Keyword Alias')),
+        (DESCRIPTION_REPLACE, _('Description Replace')),
+        (INSTRUCTION_REPLACE, _('Instruction Replace')),
+        (NEVER_UNIT, _('Never Unit')),
+        (TRANSPOSE_WORDS, _('Transpose Words')),
+        (FOOD_REPLACE, _('Food Replace')),
+        (UNIT_REPLACE, _('Unit Replace')),
+        (NAME_REPLACE, _('Name Replace')),
+    )
+
     type = models.CharField(max_length=128,
-                            choices=(
-                                (FOOD_ALIAS, _('Food Alias')),
-                                (UNIT_ALIAS, _('Unit Alias')),
-                                (KEYWORD_ALIAS, _('Keyword Alias')),
-                                (DESCRIPTION_REPLACE, _('Description Replace')),
-                                (INSTRUCTION_REPLACE, _('Instruction Replace')),
-                                (NEVER_UNIT, _('Never Unit')),
-                                (TRANSPOSE_WORDS, _('Transpose Words')),
-                                (FOOD_REPLACE, _('Food Replace')),
-                                (UNIT_REPLACE, _('Unit Replace')),
-                                (NAME_REPLACE, _('Name Replace')),
-                            ))
+                            choices=automation_types)
     name = models.CharField(max_length=128, default='')
     description = models.TextField(blank=True, null=True)
 

@@ -62,10 +62,10 @@ import {
 export interface PropertyRequest {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PropertyRequest
      */
-    propertyAmount: string | null;
+    propertyAmount: number | null;
     /**
      * 
      * @type {PropertyTypeRequest}

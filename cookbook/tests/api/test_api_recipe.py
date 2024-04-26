@@ -107,19 +107,19 @@ def test_update(arg, request, recipe_1_s1):
 
 
 def test_update_share(u1_s1, u2_s1, u1_s2, recipe_1_s1):
-    with scopes_disabled():
-        r = u1_s1.patch(
-            reverse(
-                DETAIL_URL,
-                args={recipe_1_s1.id}
-            ),
-            {'shared': [{'id': auth.get_user(u1_s2).pk, 'username': auth.get_user(u1_s2).username}, {'id': auth.get_user(u2_s1).pk, 'username': auth.get_user(u2_s1).username}]},
-            content_type='application/json'
-        )
-        response = json.loads(r.content)
-        assert r.status_code == 200
-        assert len(response['shared']) == 1
-        assert response['shared'][0]['id'] == auth.get_user(u2_s1).pk
+    # with scopes_disabled():
+    r = u1_s1.patch(
+        reverse(
+            DETAIL_URL,
+            args={recipe_1_s1.id}
+        ),
+        {'shared': [{'id': auth.get_user(u1_s2).pk, 'username': auth.get_user(u1_s2).username}, {'id': auth.get_user(u2_s1).pk, 'username': auth.get_user(u2_s1).username}]},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 200
+    assert len(response['shared']) == 1
+    assert response['shared'][0]['id'] == auth.get_user(u2_s1).pk
 
 
 def test_update_private_recipe(u1_s1, u2_s1, recipe_1_s1):

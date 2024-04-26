@@ -4,7 +4,7 @@ from decimal import Decimal
 from gettext import gettext as _
 from html import escape
 from smtplib import SMTPException
-
+from drf_spectacular.utils import extend_schema_field
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
@@ -75,7 +75,7 @@ class ExtendedRecipeMixin(serializers.ModelSerializer):
     images = None
 
     image = serializers.SerializerMethodField('get_image')
-    numrecipe = serializers.ReadOnlyField(source='recipe_count')
+    numrecipe = serializers.IntegerField(source='recipe_count', read_only=True)
 
     def get_fields(self, *args, **kwargs):
         fields = super().get_fields(*args, **kwargs)
@@ -119,6 +119,7 @@ class OpenDataModelMixin(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
+@extend_schema_field(float)
 class CustomDecimalField(serializers.Field):
     """
     Custom decimal field to normalize useless decimal places
@@ -142,6 +143,7 @@ class CustomDecimalField(serializers.Field):
                 raise ValidationError('A valid number is required')
 
 
+@extend_schema_field(bool)
 class CustomOnHandField(serializers.Field):
     def get_attribute(self, instance):
         return instance
@@ -166,26 +168,31 @@ class CustomOnHandField(serializers.Field):
 
 
 class SpaceFilterSerializer(serializers.ListSerializer):
-
     def to_representation(self, data):
         if self.context.get('request', None) is None:
             return
+
         if (isinstance(data, QuerySet) and data.query.is_sliced):
             # if query is sliced it came from api request not nested serializer
             return super().to_representation(data)
+
         if self.child.Meta.model == User:
+            # Don't return User details to anonymous users
             if isinstance(self.context['request'].user, AnonymousUser):
                 data = []
             else:
                 data = data.filter(userspace__space=self.context['request'].user.get_active_space()).all()
+        elif isinstance(data, list):
+            data = [d for d in data if getattr(d, self.child.Meta.model.get_space_key()[0]) == self.context['request'].space]
         else:
-            data = data.filter(**{'__'.join(data.model.get_space_key()): self.context['request'].space})
+            data = data.filter(**{'__'.join(self.child.Meta.model.get_space_key()): self.context['request'].space})
         return super().to_representation(data)
 
 
 class UserSerializer(WritableNestedModelSerializer):
     display_name = serializers.SerializerMethodField('get_user_label')
 
+    @extend_schema_field(str)
     def get_user_label(self, obj):
         return obj.get_user_display_name()
 
@@ -229,9 +236,11 @@ class UserFileSerializer(serializers.ModelSerializer):
     file_download = serializers.SerializerMethodField('get_download_link')
     preview = serializers.SerializerMethodField('get_preview_link')
 
+    @extend_schema_field(str)
     def get_download_link(self, obj):
         return self.context['request'].build_absolute_uri(reverse('api_download_file', args={obj.pk}))
 
+    @extend_schema_field(str)
     def get_preview_link(self, obj):
         try:
             Image.open(obj.file.file.file)
@@ -277,9 +286,11 @@ class UserFileViewSerializer(serializers.ModelSerializer):
     file_download = serializers.SerializerMethodField('get_download_link')
     preview = serializers.SerializerMethodField('get_preview_link')
 
+    @extend_schema_field(str)
     def get_download_link(self, obj):
         return self.context['request'].build_absolute_uri(reverse('api_download_file', args={obj.pk}))
 
+    @extend_schema_field(str)
     def get_preview_link(self, obj):
         try:
             Image.open(obj.file.file.file)
@@ -316,12 +327,15 @@ class SpaceSerializer(WritableNestedModelSerializer):
     logo_color_512 = UserFileViewSerializer(required=False, many=False, allow_null=True)
     logo_color_svg = UserFileViewSerializer(required=False, many=False, allow_null=True)
 
+    @extend_schema_field(int)
     def get_user_count(self, obj):
         return UserSpace.objects.filter(space=obj).count()
 
+    @extend_schema_field(int)
     def get_recipe_count(self, obj):
         return Recipe.objects.filter(space=obj).count()
 
+    @extend_schema_field(float)
     def get_file_size_mb(self, obj):
         try:
             return UserFile.objects.filter(space=obj).aggregate(Sum('file_size_kb'))['file_size_kb__sum'] / 1000
@@ -390,9 +404,11 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
+    @extend_schema_field(FoodInheritFieldSerializer)
     def get_food_inherit_defaults(self, obj):
         return FoodInheritFieldSerializer(obj.user.get_active_space().food_inherit.all(), many=True).data
 
+    @extend_schema_field(bool)
     def get_food_children_exist(self, obj):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
@@ -479,22 +495,24 @@ class SyncLogSerializer(SpacedModelSerializer):
 class KeywordLabelSerializer(serializers.ModelSerializer):
     label = serializers.SerializerMethodField('get_label')
 
+    @extend_schema_field(str)
     def get_label(self, obj):
         return str(obj)
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = Keyword
-        fields = (
-            'id', 'label',
-        )
+        fields = ('id', 'label')
         read_only_fields = ('id', 'label')
 
 
 class KeywordSerializer(UniqueFieldsMixin, ExtendedRecipeMixin):
     label = serializers.SerializerMethodField('get_label', allow_null=False)
+    parent = IntegerField(read_only=True)
+
     recipe_filter = 'keywords'
 
+    @extend_schema_field(str)
     def get_label(self, obj):
         return str(obj)
 
@@ -618,6 +636,7 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
     url = serializers.SerializerMethodField('get_url')
 
+    @extend_schema_field(str)
     def get_url(self, obj):
         return reverse('view_recipe', args=[obj.id])
 
@@ -658,12 +677,13 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
 class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
-    shopping = serializers.ReadOnlyField(source='shopping_status')
+    shopping = serializers.CharField(source='shopping_status', read_only=True)
     inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     child_inherit_fields = FoodInheritFieldSerializer(many=True, allow_null=True, required=False)
     food_onhand = CustomOnHandField(required=False, allow_null=True)
     substitute_onhand = serializers.SerializerMethodField('get_substitute_onhand')
     substitute = FoodSimpleSerializer(many=True, allow_null=True, required=False)
+    parent = IntegerField(read_only=True)
 
     properties = PropertySerializer(many=True, allow_null=True, required=False)
     properties_food_unit = UnitSerializer(allow_null=True, required=False)
@@ -672,6 +692,7 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     recipe_filter = 'steps__ingredients__food'
     images = ['recipe__image']
 
+    @extend_schema_field(bool)
     def get_substitute_onhand(self, obj):
         if not self.context["request"].user.is_authenticated:
             return []
@@ -769,12 +790,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
     class Meta:
         model = Food
         fields = (
-            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url',
-            'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
-            'food_onhand', 'supermarket_category',
-            'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
-            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields',
-            'open_data_slug',
+            'id', 'name', 'plural_name', 'description', 'shopping', 'recipe', 'url', 'properties', 'properties_food_amount', 'properties_food_unit', 'fdc_id',
+            'food_onhand', 'supermarket_category', 'image', 'parent', 'numchild', 'numrecipe', 'inherit_fields', 'full_name', 'ignore_shopping',
+            'substitute', 'substitute_siblings', 'substitute_children', 'substitute_onhand', 'child_inherit_fields', 'open_data_slug',
         )
         read_only_fields = ('id', 'numchild', 'parent', 'image', 'numrecipe')
 
@@ -786,6 +804,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
     amount = CustomDecimalField()
     conversions = serializers.SerializerMethodField('get_conversions')
 
+    @extend_schema_field(list)
     def get_used_in_recipes(self, obj):
         used_in = []
         for s in obj.step_set.all():
@@ -793,6 +812,7 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
                 used_in.append({'id': r.id, 'name': r.name})
         return used_in
 
+    @extend_schema_field(list)
     def get_conversions(self, obj):
         if obj.unit and obj.food:
             uch = UnitConversionHelper(self.context['request'].space)
@@ -837,12 +857,16 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
+    @extend_schema_field(str)
     def get_instructions_markdown(self, obj):
         return obj.get_instruction_render()
 
+    @extend_schema_field(serializers.ListField)
     def get_step_recipes(self, obj):
         return list(obj.recipe_set.values_list('id', flat=True).all())
 
+    # couldn't set proper serializer StepRecipeSerializer because of circular reference
+    @extend_schema_field(serializers.JSONField)
     def get_step_recipe_data(self, obj):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
@@ -852,8 +876,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     class Meta:
         model = Step
         fields = (
-            'id', 'name', 'instruction', 'ingredients', 'instructions_markdown',
-            'time', 'order', 'show_as_header', 'file', 'step_recipe',
+            'id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
             'step_recipe_data', 'numrecipe', 'show_ingredients_table'
         )
 
@@ -863,9 +886,7 @@ class StepRecipeSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = (
-            'id', 'name', 'steps',
-        )
+        fields = ('id', 'name', 'steps')
 
 
 class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin):
@@ -876,6 +897,7 @@ class UnitConversionSerializer(WritableNestedModelSerializer, OpenDataModelMixin
     base_amount = CustomDecimalField()
     converted_amount = CustomDecimalField()
 
+    @extend_schema_field(str)
     def get_conversion_name(self, obj):
         text = f'{round(obj.base_amount)} {obj.base_unit} '
         if obj.food:
@@ -917,6 +939,7 @@ class NutritionInformationSerializer(serializers.ModelSerializer):
 
 class RecipeBaseSerializer(WritableNestedModelSerializer):
     # TODO make days of new recipe a setting
+    @extend_schema_field(bool)
     def is_recipe_new(self, obj):
         if getattr(obj, 'new_recipe', None) or obj.created_at > (timezone.now() - timedelta(days=7)):
             return True
@@ -934,7 +957,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class RecipeOverviewSerializer(RecipeBaseSerializer):
     keywords = KeywordLabelSerializer(many=True, read_only=True)
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
-    recent = serializers.ReadOnlyField()
+    recent = serializers.CharField(read_only=True)
 
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
@@ -972,6 +995,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
 
+    @extend_schema_field(serializers.JSONField)
     def get_food_properties(self, obj):
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
@@ -979,12 +1003,9 @@ class RecipeSerializer(RecipeBaseSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time',
-            'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings',
-            'file_path', 'servings_text', 'rating',
-            'last_cooked',
-            'private', 'shared',
+            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'rating',
+            'last_cooked', 'private', 'shared'
         )
         read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
 
@@ -1046,9 +1067,11 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     book_content = serializers.SerializerMethodField(method_name='get_book_content', read_only=True)
     recipe_content = serializers.SerializerMethodField(method_name='get_recipe_content', read_only=True)
 
+    @extend_schema_field(RecipeBookSerializer)
     def get_book_content(self, obj):
         return RecipeBookSerializer(context={'request': self.context['request']}).to_representation(obj.book)
 
+    @extend_schema_field(RecipeOverviewSerializer)
     def get_recipe_content(self, obj):
         return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
 
@@ -1068,9 +1091,9 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
-    recipe_name = serializers.ReadOnlyField(source='recipe.name')
+    recipe_name = serializers.CharField(source='recipe.name', read_only=True)
     meal_type = MealTypeSerializer()
-    meal_type_name = serializers.ReadOnlyField(source='meal_type.name')  # TODO deprecate once old meal plan was removed
+    meal_type_name = serializers.CharField(source='meal_type.name', read_only=True)  # TODO deprecate once old meal plan was removed
     note_markdown = serializers.SerializerMethodField('get_note_markdown')
     servings = CustomDecimalField()
     shared = UserSerializer(many=True, required=False, allow_null=True)
@@ -1078,9 +1101,11 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
     to_date = serializers.DateField(required=False)
 
+    @extend_schema_field(str)
     def get_note_markdown(self, obj):
         return markdown(obj.note)
 
+    @extend_schema_field(bool)
     def in_shopping(self, obj):
         return ShoppingListRecipe.objects.filter(mealplan=obj.id).exists()
 
@@ -1124,6 +1149,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     mealplan_type = serializers.ReadOnlyField(source='mealplan.meal_type.name')
     servings = CustomDecimalField()
 
+    @extend_schema_field(str)
     def get_name(self, obj):
         if not isinstance(value := obj.servings, Decimal):
             value = Decimal(value)
@@ -1377,6 +1403,7 @@ class AccessTokenSerializer(serializers.ModelSerializer):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
+    @extend_schema_field(str)
     def get_token(self, obj):
         if (timezone.now() - obj.created).seconds < 15:
             return obj.token

@@ -52,10 +52,10 @@ export interface PatchedMealPlanRequest {
     recipe?: RecipeOverviewRequest;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedMealPlanRequest
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {string}
