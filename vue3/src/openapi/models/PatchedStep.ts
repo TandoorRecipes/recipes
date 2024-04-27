@@ -37,7 +37,7 @@ export interface PatchedStep {
      * @type {number}
      * @memberof PatchedStep
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -94,16 +94,16 @@ export interface PatchedStep {
     stepRecipe?: number;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof PatchedStep
      */
-    readonly stepRecipeData?: string;
+    readonly stepRecipeData?: any;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedStep
      */
-    readonly numrecipe?: string;
+    readonly numrecipe?: number;
     /**
      * 
      * @type {boolean}
@@ -151,6 +151,7 @@ export function PatchedStepToJSON(value?: PatchedStep | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'instruction': value['instruction'],
         'ingredients': value['ingredients'] == null ? undefined : ((value['ingredients'] as Array<any>).map(IngredientToJSON)),

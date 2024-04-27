@@ -58,7 +58,7 @@ export interface PatchedUnit {
      * @type {number}
      * @memberof PatchedUnit
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -123,6 +123,7 @@ export function PatchedUnitToJSON(value?: PatchedUnit | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'plural_name': value['pluralName'],
         'description': value['description'],

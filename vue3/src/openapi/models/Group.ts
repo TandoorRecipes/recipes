@@ -58,7 +58,7 @@ export interface Group {
      * @type {number}
      * @memberof Group
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -71,7 +71,6 @@ export interface Group {
  * Check if a given object implements the Group interface.
  */
 export function instanceOfGroup(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     return true;
 }
@@ -86,7 +85,7 @@ export function GroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Gro
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
     };
 }
@@ -97,6 +96,7 @@ export function GroupToJSON(value?: Group | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
     };
 }

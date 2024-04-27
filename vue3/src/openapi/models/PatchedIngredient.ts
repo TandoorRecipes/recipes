@@ -37,7 +37,7 @@ export interface PatchedIngredient {
      * @type {number}
      * @memberof PatchedIngredient
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {Food}
@@ -52,16 +52,16 @@ export interface PatchedIngredient {
     unit?: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedIngredient
      */
-    amount?: string;
+    amount?: number;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof PatchedIngredient
      */
-    readonly conversions?: string;
+    readonly conversions?: Array<any>;
     /**
      * 
      * @type {string}
@@ -94,10 +94,10 @@ export interface PatchedIngredient {
     originalText?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<any>}
      * @memberof PatchedIngredient
      */
-    readonly usedInRecipes?: string;
+    readonly usedInRecipes?: Array<any>;
     /**
      * 
      * @type {boolean}
@@ -151,6 +151,7 @@ export function PatchedIngredientToJSON(value?: PatchedIngredient | null): any {
     }
     return {
         
+        'id': value['id'],
         'food': FoodToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],

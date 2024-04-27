@@ -31,7 +31,7 @@ export interface ImportLog {
      * @type {number}
      * @memberof ImportLog
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -86,7 +86,6 @@ export interface ImportLog {
  * Check if a given object implements the ImportLog interface.
  */
 export function instanceOfImportLog(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('type' in value)) return false;
     if (!('keyword' in value)) return false;
     if (!('createdBy' in value)) return false;
@@ -104,7 +103,7 @@ export function ImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'type': json['type'],
         'msg': json['msg'] == null ? undefined : json['msg'],
         'running': json['running'] == null ? undefined : json['running'],
@@ -122,6 +121,7 @@ export function ImportLogToJSON(value?: ImportLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'type': value['type'],
         'msg': value['msg'],
         'running': value['running'],

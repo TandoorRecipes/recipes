@@ -58,7 +58,7 @@ export interface Unit {
      * @type {number}
      * @memberof Unit
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -95,7 +95,6 @@ export interface Unit {
  * Check if a given object implements the Unit interface.
  */
 export function instanceOfUnit(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     return true;
 }
@@ -110,7 +109,7 @@ export function UnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): Unit
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'pluralName': json['plural_name'] == null ? undefined : json['plural_name'],
         'description': json['description'] == null ? undefined : json['description'],
@@ -125,6 +124,7 @@ export function UnitToJSON(value?: Unit | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'plural_name': value['pluralName'],
         'description': value['description'],

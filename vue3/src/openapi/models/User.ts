@@ -24,7 +24,7 @@ export interface User {
      * @type {number}
      * @memberof User
      */
-    readonly id: number;
+    id?: number;
     /**
      * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
      * @type {string}
@@ -55,7 +55,6 @@ export interface User {
  * Check if a given object implements the User interface.
  */
 export function instanceOfUser(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('username' in value)) return false;
     if (!('displayName' in value)) return false;
     return true;
@@ -71,7 +70,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'username': json['username'],
         'firstName': json['first_name'] == null ? undefined : json['first_name'],
         'lastName': json['last_name'] == null ? undefined : json['last_name'],
@@ -85,6 +84,7 @@ export function UserToJSON(value?: User | null): any {
     }
     return {
         
+        'id': value['id'],
         'first_name': value['firstName'],
         'last_name': value['lastName'],
     };

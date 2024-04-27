@@ -31,7 +31,7 @@ export interface PatchedSupermarketCategoryRelation {
      * @type {number}
      * @memberof PatchedSupermarketCategoryRelation
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {SupermarketCategory}
@@ -82,6 +82,7 @@ export function PatchedSupermarketCategoryRelationToJSON(value?: PatchedSupermar
     }
     return {
         
+        'id': value['id'],
         'category': SupermarketCategoryToJSON(value['category']),
         'supermarket': value['supermarket'],
         'order': value['order'],

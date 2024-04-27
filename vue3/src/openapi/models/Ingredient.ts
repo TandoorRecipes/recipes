@@ -37,7 +37,7 @@ export interface Ingredient {
      * @type {number}
      * @memberof Ingredient
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {Food}
@@ -116,7 +116,6 @@ export interface Ingredient {
  * Check if a given object implements the Ingredient interface.
  */
 export function instanceOfIngredient(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('food' in value)) return false;
     if (!('unit' in value)) return false;
     if (!('amount' in value)) return false;
@@ -135,7 +134,7 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'food': FoodFromJSON(json['food']),
         'unit': UnitFromJSON(json['unit']),
         'amount': json['amount'],
@@ -157,6 +156,7 @@ export function IngredientToJSON(value?: Ingredient | null): any {
     }
     return {
         
+        'id': value['id'],
         'food': FoodToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],

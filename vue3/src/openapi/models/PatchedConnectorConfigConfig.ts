@@ -24,7 +24,7 @@ export interface PatchedConnectorConfigConfig {
      * @type {number}
      * @memberof PatchedConnectorConfigConfig
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -117,6 +117,7 @@ export function PatchedConnectorConfigConfigToJSON(value?: PatchedConnectorConfi
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'url': value['url'],
         'token': value['token'],

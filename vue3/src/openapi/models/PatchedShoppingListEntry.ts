@@ -49,7 +49,7 @@ export interface PatchedShoppingListEntry {
      * @type {number}
      * @memberof PatchedShoppingListEntry
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -70,10 +70,10 @@ export interface PatchedShoppingListEntry {
     unit?: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListEntry
      */
-    amount?: string;
+    amount?: number;
     /**
      * 
      * @type {number}
@@ -163,6 +163,7 @@ export function PatchedShoppingListEntryToJSON(value?: PatchedShoppingListEntry 
     }
     return {
         
+        'id': value['id'],
         'list_recipe': value['listRecipe'],
         'food': FoodToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),

@@ -31,7 +31,7 @@ export interface PatchedAutomation {
      * @type {number}
      * @memberof PatchedAutomation
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {AutomationTypeEnum}
@@ -124,6 +124,7 @@ export function PatchedAutomationToJSON(value?: PatchedAutomation | null): any {
     }
     return {
         
+        'id': value['id'],
         'type': AutomationTypeEnumToJSON(value['type']),
         'name': value['name'],
         'description': value['description'],

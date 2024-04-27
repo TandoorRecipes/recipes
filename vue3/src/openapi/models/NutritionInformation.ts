@@ -24,7 +24,7 @@ export interface NutritionInformation {
      * @type {number}
      * @memberof NutritionInformation
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -61,7 +61,6 @@ export interface NutritionInformation {
  * Check if a given object implements the NutritionInformation interface.
  */
 export function instanceOfNutritionInformation(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('carbohydrates' in value)) return false;
     if (!('fats' in value)) return false;
     if (!('proteins' in value)) return false;
@@ -79,7 +78,7 @@ export function NutritionInformationFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'carbohydrates': json['carbohydrates'],
         'fats': json['fats'],
         'proteins': json['proteins'],
@@ -94,6 +93,7 @@ export function NutritionInformationToJSON(value?: NutritionInformation | null):
     }
     return {
         
+        'id': value['id'],
         'carbohydrates': value['carbohydrates'],
         'fats': value['fats'],
         'proteins': value['proteins'],

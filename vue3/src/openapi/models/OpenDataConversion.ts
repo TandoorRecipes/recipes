@@ -43,7 +43,7 @@ export interface OpenDataConversion {
      * @type {number}
      * @memberof OpenDataConversion
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -64,10 +64,10 @@ export interface OpenDataConversion {
     food: OpenDataFood;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof OpenDataConversion
      */
-    baseAmount: string;
+    baseAmount: number;
     /**
      * 
      * @type {OpenDataUnit}
@@ -76,10 +76,10 @@ export interface OpenDataConversion {
     baseUnit: OpenDataUnit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof OpenDataConversion
      */
-    convertedAmount: string;
+    convertedAmount: number;
     /**
      * 
      * @type {OpenDataUnit}
@@ -110,7 +110,6 @@ export interface OpenDataConversion {
  * Check if a given object implements the OpenDataConversion interface.
  */
 export function instanceOfOpenDataConversion(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('version' in value)) return false;
     if (!('slug' in value)) return false;
     if (!('food' in value)) return false;
@@ -133,7 +132,7 @@ export function OpenDataConversionFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'food': OpenDataFoodFromJSON(json['food']),
@@ -153,6 +152,7 @@ export function OpenDataConversionToJSON(value?: OpenDataConversion | null): any
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'food': OpenDataFoodToJSON(value['food']),

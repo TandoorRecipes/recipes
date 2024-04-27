@@ -24,7 +24,7 @@ export interface UserFileView {
      * @type {number}
      * @memberof UserFileView
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -49,7 +49,6 @@ export interface UserFileView {
  * Check if a given object implements the UserFileView interface.
  */
 export function instanceOfUserFileView(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('fileDownload' in value)) return false;
     if (!('preview' in value)) return false;
@@ -66,7 +65,7 @@ export function UserFileViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'fileDownload': json['file_download'],
         'preview': json['preview'],
@@ -79,6 +78,7 @@ export function UserFileViewToJSON(value?: UserFileView | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
     };
 }

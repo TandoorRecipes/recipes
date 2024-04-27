@@ -43,7 +43,7 @@ export interface PatchedOpenDataConversion {
      * @type {number}
      * @memberof PatchedOpenDataConversion
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -64,10 +64,10 @@ export interface PatchedOpenDataConversion {
     food?: OpenDataFood;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedOpenDataConversion
      */
-    baseAmount?: string;
+    baseAmount?: number;
     /**
      * 
      * @type {OpenDataUnit}
@@ -76,10 +76,10 @@ export interface PatchedOpenDataConversion {
     baseUnit?: OpenDataUnit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedOpenDataConversion
      */
-    convertedAmount?: string;
+    convertedAmount?: number;
     /**
      * 
      * @type {OpenDataUnit}
@@ -143,6 +143,7 @@ export function PatchedOpenDataConversionToJSON(value?: PatchedOpenDataConversio
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'food': OpenDataFoodToJSON(value['food']),

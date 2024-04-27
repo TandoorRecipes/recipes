@@ -49,7 +49,7 @@ export interface PatchedSpace {
      * @type {number}
      * @memberof PatchedSpace
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -112,22 +112,22 @@ export interface PatchedSpace {
     foodInherit?: Array<FoodInheritField>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    readonly userCount?: string;
+    readonly userCount?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    readonly recipeCount?: string;
+    readonly recipeCount?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedSpace
      */
-    readonly fileSizeMb?: string;
+    readonly fileSizeMb?: number;
     /**
      * 
      * @type {UserFileView}
@@ -261,6 +261,7 @@ export function PatchedSpaceToJSON(value?: PatchedSpace | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'message': value['message'],
         'food_inherit': value['foodInherit'] == null ? undefined : ((value['foodInherit'] as Array<any>).map(FoodInheritFieldToJSON)),

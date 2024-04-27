@@ -65,7 +65,7 @@ export interface PatchedOpenDataCategory {
      * @type {number}
      * @memberof PatchedOpenDataCategory
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -137,6 +137,7 @@ export function PatchedOpenDataCategoryToJSON(value?: PatchedOpenDataCategory | 
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

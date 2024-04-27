@@ -24,7 +24,7 @@ export interface PatchedViewLog {
      * @type {number}
      * @memberof PatchedViewLog
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -75,6 +75,7 @@ export function PatchedViewLogToJSON(value?: PatchedViewLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'recipe': value['recipe'],
     };
 }

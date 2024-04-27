@@ -24,7 +24,7 @@ export interface ExportLog {
      * @type {number}
      * @memberof ExportLog
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -85,7 +85,6 @@ export interface ExportLog {
  * Check if a given object implements the ExportLog interface.
  */
 export function instanceOfExportLog(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('type' in value)) return false;
     if (!('createdBy' in value)) return false;
     if (!('createdAt' in value)) return false;
@@ -102,7 +101,7 @@ export function ExportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'type': json['type'],
         'msg': json['msg'] == null ? undefined : json['msg'],
         'running': json['running'] == null ? undefined : json['running'],
@@ -121,6 +120,7 @@ export function ExportLogToJSON(value?: ExportLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'type': value['type'],
         'msg': value['msg'],
         'running': value['running'],

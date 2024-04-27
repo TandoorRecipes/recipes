@@ -31,7 +31,7 @@ export interface CookLog {
      * @type {number}
      * @memberof CookLog
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -80,7 +80,6 @@ export interface CookLog {
  * Check if a given object implements the CookLog interface.
  */
 export function instanceOfCookLog(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('recipe' in value)) return false;
     if (!('createdBy' in value)) return false;
     if (!('updatedAt' in value)) return false;
@@ -97,7 +96,7 @@ export function CookLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'recipe': json['recipe'],
         'servings': json['servings'] == null ? undefined : json['servings'],
         'rating': json['rating'] == null ? undefined : json['rating'],
@@ -114,6 +113,7 @@ export function CookLogToJSON(value?: CookLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'recipe': value['recipe'],
         'servings': value['servings'],
         'rating': value['rating'],
