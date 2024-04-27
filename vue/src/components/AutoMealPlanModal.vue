@@ -243,7 +243,7 @@ export default {
                 "shared": autoPlan.shared,
                 "addshopping": autoPlan.addshopping
             }
-            return apiClient.createAutoPlanViewSet(data)
+            return apiClient.createAutoPlan(data)
 
         },
         refreshEntries() { //TODO move properly to MealPLanStore (save period for default refresh)
