@@ -13,6 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { RecipeBook } from './RecipeBook';
+import {
+    RecipeBookFromJSON,
+    RecipeBookFromJSONTyped,
+    RecipeBookToJSON,
+} from './RecipeBook';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+} from './RecipeOverview';
+
 /**
  * 
  * @export
@@ -24,7 +37,7 @@ export interface PatchedRecipeBookEntry {
      * @type {number}
      * @memberof PatchedRecipeBookEntry
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -33,10 +46,10 @@ export interface PatchedRecipeBookEntry {
     book?: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeBook}
      * @memberof PatchedRecipeBookEntry
      */
-    readonly bookContent?: string;
+    readonly bookContent?: RecipeBook;
     /**
      * 
      * @type {number}
@@ -45,10 +58,10 @@ export interface PatchedRecipeBookEntry {
     recipe?: number;
     /**
      * 
-     * @type {string}
+     * @type {RecipeOverview}
      * @memberof PatchedRecipeBookEntry
      */
-    readonly recipeContent?: string;
+    readonly recipeContent?: RecipeOverview;
 }
 
 /**
@@ -70,9 +83,9 @@ export function PatchedRecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminat
         
         'id': json['id'] == null ? undefined : json['id'],
         'book': json['book'] == null ? undefined : json['book'],
-        'bookContent': json['book_content'] == null ? undefined : json['book_content'],
+        'bookContent': json['book_content'] == null ? undefined : RecipeBookFromJSON(json['book_content']),
         'recipe': json['recipe'] == null ? undefined : json['recipe'],
-        'recipeContent': json['recipe_content'] == null ? undefined : json['recipe_content'],
+        'recipeContent': json['recipe_content'] == null ? undefined : RecipeOverviewFromJSON(json['recipe_content']),
     };
 }
 
@@ -82,6 +95,7 @@ export function PatchedRecipeBookEntryToJSON(value?: PatchedRecipeBookEntry | nu
     }
     return {
         
+        'id': value['id'],
         'book': value['book'],
         'recipe': value['recipe'],
     };

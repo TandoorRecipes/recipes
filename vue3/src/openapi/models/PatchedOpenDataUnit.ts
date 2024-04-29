@@ -77,7 +77,7 @@ export interface PatchedOpenDataUnit {
      * @type {number}
      * @memberof PatchedOpenDataUnit
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -163,6 +163,7 @@ export function PatchedOpenDataUnitToJSON(value?: PatchedOpenDataUnit | null): a
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

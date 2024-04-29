@@ -31,7 +31,7 @@ export interface Storage {
      * @type {number}
      * @memberof Storage
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -52,6 +52,18 @@ export interface Storage {
     username?: string;
     /**
      * 
+     * @type {string}
+     * @memberof Storage
+     */
+    password?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Storage
+     */
+    token?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Storage
      */
@@ -62,7 +74,6 @@ export interface Storage {
  * Check if a given object implements the Storage interface.
  */
 export function instanceOfStorage(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('createdBy' in value)) return false;
     return true;
@@ -78,10 +89,12 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'method': json['method'] == null ? undefined : MethodEnumFromJSON(json['method']),
         'username': json['username'] == null ? undefined : json['username'],
+        'password': json['password'] == null ? undefined : json['password'],
+        'token': json['token'] == null ? undefined : json['token'],
         'createdBy': json['created_by'],
     };
 }
@@ -92,9 +105,12 @@ export function StorageToJSON(value?: Storage | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'method': MethodEnumToJSON(value['method']),
         'username': value['username'],
+        'password': value['password'],
+        'token': value['token'],
     };
 }
 

@@ -31,7 +31,7 @@ export interface PatchedCookLog {
      * @type {number}
      * @memberof PatchedCookLog
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -110,6 +110,7 @@ export function PatchedCookLogToJSON(value?: PatchedCookLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'recipe': value['recipe'],
         'servings': value['servings'],
         'rating': value['rating'],

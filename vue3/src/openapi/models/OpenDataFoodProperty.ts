@@ -31,7 +31,7 @@ export interface OpenDataFoodProperty {
      * @type {number}
      * @memberof OpenDataFoodProperty
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataProperty}
@@ -40,17 +40,16 @@ export interface OpenDataFoodProperty {
     property: OpenDataProperty;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof OpenDataFoodProperty
      */
-    propertyAmount: string;
+    propertyAmount: number;
 }
 
 /**
  * Check if a given object implements the OpenDataFoodProperty interface.
  */
 export function instanceOfOpenDataFoodProperty(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('property' in value)) return false;
     if (!('propertyAmount' in value)) return false;
     return true;
@@ -66,7 +65,7 @@ export function OpenDataFoodPropertyFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'property': OpenDataPropertyFromJSON(json['property']),
         'propertyAmount': json['property_amount'],
     };
@@ -78,6 +77,7 @@ export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null):
     }
     return {
         
+        'id': value['id'],
         'property': OpenDataPropertyToJSON(value['property']),
         'property_amount': value['propertyAmount'],
     };

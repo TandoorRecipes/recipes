@@ -65,13 +65,13 @@ export interface PatchedProperty {
      * @type {number}
      * @memberof PatchedProperty
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedProperty
      */
-    propertyAmount?: string;
+    propertyAmount?: number;
     /**
      * 
      * @type {PropertyType}
@@ -109,6 +109,7 @@ export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
     }
     return {
         
+        'id': value['id'],
         'property_amount': value['propertyAmount'],
         'property_type': PropertyTypeToJSON(value['propertyType']),
     };

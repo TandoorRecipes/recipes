@@ -58,7 +58,7 @@ export interface PatchedOpenDataVersion {
      * @type {number}
      * @memberof PatchedOpenDataVersion
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -109,6 +109,7 @@ export function PatchedOpenDataVersionToJSON(value?: PatchedOpenDataVersion | nu
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'code': value['code'],
         'comment': value['comment'],

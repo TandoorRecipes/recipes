@@ -31,7 +31,7 @@ export interface RecipeOverview {
      * @type {number}
      * @memberof RecipeOverview
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -134,7 +134,6 @@ export interface RecipeOverview {
  * Check if a given object implements the RecipeOverview interface.
  */
 export function instanceOfRecipeOverview(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('image' in value)) return false;
     if (!('keywords' in value)) return false;
@@ -163,7 +162,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'image': json['image'],
@@ -189,6 +188,7 @@ export function RecipeOverviewToJSON(value?: RecipeOverview | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
     };

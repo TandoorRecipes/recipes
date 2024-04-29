@@ -37,7 +37,7 @@ export interface UserSpace {
      * @type {number}
      * @memberof UserSpace
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {User}
@@ -92,7 +92,6 @@ export interface UserSpace {
  * Check if a given object implements the UserSpace interface.
  */
 export function instanceOfUserSpace(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('user' in value)) return false;
     if (!('space' in value)) return false;
     if (!('groups' in value)) return false;
@@ -112,7 +111,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'user': UserFromJSON(json['user']),
         'space': json['space'],
         'groups': ((json['groups'] as Array<any>).map(GroupFromJSON)),
@@ -130,6 +129,7 @@ export function UserSpaceToJSON(value?: UserSpace | null): any {
     }
     return {
         
+        'id': value['id'],
         'groups': ((value['groups'] as Array<any>).map(GroupToJSON)),
         'active': value['active'],
         'internal_note': value['internalNote'],

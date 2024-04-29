@@ -24,7 +24,7 @@ export interface PatchedAccessToken {
      * @type {number}
      * @memberof PatchedAccessToken
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -89,6 +89,7 @@ export function PatchedAccessTokenToJSON(value?: PatchedAccessToken | null): any
     }
     return {
         
+        'id': value['id'],
         'expires': value['expires'] == null ? undefined : ((value['expires']).toISOString()),
         'scope': value['scope'],
     };

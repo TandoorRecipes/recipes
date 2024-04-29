@@ -58,7 +58,7 @@ export interface PatchedKeyword {
      * @type {number}
      * @memberof PatchedKeyword
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -79,10 +79,10 @@ export interface PatchedKeyword {
     description?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedKeyword
      */
-    readonly parent?: string;
+    readonly parent?: number;
     /**
      * 
      * @type {number}
@@ -102,7 +102,8 @@ export interface PatchedKeyword {
      */
     readonly updatedAt?: Date;
     /**
-     * 
+     * Returns a string representation of a tree node and it's ancestors,
+     * e.g. 'Cuisine > Asian > Chinese > Catonese'.
      * @type {string}
      * @memberof PatchedKeyword
      */
@@ -144,6 +145,7 @@ export function PatchedKeywordToJSON(value?: PatchedKeyword | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
     };

@@ -31,7 +31,7 @@ export interface PatchedImportLog {
      * @type {number}
      * @memberof PatchedImportLog
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -117,6 +117,7 @@ export function PatchedImportLogToJSON(value?: PatchedImportLog | null): any {
     }
     return {
         
+        'id': value['id'],
         'type': value['type'],
         'msg': value['msg'],
         'running': value['running'],

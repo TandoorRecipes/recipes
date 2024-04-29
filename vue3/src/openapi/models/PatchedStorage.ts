@@ -31,7 +31,7 @@ export interface PatchedStorage {
      * @type {number}
      * @memberof PatchedStorage
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -103,6 +103,7 @@ export function PatchedStorageToJSON(value?: PatchedStorage | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'method': MethodEnumToJSON(value['method']),
         'username': value['username'],

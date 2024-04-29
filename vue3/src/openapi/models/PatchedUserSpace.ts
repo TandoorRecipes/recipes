@@ -37,7 +37,7 @@ export interface PatchedUserSpace {
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {User}
@@ -123,6 +123,7 @@ export function PatchedUserSpaceToJSON(value?: PatchedUserSpace | null): any {
     }
     return {
         
+        'id': value['id'],
         'groups': value['groups'] == null ? undefined : ((value['groups'] as Array<any>).map(GroupToJSON)),
         'active': value['active'],
         'internal_note': value['internalNote'],

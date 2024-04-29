@@ -24,13 +24,19 @@ export interface UserFile {
      * @type {number}
      * @memberof UserFile
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
      * @memberof UserFile
      */
     name: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserFile
+     */
+    file: string;
     /**
      * 
      * @type {string}
@@ -55,8 +61,8 @@ export interface UserFile {
  * Check if a given object implements the UserFile interface.
  */
 export function instanceOfUserFile(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
+    if (!('file' in value)) return false;
     if (!('fileDownload' in value)) return false;
     if (!('preview' in value)) return false;
     if (!('fileSizeKb' in value)) return false;
@@ -73,8 +79,9 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
+        'file': json['file'],
         'fileDownload': json['file_download'],
         'preview': json['preview'],
         'fileSizeKb': json['file_size_kb'],
@@ -87,7 +94,9 @@ export function UserFileToJSON(value?: UserFile | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
+        'file': value['file'],
     };
 }
 

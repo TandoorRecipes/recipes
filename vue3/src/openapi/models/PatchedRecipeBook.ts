@@ -37,7 +37,7 @@ export interface PatchedRecipeBook {
      * @type {number}
      * @memberof PatchedRecipeBook
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -109,6 +109,7 @@ export function PatchedRecipeBookToJSON(value?: PatchedRecipeBook | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),

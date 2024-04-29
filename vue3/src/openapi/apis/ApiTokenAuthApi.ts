@@ -25,6 +25,7 @@ import {
 export interface ApiTokenAuthCreateRequest {
     username: string;
     password: string;
+    token: string;
 }
 
 /**
@@ -46,6 +47,13 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
             throw new runtime.RequiredError(
                 'password',
                 'Required parameter "password" was null or undefined when calling apiTokenAuthCreate().'
+            );
+        }
+
+        if (requestParameters['token'] == null) {
+            throw new runtime.RequiredError(
+                'token',
+                'Required parameter "token" was null or undefined when calling apiTokenAuthCreate().'
             );
         }
 
@@ -79,6 +87,10 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
 
         if (requestParameters['password'] != null) {
             formParams.append('password', requestParameters['password'] as any);
+        }
+
+        if (requestParameters['token'] != null) {
+            formParams.append('token', requestParameters['token'] as any);
         }
 
         const response = await this.request({

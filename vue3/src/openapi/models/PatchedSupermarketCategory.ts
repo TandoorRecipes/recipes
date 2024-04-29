@@ -58,7 +58,7 @@ export interface PatchedSupermarketCategory {
      * @type {number}
      * @memberof PatchedSupermarketCategory
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -102,6 +102,7 @@ export function PatchedSupermarketCategoryToJSON(value?: PatchedSupermarketCateg
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
     };

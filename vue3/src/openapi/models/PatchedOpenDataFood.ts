@@ -83,7 +83,7 @@ export interface PatchedOpenDataFood {
      * @type {number}
      * @memberof PatchedOpenDataFood
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -225,6 +225,7 @@ export function PatchedOpenDataFoodToJSON(value?: PatchedOpenDataFood | null): a
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

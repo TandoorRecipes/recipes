@@ -24,6 +24,18 @@ export interface AuthToken {
      * @type {string}
      * @memberof AuthToken
      */
+    username: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthToken
+     */
+    password: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AuthToken
+     */
     readonly token: string;
 }
 
@@ -31,6 +43,8 @@ export interface AuthToken {
  * Check if a given object implements the AuthToken interface.
  */
 export function instanceOfAuthToken(value: object): boolean {
+    if (!('username' in value)) return false;
+    if (!('password' in value)) return false;
     if (!('token' in value)) return false;
     return true;
 }
@@ -45,6 +59,8 @@ export function AuthTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     }
     return {
         
+        'username': json['username'],
+        'password': json['password'],
         'token': json['token'],
     };
 }
@@ -55,6 +71,8 @@ export function AuthTokenToJSON(value?: AuthToken | null): any {
     }
     return {
         
+        'username': value['username'],
+        'password': value['password'],
     };
 }
 

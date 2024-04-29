@@ -24,7 +24,7 @@ export interface PatchedUser {
      * @type {number}
      * @memberof PatchedUser
      */
-    readonly id?: number;
+    id?: number;
     /**
      * Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
      * @type {string}
@@ -82,6 +82,7 @@ export function PatchedUserToJSON(value?: PatchedUser | null): any {
     }
     return {
         
+        'id': value['id'],
         'first_name': value['firstName'],
         'last_name': value['lastName'],
     };
