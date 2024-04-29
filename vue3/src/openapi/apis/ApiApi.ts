@@ -696,61 +696,6 @@ export interface ApiFoodPartialUpdateRequest {
     patchedFoodRequest?: PatchedFoodRequest;
 }
 
-export interface ApiFoodPropertyCreateRequest {
-    propertyRequest: PropertyRequest;
-}
-
-export interface ApiFoodPropertyDestroyRequest {
-    id: number;
-}
-
-export interface ApiFoodPropertyListRequest {
-    page?: number;
-    pageSize?: number;
-}
-
-export interface ApiFoodPropertyPartialUpdateRequest {
-    id: number;
-    patchedPropertyRequest?: PatchedPropertyRequest;
-}
-
-export interface ApiFoodPropertyRetrieveRequest {
-    id: number;
-}
-
-export interface ApiFoodPropertyTypeCreateRequest {
-    propertyTypeRequest: PropertyTypeRequest;
-}
-
-export interface ApiFoodPropertyTypeDestroyRequest {
-    id: number;
-}
-
-export interface ApiFoodPropertyTypeListRequest {
-    category?: Array<ApiFoodPropertyTypeListCategoryEnum>;
-    page?: number;
-    pageSize?: number;
-}
-
-export interface ApiFoodPropertyTypePartialUpdateRequest {
-    id: number;
-    patchedPropertyTypeRequest?: PatchedPropertyTypeRequest;
-}
-
-export interface ApiFoodPropertyTypeRetrieveRequest {
-    id: number;
-}
-
-export interface ApiFoodPropertyTypeUpdateRequest {
-    id: number;
-    propertyTypeRequest: PropertyTypeRequest;
-}
-
-export interface ApiFoodPropertyUpdateRequest {
-    id: number;
-    propertyRequest: PropertyRequest;
-}
-
 export interface ApiFoodRetrieveRequest {
     id: number;
 }
@@ -975,6 +920,61 @@ export interface ApiMealTypeRetrieveRequest {
 export interface ApiMealTypeUpdateRequest {
     id: number;
     mealTypeRequest: MealTypeRequest;
+}
+
+export interface ApiPropertyCreateRequest {
+    propertyRequest: PropertyRequest;
+}
+
+export interface ApiPropertyDestroyRequest {
+    id: number;
+}
+
+export interface ApiPropertyListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiPropertyPartialUpdateRequest {
+    id: number;
+    patchedPropertyRequest?: PatchedPropertyRequest;
+}
+
+export interface ApiPropertyRetrieveRequest {
+    id: number;
+}
+
+export interface ApiPropertyTypeCreateRequest {
+    propertyTypeRequest: PropertyTypeRequest;
+}
+
+export interface ApiPropertyTypeDestroyRequest {
+    id: number;
+}
+
+export interface ApiPropertyTypeListRequest {
+    category?: Array<ApiPropertyTypeListCategoryEnum>;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiPropertyTypePartialUpdateRequest {
+    id: number;
+    patchedPropertyTypeRequest?: PatchedPropertyTypeRequest;
+}
+
+export interface ApiPropertyTypeRetrieveRequest {
+    id: number;
+}
+
+export interface ApiPropertyTypeUpdateRequest {
+    id: number;
+    propertyTypeRequest: PropertyTypeRequest;
+}
+
+export interface ApiPropertyUpdateRequest {
+    id: number;
+    propertyRequest: PropertyRequest;
 }
 
 export interface ApiRecipeBookCreateRequest {
@@ -3601,462 +3601,6 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiFoodPropertyCreateRaw(requestParameters: ApiFoodPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
-        if (requestParameters['propertyRequest'] == null) {
-            throw new runtime.RequiredError(
-                'propertyRequest',
-                'Required parameter "propertyRequest" was null or undefined when calling apiFoodPropertyCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyCreate(requestParameters: ApiFoodPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
-        const response = await this.apiFoodPropertyCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyDestroyRaw(requestParameters: ApiFoodPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyDestroy().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiFoodPropertyDestroy(requestParameters: ApiFoodPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiFoodPropertyDestroyRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiFoodPropertyListRaw(requestParameters: ApiFoodPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyList>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyListFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyList(requestParameters: ApiFoodPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyList> {
-        const response = await this.apiFoodPropertyListRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyPartialUpdateRaw(requestParameters: ApiFoodPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyPartialUpdate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PatchedPropertyRequestToJSON(requestParameters['patchedPropertyRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyPartialUpdate(requestParameters: ApiFoodPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
-        const response = await this.apiFoodPropertyPartialUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyRetrieveRaw(requestParameters: ApiFoodPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyRetrieve().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyRetrieve(requestParameters: ApiFoodPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
-        const response = await this.apiFoodPropertyRetrieveRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeCreateRaw(requestParameters: ApiFoodPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
-        if (requestParameters['propertyTypeRequest'] == null) {
-            throw new runtime.RequiredError(
-                'propertyTypeRequest',
-                'Required parameter "propertyTypeRequest" was null or undefined when calling apiFoodPropertyTypeCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeCreate(requestParameters: ApiFoodPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
-        const response = await this.apiFoodPropertyTypeCreateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeDestroyRaw(requestParameters: ApiFoodPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyTypeDestroy().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'DELETE',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.VoidApiResponse(response);
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeDestroy(requestParameters: ApiFoodPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.apiFoodPropertyTypeDestroyRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeListRaw(requestParameters: ApiFoodPropertyTypeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyTypeList>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['category'] != null) {
-            queryParameters['category'] = requestParameters['category'];
-        }
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyTypeListFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeList(requestParameters: ApiFoodPropertyTypeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyTypeList> {
-        const response = await this.apiFoodPropertyTypeListRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypePartialUpdateRaw(requestParameters: ApiFoodPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyTypePartialUpdate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PatchedPropertyTypeRequestToJSON(requestParameters['patchedPropertyTypeRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypePartialUpdate(requestParameters: ApiFoodPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
-        const response = await this.apiFoodPropertyTypePartialUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeRetrieveRaw(requestParameters: ApiFoodPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyTypeRetrieve().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeRetrieve(requestParameters: ApiFoodPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
-        const response = await this.apiFoodPropertyTypeRetrieveRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeUpdateRaw(requestParameters: ApiFoodPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyTypeUpdate().'
-            );
-        }
-
-        if (requestParameters['propertyTypeRequest'] == null) {
-            throw new runtime.RequiredError(
-                'propertyTypeRequest',
-                'Required parameter "propertyTypeRequest" was null or undefined when calling apiFoodPropertyTypeUpdate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyTypeUpdate(requestParameters: ApiFoodPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
-        const response = await this.apiFoodPropertyTypeUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
-    async apiFoodPropertyUpdateRaw(requestParameters: ApiFoodPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
-        if (requestParameters['id'] == null) {
-            throw new runtime.RequiredError(
-                'id',
-                'Required parameter "id" was null or undefined when calling apiFoodPropertyUpdate().'
-            );
-        }
-
-        if (requestParameters['propertyRequest'] == null) {
-            throw new runtime.RequiredError(
-                'propertyRequest',
-                'Required parameter "propertyRequest" was null or undefined when calling apiFoodPropertyUpdate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/food-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
-            method: 'PUT',
-            headers: headerParameters,
-            query: queryParameters,
-            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiFoodPropertyUpdate(requestParameters: ApiFoodPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
-        const response = await this.apiFoodPropertyUpdateRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
     async apiFoodRetrieveRaw(requestParameters: ApiFoodRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
@@ -5955,6 +5499,462 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiMealTypeUpdate(requestParameters: ApiMealTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealType> {
         const response = await this.apiMealTypeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyCreateRaw(requestParameters: ApiPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
+        if (requestParameters['propertyRequest'] == null) {
+            throw new runtime.RequiredError(
+                'propertyRequest',
+                'Required parameter "propertyRequest" was null or undefined when calling apiPropertyCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyCreate(requestParameters: ApiPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
+        const response = await this.apiPropertyCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyDestroyRaw(requestParameters: ApiPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiPropertyDestroy(requestParameters: ApiPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiPropertyDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiPropertyListRaw(requestParameters: ApiPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyList(requestParameters: ApiPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyList> {
+        const response = await this.apiPropertyListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyPartialUpdateRaw(requestParameters: ApiPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedPropertyRequestToJSON(requestParameters['patchedPropertyRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyPartialUpdate(requestParameters: ApiPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
+        const response = await this.apiPropertyPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyRetrieveRaw(requestParameters: ApiPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyRetrieve(requestParameters: ApiPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
+        const response = await this.apiPropertyRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyTypeCreateRaw(requestParameters: ApiPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
+        if (requestParameters['propertyTypeRequest'] == null) {
+            throw new runtime.RequiredError(
+                'propertyTypeRequest',
+                'Required parameter "propertyTypeRequest" was null or undefined when calling apiPropertyTypeCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyTypeCreate(requestParameters: ApiPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
+        const response = await this.apiPropertyTypeCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyTypeDestroyRaw(requestParameters: ApiPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiPropertyTypeDestroy(requestParameters: ApiPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiPropertyTypeDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiPropertyTypeListRaw(requestParameters: ApiPropertyTypeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyTypeList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['category'] != null) {
+            queryParameters['category'] = requestParameters['category'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedPropertyTypeListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyTypeList(requestParameters: ApiPropertyTypeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyTypeList> {
+        const response = await this.apiPropertyTypeListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyTypePartialUpdateRaw(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedPropertyTypeRequestToJSON(requestParameters['patchedPropertyTypeRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyTypePartialUpdate(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
+        const response = await this.apiPropertyTypePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyTypeRetrieveRaw(requestParameters: ApiPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyTypeRetrieve(requestParameters: ApiPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
+        const response = await this.apiPropertyTypeRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyTypeUpdateRaw(requestParameters: ApiPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyTypeUpdate().'
+            );
+        }
+
+        if (requestParameters['propertyTypeRequest'] == null) {
+            throw new runtime.RequiredError(
+                'propertyTypeRequest',
+                'Required parameter "propertyTypeRequest" was null or undefined when calling apiPropertyTypeUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyTypeUpdate(requestParameters: ApiPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
+        const response = await this.apiPropertyTypeUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiPropertyUpdateRaw(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiPropertyUpdate().'
+            );
+        }
+
+        if (requestParameters['propertyRequest'] == null) {
+            throw new runtime.RequiredError(
+                'propertyRequest',
+                'Required parameter "propertyRequest" was null or undefined when calling apiPropertyUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiPropertyUpdate(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
+        const response = await this.apiPropertyUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -10663,14 +10663,14 @@ export type ApiCustomFilterListTypeEnum = typeof ApiCustomFilterListTypeEnum[key
 /**
  * @export
  */
-export const ApiFoodPropertyTypeListCategoryEnum = {
+export const ApiPropertyTypeListCategoryEnum = {
     Allergen: 'ALLERGEN',
     Goal: 'GOAL',
     Nutrition: 'NUTRITION',
     Other: 'OTHER',
     Price: 'PRICE'
 } as const;
-export type ApiFoodPropertyTypeListCategoryEnum = typeof ApiFoodPropertyTypeListCategoryEnum[keyof typeof ApiFoodPropertyTypeListCategoryEnum];
+export type ApiPropertyTypeListCategoryEnum = typeof ApiPropertyTypeListCategoryEnum[keyof typeof ApiPropertyTypeListCategoryEnum];
 /**
  * @export
  */
