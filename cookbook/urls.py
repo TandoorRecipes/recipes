@@ -8,17 +8,17 @@ from rest_framework import routers
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
 
-from .models import (Automation, Comment, CustomFilter, Food, InviteLink, Keyword, PropertyType,
-                     Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step,
-                     Storage, Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion,
-                     UserFile, UserSpace, get_model_name, ConnectorConfig)
-
+from .models import (
+    Automation, Comment, ConnectorConfig, CustomFilter, Food, InviteLink, Keyword, PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport, Space, Step, Storage,
+    Supermarket, SupermarketCategory, Sync, SyncLog, Unit, UnitConversion, UserFile, UserSpace, get_model_name
+)
 from .views import api, data, delete, edit, import_export, lists, new, telegram, views
 from .views.api import CustomAuthToken, ImportOpenData
 
 
 # extend DRF default router class to allow including additional routers
 class DefaultRouter(routers.DefaultRouter):
+
     def extend(self, r):
         self.registry.extend(r.registry)
 
@@ -43,8 +43,8 @@ router.register(r'recipe', api.RecipeViewSet)
 router.register(r'recipe-book', api.RecipeBookViewSet)
 router.register(r'recipe-book-entry', api.RecipeBookEntryViewSet)
 router.register(r'unit-conversion', api.UnitConversionViewSet)
-router.register(r'food-property-type', api.PropertyTypeViewSet)  # TODO rename + regenerate
-router.register(r'food-property', api.PropertyViewSet)
+router.register(r'property-type', api.PropertyTypeViewSet)  # NOTE: if regenerating the legacy API these need renamed to food-property
+router.register(r'property', api.PropertyViewSet)
 router.register(r'shopping-list-entry', api.ShoppingListEntryViewSet)
 router.register(r'shopping-list-recipe', api.ShoppingListRecipeViewSet)
 router.register(r'space', api.SpaceViewSet)
@@ -119,7 +119,6 @@ urlpatterns = [
     path('api/get_external_file_link/<int:recipe_id>/', api.get_external_file_link, name='api_get_external_file_link'),
     path('api/get_recipe_file/<int:recipe_id>/', api.get_recipe_file, name='api_get_recipe_file'),
     path('api/sync_all/', api.sync_all, name='api_sync'),
-
     path('api/recipe-from-source/', api.RecipeUrlImportView.as_view(), name='api_recipe_from_source'),
     path('api/ingredient-from-string/', api.ingredient_from_string, name='api_ingredient_from_string'),
     path('api/share-link/<int:pk>', api.share_link, name='api_share_link'),
@@ -131,22 +130,19 @@ urlpatterns = [
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),
     path('docs/markdown/', views.markdown_info, name='docs_markdown'),
     path('docs/search/', views.search_info, name='docs_search'),
-    path('docs/api/',  views.Redoc.as_view(url_name='openapi-schema'), name='docs_api'),
-    path('docs/swagger/',  views.Swagger.as_view(url_name='openapi-schema'), name='docs_swagger'),
+    path('docs/api/', views.Redoc.as_view(url_name='openapi-schema'), name='docs_api'),
+    path('docs/swagger/', views.Swagger.as_view(url_name='openapi-schema'), name='docs_swagger'),
     path('openapi/', SpectacularAPIView.as_view(api_version=TANDOOR_VERSION), name='openapi-schema'),
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', CustomAuthToken.as_view()),
     path('api-import-open-data/', ImportOpenData.as_view(), name='api_import_open_data'),
     path('offline/', views.offline, name='view_offline'),
-    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript', )), name='service_worker'),
+    path('service-worker.js', (TemplateView.as_view(template_name="sw.js", content_type='application/javascript')), name='service_worker'),
     path('manifest.json', views.web_manifest, name='web_manifest'),
 ]
 
-generic_models = (
-    Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync,
-    Comment, RecipeBookEntry, InviteLink, UserSpace, Space
-)
+generic_models = (Recipe, RecipeImport, Storage, ConnectorConfig, RecipeBook, SyncLog, Sync, Comment, RecipeBookEntry, InviteLink, UserSpace, Space)
 
 for m in generic_models:
     py_name = get_model_name(m)
