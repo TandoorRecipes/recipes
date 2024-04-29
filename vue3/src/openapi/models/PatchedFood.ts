@@ -95,7 +95,7 @@ export interface PatchedFood {
      * @type {number}
      * @memberof PatchedFood
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -140,10 +140,10 @@ export interface PatchedFood {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedFood
      */
-    propertiesFoodAmount?: string;
+    propertiesFoodAmount?: number;
     /**
      * 
      * @type {Unit}
@@ -158,10 +158,10 @@ export interface PatchedFood {
     fdcId?: number;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedFood
      */
-    foodOnhand?: string;
+    foodOnhand?: boolean;
     /**
      * 
      * @type {SupermarketCategory}
@@ -170,10 +170,10 @@ export interface PatchedFood {
     supermarketCategory?: SupermarketCategory;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedFood
      */
-    readonly parent?: string;
+    readonly parent?: number;
     /**
      * 
      * @type {number}
@@ -187,7 +187,8 @@ export interface PatchedFood {
      */
     inheritFields?: Array<FoodInheritField>;
     /**
-     * 
+     * Returns a string representation of a tree node and it's ancestors,
+     * e.g. 'Cuisine > Asian > Chinese > Catonese'.
      * @type {string}
      * @memberof PatchedFood
      */
@@ -218,10 +219,10 @@ export interface PatchedFood {
     substituteChildren?: boolean;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedFood
      */
-    readonly substituteOnhand?: string;
+    readonly substituteOnhand?: boolean;
     /**
      * 
      * @type {Array<FoodInheritField>}
@@ -286,6 +287,7 @@ export function PatchedFoodToJSON(value?: PatchedFood | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'plural_name': value['pluralName'],
         'description': value['description'],

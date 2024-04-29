@@ -16,40 +16,31 @@
 import * as runtime from '../runtime';
 import type {
   AccessToken,
-  AccessTokenRequest,
   AutoMealPlan,
-  AutoMealPlanRequest,
   Automation,
-  AutomationRequest,
   BookmarkletImport,
-  BookmarkletImportRequest,
   ConnectorConfigConfig,
-  ConnectorConfigConfigRequest,
   CookLog,
-  CookLogRequest,
   CustomFilter,
-  CustomFilterRequest,
   ExportLog,
-  ExportLogRequest,
   Food,
   FoodInheritField,
-  FoodRequest,
   FoodShoppingUpdate,
-  FoodShoppingUpdateRequest,
   Group,
   ImportLog,
-  ImportLogRequest,
   Ingredient,
-  IngredientRequest,
-  IngredientStringRequest,
+  IngredientString,
   InviteLink,
-  InviteLinkRequest,
   Keyword,
-  KeywordRequest,
   MealPlan,
-  MealPlanRequest,
   MealType,
-  MealTypeRequest,
+  OpenDataCategory,
+  OpenDataConversion,
+  OpenDataFood,
+  OpenDataProperty,
+  OpenDataStore,
+  OpenDataUnit,
+  OpenDataVersion,
   PaginatedAutomationList,
   PaginatedBookmarkletImportListList,
   PaginatedCookLogList,
@@ -81,158 +72,129 @@ import type {
   PaginatedUserSpaceList,
   PaginatedViewLogList,
   ParsedIngredient,
-  PatchedAccessTokenRequest,
-  PatchedAutomationRequest,
-  PatchedBookmarkletImportRequest,
-  PatchedConnectorConfigConfigRequest,
-  PatchedCookLogRequest,
-  PatchedCustomFilterRequest,
-  PatchedExportLogRequest,
-  PatchedFoodRequest,
-  PatchedImportLogRequest,
-  PatchedIngredientRequest,
-  PatchedInviteLinkRequest,
-  PatchedKeywordRequest,
-  PatchedMealPlanRequest,
-  PatchedMealTypeRequest,
-  PatchedPropertyRequest,
-  PatchedPropertyTypeRequest,
-  PatchedRecipeBookEntryRequest,
-  PatchedRecipeBookRequest,
-  PatchedRecipeRequest,
-  PatchedShoppingListEntryRequest,
-  PatchedShoppingListRecipeRequest,
-  PatchedSpaceRequest,
-  PatchedStepRequest,
-  PatchedStorageRequest,
-  PatchedSupermarketCategoryRelationRequest,
-  PatchedSupermarketCategoryRequest,
-  PatchedSupermarketRequest,
-  PatchedSyncRequest,
-  PatchedUnitConversionRequest,
-  PatchedUnitRequest,
-  PatchedUserPreferenceRequest,
-  PatchedUserRequest,
-  PatchedUserSpaceRequest,
-  PatchedViewLogRequest,
+  PatchedAccessToken,
+  PatchedAutomation,
+  PatchedBookmarkletImport,
+  PatchedConnectorConfigConfig,
+  PatchedCookLog,
+  PatchedCustomFilter,
+  PatchedExportLog,
+  PatchedFood,
+  PatchedImportLog,
+  PatchedIngredient,
+  PatchedInviteLink,
+  PatchedKeyword,
+  PatchedMealPlan,
+  PatchedMealType,
+  PatchedOpenDataCategory,
+  PatchedOpenDataConversion,
+  PatchedOpenDataFood,
+  PatchedOpenDataProperty,
+  PatchedOpenDataStore,
+  PatchedOpenDataUnit,
+  PatchedOpenDataVersion,
+  PatchedProperty,
+  PatchedPropertyType,
+  PatchedRecipe,
+  PatchedRecipeBook,
+  PatchedRecipeBookEntry,
+  PatchedShoppingListEntry,
+  PatchedShoppingListRecipe,
+  PatchedSpace,
+  PatchedStep,
+  PatchedStorage,
+  PatchedSupermarket,
+  PatchedSupermarketCategory,
+  PatchedSupermarketCategoryRelation,
+  PatchedSync,
+  PatchedUnit,
+  PatchedUnitConversion,
+  PatchedUser,
+  PatchedUserPreference,
+  PatchedUserSpace,
+  PatchedViewLog,
   Property,
-  PropertyRequest,
   PropertyType,
-  PropertyTypeRequest,
   Recipe,
   RecipeBook,
   RecipeBookEntry,
-  RecipeBookEntryRequest,
-  RecipeBookRequest,
   RecipeFlat,
   RecipeImage,
-  RecipeRequest,
   RecipeShoppingUpdate,
-  RecipeShoppingUpdateRequest,
   RecipeSimple,
   ShareLink,
   ShoppingListEntry,
   ShoppingListEntryBulk,
-  ShoppingListEntryBulkRequest,
-  ShoppingListEntryRequest,
   ShoppingListRecipe,
-  ShoppingListRecipeRequest,
   Space,
   Step,
-  StepRequest,
   Storage,
-  StorageRequest,
   Supermarket,
   SupermarketCategory,
   SupermarketCategoryRelation,
-  SupermarketCategoryRelationRequest,
-  SupermarketCategoryRequest,
-  SupermarketRequest,
   Sync,
   SyncLog,
-  SyncRequest,
   Unit,
   UnitConversion,
-  UnitConversionRequest,
-  UnitRequest,
   User,
   UserFile,
   UserPreference,
   UserSpace,
   ViewLog,
-  ViewLogRequest,
 } from '../models/index';
 import {
     AccessTokenFromJSON,
     AccessTokenToJSON,
-    AccessTokenRequestFromJSON,
-    AccessTokenRequestToJSON,
     AutoMealPlanFromJSON,
     AutoMealPlanToJSON,
-    AutoMealPlanRequestFromJSON,
-    AutoMealPlanRequestToJSON,
     AutomationFromJSON,
     AutomationToJSON,
-    AutomationRequestFromJSON,
-    AutomationRequestToJSON,
     BookmarkletImportFromJSON,
     BookmarkletImportToJSON,
-    BookmarkletImportRequestFromJSON,
-    BookmarkletImportRequestToJSON,
     ConnectorConfigConfigFromJSON,
     ConnectorConfigConfigToJSON,
-    ConnectorConfigConfigRequestFromJSON,
-    ConnectorConfigConfigRequestToJSON,
     CookLogFromJSON,
     CookLogToJSON,
-    CookLogRequestFromJSON,
-    CookLogRequestToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
-    CustomFilterRequestFromJSON,
-    CustomFilterRequestToJSON,
     ExportLogFromJSON,
     ExportLogToJSON,
-    ExportLogRequestFromJSON,
-    ExportLogRequestToJSON,
     FoodFromJSON,
     FoodToJSON,
     FoodInheritFieldFromJSON,
     FoodInheritFieldToJSON,
-    FoodRequestFromJSON,
-    FoodRequestToJSON,
     FoodShoppingUpdateFromJSON,
     FoodShoppingUpdateToJSON,
-    FoodShoppingUpdateRequestFromJSON,
-    FoodShoppingUpdateRequestToJSON,
     GroupFromJSON,
     GroupToJSON,
     ImportLogFromJSON,
     ImportLogToJSON,
-    ImportLogRequestFromJSON,
-    ImportLogRequestToJSON,
     IngredientFromJSON,
     IngredientToJSON,
-    IngredientRequestFromJSON,
-    IngredientRequestToJSON,
-    IngredientStringRequestFromJSON,
-    IngredientStringRequestToJSON,
+    IngredientStringFromJSON,
+    IngredientStringToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
-    InviteLinkRequestFromJSON,
-    InviteLinkRequestToJSON,
     KeywordFromJSON,
     KeywordToJSON,
-    KeywordRequestFromJSON,
-    KeywordRequestToJSON,
     MealPlanFromJSON,
     MealPlanToJSON,
-    MealPlanRequestFromJSON,
-    MealPlanRequestToJSON,
     MealTypeFromJSON,
     MealTypeToJSON,
-    MealTypeRequestFromJSON,
-    MealTypeRequestToJSON,
+    OpenDataCategoryFromJSON,
+    OpenDataCategoryToJSON,
+    OpenDataConversionFromJSON,
+    OpenDataConversionToJSON,
+    OpenDataFoodFromJSON,
+    OpenDataFoodToJSON,
+    OpenDataPropertyFromJSON,
+    OpenDataPropertyToJSON,
+    OpenDataStoreFromJSON,
+    OpenDataStoreToJSON,
+    OpenDataUnitFromJSON,
+    OpenDataUnitToJSON,
+    OpenDataVersionFromJSON,
+    OpenDataVersionToJSON,
     PaginatedAutomationListFromJSON,
     PaginatedAutomationListToJSON,
     PaginatedBookmarkletImportListListFromJSON,
@@ -295,102 +257,104 @@ import {
     PaginatedViewLogListToJSON,
     ParsedIngredientFromJSON,
     ParsedIngredientToJSON,
-    PatchedAccessTokenRequestFromJSON,
-    PatchedAccessTokenRequestToJSON,
-    PatchedAutomationRequestFromJSON,
-    PatchedAutomationRequestToJSON,
-    PatchedBookmarkletImportRequestFromJSON,
-    PatchedBookmarkletImportRequestToJSON,
-    PatchedConnectorConfigConfigRequestFromJSON,
-    PatchedConnectorConfigConfigRequestToJSON,
-    PatchedCookLogRequestFromJSON,
-    PatchedCookLogRequestToJSON,
-    PatchedCustomFilterRequestFromJSON,
-    PatchedCustomFilterRequestToJSON,
-    PatchedExportLogRequestFromJSON,
-    PatchedExportLogRequestToJSON,
-    PatchedFoodRequestFromJSON,
-    PatchedFoodRequestToJSON,
-    PatchedImportLogRequestFromJSON,
-    PatchedImportLogRequestToJSON,
-    PatchedIngredientRequestFromJSON,
-    PatchedIngredientRequestToJSON,
-    PatchedInviteLinkRequestFromJSON,
-    PatchedInviteLinkRequestToJSON,
-    PatchedKeywordRequestFromJSON,
-    PatchedKeywordRequestToJSON,
-    PatchedMealPlanRequestFromJSON,
-    PatchedMealPlanRequestToJSON,
-    PatchedMealTypeRequestFromJSON,
-    PatchedMealTypeRequestToJSON,
-    PatchedPropertyRequestFromJSON,
-    PatchedPropertyRequestToJSON,
-    PatchedPropertyTypeRequestFromJSON,
-    PatchedPropertyTypeRequestToJSON,
-    PatchedRecipeBookEntryRequestFromJSON,
-    PatchedRecipeBookEntryRequestToJSON,
-    PatchedRecipeBookRequestFromJSON,
-    PatchedRecipeBookRequestToJSON,
-    PatchedRecipeRequestFromJSON,
-    PatchedRecipeRequestToJSON,
-    PatchedShoppingListEntryRequestFromJSON,
-    PatchedShoppingListEntryRequestToJSON,
-    PatchedShoppingListRecipeRequestFromJSON,
-    PatchedShoppingListRecipeRequestToJSON,
-    PatchedSpaceRequestFromJSON,
-    PatchedSpaceRequestToJSON,
-    PatchedStepRequestFromJSON,
-    PatchedStepRequestToJSON,
-    PatchedStorageRequestFromJSON,
-    PatchedStorageRequestToJSON,
-    PatchedSupermarketCategoryRelationRequestFromJSON,
-    PatchedSupermarketCategoryRelationRequestToJSON,
-    PatchedSupermarketCategoryRequestFromJSON,
-    PatchedSupermarketCategoryRequestToJSON,
-    PatchedSupermarketRequestFromJSON,
-    PatchedSupermarketRequestToJSON,
-    PatchedSyncRequestFromJSON,
-    PatchedSyncRequestToJSON,
-    PatchedUnitConversionRequestFromJSON,
-    PatchedUnitConversionRequestToJSON,
-    PatchedUnitRequestFromJSON,
-    PatchedUnitRequestToJSON,
-    PatchedUserPreferenceRequestFromJSON,
-    PatchedUserPreferenceRequestToJSON,
-    PatchedUserRequestFromJSON,
-    PatchedUserRequestToJSON,
-    PatchedUserSpaceRequestFromJSON,
-    PatchedUserSpaceRequestToJSON,
-    PatchedViewLogRequestFromJSON,
-    PatchedViewLogRequestToJSON,
+    PatchedAccessTokenFromJSON,
+    PatchedAccessTokenToJSON,
+    PatchedAutomationFromJSON,
+    PatchedAutomationToJSON,
+    PatchedBookmarkletImportFromJSON,
+    PatchedBookmarkletImportToJSON,
+    PatchedConnectorConfigConfigFromJSON,
+    PatchedConnectorConfigConfigToJSON,
+    PatchedCookLogFromJSON,
+    PatchedCookLogToJSON,
+    PatchedCustomFilterFromJSON,
+    PatchedCustomFilterToJSON,
+    PatchedExportLogFromJSON,
+    PatchedExportLogToJSON,
+    PatchedFoodFromJSON,
+    PatchedFoodToJSON,
+    PatchedImportLogFromJSON,
+    PatchedImportLogToJSON,
+    PatchedIngredientFromJSON,
+    PatchedIngredientToJSON,
+    PatchedInviteLinkFromJSON,
+    PatchedInviteLinkToJSON,
+    PatchedKeywordFromJSON,
+    PatchedKeywordToJSON,
+    PatchedMealPlanFromJSON,
+    PatchedMealPlanToJSON,
+    PatchedMealTypeFromJSON,
+    PatchedMealTypeToJSON,
+    PatchedOpenDataCategoryFromJSON,
+    PatchedOpenDataCategoryToJSON,
+    PatchedOpenDataConversionFromJSON,
+    PatchedOpenDataConversionToJSON,
+    PatchedOpenDataFoodFromJSON,
+    PatchedOpenDataFoodToJSON,
+    PatchedOpenDataPropertyFromJSON,
+    PatchedOpenDataPropertyToJSON,
+    PatchedOpenDataStoreFromJSON,
+    PatchedOpenDataStoreToJSON,
+    PatchedOpenDataUnitFromJSON,
+    PatchedOpenDataUnitToJSON,
+    PatchedOpenDataVersionFromJSON,
+    PatchedOpenDataVersionToJSON,
+    PatchedPropertyFromJSON,
+    PatchedPropertyToJSON,
+    PatchedPropertyTypeFromJSON,
+    PatchedPropertyTypeToJSON,
+    PatchedRecipeFromJSON,
+    PatchedRecipeToJSON,
+    PatchedRecipeBookFromJSON,
+    PatchedRecipeBookToJSON,
+    PatchedRecipeBookEntryFromJSON,
+    PatchedRecipeBookEntryToJSON,
+    PatchedShoppingListEntryFromJSON,
+    PatchedShoppingListEntryToJSON,
+    PatchedShoppingListRecipeFromJSON,
+    PatchedShoppingListRecipeToJSON,
+    PatchedSpaceFromJSON,
+    PatchedSpaceToJSON,
+    PatchedStepFromJSON,
+    PatchedStepToJSON,
+    PatchedStorageFromJSON,
+    PatchedStorageToJSON,
+    PatchedSupermarketFromJSON,
+    PatchedSupermarketToJSON,
+    PatchedSupermarketCategoryFromJSON,
+    PatchedSupermarketCategoryToJSON,
+    PatchedSupermarketCategoryRelationFromJSON,
+    PatchedSupermarketCategoryRelationToJSON,
+    PatchedSyncFromJSON,
+    PatchedSyncToJSON,
+    PatchedUnitFromJSON,
+    PatchedUnitToJSON,
+    PatchedUnitConversionFromJSON,
+    PatchedUnitConversionToJSON,
+    PatchedUserFromJSON,
+    PatchedUserToJSON,
+    PatchedUserPreferenceFromJSON,
+    PatchedUserPreferenceToJSON,
+    PatchedUserSpaceFromJSON,
+    PatchedUserSpaceToJSON,
+    PatchedViewLogFromJSON,
+    PatchedViewLogToJSON,
     PropertyFromJSON,
     PropertyToJSON,
-    PropertyRequestFromJSON,
-    PropertyRequestToJSON,
     PropertyTypeFromJSON,
     PropertyTypeToJSON,
-    PropertyTypeRequestFromJSON,
-    PropertyTypeRequestToJSON,
     RecipeFromJSON,
     RecipeToJSON,
     RecipeBookFromJSON,
     RecipeBookToJSON,
     RecipeBookEntryFromJSON,
     RecipeBookEntryToJSON,
-    RecipeBookEntryRequestFromJSON,
-    RecipeBookEntryRequestToJSON,
-    RecipeBookRequestFromJSON,
-    RecipeBookRequestToJSON,
     RecipeFlatFromJSON,
     RecipeFlatToJSON,
     RecipeImageFromJSON,
     RecipeImageToJSON,
-    RecipeRequestFromJSON,
-    RecipeRequestToJSON,
     RecipeShoppingUpdateFromJSON,
     RecipeShoppingUpdateToJSON,
-    RecipeShoppingUpdateRequestFromJSON,
-    RecipeShoppingUpdateRequestToJSON,
     RecipeSimpleFromJSON,
     RecipeSimpleToJSON,
     ShareLinkFromJSON,
@@ -399,50 +363,28 @@ import {
     ShoppingListEntryToJSON,
     ShoppingListEntryBulkFromJSON,
     ShoppingListEntryBulkToJSON,
-    ShoppingListEntryBulkRequestFromJSON,
-    ShoppingListEntryBulkRequestToJSON,
-    ShoppingListEntryRequestFromJSON,
-    ShoppingListEntryRequestToJSON,
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeToJSON,
-    ShoppingListRecipeRequestFromJSON,
-    ShoppingListRecipeRequestToJSON,
     SpaceFromJSON,
     SpaceToJSON,
     StepFromJSON,
     StepToJSON,
-    StepRequestFromJSON,
-    StepRequestToJSON,
     StorageFromJSON,
     StorageToJSON,
-    StorageRequestFromJSON,
-    StorageRequestToJSON,
     SupermarketFromJSON,
     SupermarketToJSON,
     SupermarketCategoryFromJSON,
     SupermarketCategoryToJSON,
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationToJSON,
-    SupermarketCategoryRelationRequestFromJSON,
-    SupermarketCategoryRelationRequestToJSON,
-    SupermarketCategoryRequestFromJSON,
-    SupermarketCategoryRequestToJSON,
-    SupermarketRequestFromJSON,
-    SupermarketRequestToJSON,
     SyncFromJSON,
     SyncToJSON,
     SyncLogFromJSON,
     SyncLogToJSON,
-    SyncRequestFromJSON,
-    SyncRequestToJSON,
     UnitFromJSON,
     UnitToJSON,
     UnitConversionFromJSON,
     UnitConversionToJSON,
-    UnitConversionRequestFromJSON,
-    UnitConversionRequestToJSON,
-    UnitRequestFromJSON,
-    UnitRequestToJSON,
     UserFromJSON,
     UserToJSON,
     UserFileFromJSON,
@@ -453,12 +395,10 @@ import {
     UserSpaceToJSON,
     ViewLogFromJSON,
     ViewLogToJSON,
-    ViewLogRequestFromJSON,
-    ViewLogRequestToJSON,
 } from '../models/index';
 
 export interface ApiAccessTokenCreateRequest {
-    accessTokenRequest: AccessTokenRequest;
+    accessToken: AccessToken;
 }
 
 export interface ApiAccessTokenDestroyRequest {
@@ -467,7 +407,7 @@ export interface ApiAccessTokenDestroyRequest {
 
 export interface ApiAccessTokenPartialUpdateRequest {
     id: number;
-    patchedAccessTokenRequest?: PatchedAccessTokenRequest;
+    patchedAccessToken?: PatchedAccessToken;
 }
 
 export interface ApiAccessTokenRetrieveRequest {
@@ -476,15 +416,15 @@ export interface ApiAccessTokenRetrieveRequest {
 
 export interface ApiAccessTokenUpdateRequest {
     id: number;
-    accessTokenRequest: AccessTokenRequest;
+    accessToken: AccessToken;
 }
 
 export interface ApiAutoPlanCreateRequest {
-    autoMealPlanRequest: AutoMealPlanRequest;
+    autoMealPlan: AutoMealPlan;
 }
 
 export interface ApiAutomationCreateRequest {
-    automationRequest: AutomationRequest;
+    automation: Automation;
 }
 
 export interface ApiAutomationDestroyRequest {
@@ -499,7 +439,7 @@ export interface ApiAutomationListRequest {
 
 export interface ApiAutomationPartialUpdateRequest {
     id: number;
-    patchedAutomationRequest?: PatchedAutomationRequest;
+    patchedAutomation?: PatchedAutomation;
 }
 
 export interface ApiAutomationRetrieveRequest {
@@ -508,11 +448,11 @@ export interface ApiAutomationRetrieveRequest {
 
 export interface ApiAutomationUpdateRequest {
     id: number;
-    automationRequest: AutomationRequest;
+    automation: Automation;
 }
 
 export interface ApiBookmarkletImportCreateRequest {
-    bookmarkletImportRequest: BookmarkletImportRequest;
+    bookmarkletImport: BookmarkletImport;
 }
 
 export interface ApiBookmarkletImportDestroyRequest {
@@ -526,7 +466,7 @@ export interface ApiBookmarkletImportListRequest {
 
 export interface ApiBookmarkletImportPartialUpdateRequest {
     id: number;
-    patchedBookmarkletImportRequest?: PatchedBookmarkletImportRequest;
+    patchedBookmarkletImport?: PatchedBookmarkletImport;
 }
 
 export interface ApiBookmarkletImportRetrieveRequest {
@@ -535,11 +475,11 @@ export interface ApiBookmarkletImportRetrieveRequest {
 
 export interface ApiBookmarkletImportUpdateRequest {
     id: number;
-    bookmarkletImportRequest: BookmarkletImportRequest;
+    bookmarkletImport: BookmarkletImport;
 }
 
 export interface ApiConnectorConfigCreateRequest {
-    connectorConfigConfigRequest: ConnectorConfigConfigRequest;
+    connectorConfigConfig: ConnectorConfigConfig;
 }
 
 export interface ApiConnectorConfigDestroyRequest {
@@ -548,7 +488,7 @@ export interface ApiConnectorConfigDestroyRequest {
 
 export interface ApiConnectorConfigPartialUpdateRequest {
     id: number;
-    patchedConnectorConfigConfigRequest?: PatchedConnectorConfigConfigRequest;
+    patchedConnectorConfigConfig?: PatchedConnectorConfigConfig;
 }
 
 export interface ApiConnectorConfigRetrieveRequest {
@@ -557,11 +497,11 @@ export interface ApiConnectorConfigRetrieveRequest {
 
 export interface ApiConnectorConfigUpdateRequest {
     id: number;
-    connectorConfigConfigRequest: ConnectorConfigConfigRequest;
+    connectorConfigConfig: ConnectorConfigConfig;
 }
 
 export interface ApiCookLogCreateRequest {
-    cookLogRequest: CookLogRequest;
+    cookLog: CookLog;
 }
 
 export interface ApiCookLogDestroyRequest {
@@ -576,7 +516,7 @@ export interface ApiCookLogListRequest {
 
 export interface ApiCookLogPartialUpdateRequest {
     id: number;
-    patchedCookLogRequest?: PatchedCookLogRequest;
+    patchedCookLog?: PatchedCookLog;
 }
 
 export interface ApiCookLogRetrieveRequest {
@@ -585,11 +525,11 @@ export interface ApiCookLogRetrieveRequest {
 
 export interface ApiCookLogUpdateRequest {
     id: number;
-    cookLogRequest: CookLogRequest;
+    cookLog: CookLog;
 }
 
 export interface ApiCustomFilterCreateRequest {
-    customFilterRequest: CustomFilterRequest;
+    customFilter: CustomFilter;
 }
 
 export interface ApiCustomFilterDestroyRequest {
@@ -608,7 +548,7 @@ export interface ApiCustomFilterListRequest {
 
 export interface ApiCustomFilterPartialUpdateRequest {
     id: number;
-    patchedCustomFilterRequest?: PatchedCustomFilterRequest;
+    patchedCustomFilter?: PatchedCustomFilter;
 }
 
 export interface ApiCustomFilterRetrieveRequest {
@@ -617,7 +557,7 @@ export interface ApiCustomFilterRetrieveRequest {
 
 export interface ApiCustomFilterUpdateRequest {
     id: number;
-    customFilterRequest: CustomFilterRequest;
+    customFilter: CustomFilter;
 }
 
 export interface ApiDownloadFileRetrieveRequest {
@@ -625,7 +565,7 @@ export interface ApiDownloadFileRetrieveRequest {
 }
 
 export interface ApiExportLogCreateRequest {
-    exportLogRequest: ExportLogRequest;
+    exportLog: ExportLog;
 }
 
 export interface ApiExportLogDestroyRequest {
@@ -639,7 +579,7 @@ export interface ApiExportLogListRequest {
 
 export interface ApiExportLogPartialUpdateRequest {
     id: number;
-    patchedExportLogRequest?: PatchedExportLogRequest;
+    patchedExportLog?: PatchedExportLog;
 }
 
 export interface ApiExportLogRetrieveRequest {
@@ -648,11 +588,11 @@ export interface ApiExportLogRetrieveRequest {
 
 export interface ApiExportLogUpdateRequest {
     id: number;
-    exportLogRequest: ExportLogRequest;
+    exportLog: ExportLog;
 }
 
 export interface ApiFoodCreateRequest {
-    foodRequest: FoodRequest;
+    food: Food;
 }
 
 export interface ApiFoodDestroyRequest {
@@ -661,7 +601,7 @@ export interface ApiFoodDestroyRequest {
 
 export interface ApiFoodFdcCreateRequest {
     id: number;
-    foodRequest: FoodRequest;
+    food: Food;
 }
 
 export interface ApiFoodInheritFieldRetrieveRequest {
@@ -682,22 +622,22 @@ export interface ApiFoodListRequest {
 export interface ApiFoodMergeUpdateRequest {
     id: number;
     target: number;
-    foodRequest: FoodRequest;
+    food: Food;
 }
 
 export interface ApiFoodMoveUpdateRequest {
     id: number;
     parent: number;
-    foodRequest: FoodRequest;
+    food: Food;
 }
 
 export interface ApiFoodPartialUpdateRequest {
     id: number;
-    patchedFoodRequest?: PatchedFoodRequest;
+    patchedFood?: PatchedFood;
 }
 
 export interface ApiFoodPropertyCreateRequest {
-    propertyRequest: PropertyRequest;
+    property: Property;
 }
 
 export interface ApiFoodPropertyDestroyRequest {
@@ -711,7 +651,7 @@ export interface ApiFoodPropertyListRequest {
 
 export interface ApiFoodPropertyPartialUpdateRequest {
     id: number;
-    patchedPropertyRequest?: PatchedPropertyRequest;
+    patchedProperty?: PatchedProperty;
 }
 
 export interface ApiFoodPropertyRetrieveRequest {
@@ -719,7 +659,7 @@ export interface ApiFoodPropertyRetrieveRequest {
 }
 
 export interface ApiFoodPropertyTypeCreateRequest {
-    propertyTypeRequest: PropertyTypeRequest;
+    propertyType: PropertyType;
 }
 
 export interface ApiFoodPropertyTypeDestroyRequest {
@@ -734,7 +674,7 @@ export interface ApiFoodPropertyTypeListRequest {
 
 export interface ApiFoodPropertyTypePartialUpdateRequest {
     id: number;
-    patchedPropertyTypeRequest?: PatchedPropertyTypeRequest;
+    patchedPropertyType?: PatchedPropertyType;
 }
 
 export interface ApiFoodPropertyTypeRetrieveRequest {
@@ -743,12 +683,12 @@ export interface ApiFoodPropertyTypeRetrieveRequest {
 
 export interface ApiFoodPropertyTypeUpdateRequest {
     id: number;
-    propertyTypeRequest: PropertyTypeRequest;
+    propertyType: PropertyType;
 }
 
 export interface ApiFoodPropertyUpdateRequest {
     id: number;
-    propertyRequest: PropertyRequest;
+    property: Property;
 }
 
 export interface ApiFoodRetrieveRequest {
@@ -757,12 +697,12 @@ export interface ApiFoodRetrieveRequest {
 
 export interface ApiFoodShoppingUpdateRequest {
     id: number;
-    foodShoppingUpdateRequest: FoodShoppingUpdateRequest;
+    foodShoppingUpdate: FoodShoppingUpdate;
 }
 
 export interface ApiFoodUpdateRequest {
     id: number;
-    foodRequest: FoodRequest;
+    food: Food;
 }
 
 export interface ApiGetExternalFileLinkRetrieveRequest {
@@ -778,7 +718,7 @@ export interface ApiGroupRetrieveRequest {
 }
 
 export interface ApiImportLogCreateRequest {
-    importLogRequest: ImportLogRequest;
+    importLog: ImportLog;
 }
 
 export interface ApiImportLogDestroyRequest {
@@ -792,7 +732,7 @@ export interface ApiImportLogListRequest {
 
 export interface ApiImportLogPartialUpdateRequest {
     id: number;
-    patchedImportLogRequest?: PatchedImportLogRequest;
+    patchedImportLog?: PatchedImportLog;
 }
 
 export interface ApiImportLogRetrieveRequest {
@@ -801,11 +741,11 @@ export interface ApiImportLogRetrieveRequest {
 
 export interface ApiImportLogUpdateRequest {
     id: number;
-    importLogRequest: ImportLogRequest;
+    importLog: ImportLog;
 }
 
 export interface ApiIngredientCreateRequest {
-    ingredientRequest: IngredientRequest;
+    ingredient: Ingredient;
 }
 
 export interface ApiIngredientDestroyRequest {
@@ -813,7 +753,7 @@ export interface ApiIngredientDestroyRequest {
 }
 
 export interface ApiIngredientFromStringCreateRequest {
-    ingredientStringRequest: IngredientStringRequest;
+    ingredientString: IngredientString;
 }
 
 export interface ApiIngredientListRequest {
@@ -825,7 +765,7 @@ export interface ApiIngredientListRequest {
 
 export interface ApiIngredientPartialUpdateRequest {
     id: number;
-    patchedIngredientRequest?: PatchedIngredientRequest;
+    patchedIngredient?: PatchedIngredient;
 }
 
 export interface ApiIngredientRetrieveRequest {
@@ -834,11 +774,11 @@ export interface ApiIngredientRetrieveRequest {
 
 export interface ApiIngredientUpdateRequest {
     id: number;
-    ingredientRequest: IngredientRequest;
+    ingredient: Ingredient;
 }
 
 export interface ApiInviteLinkCreateRequest {
-    inviteLinkRequest: InviteLinkRequest;
+    inviteLink: InviteLink;
 }
 
 export interface ApiInviteLinkDestroyRequest {
@@ -857,7 +797,7 @@ export interface ApiInviteLinkListRequest {
 
 export interface ApiInviteLinkPartialUpdateRequest {
     id: number;
-    patchedInviteLinkRequest?: PatchedInviteLinkRequest;
+    patchedInviteLink?: PatchedInviteLink;
 }
 
 export interface ApiInviteLinkRetrieveRequest {
@@ -866,11 +806,11 @@ export interface ApiInviteLinkRetrieveRequest {
 
 export interface ApiInviteLinkUpdateRequest {
     id: number;
-    inviteLinkRequest: InviteLinkRequest;
+    inviteLink: InviteLink;
 }
 
 export interface ApiKeywordCreateRequest {
-    keywordRequest: KeywordRequest;
+    keyword: Keyword;
 }
 
 export interface ApiKeywordDestroyRequest {
@@ -891,18 +831,18 @@ export interface ApiKeywordListRequest {
 export interface ApiKeywordMergeUpdateRequest {
     id: number;
     target: number;
-    keywordRequest: KeywordRequest;
+    keyword: Keyword;
 }
 
 export interface ApiKeywordMoveUpdateRequest {
     id: number;
     parent: number;
-    keywordRequest: KeywordRequest;
+    keyword: Keyword;
 }
 
 export interface ApiKeywordPartialUpdateRequest {
     id: number;
-    patchedKeywordRequest?: PatchedKeywordRequest;
+    patchedKeyword?: PatchedKeyword;
 }
 
 export interface ApiKeywordRetrieveRequest {
@@ -911,11 +851,11 @@ export interface ApiKeywordRetrieveRequest {
 
 export interface ApiKeywordUpdateRequest {
     id: number;
-    keywordRequest: KeywordRequest;
+    keyword: Keyword;
 }
 
 export interface ApiMealPlanCreateRequest {
-    mealPlanRequest: MealPlanRequest;
+    mealPlan: MealPlan;
 }
 
 export interface ApiMealPlanDestroyRequest {
@@ -938,7 +878,7 @@ export interface ApiMealPlanListRequest {
 
 export interface ApiMealPlanPartialUpdateRequest {
     id: number;
-    patchedMealPlanRequest?: PatchedMealPlanRequest;
+    patchedMealPlan?: PatchedMealPlan;
 }
 
 export interface ApiMealPlanRetrieveRequest {
@@ -947,11 +887,11 @@ export interface ApiMealPlanRetrieveRequest {
 
 export interface ApiMealPlanUpdateRequest {
     id: number;
-    mealPlanRequest: MealPlanRequest;
+    mealPlan: MealPlan;
 }
 
 export interface ApiMealTypeCreateRequest {
-    mealTypeRequest: MealTypeRequest;
+    mealType: MealType;
 }
 
 export interface ApiMealTypeDestroyRequest {
@@ -965,7 +905,7 @@ export interface ApiMealTypeListRequest {
 
 export interface ApiMealTypePartialUpdateRequest {
     id: number;
-    patchedMealTypeRequest?: PatchedMealTypeRequest;
+    patchedMealType?: PatchedMealType;
 }
 
 export interface ApiMealTypeRetrieveRequest {
@@ -974,11 +914,169 @@ export interface ApiMealTypeRetrieveRequest {
 
 export interface ApiMealTypeUpdateRequest {
     id: number;
-    mealTypeRequest: MealTypeRequest;
+    mealType: MealType;
+}
+
+export interface ApiOpenDataCategoryCreateRequest {
+    openDataCategory: OpenDataCategory;
+}
+
+export interface ApiOpenDataCategoryDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataCategoryPartialUpdateRequest {
+    id: number;
+    patchedOpenDataCategory?: PatchedOpenDataCategory;
+}
+
+export interface ApiOpenDataCategoryRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataCategoryUpdateRequest {
+    id: number;
+    openDataCategory: OpenDataCategory;
+}
+
+export interface ApiOpenDataConversionCreateRequest {
+    openDataConversion: OpenDataConversion;
+}
+
+export interface ApiOpenDataConversionDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataConversionPartialUpdateRequest {
+    id: number;
+    patchedOpenDataConversion?: PatchedOpenDataConversion;
+}
+
+export interface ApiOpenDataConversionRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataConversionUpdateRequest {
+    id: number;
+    openDataConversion: OpenDataConversion;
+}
+
+export interface ApiOpenDataFDCRetrieveRequest {
+    id: string;
+}
+
+export interface ApiOpenDataFoodCreateRequest {
+    openDataFood: OpenDataFood;
+}
+
+export interface ApiOpenDataFoodDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataFoodPartialUpdateRequest {
+    id: number;
+    patchedOpenDataFood?: PatchedOpenDataFood;
+}
+
+export interface ApiOpenDataFoodRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataFoodUpdateRequest {
+    id: number;
+    openDataFood: OpenDataFood;
+}
+
+export interface ApiOpenDataPropertyCreateRequest {
+    openDataProperty: OpenDataProperty;
+}
+
+export interface ApiOpenDataPropertyDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataPropertyPartialUpdateRequest {
+    id: number;
+    patchedOpenDataProperty?: PatchedOpenDataProperty;
+}
+
+export interface ApiOpenDataPropertyRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataPropertyUpdateRequest {
+    id: number;
+    openDataProperty: OpenDataProperty;
+}
+
+export interface ApiOpenDataStoreCreateRequest {
+    openDataStore: OpenDataStore;
+}
+
+export interface ApiOpenDataStoreDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataStorePartialUpdateRequest {
+    id: number;
+    patchedOpenDataStore?: PatchedOpenDataStore;
+}
+
+export interface ApiOpenDataStoreRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataStoreUpdateRequest {
+    id: number;
+    openDataStore: OpenDataStore;
+}
+
+export interface ApiOpenDataUnitCreateRequest {
+    openDataUnit: OpenDataUnit;
+}
+
+export interface ApiOpenDataUnitDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataUnitPartialUpdateRequest {
+    id: number;
+    patchedOpenDataUnit?: PatchedOpenDataUnit;
+}
+
+export interface ApiOpenDataUnitRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataUnitUpdateRequest {
+    id: number;
+    openDataUnit: OpenDataUnit;
+}
+
+export interface ApiOpenDataVersionCreateRequest {
+    openDataVersion: OpenDataVersion;
+}
+
+export interface ApiOpenDataVersionDestroyRequest {
+    id: number;
+}
+
+export interface ApiOpenDataVersionPartialUpdateRequest {
+    id: number;
+    patchedOpenDataVersion?: PatchedOpenDataVersion;
+}
+
+export interface ApiOpenDataVersionRetrieveRequest {
+    id: number;
+}
+
+export interface ApiOpenDataVersionUpdateRequest {
+    id: number;
+    openDataVersion: OpenDataVersion;
 }
 
 export interface ApiRecipeBookCreateRequest {
-    recipeBookRequest: RecipeBookRequest;
+    recipeBook: RecipeBook;
 }
 
 export interface ApiRecipeBookDestroyRequest {
@@ -986,7 +1084,7 @@ export interface ApiRecipeBookDestroyRequest {
 }
 
 export interface ApiRecipeBookEntryCreateRequest {
-    recipeBookEntryRequest: RecipeBookEntryRequest;
+    recipeBookEntry: RecipeBookEntry;
 }
 
 export interface ApiRecipeBookEntryDestroyRequest {
@@ -1002,7 +1100,7 @@ export interface ApiRecipeBookEntryListRequest {
 
 export interface ApiRecipeBookEntryPartialUpdateRequest {
     id: number;
-    patchedRecipeBookEntryRequest?: PatchedRecipeBookEntryRequest;
+    patchedRecipeBookEntry?: PatchedRecipeBookEntry;
 }
 
 export interface ApiRecipeBookEntryRetrieveRequest {
@@ -1011,7 +1109,7 @@ export interface ApiRecipeBookEntryRetrieveRequest {
 
 export interface ApiRecipeBookEntryUpdateRequest {
     id: number;
-    recipeBookEntryRequest: RecipeBookEntryRequest;
+    recipeBookEntry: RecipeBookEntry;
 }
 
 export interface ApiRecipeBookListRequest {
@@ -1027,7 +1125,7 @@ export interface ApiRecipeBookListRequest {
 
 export interface ApiRecipeBookPartialUpdateRequest {
     id: number;
-    patchedRecipeBookRequest?: PatchedRecipeBookRequest;
+    patchedRecipeBook?: PatchedRecipeBook;
 }
 
 export interface ApiRecipeBookRetrieveRequest {
@@ -1036,11 +1134,11 @@ export interface ApiRecipeBookRetrieveRequest {
 
 export interface ApiRecipeBookUpdateRequest {
     id: number;
-    recipeBookRequest: RecipeBookRequest;
+    recipeBook: RecipeBook;
 }
 
 export interface ApiRecipeCreateRequest {
-    recipeRequest: RecipeRequest;
+    recipe: Recipe;
 }
 
 export interface ApiRecipeDestroyRequest {
@@ -1049,7 +1147,7 @@ export interface ApiRecipeDestroyRequest {
 
 export interface ApiRecipeImageUpdateRequest {
     id: number;
-    image?: Blob;
+    image?: string;
     imageUrl?: string;
 }
 
@@ -1087,7 +1185,7 @@ export interface ApiRecipeListRequest {
 
 export interface ApiRecipePartialUpdateRequest {
     id: number;
-    patchedRecipeRequest?: PatchedRecipeRequest;
+    patchedRecipe?: PatchedRecipe;
 }
 
 export interface ApiRecipeRelatedRetrieveRequest {
@@ -1100,12 +1198,12 @@ export interface ApiRecipeRetrieveRequest {
 
 export interface ApiRecipeShoppingUpdateRequest {
     id: number;
-    recipeShoppingUpdateRequest?: RecipeShoppingUpdateRequest;
+    recipeShoppingUpdate?: RecipeShoppingUpdate;
 }
 
 export interface ApiRecipeUpdateRequest {
     id: number;
-    recipeRequest: RecipeRequest;
+    recipe: Recipe;
 }
 
 export interface ApiShareLinkRetrieveRequest {
@@ -1113,11 +1211,11 @@ export interface ApiShareLinkRetrieveRequest {
 }
 
 export interface ApiShoppingListEntryBulkCreateRequest {
-    shoppingListEntryBulkRequest: ShoppingListEntryBulkRequest;
+    shoppingListEntryBulk: ShoppingListEntryBulk;
 }
 
 export interface ApiShoppingListEntryCreateRequest {
-    shoppingListEntryRequest: ShoppingListEntryRequest;
+    shoppingListEntry: ShoppingListEntry;
 }
 
 export interface ApiShoppingListEntryDestroyRequest {
@@ -1134,7 +1232,7 @@ export interface ApiShoppingListEntryListRequest {
 
 export interface ApiShoppingListEntryPartialUpdateRequest {
     id: number;
-    patchedShoppingListEntryRequest?: PatchedShoppingListEntryRequest;
+    patchedShoppingListEntry?: PatchedShoppingListEntry;
 }
 
 export interface ApiShoppingListEntryRetrieveRequest {
@@ -1143,11 +1241,11 @@ export interface ApiShoppingListEntryRetrieveRequest {
 
 export interface ApiShoppingListEntryUpdateRequest {
     id: number;
-    shoppingListEntryRequest: ShoppingListEntryRequest;
+    shoppingListEntry: ShoppingListEntry;
 }
 
 export interface ApiShoppingListRecipeCreateRequest {
-    shoppingListRecipeRequest: ShoppingListRecipeRequest;
+    shoppingListRecipe: ShoppingListRecipe;
 }
 
 export interface ApiShoppingListRecipeDestroyRequest {
@@ -1161,7 +1259,7 @@ export interface ApiShoppingListRecipeListRequest {
 
 export interface ApiShoppingListRecipePartialUpdateRequest {
     id: number;
-    patchedShoppingListRecipeRequest?: PatchedShoppingListRecipeRequest;
+    patchedShoppingListRecipe?: PatchedShoppingListRecipe;
 }
 
 export interface ApiShoppingListRecipeRetrieveRequest {
@@ -1170,12 +1268,12 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
-    shoppingListRecipeRequest: ShoppingListRecipeRequest;
+    shoppingListRecipe: ShoppingListRecipe;
 }
 
 export interface ApiSpacePartialUpdateRequest {
     id: number;
-    patchedSpaceRequest?: PatchedSpaceRequest;
+    patchedSpace?: PatchedSpace;
 }
 
 export interface ApiSpaceRetrieveRequest {
@@ -1183,7 +1281,7 @@ export interface ApiSpaceRetrieveRequest {
 }
 
 export interface ApiStepCreateRequest {
-    stepRequest: StepRequest;
+    step: Step;
 }
 
 export interface ApiStepDestroyRequest {
@@ -1199,7 +1297,7 @@ export interface ApiStepListRequest {
 
 export interface ApiStepPartialUpdateRequest {
     id: number;
-    patchedStepRequest?: PatchedStepRequest;
+    patchedStep?: PatchedStep;
 }
 
 export interface ApiStepRetrieveRequest {
@@ -1208,11 +1306,11 @@ export interface ApiStepRetrieveRequest {
 
 export interface ApiStepUpdateRequest {
     id: number;
-    stepRequest: StepRequest;
+    step: Step;
 }
 
 export interface ApiStorageCreateRequest {
-    storageRequest: StorageRequest;
+    storage: Storage;
 }
 
 export interface ApiStorageDestroyRequest {
@@ -1221,7 +1319,7 @@ export interface ApiStorageDestroyRequest {
 
 export interface ApiStoragePartialUpdateRequest {
     id: number;
-    patchedStorageRequest?: PatchedStorageRequest;
+    patchedStorage?: PatchedStorage;
 }
 
 export interface ApiStorageRetrieveRequest {
@@ -1230,11 +1328,11 @@ export interface ApiStorageRetrieveRequest {
 
 export interface ApiStorageUpdateRequest {
     id: number;
-    storageRequest: StorageRequest;
+    storage: Storage;
 }
 
 export interface ApiSupermarketCategoryCreateRequest {
-    supermarketCategoryRequest: SupermarketCategoryRequest;
+    supermarketCategory: SupermarketCategory;
 }
 
 export interface ApiSupermarketCategoryDestroyRequest {
@@ -1253,16 +1351,16 @@ export interface ApiSupermarketCategoryListRequest {
 export interface ApiSupermarketCategoryMergeUpdateRequest {
     id: number;
     target: number;
-    supermarketCategoryRequest: SupermarketCategoryRequest;
+    supermarketCategory: SupermarketCategory;
 }
 
 export interface ApiSupermarketCategoryPartialUpdateRequest {
     id: number;
-    patchedSupermarketCategoryRequest?: PatchedSupermarketCategoryRequest;
+    patchedSupermarketCategory?: PatchedSupermarketCategory;
 }
 
 export interface ApiSupermarketCategoryRelationCreateRequest {
-    supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest;
+    supermarketCategoryRelation: SupermarketCategoryRelation;
 }
 
 export interface ApiSupermarketCategoryRelationDestroyRequest {
@@ -1280,7 +1378,7 @@ export interface ApiSupermarketCategoryRelationListRequest {
 
 export interface ApiSupermarketCategoryRelationPartialUpdateRequest {
     id: number;
-    patchedSupermarketCategoryRelationRequest?: PatchedSupermarketCategoryRelationRequest;
+    patchedSupermarketCategoryRelation?: PatchedSupermarketCategoryRelation;
 }
 
 export interface ApiSupermarketCategoryRelationRetrieveRequest {
@@ -1289,7 +1387,7 @@ export interface ApiSupermarketCategoryRelationRetrieveRequest {
 
 export interface ApiSupermarketCategoryRelationUpdateRequest {
     id: number;
-    supermarketCategoryRelationRequest: SupermarketCategoryRelationRequest;
+    supermarketCategoryRelation: SupermarketCategoryRelation;
 }
 
 export interface ApiSupermarketCategoryRetrieveRequest {
@@ -1298,11 +1396,11 @@ export interface ApiSupermarketCategoryRetrieveRequest {
 
 export interface ApiSupermarketCategoryUpdateRequest {
     id: number;
-    supermarketCategoryRequest: SupermarketCategoryRequest;
+    supermarketCategory: SupermarketCategory;
 }
 
 export interface ApiSupermarketCreateRequest {
-    supermarketRequest: SupermarketRequest;
+    supermarket: Supermarket;
 }
 
 export interface ApiSupermarketDestroyRequest {
@@ -1320,7 +1418,7 @@ export interface ApiSupermarketListRequest {
 
 export interface ApiSupermarketPartialUpdateRequest {
     id: number;
-    patchedSupermarketRequest?: PatchedSupermarketRequest;
+    patchedSupermarket?: PatchedSupermarket;
 }
 
 export interface ApiSupermarketRetrieveRequest {
@@ -1329,7 +1427,7 @@ export interface ApiSupermarketRetrieveRequest {
 
 export interface ApiSupermarketUpdateRequest {
     id: number;
-    supermarketRequest: SupermarketRequest;
+    supermarket: Supermarket;
 }
 
 export interface ApiSwitchActiveSpaceRetrieveRequest {
@@ -1337,7 +1435,7 @@ export interface ApiSwitchActiveSpaceRetrieveRequest {
 }
 
 export interface ApiSyncCreateRequest {
-    syncRequest: SyncRequest;
+    sync: Sync;
 }
 
 export interface ApiSyncDestroyRequest {
@@ -1360,7 +1458,7 @@ export interface ApiSyncLogRetrieveRequest {
 
 export interface ApiSyncPartialUpdateRequest {
     id: number;
-    patchedSyncRequest?: PatchedSyncRequest;
+    patchedSync?: PatchedSync;
 }
 
 export interface ApiSyncRetrieveRequest {
@@ -1369,11 +1467,11 @@ export interface ApiSyncRetrieveRequest {
 
 export interface ApiSyncUpdateRequest {
     id: number;
-    syncRequest: SyncRequest;
+    sync: Sync;
 }
 
 export interface ApiUnitConversionCreateRequest {
-    unitConversionRequest: UnitConversionRequest;
+    unitConversion: UnitConversion;
 }
 
 export interface ApiUnitConversionDestroyRequest {
@@ -1388,7 +1486,7 @@ export interface ApiUnitConversionListRequest {
 
 export interface ApiUnitConversionPartialUpdateRequest {
     id: number;
-    patchedUnitConversionRequest?: PatchedUnitConversionRequest;
+    patchedUnitConversion?: PatchedUnitConversion;
 }
 
 export interface ApiUnitConversionRetrieveRequest {
@@ -1397,11 +1495,11 @@ export interface ApiUnitConversionRetrieveRequest {
 
 export interface ApiUnitConversionUpdateRequest {
     id: number;
-    unitConversionRequest: UnitConversionRequest;
+    unitConversion: UnitConversion;
 }
 
 export interface ApiUnitCreateRequest {
-    unitRequest: UnitRequest;
+    unit: Unit;
 }
 
 export interface ApiUnitDestroyRequest {
@@ -1420,12 +1518,12 @@ export interface ApiUnitListRequest {
 export interface ApiUnitMergeUpdateRequest {
     id: number;
     target: number;
-    unitRequest: UnitRequest;
+    unit: Unit;
 }
 
 export interface ApiUnitPartialUpdateRequest {
     id: number;
-    patchedUnitRequest?: PatchedUnitRequest;
+    patchedUnit?: PatchedUnit;
 }
 
 export interface ApiUnitRetrieveRequest {
@@ -1434,12 +1532,15 @@ export interface ApiUnitRetrieveRequest {
 
 export interface ApiUnitUpdateRequest {
     id: number;
-    unitRequest: UnitRequest;
+    unit: Unit;
 }
 
 export interface ApiUserFileCreateRequest {
     name: string;
-    file: Blob;
+    file: string;
+    fileDownload: string;
+    preview: string;
+    fileSizeKb: number;
     id?: number;
 }
 
@@ -1458,9 +1559,12 @@ export interface ApiUserFileListRequest {
 
 export interface ApiUserFilePartialUpdateRequest {
     id: number;
-    name?: string;
-    file?: Blob;
     id2?: number;
+    name?: string;
+    file?: string;
+    fileDownload?: string;
+    preview?: string;
+    fileSizeKb?: number;
 }
 
 export interface ApiUserFileRetrieveRequest {
@@ -1470,7 +1574,10 @@ export interface ApiUserFileRetrieveRequest {
 export interface ApiUserFileUpdateRequest {
     id: number;
     name: string;
-    file: Blob;
+    file: string;
+    fileDownload: string;
+    preview: string;
+    fileSizeKb: number;
     id2?: number;
 }
 
@@ -1480,12 +1587,12 @@ export interface ApiUserListRequest {
 
 export interface ApiUserPartialUpdateRequest {
     id: number;
-    patchedUserRequest?: PatchedUserRequest;
+    patchedUser?: PatchedUser;
 }
 
 export interface ApiUserPreferencePartialUpdateRequest {
     user: number;
-    patchedUserPreferenceRequest?: PatchedUserPreferenceRequest;
+    patchedUserPreference?: PatchedUserPreference;
 }
 
 export interface ApiUserPreferenceRetrieveRequest {
@@ -1508,7 +1615,7 @@ export interface ApiUserSpaceListRequest {
 
 export interface ApiUserSpacePartialUpdateRequest {
     id: number;
-    patchedUserSpaceRequest?: PatchedUserSpaceRequest;
+    patchedUserSpace?: PatchedUserSpace;
 }
 
 export interface ApiUserSpaceRetrieveRequest {
@@ -1516,7 +1623,7 @@ export interface ApiUserSpaceRetrieveRequest {
 }
 
 export interface ApiViewLogCreateRequest {
-    viewLogRequest: ViewLogRequest;
+    viewLog: ViewLog;
 }
 
 export interface ApiViewLogDestroyRequest {
@@ -1530,7 +1637,7 @@ export interface ApiViewLogListRequest {
 
 export interface ApiViewLogPartialUpdateRequest {
     id: number;
-    patchedViewLogRequest?: PatchedViewLogRequest;
+    patchedViewLog?: PatchedViewLog;
 }
 
 export interface ApiViewLogRetrieveRequest {
@@ -1539,7 +1646,7 @@ export interface ApiViewLogRetrieveRequest {
 
 export interface ApiViewLogUpdateRequest {
     id: number;
-    viewLogRequest: ViewLogRequest;
+    viewLog: ViewLog;
 }
 
 /**
@@ -1550,10 +1657,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiAccessTokenCreateRaw(requestParameters: ApiAccessTokenCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccessToken>> {
-        if (requestParameters['accessTokenRequest'] == null) {
+        if (requestParameters['accessToken'] == null) {
             throw new runtime.RequiredError(
-                'accessTokenRequest',
-                'Required parameter "accessTokenRequest" was null or undefined when calling apiAccessTokenCreate().'
+                'accessToken',
+                'Required parameter "accessToken" was null or undefined when calling apiAccessTokenCreate().'
             );
         }
 
@@ -1572,7 +1679,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: AccessTokenRequestToJSON(requestParameters['accessTokenRequest']),
+            body: AccessTokenToJSON(requestParameters['accessToken']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AccessTokenFromJSON(jsonValue));
@@ -1672,7 +1779,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedAccessTokenRequestToJSON(requestParameters['patchedAccessTokenRequest']),
+            body: PatchedAccessTokenToJSON(requestParameters['patchedAccessToken']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AccessTokenFromJSON(jsonValue));
@@ -1730,10 +1837,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['accessTokenRequest'] == null) {
+        if (requestParameters['accessToken'] == null) {
             throw new runtime.RequiredError(
-                'accessTokenRequest',
-                'Required parameter "accessTokenRequest" was null or undefined when calling apiAccessTokenUpdate().'
+                'accessToken',
+                'Required parameter "accessToken" was null or undefined when calling apiAccessTokenUpdate().'
             );
         }
 
@@ -1752,7 +1859,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: AccessTokenRequestToJSON(requestParameters['accessTokenRequest']),
+            body: AccessTokenToJSON(requestParameters['accessToken']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AccessTokenFromJSON(jsonValue));
@@ -1768,10 +1875,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiAutoPlanCreateRaw(requestParameters: ApiAutoPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AutoMealPlan>> {
-        if (requestParameters['autoMealPlanRequest'] == null) {
+        if (requestParameters['autoMealPlan'] == null) {
             throw new runtime.RequiredError(
-                'autoMealPlanRequest',
-                'Required parameter "autoMealPlanRequest" was null or undefined when calling apiAutoPlanCreate().'
+                'autoMealPlan',
+                'Required parameter "autoMealPlan" was null or undefined when calling apiAutoPlanCreate().'
             );
         }
 
@@ -1790,7 +1897,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: AutoMealPlanRequestToJSON(requestParameters['autoMealPlanRequest']),
+            body: AutoMealPlanToJSON(requestParameters['autoMealPlan']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AutoMealPlanFromJSON(jsonValue));
@@ -1806,10 +1913,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiAutomationCreateRaw(requestParameters: ApiAutomationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Automation>> {
-        if (requestParameters['automationRequest'] == null) {
+        if (requestParameters['automation'] == null) {
             throw new runtime.RequiredError(
-                'automationRequest',
-                'Required parameter "automationRequest" was null or undefined when calling apiAutomationCreate().'
+                'automation',
+                'Required parameter "automation" was null or undefined when calling apiAutomationCreate().'
             );
         }
 
@@ -1828,7 +1935,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: AutomationRequestToJSON(requestParameters['automationRequest']),
+            body: AutomationToJSON(requestParameters['automation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AutomationFromJSON(jsonValue));
@@ -1940,7 +2047,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedAutomationRequestToJSON(requestParameters['patchedAutomationRequest']),
+            body: PatchedAutomationToJSON(requestParameters['patchedAutomation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AutomationFromJSON(jsonValue));
@@ -1998,10 +2105,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['automationRequest'] == null) {
+        if (requestParameters['automation'] == null) {
             throw new runtime.RequiredError(
-                'automationRequest',
-                'Required parameter "automationRequest" was null or undefined when calling apiAutomationUpdate().'
+                'automation',
+                'Required parameter "automation" was null or undefined when calling apiAutomationUpdate().'
             );
         }
 
@@ -2020,7 +2127,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: AutomationRequestToJSON(requestParameters['automationRequest']),
+            body: AutomationToJSON(requestParameters['automation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => AutomationFromJSON(jsonValue));
@@ -2036,10 +2143,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiBookmarkletImportCreateRaw(requestParameters: ApiBookmarkletImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BookmarkletImport>> {
-        if (requestParameters['bookmarkletImportRequest'] == null) {
+        if (requestParameters['bookmarkletImport'] == null) {
             throw new runtime.RequiredError(
-                'bookmarkletImportRequest',
-                'Required parameter "bookmarkletImportRequest" was null or undefined when calling apiBookmarkletImportCreate().'
+                'bookmarkletImport',
+                'Required parameter "bookmarkletImport" was null or undefined when calling apiBookmarkletImportCreate().'
             );
         }
 
@@ -2058,7 +2165,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: BookmarkletImportRequestToJSON(requestParameters['bookmarkletImportRequest']),
+            body: BookmarkletImportToJSON(requestParameters['bookmarkletImport']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => BookmarkletImportFromJSON(jsonValue));
@@ -2166,7 +2273,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedBookmarkletImportRequestToJSON(requestParameters['patchedBookmarkletImportRequest']),
+            body: PatchedBookmarkletImportToJSON(requestParameters['patchedBookmarkletImport']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => BookmarkletImportFromJSON(jsonValue));
@@ -2224,10 +2331,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['bookmarkletImportRequest'] == null) {
+        if (requestParameters['bookmarkletImport'] == null) {
             throw new runtime.RequiredError(
-                'bookmarkletImportRequest',
-                'Required parameter "bookmarkletImportRequest" was null or undefined when calling apiBookmarkletImportUpdate().'
+                'bookmarkletImport',
+                'Required parameter "bookmarkletImport" was null or undefined when calling apiBookmarkletImportUpdate().'
             );
         }
 
@@ -2246,7 +2353,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: BookmarkletImportRequestToJSON(requestParameters['bookmarkletImportRequest']),
+            body: BookmarkletImportToJSON(requestParameters['bookmarkletImport']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => BookmarkletImportFromJSON(jsonValue));
@@ -2262,10 +2369,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiConnectorConfigCreateRaw(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
-        if (requestParameters['connectorConfigConfigRequest'] == null) {
+        if (requestParameters['connectorConfigConfig'] == null) {
             throw new runtime.RequiredError(
-                'connectorConfigConfigRequest',
-                'Required parameter "connectorConfigConfigRequest" was null or undefined when calling apiConnectorConfigCreate().'
+                'connectorConfigConfig',
+                'Required parameter "connectorConfigConfig" was null or undefined when calling apiConnectorConfigCreate().'
             );
         }
 
@@ -2284,7 +2391,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ConnectorConfigConfigRequestToJSON(requestParameters['connectorConfigConfigRequest']),
+            body: ConnectorConfigConfigToJSON(requestParameters['connectorConfigConfig']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
@@ -2384,7 +2491,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedConnectorConfigConfigRequestToJSON(requestParameters['patchedConnectorConfigConfigRequest']),
+            body: PatchedConnectorConfigConfigToJSON(requestParameters['patchedConnectorConfigConfig']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
@@ -2442,10 +2549,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['connectorConfigConfigRequest'] == null) {
+        if (requestParameters['connectorConfigConfig'] == null) {
             throw new runtime.RequiredError(
-                'connectorConfigConfigRequest',
-                'Required parameter "connectorConfigConfigRequest" was null or undefined when calling apiConnectorConfigUpdate().'
+                'connectorConfigConfig',
+                'Required parameter "connectorConfigConfig" was null or undefined when calling apiConnectorConfigUpdate().'
             );
         }
 
@@ -2464,7 +2571,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ConnectorConfigConfigRequestToJSON(requestParameters['connectorConfigConfigRequest']),
+            body: ConnectorConfigConfigToJSON(requestParameters['connectorConfigConfig']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ConnectorConfigConfigFromJSON(jsonValue));
@@ -2480,10 +2587,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiCookLogCreateRaw(requestParameters: ApiCookLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
-        if (requestParameters['cookLogRequest'] == null) {
+        if (requestParameters['cookLog'] == null) {
             throw new runtime.RequiredError(
-                'cookLogRequest',
-                'Required parameter "cookLogRequest" was null or undefined when calling apiCookLogCreate().'
+                'cookLog',
+                'Required parameter "cookLog" was null or undefined when calling apiCookLogCreate().'
             );
         }
 
@@ -2502,7 +2609,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CookLogRequestToJSON(requestParameters['cookLogRequest']),
+            body: CookLogToJSON(requestParameters['cookLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CookLogFromJSON(jsonValue));
@@ -2614,7 +2721,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCookLogRequestToJSON(requestParameters['patchedCookLogRequest']),
+            body: PatchedCookLogToJSON(requestParameters['patchedCookLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CookLogFromJSON(jsonValue));
@@ -2672,10 +2779,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['cookLogRequest'] == null) {
+        if (requestParameters['cookLog'] == null) {
             throw new runtime.RequiredError(
-                'cookLogRequest',
-                'Required parameter "cookLogRequest" was null or undefined when calling apiCookLogUpdate().'
+                'cookLog',
+                'Required parameter "cookLog" was null or undefined when calling apiCookLogUpdate().'
             );
         }
 
@@ -2694,7 +2801,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CookLogRequestToJSON(requestParameters['cookLogRequest']),
+            body: CookLogToJSON(requestParameters['cookLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CookLogFromJSON(jsonValue));
@@ -2710,10 +2817,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiCustomFilterCreateRaw(requestParameters: ApiCustomFilterCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomFilter>> {
-        if (requestParameters['customFilterRequest'] == null) {
+        if (requestParameters['customFilter'] == null) {
             throw new runtime.RequiredError(
-                'customFilterRequest',
-                'Required parameter "customFilterRequest" was null or undefined when calling apiCustomFilterCreate().'
+                'customFilter',
+                'Required parameter "customFilter" was null or undefined when calling apiCustomFilterCreate().'
             );
         }
 
@@ -2732,7 +2839,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CustomFilterRequestToJSON(requestParameters['customFilterRequest']),
+            body: CustomFilterToJSON(requestParameters['customFilter']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CustomFilterFromJSON(jsonValue));
@@ -2860,7 +2967,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCustomFilterRequestToJSON(requestParameters['patchedCustomFilterRequest']),
+            body: PatchedCustomFilterToJSON(requestParameters['patchedCustomFilter']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CustomFilterFromJSON(jsonValue));
@@ -2918,10 +3025,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['customFilterRequest'] == null) {
+        if (requestParameters['customFilter'] == null) {
             throw new runtime.RequiredError(
-                'customFilterRequest',
-                'Required parameter "customFilterRequest" was null or undefined when calling apiCustomFilterUpdate().'
+                'customFilter',
+                'Required parameter "customFilter" was null or undefined when calling apiCustomFilterUpdate().'
             );
         }
 
@@ -2940,7 +3047,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CustomFilterRequestToJSON(requestParameters['customFilterRequest']),
+            body: CustomFilterToJSON(requestParameters['customFilter']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => CustomFilterFromJSON(jsonValue));
@@ -2992,10 +3099,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiExportLogCreateRaw(requestParameters: ApiExportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
-        if (requestParameters['exportLogRequest'] == null) {
+        if (requestParameters['exportLog'] == null) {
             throw new runtime.RequiredError(
-                'exportLogRequest',
-                'Required parameter "exportLogRequest" was null or undefined when calling apiExportLogCreate().'
+                'exportLog',
+                'Required parameter "exportLog" was null or undefined when calling apiExportLogCreate().'
             );
         }
 
@@ -3014,7 +3121,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ExportLogRequestToJSON(requestParameters['exportLogRequest']),
+            body: ExportLogToJSON(requestParameters['exportLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ExportLogFromJSON(jsonValue));
@@ -3122,7 +3229,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedExportLogRequestToJSON(requestParameters['patchedExportLogRequest']),
+            body: PatchedExportLogToJSON(requestParameters['patchedExportLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ExportLogFromJSON(jsonValue));
@@ -3180,10 +3287,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['exportLogRequest'] == null) {
+        if (requestParameters['exportLog'] == null) {
             throw new runtime.RequiredError(
-                'exportLogRequest',
-                'Required parameter "exportLogRequest" was null or undefined when calling apiExportLogUpdate().'
+                'exportLog',
+                'Required parameter "exportLog" was null or undefined when calling apiExportLogUpdate().'
             );
         }
 
@@ -3202,7 +3309,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ExportLogRequestToJSON(requestParameters['exportLogRequest']),
+            body: ExportLogToJSON(requestParameters['exportLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ExportLogFromJSON(jsonValue));
@@ -3218,10 +3325,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiFoodCreateRaw(requestParameters: ApiFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
-        if (requestParameters['foodRequest'] == null) {
+        if (requestParameters['food'] == null) {
             throw new runtime.RequiredError(
-                'foodRequest',
-                'Required parameter "foodRequest" was null or undefined when calling apiFoodCreate().'
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodCreate().'
             );
         }
 
@@ -3240,7 +3347,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodRequestToJSON(requestParameters['foodRequest']),
+            body: FoodToJSON(requestParameters['food']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -3298,10 +3405,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['foodRequest'] == null) {
+        if (requestParameters['food'] == null) {
             throw new runtime.RequiredError(
-                'foodRequest',
-                'Required parameter "foodRequest" was null or undefined when calling apiFoodFdcCreate().'
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodFdcCreate().'
             );
         }
 
@@ -3320,7 +3427,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodRequestToJSON(requestParameters['foodRequest']),
+            body: FoodToJSON(requestParameters['food']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -3474,10 +3581,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['foodRequest'] == null) {
+        if (requestParameters['food'] == null) {
             throw new runtime.RequiredError(
-                'foodRequest',
-                'Required parameter "foodRequest" was null or undefined when calling apiFoodMergeUpdate().'
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodMergeUpdate().'
             );
         }
 
@@ -3496,7 +3603,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodRequestToJSON(requestParameters['foodRequest']),
+            body: FoodToJSON(requestParameters['food']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -3526,10 +3633,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['foodRequest'] == null) {
+        if (requestParameters['food'] == null) {
             throw new runtime.RequiredError(
-                'foodRequest',
-                'Required parameter "foodRequest" was null or undefined when calling apiFoodMoveUpdate().'
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodMoveUpdate().'
             );
         }
 
@@ -3548,7 +3655,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodRequestToJSON(requestParameters['foodRequest']),
+            body: FoodToJSON(requestParameters['food']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -3586,7 +3693,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedFoodRequestToJSON(requestParameters['patchedFoodRequest']),
+            body: PatchedFoodToJSON(requestParameters['patchedFood']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -3602,10 +3709,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiFoodPropertyCreateRaw(requestParameters: ApiFoodPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
-        if (requestParameters['propertyRequest'] == null) {
+        if (requestParameters['property'] == null) {
             throw new runtime.RequiredError(
-                'propertyRequest',
-                'Required parameter "propertyRequest" was null or undefined when calling apiFoodPropertyCreate().'
+                'property',
+                'Required parameter "property" was null or undefined when calling apiFoodPropertyCreate().'
             );
         }
 
@@ -3624,7 +3731,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
+            body: PropertyToJSON(requestParameters['property']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
@@ -3732,7 +3839,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedPropertyRequestToJSON(requestParameters['patchedPropertyRequest']),
+            body: PatchedPropertyToJSON(requestParameters['patchedProperty']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
@@ -3783,10 +3890,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiFoodPropertyTypeCreateRaw(requestParameters: ApiFoodPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
-        if (requestParameters['propertyTypeRequest'] == null) {
+        if (requestParameters['propertyType'] == null) {
             throw new runtime.RequiredError(
-                'propertyTypeRequest',
-                'Required parameter "propertyTypeRequest" was null or undefined when calling apiFoodPropertyTypeCreate().'
+                'propertyType',
+                'Required parameter "propertyType" was null or undefined when calling apiFoodPropertyTypeCreate().'
             );
         }
 
@@ -3805,7 +3912,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
+            body: PropertyTypeToJSON(requestParameters['propertyType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
@@ -3917,7 +4024,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedPropertyTypeRequestToJSON(requestParameters['patchedPropertyTypeRequest']),
+            body: PatchedPropertyTypeToJSON(requestParameters['patchedPropertyType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
@@ -3975,10 +4082,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['propertyTypeRequest'] == null) {
+        if (requestParameters['propertyType'] == null) {
             throw new runtime.RequiredError(
-                'propertyTypeRequest',
-                'Required parameter "propertyTypeRequest" was null or undefined when calling apiFoodPropertyTypeUpdate().'
+                'propertyType',
+                'Required parameter "propertyType" was null or undefined when calling apiFoodPropertyTypeUpdate().'
             );
         }
 
@@ -3997,7 +4104,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: PropertyTypeRequestToJSON(requestParameters['propertyTypeRequest']),
+            body: PropertyTypeToJSON(requestParameters['propertyType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyTypeFromJSON(jsonValue));
@@ -4020,10 +4127,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['propertyRequest'] == null) {
+        if (requestParameters['property'] == null) {
             throw new runtime.RequiredError(
-                'propertyRequest',
-                'Required parameter "propertyRequest" was null or undefined when calling apiFoodPropertyUpdate().'
+                'property',
+                'Required parameter "property" was null or undefined when calling apiFoodPropertyUpdate().'
             );
         }
 
@@ -4042,7 +4149,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: PropertyRequestToJSON(requestParameters['propertyRequest']),
+            body: PropertyToJSON(requestParameters['property']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => PropertyFromJSON(jsonValue));
@@ -4100,10 +4207,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['foodShoppingUpdateRequest'] == null) {
+        if (requestParameters['foodShoppingUpdate'] == null) {
             throw new runtime.RequiredError(
-                'foodShoppingUpdateRequest',
-                'Required parameter "foodShoppingUpdateRequest" was null or undefined when calling apiFoodShoppingUpdate().'
+                'foodShoppingUpdate',
+                'Required parameter "foodShoppingUpdate" was null or undefined when calling apiFoodShoppingUpdate().'
             );
         }
 
@@ -4122,7 +4229,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodShoppingUpdateRequestToJSON(requestParameters['foodShoppingUpdateRequest']),
+            body: FoodShoppingUpdateToJSON(requestParameters['foodShoppingUpdate']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodShoppingUpdateFromJSON(jsonValue));
@@ -4145,10 +4252,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['foodRequest'] == null) {
+        if (requestParameters['food'] == null) {
             throw new runtime.RequiredError(
-                'foodRequest',
-                'Required parameter "foodRequest" was null or undefined when calling apiFoodUpdate().'
+                'food',
+                'Required parameter "food" was null or undefined when calling apiFoodUpdate().'
             );
         }
 
@@ -4167,7 +4274,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: FoodRequestToJSON(requestParameters['foodRequest']),
+            body: FoodToJSON(requestParameters['food']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => FoodFromJSON(jsonValue));
@@ -4343,10 +4450,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiImportLogCreateRaw(requestParameters: ApiImportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportLog>> {
-        if (requestParameters['importLogRequest'] == null) {
+        if (requestParameters['importLog'] == null) {
             throw new runtime.RequiredError(
-                'importLogRequest',
-                'Required parameter "importLogRequest" was null or undefined when calling apiImportLogCreate().'
+                'importLog',
+                'Required parameter "importLog" was null or undefined when calling apiImportLogCreate().'
             );
         }
 
@@ -4365,7 +4472,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ImportLogRequestToJSON(requestParameters['importLogRequest']),
+            body: ImportLogToJSON(requestParameters['importLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ImportLogFromJSON(jsonValue));
@@ -4473,7 +4580,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedImportLogRequestToJSON(requestParameters['patchedImportLogRequest']),
+            body: PatchedImportLogToJSON(requestParameters['patchedImportLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ImportLogFromJSON(jsonValue));
@@ -4531,10 +4638,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['importLogRequest'] == null) {
+        if (requestParameters['importLog'] == null) {
             throw new runtime.RequiredError(
-                'importLogRequest',
-                'Required parameter "importLogRequest" was null or undefined when calling apiImportLogUpdate().'
+                'importLog',
+                'Required parameter "importLog" was null or undefined when calling apiImportLogUpdate().'
             );
         }
 
@@ -4553,7 +4660,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ImportLogRequestToJSON(requestParameters['importLogRequest']),
+            body: ImportLogToJSON(requestParameters['importLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ImportLogFromJSON(jsonValue));
@@ -4569,10 +4676,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiIngredientCreateRaw(requestParameters: ApiIngredientCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Ingredient>> {
-        if (requestParameters['ingredientRequest'] == null) {
+        if (requestParameters['ingredient'] == null) {
             throw new runtime.RequiredError(
-                'ingredientRequest',
-                'Required parameter "ingredientRequest" was null or undefined when calling apiIngredientCreate().'
+                'ingredient',
+                'Required parameter "ingredient" was null or undefined when calling apiIngredientCreate().'
             );
         }
 
@@ -4591,7 +4698,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: IngredientRequestToJSON(requestParameters['ingredientRequest']),
+            body: IngredientToJSON(requestParameters['ingredient']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => IngredientFromJSON(jsonValue));
@@ -4641,10 +4748,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiIngredientFromStringCreateRaw(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ParsedIngredient>> {
-        if (requestParameters['ingredientStringRequest'] == null) {
+        if (requestParameters['ingredientString'] == null) {
             throw new runtime.RequiredError(
-                'ingredientStringRequest',
-                'Required parameter "ingredientStringRequest" was null or undefined when calling apiIngredientFromStringCreate().'
+                'ingredientString',
+                'Required parameter "ingredientString" was null or undefined when calling apiIngredientFromStringCreate().'
             );
         }
 
@@ -4663,7 +4770,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: IngredientStringRequestToJSON(requestParameters['ingredientStringRequest']),
+            body: IngredientStringToJSON(requestParameters['ingredientString']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ParsedIngredientFromJSON(jsonValue));
@@ -4745,7 +4852,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedIngredientRequestToJSON(requestParameters['patchedIngredientRequest']),
+            body: PatchedIngredientToJSON(requestParameters['patchedIngredient']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => IngredientFromJSON(jsonValue));
@@ -4803,10 +4910,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['ingredientRequest'] == null) {
+        if (requestParameters['ingredient'] == null) {
             throw new runtime.RequiredError(
-                'ingredientRequest',
-                'Required parameter "ingredientRequest" was null or undefined when calling apiIngredientUpdate().'
+                'ingredient',
+                'Required parameter "ingredient" was null or undefined when calling apiIngredientUpdate().'
             );
         }
 
@@ -4825,7 +4932,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: IngredientRequestToJSON(requestParameters['ingredientRequest']),
+            body: IngredientToJSON(requestParameters['ingredient']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => IngredientFromJSON(jsonValue));
@@ -4841,10 +4948,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiInviteLinkCreateRaw(requestParameters: ApiInviteLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
-        if (requestParameters['inviteLinkRequest'] == null) {
+        if (requestParameters['inviteLink'] == null) {
             throw new runtime.RequiredError(
-                'inviteLinkRequest',
-                'Required parameter "inviteLinkRequest" was null or undefined when calling apiInviteLinkCreate().'
+                'inviteLink',
+                'Required parameter "inviteLink" was null or undefined when calling apiInviteLinkCreate().'
             );
         }
 
@@ -4863,7 +4970,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: InviteLinkRequestToJSON(requestParameters['inviteLinkRequest']),
+            body: InviteLinkToJSON(requestParameters['inviteLink']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InviteLinkFromJSON(jsonValue));
@@ -4991,7 +5098,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedInviteLinkRequestToJSON(requestParameters['patchedInviteLinkRequest']),
+            body: PatchedInviteLinkToJSON(requestParameters['patchedInviteLink']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InviteLinkFromJSON(jsonValue));
@@ -5049,10 +5156,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['inviteLinkRequest'] == null) {
+        if (requestParameters['inviteLink'] == null) {
             throw new runtime.RequiredError(
-                'inviteLinkRequest',
-                'Required parameter "inviteLinkRequest" was null or undefined when calling apiInviteLinkUpdate().'
+                'inviteLink',
+                'Required parameter "inviteLink" was null or undefined when calling apiInviteLinkUpdate().'
             );
         }
 
@@ -5071,7 +5178,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: InviteLinkRequestToJSON(requestParameters['inviteLinkRequest']),
+            body: InviteLinkToJSON(requestParameters['inviteLink']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => InviteLinkFromJSON(jsonValue));
@@ -5087,10 +5194,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiKeywordCreateRaw(requestParameters: ApiKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
-        if (requestParameters['keywordRequest'] == null) {
+        if (requestParameters['keyword'] == null) {
             throw new runtime.RequiredError(
-                'keywordRequest',
-                'Required parameter "keywordRequest" was null or undefined when calling apiKeywordCreate().'
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiKeywordCreate().'
             );
         }
 
@@ -5109,7 +5216,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: KeywordRequestToJSON(requestParameters['keywordRequest']),
+            body: KeywordToJSON(requestParameters['keyword']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
@@ -5233,10 +5340,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['keywordRequest'] == null) {
+        if (requestParameters['keyword'] == null) {
             throw new runtime.RequiredError(
-                'keywordRequest',
-                'Required parameter "keywordRequest" was null or undefined when calling apiKeywordMergeUpdate().'
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiKeywordMergeUpdate().'
             );
         }
 
@@ -5255,7 +5362,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: KeywordRequestToJSON(requestParameters['keywordRequest']),
+            body: KeywordToJSON(requestParameters['keyword']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
@@ -5285,10 +5392,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['keywordRequest'] == null) {
+        if (requestParameters['keyword'] == null) {
             throw new runtime.RequiredError(
-                'keywordRequest',
-                'Required parameter "keywordRequest" was null or undefined when calling apiKeywordMoveUpdate().'
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiKeywordMoveUpdate().'
             );
         }
 
@@ -5307,7 +5414,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: KeywordRequestToJSON(requestParameters['keywordRequest']),
+            body: KeywordToJSON(requestParameters['keyword']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
@@ -5345,7 +5452,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedKeywordRequestToJSON(requestParameters['patchedKeywordRequest']),
+            body: PatchedKeywordToJSON(requestParameters['patchedKeyword']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
@@ -5403,10 +5510,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['keywordRequest'] == null) {
+        if (requestParameters['keyword'] == null) {
             throw new runtime.RequiredError(
-                'keywordRequest',
-                'Required parameter "keywordRequest" was null or undefined when calling apiKeywordUpdate().'
+                'keyword',
+                'Required parameter "keyword" was null or undefined when calling apiKeywordUpdate().'
             );
         }
 
@@ -5425,7 +5532,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: KeywordRequestToJSON(requestParameters['keywordRequest']),
+            body: KeywordToJSON(requestParameters['keyword']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => KeywordFromJSON(jsonValue));
@@ -5441,10 +5548,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiMealPlanCreateRaw(requestParameters: ApiMealPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
-        if (requestParameters['mealPlanRequest'] == null) {
+        if (requestParameters['mealPlan'] == null) {
             throw new runtime.RequiredError(
-                'mealPlanRequest',
-                'Required parameter "mealPlanRequest" was null or undefined when calling apiMealPlanCreate().'
+                'mealPlan',
+                'Required parameter "mealPlan" was null or undefined when calling apiMealPlanCreate().'
             );
         }
 
@@ -5463,7 +5570,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: MealPlanRequestToJSON(requestParameters['mealPlanRequest']),
+            body: MealPlanToJSON(requestParameters['mealPlan']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealPlanFromJSON(jsonValue));
@@ -5627,7 +5734,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedMealPlanRequestToJSON(requestParameters['patchedMealPlanRequest']),
+            body: PatchedMealPlanToJSON(requestParameters['patchedMealPlan']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealPlanFromJSON(jsonValue));
@@ -5685,10 +5792,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['mealPlanRequest'] == null) {
+        if (requestParameters['mealPlan'] == null) {
             throw new runtime.RequiredError(
-                'mealPlanRequest',
-                'Required parameter "mealPlanRequest" was null or undefined when calling apiMealPlanUpdate().'
+                'mealPlan',
+                'Required parameter "mealPlan" was null or undefined when calling apiMealPlanUpdate().'
             );
         }
 
@@ -5707,7 +5814,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: MealPlanRequestToJSON(requestParameters['mealPlanRequest']),
+            body: MealPlanToJSON(requestParameters['mealPlan']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealPlanFromJSON(jsonValue));
@@ -5724,10 +5831,10 @@ export class ApiApi extends runtime.BaseAPI {
      * returns list of meal types created by the requesting user ordered by the order field.
      */
     async apiMealTypeCreateRaw(requestParameters: ApiMealTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealType>> {
-        if (requestParameters['mealTypeRequest'] == null) {
+        if (requestParameters['mealType'] == null) {
             throw new runtime.RequiredError(
-                'mealTypeRequest',
-                'Required parameter "mealTypeRequest" was null or undefined when calling apiMealTypeCreate().'
+                'mealType',
+                'Required parameter "mealType" was null or undefined when calling apiMealTypeCreate().'
             );
         }
 
@@ -5746,7 +5853,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: MealTypeRequestToJSON(requestParameters['mealTypeRequest']),
+            body: MealTypeToJSON(requestParameters['mealType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealTypeFromJSON(jsonValue));
@@ -5860,7 +5967,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedMealTypeRequestToJSON(requestParameters['patchedMealTypeRequest']),
+            body: PatchedMealTypeToJSON(requestParameters['patchedMealType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealTypeFromJSON(jsonValue));
@@ -5922,10 +6029,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['mealTypeRequest'] == null) {
+        if (requestParameters['mealType'] == null) {
             throw new runtime.RequiredError(
-                'mealTypeRequest',
-                'Required parameter "mealTypeRequest" was null or undefined when calling apiMealTypeUpdate().'
+                'mealType',
+                'Required parameter "mealType" was null or undefined when calling apiMealTypeUpdate().'
             );
         }
 
@@ -5944,7 +6051,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: MealTypeRequestToJSON(requestParameters['mealTypeRequest']),
+            body: MealTypeToJSON(requestParameters['mealType']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => MealTypeFromJSON(jsonValue));
@@ -5960,11 +6067,1598 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiRecipeBookCreateRaw(requestParameters: ApiRecipeBookCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
-        if (requestParameters['recipeBookRequest'] == null) {
+    async apiOpenDataCategoryCreateRaw(requestParameters: ApiOpenDataCategoryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataCategory>> {
+        if (requestParameters['openDataCategory'] == null) {
             throw new runtime.RequiredError(
-                'recipeBookRequest',
-                'Required parameter "recipeBookRequest" was null or undefined when calling apiRecipeBookCreate().'
+                'openDataCategory',
+                'Required parameter "openDataCategory" was null or undefined when calling apiOpenDataCategoryCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataCategoryToJSON(requestParameters['openDataCategory']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataCategoryFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryCreate(requestParameters: ApiOpenDataCategoryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataCategory> {
+        const response = await this.apiOpenDataCategoryCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryDestroyRaw(requestParameters: ApiOpenDataCategoryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataCategoryDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryDestroy(requestParameters: ApiOpenDataCategoryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataCategoryDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataCategory>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataCategoryFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataCategory>> {
+        const response = await this.apiOpenDataCategoryListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryPartialUpdateRaw(requestParameters: ApiOpenDataCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataCategory>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataCategoryPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataCategoryToJSON(requestParameters['patchedOpenDataCategory']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataCategoryFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryPartialUpdate(requestParameters: ApiOpenDataCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataCategory> {
+        const response = await this.apiOpenDataCategoryPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryRetrieveRaw(requestParameters: ApiOpenDataCategoryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataCategory>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataCategoryRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataCategoryFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryRetrieve(requestParameters: ApiOpenDataCategoryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataCategory> {
+        const response = await this.apiOpenDataCategoryRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryUpdateRaw(requestParameters: ApiOpenDataCategoryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataCategory>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataCategoryUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataCategory'] == null) {
+            throw new runtime.RequiredError(
+                'openDataCategory',
+                'Required parameter "openDataCategory" was null or undefined when calling apiOpenDataCategoryUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataCategoryToJSON(requestParameters['openDataCategory']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataCategoryFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataCategoryUpdate(requestParameters: ApiOpenDataCategoryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataCategory> {
+        const response = await this.apiOpenDataCategoryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataConversionCreateRaw(requestParameters: ApiOpenDataConversionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataConversion>> {
+        if (requestParameters['openDataConversion'] == null) {
+            throw new runtime.RequiredError(
+                'openDataConversion',
+                'Required parameter "openDataConversion" was null or undefined when calling apiOpenDataConversionCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataConversionToJSON(requestParameters['openDataConversion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataConversionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataConversionCreate(requestParameters: ApiOpenDataConversionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataConversion> {
+        const response = await this.apiOpenDataConversionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataConversionDestroyRaw(requestParameters: ApiOpenDataConversionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataConversionDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataConversionDestroy(requestParameters: ApiOpenDataConversionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataConversionDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataConversionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataConversion>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataConversionFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataConversionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataConversion>> {
+        const response = await this.apiOpenDataConversionListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataConversionPartialUpdateRaw(requestParameters: ApiOpenDataConversionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataConversion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataConversionPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataConversionToJSON(requestParameters['patchedOpenDataConversion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataConversionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataConversionPartialUpdate(requestParameters: ApiOpenDataConversionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataConversion> {
+        const response = await this.apiOpenDataConversionPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataConversionRetrieveRaw(requestParameters: ApiOpenDataConversionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataConversion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataConversionRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataConversionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataConversionRetrieve(requestParameters: ApiOpenDataConversionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataConversion> {
+        const response = await this.apiOpenDataConversionRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataConversionUpdateRaw(requestParameters: ApiOpenDataConversionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataConversion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataConversionUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataConversion'] == null) {
+            throw new runtime.RequiredError(
+                'openDataConversion',
+                'Required parameter "openDataConversion" was null or undefined when calling apiOpenDataConversionUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataConversionToJSON(requestParameters['openDataConversion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataConversionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataConversionUpdate(requestParameters: ApiOpenDataConversionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataConversion> {
+        const response = await this.apiOpenDataConversionUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFDCRetrieveRaw(requestParameters: ApiOpenDataFDCRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFDCRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-FDC/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataFDCRetrieve(requestParameters: ApiOpenDataFDCRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataFDCRetrieveRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataFoodCreateRaw(requestParameters: ApiOpenDataFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
+        if (requestParameters['openDataFood'] == null) {
+            throw new runtime.RequiredError(
+                'openDataFood',
+                'Required parameter "openDataFood" was null or undefined when calling apiOpenDataFoodCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataFoodToJSON(requestParameters['openDataFood']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataFoodCreate(requestParameters: ApiOpenDataFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
+        const response = await this.apiOpenDataFoodCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFoodDestroyRaw(requestParameters: ApiOpenDataFoodDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFoodDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataFoodDestroy(requestParameters: ApiOpenDataFoodDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataFoodDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataFoodListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataFood>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataFoodFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataFoodList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataFood>> {
+        const response = await this.apiOpenDataFoodListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFoodPartialUpdateRaw(requestParameters: ApiOpenDataFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFoodPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataFoodToJSON(requestParameters['patchedOpenDataFood']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataFoodPartialUpdate(requestParameters: ApiOpenDataFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
+        const response = await this.apiOpenDataFoodPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFoodRetrieveRaw(requestParameters: ApiOpenDataFoodRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFoodRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataFoodRetrieve(requestParameters: ApiOpenDataFoodRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
+        const response = await this.apiOpenDataFoodRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataFoodUpdateRaw(requestParameters: ApiOpenDataFoodUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataFood>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataFoodUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataFood'] == null) {
+            throw new runtime.RequiredError(
+                'openDataFood',
+                'Required parameter "openDataFood" was null or undefined when calling apiOpenDataFoodUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataFoodToJSON(requestParameters['openDataFood']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataFoodFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataFoodUpdate(requestParameters: ApiOpenDataFoodUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataFood> {
+        const response = await this.apiOpenDataFoodUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyCreateRaw(requestParameters: ApiOpenDataPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataProperty>> {
+        if (requestParameters['openDataProperty'] == null) {
+            throw new runtime.RequiredError(
+                'openDataProperty',
+                'Required parameter "openDataProperty" was null or undefined when calling apiOpenDataPropertyCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataPropertyToJSON(requestParameters['openDataProperty']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataPropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyCreate(requestParameters: ApiOpenDataPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataProperty> {
+        const response = await this.apiOpenDataPropertyCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyDestroyRaw(requestParameters: ApiOpenDataPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataPropertyDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyDestroy(requestParameters: ApiOpenDataPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataPropertyDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataProperty>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataPropertyFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataProperty>> {
+        const response = await this.apiOpenDataPropertyListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyPartialUpdateRaw(requestParameters: ApiOpenDataPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataProperty>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataPropertyPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataPropertyToJSON(requestParameters['patchedOpenDataProperty']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataPropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyPartialUpdate(requestParameters: ApiOpenDataPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataProperty> {
+        const response = await this.apiOpenDataPropertyPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyRetrieveRaw(requestParameters: ApiOpenDataPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataProperty>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataPropertyRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataPropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyRetrieve(requestParameters: ApiOpenDataPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataProperty> {
+        const response = await this.apiOpenDataPropertyRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyUpdateRaw(requestParameters: ApiOpenDataPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataProperty>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataPropertyUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataProperty'] == null) {
+            throw new runtime.RequiredError(
+                'openDataProperty',
+                'Required parameter "openDataProperty" was null or undefined when calling apiOpenDataPropertyUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataPropertyToJSON(requestParameters['openDataProperty']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataPropertyFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataPropertyUpdate(requestParameters: ApiOpenDataPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataProperty> {
+        const response = await this.apiOpenDataPropertyUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataStatsRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-stats/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataStatsRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataStatsRetrieveRaw(initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataStoreCreateRaw(requestParameters: ApiOpenDataStoreCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataStore>> {
+        if (requestParameters['openDataStore'] == null) {
+            throw new runtime.RequiredError(
+                'openDataStore',
+                'Required parameter "openDataStore" was null or undefined when calling apiOpenDataStoreCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataStoreToJSON(requestParameters['openDataStore']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataStoreFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataStoreCreate(requestParameters: ApiOpenDataStoreCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataStore> {
+        const response = await this.apiOpenDataStoreCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataStoreDestroyRaw(requestParameters: ApiOpenDataStoreDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataStoreDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataStoreDestroy(requestParameters: ApiOpenDataStoreDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataStoreDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataStoreListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataStore>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataStoreFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataStoreList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataStore>> {
+        const response = await this.apiOpenDataStoreListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataStorePartialUpdateRaw(requestParameters: ApiOpenDataStorePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataStore>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataStorePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataStoreToJSON(requestParameters['patchedOpenDataStore']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataStoreFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataStorePartialUpdate(requestParameters: ApiOpenDataStorePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataStore> {
+        const response = await this.apiOpenDataStorePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataStoreRetrieveRaw(requestParameters: ApiOpenDataStoreRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataStore>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataStoreRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataStoreFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataStoreRetrieve(requestParameters: ApiOpenDataStoreRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataStore> {
+        const response = await this.apiOpenDataStoreRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataStoreUpdateRaw(requestParameters: ApiOpenDataStoreUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataStore>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataStoreUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataStore'] == null) {
+            throw new runtime.RequiredError(
+                'openDataStore',
+                'Required parameter "openDataStore" was null or undefined when calling apiOpenDataStoreUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataStoreToJSON(requestParameters['openDataStore']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataStoreFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataStoreUpdate(requestParameters: ApiOpenDataStoreUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataStore> {
+        const response = await this.apiOpenDataStoreUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataUnitCreateRaw(requestParameters: ApiOpenDataUnitCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataUnit>> {
+        if (requestParameters['openDataUnit'] == null) {
+            throw new runtime.RequiredError(
+                'openDataUnit',
+                'Required parameter "openDataUnit" was null or undefined when calling apiOpenDataUnitCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataUnitToJSON(requestParameters['openDataUnit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataUnitFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataUnitCreate(requestParameters: ApiOpenDataUnitCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataUnit> {
+        const response = await this.apiOpenDataUnitCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataUnitDestroyRaw(requestParameters: ApiOpenDataUnitDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataUnitDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataUnitDestroy(requestParameters: ApiOpenDataUnitDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataUnitDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataUnitListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataUnit>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataUnitFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataUnitList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataUnit>> {
+        const response = await this.apiOpenDataUnitListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataUnitPartialUpdateRaw(requestParameters: ApiOpenDataUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataUnit>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataUnitPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataUnitToJSON(requestParameters['patchedOpenDataUnit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataUnitFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataUnitPartialUpdate(requestParameters: ApiOpenDataUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataUnit> {
+        const response = await this.apiOpenDataUnitPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataUnitRetrieveRaw(requestParameters: ApiOpenDataUnitRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataUnit>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataUnitRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataUnitFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataUnitRetrieve(requestParameters: ApiOpenDataUnitRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataUnit> {
+        const response = await this.apiOpenDataUnitRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataUnitUpdateRaw(requestParameters: ApiOpenDataUnitUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataUnit>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataUnitUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataUnit'] == null) {
+            throw new runtime.RequiredError(
+                'openDataUnit',
+                'Required parameter "openDataUnit" was null or undefined when calling apiOpenDataUnitUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataUnitToJSON(requestParameters['openDataUnit']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataUnitFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataUnitUpdate(requestParameters: ApiOpenDataUnitUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataUnit> {
+        const response = await this.apiOpenDataUnitUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataVersionCreateRaw(requestParameters: ApiOpenDataVersionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataVersion>> {
+        if (requestParameters['openDataVersion'] == null) {
+            throw new runtime.RequiredError(
+                'openDataVersion',
+                'Required parameter "openDataVersion" was null or undefined when calling apiOpenDataVersionCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataVersionToJSON(requestParameters['openDataVersion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataVersionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataVersionCreate(requestParameters: ApiOpenDataVersionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataVersion> {
+        const response = await this.apiOpenDataVersionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataVersionDestroyRaw(requestParameters: ApiOpenDataVersionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataVersionDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiOpenDataVersionDestroy(requestParameters: ApiOpenDataVersionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiOpenDataVersionDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiOpenDataVersionListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<OpenDataVersion>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(OpenDataVersionFromJSON));
+    }
+
+    /**
+     */
+    async apiOpenDataVersionList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<OpenDataVersion>> {
+        const response = await this.apiOpenDataVersionListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataVersionPartialUpdateRaw(requestParameters: ApiOpenDataVersionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataVersion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataVersionPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedOpenDataVersionToJSON(requestParameters['patchedOpenDataVersion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataVersionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataVersionPartialUpdate(requestParameters: ApiOpenDataVersionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataVersion> {
+        const response = await this.apiOpenDataVersionPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataVersionRetrieveRaw(requestParameters: ApiOpenDataVersionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataVersion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataVersionRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataVersionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataVersionRetrieve(requestParameters: ApiOpenDataVersionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataVersion> {
+        const response = await this.apiOpenDataVersionRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiOpenDataVersionUpdateRaw(requestParameters: ApiOpenDataVersionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OpenDataVersion>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiOpenDataVersionUpdate().'
+            );
+        }
+
+        if (requestParameters['openDataVersion'] == null) {
+            throw new runtime.RequiredError(
+                'openDataVersion',
+                'Required parameter "openDataVersion" was null or undefined when calling apiOpenDataVersionUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: OpenDataVersionToJSON(requestParameters['openDataVersion']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OpenDataVersionFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiOpenDataVersionUpdate(requestParameters: ApiOpenDataVersionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OpenDataVersion> {
+        const response = await this.apiOpenDataVersionUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiRecipeBookCreateRaw(requestParameters: ApiRecipeBookCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
+        if (requestParameters['recipeBook'] == null) {
+            throw new runtime.RequiredError(
+                'recipeBook',
+                'Required parameter "recipeBook" was null or undefined when calling apiRecipeBookCreate().'
             );
         }
 
@@ -5983,7 +7677,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeBookRequestToJSON(requestParameters['recipeBookRequest']),
+            body: RecipeBookToJSON(requestParameters['recipeBook']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookFromJSON(jsonValue));
@@ -6033,10 +7727,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiRecipeBookEntryCreateRaw(requestParameters: ApiRecipeBookEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
-        if (requestParameters['recipeBookEntryRequest'] == null) {
+        if (requestParameters['recipeBookEntry'] == null) {
             throw new runtime.RequiredError(
-                'recipeBookEntryRequest',
-                'Required parameter "recipeBookEntryRequest" was null or undefined when calling apiRecipeBookEntryCreate().'
+                'recipeBookEntry',
+                'Required parameter "recipeBookEntry" was null or undefined when calling apiRecipeBookEntryCreate().'
             );
         }
 
@@ -6055,7 +7749,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeBookEntryRequestToJSON(requestParameters['recipeBookEntryRequest']),
+            body: RecipeBookEntryToJSON(requestParameters['recipeBookEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookEntryFromJSON(jsonValue));
@@ -6171,7 +7865,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedRecipeBookEntryRequestToJSON(requestParameters['patchedRecipeBookEntryRequest']),
+            body: PatchedRecipeBookEntryToJSON(requestParameters['patchedRecipeBookEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookEntryFromJSON(jsonValue));
@@ -6229,10 +7923,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['recipeBookEntryRequest'] == null) {
+        if (requestParameters['recipeBookEntry'] == null) {
             throw new runtime.RequiredError(
-                'recipeBookEntryRequest',
-                'Required parameter "recipeBookEntryRequest" was null or undefined when calling apiRecipeBookEntryUpdate().'
+                'recipeBookEntry',
+                'Required parameter "recipeBookEntry" was null or undefined when calling apiRecipeBookEntryUpdate().'
             );
         }
 
@@ -6251,7 +7945,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeBookEntryRequestToJSON(requestParameters['recipeBookEntryRequest']),
+            body: RecipeBookEntryToJSON(requestParameters['recipeBookEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookEntryFromJSON(jsonValue));
@@ -6349,7 +8043,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedRecipeBookRequestToJSON(requestParameters['patchedRecipeBookRequest']),
+            body: PatchedRecipeBookToJSON(requestParameters['patchedRecipeBook']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookFromJSON(jsonValue));
@@ -6407,10 +8101,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['recipeBookRequest'] == null) {
+        if (requestParameters['recipeBook'] == null) {
             throw new runtime.RequiredError(
-                'recipeBookRequest',
-                'Required parameter "recipeBookRequest" was null or undefined when calling apiRecipeBookUpdate().'
+                'recipeBook',
+                'Required parameter "recipeBook" was null or undefined when calling apiRecipeBookUpdate().'
             );
         }
 
@@ -6429,7 +8123,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeBookRequestToJSON(requestParameters['recipeBookRequest']),
+            body: RecipeBookToJSON(requestParameters['recipeBook']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeBookFromJSON(jsonValue));
@@ -6445,10 +8139,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiRecipeCreateRaw(requestParameters: ApiRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
-        if (requestParameters['recipeRequest'] == null) {
+        if (requestParameters['recipe'] == null) {
             throw new runtime.RequiredError(
-                'recipeRequest',
-                'Required parameter "recipeRequest" was null or undefined when calling apiRecipeCreate().'
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiRecipeCreate().'
             );
         }
 
@@ -6467,7 +8161,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeRequestToJSON(requestParameters['recipeRequest']),
+            body: RecipeToJSON(requestParameters['recipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
@@ -6597,8 +8291,6 @@ export class ApiApi extends runtime.BaseAPI {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -6800,7 +8492,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedRecipeRequestToJSON(requestParameters['patchedRecipeRequest']),
+            body: PatchedRecipeToJSON(requestParameters['patchedRecipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
@@ -6908,7 +8600,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeShoppingUpdateRequestToJSON(requestParameters['recipeShoppingUpdateRequest']),
+            body: RecipeShoppingUpdateToJSON(requestParameters['recipeShoppingUpdate']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeShoppingUpdateFromJSON(jsonValue));
@@ -6931,10 +8623,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['recipeRequest'] == null) {
+        if (requestParameters['recipe'] == null) {
             throw new runtime.RequiredError(
-                'recipeRequest',
-                'Required parameter "recipeRequest" was null or undefined when calling apiRecipeUpdate().'
+                'recipe',
+                'Required parameter "recipe" was null or undefined when calling apiRecipeUpdate().'
             );
         }
 
@@ -6953,7 +8645,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: RecipeRequestToJSON(requestParameters['recipeRequest']),
+            body: RecipeToJSON(requestParameters['recipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RecipeFromJSON(jsonValue));
@@ -7033,10 +8725,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiShoppingListEntryBulkCreateRaw(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntryBulk>> {
-        if (requestParameters['shoppingListEntryBulkRequest'] == null) {
+        if (requestParameters['shoppingListEntryBulk'] == null) {
             throw new runtime.RequiredError(
-                'shoppingListEntryBulkRequest',
-                'Required parameter "shoppingListEntryBulkRequest" was null or undefined when calling apiShoppingListEntryBulkCreate().'
+                'shoppingListEntryBulk',
+                'Required parameter "shoppingListEntryBulk" was null or undefined when calling apiShoppingListEntryBulkCreate().'
             );
         }
 
@@ -7055,7 +8747,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ShoppingListEntryBulkRequestToJSON(requestParameters['shoppingListEntryBulkRequest']),
+            body: ShoppingListEntryBulkToJSON(requestParameters['shoppingListEntryBulk']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListEntryBulkFromJSON(jsonValue));
@@ -7071,10 +8763,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiShoppingListEntryCreateRaw(requestParameters: ApiShoppingListEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
-        if (requestParameters['shoppingListEntryRequest'] == null) {
+        if (requestParameters['shoppingListEntry'] == null) {
             throw new runtime.RequiredError(
-                'shoppingListEntryRequest',
-                'Required parameter "shoppingListEntryRequest" was null or undefined when calling apiShoppingListEntryCreate().'
+                'shoppingListEntry',
+                'Required parameter "shoppingListEntry" was null or undefined when calling apiShoppingListEntryCreate().'
             );
         }
 
@@ -7093,7 +8785,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ShoppingListEntryRequestToJSON(requestParameters['shoppingListEntryRequest']),
+            body: ShoppingListEntryToJSON(requestParameters['shoppingListEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListEntryFromJSON(jsonValue));
@@ -7213,7 +8905,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedShoppingListEntryRequestToJSON(requestParameters['patchedShoppingListEntryRequest']),
+            body: PatchedShoppingListEntryToJSON(requestParameters['patchedShoppingListEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListEntryFromJSON(jsonValue));
@@ -7271,10 +8963,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['shoppingListEntryRequest'] == null) {
+        if (requestParameters['shoppingListEntry'] == null) {
             throw new runtime.RequiredError(
-                'shoppingListEntryRequest',
-                'Required parameter "shoppingListEntryRequest" was null or undefined when calling apiShoppingListEntryUpdate().'
+                'shoppingListEntry',
+                'Required parameter "shoppingListEntry" was null or undefined when calling apiShoppingListEntryUpdate().'
             );
         }
 
@@ -7293,7 +8985,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ShoppingListEntryRequestToJSON(requestParameters['shoppingListEntryRequest']),
+            body: ShoppingListEntryToJSON(requestParameters['shoppingListEntry']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListEntryFromJSON(jsonValue));
@@ -7309,10 +9001,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiShoppingListRecipeCreateRaw(requestParameters: ApiShoppingListRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListRecipe>> {
-        if (requestParameters['shoppingListRecipeRequest'] == null) {
+        if (requestParameters['shoppingListRecipe'] == null) {
             throw new runtime.RequiredError(
-                'shoppingListRecipeRequest',
-                'Required parameter "shoppingListRecipeRequest" was null or undefined when calling apiShoppingListRecipeCreate().'
+                'shoppingListRecipe',
+                'Required parameter "shoppingListRecipe" was null or undefined when calling apiShoppingListRecipeCreate().'
             );
         }
 
@@ -7331,7 +9023,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ShoppingListRecipeRequestToJSON(requestParameters['shoppingListRecipeRequest']),
+            body: ShoppingListRecipeToJSON(requestParameters['shoppingListRecipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListRecipeFromJSON(jsonValue));
@@ -7439,7 +9131,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedShoppingListRecipeRequestToJSON(requestParameters['patchedShoppingListRecipeRequest']),
+            body: PatchedShoppingListRecipeToJSON(requestParameters['patchedShoppingListRecipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListRecipeFromJSON(jsonValue));
@@ -7497,10 +9189,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['shoppingListRecipeRequest'] == null) {
+        if (requestParameters['shoppingListRecipe'] == null) {
             throw new runtime.RequiredError(
-                'shoppingListRecipeRequest',
-                'Required parameter "shoppingListRecipeRequest" was null or undefined when calling apiShoppingListRecipeUpdate().'
+                'shoppingListRecipe',
+                'Required parameter "shoppingListRecipe" was null or undefined when calling apiShoppingListRecipeUpdate().'
             );
         }
 
@@ -7519,7 +9211,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ShoppingListRecipeRequestToJSON(requestParameters['shoppingListRecipeRequest']),
+            body: ShoppingListRecipeToJSON(requestParameters['shoppingListRecipe']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ShoppingListRecipeFromJSON(jsonValue));
@@ -7585,7 +9277,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedSpaceRequestToJSON(requestParameters['patchedSpaceRequest']),
+            body: PatchedSpaceToJSON(requestParameters['patchedSpace']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
@@ -7636,10 +9328,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiStepCreateRaw(requestParameters: ApiStepCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Step>> {
-        if (requestParameters['stepRequest'] == null) {
+        if (requestParameters['step'] == null) {
             throw new runtime.RequiredError(
-                'stepRequest',
-                'Required parameter "stepRequest" was null or undefined when calling apiStepCreate().'
+                'step',
+                'Required parameter "step" was null or undefined when calling apiStepCreate().'
             );
         }
 
@@ -7658,7 +9350,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: StepRequestToJSON(requestParameters['stepRequest']),
+            body: StepToJSON(requestParameters['step']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StepFromJSON(jsonValue));
@@ -7774,7 +9466,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedStepRequestToJSON(requestParameters['patchedStepRequest']),
+            body: PatchedStepToJSON(requestParameters['patchedStep']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StepFromJSON(jsonValue));
@@ -7832,10 +9524,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['stepRequest'] == null) {
+        if (requestParameters['step'] == null) {
             throw new runtime.RequiredError(
-                'stepRequest',
-                'Required parameter "stepRequest" was null or undefined when calling apiStepUpdate().'
+                'step',
+                'Required parameter "step" was null or undefined when calling apiStepUpdate().'
             );
         }
 
@@ -7854,7 +9546,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: StepRequestToJSON(requestParameters['stepRequest']),
+            body: StepToJSON(requestParameters['step']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StepFromJSON(jsonValue));
@@ -7870,10 +9562,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiStorageCreateRaw(requestParameters: ApiStorageCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
-        if (requestParameters['storageRequest'] == null) {
+        if (requestParameters['storage'] == null) {
             throw new runtime.RequiredError(
-                'storageRequest',
-                'Required parameter "storageRequest" was null or undefined when calling apiStorageCreate().'
+                'storage',
+                'Required parameter "storage" was null or undefined when calling apiStorageCreate().'
             );
         }
 
@@ -7892,7 +9584,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: StorageRequestToJSON(requestParameters['storageRequest']),
+            body: StorageToJSON(requestParameters['storage']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StorageFromJSON(jsonValue));
@@ -7992,7 +9684,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedStorageRequestToJSON(requestParameters['patchedStorageRequest']),
+            body: PatchedStorageToJSON(requestParameters['patchedStorage']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StorageFromJSON(jsonValue));
@@ -8050,10 +9742,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['storageRequest'] == null) {
+        if (requestParameters['storage'] == null) {
             throw new runtime.RequiredError(
-                'storageRequest',
-                'Required parameter "storageRequest" was null or undefined when calling apiStorageUpdate().'
+                'storage',
+                'Required parameter "storage" was null or undefined when calling apiStorageUpdate().'
             );
         }
 
@@ -8072,7 +9764,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: StorageRequestToJSON(requestParameters['storageRequest']),
+            body: StorageToJSON(requestParameters['storage']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => StorageFromJSON(jsonValue));
@@ -8088,10 +9780,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiSupermarketCategoryCreateRaw(requestParameters: ApiSupermarketCategoryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
-        if (requestParameters['supermarketCategoryRequest'] == null) {
+        if (requestParameters['supermarketCategory'] == null) {
             throw new runtime.RequiredError(
-                'supermarketCategoryRequest',
-                'Required parameter "supermarketCategoryRequest" was null or undefined when calling apiSupermarketCategoryCreate().'
+                'supermarketCategory',
+                'Required parameter "supermarketCategory" was null or undefined when calling apiSupermarketCategoryCreate().'
             );
         }
 
@@ -8110,7 +9802,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketCategoryRequestToJSON(requestParameters['supermarketCategoryRequest']),
+            body: SupermarketCategoryToJSON(requestParameters['supermarketCategory']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryFromJSON(jsonValue));
@@ -8226,10 +9918,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['supermarketCategoryRequest'] == null) {
+        if (requestParameters['supermarketCategory'] == null) {
             throw new runtime.RequiredError(
-                'supermarketCategoryRequest',
-                'Required parameter "supermarketCategoryRequest" was null or undefined when calling apiSupermarketCategoryMergeUpdate().'
+                'supermarketCategory',
+                'Required parameter "supermarketCategory" was null or undefined when calling apiSupermarketCategoryMergeUpdate().'
             );
         }
 
@@ -8248,7 +9940,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketCategoryRequestToJSON(requestParameters['supermarketCategoryRequest']),
+            body: SupermarketCategoryToJSON(requestParameters['supermarketCategory']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryFromJSON(jsonValue));
@@ -8286,7 +9978,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedSupermarketCategoryRequestToJSON(requestParameters['patchedSupermarketCategoryRequest']),
+            body: PatchedSupermarketCategoryToJSON(requestParameters['patchedSupermarketCategory']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryFromJSON(jsonValue));
@@ -8302,10 +9994,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiSupermarketCategoryRelationCreateRaw(requestParameters: ApiSupermarketCategoryRelationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategoryRelation>> {
-        if (requestParameters['supermarketCategoryRelationRequest'] == null) {
+        if (requestParameters['supermarketCategoryRelation'] == null) {
             throw new runtime.RequiredError(
-                'supermarketCategoryRelationRequest',
-                'Required parameter "supermarketCategoryRelationRequest" was null or undefined when calling apiSupermarketCategoryRelationCreate().'
+                'supermarketCategoryRelation',
+                'Required parameter "supermarketCategoryRelation" was null or undefined when calling apiSupermarketCategoryRelationCreate().'
             );
         }
 
@@ -8324,7 +10016,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketCategoryRelationRequestToJSON(requestParameters['supermarketCategoryRelationRequest']),
+            body: SupermarketCategoryRelationToJSON(requestParameters['supermarketCategoryRelation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryRelationFromJSON(jsonValue));
@@ -8448,7 +10140,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedSupermarketCategoryRelationRequestToJSON(requestParameters['patchedSupermarketCategoryRelationRequest']),
+            body: PatchedSupermarketCategoryRelationToJSON(requestParameters['patchedSupermarketCategoryRelation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryRelationFromJSON(jsonValue));
@@ -8506,10 +10198,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['supermarketCategoryRelationRequest'] == null) {
+        if (requestParameters['supermarketCategoryRelation'] == null) {
             throw new runtime.RequiredError(
-                'supermarketCategoryRelationRequest',
-                'Required parameter "supermarketCategoryRelationRequest" was null or undefined when calling apiSupermarketCategoryRelationUpdate().'
+                'supermarketCategoryRelation',
+                'Required parameter "supermarketCategoryRelation" was null or undefined when calling apiSupermarketCategoryRelationUpdate().'
             );
         }
 
@@ -8528,7 +10220,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketCategoryRelationRequestToJSON(requestParameters['supermarketCategoryRelationRequest']),
+            body: SupermarketCategoryRelationToJSON(requestParameters['supermarketCategoryRelation']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryRelationFromJSON(jsonValue));
@@ -8586,10 +10278,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['supermarketCategoryRequest'] == null) {
+        if (requestParameters['supermarketCategory'] == null) {
             throw new runtime.RequiredError(
-                'supermarketCategoryRequest',
-                'Required parameter "supermarketCategoryRequest" was null or undefined when calling apiSupermarketCategoryUpdate().'
+                'supermarketCategory',
+                'Required parameter "supermarketCategory" was null or undefined when calling apiSupermarketCategoryUpdate().'
             );
         }
 
@@ -8608,7 +10300,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketCategoryRequestToJSON(requestParameters['supermarketCategoryRequest']),
+            body: SupermarketCategoryToJSON(requestParameters['supermarketCategory']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketCategoryFromJSON(jsonValue));
@@ -8624,10 +10316,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiSupermarketCreateRaw(requestParameters: ApiSupermarketCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
-        if (requestParameters['supermarketRequest'] == null) {
+        if (requestParameters['supermarket'] == null) {
             throw new runtime.RequiredError(
-                'supermarketRequest',
-                'Required parameter "supermarketRequest" was null or undefined when calling apiSupermarketCreate().'
+                'supermarket',
+                'Required parameter "supermarket" was null or undefined when calling apiSupermarketCreate().'
             );
         }
 
@@ -8646,7 +10338,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketRequestToJSON(requestParameters['supermarketRequest']),
+            body: SupermarketToJSON(requestParameters['supermarket']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketFromJSON(jsonValue));
@@ -8770,7 +10462,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedSupermarketRequestToJSON(requestParameters['patchedSupermarketRequest']),
+            body: PatchedSupermarketToJSON(requestParameters['patchedSupermarket']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketFromJSON(jsonValue));
@@ -8828,10 +10520,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['supermarketRequest'] == null) {
+        if (requestParameters['supermarket'] == null) {
             throw new runtime.RequiredError(
-                'supermarketRequest',
-                'Required parameter "supermarketRequest" was null or undefined when calling apiSupermarketUpdate().'
+                'supermarket',
+                'Required parameter "supermarket" was null or undefined when calling apiSupermarketUpdate().'
             );
         }
 
@@ -8850,7 +10542,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SupermarketRequestToJSON(requestParameters['supermarketRequest']),
+            body: SupermarketToJSON(requestParameters['supermarket']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SupermarketFromJSON(jsonValue));
@@ -8902,10 +10594,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiSyncCreateRaw(requestParameters: ApiSyncCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
-        if (requestParameters['syncRequest'] == null) {
+        if (requestParameters['sync'] == null) {
             throw new runtime.RequiredError(
-                'syncRequest',
-                'Required parameter "syncRequest" was null or undefined when calling apiSyncCreate().'
+                'sync',
+                'Required parameter "sync" was null or undefined when calling apiSyncCreate().'
             );
         }
 
@@ -8924,7 +10616,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: SyncRequestToJSON(requestParameters['syncRequest']),
+            body: SyncToJSON(requestParameters['sync']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SyncFromJSON(jsonValue));
@@ -9103,7 +10795,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedSyncRequestToJSON(requestParameters['patchedSyncRequest']),
+            body: PatchedSyncToJSON(requestParameters['patchedSync']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SyncFromJSON(jsonValue));
@@ -9161,10 +10853,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['syncRequest'] == null) {
+        if (requestParameters['sync'] == null) {
             throw new runtime.RequiredError(
-                'syncRequest',
-                'Required parameter "syncRequest" was null or undefined when calling apiSyncUpdate().'
+                'sync',
+                'Required parameter "sync" was null or undefined when calling apiSyncUpdate().'
             );
         }
 
@@ -9183,7 +10875,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: SyncRequestToJSON(requestParameters['syncRequest']),
+            body: SyncToJSON(requestParameters['sync']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => SyncFromJSON(jsonValue));
@@ -9199,10 +10891,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiUnitConversionCreateRaw(requestParameters: ApiUnitConversionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitConversion>> {
-        if (requestParameters['unitConversionRequest'] == null) {
+        if (requestParameters['unitConversion'] == null) {
             throw new runtime.RequiredError(
-                'unitConversionRequest',
-                'Required parameter "unitConversionRequest" was null or undefined when calling apiUnitConversionCreate().'
+                'unitConversion',
+                'Required parameter "unitConversion" was null or undefined when calling apiUnitConversionCreate().'
             );
         }
 
@@ -9221,7 +10913,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UnitConversionRequestToJSON(requestParameters['unitConversionRequest']),
+            body: UnitConversionToJSON(requestParameters['unitConversion']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitConversionFromJSON(jsonValue));
@@ -9333,7 +11025,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedUnitConversionRequestToJSON(requestParameters['patchedUnitConversionRequest']),
+            body: PatchedUnitConversionToJSON(requestParameters['patchedUnitConversion']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitConversionFromJSON(jsonValue));
@@ -9391,10 +11083,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['unitConversionRequest'] == null) {
+        if (requestParameters['unitConversion'] == null) {
             throw new runtime.RequiredError(
-                'unitConversionRequest',
-                'Required parameter "unitConversionRequest" was null or undefined when calling apiUnitConversionUpdate().'
+                'unitConversion',
+                'Required parameter "unitConversion" was null or undefined when calling apiUnitConversionUpdate().'
             );
         }
 
@@ -9413,7 +11105,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: UnitConversionRequestToJSON(requestParameters['unitConversionRequest']),
+            body: UnitConversionToJSON(requestParameters['unitConversion']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitConversionFromJSON(jsonValue));
@@ -9429,10 +11121,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiUnitCreateRaw(requestParameters: ApiUnitCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
-        if (requestParameters['unitRequest'] == null) {
+        if (requestParameters['unit'] == null) {
             throw new runtime.RequiredError(
-                'unitRequest',
-                'Required parameter "unitRequest" was null or undefined when calling apiUnitCreate().'
+                'unit',
+                'Required parameter "unit" was null or undefined when calling apiUnitCreate().'
             );
         }
 
@@ -9451,7 +11143,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: UnitRequestToJSON(requestParameters['unitRequest']),
+            body: UnitToJSON(requestParameters['unit']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitFromJSON(jsonValue));
@@ -9567,10 +11259,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['unitRequest'] == null) {
+        if (requestParameters['unit'] == null) {
             throw new runtime.RequiredError(
-                'unitRequest',
-                'Required parameter "unitRequest" was null or undefined when calling apiUnitMergeUpdate().'
+                'unit',
+                'Required parameter "unit" was null or undefined when calling apiUnitMergeUpdate().'
             );
         }
 
@@ -9589,7 +11281,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: UnitRequestToJSON(requestParameters['unitRequest']),
+            body: UnitToJSON(requestParameters['unit']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitFromJSON(jsonValue));
@@ -9627,7 +11319,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedUnitRequestToJSON(requestParameters['patchedUnitRequest']),
+            body: PatchedUnitToJSON(requestParameters['patchedUnit']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitFromJSON(jsonValue));
@@ -9685,10 +11377,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['unitRequest'] == null) {
+        if (requestParameters['unit'] == null) {
             throw new runtime.RequiredError(
-                'unitRequest',
-                'Required parameter "unitRequest" was null or undefined when calling apiUnitUpdate().'
+                'unit',
+                'Required parameter "unit" was null or undefined when calling apiUnitUpdate().'
             );
         }
 
@@ -9707,7 +11399,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: UnitRequestToJSON(requestParameters['unitRequest']),
+            body: UnitToJSON(requestParameters['unit']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UnitFromJSON(jsonValue));
@@ -9737,6 +11429,27 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['fileDownload'] == null) {
+            throw new runtime.RequiredError(
+                'fileDownload',
+                'Required parameter "fileDownload" was null or undefined when calling apiUserFileCreate().'
+            );
+        }
+
+        if (requestParameters['preview'] == null) {
+            throw new runtime.RequiredError(
+                'preview',
+                'Required parameter "preview" was null or undefined when calling apiUserFileCreate().'
+            );
+        }
+
+        if (requestParameters['fileSizeKb'] == null) {
+            throw new runtime.RequiredError(
+                'fileSizeKb',
+                'Required parameter "fileSizeKb" was null or undefined when calling apiUserFileCreate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -9753,12 +11466,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['id'] != null) {
+            formParams.append('id', requestParameters['id'] as any);
         }
 
         if (requestParameters['name'] != null) {
@@ -9769,8 +11484,16 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file', requestParameters['file'] as any);
         }
 
-        if (requestParameters['id'] != null) {
-            formParams.append('id', requestParameters['id'] as any);
+        if (requestParameters['fileDownload'] != null) {
+            formParams.append('file_download', requestParameters['fileDownload'] as any);
+        }
+
+        if (requestParameters['preview'] != null) {
+            formParams.append('preview', requestParameters['preview'] as any);
+        }
+
+        if (requestParameters['fileSizeKb'] != null) {
+            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
         }
 
         const response = await this.request({
@@ -9903,12 +11626,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['id2'] != null) {
+            formParams.append('id', requestParameters['id2'] as any);
         }
 
         if (requestParameters['name'] != null) {
@@ -9919,8 +11644,16 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file', requestParameters['file'] as any);
         }
 
-        if (requestParameters['id2'] != null) {
-            formParams.append('id', requestParameters['id2'] as any);
+        if (requestParameters['fileDownload'] != null) {
+            formParams.append('file_download', requestParameters['fileDownload'] as any);
+        }
+
+        if (requestParameters['preview'] != null) {
+            formParams.append('preview', requestParameters['preview'] as any);
+        }
+
+        if (requestParameters['fileSizeKb'] != null) {
+            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
         }
 
         const response = await this.request({
@@ -10000,6 +11733,27 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['fileDownload'] == null) {
+            throw new runtime.RequiredError(
+                'fileDownload',
+                'Required parameter "fileDownload" was null or undefined when calling apiUserFileUpdate().'
+            );
+        }
+
+        if (requestParameters['preview'] == null) {
+            throw new runtime.RequiredError(
+                'preview',
+                'Required parameter "preview" was null or undefined when calling apiUserFileUpdate().'
+            );
+        }
+
+        if (requestParameters['fileSizeKb'] == null) {
+            throw new runtime.RequiredError(
+                'fileSizeKb',
+                'Required parameter "fileSizeKb" was null or undefined when calling apiUserFileUpdate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -10016,12 +11770,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         let formParams: { append(param: string, value: any): any };
         let useForm = false;
-        // use FormData to transmit files using content-type "multipart/form-data"
-        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
             formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['id2'] != null) {
+            formParams.append('id', requestParameters['id2'] as any);
         }
 
         if (requestParameters['name'] != null) {
@@ -10032,8 +11788,16 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file', requestParameters['file'] as any);
         }
 
-        if (requestParameters['id2'] != null) {
-            formParams.append('id', requestParameters['id2'] as any);
+        if (requestParameters['fileDownload'] != null) {
+            formParams.append('file_download', requestParameters['fileDownload'] as any);
+        }
+
+        if (requestParameters['preview'] != null) {
+            formParams.append('preview', requestParameters['preview'] as any);
+        }
+
+        if (requestParameters['fileSizeKb'] != null) {
+            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
         }
 
         const response = await this.request({
@@ -10111,7 +11875,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedUserRequestToJSON(requestParameters['patchedUserRequest']),
+            body: PatchedUserToJSON(requestParameters['patchedUser']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
@@ -10177,7 +11941,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedUserPreferenceRequestToJSON(requestParameters['patchedUserPreferenceRequest']),
+            body: PatchedUserPreferenceToJSON(requestParameters['patchedUserPreference']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserPreferenceFromJSON(jsonValue));
@@ -10359,7 +12123,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedUserSpaceRequestToJSON(requestParameters['patchedUserSpaceRequest']),
+            body: PatchedUserSpaceToJSON(requestParameters['patchedUserSpace']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceFromJSON(jsonValue));
@@ -10410,10 +12174,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiViewLogCreateRaw(requestParameters: ApiViewLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ViewLog>> {
-        if (requestParameters['viewLogRequest'] == null) {
+        if (requestParameters['viewLog'] == null) {
             throw new runtime.RequiredError(
-                'viewLogRequest',
-                'Required parameter "viewLogRequest" was null or undefined when calling apiViewLogCreate().'
+                'viewLog',
+                'Required parameter "viewLog" was null or undefined when calling apiViewLogCreate().'
             );
         }
 
@@ -10432,7 +12196,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ViewLogRequestToJSON(requestParameters['viewLogRequest']),
+            body: ViewLogToJSON(requestParameters['viewLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ViewLogFromJSON(jsonValue));
@@ -10540,7 +12304,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedViewLogRequestToJSON(requestParameters['patchedViewLogRequest']),
+            body: PatchedViewLogToJSON(requestParameters['patchedViewLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ViewLogFromJSON(jsonValue));
@@ -10598,10 +12362,10 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['viewLogRequest'] == null) {
+        if (requestParameters['viewLog'] == null) {
             throw new runtime.RequiredError(
-                'viewLogRequest',
-                'Required parameter "viewLogRequest" was null or undefined when calling apiViewLogUpdate().'
+                'viewLog',
+                'Required parameter "viewLog" was null or undefined when calling apiViewLogUpdate().'
             );
         }
 
@@ -10620,7 +12384,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ViewLogRequestToJSON(requestParameters['viewLogRequest']),
+            body: ViewLogToJSON(requestParameters['viewLog']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ViewLogFromJSON(jsonValue));

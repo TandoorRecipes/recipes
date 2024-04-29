@@ -24,7 +24,7 @@ export interface PatchedMealType {
      * @type {number}
      * @memberof PatchedMealType
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -89,6 +89,7 @@ export function PatchedMealTypeToJSON(value?: PatchedMealType | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'order': value['order'],
         'color': value['color'],

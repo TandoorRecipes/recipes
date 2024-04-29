@@ -31,7 +31,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -124,6 +124,7 @@ export function PatchedInviteLinkToJSON(value?: PatchedInviteLink | null): any {
     }
     return {
         
+        'id': value['id'],
         'email': value['email'],
         'group': GroupToJSON(value['group']),
         'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),

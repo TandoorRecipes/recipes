@@ -24,7 +24,7 @@ export interface AccessToken {
      * @type {number}
      * @memberof AccessToken
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -61,7 +61,6 @@ export interface AccessToken {
  * Check if a given object implements the AccessToken interface.
  */
 export function instanceOfAccessToken(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('token' in value)) return false;
     if (!('expires' in value)) return false;
     if (!('created' in value)) return false;
@@ -79,7 +78,7 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'token': json['token'],
         'expires': (new Date(json['expires'])),
         'scope': json['scope'] == null ? undefined : json['scope'],
@@ -94,6 +93,7 @@ export function AccessTokenToJSON(value?: AccessToken | null): any {
     }
     return {
         
+        'id': value['id'],
         'expires': ((value['expires']).toISOString()),
         'scope': value['scope'],
     };

@@ -24,7 +24,7 @@ export interface PatchedSync {
      * @type {number}
      * @memberof PatchedSync
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {number}
@@ -96,6 +96,7 @@ export function PatchedSyncToJSON(value?: PatchedSync | null): any {
     }
     return {
         
+        'id': value['id'],
         'storage': value['storage'],
         'path': value['path'],
         'active': value['active'],

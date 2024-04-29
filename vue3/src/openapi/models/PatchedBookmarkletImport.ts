@@ -24,7 +24,7 @@ export interface PatchedBookmarkletImport {
      * @type {number}
      * @memberof PatchedBookmarkletImport
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -82,6 +82,7 @@ export function PatchedBookmarkletImportToJSON(value?: PatchedBookmarkletImport 
     }
     return {
         
+        'id': value['id'],
         'url': value['url'],
         'html': value['html'],
     };

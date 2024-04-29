@@ -24,14 +24,31 @@ export interface RecipeShoppingUpdate {
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    readonly id: number;
+    id?: number;
+    /**
+     * Existing shopping list to update
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    listRecipe?: number;
+    /**
+     * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    ingredients?: number;
+    /**
+     * Providing a list_recipe ID and servings of 0 will delete that shopping list.
+     * @type {number}
+     * @memberof RecipeShoppingUpdate
+     */
+    servings?: number;
 }
 
 /**
  * Check if a given object implements the RecipeShoppingUpdate interface.
  */
 export function instanceOfRecipeShoppingUpdate(value: object): boolean {
-    if (!('id' in value)) return false;
     return true;
 }
 
@@ -45,7 +62,10 @@ export function RecipeShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'listRecipe': json['list_recipe'] == null ? undefined : json['list_recipe'],
+        'ingredients': json['ingredients'] == null ? undefined : json['ingredients'],
+        'servings': json['servings'] == null ? undefined : json['servings'],
     };
 }
 
@@ -55,6 +75,10 @@ export function RecipeShoppingUpdateToJSON(value?: RecipeShoppingUpdate | null):
     }
     return {
         
+        'id': value['id'],
+        'list_recipe': value['listRecipe'],
+        'ingredients': value['ingredients'],
+        'servings': value['servings'],
     };
 }
 

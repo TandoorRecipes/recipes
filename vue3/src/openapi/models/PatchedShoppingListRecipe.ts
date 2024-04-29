@@ -24,7 +24,7 @@ export interface PatchedShoppingListRecipe {
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -51,10 +51,10 @@ export interface PatchedShoppingListRecipe {
     mealplan?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {string}
@@ -110,6 +110,7 @@ export function PatchedShoppingListRecipeToJSON(value?: PatchedShoppingListRecip
     }
     return {
         
+        'id': value['id'],
         'recipe': value['recipe'],
         'mealplan': value['mealplan'],
         'servings': value['servings'],

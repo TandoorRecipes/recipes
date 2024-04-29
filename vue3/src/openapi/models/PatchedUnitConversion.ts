@@ -37,7 +37,7 @@ export interface PatchedUnitConversion {
      * @type {number}
      * @memberof PatchedUnitConversion
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -46,10 +46,10 @@ export interface PatchedUnitConversion {
     readonly name?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversion
      */
-    baseAmount?: string;
+    baseAmount?: number;
     /**
      * 
      * @type {Unit}
@@ -58,10 +58,10 @@ export interface PatchedUnitConversion {
     baseUnit?: Unit;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedUnitConversion
      */
-    convertedAmount?: string;
+    convertedAmount?: number;
     /**
      * 
      * @type {Unit}
@@ -116,6 +116,7 @@ export function PatchedUnitConversionToJSON(value?: PatchedUnitConversion | null
     }
     return {
         
+        'id': value['id'],
         'base_amount': value['baseAmount'],
         'base_unit': UnitToJSON(value['baseUnit']),
         'converted_amount': value['convertedAmount'],

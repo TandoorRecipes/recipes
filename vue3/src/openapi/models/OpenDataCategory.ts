@@ -65,7 +65,7 @@ export interface OpenDataCategory {
      * @type {number}
      * @memberof OpenDataCategory
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -108,7 +108,6 @@ export interface OpenDataCategory {
  * Check if a given object implements the OpenDataCategory interface.
  */
 export function instanceOfOpenDataCategory(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('version' in value)) return false;
     if (!('slug' in value)) return false;
     if (!('name' in value)) return false;
@@ -126,7 +125,7 @@ export function OpenDataCategoryFromJSONTyped(json: any, ignoreDiscriminator: bo
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'version': OpenDataVersionFromJSON(json['version']),
         'slug': json['slug'],
         'name': json['name'],
@@ -142,6 +141,7 @@ export function OpenDataCategoryToJSON(value?: OpenDataCategory | null): any {
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

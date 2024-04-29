@@ -31,7 +31,7 @@ export interface PatchedCustomFilter {
      * @type {number}
      * @memberof PatchedCustomFilter
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -89,6 +89,7 @@ export function PatchedCustomFilterToJSON(value?: PatchedCustomFilter | null): a
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'search': value['search'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),

@@ -43,7 +43,7 @@ export interface PatchedMealPlan {
      * @type {number}
      * @memberof PatchedMealPlan
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -58,10 +58,10 @@ export interface PatchedMealPlan {
     recipe?: RecipeOverview;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedMealPlan
      */
-    servings?: string;
+    servings?: number;
     /**
      * 
      * @type {string}
@@ -118,10 +118,10 @@ export interface PatchedMealPlan {
     readonly mealTypeName?: string;
     /**
      * 
-     * @type {string}
+     * @type {boolean}
      * @memberof PatchedMealPlan
      */
-    readonly shopping?: string;
+    readonly shopping?: boolean;
 }
 
 /**
@@ -164,6 +164,7 @@ export function PatchedMealPlanToJSON(value?: PatchedMealPlan | null): any {
     }
     return {
         
+        'id': value['id'],
         'title': value['title'],
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],

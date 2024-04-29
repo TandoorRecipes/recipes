@@ -31,7 +31,7 @@ export interface OpenDataStoreCategory {
      * @type {number}
      * @memberof OpenDataStoreCategory
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataCategory}
@@ -56,7 +56,6 @@ export interface OpenDataStoreCategory {
  * Check if a given object implements the OpenDataStoreCategory interface.
  */
 export function instanceOfOpenDataStoreCategory(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('category' in value)) return false;
     if (!('store' in value)) return false;
     return true;
@@ -72,7 +71,7 @@ export function OpenDataStoreCategoryFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'category': OpenDataCategoryFromJSON(json['category']),
         'store': json['store'],
         'order': json['order'] == null ? undefined : json['order'],
@@ -85,6 +84,7 @@ export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null
     }
     return {
         
+        'id': value['id'],
         'category': OpenDataCategoryToJSON(value['category']),
         'store': value['store'],
         'order': value['order'],

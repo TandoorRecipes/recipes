@@ -65,7 +65,7 @@ export interface PatchedOpenDataProperty {
      * @type {number}
      * @memberof PatchedOpenDataProperty
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {OpenDataVersion}
@@ -144,6 +144,7 @@ export function PatchedOpenDataPropertyToJSON(value?: PatchedOpenDataProperty | 
     }
     return {
         
+        'id': value['id'],
         'version': OpenDataVersionToJSON(value['version']),
         'slug': value['slug'],
         'name': value['name'],

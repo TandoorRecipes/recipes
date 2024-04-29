@@ -55,7 +55,7 @@ export interface PatchedRecipe {
      * @type {number}
      * @memberof PatchedRecipe
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -148,10 +148,10 @@ export interface PatchedRecipe {
     properties?: Array<Property>;
     /**
      * 
-     * @type {string}
+     * @type {any}
      * @memberof PatchedRecipe
      */
-    readonly foodProperties?: string;
+    readonly foodProperties?: any;
     /**
      * 
      * @type {number}
@@ -172,10 +172,10 @@ export interface PatchedRecipe {
     servingsText?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof PatchedRecipe
      */
-    readonly rating?: string;
+    readonly rating?: number;
     /**
      * 
      * @type {Date}
@@ -246,6 +246,7 @@ export function PatchedRecipeToJSON(value?: PatchedRecipe | null): any {
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'keywords': value['keywords'] == null ? undefined : ((value['keywords'] as Array<any>).map(KeywordToJSON)),

@@ -24,7 +24,7 @@ export interface BookmarkletImportList {
      * @type {number}
      * @memberof BookmarkletImportList
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -49,7 +49,6 @@ export interface BookmarkletImportList {
  * Check if a given object implements the BookmarkletImportList interface.
  */
 export function instanceOfBookmarkletImportList(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('createdBy' in value)) return false;
     if (!('createdAt' in value)) return false;
     return true;
@@ -65,7 +64,7 @@ export function BookmarkletImportListFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'url': json['url'] == null ? undefined : json['url'],
         'createdBy': json['created_by'],
         'createdAt': (new Date(json['created_at'])),
@@ -78,6 +77,7 @@ export function BookmarkletImportListToJSON(value?: BookmarkletImportList | null
     }
     return {
         
+        'id': value['id'],
         'url': value['url'],
     };
 }

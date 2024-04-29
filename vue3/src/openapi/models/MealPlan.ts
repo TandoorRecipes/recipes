@@ -43,7 +43,7 @@ export interface MealPlan {
      * @type {number}
      * @memberof MealPlan
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -128,7 +128,6 @@ export interface MealPlan {
  * Check if a given object implements the MealPlan interface.
  */
 export function instanceOfMealPlan(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('servings' in value)) return false;
     if (!('noteMarkdown' in value)) return false;
     if (!('fromDate' in value)) return false;
@@ -150,7 +149,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'title': json['title'] == null ? undefined : json['title'],
         'recipe': json['recipe'] == null ? undefined : RecipeOverviewFromJSON(json['recipe']),
         'servings': json['servings'],
@@ -173,6 +172,7 @@ export function MealPlanToJSON(value?: MealPlan | null): any {
     }
     return {
         
+        'id': value['id'],
         'title': value['title'],
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],

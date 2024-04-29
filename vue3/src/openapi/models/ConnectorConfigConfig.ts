@@ -24,7 +24,7 @@ export interface ConnectorConfigConfig {
      * @type {number}
      * @memberof ConnectorConfigConfig
      */
-    readonly id: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -37,6 +37,12 @@ export interface ConnectorConfigConfig {
      * @memberof ConnectorConfigConfig
      */
     url?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ConnectorConfigConfig
+     */
+    token?: string;
     /**
      * 
      * @type {string}
@@ -79,7 +85,6 @@ export interface ConnectorConfigConfig {
  * Check if a given object implements the ConnectorConfigConfig interface.
  */
 export function instanceOfConnectorConfigConfig(value: object): boolean {
-    if (!('id' in value)) return false;
     if (!('name' in value)) return false;
     if (!('createdBy' in value)) return false;
     return true;
@@ -95,9 +100,10 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'id': json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'url': json['url'] == null ? undefined : json['url'],
+        'token': json['token'] == null ? undefined : json['token'],
         'todoEntity': json['todo_entity'] == null ? undefined : json['todo_entity'],
         'enabled': json['enabled'] == null ? undefined : json['enabled'],
         'onShoppingListEntryCreatedEnabled': json['on_shopping_list_entry_created_enabled'] == null ? undefined : json['on_shopping_list_entry_created_enabled'],
@@ -113,8 +119,10 @@ export function ConnectorConfigConfigToJSON(value?: ConnectorConfigConfig | null
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'url': value['url'],
+        'token': value['token'],
         'todo_entity': value['todoEntity'],
         'enabled': value['enabled'],
         'on_shopping_list_entry_created_enabled': value['onShoppingListEntryCreatedEnabled'],

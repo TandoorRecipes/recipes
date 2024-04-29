@@ -65,7 +65,7 @@ export interface PatchedSupermarket {
      * @type {number}
      * @memberof PatchedSupermarket
      */
-    readonly id?: number;
+    id?: number;
     /**
      * 
      * @type {string}
@@ -123,6 +123,7 @@ export function PatchedSupermarketToJSON(value?: PatchedSupermarket | null): any
     }
     return {
         
+        'id': value['id'],
         'name': value['name'],
         'description': value['description'],
         'open_data_slug': value['openDataSlug'],
