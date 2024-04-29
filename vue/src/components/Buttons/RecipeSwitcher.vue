@@ -87,11 +87,11 @@
 
 <script>
 const { ApiApiFactory } = require("@/utils/openapi/api")
-import { ResolveUrlMixin } from "@/utils/utils"
+import { ApiMixin, ResolveUrlMixin } from "@/utils/utils"
 
 export default {
     name: "RecipeSwitcher",
-    mixins: [ResolveUrlMixin],
+    mixins: [ApiMixin, ResolveUrlMixin],
     props: {
         recipe: { type: Number, default: undefined },
     },
@@ -179,9 +179,9 @@ export default {
             // TODO move to utility function moment is in maintenance mode https://momentjs.com/docs/
             var tzoffset = new Date().getTimezoneOffset() * 60000 //offset in milliseconds
             let today = new Date(Date.now() - tzoffset).toISOString().split("T")[0]
-            return apiClient.listMealPlans(today, today).then((result) => {
+            return this.genericAPI(this.Models.MEAL_PLAN, this.Actions.LIST, {'fromDate': today, 'toDate': today}).then((result) => {
                 let promises = []
-                result.data.forEach((mealplan) => {
+                result.data.results.forEach((mealplan) => {
                     this.planned_recipes.push({ ...mealplan?.recipe, servings: mealplan?.servings })
                     const serving_factor = (mealplan?.servings ?? mealplan?.recipe?.servings ?? 1) / (mealplan?.recipe?.servings ?? 1)
                     promises.push(

@@ -1149,11 +1149,9 @@ export default {
             this.recipe.properties = this.recipe.properties.filter(p => p.id !== recipe_property.id)
         },
         searchKeywords: function (query) {
-            let apiFactory = new ApiApiFactory()
 
             this.keywords_loading = true
-            apiFactory
-                .listKeywords(query, undefined, undefined, 1, this.options_limit)
+            this.genericAPI(this.Models.KEYWORD, this.Actions.LIST, {'query': query, 'page': 1, 'pageSize': this.options_limit})
                 .then((response) => {
                     this.keywords = response.data.results
                     this.keywords_loading = false
@@ -1163,13 +1161,10 @@ export default {
                 })
         },
         searchFiles: function (query) {
-            let apiFactory = new ApiApiFactory()
-
             this.files_loading = true
-            apiFactory
-                .listUserFiles({query: {query: query}})
+            this.genericAPI(this.Models.USERFILE, this.Actions.LIST, {'query': query})
                 .then((response) => {
-                    this.files = response.data
+                    this.files = response.data.results
                     this.files_loading = false
                 })
                 .catch((err) => {
@@ -1188,11 +1183,9 @@ export default {
                 })
         },
         searchUnits: function (query) {
-            let apiFactory = new ApiApiFactory()
 
             this.units_loading = true
-            apiFactory
-                .listUnits(query, 1, this.options_limit)
+            this.genericAPI(this.Models.UNIT, this.Actions.LIST, {'query': query, 'page': 1, 'pageSize': this.options_limit})
                 .then((response) => {
                     this.units = response.data.results
                     let unique_units = this.units.map(u => u.name)
@@ -1212,11 +1205,9 @@ export default {
                 })
         },
         searchFoods: _debounce(function (query) {
-            let apiFactory = new ApiApiFactory()
 
             this.foods_loading = true
-            apiFactory
-                .listFoods(query, undefined, undefined, 1, this.options_limit)
+            this.genericAPI(this.Models.FOOD, this.Actions.LIST, {'query': query, 'page': 1, 'pageSize': this.options_limit})
                 .then((response) => {
                     this.foods = response.data.results
                     let unique_foods = this.foods.map(f => f.name)
