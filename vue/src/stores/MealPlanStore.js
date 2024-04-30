@@ -1,6 +1,7 @@
-import { ApiApiFactory } from "@/utils/openapi/api"
-import { StandardToasts } from "@/utils/utils"
-import { defineStore } from "pinia"
+import {ApiApiFactory} from "@/utils/openapi/api"
+import {ApiMixin, StandardToasts} from "@/utils/utils"
+import {Models, Actions} from "@/utils/models"
+import {defineStore} from "pinia"
 import Vue from "vue"
 
 const _STORE_ID = "meal_plan_store"
@@ -50,9 +51,9 @@ export const useMealPlanStore = defineStore(_STORE_ID, {
             if (this.currently_updating == null || (this.currently_updating[0] !== from_date || this.currently_updating[1] !== to_date)) {
                 this.currently_updating = [from_date, to_date] // certainly no perfect check but better than nothing
 
-                let apiClient = new ApiApiFactory()
-                apiClient.listMealPlans(from_date, to_date).then((r) => {
-                    r.data.forEach((p) => {
+                let GenericAPI = ApiMixin.methods.genericAPI
+                GenericAPI(Models.MEAL_PLAN, Actions.LIST, {'fromDate': from_date, 'toDate': to_date}).then((r) => {
+                    r.data.results.forEach((p) => {
                         Vue.set(this.plans, p.id, p)
                     })
                     this.currently_updating = null
