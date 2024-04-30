@@ -35,12 +35,6 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
 #Copy project and execute it.
 COPY . ./
 
-# collect the static files
-RUN /opt/recipes/venv/bin/python manage.py collectstatic_js_reverse
-RUN /opt/recipes/venv/bin/python manage.py collectstatic --noinput
-# copy the collected static files to a different location, so they can be moved into a potentially mounted volume
-RUN mv /opt/recipes/staticfiles /opt/recipes/staticfiles-collect
-
 # collect information from git repositories
 RUN /opt/recipes/venv/bin/python version.py
 # delete git repositories to reduce image size
