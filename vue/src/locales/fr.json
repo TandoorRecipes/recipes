@@ -544,5 +544,13 @@
     "Logo": "Logo",
     "Show_Logo": "Montrer le logo",
     "Shopping_input_placeholder": "par ex. Pommes de terre/100 Pommes de terre/100 gr Pomme de terre",
-    "Sticky_Nav": "Barre de navigation collante"
+    "Sticky_Nav": "Barre de navigation collante",
+    "tbsp": "",
+    "DefaultPage": "Page par défaut",
+    "InheritFields_help": "Les valeurs de ces champs seront héritées du parent (Exception : les listes de course vide ne sont pas héritées)",
+    "Show_Logo_Help": "Afficher le logo Tandoor ou de groupe dans la barre de navigation.",
+    "Space_Cosmetic_Settings": "Certains paramètres cosmétiques peuvent être modifiés par un administrateur de l'espace et seront prioritaires sur les paramètres des utilisateurs pour cet espace.",
+    "Nav_Text_Mode": "Mode de navigation texte",
+    "Nav_Text_Mode_Help": "Se comporte différemment pour chaque thème.",
+    "Enable": "Activer"
 }
