@@ -1,6 +1,7 @@
 <template>
     <v-row class="h-100">
         <v-col>
+            <!-- TODO add hint about CTRL key while drag/drop -->
             <CalendarView
                 :items="planItems"
                 class="theme-default"
@@ -28,16 +29,18 @@ import "vue-simple-calendar/dist/css/default.css"
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
 import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
 import {computed, onMounted, ref} from "vue";
-import {ApiApi, MealPlan} from "@/openapi";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 const {lgAndUp} = useDisplay()
 
-const mealPlans = ref([] as MealPlan[])
 const currentlyDraggedMealplan = ref({} as IMealPlanNormalizedCalendarItem)
-
+const clickedMealPlan = ref({} as IMealPlanNormalizedCalendarItem)
+/**
+ * computed property that converts array of MealPlan object to
+ * array of CalendarItems (format required/extended from vue-simple-calendar)
+ */
 const planItems = computed(() => {
     let items = [] as IMealPlanCalendarItem[]
     useMealPlanStore().planList.forEach(mp => {
@@ -67,18 +70,19 @@ function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, 
     //The item argument (first) is undefined because our custom calendar item cannot manipulate the calendar state so the item is unknown to the calendar (probably fixable by somehow binding state to the item)
     if (currentlyDraggedMealplan.value.originalItem.mealPlan.id != undefined) {
         let mealPlan = useMealPlanStore().plans.get(currentlyDraggedMealplan.value.originalItem.mealPlan.id)
-        let fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
-        if (event.ctrlKey) {
-            let new_entry = Object.assign({}, mealPlan)
-            new_entry.fromDate = targetDate
-            new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
-            useMealPlanStore().createObject(new_entry)
+        if (mealPlan != undefined) {
+            let fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
+            if (event.ctrlKey) {
+                let new_entry = Object.assign({}, mealPlan)
+                new_entry.fromDate = targetDate
+                new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                useMealPlanStore().createObject(new_entry)
 
-        } else {
-            mealPlan.fromDate = targetDate
-            mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
-            console.log('UPDAAAATING: ', mealPlan.fromDate, mealPlan.toDate)
-            useMealPlanStore().updateObject(mealPlan)
+            } else {
+                mealPlan.fromDate = targetDate
+                mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                useMealPlanStore().updateObject(mealPlan)
+            }
         }
     }
 }

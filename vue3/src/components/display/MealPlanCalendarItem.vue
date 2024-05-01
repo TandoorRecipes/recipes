@@ -17,7 +17,7 @@
                     </span>
                 </div>
             </div>
-
+            <meal-plan-dialog :meal-plan="mealPlan"></meal-plan-dialog>
         </v-card-text>
 
     </v-card>
@@ -28,6 +28,7 @@
 import {computed, PropType} from "vue";
 import {IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
 import RecipeImage from "@/components/display/RecipeImage.vue";
+import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 
 const emit = defineEmits({
     onDragStart: (value: IMealPlanNormalizedCalendarItem, event: DragEvent) => {

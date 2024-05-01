@@ -24,7 +24,7 @@
                             </v-col>
                             <v-col cols="12" md="6">
                                 <ModelSelect model="recipe" v-model="mutableMealPlan.recipe"></ModelSelect>
-                                <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>--> <!--TODO create days input with +/- snyced to date -->
+                                <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>--> <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
                             </v-col>
                         </v-row>
@@ -37,7 +37,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
-                    <v-btn color="error">
+                    <v-btn color="error" @click="useMealPlanStore().deleteObject(mutableMealPlan); dialog = false">
                         Delete
                     </v-btn>
                     <v-btn color="success" class="ml-auto" @click="saveMealPlan">
@@ -57,7 +57,6 @@ import RecipeCard from "@/components/display/RecipeCard.vue";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
-import Multiselect from '@vueform/multiselect'
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useMessageStore} from "@/stores/MessageStore";
 
@@ -78,6 +77,8 @@ if (props.mealPlan != undefined) {
 watchEffect(() => {
     if (props.mealPlan != undefined) {
         mutableMealPlan.value = props.mealPlan
+        dateRangeValue.value.push(mutableMealPlan.value.fromDate)
+        dateRangeValue.value.push(mutableMealPlan.value.toDate)
     } else {
         mutableMealPlan.value = newMealPlan()
     }
@@ -89,7 +90,7 @@ function saveMealPlan() {
         mutableMealPlan.value.recipe = mutableMealPlan.value.recipe as RecipeOverview
         if (dateRangeValue.value != null) {
             mutableMealPlan.value.fromDate = dateRangeValue.value[0]
-            mutableMealPlan.value.toDate = dateRangeValue.value[dateRangeValue.value.length-1]
+            mutableMealPlan.value.toDate = dateRangeValue.value[dateRangeValue.value.length - 1]
         } else {
             useMessageStore().addError('Missing Dates')
             return
@@ -108,6 +109,7 @@ function newMealPlan() {
     return {
         fromDate: DateTime.now().toJSDate(),
         toDate: DateTime.now().toJSDate(),
+        servings: 1,
     } as MealPlan
 }
 
