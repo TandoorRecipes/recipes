@@ -1141,6 +1141,7 @@ class MealType(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
     order = models.IntegerField(default=0)
     color = models.CharField(max_length=7, blank=True, null=True)
+    time = models.TimeField(null=True, blank=True)
     default = models.BooleanField(default=False, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -1164,8 +1165,8 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     shared = models.ManyToManyField(User, blank=True, related_name='plan_share')
     meal_type = models.ForeignKey(MealType, on_delete=models.CASCADE)
     note = models.TextField(blank=True)
-    from_date = models.DateField()
-    to_date = models.DateField()
+    from_date = models.DateTimeField()
+    to_date = models.DateTimeField()
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
