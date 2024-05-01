@@ -355,7 +355,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'color', 'default', 'created_by')
+        fields = ('id', 'name', 'order', 'time', 'color', 'default', 'created_by')
         read_only_fields = ('created_by',)
 
 
@@ -1030,7 +1030,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False, allow_null=True)
     shopping = serializers.SerializerMethodField('in_shopping')
 
-    to_date = serializers.DateField(required=False)
+    to_date = serializers.DateTimeField(required=False)
 
     def get_note_markdown(self, obj):
         return markdown(obj.note)
