@@ -508,6 +508,7 @@ export default {
                     } else {
                         entry.from_date = target_date
                         entry.to_date = moment(target_date).add(fromToDiff, 'd')
+                        console.log('UPDAAAATING: ', entry.fromDate, entry.toDate)
                         this.saveEntry(entry)
                     }
                 }

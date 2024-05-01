@@ -8,7 +8,7 @@
                 :enable-drag-drop="true"
                 @dropOnDate="dropCalendarItemOnDate">
                 <template #header="{ headerProps }">
-                    <CalendarViewHeader :header-props="headerProps" />
+                    <CalendarViewHeader :header-props="headerProps"/>
                 </template>
                 <template #item="{ value, weekStartDate, top }">
                     <meal-plan-calendar-item :item-height="calendarItemHeight" :value="value" :item-top="top" @onDragStart="currentlyDraggedMealplan = value" :detailed-items="lgAndUp"></meal-plan-calendar-item>
@@ -31,6 +31,7 @@ import {computed, onMounted, ref} from "vue";
 import {ApiApi, MealPlan} from "@/openapi";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
+import {useMealPlanStore} from "@/stores/MealPlanStore";
 
 const {lgAndUp} = useDisplay()
 
@@ -39,7 +40,7 @@ const currentlyDraggedMealplan = ref({} as IMealPlanNormalizedCalendarItem)
 
 const planItems = computed(() => {
     let items = [] as IMealPlanCalendarItem[]
-    mealPlans.value.forEach(mp => {
+    useMealPlanStore().planList.forEach(mp => {
         items.push({
             startDate: mp.fromDate,
             endDate: mp.toDate,
@@ -59,31 +60,27 @@ const calendarItemHeight = computed(() => {
 })
 
 onMounted(() => {
-    let api = new ApiApi()
-    api.apiMealPlanList().then(r => {
-        mealPlans.value = r.results
-    })
+    useMealPlanStore().refreshFromAPI() //TODO filter to visible date
 })
 
 function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, targetDate: Date, event: DragEvent) {
-    //The item argument is undefined because our custom calendar item cannot manipulate the calendar state so the item is unknown to the calendar (probably fixable by somehow binding state to the item)
-    mealPlans.value.forEach(mealPlan => {
-        if (mealPlan.id == currentlyDraggedMealplan.value.originalItem.mealPlan.id) {
-            let fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
-            if (event.ctrlKey) {
-                let new_entry = Object.assign({}, mealPlan)
-                new_entry.fromDate = targetDate
-                new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+    //The item argument (first) is undefined because our custom calendar item cannot manipulate the calendar state so the item is unknown to the calendar (probably fixable by somehow binding state to the item)
+    if (currentlyDraggedMealplan.value.originalItem.mealPlan.id != undefined) {
+        let mealPlan = useMealPlanStore().plans.get(currentlyDraggedMealplan.value.originalItem.mealPlan.id)
+        let fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
+        if (event.ctrlKey) {
+            let new_entry = Object.assign({}, mealPlan)
+            new_entry.fromDate = targetDate
+            new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+            useMealPlanStore().createObject(new_entry)
 
-                //this.createEntry(new_entry) //TODO implement once API works
-            } else {
-                mealPlan.fromDate = targetDate
-                mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
-                console.log(mealPlan.fromDate, mealPlan.toDate)
-                //this.saveEntry(entry) //TODO implement once API works
-            }
+        } else {
+            mealPlan.fromDate = targetDate
+            mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+            console.log('UPDAAAATING: ', mealPlan.fromDate, mealPlan.toDate)
+            useMealPlanStore().updateObject(mealPlan)
         }
-    })
+    }
 }
 
 </script>

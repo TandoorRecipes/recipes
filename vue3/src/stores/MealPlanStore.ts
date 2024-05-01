@@ -15,7 +15,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     let currently_updating = ref([new Date(0), new Date(0)])
     let settings = ref({})
 
-    const plan_list = computed(() => {
+    const planList = computed(() => {
         let plan_list = [] as MealPlan[]
 
         plans.value.forEach((plan: MealPlan, key: number) => {
@@ -88,7 +88,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     function updateObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanUpdate({id: object.id, mealPlanRequest: object}).then((r) => {
+        return api.apiMealPlanUpdate({id: object.id, mealPlan: object}).then((r) => {
             useMessageStore().addMessage(MessageType.SUCCESS, 'Updated successfully', 7000, object)
             plans.value.set(r.id, r)
         }).catch((err) => {
@@ -124,7 +124,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     //         return JSON.parse(s)
     //     }
     // }
-    return {plans, currently_updating, plan_list, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
+    return {plans, currently_updating, planList, refreshFromAPI, createObject, updateObject, deleteObject, createOrUpdate}
 })
 
 // enable hot reload for store
