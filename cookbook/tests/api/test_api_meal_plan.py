@@ -1,5 +1,6 @@
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 
 import pytest
 from django.contrib import auth
@@ -29,8 +30,8 @@ def obj_1(space_1, recipe_1_s1, meal_type, u1_s1):
     return MealPlan.objects.create(recipe=recipe_1_s1,
                                    space=space_1,
                                    meal_type=meal_type,
-                                   from_date=datetime.now(),
-                                   to_date=datetime.now(),
+                                   from_date=timezone.now(),
+                                   to_date=timezone.now(),
                                    created_by=auth.get_user(u1_s1))
 
 
@@ -39,8 +40,8 @@ def obj_2(space_1, recipe_1_s1, meal_type, u1_s1):
     return MealPlan.objects.create(recipe=recipe_1_s1,
                                    space=space_1,
                                    meal_type=meal_type,
-                                   from_date=datetime.now(),
-                                   to_date=datetime.now(),
+                                   from_date=timezone.now(),
+                                   to_date=timezone.now(),
                                    created_by=auth.get_user(u1_s1))
 
 
@@ -49,9 +50,8 @@ def obj_3(space_1, recipe_1_s1, meal_type, u1_s1):
     return MealPlan.objects.create(recipe=recipe_1_s1,
                                    space=space_1,
                                    meal_type=meal_type,
-                                   from_date=datetime.now() -
-                                   timedelta(days=30),
-                                   to_date=datetime.now() - timedelta(days=1),
+                                   from_date=timezone.now() - timedelta(days=30),
+                                   to_date=timezone.now() - timedelta(days=1),
                                    created_by=auth.get_user(u1_s1))
 
 
@@ -99,19 +99,19 @@ def test_list_filter(obj_1, u1_s1):
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?from_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 0
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?to_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?to_date={(timezone.now() - timedelta(days=2)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 0
 
     response = json.loads(
         u1_s1.get(
-            f'{reverse(LIST_URL)}?from_date={(datetime.now() - timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
+            f'{reverse(LIST_URL)}?from_date={(timezone.now() - timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}'
         ).content)['results']
     assert len(response) == 1
 
@@ -153,8 +153,8 @@ def test_add(arg, request, u1_s2, recipe_1_s1, meal_type):
             'id': meal_type.id,
             'name': meal_type.name
         },
-        'from_date': (datetime.now()).strftime("%Y-%m-%d"),
-        'to_date': (datetime.now()).strftime("%Y-%m-%d"),
+        'from_date': (timezone.now()).strftime("%Y-%m-%d"),
+        'to_date': (timezone.now()).strftime("%Y-%m-%d"),
         'servings': 1,
         'title': 'test',
         'shared': []
@@ -196,8 +196,8 @@ def test_add_with_shopping(u1_s1, meal_type):
             'id': meal_type.id,
             'name': meal_type.name
         },
-        'from_date': (datetime.now()).strftime("%Y-%m-%d"),
-        'to_date': (datetime.now()).strftime("%Y-%m-%d"),
+        'from_date': (timezone.now()).strftime("%Y-%m-%d"),
+        'to_date': (timezone.now()).strftime("%Y-%m-%d"),
         'servings': 1,
         'title': 'test',
         'shared': [],
@@ -212,13 +212,13 @@ def test_add_with_shopping(u1_s1, meal_type):
 
 @pytest.mark.parametrize("arg", [
     ['', 2],
-    [f'?from_date={datetime.now().strftime("%Y-%m-%d")}', 1],
+    [f'?from_date={timezone.now().strftime("%Y-%m-%d")}', 1],
     [
-        f'?to_date={(datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")}',
+        f'?to_date={(timezone.now() - timedelta(days=1)).strftime("%Y-%m-%d")}',
         1
     ],
     [
-        f'?from_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(datetime.now() + timedelta(days=2)).strftime("%Y-%m-%d")}',
+        f'?from_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}&to_date={(timezone.now() + timedelta(days=2)).strftime("%Y-%m-%d")}',
         0
     ],
 ])
@@ -241,5 +241,5 @@ def test_ical_event(obj_1, u1_s1):
     assert int(event['uid']) == obj_1.id
     assert event['summary'] == f'{obj_1.meal_type.name}: {obj_1.get_label()}'
     assert event['description'] == obj_1.note
-    assert event.decoded('dtstart') == datetime.now().date()
-    assert event.decoded('dtend') == datetime.now().date()
+    assert event.decoded('dtstart').date() == timezone.now().date()
+    assert event.decoded('dtend').date() == timezone.now().date()
