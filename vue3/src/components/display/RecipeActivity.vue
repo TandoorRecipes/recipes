@@ -19,36 +19,6 @@
             </v-card>
 
 
-            <Vueform :endpoint="false" @submit="createCookLog" class="mt-2">
-                <textarea-element name="comment" label="Comment"></textarea-element>
-                <text-element type="number" name="rating" label="Rating" :default="5">
-                    <template #addon-before>
-                        <v-btn-group class="rounded-0">
-
-                            <v-btn color="secondary">-</v-btn>
-                        </v-btn-group>
-                    </template>
-                    <template #addon-after>
-                        <v-btn-group class="rounded-0">
-                            <v-btn color="primary">+</v-btn>
-                        </v-btn-group>
-                    </template>
-                </text-element>
-                <text-element type="number" name="servings" label="Servings" :default="recipe.servings">
-                    <template #addon-before>
-                        <v-btn-group class="rounded-0">
-
-                            <v-btn color="secondary">-</v-btn>
-                        </v-btn-group>
-                    </template>
-                    <template #addon-after>
-                        <v-btn-group class="rounded-0">
-                            <v-btn color="primary">+</v-btn>
-                        </v-btn-group>
-                    </template>
-                </text-element>
-                <button-element name="submit" :submits="true" button-label="Submit"></button-element>
-            </Vueform>
 
         </v-card-text>
     </v-card>

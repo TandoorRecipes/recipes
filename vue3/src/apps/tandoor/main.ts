@@ -13,8 +13,6 @@ import RecipeViewPage from "@/pages/RecipeViewPage.vue";
 import luxonPlugin from "@/plugins/luxonPlugin";
 import RecipeEditPage from "@/pages/RecipeEditPage.vue";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
-import Vueform from '@vueform/vueform'
-import vueform from '@/vueform'
 import SearchPage from "@/pages/SearchPage.vue";
 
 const routes = [
@@ -39,7 +37,6 @@ app.use(createPinia())
 app.use(vuetify)
 app.use(router)
 app.use(luxonPlugin)
-app.use(Vueform, vueform)
 app.use(mavonEditor) // TODO only use on pages that need it
 
 app.mount('#app')
