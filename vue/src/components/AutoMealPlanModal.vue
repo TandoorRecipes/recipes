@@ -191,7 +191,7 @@ export default {
             let apiClient = new ApiApiFactory()
 
             Promise.resolve(apiClient.listMealTypes().then((result) => {
-                result.data.forEach((meal_type) => {
+                result.data.results.forEach((meal_type) => {
                     meal_type.editing = false
                 })
                 this.AutoPlan.meal_types = result.data

@@ -39,12 +39,13 @@ Vue.prototype.moment = moment
 import Vue from "vue";
 import {BootstrapVue} from "bootstrap-vue";
 import {ApiApiFactory} from "@/utils/openapi/api";
-import {makeStandardToast, StandardToasts} from "@/utils/utils";
+import {makeStandardToast, StandardToasts, ApiMixin} from "@/utils/utils";
 
 Vue.use(BootstrapVue)
 
 export default {
   name: 'AddRecipeToBook',
+  mixins: [ApiMixin],
   components: {
     Multiselect
   },
@@ -79,9 +80,8 @@ export default {
   methods: {
     loadBooks: function (query) {
       this.books_loading = true
-      let apiFactory = new ApiApiFactory()
-      apiFactory.listRecipeBooks({query: {query: query}}).then(results => {
-        this.books = results.data.filter(e => this.recipe_book_list.indexOf(e) === -1)
+      this.genericAPI(this.Models.RECIPE_BOOK, this.Actions.LIST, {'query': query}).then(results => {
+        this.books = results.data.results.filter(e => this.recipe_book_list.indexOf(e) === -1)
         this.books_loading = false
       })
     },
@@ -111,9 +111,8 @@ export default {
     },
     loadBookEntries: function () {
 
-      let apiFactory = new ApiApiFactory()
-      apiFactory.listRecipeBookEntrys({query: {recipe: this.recipe.id}}).then(r => {
-        this.recipe_book_list = r.data
+      this.genericAPI(this.Models.RECIPE_BOOK_ENTRY, this.Actions.LIST, {recipe: this.recipe.id}).then(r => {
+        this.recipe_book_list = r.data.results
         this.loadBooks('')
       })
     }
