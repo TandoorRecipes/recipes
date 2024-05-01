@@ -42,6 +42,12 @@ export interface MealType {
      * @type {string}
      * @memberof MealType
      */
+    time?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MealType
+     */
     color?: string;
     /**
      * 
@@ -79,6 +85,7 @@ export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'],
         'order': json['order'] == null ? undefined : json['order'],
+        'time': json['time'] == null ? undefined : json['time'],
         'color': json['color'] == null ? undefined : json['color'],
         '_default': json['default'] == null ? undefined : json['default'],
         'createdBy': json['created_by'],
@@ -94,6 +101,7 @@ export function MealTypeToJSON(value?: MealType | null): any {
         'id': value['id'],
         'name': value['name'],
         'order': value['order'],
+        'time': value['time'],
         'color': value['color'],
         'default': value['_default'],
     };

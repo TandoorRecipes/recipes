@@ -169,8 +169,8 @@ export function PatchedMealPlanToJSON(value?: PatchedMealPlan | null): any {
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],
         'note': value['note'],
-        'from_date': value['fromDate'] == null ? undefined : ((value['fromDate']).toISOString().substring(0,10)),
-        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString().substring(0,10)),
+        'from_date': value['fromDate'] == null ? undefined : ((value['fromDate']).toISOString()),
+        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
         'meal_type': MealTypeToJSON(value['mealType']),
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
