@@ -1,0 +1,87 @@
+<template>
+    <v-snackbar
+        v-model="showSnackbar"
+        :timer="true"
+        :timeout="visibleMessage.showTimeout"
+        :color="visibleMessage.type"
+        :vertical="vertical"
+        :location="location"
+        multi-line
+    >
+        <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>
+        {{ visibleMessage.msg }}
+
+        <template v-slot:actions>
+
+            <v-btn variant="text">View <message-list-dialog></message-list-dialog> </v-btn>
+            <v-btn variant="text" @click="removeItem()">
+                <span v-if="useMessageStore().snackbarQueue.length > 1">Next ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
+                <span v-else>Close</span>
+            </v-btn>
+        </template>
+    </v-snackbar>
+</template>
+
+<script setup lang="ts">
+import {ref} from 'vue'
+import {Message, useMessageStore} from "@/stores/MessageStore";
+import {DateTime} from "luxon";
+import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
+
+const props = defineProps({
+    /**
+     * passed to VSnackbar location prop https://vuetifyjs.com/en/api/v-snackbar/#props-location
+     * Specifies the anchor point for positioning the component, using directional cues to align it either horizontally, vertically, or both…
+     */
+    location: {
+        required: false,
+        type: String,
+        default: 'bottom'
+    },
+    /**
+     * passed to VSnackbar vertical prop https://vuetifyjs.com/en/api/v-snackbar/#props-vertical
+     * Stacks snackbar content on top of the actions (button).
+     */
+    vertical: {
+        required: false,
+        type: Boolean,
+        default: false
+    }
+})
+
+
+const timeoutId = ref(-1)
+const visibleMessage = ref({} as Message)
+const showSnackbar = ref(false)
+
+useMessageStore().$subscribe((mutation, state) => {
+    if ('snackbarQueue' in state && mutation.events.type == 'add') {
+        processQueue()
+    }
+})
+
+function processQueue() {
+    if (timeoutId.value == -1 && useMessageStore().snackbarQueue.length > 0) {
+        visibleMessage.value = useMessageStore().snackbarQueue[0]
+        showSnackbar.value = true
+        timeoutId.value = setTimeout(() => {
+            useMessageStore().snackbarQueue.shift()
+            timeoutId.value = -1
+            processQueue()
+        }, visibleMessage.value.showTimeout + 50)
+    }
+}
+
+function removeItem() {
+    showSnackbar.value = false
+    clearTimeout(timeoutId.value)
+    timeoutId.value = -1
+    useMessageStore().snackbarQueue.shift()
+    processQueue()
+}
+</script>
+
+
+<style scoped>
+
+</style>

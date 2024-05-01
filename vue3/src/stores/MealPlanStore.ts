@@ -2,6 +2,7 @@ import {acceptHMRUpdate, defineStore} from "pinia"
 import {ApiApi, MealPlan} from "@/openapi";
 import {computed, ref} from "vue";
 import {DateTime} from "luxon";
+import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 
 
 const _STORE_ID = "meal_plan_store"
@@ -54,10 +55,12 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
             const api = new ApiApi()
             return api.apiMealPlanList({fromDate: DateTime.fromJSDate(from_date).toISODate() as string, toDate: DateTime.fromJSDate(to_date).toISODate() as string}).then(r => {
-                r.forEach((p) => {
+                r.results.forEach((p) => {
                     plans.value.set(p.id, p)
                 })
                 currently_updating.value = [new Date(0), new Date(0)]
+            }).catch((err) => {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             })
         }
         return new Promise(() => {
@@ -65,7 +68,7 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
     }
 
     function createOrUpdate(object: MealPlan) {
-        if(object.id == undefined){
+        if (object.id == undefined) {
             return createObject(object)
         } else {
             return updateObject(object)
@@ -74,32 +77,32 @@ export const useMealPlanStore = defineStore(_STORE_ID, () => {
 
     function createObject(object: MealPlan) {
         const api = new ApiApi()
-        return api.apiMealPlanCreate({mealPlanRequest: object}).then((r) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
+        return api.apiMealPlanCreate({mealPlan: object}).then((r) => {
+            useMessageStore().addMessage(MessageType.SUCCESS, 'Created successfully', 7000, object)
             plans.value.set(r.id, r)
             return r
         }).catch((err) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         })
     }
 
     function updateObject(object: MealPlan) {
         const api = new ApiApi()
         return api.apiMealPlanUpdate({id: object.id, mealPlanRequest: object}).then((r) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_UPDATE)
+            useMessageStore().addMessage(MessageType.SUCCESS, 'Updated successfully', 7000, object)
             plans.value.set(r.id, r)
         }).catch((err) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         })
     }
 
     function deleteObject(object: MealPlan) {
         const api = new ApiApi()
         return api.apiMealPlanDestroy({id: object.id}).then((r) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_DELETE)
+            useMessageStore().addMessage(MessageType.INFO, 'Deleted successfully', 7000, object)
             plans.value.delete(object.id)
         }).catch((err) => {
-            //StandardToasts.makeStandardToast(this, StandardToasts.FAIL_DELETE, err)
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
         })
     }
 

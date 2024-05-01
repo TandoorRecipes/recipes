@@ -61,7 +61,7 @@ const calendarItemHeight = computed(() => {
 onMounted(() => {
     let api = new ApiApi()
     api.apiMealPlanList().then(r => {
-        mealPlans.value = r
+        mealPlans.value = r.results
     })
 })
 
