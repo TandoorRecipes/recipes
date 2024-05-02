@@ -63,7 +63,6 @@ from cookbook.helper.permission_helper import (
 )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
-from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
@@ -1457,9 +1456,9 @@ class RecipeUrlImportView(APIView):
                     data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
                 except JSONDecodeError:
                     pass
-                scrape = text_scraper(text=data, url=url)
-                if not url and (found_url := scrape.schema.data.get('url', None)):
-                    scrape = text_scraper(text=data, url=found_url)
+                scrape = scrape_html(html=data, org_url=url, supported_only=False)
+                if not url and (found_url := scrape.schema.data.get('url', 'https://urlnotfound.none')):
+                    scrape = scrape_html(text=data, url=found_url, supported_only=False)
 
             if scrape:
                 return Response({

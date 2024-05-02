@@ -7,7 +7,7 @@ import validators
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import (get_from_scraper, get_images_from_soup,
                                                iso_duration_to_minutes)
-from cookbook.helper.scrapers.scrapers import text_scraper
+from recipe_scrapers import scrape_html
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Recipe, Step
 
@@ -20,7 +20,7 @@ class CookBookApp(Integration):
     def get_recipe_from_file(self, file):
         recipe_html = file.getvalue().decode("utf-8")
 
-        scrape = text_scraper(text=recipe_html)
+        scrape = scrape_html(html=recipe_html, org_url="https://cookbookapp.import", supported_only=False)
         recipe_json = get_from_scraper(scrape, self.request)
         images = list(dict.fromkeys(get_images_from_soup(scrape.soup, None)))
 
