@@ -389,7 +389,7 @@ def parse_servings_text(servings):
         try:
             servings = parse_servings_text(servings[1])
         except Exception:
-            pass
+            servings = ''
     return str(servings)[:32]
 
 

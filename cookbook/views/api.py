@@ -35,7 +35,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
-from recipe_scrapers import scrape_html
+from recipe_scrapers import scrape_html, SCRAPERS, get_host_name
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
 from requests.exceptions import MissingSchema
 from rest_framework import decorators, status, viewsets
@@ -1456,9 +1456,14 @@ class RecipeUrlImportView(APIView):
                     data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
                 except JSONDecodeError:
                     pass
-                scrape = scrape_html(html=data, org_url=url, supported_only=False)
-                if not url and (found_url := scrape.schema.data.get('url', 'https://urlnotfound.none')):
-                    scrape = scrape_html(text=data, url=found_url, supported_only=False)
+
+                # URL is unknown at this stage - scraper with generic scraper
+                scrape = scrape_html(html=data, org_url='http://unknown.website', supported_only=False)
+
+                # if a scraper is found for url, re-scrape using the site-specific scraper
+                found_url = scrape.schema.data.get('url', 'https://urlnotfound.none')
+                if SCRAPERS.get(get_host_name(found_url), None):
+                    scrape = scrape_html(html=data, org_url=found_url, supported_only=True)
 
             if scrape:
                 return Response({
