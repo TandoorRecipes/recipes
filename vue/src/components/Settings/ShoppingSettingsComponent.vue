@@ -3,7 +3,7 @@
         <b-form-group :label="$t('shopping_share')" :description="$t('shopping_share_desc')">
             <generic-multiselect
                 @change="useUserPreferenceStore().user_settings.shopping_share = $event.val; updateSettings(false)"
-                :model="Models.USER"
+                :model="Models.USER_NAME"
                 :initial_selection="useUserPreferenceStore().user_settings.shopping_share"
                 label="display_name"
                 :multiple="true"

@@ -141,8 +141,8 @@ class ExtendedRecipeMixin():
     @classmethod
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
         extended = str2bool(request.query_params.get('extended', None))
-        if extended:
-            recipe_filter = serializer.recipe_filter
+        recipe_filter = getattr(serializer, 'recipe_filter', None)
+        if extended and recipe_filter:
             images = serializer.images
             space = request.space
 
@@ -772,11 +772,11 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
         from_date = self.request.query_params.get('from_date', None)
         if from_date is not None:
-            queryset = queryset.filter(to_date__gte=from_date)
+            queryset = queryset.filter(to_date__date__gte=from_date)
 
         to_date = self.request.query_params.get('to_date', None)
         if to_date is not None:
-            queryset = queryset.filter(to_date__lte=to_date)
+            queryset = queryset.filter(to_date__date__lte=to_date)
 
         meal_type = self.request.query_params.getlist('meal_type', [])
         if meal_type:

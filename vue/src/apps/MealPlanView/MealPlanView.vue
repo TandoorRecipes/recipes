@@ -249,7 +249,7 @@ import moment from "moment"
 import draggable from "vuedraggable"
 import VueCookies from "vue-cookies"
 
-import {ApiMixin, StandardToasts, ResolveUrlMixin} from "@/utils/utils"
+import {ApiMixin, StandardToasts, ResolveUrlMixin, resolveDjangoUrl} from "@/utils/utils"
 import {CalendarView, CalendarMathMixin} from "vue-simple-calendar/src/components/bundle"
 import {ApiApiFactory} from "@/utils/openapi/api"
 import BottomNavigationBar from "@/components/BottomNavigationBar.vue";
@@ -317,7 +317,6 @@ export default {
             current_period: null,
             entryEditing: null,
             mealplan_default_date: null,
-            ical_url: window.ICAL_URL,
             image_placeholder: window.IMAGE_PLACEHOLDER,
         }
     },
@@ -350,7 +349,7 @@ export default {
             if (this.current_period !== null) {
                 let start = moment(this.current_period.periodStart).format("YYYY-MM-DD")
                 let end = moment(this.current_period.periodEnd).format("YYYY-MM-DD")
-                return this.ical_url.replace(/12345/, start).replace(/6789/, end)
+                return this.resolveDjangoUrl('api:mealplan-ical', start, end)
             } else {
                 return ""
             }
@@ -561,10 +560,10 @@ export default {
             let apiClient = new ApiApiFactory()
 
             apiClient.listMealTypes().then((result) => {
-                result.data.forEach((meal_type) => {
+                result.data.results.forEach((meal_type) => {
                     meal_type.editing = false
                 })
-                this.meal_types = result.data
+                this.meal_types = result.data.results
             })
         },
         saveEntry(entry) {

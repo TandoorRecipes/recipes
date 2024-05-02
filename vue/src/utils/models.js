@@ -342,6 +342,15 @@ export class Models {
     merge: true,
   }
 
+  static INGREDIENT = {
+    name: "Ingredient",
+    apiName: "Ingredient",
+    paginated: true,
+    list: {
+      params: ["food", "page", "pageSize", "unit", "options"],
+    },
+  }
+
   static SHOPPING_LIST = {
     name: "Shopping_list",
     apiName: "ShoppingListEntry",
@@ -408,6 +417,15 @@ export class Models {
     list: {
       params: ["limit", "orderDirection", "orderField", "page", "pageSize", "query", "random", "updatedAt", "options"],
     },
+  }
+
+  static RECIPE_BOOK_ENTRY = {
+    name: "Recipe_Book_Entry",
+    apiName: "RecipeBookEntry",
+    paginated: true,
+    list: {
+      params: ["book", "page", "pageSize", "recipe",  "options"],
+    }
   }
 
   static SHOPPING_CATEGORY = {
@@ -1080,6 +1098,7 @@ export class Models {
   static USER_NAME = {
     name: "User",
     apiName: "User",
+    paginated: false,
     list: {
       params: ["filter_list", "options"],
     },
@@ -1088,6 +1107,7 @@ export class Models {
   static MEAL_TYPE = {
     name: "Meal_Type",
     apiName: "MealType",
+    paginated: true,
     list: {
       params: ["page", "pageSize", "options"],
     },
@@ -1232,12 +1252,6 @@ export class Models {
         },
       },
     },
-  }
-
-  static USER = {
-    name: "User",
-    apiName: "User",
-    paginated: false,
   }
 
   static GROUP = {
