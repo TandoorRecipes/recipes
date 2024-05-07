@@ -49,17 +49,26 @@ const props = defineProps({
     }
 })
 
-
+// ID of message timeout currently running
 const timeoutId = ref(-1)
+// currently visible message
 const visibleMessage = ref({} as Message)
+// visible state binding of snackbar
 const showSnackbar = ref(false)
 
+/**
+ * subscribe to mutation of the snackbarQueue to detect new messages being added
+ */
 useMessageStore().$subscribe((mutation, state) => {
     if ('snackbarQueue' in state && mutation.events.type == 'add') {
         processQueue()
     }
 })
 
+/**
+ * process snackbar queue
+ * show oldest message for desired time and remove it afterwards
+ */
 function processQueue() {
     if (timeoutId.value == -1 && useMessageStore().snackbarQueue.length > 0) {
         visibleMessage.value = useMessageStore().snackbarQueue[0]
@@ -72,6 +81,10 @@ function processQueue() {
     }
 }
 
+/**
+ * after item timeout has been reached remove it from the list
+ * and restart processing the queue to check for new items
+ */
 function removeItem() {
     showSnackbar.value = false
     clearTimeout(timeoutId.value)

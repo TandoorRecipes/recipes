@@ -84,12 +84,11 @@ const meal_plan_grid = computed(() => {
 
     for (const x of Array(4).keys()) {
         let grid_day_date = DateTime.now().plus({days: x})
-        console.log('going trough days ', x, grid_day_date)
         grid.push({
             date: grid_day_date,
             create_default_date: grid_day_date.toISODate(), // improve meal plan edit modal to do formatting itself and accept dates
             date_label: grid_day_date.toLocaleString(DateTime.DATE_MED),
-            plan_entries: useMealPlanStore().plan_list.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
+            plan_entries: useMealPlanStore().planList.filter((m: MealPlan) => ((DateTime.fromJSDate(m.fromDate).startOf('day') <= grid_day_date.startOf('day')) && (DateTime.fromJSDate((m.toDate != undefined) ? m.toDate : m.fromDate).startOf('day') >= grid_day_date.startOf('day')))),
         } as MealPlanGridItem)
     }
 

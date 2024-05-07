@@ -9,6 +9,8 @@
             :resolve-on-load="false"
             v-model="model"
             :options="search"
+            :on-create="createObject"
+            :createOption="allowCreate"
             :delay="300"
             :object="true"
             :valueProp="itemValue"
@@ -29,13 +31,12 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, PropType, ref, Ref} from "vue"
-import {useDebounceFn} from "@vueuse/core"
+import {onMounted, PropType, ref} from "vue"
 import {GenericModel, getModelFromStr} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'create'])
 
 const props = defineProps({
     model: {type: String, required: true},
@@ -51,10 +52,9 @@ const props = defineProps({
 
     mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
 
-    // not verified
-
     allowCreate: {type: Boolean, default: false},
 
+    // not verified
     search_on_load: {type: Boolean, default: false},
 
     placeholder: {type: String, default: undefined},
@@ -72,9 +72,13 @@ const props = defineProps({
 
 const model = defineModel()
 const model_class = ref({} as GenericModel<any>)
-const items: Ref<Array<any>> = ref([])
-const selected_items: Ref<Array<any> | any> = ref(undefined)
 
+/**
+ * create instance of model class when mounted
+ */
+onMounted(() => {
+    model_class.value = getModelFromStr(props.model)
+})
 
 /**
  * performs the API request to search for the selected input
@@ -90,23 +94,22 @@ function search(query: string) {
     })
 }
 
-// TODO refactor for new multiselect
-function addItem(item: string) {
-    console.log("CREATEING NEW with -> ", item)
+/**
+ * handle new object being created
+ *
+ * @param object object with two keys (itemValue/itemLabel) both having the string of the newly created item (query) as a value {<itemValue>: query, <itemLabel>: query}
+ * @param select$ reference to multiselect instance
+ */
+async function createObject(object: any, select$: Multiselect) {
+    console.log("CREATING NEW with -> ", object)
 
-    model_class.value.create(item).then((createdObj) => {
-        useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000)
-        if (selected_items.value instanceof Array) {
-            selected_items.value.push(createdObj)
-        } else {
-            selected_items.value = createdObj
-        }
-        items.value.push(createdObj)
+    emit('create', object)
 
+    return await model_class.value.create(object[props.itemLabel]).then((createdObj) => {
+        useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
+        return createdObj
     }).catch((err) => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    }).finally(() => {
-
     })
 }
 

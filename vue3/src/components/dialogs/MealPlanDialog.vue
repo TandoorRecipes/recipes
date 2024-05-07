@@ -18,7 +18,7 @@
                                     prepend-icon=""
                                     prepend-inner-icon="$calendar"
                                 ></v-date-input>
-                                <ModelSelect model="MealType" v-model="mutableMealPlan.mealType"></ModelSelect>
+                                <ModelSelect model="MealType" :allow-create="true" v-model="mutableMealPlan.mealType"></ModelSelect>
                                 <v-number-input control-variant="split" :min="0" v-model="mutableMealPlan.servings"></v-number-input>
                                 <v-text-field label="Share" v-model="mutableMealPlan.shared"></v-text-field>
                             </v-col>
