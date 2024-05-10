@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-21 14:39+0100\n"
-"PO-Revision-Date: 2024-05-04 19:10+0000\n"
-"Last-Translator: Carsten Docktor <carsten.docktor@gmail.com>\n"
+"PO-Revision-Date: 2024-05-11 00:33+0000\n"
+"Last-Translator: Jakob Priesner <jakob.priesner@outlook.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
 "Language: de\n"
@@ -494,10 +494,8 @@ msgid "Nutrition"
 msgstr "Nährwerte"
 
 #: .\cookbook\models.py:919
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Zusammenführen"
+msgstr "Allergen"
 
 #: .\cookbook\models.py:920
 msgid "Price"
@@ -551,17 +549,15 @@ msgstr "Neue Einheit"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Wörter austauschen"
 
 #: .\cookbook\models.py:1474
 msgid "Food Replace"
 msgstr "Lebensmittelersatz"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description Replace"
 msgid "Unit Replace"
-msgstr "Beschreibung ersetzen"
+msgstr "Einheit Ersetzen"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
@@ -2153,10 +2149,8 @@ msgid "Info"
 msgstr "Info"
 
 #: .\cookbook\templates\system.html:99 .\cookbook\templates\system.html:116
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Brüche verwenden"
+msgstr "Migrationen"
 
 #: .\cookbook\templates\system.html:105
 msgid ""
@@ -2169,6 +2163,14 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            Migrationen sollten niemals fehlschlagen!\n"
+"            Fehlgeschlagene Migrationen werden wahrscheinlich dazu führen, "
+"dass wichtige Teile der App nicht mehr korrekt funktionieren.\n"
+"            Wenn eine Migration fehlschlägt, vergewissern Sie sich, dass Sie "
+"die neueste Version verwenden. Wenn ja, posten Sie bitte das "
+"Migrationsprotokoll und die Übersicht unten in einem GitHub-Problem.\n"
+"        "
 
 #: .\cookbook\templates\system.html:171
 msgid "False"
@@ -2261,18 +2263,18 @@ msgstr "{obj.name} wurde der Einkaufsliste hinzugefügt."
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "Filtern Sie Essenspläne ab Datum (einschließlich) im Format JJJJ-MM-TT."
 
 #: .\cookbook\views\api.py:744
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtern Sie die Essenspläne nach Datum (einschließlich) im Format JJJJ-MM-TT."
 
 #: .\cookbook\views\api.py:745
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
-"ID des Rezeptes zu dem ein Schritt gehört. Kann mehrfach angegeben werden."
+"Filtern Sie Mahlzeitenpläne nach der MealType ID. Für mehrere "
+"Wiederholungsparameter."
 
 #: .\cookbook\views\api.py:873
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2468,18 +2470,14 @@ msgstr ""
 "mehrfach angegeben werden."
 
 #: .\cookbook\views\api.py:1126
-#, fuzzy
-#| msgid ""
-#| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
-#| "b>]<br>  - recent includes unchecked items and recently completed items."
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
-"Einkaufslisteneinträge nach Häkchen filtern.  [ja, nein, beides, "
-"<b>kürzlich</b>]<br>  - kürzlich enthält nicht abgehakte Einträge und "
-"kürzlich abgeschlossene Einträge."
+"Einkaufslisteneinträge nach Häkchen filtern.   [ja, nein, beides, "
+"<b>kürzlich</b>]<br>                  - kürzlich enthält nicht abgehakte "
+"Einträge und kürzlich abgeschlossene Einträge."
 
 #: .\cookbook\views\api.py:1129
 msgid "Returns the shopping list entries sorted by supermarket category order."
@@ -2488,7 +2486,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Filter für Einträge mit dem angegebenen Rezept"
 
 #: .\cookbook\views\api.py:1293
 #, fuzzy
@@ -2524,7 +2522,7 @@ msgstr "Es konnten keine passenden Daten gefunden werden."
 
 #: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
-msgstr ""
+msgstr "Datei überschreitet das Speicherplatzlimit"
 
 #: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
@@ -2678,11 +2676,10 @@ msgid "This feature is not available in the demo version!"
 msgstr "Diese Funktion ist in der Demo-Version nicht verfügbar!"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Du hast die maximale Anzahl an Rezepten für Deinen Space erreicht."
+msgstr ""
+"Du hast die maximale Anzahl an Rezepten erreicht, die Du besitzen kannst."
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2721,29 +2718,22 @@ msgstr "Die \"Ungenaue\" Suche ist mit diesem Suchtyp nicht kompatibel!"
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s ist veraltet.   Aktualisieren Sie auf eine vollständig "
+"unterstützte Version!"
 
 #: .\cookbook\views\views.py:308
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "Sie verwenden PostgreSQL %(v1)s.   PostgreSQL %(v2)s wird empfohlen"
 
 #: .\cookbook\views\views.py:312
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Diese Anwendung läuft nicht mit einer PostgreSQL Datenbank. Dies "
-"ist in Ordnung, wird aber nicht empfohlen, da einige\n"
-"Funktionen nur mit einer PostgreSQL-Datenbanken funktionieren.\n"
-"        "
+"Diese Anwendung läuft nicht mit einer PostgreSQL Datenbank. Dies ist in "
+"Ordnung, wird aber nicht empfohlen, da einige Funktionen nur mit einer "
+"PostgreSQL-Datenbanken funktionieren."
 
 #: .\cookbook\views\views.py:355
 #, fuzzy
