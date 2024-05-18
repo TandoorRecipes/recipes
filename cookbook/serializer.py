@@ -63,7 +63,7 @@ class WritableNestedModelSerializer(WNMS):
                     pk_data = [x for x in data[f] if isinstance(x, int)]
                     # merge non-pk values with retrieved values
                     data[f] = [x for x in data[f] if not isinstance(x, int)] \
-                        + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+                              + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
         return super().to_internal_value(data)
 
 
@@ -1526,3 +1526,7 @@ class RecipeFromSourceSerializer(serializers.Serializer):
     url = serializers.CharField(max_length=4096, required=False, allow_null=True, allow_blank=True)
     data = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     bookmarklet = serializers.IntegerField(required=False, allow_null=True, )
+
+
+class ImportImageSerializer(serializers.Serializer):
+    image = serializers.ImageField()

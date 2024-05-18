@@ -22,6 +22,7 @@
             <v-list-item prepend-icon="fas fa-calendar-alt" title="Mealplan" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
             <v-list-item prepend-icon="fas fa-shopping-cart" title="Shopping" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
             <v-list-item prepend-icon="fas fa-bars" title="More" :to="{ name: 'view_books', params: {} }"></v-list-item>
+            <v-list-item prepend-icon="fas fa-bars" title="Test" :to="{ name: 'view_test', params: {} }"></v-list-item>
             <!-- TODO link -->
         </v-navigation-drawer>
 

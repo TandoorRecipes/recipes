@@ -125,6 +125,7 @@ urlpatterns = [
     path('api/reset-food-inheritance/', api.reset_food_inheritance, name='api_reset_food_inheritance'),
     path('api/switch-active-space/<int:space_id>/', api.switch_active_space, name='api_switch_active_space'),
     path('api/download-file/<int:file_id>/', api.download_file, name='api_download_file'),
+    path('api/image-to-recipe', api.ImageToRecipeView.as_view(), name='api_image_to_recipe'),
     path('telegram/setup/<int:pk>', telegram.setup_bot, name='telegram_setup'),
     path('telegram/remove/<int:pk>', telegram.remove_bot, name='telegram_remove'),
     path('telegram/hook/<slug:token>/', telegram.hook, name='telegram_hook'),

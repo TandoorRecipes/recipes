@@ -22,6 +22,7 @@ models/FoodInheritField.ts
 models/FoodShoppingUpdate.ts
 models/FoodSimple.ts
 models/Group.ts
+models/ImportImage.ts
 models/ImportLog.ts
 models/Ingredient.ts
 models/IngredientString.ts

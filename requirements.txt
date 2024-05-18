@@ -47,6 +47,7 @@ validators==0.20.0
 pytube==15.0.0
 aiohttp==3.9.4
 django-vite==3.0.3
+google-generativeai==0.5.3
 
 # Development
 pytest==8.0.0

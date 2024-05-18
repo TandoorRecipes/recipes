@@ -96,6 +96,7 @@ HCAPTCHA_SITEKEY = os.getenv('HCAPTCHA_SITEKEY', '')
 HCAPTCHA_SECRET = os.getenv('HCAPTCHA_SECRET', '')
 
 FDC_API_KEY = os.getenv('FDC_API_KEY', 'DEMO_KEY')
+GOOGLE_AI_API_KEY = os.getenv('GOOGLE_AI_API_KEY', '')
 
 SHARING_ABUSE = bool(int(os.getenv('SHARING_ABUSE', False)))
 SHARING_LIMIT = int(os.getenv('SHARING_LIMIT', 0))

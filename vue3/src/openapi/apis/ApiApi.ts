@@ -27,6 +27,7 @@ import type {
   FoodInheritField,
   FoodShoppingUpdate,
   Group,
+  ImportImage,
   ImportLog,
   Ingredient,
   IngredientString,
@@ -167,6 +168,8 @@ import {
     FoodShoppingUpdateToJSON,
     GroupFromJSON,
     GroupToJSON,
+    ImportImageFromJSON,
+    ImportImageToJSON,
     ImportLogFromJSON,
     ImportLogToJSON,
     IngredientFromJSON,
@@ -660,6 +663,10 @@ export interface ApiGetRecipeFileRetrieveRequest {
 
 export interface ApiGroupRetrieveRequest {
     id: number;
+}
+
+export interface ApiImageToRecipeCreateRequest {
+    image: string;
 }
 
 export interface ApiImportLogCreateRequest {
@@ -3959,6 +3966,60 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiGroupRetrieve(requestParameters: ApiGroupRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Group> {
         const response = await this.apiGroupRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiImageToRecipeCreateRaw(requestParameters: ApiImageToRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportImage>> {
+        if (requestParameters['image'] == null) {
+            throw new runtime.RequiredError(
+                'image',
+                'Required parameter "image" was null or undefined when calling apiImageToRecipeCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['image'] != null) {
+            formParams.append('image', requestParameters['image'] as any);
+        }
+
+        const response = await this.request({
+            path: `/api/image-to-recipe`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ImportImageFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiImageToRecipeCreate(requestParameters: ApiImageToRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ImportImage> {
+        const response = await this.apiImageToRecipeCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -12,6 +12,7 @@ from json import JSONDecodeError
 from urllib.parse import unquote
 from zipfile import ZipFile
 
+import PIL.Image
 import requests
 import validators
 from PIL import UnidentifiedImageError
@@ -33,6 +34,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
+from google import generativeai
 from icalendar import Calendar, Event
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
@@ -83,12 +85,11 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  RecipeOverviewSerializer, RecipeSerializer, RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListEntryBulkSerializer,
                                  ShoppingListEntrySerializer, ShoppingListRecipeSerializer, SpaceSerializer, StepSerializer, StorageSerializer,
                                  SupermarketCategoryRelationSerializer, SupermarketCategorySerializer, SupermarketSerializer, SyncLogSerializer, SyncSerializer,
-                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer
+                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer
                                  )
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY
-
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, GOOGLE_AI_API_KEY
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1141,14 +1142,14 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(
-        parameters=[OpenApiParameter(
-            name='category',
-            description=_('Return the PropertyTypes matching the property category.  Repeat for multiple.'),
-            type=str,
-            many=True,
-            enum=[m[0] for m in PropertyType.CHOICES])
-        ]
-    ))
+    parameters=[OpenApiParameter(
+        name='category',
+        description=_('Return the PropertyTypes matching the property category.  Repeat for multiple.'),
+        type=str,
+        many=True,
+        enum=[m[0] for m in PropertyType.CHOICES])
+    ]
+))
 class PropertyTypeViewSet(viewsets.ModelViewSet):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
@@ -1361,7 +1362,7 @@ class AutomationViewSet(StandardFilterModelViewSet):
 
 # TODO explain what internal_note is for
 @extend_schema_view(list=extend_schema(parameters=[
-            OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
+    OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
 ]))
 class InviteLinkViewSet(StandardFilterModelViewSet):
     queryset = InviteLink.objects
@@ -1382,14 +1383,14 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(
-        parameters=[OpenApiParameter(
-            name='type',
-            description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
-            type=str,
-            many=True,
-            enum=[m[0] for m in CustomFilter.MODELS])
-        ]
-    ))
+    parameters=[OpenApiParameter(
+        name='type',
+        description=_('Return the CustomFilters matching the model type.  Repeat for multiple.'),
+        type=str,
+        many=True,
+        enum=[m[0] for m in CustomFilter.MODELS])
+    ]
+))
 class CustomFilterViewSet(StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
@@ -1535,6 +1536,31 @@ class RecipeUrlImportView(APIView):
                 return Response({'error': True, 'msg': _('No usable data could be found.')}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ImageToRecipeView(APIView):
+    serializer_class = ImportImageSerializer
+    http_method_names = ['post', 'options']
+    #parser_classes = [MultiPartParser]
+    throttle_classes = [RecipeImportThrottle]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+
+    def post(self, request, *args, **kwargs):
+        """
+
+        """
+        serializer = ImportImageSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            generativeai.configure(api_key=GOOGLE_AI_API_KEY)
+
+            # model = generativeai.GenerativeModel('gemini-1.5-flash-latest')
+            # img = PIL.Image.open('')
+            # response = model.generate_content(["The image contains a recipe. Please return all data contained in the recipe formatted according to the schema.org specification for recipes", img], stream=True)
+            # response.resolve()
+            Response({'msg': 'SUCCESS'})
+        else:
+            Response({'msg': serializer.errors})
+        return Response({'test': 'test'})
 
 
 @extend_schema(

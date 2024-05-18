@@ -19,6 +19,7 @@ export * from './FoodInheritField';
 export * from './FoodShoppingUpdate';
 export * from './FoodSimple';
 export * from './Group';
+export * from './ImportImage';
 export * from './ImportLog';
 export * from './Ingredient';
 export * from './IngredientString';

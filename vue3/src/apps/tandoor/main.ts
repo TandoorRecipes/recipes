@@ -14,9 +14,11 @@ import luxonPlugin from "@/plugins/luxonPlugin";
 import RecipeEditPage from "@/pages/RecipeEditPage.vue";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import SearchPage from "@/pages/SearchPage.vue";
+import TestPage from "@/pages/TestPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
+    {path: '/test', component: TestPage, name: 'view_test'},
     {path: '/search', component: SearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
