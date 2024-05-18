@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-21 14:39+0100\n"
-"PO-Revision-Date: 2023-03-12 02:55+0000\n"
-"Last-Translator: Feng Zhong <fewoodse@gmail.com>\n"
+"PO-Revision-Date: 2024-05-19 13:38+0000\n"
+"Last-Translator: only <jeter.nice@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hant/>\n"
 "Language: zh_Hant\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -31,7 +31,7 @@ msgstr "名字"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr "關鍵詞"
+msgstr "關鍵字"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
