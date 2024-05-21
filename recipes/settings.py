@@ -415,14 +415,14 @@ WSGI_APPLICATION = 'recipes.wsgi.application'
 
 # Database
 # Load settings from env files
-DATABASE_URL = os.getenv('DATABASE_URL') or None
-DB_OPTIONS = os.getenv('DB_OPTIONS') or None
-DB_ENGINE = os.getenv('DB_ENGINE') or None
-POSTGRES_HOST = os.getenv('POSTGRES_HOST') or None
-POSTGRES_PORT = os.getenv('POSTGRES_PORT') or None
-POSTGRES_USER = os.getenv('POSTGRES_USER') or None
-POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD') or None
-POSTGRES_DB = os.getenv('POSTGRES_DB') or None
+DATABASE_URL = os.getenv('DATABASE_URL', None)
+DB_OPTIONS = os.getenv('DB_OPTIONS', None)
+DB_ENGINE = os.getenv('DB_ENGINE', None)
+POSTGRES_HOST = os.getenv('POSTGRES_HOST', None)
+POSTGRES_PORT = os.getenv('POSTGRES_PORT', None)
+POSTGRES_USER = os.getenv('POSTGRES_USER', None)
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', None)
+POSTGRES_DB = os.getenv('POSTGRES_DB', None)
 
 
 def setup_database(db_url=None, db_options=None, db_engine=None, pg_host=None, pg_port=None, pg_user=None, pg_password=None, pg_db=None):
