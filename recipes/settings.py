@@ -46,7 +46,7 @@ SPACE_DEFAULT_MAX_USERS = int(os.getenv('SPACE_DEFAULT_MAX_USERS', 0))
 SPACE_DEFAULT_MAX_FILES = int(os.getenv('SPACE_DEFAULT_MAX_FILES', 0))
 SPACE_DEFAULT_ALLOW_SHARING = bool(int(os.getenv('SPACE_DEFAULT_ALLOW_SHARING', True)))
 
-INTERNAL_IPS = os.getenv('INTERNAL_IPS').split(',') if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
+INTERNAL_IPS = [ip.strip() for ip in os.getenv('INTERNAL_IPS').split(',')] if os.getenv('INTERNAL_IPS') else ['127.0.0.1']
 
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = bool(int(os.getenv('GUNICORN_MEDIA', False)))
@@ -69,10 +69,10 @@ FORCE_THEME_FROM_SPACE = int(os.getenv('FORCE_THEME_FROM_SPACE', 0))
 # minimum interval that users can set for automatic sync of shopping lists
 SHOPPING_MIN_AUTOSYNC_INTERVAL = int(os.getenv('SHOPPING_MIN_AUTOSYNC_INTERVAL', 5))
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',') if os.getenv('ALLOWED_HOSTS') else ['*']
+ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS').split(',')] if os.getenv('ALLOWED_HOSTS') else ['*']
 
 if os.getenv('CSRF_TRUSTED_ORIGINS'):
-    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(',')
+    CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS').split(',')]
 
 if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
     print('DEPRECATION WARNING: Environment var "CORS_ORIGIN_ALLOW_ALL" is deprecated. Please use "CORS_ALLOW_ALL_ORIGINS."')
@@ -184,7 +184,7 @@ except Exception:
     if DEBUG:
         print('ERROR failed to initialize plugins')
 
-SOCIAL_PROVIDERS = os.getenv('SOCIAL_PROVIDERS').split(',') if os.getenv('SOCIAL_PROVIDERS') else []
+SOCIAL_PROVIDERS = [social.strip() for social in os.getenv('SOCIAL_PROVIDERS').split(',')] if os.getenv('SOCIAL_PROVIDERS') else []
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
