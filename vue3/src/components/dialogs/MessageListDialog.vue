@@ -3,7 +3,7 @@
         <template v-slot:default="{ isActive }">
             <v-card>
                 <v-card-title>
-                    Nachrichten <v-btn icon="fas fa-times" variant="flat" size="x-small" class="mt-2 float-right " @click="isActive.value = false"></v-btn>
+                    Nachrichten
                 </v-card-title>
 
                 <v-card-text>
@@ -27,19 +27,19 @@
                         divided
                         multiple>
                         <v-btn :value="MessageType.SUCCESS">
-                            <v-icon icon="fas fa-eye" class="me-2" color="success"></v-icon>
+                            <v-icon icon="mdi-eye" color="success"></v-icon>
                             Success
                         </v-btn>
                         <v-btn :value="MessageType.INFO">
-                            <v-icon icon="fas fa-eye" class="me-2" color="info"></v-icon>
+                            <v-icon icon="mdi-eye" color="info"></v-icon>
                             Info
                         </v-btn>
                         <v-btn :value="MessageType.WARNING">
-                            <v-icon icon="fas fa-eye" class="me-2" color="warning"></v-icon>
+                            <v-icon icon="mdi-eye" color="warning"></v-icon>
                             Warning
                         </v-btn>
                         <v-btn :value="MessageType.ERROR">
-                            <v-icon icon="fas fa-eye" class="me-2" color="error"></v-icon>
+                            <v-icon icon="mdi-eye" color="error"></v-icon>
                             Error
                         </v-btn>
                     </v-btn-toggle>
@@ -51,6 +51,10 @@
                         :search="search"
                     >
 
+                        <template v-slot:item.createdAt="{ value }">
+                            {{ DateTime.fromSeconds(value).toLocaleString(DateTime.DATETIME_MED) }}
+                        </template>
+
                         <template v-slot:item.type="{ value }">
                             <v-chip :color="value">
                                 {{ value }}
@@ -58,8 +62,8 @@
                         </template>
 
                         <template v-slot:item.actions="{ item }">
-                            <v-icon icon="fas fa-search" @click="showDetailDialog = true; detailItem = item"></v-icon>
-                            <v-icon class="ms-1" icon="fas fa-copy" @click="copy(JSON.stringify({'type': item.type, 'createdAt': item.createdAt, 'msg': item.msg, 'data': item.data}));"></v-icon>
+                            <v-icon icon="mdi-magnify" @click="showDetailDialog = true; detailItem = item"></v-icon>
+                            <v-icon class="ms-1" icon="mdi-content-copy" @click="copy(JSON.stringify({'type': item.type, 'createdAt': item.createdAt, 'msg': item.msg, 'data': item.data}));"></v-icon>
                         </template>
                     </v-data-table>
 
@@ -117,6 +121,9 @@ import {useClipboard} from "@vueuse/core";
 
 const {copy} = useClipboard()
 
+/**
+ * loads messages from store and filters them according to selected message types
+ */
 const displayItems = computed(() => {
     let items = [] as Message[]
     useMessageStore().messages.forEach(m => {
@@ -130,19 +137,18 @@ const displayItems = computed(() => {
 const sortBy = ref([{key: 'createdAt', order: 'desc'}])
 const search = ref('')
 const tableHeaders = ref([
-    {title: 'Type', key: 'type'},
-    {
-        title: 'Created',
-        key: 'createdAt',
-        value: (item: Message) => `${DateTime.fromSeconds(item.createdAt).toLocaleString(DateTime.DATETIME_MED)}`,
-    },
-    {title: 'Message', key: 'msg'},
+    {title: 'Typ', key: 'type'},
+    {title: 'Erstellt', key: 'createdAt'},
+    {title: 'Nachricht', key: 'msg'},
     {title: 'Actions', key: 'actions', align: 'end'},
 ])
 const typeFilter = ref([MessageType.SUCCESS, MessageType.INFO, MessageType.WARNING, MessageType.ERROR])
 const detailItem = ref({} as Message)
 const showDetailDialog = ref(false)
 
+/**
+ * create test message (for testing message framework)
+ */
 function addTestMessage() {
     let types = [MessageType.SUCCESS, MessageType.ERROR, MessageType.INFO, MessageType.WARNING]
     useMessageStore().addMessage(types[Math.floor(Math.random() * types.length)], `Lorem Ipsum ${Math.random() * 1000}`, 5000, {json: "data", 'msg': 'whatever', data: 1})
