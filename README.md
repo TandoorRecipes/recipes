@@ -49,7 +49,7 @@
 ## All the must haves
 
 - 📱Optimized for use on **mobile** devices
-- 🌍 localized in many languages thanks to the awesome community
+- 🌍 Localized in many languages thanks to the awesome community
 - 📥️ **Import your collection** from many other [recipe managers](https://docs.tandoor.dev/features/import_export/)
 - ➕ Many more like recipe scaling, image compression, printing views and supermarkets
 
@@ -103,7 +103,7 @@ Beginning with version 0.10.0 the code in this repository is licensed under the 
 **Reasoning**
 **This software and *all* its features are and will always be free for everyone to use and enjoy.**
 
-The reason for the selling exception is that a significant amount of time was spend over multiple years to develop this software.
+The reason for the selling exception is that a significant amount of time was spent over multiple years to develop this software.
 A paid hosted version which will be identical in features and code base to the software offered in this repository will
 likely be released in the future (including all features needed to sell a hosted version as they might also be useful for personal use).
 This will not only benefit me personally but also everyone who self-hosts this software as any profits made through selling the hosted option
