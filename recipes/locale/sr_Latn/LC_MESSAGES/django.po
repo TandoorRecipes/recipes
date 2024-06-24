@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-21 14:39+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\recipes\plugins\enterprise_plugin\helper\permission_helper.py:58
+msgid ""
+"You do not have the required permissions to view this page! You need to have "
+"the following modules licensed: "
+msgstr ""
+"Nemate potrebne dozvole za pregled ove stranice! Morate imati licencirane sledeće module: "
+
+#: .\recipes\plugins\enterprise_plugin\helper\permission_helper.py:76
+msgid "You are not logged in and therefore cannot view this page!"
+msgstr "Niste prijavljeni i stoga ne možete pregledati ovu stranicu!"
+
+#: .\recipes\plugins\enterprise_plugin\helper\permission_helper.py:79
+msgid "You do not have the required modules to view this page!"
+msgstr "Nemate potrebne module za pregled ove stranice!"
+
+#: .\recipes\plugins\enterprise_plugin\helper\permission_helper.py:90
+msgid "You do not have the required module to view this page!"
+msgstr "Nemate potreban modul za pregled ove stranice!"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:32
+msgid "Recipe"
+msgstr "Recept"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:32
+msgid "Recipe Keyword"
+msgstr "Ključna reč recepta"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:32
+msgid "Meal Plan"
+msgstr "Plan ishrane"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:32
+msgid "Shopping"
+msgstr "Kupovina"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:32
+msgid "Book"
+msgstr "Knjiga"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "start"
+msgstr "početak"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "center"
+msgstr "središte"
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "end"
+msgstr "kraj"
+
+#: .\recipes\settings.py:402
+msgid "Armenian "
+msgstr "Jermenski"
+
+#: .\recipes\settings.py:402
+msgid "Bulgarian"
+msgstr "Bugarski"
+
+#: .\recipes\settings.py:402
+msgid "Catalan"
+msgstr "Katalonski"
+
+#: .\recipes\settings.py:402
+msgid "Czech"
+msgstr "Češki"
+
+#: .\recipes\settings.py:402
+msgid "Danish"
+msgstr "Danski"
+
+#: .\recipes\settings.py:402
+msgid "Dutch"
+msgstr "Holandski"
+
+#: .\recipes\settings.py:402
+msgid "English"
+msgstr "Engleski"
+
+#: .\recipes\settings.py:403
+msgid "French"
+msgstr "Francuski"
+
+#: .\recipes\settings.py:403
+msgid "German"
+msgstr "Nemački"
+
+#: .\recipes\settings.py:403
+msgid "Hungarian"
+msgstr "Mađarski"
+
+#: .\recipes\settings.py:403
+msgid "Italian"
+msgstr "Italijanski"
+
+#: .\recipes\settings.py:403
+msgid "Latvian"
+msgstr "Latvijski"
+
+#: .\recipes\settings.py:403
+msgid "Norwegian "
+msgstr "Norveški"
+
+#: .\recipes\settings.py:403
+msgid "Polish"
+msgstr "Poljski"
+
+#: .\recipes\settings.py:404
+msgid "Russian"
+msgstr "Ruski"
+
+#: .\recipes\settings.py:404
+msgid "Spanish"
+msgstr "Španski"
+
+#: .\recipes\settings.py:404
+msgid "Swedish"
+msgstr "Švedski"
