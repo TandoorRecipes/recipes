@@ -27,6 +27,18 @@ SECRET_KEY_FILE=/path/to/file.txt
 #$tp%v6*(*ba01wcz(ip(i5vfz8z$f%qdio&q@anr1#$=%(m4c
 ```
 
+#### Allowed Hosts
+
+> default `*` - options: `recipes.mydomain.com,cooking.mydomain.com,...` (comma seperated domain/ip list)
+
+Security setting to prevent HTTP Host Header Attacks,
+see [Django docs](https://docs.djangoproject.com/en/5.0/ref/settings/#allowed-hosts).
+Some proxies require `*` (default) but it should be set to the actual host(s).
+
+```
+ALLOWED_HOSTS=recipes.mydomain.com
+```
+
 ### Database
 
 Multiple parameters are required to configure the database.
@@ -92,17 +104,6 @@ Port for gunicorn to bind to. Should not be changed if using docker stack with r
 TANDOOR_PORT=8080
 ```
 
-#### Allowed Hosts
-
-> default `*` - options: `recipes.mydomain.com,cooking.mydomain.com,...` (comma seperated domain/ip list)
-
-Security setting to prevent HTTP Host Header Attacks,
-see [Django docs](https://docs.djangoproject.com/en/5.0/ref/settings/#allowed-hosts).
-Many reverse proxies handle this and require the setting to be `*` (default).
-
-```
-ALLOWED_HOSTS=recipes.mydomain.com
-```
 
 #### URL Path
 
