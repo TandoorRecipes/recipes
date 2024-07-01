@@ -81,7 +81,7 @@ jobs:
             type=semver,pattern={{major}}
             type=ref,event=branch
       - name: Build and Push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ${{ matrix.dockerfile }}
