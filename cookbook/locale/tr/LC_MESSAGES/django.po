@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-21 14:39+0100\n"
-"PO-Revision-Date: 2024-04-01 22:04+0000\n"
-"Last-Translator: atom karinca <atomkarinca@tutanota.com>\n"
+"PO-Revision-Date: 2024-07-03 16:38+0000\n"
+"Last-Translator: Taylan TATLI <uyelik-tandoor@tatli.me>\n"
 "Language-Team: Turkish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/tr/>\n"
 "Language: tr\n"
@@ -955,10 +955,8 @@ msgstr ""
 #: .\cookbook\templates\base.html:263
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Ingredient Editor"
-msgstr "Malzemeler"
+msgstr "Malzeme Editörü"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
@@ -1417,10 +1415,8 @@ msgid "Back"
 msgstr ""
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredients"
 msgid "Property Editor"
-msgstr "Malzemeler"
+msgstr "Özellik Editörü"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1910,10 +1906,8 @@ msgid "Info"
 msgstr ""
 
 #: .\cookbook\templates\system.html:99 .\cookbook\templates\system.html:116
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Kesirleri kullan"
+msgstr "Göçler"
 
 #: .\cookbook\templates\system.html:105
 msgid ""
@@ -2459,10 +2453,8 @@ msgid "View your cookbooks"
 msgstr ""
 
 #: .\cookbook\views\views.py:455
-#, fuzzy
-#| msgid "Users with whom to share shopping lists."
 msgid "View your shopping lists"
-msgstr "Alışveriş listesinin paylaşılacağı kullanıcılar."
+msgstr "Alışveriş listelerinizi görüntüleyin"
 
 #~ msgid "Default unit"
 #~ msgstr "Varsayılan birim"
