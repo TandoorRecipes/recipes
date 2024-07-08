@@ -861,7 +861,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
         if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
-        return queryset
+        return queryset.select_related('food')
 
 
 class StepViewSet(viewsets.ModelViewSet):

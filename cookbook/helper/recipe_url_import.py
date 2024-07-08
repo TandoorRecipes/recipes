@@ -373,8 +373,8 @@ def parse_servings(servings):
             servings = 1
     elif isinstance(servings, list):
         try:
-            servings = int(re.findall(r'\b\d+\b', servings[0])[0])
-        except KeyError:
+            servings = int(re.findall(r'\b\d+\b', str(servings[0]))[0])
+        except (KeyError, IndexError):
             servings = 1
     return servings
 
