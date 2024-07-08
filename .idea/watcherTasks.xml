@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectTasksOptions">
-    <TaskOptions isEnabled="true">
+    <TaskOptions isEnabled="false">
       <option name="arguments" value="-m flake8 $FilePath$ --config $ContentRoot$\.flake8" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
