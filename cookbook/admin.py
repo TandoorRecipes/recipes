@@ -185,7 +185,7 @@ class StepAdmin(admin.ModelAdmin):
     @admin.display(description="Name")
     def recipe_and_name(obj):
         if not obj.recipe_set.exists():
-            return f"Orphaned Step{'':s if not obj.name else f': {obj.name}'}"
+            return "Orphaned Step" + ('' if not obj.name else f': {obj.name}')
         return f"{obj.recipe_set.first().name}: {obj.name}" if obj.name else obj.recipe_set.first().name
 
 
@@ -376,10 +376,17 @@ class ShareLinkAdmin(admin.ModelAdmin):
 admin.site.register(ShareLink, ShareLinkAdmin)
 
 
+@admin.action(description='Delete all properties with type')
+def delete_properties_with_type(modeladmin, request, queryset):
+    for pt in queryset:
+        Property.objects.filter(property_type=pt).delete()
+
+
 class PropertyTypeAdmin(admin.ModelAdmin):
-    search_fields = ('space',)
+    search_fields = ('name',)
 
     list_display = ('id', 'space', 'name', 'fdc_id')
+    actions = [delete_properties_with_type]
 
 
 admin.site.register(PropertyType, PropertyTypeAdmin)

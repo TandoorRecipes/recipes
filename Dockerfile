@@ -6,6 +6,8 @@ RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg li
 #Print all logs without buffering it.
 ENV PYTHONUNBUFFERED 1
 
+ENV DOCKER true
+
 #This port will be used by gunicorn.
 EXPOSE 8080
 

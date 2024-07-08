@@ -348,7 +348,7 @@ def system(request):
         request, 'system.html', {
             'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'postgres_version': postgres_ver, 'postgres_status': database_status,
             'postgres_message': database_message, 'version_info': VERSION_INFO, 'plugins': PLUGINS, 'secret_key': secret_key, 'orphans': orphans, 'migration_info': migration_info,
-            'missing_migration': missing_migration,
+            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS,
         })
 
 

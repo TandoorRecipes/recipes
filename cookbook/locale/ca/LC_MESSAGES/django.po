@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-21 14:39+0100\n"
+"POT-Creation-Date: 2024-07-08 17:43+0200\n"
 "PO-Revision-Date: 2024-03-08 23:19+0000\n"
 "Last-Translator: Enric Bergadà <enric@bergada.cat>\n"
 "Language-Team: Catalan <http://translate.tandoor.dev/projects/tandoor/"
@@ -280,33 +280,33 @@ msgstr "Has arribat al nombre màxim de receptes per al vostre espai."
 msgid "You have more users than allowed in your space."
 msgstr "Tens més usuaris dels permesos al teu espai."
 
-#: .\cookbook\helper\recipe_url_import.py:304
+#: .\cookbook\helper\recipe_url_import.py:310
 #, fuzzy
 #| msgid "Use fractions"
 msgid "reverse rotation"
 msgstr "Utilitza fraccions"
 
-#: .\cookbook\helper\recipe_url_import.py:305
+#: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:306
+#: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:307
+#: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:308
+#: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:309
+#: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:310
+#: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
 msgstr ""
 
@@ -430,7 +430,7 @@ msgstr "Dinar"
 msgid "Dinner"
 msgstr "Sopar"
 
-#: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:920
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:919
 msgid "Other"
 msgstr "Un altre"
 
@@ -470,45 +470,45 @@ msgstr ""
 "Emmagatzematge màxim de fitxers per espai en MB. 0 per il·limitat, -1 per "
 "desactivar la càrrega de fitxers."
 
-#: .\cookbook\models.py:455 .\cookbook\templates\search.html:7
+#: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
 msgid "Search"
 msgstr "Cerca"
 
-#: .\cookbook\models.py:456 .\cookbook\templates\base.html:114
+#: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
 msgid "Meal-Plan"
 msgstr "Plans de Menjar"
 
-#: .\cookbook\models.py:457 .\cookbook\templates\base.html:122
-#: .\cookbook\views\views.py:454
+#: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
+#: .\cookbook\views\views.py:459
 msgid "Books"
 msgstr "Receptes"
 
-#: .\cookbook\models.py:458 .\cookbook\templates\base.html:118
-#: .\cookbook\views\views.py:455
+#: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
+#: .\cookbook\views\views.py:460
 msgid "Shopping"
 msgstr "Compres"
 
-#: .\cookbook\models.py:753
+#: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
 msgstr " forma part d'un pas de recepta i no es pot suprimir"
 
-#: .\cookbook\models.py:919
+#: .\cookbook\models.py:918
 msgid "Nutrition"
 msgstr "Nutrició"
 
-#: .\cookbook\models.py:919
+#: .\cookbook\models.py:918
 #, fuzzy
 #| msgid "Merge"
 msgid "Allergen"
 msgstr "Combina"
 
-#: .\cookbook\models.py:920
+#: .\cookbook\models.py:919
 msgid "Price"
 msgstr ""
 
-#: .\cookbook\models.py:920
+#: .\cookbook\models.py:919
 msgid "Goal"
 msgstr ""
 
@@ -1985,14 +1985,14 @@ msgid "Media Serving"
 msgstr "Servei Mitjans"
 
 #: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
-#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:91
-#: .\cookbook\templates\system.html:102
+#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
+#: .\cookbook\templates\system.html:102 .\cookbook\templates\system.html:113
 msgid "Warning"
 msgstr "Advertència"
 
 #: .\cookbook\templates\system.html:47 .\cookbook\templates\system.html:61
-#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:93
-#: .\cookbook\templates\system.html:102
+#: .\cookbook\templates\system.html:75 .\cookbook\templates\system.html:88
+#: .\cookbook\templates\system.html:104 .\cookbook\templates\system.html:113
 msgid "Ok"
 msgstr "Ok"
 
@@ -2013,7 +2013,8 @@ msgstr ""
 "la vostra instal·lació."
 
 #: .\cookbook\templates\system.html:55 .\cookbook\templates\system.html:70
-#: .\cookbook\templates\system.html:83 .\cookbook\views\views.py:302
+#: .\cookbook\templates\system.html:83 .\cookbook\templates\system.html:94
+#: .\cookbook\views\views.py:303
 msgid "Everything is fine!"
 msgstr "Tot està bé!"
 
@@ -2062,20 +2063,33 @@ msgstr ""
 "<code>DEBUG = 0</code> al fitxer de configuració<code> .env.</code>"
 
 #: .\cookbook\templates\system.html:86
+msgid "Allowed Hosts"
+msgstr ""
+
+#: .\cookbook\templates\system.html:90
+msgid ""
+"\n"
+"            Your allowed hosts are configured to allow every host. This "
+"might be ok in some setups but should be avoided. Please see the docs about "
+"this.\n"
+"        "
+msgstr ""
+
+#: .\cookbook\templates\system.html:97
 msgid "Database"
 msgstr "Base de Dades"
 
-#: .\cookbook\templates\system.html:89
+#: .\cookbook\templates\system.html:100
 msgid "Info"
 msgstr "Info"
 
-#: .\cookbook\templates\system.html:99 .\cookbook\templates\system.html:116
+#: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
 #, fuzzy
 #| msgid "Use fractions"
 msgid "Migrations"
 msgstr "Utilitza fraccions"
 
-#: .\cookbook\templates\system.html:105
+#: .\cookbook\templates\system.html:116
 msgid ""
 "\n"
 "            Migrations should never fail!\n"
@@ -2087,19 +2101,19 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\cookbook\templates\system.html:171
+#: .\cookbook\templates\system.html:182
 msgid "False"
 msgstr ""
 
-#: .\cookbook\templates\system.html:171
+#: .\cookbook\templates\system.html:182
 msgid "True"
 msgstr ""
 
-#: .\cookbook\templates\system.html:196
+#: .\cookbook\templates\system.html:207
 msgid "Hide"
 msgstr ""
 
-#: .\cookbook\templates\system.html:199
+#: .\cookbook\templates\system.html:210
 #, fuzzy
 #| msgid "Show Log"
 msgid "Show"
@@ -2542,7 +2556,7 @@ msgid "There was an error importing this recipe!"
 msgstr "S'ha produït un error en importar la recepta!"
 
 #: .\cookbook\views\views.py:69 .\cookbook\views\views.py:177
-#: .\cookbook\views\views.py:204 .\cookbook\views\views.py:418
+#: .\cookbook\views\views.py:204 .\cookbook\views\views.py:423
 msgid "This feature is not available in the demo version!"
 msgstr "Funció no està disponible a la versió de demostració!"
 
@@ -2585,17 +2599,21 @@ msgstr ""
 msgid "Fuzzy search is not compatible with this search method!"
 msgstr "Cerca difusa no és compatible amb aquest mètode de cerca!"
 
-#: .\cookbook\views\views.py:305
+#: .\cookbook\views\views.py:306
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
 
-#: .\cookbook\views\views.py:308
+#: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
 msgstr ""
 
-#: .\cookbook\views\views.py:312
+#: .\cookbook\views\views.py:313
+msgid "Unable to determine PostgreSQL version."
+msgstr ""
+
+#: .\cookbook\views\views.py:317
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -2612,7 +2630,7 @@ msgstr ""
 "Això està bé, però no es recomana com alguns\n"
 "les funcions només funcionen amb bases de dades postgres."
 
-#: .\cookbook\views\views.py:355
+#: .\cookbook\views\views.py:360
 #, fuzzy
 #| msgid ""
 #| "The setup page can only be used to create the first user! If you have "
@@ -2627,27 +2645,27 @@ msgstr ""
 "Si heu oblidat les vostres credencials de superusuari, consulteu la "
 "documentació de django sobre com restablir les contrasenyes."
 
-#: .\cookbook\views\views.py:364
+#: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
 msgstr "Les contrasenyes no coincideixen!"
 
-#: .\cookbook\views\views.py:372
+#: .\cookbook\views\views.py:377
 msgid "User has been created, please login!"
 msgstr "L'usuari s'ha creat, si us plau inicieu la sessió!"
 
-#: .\cookbook\views\views.py:388
+#: .\cookbook\views\views.py:393
 msgid "Malformed Invite Link supplied!"
 msgstr "S'ha proporcionat un enllaç d'invitació mal format."
 
-#: .\cookbook\views\views.py:405
+#: .\cookbook\views\views.py:410
 msgid "Successfully joined space."
 msgstr "Unit correctament a l'espai."
 
-#: .\cookbook\views\views.py:411
+#: .\cookbook\views\views.py:416
 msgid "Invite Link not valid or already used!"
 msgstr "L'enllaç d'invitació no és vàlid o ja s'ha utilitzat."
 
-#: .\cookbook\views\views.py:427
+#: .\cookbook\views\views.py:432
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
@@ -2655,7 +2673,7 @@ msgstr ""
 "Notificació d'enllaços compartits no activada en aquesta instància. Aviseu "
 "l'administrador per informar dels problemes."
 
-#: .\cookbook\views\views.py:432
+#: .\cookbook\views\views.py:437
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
@@ -2663,23 +2681,23 @@ msgstr ""
 "L'enllaç per compartir receptes s'ha desactivat! Per obtenir informació "
 "addicional, poseu-vos en contacte amb l'administrador."
 
-#: .\cookbook\views\views.py:446
+#: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
 msgstr ""
 
-#: .\cookbook\views\views.py:453
+#: .\cookbook\views\views.py:458
 msgid "Plan"
 msgstr "Pla"
 
-#: .\cookbook\views\views.py:453
+#: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
 msgstr ""
 
-#: .\cookbook\views\views.py:454
+#: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
 msgstr ""
 
-#: .\cookbook\views\views.py:455
+#: .\cookbook\views\views.py:460
 #, fuzzy
 #| msgid "New Shopping List"
 msgid "View your shopping lists"

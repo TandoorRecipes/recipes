@@ -67,7 +67,7 @@ echo "Migrating database"
 
 python manage.py migrate
 
-echo "Generating static files"
+echo "Collecting static files, this may take a while..."
 
 python manage.py collectstatic_js_reverse
 python manage.py collectstatic --noinput

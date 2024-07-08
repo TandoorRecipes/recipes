@@ -4,6 +4,7 @@ import requests
 import validators
 
 from cookbook.helper.ingredient_parser import IngredientParser
+from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
 from cookbook.models import Ingredient, Keyword, Recipe, Step
 
@@ -18,32 +19,38 @@ class Plantoeat(Integration):
         tags = None
         ingredients = []
         directions = []
-        description = ''
+        fields = {}
         for line in file.replace('\r', '').split('\n'):
             if line.strip() != '':
                 if 'Title:' in line:
-                    title = line.replace('Title:', '').replace('"', '').strip()
+                    fields['name'] = line.replace('Title:', '').replace('"', '').strip()
                 if 'Description:' in line:
-                    description = line.replace('Description:', '').strip()
-                if 'Source:' in line or 'Serves:' in line or 'Prep Time:' in line or 'Cook Time:' in line:
-                    directions.append(line.strip() + '\n')
+                    fields['description'] = line.replace('Description:', '').strip()
+                if 'Serves:' in line:
+                    fields['servings'] = parse_servings(line.replace('Serves:', '').strip())
+                if 'Source:' in line:
+                    fields['source_url'] = line.replace('Source:', '').strip()
                 if 'Photo Url:' in line:
                     image_url = line.replace('Photo Url:', '').strip()
+                if 'Prep Time:' in line:
+                    fields['working_time'] = parse_time(line.replace('Prep Time:', '').strip())
+                if 'Cook Time:' in line:
+                    fields['waiting_time'] = parse_time(line.replace('Cook Time:', '').strip())
                 if 'Tags:' in line:
                     tags = line.replace('Tags:', '').strip()
-                if ingredient_mode:
-                    if len(line) > 2 and 'Instructions:' not in line:
-                        ingredients.append(line.strip())
-                if direction_mode:
-                    if len(line) > 2:
-                        directions.append(line.strip() + '\n')
                 if 'Ingredients:' in line:
                     ingredient_mode = True
                 if 'Directions:' in line:
                     ingredient_mode = False
                     direction_mode = True
+                if ingredient_mode:
+                    if len(line) > 2 and 'Ingredients:' not in line:
+                        ingredients.append(line.strip())
+                if direction_mode:
+                    if len(line) > 2:
+                        directions.append(line.strip() + '\n')                
 
-        recipe = Recipe.objects.create(name=title, description=description, created_by=self.request.user, internal=True, space=self.request.space)
+        recipe = Recipe.objects.create(**fields, created_by=self.request.user, internal=True, space=self.request.space)
 
         step = Step.objects.create(
             instruction='\n'.join(directions) + '\n\n', space=self.request.space, show_ingredients_table=self.request.user.userpreference.show_step_ingredients,
