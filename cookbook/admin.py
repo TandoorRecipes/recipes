@@ -185,7 +185,7 @@ class StepAdmin(admin.ModelAdmin):
     @admin.display(description="Name")
     def recipe_and_name(obj):
         if not obj.recipe_set.exists():
-            return f"Orphaned Step{'' if not obj.name else f': {obj.name}'}"
+            return "Orphaned Step" + ('' if not obj.name else f': {obj.name}')
         return f"{obj.recipe_set.first().name}: {obj.name}" if obj.name else obj.recipe_set.first().name
 
 
