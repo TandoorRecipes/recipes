@@ -273,12 +273,12 @@ def test_search_units(found_recipe, recipes, u1_s1, space_1):
         ('fuzzy_lookups', True), ('fuzzy_lookups', False)
     ],
     [('unaccent', True), ('unaccent', False)]
-), indirect=['user1'])
+), indirect=['user1'], ids=str)
 @pytest.mark.parametrize("found_recipe, param_type", [
     ({'unit': True}, 'unit'),
     ({'keyword': True}, 'keyword'),
     ({'food': True}, 'food'),
-], indirect=['found_recipe'])
+], indirect=['found_recipe'], ids=str)
 def test_fuzzy_lookup(found_recipe, recipes, param_type, user1, space_1):
     with scope(space=space_1):
         list_url = f'api:{param_type}-list'
@@ -306,14 +306,14 @@ def test_fuzzy_lookup(found_recipe, recipes, param_type, user1, space_1):
         ('istartswith', True), ('istartswith', False),
     ],
     [('unaccent', True), ('unaccent', False)]
-), indirect=['user1'])
+), indirect=['user1'], ids=str)
 @pytest.mark.parametrize("found_recipe", [
     ({'name': True}),
     ({'description': True}),
     ({'instruction': True}),
     ({'keyword': True}),
     ({'food': True}),
-], indirect=['found_recipe'])
+], indirect=['found_recipe'], ids=str)
 # user array contains: user client, expected count of search, expected count of mispelled search, search string, mispelled search string, user search preferences
 def test_search_string(found_recipe, recipes, user1, space_1):
     with scope(space=space_1):
