@@ -6,9 +6,34 @@
             </router-link>
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
-            <v-btn>DEBUG <message-list-dialog></message-list-dialog></v-btn>
+            <v-btn>DEBUG
+                <message-list-dialog></message-list-dialog>
+            </v-btn>
 
-            <v-avatar color="cyan" class="me-2">V</v-avatar>
+            <v-avatar color="cyan" class="me-2">V
+                <v-menu activator="parent">
+
+                    <v-list density="compact">
+                        <v-list-item class="pb-2">
+                            <v-card>
+                                <v-avatar color="cyan" class="me-2">V</v-avatar> vabene1111
+                            </v-card>
+                        </v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-sliders"></v-icon></template>Settings</v-list-item>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-server"></v-icon></template>System</v-list-item>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-subheader>Spaces</v-list-subheader>
+                        <v-list-item>Space 1</v-list-item>
+                        <v-list-item>Space 2</v-list-item>
+                        <v-list-item>Space 3</v-list-item>
+                        <v-divider></v-divider>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon></template>Logout</v-list-item>
+                    </v-list>
+                </v-menu>
+            </v-avatar>
         </v-app-bar>
 
         <v-main>
