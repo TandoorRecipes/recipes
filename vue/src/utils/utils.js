@@ -242,17 +242,22 @@ export const ResolveUrlMixin = {
 }
 
 export function resolveDjangoUrl(url, params = null) {
+    let fun = window.Urls[url];
+    if (typeof fun !== 'function') {
+        console.error(`window.Urls[${url}] is not a function: ${fun}`);
+	return
+    }
     if (params == null) {
-        return window.Urls[url]()
+        return fun()
     } else if (typeof params != "object") {
-        return window.Urls[url](params)
+        return fun(params)
     } else if (typeof params == "object") {
         if (params.length === 1) {
-            return window.Urls[url](params)
+            return fun(params)
         } else if (params.length === 2) {
-            return window.Urls[url](params[0], params[1])
+            return fun(params[0], params[1])
         } else if (params.length === 3) {
-            return window.Urls[url](params[0], params[1], params[2])
+            return fun(params[0], params[1], params[2])
         }
     }
 }

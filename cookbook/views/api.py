@@ -896,7 +896,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
         if unit and re.match(r'^(\d)+$', unit):
             queryset = queryset.filter(unit_id=unit)
 
-        return queryset
+        return queryset.select_related('food')
 
 
 @extend_schema_view(list=extend_schema(parameters=[
