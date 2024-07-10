@@ -32,7 +32,11 @@ export default createVuetify({
     },
     icons: {
         defaultSet: 'fa',
-        aliases,
+        aliases : {
+            ...aliases,
+            save: 'fa-regular fa-floppy-disk',
+            delete: 'fa-regular fa-trash-can',
+        },
         sets: {
             fa,
         },

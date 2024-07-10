@@ -17,6 +17,8 @@
                             <v-textarea
                                 label="Description"
                                 v-model="recipe.description"
+                                :rules="[v => v.length <= 512 || '> 512']"
+                                counter
                                 clearable
                             ></v-textarea>
 
@@ -73,7 +75,28 @@
                 <step-editor v-model="recipe.steps[index]" :step-index="index"></step-editor>
             </v-col>
         </v-row>
+
+        <v-speed-dial
+            location="top"
+            transition="fade-transition"
+        >
+            <template v-slot:activator="{ props: activatorProps }">
+                <v-fab
+                    app
+                    v-bind="activatorProps"
+                    color="primary"
+                    size="large"
+                    icon="$save"
+                ></v-fab>
+            </template>
+
+            <v-btn key="1" icon="$success"></v-btn>
+            <v-btn key="2" icon="$info"></v-btn>
+            <v-btn key="3" icon="$warning"></v-btn>
+            <v-btn key="4" icon="$error"></v-btn>
+        </v-speed-dial>
     </v-container>
+
 
     <v-btn @click="updateRecipe()">Save</v-btn>
     <v-btn :to="{name: 'view_recipe', params: {id: recipe_id}}">View</v-btn>
@@ -110,7 +133,7 @@ export default defineComponent({
 
         const api = new ApiApi()
         api.apiKeywordList({page: 1, pageSize: 100}).then(r => {
-            if(r.results){
+            if (r.results) {
                 this.keywords = r.results
             }
         })
