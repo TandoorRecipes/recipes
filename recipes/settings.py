@@ -48,7 +48,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
+            'format': '{processName} {threadName} {levelname} {asctime} {module} {message}',
             'style': '{',
         },
     },
