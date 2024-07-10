@@ -5,6 +5,7 @@ import threading
 from asyncio import Task
 from dataclasses import dataclass
 from enum import Enum
+from logging import Logger
 from types import UnionType
 from typing import List, Any, Dict, Optional, Type
 
@@ -39,10 +40,12 @@ class Work:
 # 4. Work is marked as consumed, and next entry of the queue is consumed.
 # Each 'Work' is processed in sequential by the worker, so the throughput is about [workers * the slowest connector]
 class ConnectorManager:
+    _logger: Logger
     _queue: queue.Queue
     _listening_to_classes = REGISTERED_CLASSES | ConnectorConfig
 
     def __init__(self):
+        self._logger = logging.getLogger("recipes.connector")
         self._queue = queue.Queue(maxsize=settings.EXTERNAL_CONNECTORS_QUEUE_SIZE)
         self._worker = threading.Thread(target=self.worker, args=(0, self._queue,), daemon=True)
         self._worker.start()
@@ -65,7 +68,7 @@ class ConnectorManager:
         try:
             self._queue.put_nowait(Work(instance, action_type))
         except queue.Full:
-            logging.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
+            self._logger.info(f"queue was full, so skipping {action_type} of type {type(instance)}")
             return
 
     def stop(self):
@@ -74,10 +77,12 @@ class ConnectorManager:
 
     @staticmethod
     def worker(worker_id: int, worker_queue: queue.Queue):
+        logger = logging.getLogger("recipes.connector.worker")
+
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-        logging.info(f"started ConnectionManager worker {worker_id}")
+        logger.info(f"started ConnectionManager worker {worker_id}")
 
         # When multiple workers are used, please make sure the cache is shared across all threads, otherwise it might lead to un-expected behavior.
         _connectors_cache: Dict[int, List[Connector]] = dict()
@@ -90,6 +95,8 @@ class ConnectorManager:
 
             if item is None:
                 break
+
+            logger.debug(f"received {item.instance=} with {item.actionType=}")
 
             # If a Connector was changed/updated, refresh connector from the database for said space
             refresh_connector_cache = isinstance(item.instance, ConnectorConfig)
@@ -111,7 +118,7 @@ class ConnectorManager:
                         try:
                             connector: Optional[Connector] = ConnectorManager.get_connected_for_config(config)
                         except BaseException:
-                            logging.exception(f"failed to initialize {config.name}")
+                            logger.exception(f"failed to initialize {config.name}")
                             continue
 
                         if connector is not None:
@@ -123,10 +130,12 @@ class ConnectorManager:
                 worker_queue.task_done()
                 continue
 
+            logger.debug(f"running {len(connectors)} connectors for {item.instance=} with {item.actionType=}")
+
             loop.run_until_complete(run_connectors(connectors, space, item.instance, item.actionType))
             worker_queue.task_done()
 
-        logging.info(f"terminating ConnectionManager worker {worker_id}")
+        logger.info(f"terminating ConnectionManager worker {worker_id}")
 
         asyncio.set_event_loop(None)
         loop.close()

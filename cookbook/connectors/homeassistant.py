@@ -20,7 +20,7 @@ class HomeAssistant(Connector):
         if config.url[-1] != "/":
             config.url += "/"
         self._config = config
-        self._logger = logging.getLogger("connector.HomeAssistant")
+        self._logger = logging.getLogger("recipes.connector.HomeAssistant")
 
     async def homeassistant_api_call(self, method: str, path: str, data: Dict) -> str:
         headers = {
