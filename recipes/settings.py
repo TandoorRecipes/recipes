@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else 'INSECURE_S
 DEBUG = bool(int(os.getenv('DEBUG', True)))
 DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', True)))
 
-LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
