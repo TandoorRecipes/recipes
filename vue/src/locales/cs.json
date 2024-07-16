@@ -552,5 +552,11 @@
     "fluid_ounce": "tekutá unce [fl oz] (US, objem)",
     "make_now_count": "Nejvyšší počet chybějících ingrediencí",
     "Alignment": "Zarovnání",
-    "Never_Unit": "Není jednotkou"
+    "Never_Unit": "Není jednotkou",
+    "Delete_All": "Smazat vše",
+    "DefaultPage": "Výchozí stránka",
+    "Shopping_input_placeholder": "např. Brambora/100 Brambor/ 100g Brambor",
+    "Error": "Chyba",
+    "Calculator": "Kalkulačka",
+    "Enable": "Aktivovat"
 }
