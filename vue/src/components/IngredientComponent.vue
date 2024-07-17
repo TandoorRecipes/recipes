@@ -31,11 +31,9 @@
             </td>
             <td v-if="detailed" class="ingredients__note align-baseline">
                 <template v-if="ingredient.note">
-                    <span class="ingredients__note ingredients__note_hover d-print-none touchable py-0 px-2" v-b-popover.hover="ingredient.note">
-                        <i class="far fa-comment"></i>
+                    <span class="ingredients__note">
+                        <div class="ingredients__note ingredients__note_print"><i>{{ ingredient.note }}</i></div>
                     </span>
-
-                    <div class="ingredients__note ingredients__note_print d-none d-print-block"><i class="far fa-comment-alt d-print-none"></i> {{ ingredient.note }}</div>
                 </template>
             </td>
         </template>
