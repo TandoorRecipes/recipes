@@ -1,4 +1,4 @@
-import {ApiApi, Keyword as IKeyword, Food as IFood, RecipeOverview as IRecipeOverview, Recipe as IRecipe, Unit as IUnit, MealType as IMealType} from "@/openapi";
+import {ApiApi, Keyword as IKeyword, Food as IFood, RecipeOverview as IRecipeOverview, Recipe as IRecipe, Unit as IUnit, MealType as IMealType, User as IUser} from "@/openapi";
 
 export function getModelFromStr(model_name: String) {
     switch (model_name.toLowerCase()) {
@@ -16,6 +16,9 @@ export function getModelFromStr(model_name: String) {
         }
         case 'mealtype': {
             return new MealType
+        }
+        case 'user': {
+            return new User
         }
         default: {
             throw Error(`Invalid Model ${model_name}, did you forget to register it in Models.ts?`)
@@ -117,6 +120,25 @@ export class MealType extends GenericModel<IMealType> {
         return api.apiMealTypeList({}).then(r => {
             if (r.results) {
                 return r.results
+            } else {
+                return []
+            }
+        })
+    }
+}
+
+export class User extends GenericModel<IUser> {
+    create(name: string) {
+        return new Promise<undefined>( () => {
+            return undefined
+        })
+     }
+
+    list(query: string) {
+        const api = new ApiApi()
+        return api.apiUserList({}).then(r => {
+            if (r) {
+                return r
             } else {
                 return []
             }

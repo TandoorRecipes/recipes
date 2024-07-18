@@ -1,5 +1,5 @@
 <template>
-    <v-dialog activator="parent" v-model="dialog">
+    <v-dialog activator="parent" v-model="dialog" max-width="1200">
         <template v-slot:default="{ isActive }">
             <v-card style="overflow: auto">
                 <v-card-title>Meal Plan Edit
@@ -21,6 +21,7 @@
                                 <ModelSelect model="MealType" :allow-create="true" v-model="mutableMealPlan.mealType"></ModelSelect>
                                 <v-number-input control-variant="split" :min="0" v-model="mutableMealPlan.servings"></v-number-input>
                                 <v-text-field label="Share" v-model="mutableMealPlan.shared"></v-text-field>
+                                <ModelSelect model="User" :allow-create="false" v-model="mutableMealPlan.shared"></ModelSelect>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <ModelSelect model="recipe" v-model="mutableMealPlan.recipe"></ModelSelect>
