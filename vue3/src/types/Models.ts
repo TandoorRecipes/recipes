@@ -26,10 +26,38 @@ export function getModelFromStr(model_name: String) {
     }
 }
 
+/**
+ * Generic model used for generic model selects/requests
+ * TODO should be somehow automatically created in the model but for now this works
+ */
 export abstract class GenericModel<T> {
-    abstract list(query: string): Promise<Array<T>>
 
-    abstract create(name: string): Promise<T>
+    /**
+     * override and set to false if model is read only
+     */
+    canCreate(): boolean {
+        return true
+    }
+
+    /**
+     * create a new instance of a given model
+     * do not override on models that cannot create
+     * @param name value for field name
+     */
+    create(name: string): Promise<T> {
+        if (!this.canCreate()) {
+            throw new Error('Cannot create on this model!')
+        }
+        return new Promise(() => {
+            return undefined
+        })
+    };
+
+    /**
+     * retrieves instances of given model with given query from DB
+     * @param query value for standard query parameter of endpoint
+     */
+    abstract list(query: string): Promise<Array<T>>
 }
 
 //TODO this can probably be achieved by manipulating the client generation https://openapi-generator.tech/docs/templating/#models
@@ -128,11 +156,10 @@ export class MealType extends GenericModel<IMealType> {
 }
 
 export class User extends GenericModel<IUser> {
-    create(name: string) {
-        return new Promise<undefined>( () => {
-            return undefined
-        })
-     }
+
+    canCreate(): boolean {
+        return false
+    }
 
     list(query: string) {
         const api = new ApiApi()

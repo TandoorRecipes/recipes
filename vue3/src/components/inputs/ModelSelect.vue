@@ -3,6 +3,7 @@
 
         <!--TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <!-- TODO strange behavior/layering issues with appendTo body, find soltion to make it work -->
+
         <Multiselect
             :id="id"
             class="material-multiselect z-max"
@@ -101,16 +102,21 @@ function search(query: string) {
  * @param select$ reference to multiselect instance
  */
 async function createObject(object: any, select$: Multiselect) {
-    console.log("CREATING NEW with -> ", object)
+    if (model_class.value.canCreate()) {
+        console.log("CREATING NEW with -> ", object)
 
-    emit('create', object)
+        emit('create', object)
 
-    return await model_class.value.create(object[props.itemLabel]).then((createdObj) => {
-        useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
-        return createdObj
-    }).catch((err) => {
-        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-    })
+        return await model_class.value.create(object[props.itemLabel]).then((createdObj) => {
+            useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
+            return createdObj
+        }).catch((err) => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        })
+    } else {
+        console.error('Cannot create using model, should probably set can_create prop to false or fix model ', model_class)
+    }
+
 }
 
 

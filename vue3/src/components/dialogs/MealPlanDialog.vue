@@ -11,6 +11,9 @@
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-text-field label="Title" v-model="mutableMealPlan.title"></v-text-field>
+                                {{mutableMealPlan.fromDate}}
+                                {{mutableMealPlan.toDate}}
+                                {{ dateRangeValue}}
                                 <v-date-input
                                     v-model="dateRangeValue"
                                     label="Plan Date"
@@ -19,12 +22,11 @@
                                     prepend-inner-icon="$calendar"
                                 ></v-date-input>
                                 <ModelSelect model="MealType" :allow-create="true" v-model="mutableMealPlan.mealType"></ModelSelect>
-                                <v-number-input control-variant="split" :min="0" v-model="mutableMealPlan.servings"></v-number-input>
-                                <v-text-field label="Share" v-model="mutableMealPlan.shared"></v-text-field>
-                                <ModelSelect model="User" :allow-create="false" v-model="mutableMealPlan.shared"></ModelSelect>
+                                <v-number-input control-variant="split" :min="0" v-model="mutableMealPlan.servings" label="Servings"></v-number-input>
+                                <ModelSelect model="User" :allow-create="false" v-model="mutableMealPlan.shared" item-label="displayName" mode="tags"></ModelSelect>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <ModelSelect model="recipe" v-model="mutableMealPlan.recipe"></ModelSelect>
+                                <ModelSelect model="recipe" v-model="mutableMealPlan.recipe" @update:modelValue="mutableMealPlan.servings = mutableMealPlan.recipe?.servings ? mutableMealPlan.recipe?.servings : 1"></ModelSelect>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>--> <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
                             </v-col>
@@ -78,6 +80,7 @@ if (props.mealPlan != undefined) {
 watchEffect(() => {
     if (props.mealPlan != undefined) {
         mutableMealPlan.value = props.mealPlan
+        console.log('chjaning range')
         dateRangeValue.value.push(mutableMealPlan.value.fromDate)
         dateRangeValue.value.push(mutableMealPlan.value.toDate)
     } else {
