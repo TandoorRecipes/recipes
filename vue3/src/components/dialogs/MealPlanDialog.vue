@@ -19,12 +19,12 @@
                                     prepend-inner-icon="$calendar"
                                 ></v-date-input>
 
-                                <v-input >
-                                    <v-btn-group color="primary">
-                                        <v-btn @click="">-1</v-btn>
-                                        <v-btn @click="dateRangeValue = shiftDateRange(dateRangeValue, -1)"><-</v-btn>
-                                        <v-btn @click="dateRangeValue = shiftDateRange(dateRangeValue, +1)">-></v-btn>
-                                        <v-btn>+1</v-btn>
+                                <v-input>
+                                    <v-btn-group elevation="1" class="w-100" divided border>
+                                        <v-btn class="w-25" @click="adjustDateRangeLength(dateRangeValue,-1)"><i class="fa-solid fa-minus"></i></v-btn>
+                                        <v-btn class="w-25" @click="dateRangeValue = shiftDateRange(dateRangeValue, -1)"><i class="fa-solid fa-angles-left"></i></v-btn>
+                                        <v-btn class="w-25" @click="dateRangeValue = shiftDateRange(dateRangeValue, +1)"><i class="fa-solid fa-angles-right"></i></v-btn>
+                                        <v-btn class="w-25" @click="adjustDateRangeLength(dateRangeValue,+1)"><i class="fa-solid fa-plus"></i></v-btn>
                                     </v-btn-group>
                                 </v-input>
 
@@ -69,7 +69,7 @@ import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once compon
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useMessageStore} from "@/stores/MessageStore";
-import {shiftDateRange} from "@/utils/date_utils";
+import {adjustDateRangeLength, shiftDateRange} from "@/utils/date_utils";
 
 const props = defineProps(
     {
@@ -88,7 +88,7 @@ if (props.mealPlan != undefined) {
 /**
  * once dialog is opened check if a meal plan prop is given, if so load it as the default values
  */
-watch(dialog,() => {
+watch(dialog, () => {
     if (dialog.value && props.mealPlan != undefined) {
         mutableMealPlan.value = props.mealPlan
 
@@ -105,6 +105,9 @@ watch(dialog,() => {
     }
 });
 
+/**
+ * save meal plan into DB, parsing values from dateRange into meal plan object
+ */
 function saveMealPlan() {
 
     if (mutableMealPlan.value != undefined) {
@@ -126,7 +129,11 @@ function saveMealPlan() {
     }
 }
 
+/**
+ * create new meal plan on current date
+ */
 function newMealPlan() {
+    // TODO load default meal type and shared users
     return {
         fromDate: DateTime.now().toJSDate(),
         toDate: DateTime.now().toJSDate(),
