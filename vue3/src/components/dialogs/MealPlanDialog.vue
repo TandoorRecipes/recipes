@@ -11,9 +11,6 @@
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-text-field label="Title" v-model="mutableMealPlan.title"></v-text-field>
-                                {{mutableMealPlan.fromDate}}
-                                {{mutableMealPlan.toDate}}
-                                {{ dateRangeValue}}
                                 <v-date-input
                                     v-model="dateRangeValue"
                                     label="Plan Date"
@@ -21,6 +18,16 @@
                                     prepend-icon=""
                                     prepend-inner-icon="$calendar"
                                 ></v-date-input>
+
+                                <v-input >
+                                    <v-btn-group color="primary">
+                                        <v-btn @click="">-1</v-btn>
+                                        <v-btn @click="dateRangeValue = shiftDateRange(dateRangeValue, -1)"><-</v-btn>
+                                        <v-btn @click="dateRangeValue = shiftDateRange(dateRangeValue, +1)">-></v-btn>
+                                        <v-btn>+1</v-btn>
+                                    </v-btn-group>
+                                </v-input>
+
                                 <ModelSelect model="MealType" :allow-create="true" v-model="mutableMealPlan.mealType"></ModelSelect>
                                 <v-number-input control-variant="split" :min="0" v-model="mutableMealPlan.servings" label="Servings"></v-number-input>
                                 <ModelSelect model="User" :allow-create="false" v-model="mutableMealPlan.shared" item-label="displayName" mode="tags"></ModelSelect>
@@ -53,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType, ref, watchEffect} from "vue";
+import {onMounted, PropType, ref, watch, watchEffect} from "vue";
 import {ApiApi, MealPlan, RecipeOverview} from "@/openapi";
 import {DateTime} from "luxon";
 import RecipeCard from "@/components/display/RecipeCard.vue";
@@ -62,6 +69,7 @@ import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once compon
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useMessageStore} from "@/stores/MessageStore";
+import {shiftDateRange} from "@/utils/date_utils";
 
 const props = defineProps(
     {
@@ -77,12 +85,21 @@ if (props.mealPlan != undefined) {
     mutableMealPlan.value = props.mealPlan
 }
 
-watchEffect(() => {
-    if (props.mealPlan != undefined) {
+/**
+ * once dialog is opened check if a meal plan prop is given, if so load it as the default values
+ */
+watch(dialog,() => {
+    if (dialog.value && props.mealPlan != undefined) {
         mutableMealPlan.value = props.mealPlan
-        console.log('chjaning range')
-        dateRangeValue.value.push(mutableMealPlan.value.fromDate)
-        dateRangeValue.value.push(mutableMealPlan.value.toDate)
+
+        dateRangeValue.value = []
+        if (!dateRangeValue.value.includes(mutableMealPlan.value.fromDate)) {
+            dateRangeValue.value.push(mutableMealPlan.value.fromDate)
+        }
+        if (mutableMealPlan.value.toDate && !dateRangeValue.value.includes(mutableMealPlan.value.toDate)) {
+            dateRangeValue.value.push(mutableMealPlan.value.toDate)
+        }
+
     } else {
         mutableMealPlan.value = newMealPlan()
     }
