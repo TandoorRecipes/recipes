@@ -70,6 +70,7 @@ import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component 
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useMessageStore} from "@/stores/MessageStore";
 import {adjustDateRangeLength, shiftDateRange} from "@/utils/date_utils";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const props = defineProps(
     {
@@ -133,11 +134,12 @@ function saveMealPlan() {
  * create new meal plan on current date
  */
 function newMealPlan() {
-    // TODO load default meal type and shared users
+    // TODO load default meal type
     return {
         fromDate: DateTime.now().toJSDate(),
         toDate: DateTime.now().toJSDate(),
         servings: 1,
+        shared: useUserPreferenceStore().userSettings.planShare
     } as MealPlan
 }
 

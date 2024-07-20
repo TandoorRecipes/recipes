@@ -90,8 +90,11 @@ import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 import {useDisplay} from "vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const {lgAndUp} = useDisplay()
+
+useUserPreferenceStore()
 
 </script>
 
