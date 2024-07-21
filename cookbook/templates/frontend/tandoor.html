@@ -1,12 +1,15 @@
 {% load django_vite %}
 
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
 {% load theming_tags %}
 {% load custom_tags %}
 
 {% theme_values request as theme_values %}
 
 <!DOCTYPE html>
-<html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>Tandoor</title>
     <meta charset="utf-8">

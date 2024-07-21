@@ -55,10 +55,14 @@ const props = defineProps({
 
     allowCreate: {type: Boolean, default: false},
 
+    placeholder: {type: String, default: undefined},
+    noOptionsText: {type: String, default: undefined},
+    noResultsText: {type: String, default: undefined},
+
     // not verified
     search_on_load: {type: Boolean, default: false},
 
-    placeholder: {type: String, default: undefined},
+
     parent_variable: {type: String, default: undefined},
 
     sticky_options: {
