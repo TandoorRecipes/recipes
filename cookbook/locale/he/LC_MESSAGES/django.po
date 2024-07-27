@@ -8,27 +8,27 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-07-08 17:43+0200\n"
-"PO-Revision-Date: 2023-11-15 08:20+0000\n"
-"Last-Translator: avi meyer <avmeyer@gmail.com>\n"
-"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/he/>\n"
+"PO-Revision-Date: 2024-07-28 08:38+0000\n"
+"Last-Translator: dudu dor <dudpon@gmail.com>\n"
+"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
-msgstr ""
+msgstr "שני השדות אופציונלים. אם שני השדות ריקים, שם המשתמש יוצג במקום."
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
@@ -36,23 +36,23 @@ msgstr "מילות מפתח"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "זמן הכנה בדקות"
 
 #: .\cookbook\forms.py:62
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "זמן המתנה (בישול/אפייה) בדקות"
 
 #: .\cookbook\forms.py:63 .\cookbook\forms.py:222 .\cookbook\forms.py:246
 msgid "Path"
-msgstr ""
+msgstr "נתיב"
 
 #: .\cookbook\forms.py:63
 msgid "Storage UID"
-msgstr ""
+msgstr "אחסון UID"
 
 #: .\cookbook\forms.py:93
 msgid "Default"
-msgstr ""
+msgstr "ברירת מחדל"
 
 #: .\cookbook\forms.py:121
 msgid ""
@@ -62,21 +62,23 @@ msgstr ""
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
-msgstr ""
+msgstr "הוף את ההערות שלך:- "
 
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "השאר ריק עבור dropbox והכנס סיסמאת יישום עבור nextcloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "השאר ריק עבור nextcloud והכנס טוקן API עבור dropbox."
 
 #: .\cookbook\forms.py:160
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"השאר ריק עבור dropbox וכנס רק URL בסיסי עבור nextcloud (<code>/remote.php/"
+"webdav/</code> נוסף אוטומטי)"
 
 #: .\cookbook\forms.py:188
 msgid ""
@@ -86,49 +88,49 @@ msgstr ""
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "משהו דומה לhttp://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "לדוגמא http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
-msgstr ""
+msgstr "אחסון"
 
 #: .\cookbook\forms.py:222
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
-msgstr ""
+msgstr "מחרוזת חיפוש"
 
 #: .\cookbook\forms.py:246
 msgid "File ID"
-msgstr ""
+msgstr "ID של הקובץ"
 
 #: .\cookbook\forms.py:262
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "המספר המקסימלי של משתמשים עבור מרחב זה נוצל."
 
 #: .\cookbook\forms.py:268
 msgid "Email address already taken!"
-msgstr ""
+msgstr "כתובת האימייל כבר בשימוש!"
 
 #: .\cookbook\forms.py:275
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
-msgstr ""
+msgstr "כתובת אימייל לא נדרשת אבל אם קיימת, קישור השיתוף ישלח למשתמש."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
-msgstr ""
+msgstr "שם כבר בשימוש."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "הסכם לתנאים ולפרטיות"
 
 #: .\cookbook\forms.py:332
 msgid ""
