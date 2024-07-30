@@ -1436,7 +1436,10 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validators.url(url, public=True):
-                            html = requests.get(url).content
+                            html = requests.get(
+                                url,
+                                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
+                            ).content
                             scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
                             return Response({'error': True, 'msg': _('Invalid Url')}, status=status.HTTP_400_BAD_REQUEST)
