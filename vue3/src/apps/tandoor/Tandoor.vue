@@ -34,7 +34,7 @@
                     </v-list>
                 </v-menu>
             </v-avatar>
-              Test: {{$t('No_Results')}}
+              Test: {{$t('Recipes')}}
         </v-app-bar>
 
         <v-main>

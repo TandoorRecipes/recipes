@@ -87,3 +87,4 @@ vue3/.vite
 vetur.config.js
 venv/
 vue3/node_modules
+.idea/easy-i18n.xml
