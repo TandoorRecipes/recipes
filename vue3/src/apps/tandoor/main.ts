@@ -18,7 +18,7 @@ import MealPlanPage from "@/pages/MealPlanPage.vue";
 import SearchPage from "@/pages/SearchPage.vue";
 import TestPage from "@/pages/TestPage.vue";
 import {createI18n, I18n} from "vue-i18n";
-import {getLocale, loadLocaleMessages, SUPPORT_LOCALES} from "@/i18n";
+import {getLocale, loadLocaleMessages, setupI18n, SUPPORT_LOCALES} from "@/i18n";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -37,23 +37,7 @@ const router = createRouter({
     routes,
 })
 
-let locale = document.querySelector('html')!.getAttribute('lang')
-if (locale == null || !SUPPORT_LOCALES.includes(locale)) {
-    console.log('falling back to en because ', locale, ' is not supported as a locale')
-    locale = 'en'
-}
-const localeMessages = await import((`../../locales/${locale}.json`))
-console.log(localeMessages, de)
-const i18n = createI18n({
-    legacy: false,
-    locale: 'en',
-    fallbackLocale: 'en',
-    messages: {
-        en
-    }
-}) as I18n
-
-loadLocaleMessages(i18n, locale).then(r => {})
+let i18n = setupI18n()
 
 const app = createApp(App)
 

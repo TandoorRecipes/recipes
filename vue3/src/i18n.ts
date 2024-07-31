@@ -7,6 +7,9 @@ import type {
     Composer,
     I18nMode
 } from 'vue-i18n'
+import de from "../../vue/src/locales/de.json";
+import {createI18n} from "vue-i18n";
+import en from "../../vue/src/locales/en.json";
 
 /**
  * lazy loading of translation, resources:
@@ -18,6 +21,53 @@ import type {
  * constant list of supported locales for app to check if requested locale is supported
  */
 export const SUPPORT_LOCALES = getSupportedLocales()
+
+
+export function setupI18n() {
+    let locale = document.querySelector('html')!.getAttribute('lang')
+    if (locale == null || !SUPPORT_LOCALES.includes(locale)) {
+        console.warn('Falling back to locale en because ', locale, ' is not supported as a locale.')
+        locale = 'en'
+    }
+
+    // load i18n as with locale en by default
+    const i18n = createI18n({
+        legacy: false,
+        locale: 'en',
+        fallbackLocale: 'en',
+        messages: {
+            en
+        }
+    }) as I18n
+
+    // async load user locale into existing i18n instance
+    loadLocaleMessages(i18n, locale).then(r => {})
+
+    return i18n
+}
+
+
+/**
+ * load specified locale messages from server and set the locale as active
+ * @param i18n instance of Vue i18n
+ * @param locale string locale code to set (should be in SUPPORT_LOCALES)
+ */
+export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
+    // load locale messages
+    const messages = await import(`./locales/${locale}.json`).then(
+        getResourceMessages
+    )
+
+    // set messages for locale
+    i18n.global.setLocaleMessage(locale, messages)
+    // switch to given locale
+    setLocale(i18n, locale)
+
+    console.log('loaded user locale')
+
+    return nextTick()
+}
+
 
 /**
  * loop trough translation files to determine for which locales a translation is available
@@ -37,7 +87,7 @@ function getSupportedLocales() {
  * @param instance
  * @param mode
  */
-function isComposer( instance: VueI18n | Composer, mode: I18nMode ): instance is Composer {
+function isComposer(instance: VueI18n | Composer, mode: I18nMode): instance is Composer {
     return mode === 'composition' && isRef(instance.locale)
 }
 
@@ -68,24 +118,3 @@ export function setLocale(i18n: I18n, locale: Locale): void {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getResourceMessages = (r: any) => r.default || r
-
-/**
- * load specified locale messages from server and set the locale as active
- * @param i18n instance of Vue i18n
- * @param locale string locale code to set (should be in SUPPORT_LOCALES)
- */
-export async function loadLocaleMessages(i18n: I18n, locale: Locale) {
-    // load locale messages
-    const messages = await import(`./locales/${locale}.json`).then(
-        getResourceMessages
-    )
-
-    // set messages for locale
-    i18n.global.setLocaleMessage(locale, messages)
-    // switch to given locale
-    setLocale(i18n, locale)
-
-    console.log('loaded user locale')
-
-    return nextTick()
-}
