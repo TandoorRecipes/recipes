@@ -11,13 +11,13 @@ export function homePageCols(breakpoint: string){
             return 4
         }
         case "lg": {
-            return 5
+            return 4
         }
         case "xl": {
-            return 6
+            return 5
         }
         case "xxl": {
-            return 7
+            return 6
         }
         default: {
             return 1

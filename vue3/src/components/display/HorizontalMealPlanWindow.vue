@@ -1,9 +1,9 @@
 <template>
-    <v-row justify="space-between">
-        <v-col>
-            <h2><i class="fas fa-calendar-week fa-fw"></i> Meal Plans</h2>
-        </v-col>
-    </v-row>
+<!--    <v-row justify="space-between">-->
+<!--        <v-col>-->
+<!--            <h2><i class="fas fa-calendar-week fa-fw"></i> Meal Plans</h2>-->
+<!--        </v-col>-->
+<!--    </v-row>-->
 
     <v-row class="mt-0" v-if="mealPlanWindows.length > 0">
         <v-col>

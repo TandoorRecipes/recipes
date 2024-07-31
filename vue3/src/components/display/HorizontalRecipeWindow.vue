@@ -1,7 +1,7 @@
 <template>
     <v-row justify="space-between">
         <v-col>
-            <h2><i v-if="icon != 'undefined'" :class="icon + ' fa-fw'"></i> {{ title }}</h2>
+            <h4><i v-if="icon != 'undefined'" :class="icon + ' fa-fw'"></i> {{ title }}</h4>
         </v-col>
     </v-row>
 
@@ -11,7 +11,7 @@
                 <v-window-item v-for="w in recipeWindows" class="pt-1 pb-1">
                     <v-row>
                         <v-col v-for="r in w" :key="r.id">
-                            <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 25vh"></recipe-card>
+                            <recipe-card :recipe="r" :show_description="true" :show_keywords="true" style="height: 20vh"></recipe-card>
                         </v-col>
                     </v-row>
                 </v-window-item>

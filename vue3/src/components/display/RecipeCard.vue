@@ -10,7 +10,7 @@
             >
                 <template v-slot:activator="{ props }">
                     <recipe-image
-                        height="60%"
+                        height="70%"
                         width="100%"
                         :recipe="componentProps.recipe"
                     >
@@ -31,17 +31,17 @@
                 <!-- TODO decide if context menu should be re-added (maybe make it a setting) -->
                 <!-- <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>-->
             </v-card-item>
-            <v-card-text>
-                <div class="text-rows-2">
-                    <keywords-component variant="outlined" :keywords="componentProps.recipe.keywords">
-                        <template #prepend>
-                            <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined" v-if="componentProps.recipe.workingTime != undefined && componentProps.recipe.workingTime > 0">
-                                {{ recipe.workingTime! + recipe.waitingTime! }}
-                            </v-chip>
-                        </template>
-                    </keywords-component>
-                </div>
-            </v-card-text>
+<!--            <v-card-text>-->
+<!--                <div class="text-rows-2">-->
+<!--                    <keywords-component variant="outlined" :keywords="componentProps.recipe.keywords">-->
+<!--                        <template #prepend>-->
+<!--                            <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined" v-if="componentProps.recipe.workingTime != undefined && componentProps.recipe.workingTime > 0">-->
+<!--                                {{ recipe.workingTime! + recipe.waitingTime! }}-->
+<!--                            </v-chip>-->
+<!--                        </template>-->
+<!--                    </keywords-component>-->
+<!--                </div>-->
+<!--            </v-card-text>-->
 
         </v-card>
     </template>

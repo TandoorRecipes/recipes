@@ -39,16 +39,16 @@
             <router-view></router-view>
         </v-main>
 
-        <v-navigation-drawer v-if="lgAndUp">
-            <v-list-item title="My Application" subtitle="Vuetify"></v-list-item>
-            <v-divider></v-divider>
-            <v-list-item prepend-icon="fas fa-book" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-calendar-alt" title="Mealplan" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-shopping-cart" title="Shopping" :to="{ name: 'view_shopping', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-bars" title="More" :to="{ name: 'view_books', params: {} }"></v-list-item>
-            <v-list-item prepend-icon="fas fa-bars" title="Test" :to="{ name: 'view_test', params: {} }"></v-list-item>
-            <!-- TODO link -->
-        </v-navigation-drawer>
+<!--        <v-navigation-drawer v-if="lgAndUp">-->
+<!--            <v-list-item title="My Application" subtitle="Vuetify"></v-list-item>-->
+<!--            <v-divider></v-divider>-->
+<!--            <v-list-item prepend-icon="fas fa-book" title="Home" :to="{ name: 'view_home', params: {} }"></v-list-item>-->
+<!--            <v-list-item prepend-icon="fas fa-calendar-alt" title="Mealplan" :to="{ name: 'view_mealplan', params: {} }"></v-list-item>-->
+<!--            <v-list-item prepend-icon="fas fa-shopping-cart" title="Shopping" :to="{ name: 'view_shopping', params: {} }"></v-list-item>-->
+<!--            <v-list-item prepend-icon="fas fa-bars" title="More" :to="{ name: 'view_books', params: {} }"></v-list-item>-->
+<!--            <v-list-item prepend-icon="fas fa-bars" title="Test" :to="{ name: 'view_test', params: {} }"></v-list-item>-->
+<!--            &lt;!&ndash; TODO link &ndash;&gt;-->
+<!--        </v-navigation-drawer>-->
 
         <v-bottom-navigation grow v-if="!lgAndUp">
             <v-btn value="recent" :to="{ name: 'view_home', params: {} }">
