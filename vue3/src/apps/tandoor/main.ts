@@ -1,8 +1,6 @@
 import {createApp} from "vue";
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
-import en from '../../locales/en.json'
-import de from '../../locales/de.json'
 // @ts-ignore
 import App from './Tandoor.vue'
 
@@ -12,13 +10,11 @@ import vuetify from "@/vuetify";
 import ShoppingListPage from "@/pages/ShoppingListPage.vue";
 import StartPage from "@/pages/StartPage.vue";
 import RecipeViewPage from "@/pages/RecipeViewPage.vue";
-import luxonPlugin from "@/plugins/luxonPlugin";
 import RecipeEditPage from "@/pages/RecipeEditPage.vue";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import SearchPage from "@/pages/SearchPage.vue";
 import TestPage from "@/pages/TestPage.vue";
-import {createI18n, I18n} from "vue-i18n";
-import {getLocale, loadLocaleMessages, setupI18n, SUPPORT_LOCALES} from "@/i18n";
+import {setupI18n} from "@/i18n";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
