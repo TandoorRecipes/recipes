@@ -14,18 +14,7 @@
                         width="100%"
                         :recipe="componentProps.recipe"
                     >
-                        <template #overlay>
-                            <v-chip size="x-small" prepend-icon="fa fa-clock" label color="light" variant="elevated"
-                                    class="float-start ms-1 mt-1" v-if="componentProps.recipe.workingTime != undefined && componentProps.recipe.workingTime > 0">
-                                {{ recipe.workingTime }}
-                            </v-chip>
-                            <v-chip size="x-small" prepend-icon="fa fa-pause" label color="secondary" variant="elevated"
-                                    class="float-start ms-1 mt-1" v-if="componentProps.recipe.waitingTime != undefined && componentProps.recipe.waitingTime > 0">
-                                {{ recipe.waitingTime }}
-                            </v-chip>
 
-                            <keywords-component variant="flat" :keywords="componentProps.recipe.keywords"></keywords-component>
-                        </template>
                     </recipe-image>
 
                     <v-divider class="p-0" v-if="componentProps.recipe.image == null"></v-divider>
@@ -35,29 +24,24 @@
                     {{ componentProps.recipe.description }}
                 </div>
             </v-tooltip>
-
             <v-card-item>
-                <v-card-title>
-                    {{ componentProps.recipe.name }}
-                    <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>
-                </v-card-title>
-                <v-card-subtitle>by {{ componentProps.recipe.createdBy }}</v-card-subtitle>
-
-
-                <!--                <v-card-subtitle v-if="show_keywords">-->
-                <!--                    <keywords-component :keywords="recipe.keywords"></keywords-component>-->
-                <!--                </v-card-subtitle>-->
-                <!--                <v-rating-->
-                <!--                    v-if="recipe.rating != null"-->
-                <!--                    v-model="recipe.rating"-->
-                <!--                    color="amber"-->
-                <!--                    density="comfortable"-->
-                <!--                    half-increments-->
-                <!--                    readonly-->
-                <!--                    size="x-small"-->
-                <!--                ></v-rating>-->
-
+                <div class="text-rows-2">
+                    <h3>{{ componentProps.recipe.name }}</h3>
+                </div>
+                <!-- TODO decide if context menu should be re-added (maybe make it a setting) -->
+                <!-- <recipe-context-menu class="float-end" :recipe="recipe"></recipe-context-menu>-->
             </v-card-item>
+            <v-card-text>
+                <div class="text-rows-2">
+                    <keywords-component variant="outlined" :keywords="componentProps.recipe.keywords">
+                        <template #prepend>
+                            <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined" v-if="componentProps.recipe.workingTime != undefined && componentProps.recipe.workingTime > 0">
+                                {{ recipe.workingTime! + recipe.waitingTime! }}
+                            </v-chip>
+                        </template>
+                    </keywords-component>
+                </div>
+            </v-card-text>
 
         </v-card>
     </template>
@@ -96,4 +80,21 @@ const componentProps = defineProps({
 
 <style scoped>
 
+.text-rows-1 {
+    overflow: hidden;
+    text-overflow: clip;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.text-rows-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
 </style>

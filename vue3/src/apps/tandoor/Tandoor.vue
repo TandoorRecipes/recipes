@@ -6,9 +6,7 @@
             </router-link>
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
-            <v-btn>DEBUG
-                <message-list-dialog></message-list-dialog>
-            </v-btn>
+
 
             <v-avatar color="cyan" class="me-2">V
                 <v-menu activator="parent">
@@ -30,11 +28,11 @@
                         <v-list-item>Space 2</v-list-item>
                         <v-list-item>Space 3</v-list-item>
                         <v-divider></v-divider>
+                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-database"></v-icon></template>Messages<message-list-dialog></message-list-dialog></v-list-item>
                         <v-list-item><template #prepend><v-icon icon="fa-solid fa-arrow-right-from-bracket"></v-icon></template>Logout</v-list-item>
                     </v-list>
                 </v-menu>
             </v-avatar>
-              Test: {{$t('Recipes')}}
         </v-app-bar>
 
         <v-main>
@@ -99,4 +97,7 @@ useUserPreferenceStore()
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+
+</style>

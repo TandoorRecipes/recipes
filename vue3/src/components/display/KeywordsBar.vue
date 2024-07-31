@@ -1,6 +1,10 @@
 <template>
     <div v-if="props.keywords">
-        <v-chip class="ms-1" :color="props.color" :size="props.size" :variant="props.variant" v-for="k in props.keywords"> {{ k.label }}</v-chip>
+        <slot name="prepend"></slot>
+
+        <v-chip class="me-1 mb-1" :label="props.label" :color="props.color" :size="props.size" :variant="props.variant" v-for="k in props.keywords"> {{ k.label }}</v-chip>
+
+        <slot name="append"></slot>
     </div>
 
 </template>
@@ -15,6 +19,7 @@ const props = defineProps({
     size: {type: String, default: 'x-small'},
     color: {type: String, default: ''},
     variant: {type: String as PropType<NonNullable<"tonal" | "flat" | "text" | "elevated" | "outlined" | "plain"> | undefined>, default: 'tonal'},
+    label: {type: Boolean, default: true}
 })
 
 </script>
