@@ -17,8 +17,8 @@ import RecipeEditPage from "@/pages/RecipeEditPage.vue";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import SearchPage from "@/pages/SearchPage.vue";
 import TestPage from "@/pages/TestPage.vue";
-import {createI18n} from "vue-i18n";
-import {getLocale, loadLocaleMessages, setI18nLanguage, setupI18n, SUPPORT_LOCALES} from "@/i18n";
+import {createI18n, I18n} from "vue-i18n";
+import {getLocale, loadLocaleMessages, SUPPORT_LOCALES} from "@/i18n";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -44,15 +44,16 @@ if (locale == null || !SUPPORT_LOCALES.includes(locale)) {
 }
 const localeMessages = await import((`../../locales/${locale}.json`))
 console.log(localeMessages, de)
-const i18n = setupI18n({
+const i18n = createI18n({
     legacy: false,
-    locale: locale,
+    locale: 'en',
     fallbackLocale: 'en',
     messages: {
-       en, de
+        en
     }
-})
+}) as I18n
 
+loadLocaleMessages(i18n, locale).then(r => {})
 
 const app = createApp(App)
 
