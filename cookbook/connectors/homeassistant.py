@@ -17,10 +17,11 @@ class HomeAssistant(Connector):
         if not config.token or not config.url or not config.todo_entity:
             raise ValueError("config for HomeAssistantConnector in incomplete")
 
+        self._logger = logging.getLogger(f"recipes.connector.homeassistant.{config.name}")
+
         if config.url[-1] != "/":
             config.url += "/"
         self._config = config
-        self._logger = logging.getLogger("connector.HomeAssistant")
 
     async def homeassistant_api_call(self, method: str, path: str, data: Dict) -> str:
         headers = {
@@ -37,7 +38,7 @@ class HomeAssistant(Connector):
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
 
-        logging.debug(f"adding {item=} to {self._config.name}")
+        self._logger.debug(f"adding {item=}")
 
         data = {
             "entity_id": self._config.todo_entity,
@@ -48,7 +49,7 @@ class HomeAssistant(Connector):
         try:
             await self.homeassistant_api_call("POST", "services/todo/add_item", data)
         except ClientError as err:
-            self._logger.warning(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
+            self._logger.warning(f"received an exception from the api: {err=}, {type(err)=}")
 
     async def on_shopping_list_entry_updated(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
         if not self._config.on_shopping_list_entry_updated_enabled:
@@ -66,7 +67,7 @@ class HomeAssistant(Connector):
 
         item, _ = _format_shopping_list_entry(shopping_list_entry)
 
-        logging.debug(f"removing {item=} from {self._config.name}")
+        self._logger.debug(f"removing {item=}")
 
         data = {
             "entity_id": self._config.todo_entity,
@@ -77,7 +78,7 @@ class HomeAssistant(Connector):
             await self.homeassistant_api_call("POST", "services/todo/remove_item", data)
         except ClientError as err:
             # This error will always trigger if the item is not present/found
-            self._logger.debug(f"[HomeAssistant {self._config.name}] Received an exception from the api: {err=}, {type(err)=}")
+            self._logger.debug(f"received an exception from the api: {err=}, {type(err)=}")
 
     async def close(self) -> None:
         pass
