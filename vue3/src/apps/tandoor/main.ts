@@ -15,10 +15,12 @@ import MealPlanPage from "@/pages/MealPlanPage.vue";
 import SearchPage from "@/pages/SearchPage.vue";
 import TestPage from "@/pages/TestPage.vue";
 import {setupI18n} from "@/i18n";
+import SettingsPage from "@/pages/SettingsPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
     {path: '/test', component: TestPage, name: 'view_test'},
+    {path: '/settings', component: SettingsPage, name: 'view_settings'},
     {path: '/search', component: SearchPage, name: 'view_search'},
     {path: '/shopping', component: ShoppingListPage, name: 'view_shopping'},
     {path: '/mealplan', component: MealPlanPage, name: 'view_mealplan'},
