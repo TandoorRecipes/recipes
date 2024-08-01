@@ -51,7 +51,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'INSECURE_STANDARD_KEY_SET_IN_ENV')
 DEBUG = extract_bool('DEBUG', True)
 DEBUG_TOOLBAR = extract_bool('DEBUG_TOOLBAR', True)
 
-SOCIAL_DEFAULT_ACCESS = extract_bool('SOCIAL_DEFAULT_ACCESS', False)
+LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
+
+SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
 
 SPACE_DEFAULT_MAX_RECIPES = int(os.getenv('SPACE_DEFAULT_MAX_RECIPES', 0))
@@ -60,6 +62,31 @@ SPACE_DEFAULT_MAX_FILES = int(os.getenv('SPACE_DEFAULT_MAX_FILES', 0))
 SPACE_DEFAULT_ALLOW_SHARING = extract_bool('SPACE_DEFAULT_ALLOW_SHARING', True)
 
 INTERNAL_IPS = extract_comma_list('INTERNAL_IPS', '127.0.0.1')
+
+# Django Logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    'formatters': {
+        'verbose': {
+            "format": "{threadName} {levelname} {asctime} {name} {message}",
+            'style': '{',
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            'formatter': 'verbose',
+        },
+    },
+    "loggers": {
+        'recipes': {
+            'handlers': ['console'],
+            'level': LOG_LEVEL,
+        },
+    },
+}
+
 
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = extract_bool('GUNICORN_MEDIA', False)
@@ -278,21 +305,11 @@ if LDAP_AUTH:
     if 'AUTH_LDAP_TLS_CACERTFILE' in os.environ:
         AUTH_LDAP_GLOBAL_OPTIONS = {ldap.OPT_X_TLS_CACERTFILE: os.getenv('AUTH_LDAP_TLS_CACERTFILE')}
     if DEBUG:
-        LOGGING = {
-            "version": 1,
-            "disable_existing_loggers": False,
-            "handlers": {
-                "console": {
-                    "class": "logging.StreamHandler",
-                }
-            },
-            "loggers": {
-                "django_auth_ldap": {
-                    "level": "DEBUG",
-                    "handlers": ["console"],
-                }
-            },
+        LOGGING["loggers"]["django_auth_ldap"] = {
+            "level": "DEBUG",
+            "handlers": ["console"]
         }
+
 
 AUTHENTICATION_BACKENDS += [
     'django.contrib.auth.backends.ModelBackend',

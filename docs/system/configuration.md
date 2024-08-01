@@ -500,6 +500,18 @@ Set to `1` to enable additional query output on the search page.
 SQL_DEBUG=0
 ```
 
+#### Application Log Level
+
+> default `WARNING` - options: [see Django Docs](https://docs.djangoproject.com/en/5.0/topics/logging/#loggers)
+
+Increase or decrease the logging done by application.
+Please set to `DEBUG` when making a bug report.
+
+```
+ LOG_LEVEL="DEBUG"
+```
+
+
 #### Gunicorn Log Level
 
 > default `info` - options: [see Gunicorn Docs](https://docs.gunicorn.org/en/stable/settings.html#loglevel)
