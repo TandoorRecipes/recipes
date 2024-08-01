@@ -63,7 +63,6 @@ from cookbook.helper.permission_helper import (
 )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
-from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
@@ -1437,7 +1436,10 @@ class RecipeUrlImportView(APIView):
                 else:
                     try:
                         if validators.url(url, public=True):
-                            html = requests.get(url).content
+                            html = requests.get(
+                                url,
+                                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
+                            ).content
                             scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
                             return Response({'error': True, 'msg': _('Invalid Url')}, status=status.HTTP_400_BAD_REQUEST)
@@ -1457,9 +1459,9 @@ class RecipeUrlImportView(APIView):
                     data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
                 except JSONDecodeError:
                     pass
-                scrape = text_scraper(text=data, url=url)
-                if not url and (found_url := scrape.schema.data.get('url', None)):
-                    scrape = text_scraper(text=data, url=found_url)
+                scrape = scrape_html(html=data, org_url=url, supported_only=False)
+                if not url and (found_url := scrape.schema.data.get('url', 'https://urlnotfound.none')):
+                    scrape = scrape_html(text=data, url=found_url, supported_only=False)
 
             if scrape:
                 return Response({
