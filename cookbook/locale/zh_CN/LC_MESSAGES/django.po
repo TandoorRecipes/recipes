@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 17:43+0200\n"
+"POT-Creation-Date: 2024-08-01 15:04+0200\n"
 "PO-Revision-Date: 2024-02-15 03:19+0000\n"
 "Last-Translator: dalan <xzdlj@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
@@ -2116,231 +2116,231 @@ msgstr "显示记录"
 msgid "URL Import"
 msgstr "链接导入"
 
-#: .\cookbook\views\api.py:121 .\cookbook\views\api.py:214
+#: .\cookbook\views\api.py:120 .\cookbook\views\api.py:213
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "参数 updated_at 格式不正确"
 
-#: .\cookbook\views\api.py:235 .\cookbook\views\api.py:341
+#: .\cookbook\views\api.py:234 .\cookbook\views\api.py:340
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr "不存在ID是 {pk} 的 {self.basename}"
 
-#: .\cookbook\views\api.py:239
+#: .\cookbook\views\api.py:238
 msgid "Cannot merge with the same object!"
 msgstr "无法与同一对象合并！"
 
-#: .\cookbook\views\api.py:246
+#: .\cookbook\views\api.py:245
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr "不存在 ID 为 {target} 的 {self.basename}"
 
-#: .\cookbook\views\api.py:251
+#: .\cookbook\views\api.py:250
 msgid "Cannot merge with child object!"
 msgstr "无法与子对象合并！"
 
-#: .\cookbook\views\api.py:289
+#: .\cookbook\views\api.py:288
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr "{source.name} 已成功与 {target.name} 合并"
 
-#: .\cookbook\views\api.py:294
+#: .\cookbook\views\api.py:293
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr "视图合并 {source.name} 和 {target.name} 时出错"
 
-#: .\cookbook\views\api.py:350
+#: .\cookbook\views\api.py:349
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr "{child.name} 已成功移动到根目录。"
 
-#: .\cookbook\views\api.py:353 .\cookbook\views\api.py:371
+#: .\cookbook\views\api.py:352 .\cookbook\views\api.py:370
 msgid "An error occurred attempting to move "
 msgstr "尝试移动时出错 "
 
-#: .\cookbook\views\api.py:356
+#: .\cookbook\views\api.py:355
 msgid "Cannot move an object to itself!"
 msgstr "无法将对象移动到自身！"
 
-#: .\cookbook\views\api.py:362
+#: .\cookbook\views\api.py:361
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr "不存在 ID 为 {parent} 的 {self.basename}"
 
-#: .\cookbook\views\api.py:368
+#: .\cookbook\views\api.py:367
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr "{child.name} 成功移动到父节点 {parent.name}"
 
-#: .\cookbook\views\api.py:590
+#: .\cookbook\views\api.py:589
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} 已从购物清单中删除。"
 
-#: .\cookbook\views\api.py:595 .\cookbook\views\api.py:1038
-#: .\cookbook\views\api.py:1051
+#: .\cookbook\views\api.py:594 .\cookbook\views\api.py:1037
+#: .\cookbook\views\api.py:1050
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} 已添加到购物清单中。"
 
-#: .\cookbook\views\api.py:743
+#: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
 
-#: .\cookbook\views\api.py:744
+#: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
 
-#: .\cookbook\views\api.py:745
+#: .\cookbook\views\api.py:744
 #, fuzzy
 #| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr "食谱中的步骤ID。 对于多个重复参数。"
 
-#: .\cookbook\views\api.py:873
+#: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr "食谱中的步骤ID。 对于多个重复参数。"
 
-#: .\cookbook\views\api.py:874
+#: .\cookbook\views\api.py:873
 msgid "Query string matched (fuzzy) against object name."
 msgstr "请求参数与对象名称匹配（模糊）。"
 
-#: .\cookbook\views\api.py:910
+#: .\cookbook\views\api.py:909
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr "请求参数与食谱名称匹配（模糊）。 未来会添加全文搜索。"
 
-#: .\cookbook\views\api.py:911
+#: .\cookbook\views\api.py:910
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr "菜谱应包含的关键字 ID。 对于多个重复参数。 相当于keywords_or"
 
-#: .\cookbook\views\api.py:912
+#: .\cookbook\views\api.py:911
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr "允许多个关键字 ID。 返回带有任一关键字的食谱"
 
-#: .\cookbook\views\api.py:913
+#: .\cookbook\views\api.py:912
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr "允许多个关键字 ID。 返回带有所有关键字的食谱。"
 
-#: .\cookbook\views\api.py:914
+#: .\cookbook\views\api.py:913
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr "允许多个关键字 ID。 排除带有任一关键字的食谱。"
 
-#: .\cookbook\views\api.py:915
+#: .\cookbook\views\api.py:914
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr "允许多个关键字 ID。 排除带有所有关键字的食谱。"
 
-#: .\cookbook\views\api.py:916
+#: .\cookbook\views\api.py:915
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr "食谱中食物带有ID。并可添加多个食物。"
 
-#: .\cookbook\views\api.py:917
+#: .\cookbook\views\api.py:916
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr "食谱中食物带有ID。并可添加多个食物"
 
-#: .\cookbook\views\api.py:918
+#: .\cookbook\views\api.py:917
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr "食谱中食物带有ID。返回包含任何食物的食谱。"
 
-#: .\cookbook\views\api.py:919
+#: .\cookbook\views\api.py:918
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr "食谱中食物带有ID。排除包含任一食物的食谱。"
 
-#: .\cookbook\views\api.py:920
+#: .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr "食谱中食物带有ID。排除包含所有食物的食谱。"
 
-#: .\cookbook\views\api.py:921
+#: .\cookbook\views\api.py:920
 msgid "ID of unit a recipe should have."
 msgstr "食谱应具有单一ID。"
 
-#: .\cookbook\views\api.py:922
+#: .\cookbook\views\api.py:921
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr "配方的评分范围从 0 到 5。"
 
-#: .\cookbook\views\api.py:923
+#: .\cookbook\views\api.py:922
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr "烹饪书应该在食谱中具有ID。并且可以添加多本。"
 
-#: .\cookbook\views\api.py:924
+#: .\cookbook\views\api.py:923
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr "书的ID允许多个。返回包含任一书籍的食谱"
 
-#: .\cookbook\views\api.py:925
+#: .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr "书的ID允许多个。返回包含所有书籍的食谱。"
 
-#: .\cookbook\views\api.py:926
+#: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr "书的ID允许多个。排除包含任一书籍的食谱。"
 
-#: .\cookbook\views\api.py:927
+#: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr "书的ID允许多个。排除包含所有书籍的食谱。"
 
-#: .\cookbook\views\api.py:928
+#: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr "只返回内部食谱。 [true/<b>false</b>]"
 
-#: .\cookbook\views\api.py:929
+#: .\cookbook\views\api.py:928
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr "按随机排序返回结果。 [true/<b> false </b>]"
 
-#: .\cookbook\views\api.py:930
+#: .\cookbook\views\api.py:929
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr "在搜索结果中首先返回新结果。 [是/<b>否</b>]"
 
-#: .\cookbook\views\api.py:931
+#: .\cookbook\views\api.py:930
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr "筛选烹饪 X 次或更多次的食谱。  负值返回烹饪少于 X 次"
 
-#: .\cookbook\views\api.py:932
+#: .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
 "筛选最后烹饪在 YYYY-MM-DD 当天或之后的食谱。 前置 - 在日期或日期之前筛选。"
 
-#: .\cookbook\views\api.py:933
+#: .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr "筛选在 YYYY-MM-DD 或之后创建的食谱。 前置 - 在日期或日期之前过滤。"
 
-#: .\cookbook\views\api.py:934
+#: .\cookbook\views\api.py:933
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr "筛选在 YYYY-MM-DD 或之后更新的食谱。 前置 - 在日期或日期之前筛选。"
 
-#: .\cookbook\views\api.py:935
+#: .\cookbook\views\api.py:934
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
 "筛选最后查看时间是在 YYYY-MM-DD 或之后的食谱。 前置 - 在日期或日期之前筛选。"
 
-#: .\cookbook\views\api.py:936
+#: .\cookbook\views\api.py:935
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr "筛选可以直接用手制作的食谱。 [真/<b>假</b>]"
 
-#: .\cookbook\views\api.py:1123
+#: .\cookbook\views\api.py:1122
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr "返回主键为 id 的购物清单条目。 允许多个值。"
 
-#: .\cookbook\views\api.py:1126
+#: .\cookbook\views\api.py:1125
 #, fuzzy
 #| msgid ""
 #| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
@@ -2353,15 +2353,15 @@ msgstr ""
 "在选中时筛选购物清单列表。  [真, 假, 两者都有, <b>最近</b>]<br>  - 最近包括未"
 "选中的项目和最近完成的项目。"
 
-#: .\cookbook\views\api.py:1129
+#: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr "返回按超市分类排序的购物清单列表。"
 
-#: .\cookbook\views\api.py:1211
+#: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1293
+#: .\cookbook\views\api.py:1292
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
@@ -2371,45 +2371,45 @@ msgid ""
 "allowed."
 msgstr "返回主键为 id 的购物清单条目。 允许多个值。"
 
-#: .\cookbook\views\api.py:1416
+#: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
 msgstr "无事可做。"
 
-#: .\cookbook\views\api.py:1443
+#: .\cookbook\views\api.py:1445
 msgid "Invalid Url"
 msgstr "无效网址"
 
-#: .\cookbook\views\api.py:1447
+#: .\cookbook\views\api.py:1449
 msgid "Connection Refused."
 msgstr "连接被拒绝。"
 
-#: .\cookbook\views\api.py:1449
+#: .\cookbook\views\api.py:1451
 msgid "Bad URL Schema."
 msgstr "错误的 URL Schema。"
 
-#: .\cookbook\views\api.py:1472
+#: .\cookbook\views\api.py:1474
 msgid "No usable data could be found."
 msgstr "找不到可用的数据。"
 
-#: .\cookbook\views\api.py:1547
+#: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
 msgstr "此提供程序未实现导入"
 
-#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1650 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "此功能在泥炉的托管版本中尚不可用！"
 
-#: .\cookbook\views\api.py:1669
+#: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
 msgstr "同步成功！"
 
-#: .\cookbook\views\api.py:1672
+#: .\cookbook\views\api.py:1674
 msgid "Error synchronizing with Storage"
 msgstr "与存储同步时出错"
 
