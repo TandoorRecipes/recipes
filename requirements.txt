@@ -43,7 +43,7 @@ django-auth-ldap==4.6.0
 pyppeteer==2.0.0
 validators==0.33.0
 pytube==15.0.0
-aiohttp==3.9.4
+aiohttp==3.10.0
 inflection==0.5.1
 
 # Development
