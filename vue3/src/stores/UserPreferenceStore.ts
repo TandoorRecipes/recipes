@@ -1,8 +1,7 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
-import {ErrorMessageType, Message, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ApiApi, UserPreference} from "@/openapi";
-import {ref} from "vue";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
@@ -47,10 +46,23 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         })
     }
 
+    /**
+     * persist changes to user settings to DB
+     */
+    function updateUserSettings() {
+        let api = new ApiApi()
+
+        api.apiUserPreferencePartialUpdate({user: userSettings.value.user, patchedUserPreference: userSettings.value}).then(r => {
+            userSettings.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        })
+    }
+
     // always load user settings on first initialization of store
     loadUserSettings()
 
-    return {deviceSettings, userSettings, loadUserSettings}
+    return {deviceSettings, userSettings, loadUserSettings, updateUserSettings}
 })
 
 // enable hot reload for store

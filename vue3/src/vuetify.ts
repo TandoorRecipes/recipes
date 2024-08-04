@@ -28,14 +28,33 @@ export default createVuetify({
                     error: '#a7240e',
                 },
             },
+            dark: {
+                colors: {
+
+                    tandoor: '#ddbf86',
+                    primary: '#b98766',
+                    secondary: '#b55e4f',
+                    success: '#82aa8b',
+                    info: '#385f84',
+                    warning: '#eaaa21',
+                    error: '#a7240e',
+                },
+            },
         },
     },
     icons: {
         defaultSet: 'fa',
         aliases : {
             ...aliases,
-            save: 'fa-regular fa-floppy-disk',
-            delete: 'fa-regular fa-trash-can',
+            save: 'fa-solid fa-floppy-disk',
+            delete: 'fa-solid fa-trash-can',
+            search: 'fa-solid fa-magnifying-glass',
+            settings: 'fa-solid fa-sliders',
+            spaces: 'fa-solid fa-database',
+            shopping: 'fa-solid fa-cart-shopping',
+            mealplan: 'fa-solid fa-calendar-days',
+            recipes: 'fa-solid fa-book',
+            books: 'fa-solid fa-book-open',
         },
         sets: {
             fa,

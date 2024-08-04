@@ -31,7 +31,7 @@ export interface PaginatedPropertyTypeList {
      * @type {number}
      * @memberof PaginatedPropertyTypeList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedPropertyTypeList {
      * @type {Array<PropertyType>}
      * @memberof PaginatedPropertyTypeList
      */
-    results?: Array<PropertyType>;
+    results: Array<PropertyType>;
 }
 
 /**
  * Check if a given object implements the PaginatedPropertyTypeList interface.
  */
 export function instanceOfPaginatedPropertyTypeList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedPropertyTypeListFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(PropertyTypeFromJSON)),
+        'results': ((json['results'] as Array<any>).map(PropertyTypeFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedPropertyTypeListToJSON(value?: PaginatedPropertyTypeLis
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(PropertyTypeToJSON)),
+        'results': ((value['results'] as Array<any>).map(PropertyTypeToJSON)),
     };
 }
 

@@ -31,7 +31,7 @@ export interface PaginatedAutomationList {
      * @type {number}
      * @memberof PaginatedAutomationList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedAutomationList {
      * @type {Array<Automation>}
      * @memberof PaginatedAutomationList
      */
-    results?: Array<Automation>;
+    results: Array<Automation>;
 }
 
 /**
  * Check if a given object implements the PaginatedAutomationList interface.
  */
 export function instanceOfPaginatedAutomationList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedAutomationListFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(AutomationFromJSON)),
+        'results': ((json['results'] as Array<any>).map(AutomationFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | 
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(AutomationToJSON)),
+        'results': ((value['results'] as Array<any>).map(AutomationToJSON)),
     };
 }
 

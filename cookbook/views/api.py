@@ -84,7 +84,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  RecipeOverviewSerializer, RecipeSerializer, RecipeShoppingUpdateSerializer, RecipeSimpleSerializer, ShoppingListEntryBulkSerializer,
                                  ShoppingListEntrySerializer, ShoppingListRecipeSerializer, SpaceSerializer, StepSerializer, StorageSerializer,
                                  SupermarketCategoryRelationSerializer, SupermarketCategorySerializer, SupermarketSerializer, SyncLogSerializer, SyncSerializer,
-                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer
+                                 UnitConversionSerializer, UnitSerializer, UserFileSerializer, UserPreferenceSerializer, UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer, LocalizationSerializer
                                  )
 from cookbook.views.import_export import get_integration
 from recipes import settings
@@ -1543,7 +1543,7 @@ class RecipeUrlImportView(APIView):
 class ImageToRecipeView(APIView):
     serializer_class = ImportImageSerializer
     http_method_names = ['post', 'options']
-    #parser_classes = [MultiPartParser]
+    # parser_classes = [MultiPartParser]
     throttle_classes = [RecipeImportThrottle]
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
 
@@ -1700,6 +1700,20 @@ class ImportOpenData(APIView):
             response_obj['conversion'] = data_importer.import_conversion().to_dict()
 
         return Response(response_obj)
+
+
+# TODO implement schema
+class LocalizationViewSet(viewsets.GenericViewSet):
+    permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
+    serializer_class = LocalizationSerializer
+
+    def get_queryset(self):
+        return None
+    def list(self, request, *args, **kwargs):
+        langs = []
+        for l in settings.LANGUAGES:
+            langs.append({'code': l[0], 'language': l[1]})
+        return Response(LocalizationSerializer(langs, many=True).data)
 
 
 def get_recipe_provider(recipe):

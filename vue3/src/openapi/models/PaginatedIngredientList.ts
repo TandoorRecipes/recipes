@@ -31,7 +31,7 @@ export interface PaginatedIngredientList {
      * @type {number}
      * @memberof PaginatedIngredientList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedIngredientList {
      * @type {Array<Ingredient>}
      * @memberof PaginatedIngredientList
      */
-    results?: Array<Ingredient>;
+    results: Array<Ingredient>;
 }
 
 /**
  * Check if a given object implements the PaginatedIngredientList interface.
  */
 export function instanceOfPaginatedIngredientList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedIngredientListFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(IngredientFromJSON)),
+        'results': ((json['results'] as Array<any>).map(IngredientFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedIngredientListToJSON(value?: PaginatedIngredientList | 
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(IngredientToJSON)),
+        'results': ((value['results'] as Array<any>).map(IngredientToJSON)),
     };
 }
 

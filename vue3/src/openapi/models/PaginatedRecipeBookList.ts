@@ -31,7 +31,7 @@ export interface PaginatedRecipeBookList {
      * @type {number}
      * @memberof PaginatedRecipeBookList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedRecipeBookList {
      * @type {Array<RecipeBook>}
      * @memberof PaginatedRecipeBookList
      */
-    results?: Array<RecipeBook>;
+    results: Array<RecipeBook>;
 }
 
 /**
  * Check if a given object implements the PaginatedRecipeBookList interface.
  */
 export function instanceOfPaginatedRecipeBookList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedRecipeBookListFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(RecipeBookFromJSON)),
+        'results': ((json['results'] as Array<any>).map(RecipeBookFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedRecipeBookListToJSON(value?: PaginatedRecipeBookList | 
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(RecipeBookToJSON)),
+        'results': ((value['results'] as Array<any>).map(RecipeBookToJSON)),
     };
 }
 

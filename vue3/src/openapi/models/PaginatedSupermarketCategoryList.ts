@@ -31,7 +31,7 @@ export interface PaginatedSupermarketCategoryList {
      * @type {number}
      * @memberof PaginatedSupermarketCategoryList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedSupermarketCategoryList {
      * @type {Array<SupermarketCategory>}
      * @memberof PaginatedSupermarketCategoryList
      */
-    results?: Array<SupermarketCategory>;
+    results: Array<SupermarketCategory>;
 }
 
 /**
  * Check if a given object implements the PaginatedSupermarketCategoryList interface.
  */
 export function instanceOfPaginatedSupermarketCategoryList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedSupermarketCategoryListFromJSONTyped(json: any, ignoreD
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(SupermarketCategoryFromJSON)),
+        'results': ((json['results'] as Array<any>).map(SupermarketCategoryFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermar
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(SupermarketCategoryToJSON)),
+        'results': ((value['results'] as Array<any>).map(SupermarketCategoryToJSON)),
     };
 }
 

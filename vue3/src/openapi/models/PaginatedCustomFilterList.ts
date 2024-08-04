@@ -31,7 +31,7 @@ export interface PaginatedCustomFilterList {
      * @type {number}
      * @memberof PaginatedCustomFilterList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedCustomFilterList {
      * @type {Array<CustomFilter>}
      * @memberof PaginatedCustomFilterList
      */
-    results?: Array<CustomFilter>;
+    results: Array<CustomFilter>;
 }
 
 /**
  * Check if a given object implements the PaginatedCustomFilterList interface.
  */
 export function instanceOfPaginatedCustomFilterList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedCustomFilterListFromJSONTyped(json: any, ignoreDiscrimi
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(CustomFilterFromJSON)),
+        'results': ((json['results'] as Array<any>).map(CustomFilterFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterLis
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(CustomFilterToJSON)),
+        'results': ((value['results'] as Array<any>).map(CustomFilterToJSON)),
     };
 }
 

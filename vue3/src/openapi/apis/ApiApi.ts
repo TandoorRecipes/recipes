@@ -33,6 +33,7 @@ import type {
   IngredientString,
   InviteLink,
   Keyword,
+  Localization,
   MealPlan,
   MealType,
   OpenDataCategory,
@@ -180,6 +181,8 @@ import {
     InviteLinkToJSON,
     KeywordFromJSON,
     KeywordToJSON,
+    LocalizationFromJSON,
+    LocalizationToJSON,
     MealPlanFromJSON,
     MealPlanToJSON,
     MealTypeFromJSON,
@@ -666,7 +669,7 @@ export interface ApiGroupRetrieveRequest {
 }
 
 export interface ApiImageToRecipeCreateRequest {
-    image: string;
+    importImage: ImportImage;
 }
 
 export interface ApiImportLogCreateRequest {
@@ -3972,10 +3975,10 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiImageToRecipeCreateRaw(requestParameters: ApiImageToRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportImage>> {
-        if (requestParameters['image'] == null) {
+        if (requestParameters['importImage'] == null) {
             throw new runtime.RequiredError(
-                'image',
-                'Required parameter "image" was null or undefined when calling apiImageToRecipeCreate().'
+                'importImage',
+                'Required parameter "importImage" was null or undefined when calling apiImageToRecipeCreate().'
             );
         }
 
@@ -3983,26 +3986,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters['Content-Type'] = 'application/json';
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const consumes: runtime.Consume[] = [
-            { contentType: 'multipart/form-data' },
-        ];
-        // @ts-ignore: canConsumeForm may be unused
-        const canConsumeForm = runtime.canConsumeForm(consumes);
-
-        let formParams: { append(param: string, value: any): any };
-        let useForm = false;
-        if (useForm) {
-            formParams = new FormData();
-        } else {
-            formParams = new URLSearchParams();
-        }
-
-        if (requestParameters['image'] != null) {
-            formParams.append('image', requestParameters['image'] as any);
         }
 
         const response = await this.request({
@@ -4010,7 +3997,7 @@ export class ApiApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: formParams,
+            body: ImportImageToJSON(requestParameters['importImage']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ImportImageFromJSON(jsonValue));
@@ -5147,6 +5134,34 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiKeywordUpdate(requestParameters: ApiKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiLocalizationListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Localization>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/localization/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(LocalizationFromJSON));
+    }
+
+    /**
+     */
+    async apiLocalizationList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Localization>> {
+        const response = await this.apiLocalizationListRaw(initOverrides);
         return await response.value();
     }
 

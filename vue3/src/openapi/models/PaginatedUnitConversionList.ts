@@ -31,7 +31,7 @@ export interface PaginatedUnitConversionList {
      * @type {number}
      * @memberof PaginatedUnitConversionList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedUnitConversionList {
      * @type {Array<UnitConversion>}
      * @memberof PaginatedUnitConversionList
      */
-    results?: Array<UnitConversion>;
+    results: Array<UnitConversion>;
 }
 
 /**
  * Check if a given object implements the PaginatedUnitConversionList interface.
  */
 export function instanceOfPaginatedUnitConversionList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedUnitConversionListFromJSONTyped(json: any, ignoreDiscri
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(UnitConversionFromJSON)),
+        'results': ((json['results'] as Array<any>).map(UnitConversionFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedUnitConversionListToJSON(value?: PaginatedUnitConversio
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(UnitConversionToJSON)),
+        'results': ((value['results'] as Array<any>).map(UnitConversionToJSON)),
     };
 }
 

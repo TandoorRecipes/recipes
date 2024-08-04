@@ -26,6 +26,7 @@ export * from './IngredientString';
 export * from './InviteLink';
 export * from './Keyword';
 export * from './KeywordLabel';
+export * from './Localization';
 export * from './MealPlan';
 export * from './MealType';
 export * from './MethodEnum';

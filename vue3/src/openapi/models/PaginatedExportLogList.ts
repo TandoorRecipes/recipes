@@ -31,7 +31,7 @@ export interface PaginatedExportLogList {
      * @type {number}
      * @memberof PaginatedExportLogList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedExportLogList {
      * @type {Array<ExportLog>}
      * @memberof PaginatedExportLogList
      */
-    results?: Array<ExportLog>;
+    results: Array<ExportLog>;
 }
 
 /**
  * Check if a given object implements the PaginatedExportLogList interface.
  */
 export function instanceOfPaginatedExportLogList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedExportLogListFromJSONTyped(json: any, ignoreDiscriminat
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(ExportLogFromJSON)),
+        'results': ((json['results'] as Array<any>).map(ExportLogFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedExportLogListToJSON(value?: PaginatedExportLogList | nu
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(ExportLogToJSON)),
+        'results': ((value['results'] as Array<any>).map(ExportLogToJSON)),
     };
 }
 

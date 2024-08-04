@@ -1415,6 +1415,14 @@ class AccessTokenSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'token',)
 
 
+class LocalizationSerializer(serializers.Serializer):
+    code = serializers.CharField(max_length=8, read_only=True)
+    language = serializers.CharField(read_only=True)
+
+    class Meta:
+        fields = '__ALL__'
+
+
 # Export/Import Serializers
 
 class KeywordExportSerializer(KeywordSerializer):

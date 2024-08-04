@@ -31,7 +31,7 @@ export interface PaginatedUserFileList {
      * @type {number}
      * @memberof PaginatedUserFileList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedUserFileList {
      * @type {Array<UserFile>}
      * @memberof PaginatedUserFileList
      */
-    results?: Array<UserFile>;
+    results: Array<UserFile>;
 }
 
 /**
  * Check if a given object implements the PaginatedUserFileList interface.
  */
 export function instanceOfPaginatedUserFileList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedUserFileListFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(UserFileFromJSON)),
+        'results': ((json['results'] as Array<any>).map(UserFileFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedUserFileListToJSON(value?: PaginatedUserFileList | null
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(UserFileToJSON)),
+        'results': ((value['results'] as Array<any>).map(UserFileToJSON)),
     };
 }
 

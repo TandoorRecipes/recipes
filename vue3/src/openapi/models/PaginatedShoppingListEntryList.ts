@@ -31,7 +31,7 @@ export interface PaginatedShoppingListEntryList {
      * @type {number}
      * @memberof PaginatedShoppingListEntryList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedShoppingListEntryList {
      * @type {Array<ShoppingListEntry>}
      * @memberof PaginatedShoppingListEntryList
      */
-    results?: Array<ShoppingListEntry>;
+    results: Array<ShoppingListEntry>;
 }
 
 /**
  * Check if a given object implements the PaginatedShoppingListEntryList interface.
  */
 export function instanceOfPaginatedShoppingListEntryList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedShoppingListEntryListFromJSONTyped(json: any, ignoreDis
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(ShoppingListEntryFromJSON)),
+        'results': ((json['results'] as Array<any>).map(ShoppingListEntryFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedShoppingListEntryListToJSON(value?: PaginatedShoppingLi
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(ShoppingListEntryToJSON)),
+        'results': ((value['results'] as Array<any>).map(ShoppingListEntryToJSON)),
     };
 }
 

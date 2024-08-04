@@ -19,6 +19,11 @@ export enum ErrorMessageType {
     DELETE_ERROR = 'Update Error',
 }
 
+/** @enum {MessageType} prepared messages */
+export enum PreparedMessage {
+    UPDATE_SUCCESS = 'UPDATE_SUCCESS'
+}
+
 /**
  * Type Message holding all required contents of a message
  */
@@ -62,7 +67,6 @@ export const useMessageStore = defineStore('message_store', () => {
      * @param {string} data optional additional data only shown in log
      */
     function addMessage(type: MessageType, msg: string, showTimeout?: number, data?: any) {
-
         let message = new Message(type, msg, showTimeout, data)
 
         messages.value.push(message)
@@ -81,13 +85,23 @@ export const useMessageStore = defineStore('message_store', () => {
     }
 
     /**
+     * shorthand function to quickly add a message
+     * @param preparedMessage pre defined message
+     */
+    function addPreparedMessage(preparedMessage: PreparedMessage) {
+        if (preparedMessage == PreparedMessage.UPDATE_SUCCESS) {
+            addMessage(MessageType.SUCCESS, 'Updated Successfully', 7000, {})
+        }
+    }
+
+    /**
      * delete all messages from store
      */
     function deleteAllMessages() {
         messages.value = [] as Message[]
     }
 
-    return {snackbarQueue, messages, addMessage, addError, deleteAllMessages}
+    return {snackbarQueue, messages, addMessage, addError, addPreparedMessage, deleteAllMessages}
 })
 
 // enable hot reload for store

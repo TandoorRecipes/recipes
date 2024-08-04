@@ -29,6 +29,7 @@ models/IngredientString.ts
 models/InviteLink.ts
 models/Keyword.ts
 models/KeywordLabel.ts
+models/Localization.ts
 models/MealPlan.ts
 models/MealType.ts
 models/MethodEnum.ts

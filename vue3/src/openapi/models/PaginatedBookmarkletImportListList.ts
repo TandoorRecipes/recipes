@@ -31,7 +31,7 @@ export interface PaginatedBookmarkletImportListList {
      * @type {number}
      * @memberof PaginatedBookmarkletImportListList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedBookmarkletImportListList {
      * @type {Array<BookmarkletImportList>}
      * @memberof PaginatedBookmarkletImportListList
      */
-    results?: Array<BookmarkletImportList>;
+    results: Array<BookmarkletImportList>;
 }
 
 /**
  * Check if a given object implements the PaginatedBookmarkletImportListList interface.
  */
 export function instanceOfPaginatedBookmarkletImportListList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedBookmarkletImportListListFromJSONTyped(json: any, ignor
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(BookmarkletImportListFromJSON)),
+        'results': ((json['results'] as Array<any>).map(BookmarkletImportListFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedBookmarkletImportListListToJSON(value?: PaginatedBookma
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(BookmarkletImportListToJSON)),
+        'results': ((value['results'] as Array<any>).map(BookmarkletImportListToJSON)),
     };
 }
 

@@ -2,34 +2,31 @@
     <v-container>
 
         <v-row>
-            <v-col cols="2" offset="2">
+            <v-col cols="12" md="3" offset-md="1" offset-xl="2" xl="2">
                 <v-list class="bg-transparent">
-                    <v-list-item>Profil</v-list-item>
+                    <v-list-item :to="{name: 'view_settings_account'}" prepend-icon="fa-solid fa-user">{{ $t('Profile') }}</v-list-item>
 
                     <v-divider></v-divider>
-                    <v-list-subheader>Einstellungen</v-list-subheader>
-                    <v-list-item>Kosmetisch</v-list-item>
-                    <v-list-item>Einkaufsliste</v-list-item>
-                    <v-list-item>Speiseplan</v-list-item>
-                    <v-list-item>Suchen</v-list-item>
+                    <v-list-subheader>{{ $t('Settings') }}</v-list-subheader>
+                    <v-list-item :to="{name: 'view_settings_cosmetic'}" prepend-icon="fa-solid fa-palette">{{ $t('Cosmetic') }}</v-list-item>
+                    <v-list-item prepend-icon="$shopping">{{ $t('Shopping_list') }}</v-list-item>
+                    <v-list-item prepend-icon="$mealplan">{{ $t('Meal_Plan') }}</v-list-item>
+                    <v-list-item prepend-icon="$search">{{ $t('Search') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Space</v-list-subheader>
-                    <v-list-item>Meine Spaces</v-list-item>
-                    <v-list-item>Space Einstellungen</v-list-item>
-                    <v-list-item>Space Mitglieder</v-list-item>
+                    <v-list-item prepend-icon="$spaces">{{ $t('YourSpaces') }}</v-list-item>
+                    <v-list-item prepend-icon="$settings">{{ $t('SpaceSettings') }}</v-list-item>
+                    <v-list-item prepend-icon="fa-solid fa-users">{{ $t('SpaceSettings') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Admin</v-list-subheader>
-                    <v-list-item>API</v-list-item>
-                    <v-list-item>System</v-list-item>
+                    <v-list-item prepend-icon="fa-solid fa-code">{{ $t('API') }}</v-list-item>
+                    <v-list-item prepend-icon="fa-solid fa-server">{{ $t('System') }}</v-list-item>
                 </v-list>
 
             </v-col>
-            <v-col cols="6">
-                <v-form>
-                    <v-text-field :label="$t('Username')" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
-                    <v-text-field :label="$t('First_name')"></v-text-field>
-                    <v-text-field :label="$t('Last_name')"></v-text-field>
-                </v-form>
+            <v-col cols="12" md="7" xl="6">
+                <router-view/>
+
             </v-col>
         </v-row>
     </v-container>
@@ -38,6 +35,11 @@
 <script setup lang="ts">
 
 
+import AccountSettings from "@/components/settings/AccountSettings.vue";
+
+const props = defineProps({
+    page: {type: String, default: 'ACCOUNT'}
+})
 </script>
 
 

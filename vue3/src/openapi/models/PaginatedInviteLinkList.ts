@@ -31,7 +31,7 @@ export interface PaginatedInviteLinkList {
      * @type {number}
      * @memberof PaginatedInviteLinkList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedInviteLinkList {
      * @type {Array<InviteLink>}
      * @memberof PaginatedInviteLinkList
      */
-    results?: Array<InviteLink>;
+    results: Array<InviteLink>;
 }
 
 /**
  * Check if a given object implements the PaginatedInviteLinkList interface.
  */
 export function instanceOfPaginatedInviteLinkList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedInviteLinkListFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(InviteLinkFromJSON)),
+        'results': ((json['results'] as Array<any>).map(InviteLinkFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedInviteLinkListToJSON(value?: PaginatedInviteLinkList | 
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(InviteLinkToJSON)),
+        'results': ((value['results'] as Array<any>).map(InviteLinkToJSON)),
     };
 }
 

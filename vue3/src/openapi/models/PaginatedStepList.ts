@@ -31,7 +31,7 @@ export interface PaginatedStepList {
      * @type {number}
      * @memberof PaginatedStepList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedStepList {
      * @type {Array<Step>}
      * @memberof PaginatedStepList
      */
-    results?: Array<Step>;
+    results: Array<Step>;
 }
 
 /**
  * Check if a given object implements the PaginatedStepList interface.
  */
 export function instanceOfPaginatedStepList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedStepListFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(StepFromJSON)),
+        'results': ((json['results'] as Array<any>).map(StepFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(StepToJSON)),
+        'results': ((value['results'] as Array<any>).map(StepToJSON)),
     };
 }
 

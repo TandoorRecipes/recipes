@@ -64,6 +64,8 @@ router.register(r'user-space', api.UserSpaceViewSet)
 router.register(r'view-log', api.ViewLogViewSet)
 router.register(r'access-token', api.AccessTokenViewSet)
 
+router.register(r'localization', api.LocalizationViewSet, basename='localization')
+
 for p in PLUGINS:
     if c := locate(f'{p["module"]}.urls.{p["api_router_name"]}'):
         try:

@@ -31,7 +31,7 @@ export interface PaginatedKeywordList {
      * @type {number}
      * @memberof PaginatedKeywordList
      */
-    count?: number;
+    count: number;
     /**
      * 
      * @type {string}
@@ -49,13 +49,15 @@ export interface PaginatedKeywordList {
      * @type {Array<Keyword>}
      * @memberof PaginatedKeywordList
      */
-    results?: Array<Keyword>;
+    results: Array<Keyword>;
 }
 
 /**
  * Check if a given object implements the PaginatedKeywordList interface.
  */
 export function instanceOfPaginatedKeywordList(value: object): boolean {
+    if (!('count' in value)) return false;
+    if (!('results' in value)) return false;
     return true;
 }
 
@@ -69,10 +71,10 @@ export function PaginatedKeywordListFromJSONTyped(json: any, ignoreDiscriminator
     }
     return {
         
-        'count': json['count'] == null ? undefined : json['count'],
+        'count': json['count'],
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
-        'results': json['results'] == null ? undefined : ((json['results'] as Array<any>).map(KeywordFromJSON)),
+        'results': ((json['results'] as Array<any>).map(KeywordFromJSON)),
     };
 }
 
@@ -85,7 +87,7 @@ export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null):
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
-        'results': value['results'] == null ? undefined : ((value['results'] as Array<any>).map(KeywordToJSON)),
+        'results': ((value['results'] as Array<any>).map(KeywordToJSON)),
     };
 }
 
