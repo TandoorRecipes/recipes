@@ -18,6 +18,11 @@ import {setupI18n} from "@/i18n";
 import SettingsPage from "@/pages/SettingsPage.vue";
 import AccountSettings from "@/components/settings/AccountSettings.vue";
 import CosmeticSettings from "@/components/settings/CosmeticSettings.vue";
+import ShoppingSettings from "@/components/settings/ShoppingSettings.vue";
+import MealPlanSettings from "@/components/settings/MealPlanSettings.vue";
+import SpaceSettings from "@/components/settings/SpaceSettings.vue";
+import SpaceMemberSettings from "@/components/settings/SpaceMemberSettings.vue";
+import UserSpaceSettings from "@/components/settings/UserSpaceSettings.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -26,6 +31,11 @@ const routes = [
         children: [
             {path: 'account', component: AccountSettings, name: 'view_settings_account'},
             {path: 'cosmetic', component: CosmeticSettings, name: 'view_settings_cosmetic'},
+            {path: 'shopping', component: ShoppingSettings, name: 'view_settings_shopping'},
+            {path: 'meal-plan', component: MealPlanSettings, name: 'view_settings_mealplan'},
+            {path: 'space', component: SpaceSettings, name: 'view_settings_space'},
+            {path: 'space-members', component: SpaceMemberSettings, name: 'view_settings_space_member'},
+            {path: 'user-space', component: UserSpaceSettings, name: 'view_settings_user_space'},
         ]},
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
     {path: '/search', component: SearchPage, name: 'view_search'},

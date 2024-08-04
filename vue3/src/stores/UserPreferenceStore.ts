@@ -1,10 +1,11 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, UserPreference} from "@/openapi";
+import {ApiApi, Space, UserPreference} from "@/openapi";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
+const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 
 class DeviceSettings {
 
@@ -28,6 +29,11 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * database user settings, cache in local storage in case application is started offline
      */
     let userSettings = useStorage(USER_PREFERENCE_KEY, {} as UserPreference)
+
+    /**
+     * database user settings, cache in local storage in case application is started offline
+     */
+    let activeSpace = useStorage(ACTIVE_SPACE_KEY, {} as Space)
 
     /**
      * retrieve user settings from DB
