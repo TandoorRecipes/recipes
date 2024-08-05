@@ -1706,6 +1706,7 @@ class ImportOpenData(APIView):
 class LocalizationViewSet(viewsets.GenericViewSet):
     permission_classes = [CustomIsGuest & CustomTokenHasReadWriteScope]
     serializer_class = LocalizationSerializer
+    pagination_disabled = True
 
     def get_queryset(self):
         return None
