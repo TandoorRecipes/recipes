@@ -21,7 +21,8 @@ export enum ErrorMessageType {
 
 /** @enum {MessageType} prepared messages */
 export enum PreparedMessage {
-    UPDATE_SUCCESS = 'UPDATE_SUCCESS'
+    UPDATE_SUCCESS = 'UPDATE_SUCCESS',
+    CREATE_SUCCESS = 'CREATE_SUCCESS',
 }
 
 /**
@@ -90,7 +91,8 @@ export const useMessageStore = defineStore('message_store', () => {
      */
     function addPreparedMessage(preparedMessage: PreparedMessage) {
         if (preparedMessage == PreparedMessage.UPDATE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, 'Updated Successfully', 7000, {})
+            addMessage(MessageType.SUCCESS, 'Updated Successfully', 7000, {}) // TODO localize and make more useful ?
+            addMessage(MessageType.SUCCESS, 'Created Successfully', 7000, {})
         }
     }
 

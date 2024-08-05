@@ -26,11 +26,16 @@ export default createVuetify({
                     info: '#385f84',
                     warning: '#eaaa21',
                     error: '#a7240e',
+
+                    save: '#82aa8b',
+                    create: '#82aa8b',
+                    edit: '#385f84',
+                    delete: '#a7240e',
+                    cancel: '#eaaa21',
                 },
             },
             dark: {
                 colors: {
-
                     tandoor: '#ddbf86',
                     primary: '#b98766',
                     secondary: '#b55e4f',
@@ -38,6 +43,12 @@ export default createVuetify({
                     info: '#385f84',
                     warning: '#eaaa21',
                     error: '#a7240e',
+
+                    save: '#82aa8b',
+                    create: '#82aa8b',
+                    edit: '#385f84',
+                    delete: '#a7240e',
+                    cancel: '#eaaa21',
                 },
             },
         },
@@ -48,6 +59,8 @@ export default createVuetify({
             ...aliases,
             save: 'fa-solid fa-floppy-disk',
             delete: 'fa-solid fa-trash-can',
+            edit: 'fa-solid fa-pencil',
+            create: 'fa-solid fa-circle-plus',
             search: 'fa-solid fa-magnifying-glass',
             settings: 'fa-solid fa-sliders',
             spaces: 'fa-solid fa-database',
