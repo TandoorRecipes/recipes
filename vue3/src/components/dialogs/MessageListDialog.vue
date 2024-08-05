@@ -13,7 +13,7 @@
                         class="mt-2"
                         v-model="search"
                         label="Search"
-                        prepend-inner-icon="mdi-magnify"
+                        prepend-inner-icon="$search"
                         variant="outlined"
                         clearable
                         hide-details
@@ -27,19 +27,19 @@
                         divided
                         multiple>
                         <v-btn :value="MessageType.SUCCESS">
-                            <v-icon icon="mdi-eye" color="success"></v-icon>
+                            <v-icon icon="fa-regular fa-eye" color="success"></v-icon>
                             Success
                         </v-btn>
                         <v-btn :value="MessageType.INFO">
-                            <v-icon icon="mdi-eye" color="info"></v-icon>
+                            <v-icon icon="fa-regular fa-eye" color="info"></v-icon>
                             Info
                         </v-btn>
                         <v-btn :value="MessageType.WARNING">
-                            <v-icon icon="mdi-eye" color="warning"></v-icon>
+                            <v-icon icon="fa-regular fa-eye" color="warning"></v-icon>
                             Warning
                         </v-btn>
                         <v-btn :value="MessageType.ERROR">
-                            <v-icon icon="mdi-eye" color="error"></v-icon>
+                            <v-icon icon="fa-regular fa-eye" color="error"></v-icon>
                             Error
                         </v-btn>
                     </v-btn-toggle>
@@ -62,7 +62,7 @@
                         </template>
 
                         <template v-slot:item.actions="{ item }">
-                            <v-icon icon="mdi-magnify" @click="showDetailDialog = true; detailItem = item"></v-icon>
+                            <v-icon icon="$search" @click="showDetailDialog = true; detailItem = item"></v-icon>
                             <v-icon class="ms-1" icon="mdi-content-copy" @click="copy(JSON.stringify({'type': item.type, 'createdAt': item.createdAt, 'msg': item.msg, 'data': item.data}));"></v-icon>
                         </template>
                     </v-data-table>
