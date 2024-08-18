@@ -543,6 +543,7 @@
 	"ml": "millilitre [ml] (metric, volume)",
 	"l": "litre [l] (metric, volume)",
 	"fluid_ounce": "fluid ounce [fl oz] (US, volume)",
+	"us_cup": "cup (US, volume)",
 	"pint": "pint [pt] (US, volume)",
 	"quart": "quart [qt] (US, volume)",
 	"gallon": "gallon [gal] (US, volume)",
