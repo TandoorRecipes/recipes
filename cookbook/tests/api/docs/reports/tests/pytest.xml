@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="34.839" timestamp="2024-08-18T12:55:39.540620" hostname="vabene-pc"><testcase classname="cookbook.tests.api.test_api_food" name="test_list_permission[arg0]" time="26.624" /><testcase classname="cookbook.tests.api.test_api_food" name="test_list_permission[arg3]" time="26.985" /><testcase classname="cookbook.tests.api.test_api_food" name="test_list_permission[arg1]" time="27.282"><failure message="assert 200 == 403&#10; +  where 200 = &lt;Response status_code=200, &quot;application/json&quot;&gt;.status_code&#10; +    where &lt;Response status_code=200, &quot;application/json&quot;&gt; = &lt;bound method Client.get of &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;&gt;('/api/food/')&#10; +      where &lt;bound method Client.get of &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;&gt; = &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;.get&#10; +      and   '/api/food/' = reverse('api:food-list')">arg = ['g1_s1', 403]
+request = &lt;FixtureRequest for &lt;Function test_list_permission[arg1]&gt;&gt;
+
+    @pytest.mark.parametrize("arg", [
+        ['a_u', 403],
+        ['g1_s1', 403],
+        ['u1_s1', 200],
+        ['a1_s1', 200],
+    ])
+    def test_list_permission(arg, request):
+        c = request.getfixturevalue(arg[0])
+&gt;       assert c.get(reverse(LIST_URL)).status_code == arg[1]
+E       assert 200 == 403
+E        +  where 200 = &lt;Response status_code=200, "application/json"&gt;.status_code
+E        +    where &lt;Response status_code=200, "application/json"&gt; = &lt;bound method Client.get of &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;&gt;('/api/food/')
+E        +      where &lt;bound method Client.get of &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;&gt; = &lt;django.test.client.Client object at 0x0000017B4EB67350&gt;.get
+E        +      and   '/api/food/' = reverse('api:food-list')
+
+test_api_food.py:90: AssertionError</failure></testcase><testcase classname="cookbook.tests.api.test_api_food" name="test_list_permission[arg2]" time="27.533" /></testsuite></testsuites>

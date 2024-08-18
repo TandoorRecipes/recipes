@@ -59,7 +59,7 @@ from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
 from cookbook.helper.permission_helper import (
     CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomRecipePermission, CustomTokenHasReadWriteScope,
-    CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required, has_group_permission, is_space_owner, switch_user_active_space,
+    CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required, has_group_permission, is_space_owner, switch_user_active_space, CustomIsGuest,
 )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
@@ -405,7 +405,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [IsReadOnlyDRF & CustomIsUser | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
@@ -521,7 +521,7 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
 
@@ -548,7 +548,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):

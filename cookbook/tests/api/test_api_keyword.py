@@ -73,7 +73,7 @@ def recipe_1_1_s1(u1_s1, obj_1_1, space_1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
+    ['g1_s1', 200],
     ['u1_s1', 200],
     ['a1_s1', 200],
 ])
