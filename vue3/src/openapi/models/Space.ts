@@ -31,6 +31,12 @@ import {
     SpaceThemeEnumFromJSONTyped,
     SpaceThemeEnumToJSON,
 } from './SpaceThemeEnum';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
@@ -58,10 +64,10 @@ export interface Space {
     name?: string;
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof Space
      */
-    readonly createdBy: number | null;
+    readonly createdBy: User;
     /**
      * 
      * @type {Date}
@@ -238,7 +244,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
-        'createdBy': json['created_by'],
+        'createdBy': UserFromJSON(json['created_by']),
         'createdAt': (new Date(json['created_at'])),
         'message': json['message'] == null ? undefined : json['message'],
         'maxRecipes': json['max_recipes'],

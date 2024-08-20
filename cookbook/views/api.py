@@ -422,7 +422,13 @@ class SpaceViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
-        return self.queryset.filter(id=self.request.space.id)
+        return self.queryset.filter(id__in=UserSpace.objects.filter(user=self.request.user))
+
+    @extend_schema(responses=SpaceSerializer(many=False))
+    @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=SpaceSerializer, )
+    def current(self, request):
+        self.queryset.filter(id=self.request.space.id)
+        return Response(self.serializer_class(self.request.space, many=False).data)
 
 
 # TODO what is internal_note for?

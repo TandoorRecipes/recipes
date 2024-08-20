@@ -9302,6 +9302,34 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiSpaceCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/space/current/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiSpaceCurrentRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
+        const response = await this.apiSpaceCurrentRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiSpaceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Space>>> {
         const queryParameters: any = {};
 

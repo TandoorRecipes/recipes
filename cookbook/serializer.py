@@ -312,6 +312,7 @@ class UserFileViewSerializer(serializers.ModelSerializer):
 
 
 class SpaceSerializer(WritableNestedModelSerializer):
+    created_by = UserSerializer(read_only=True)
     user_count = serializers.SerializerMethodField('get_user_count')
     recipe_count = serializers.SerializerMethodField('get_recipe_count')
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb')
