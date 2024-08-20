@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { User } from './User';
+import {
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
+
 /**
  * 
  * @export
@@ -55,6 +62,18 @@ export interface UserFile {
      * @memberof UserFile
      */
     readonly fileSizeKb: number;
+    /**
+     * 
+     * @type {User}
+     * @memberof UserFile
+     */
+    readonly createdBy: User;
+    /**
+     * 
+     * @type {Date}
+     * @memberof UserFile
+     */
+    readonly createdAt: Date;
 }
 
 /**
@@ -66,6 +85,8 @@ export function instanceOfUserFile(value: object): boolean {
     if (!('fileDownload' in value)) return false;
     if (!('preview' in value)) return false;
     if (!('fileSizeKb' in value)) return false;
+    if (!('createdBy' in value)) return false;
+    if (!('createdAt' in value)) return false;
     return true;
 }
 
@@ -85,6 +106,8 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'fileDownload': json['file_download'],
         'preview': json['preview'],
         'fileSizeKb': json['file_size_kb'],
+        'createdBy': UserFromJSON(json['created_by']),
+        'createdAt': (new Date(json['created_at'])),
     };
 }
 

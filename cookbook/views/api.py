@@ -428,7 +428,7 @@ class SpaceViewSet(viewsets.ModelViewSet):
     @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=SpaceSerializer, )
     def current(self, request):
         self.queryset.filter(id=self.request.space.id)
-        return Response(self.serializer_class(self.request.space, many=False).data)
+        return Response(self.serializer_class(self.request.space, many=False, context={'request': self.request}).data)
 
 
 # TODO what is internal_note for?
@@ -1714,6 +1714,7 @@ class LocalizationViewSet(viewsets.GenericViewSet):
 
     def get_queryset(self):
         return None
+
     def list(self, request, *args, **kwargs):
         langs = []
         for l in settings.LANGUAGES:

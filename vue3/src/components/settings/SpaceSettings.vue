@@ -29,7 +29,10 @@
             </v-col>
         </v-row>
         <v-divider class="mt-3 mb-3"></v-divider>
-        <v-text-field></v-text-field>
+        <user-file-field v-model="space.image"></user-file-field>
+        <user-file-field v-model="space.logoColor32"></user-file-field>
+        <user-file-field v-model="space.logoColor128"></user-file-field>
+
         <v-text-field></v-text-field>
         <v-text-field></v-text-field>
 
@@ -44,6 +47,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {onMounted, ref} from "vue";
 import {ApiApi, Space} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import UserFileField from "@/components/inputs/UserFileField.vue";
 
 const space = ref({} as Space)
 

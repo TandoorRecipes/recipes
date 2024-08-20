@@ -1551,6 +1551,8 @@ export interface ApiUserFileCreateRequest {
     fileDownload: string;
     preview: string;
     fileSizeKb: number;
+    createdBy: User;
+    createdAt: Date;
     id?: number;
 }
 
@@ -1575,6 +1577,8 @@ export interface ApiUserFilePartialUpdateRequest {
     fileDownload?: string;
     preview?: string;
     fileSizeKb?: number;
+    createdBy?: User;
+    createdAt?: Date;
 }
 
 export interface ApiUserFileRetrieveRequest {
@@ -1588,6 +1592,8 @@ export interface ApiUserFileUpdateRequest {
     fileDownload: string;
     preview: string;
     fileSizeKb: number;
+    createdBy: User;
+    createdAt: Date;
     id2?: number;
 }
 
@@ -11554,6 +11560,20 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['createdBy'] == null) {
+            throw new runtime.RequiredError(
+                'createdBy',
+                'Required parameter "createdBy" was null or undefined when calling apiUserFileCreate().'
+            );
+        }
+
+        if (requestParameters['createdAt'] == null) {
+            throw new runtime.RequiredError(
+                'createdAt',
+                'Required parameter "createdAt" was null or undefined when calling apiUserFileCreate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -11598,6 +11618,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['fileSizeKb'] != null) {
             formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
+        }
+
+        if (requestParameters['createdBy'] != null) {
+            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
+                    }
+
+        if (requestParameters['createdAt'] != null) {
+            formParams.append('created_at', requestParameters['createdAt'] as any);
         }
 
         const response = await this.request({
@@ -11760,6 +11788,14 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
         }
 
+        if (requestParameters['createdBy'] != null) {
+            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
+                    }
+
+        if (requestParameters['createdAt'] != null) {
+            formParams.append('created_at', requestParameters['createdAt'] as any);
+        }
+
         const response = await this.request({
             path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
@@ -11858,6 +11894,20 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
+        if (requestParameters['createdBy'] == null) {
+            throw new runtime.RequiredError(
+                'createdBy',
+                'Required parameter "createdBy" was null or undefined when calling apiUserFileUpdate().'
+            );
+        }
+
+        if (requestParameters['createdAt'] == null) {
+            throw new runtime.RequiredError(
+                'createdAt',
+                'Required parameter "createdAt" was null or undefined when calling apiUserFileUpdate().'
+            );
+        }
+
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -11902,6 +11952,14 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['fileSizeKb'] != null) {
             formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
+        }
+
+        if (requestParameters['createdBy'] != null) {
+            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
+                    }
+
+        if (requestParameters['createdAt'] != null) {
+            formParams.append('created_at', requestParameters['createdAt'] as any);
         }
 
         const response = await this.request({

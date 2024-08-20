@@ -232,6 +232,7 @@ class FoodInheritFieldSerializer(UniqueFieldsMixin, WritableNestedModelSerialize
 
 
 class UserFileSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
     file = serializers.FileField(write_only=True)
     file_download = serializers.SerializerMethodField('get_download_link')
     preview = serializers.SerializerMethodField('get_preview_link')
@@ -277,12 +278,13 @@ class UserFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFile
-        fields = ('id', 'name', 'file', 'file_download', 'preview', 'file_size_kb')
-        read_only_fields = ('id', 'file_size_kb')
+        fields = ('id', 'name', 'file', 'file_download', 'preview', 'file_size_kb', 'created_by', 'created_at')
+        read_only_fields = ('id', 'file_download', 'preview', 'file_size_kb', 'created_by', 'created_at')
         extra_kwargs = {"file": {"required": False, }}
 
 
 class UserFileViewSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
     file_download = serializers.SerializerMethodField('get_download_link')
     preview = serializers.SerializerMethodField('get_preview_link')
 
@@ -307,8 +309,8 @@ class UserFileViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFile
-        fields = ('id', 'name', 'file_download', 'preview')
-        read_only_fields = ('id', 'file')
+        fields = ('id', 'name', 'file_download', 'preview', 'file_size_kb', 'created_by', 'created_at')
+        read_only_fields = ('id', 'file', 'file_download', 'file_size_kb', 'preview', 'created_by', 'created_at')
 
 
 class SpaceSerializer(WritableNestedModelSerializer):
