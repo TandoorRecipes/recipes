@@ -3,7 +3,7 @@
         <p class="text-h6">{{ $t('SpaceMembers') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <v-data-table :items="spaceUserSpaces" :headers="userTableHeaders" :hide-default-footer="spaceUserSpaces.length < 10">
+        <v-data-table :items="spaceUserSpaces" :headers="userTableHeaders"  density="compact" :hide-default-footer="spaceUserSpaces.length < 10">
 
             <template #item.groups="{item}">
                 <span v-for="g in item.groups">{{ g.name }}</span>
