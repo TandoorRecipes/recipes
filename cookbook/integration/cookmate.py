@@ -1,8 +1,8 @@
 from io import BytesIO
 
 import requests
-import validators
 
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
@@ -69,7 +69,7 @@ class Cookmate(Integration):
         if recipe_xml.find('imageurl') is not None:
             try:
                 url = recipe_xml.find('imageurl').text.strip()
-                if validators.url(url, public=True):
+                if validate_import_url(url):
                     response = requests.get(url)
                 self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:
