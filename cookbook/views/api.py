@@ -13,7 +13,6 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 import requests
-import validators
 from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
@@ -53,17 +52,16 @@ from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathO
 
 from cookbook.forms import ImportForm
 from cookbook.helper import recipe_url_import as helper
-from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.HelperFunctions import str2bool, validate_import_url
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
 from cookbook.helper.permission_helper import (
     CustomIsAdmin, CustomIsOwner, CustomIsOwnerReadOnly, CustomIsShared, CustomIsSpaceOwner, CustomIsUser, CustomRecipePermission, CustomTokenHasReadWriteScope,
-    CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required, has_group_permission, is_space_owner, switch_user_active_space,
+    CustomTokenHasScope, CustomUserPermission, IsReadOnlyDRF, above_space_limit, group_required, has_group_permission, is_space_owner, switch_user_active_space, CustomIsGuest,
 )
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
-from cookbook.helper.scrapers.scrapers import text_scraper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor, shopping_helper
 from cookbook.models import (Automation, BookmarkletImport, CookLog, CustomFilter, ExportLog, Food,
                              FoodInheritField, FoodProperty, ImportLog, Ingredient, InviteLink,
@@ -406,7 +404,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 class SpaceViewSet(viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [IsReadOnlyDRF & CustomIsUser | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
@@ -522,7 +520,7 @@ class KeywordViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
 
@@ -549,7 +547,7 @@ class FoodViewSet(viewsets.ModelViewSet, TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [(CustomIsGuest & IsReadOnlyDRF | CustomIsUser) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
@@ -995,7 +993,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             elif 'image_url' in serializer.validated_data:
                 try:
                     url = serializer.validated_data['image_url']
-                    if validators.url(url, public=True):
+                    if validate_import_url(url):
                         response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
                         image = File(io.BytesIO(response.content))
                         filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
@@ -1417,7 +1415,7 @@ class RecipeUrlImportView(APIView):
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
-                    if validators.url(url, public=True):
+                    if validate_import_url(url):
                         return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], }, status=status.HTTP_200_OK)
                 if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
@@ -1427,7 +1425,7 @@ class RecipeUrlImportView(APIView):
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
                         recipe = serialized_recipe.save()
-                        if validators.url(recipe_json['image'], public=True):
+                        if validate_import_url(recipe_json['image']):
                             recipe.image = File(handle_image(request,
                                                              File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'),
                                                              filetype=pathlib.Path(recipe_json['image']).suffix),
@@ -1436,8 +1434,11 @@ class RecipeUrlImportView(APIView):
                         return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))}, status=status.HTTP_201_CREATED)
                 else:
                     try:
-                        if validators.url(url, public=True):
-                            html = requests.get(url).content
+                        if validate_import_url(url):
+                            html = requests.get(
+                                url,
+                                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}
+                            ).content
                             scrape = scrape_html(org_url=url, html=html, supported_only=False)
                         else:
                             return Response({'error': True, 'msg': _('Invalid Url')}, status=status.HTTP_400_BAD_REQUEST)
@@ -1457,9 +1458,9 @@ class RecipeUrlImportView(APIView):
                     data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
                 except JSONDecodeError:
                     pass
-                scrape = text_scraper(text=data, url=url)
-                if not url and (found_url := scrape.schema.data.get('url', None)):
-                    scrape = text_scraper(text=data, url=found_url)
+                scrape = scrape_html(html=data, org_url=url, supported_only=False)
+                if not url and (found_url := scrape.schema.data.get('url', 'https://urlnotfound.none')):
+                    scrape = scrape_html(text=data, url=found_url, supported_only=False)
 
             if scrape:
                 return Response({

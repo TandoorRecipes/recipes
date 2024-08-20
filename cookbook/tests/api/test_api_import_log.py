@@ -51,7 +51,7 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     ['g1_s2', 403],
     ['u1_s2', 404],
     ['a1_s2', 404],
-])
+], ids=str)
 def test_update(arg, request, obj_1):
     c = request.getfixturevalue(arg[0])
     r = c.patch(

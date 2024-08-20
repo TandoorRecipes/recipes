@@ -81,7 +81,7 @@ def obj_tree_1(request, space_1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
+    ['g1_s1', 200],
     ['u1_s1', 200],
     ['a1_s1', 200],
 ])

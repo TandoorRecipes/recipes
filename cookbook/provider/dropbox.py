@@ -4,8 +4,8 @@ import os
 from datetime import datetime
 
 import requests
-import validators
 
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 
@@ -107,7 +107,7 @@ class Dropbox(Provider):
             recipe.save()
 
         url = recipe.link.replace('www.dropbox.', 'dl.dropboxusercontent.')
-        if validators.url(url, public=True):
+        if validate_import_url(url):
             response = requests.get(url)
 
             return io.BytesIO(response.content)

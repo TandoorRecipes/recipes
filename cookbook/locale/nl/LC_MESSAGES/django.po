@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 17:43+0200\n"
+"POT-Creation-Date: 2024-08-01 15:04+0200\n"
 "PO-Revision-Date: 2024-02-10 12:20+0000\n"
 "Last-Translator: Jonan B <jonanb@pm.me>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/recipes-"
@@ -65,8 +65,8 @@ msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
-"Om dubbelingen te voorkomen worden recepten met dezelfde naam als een "
-"bestaand recept genegeerd. Vink aan om alles te importeren."
+"Standaard worden dubbele recepten, op basis van de naam, genegeerd. Vink "
+"deze optie aan om toch alles te importeren."
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
@@ -93,14 +93,17 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Toegangtokens met lange levensduur</a> voor jouw HomeAssistant "
+"installatie"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Bijvoorbeeld http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api bijvoorbeeld"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -390,7 +393,7 @@ msgstr "Sectie"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Repareer voedingsmiddelen met "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -427,16 +430,14 @@ msgid "Other"
 msgstr "Overige"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
-msgstr "Vetten"
+msgstr "Vet"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
@@ -452,7 +453,7 @@ msgstr "Calorieën"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -491,18 +492,16 @@ msgid "Nutrition"
 msgstr "Voedingswaarde"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Samenvoegen"
+msgstr "Allergeen"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Prijs"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Doel"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -541,30 +540,24 @@ msgid "Instruction Replace"
 msgstr "Vervang instructies"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Nieuwe eenheid"
+msgstr "Nooit eenheid"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Omzetten Woorden"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Ingrediënt alias"
+msgstr "Voedingsmiddelen vervangen"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description Replace"
 msgid "Unit Replace"
-msgstr "Verrvang beschrijving"
+msgstr "Eenheid Vervangen"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Naam Vervangen"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -907,7 +900,7 @@ msgstr ""
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
-msgstr "Wijzig wachtwoord"
+msgstr "wijzig wachtwoord"
 
 #: .\cookbook\templates\account\password_reset_from_key.html:36
 #: .\cookbook\templates\account\password_reset_from_key_done.html:19
@@ -1021,13 +1014,11 @@ msgstr "Exporteren"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschappen"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Account verbindingen"
+msgstr "Eenheid omzetten"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1047,10 +1038,8 @@ msgid "Space Settings"
 msgstr "Ruimte Instellingen"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Externe recepten"
+msgstr "Externe Connectors"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1439,8 +1428,8 @@ msgstr "Tabellen"
 #: .\cookbook\templates\markdown_info.html:153
 msgid ""
 "Markdown tables are hard to create by hand. It is recommended to use a table "
-"editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
-"\"noreferrer noopener\" target=\"_blank\">this one.</a>"
+"editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" "
+"rel=\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
 "Het is lastig om met de hand Markdown tabellen te maken. Het wordt "
 "aangeraden om een tabel editor zoals <a href=\"https://www.tablesgenerator."
@@ -1513,10 +1502,8 @@ msgid "Back"
 msgstr "Terug"
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredient Editor"
 msgid "Property Editor"
-msgstr "Ingrediënten editor"
+msgstr "Eigenschappen Editor"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1973,10 +1960,8 @@ msgid "Sign in using"
 msgstr "Log in met"
 
 #: .\cookbook\templates\space_manage.html:7
-#, fuzzy
-#| msgid "Space Membership"
 msgid "Space Management"
-msgstr "Space Lidmaatschap"
+msgstr "Ruimte Management"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -2072,6 +2057,10 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Je moet <code>version.py</code> uitvoeren in je update script om "
+"versie informatie te genereren (gebeurt automatisch in docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2158,7 +2147,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Hosts met toestemming"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2168,6 +2157,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            Jouw 'hosts met toestemming' zijn geconfigureerd om alle hosts "
+"toestemming te geven. Dit is in niet altijd fout maar zou eigenlijk "
+"voorkomen moeten worden. Raadpleeg de documentatie hiervoor.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2178,10 +2172,8 @@ msgid "Info"
 msgstr "Info"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Gebruik fracties"
+msgstr "Migraties"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2194,93 +2186,103 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            Migraties mogen nooit mislukken!\n"
+"            Mislukte migraties zullen er waarschijnlijk voor zorgen dat "
+"grote delen van de app niet correct werken.\n"
+"            Als een migratie mislukt, zorg er dan voor dat de applicatie de "
+"nieuwste versie is, blijft het probleem bestaan, plaats dan het "
+"migratielogboek en het onderstaande overzicht in een GitHub-issue.\n"
+"        "
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "Niet waar"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "Waar"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "Verberg"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
-msgstr "Toon Log"
+msgstr "Toon"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
 msgstr "Importeer URL"
 
+#: .\cookbook\views\api.py:120 .\cookbook\views\api.py:213
 #: .\cookbook\views\api.py:121 .\cookbook\views\api.py:214
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "Parameter updatet_at is onjuist geformateerd"
 
+#: .\cookbook\views\api.py:234 .\cookbook\views\api.py:340
 #: .\cookbook\views\api.py:235 .\cookbook\views\api.py:341
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr "Er bestaat geen {self.basename} met id {pk}"
 
-#: .\cookbook\views\api.py:239
+#: .\cookbook\views\api.py:238 .\cookbook\views\api.py:239
 msgid "Cannot merge with the same object!"
 msgstr "Kan niet met hetzelfde object samenvoegen!"
 
-#: .\cookbook\views\api.py:246
+#: .\cookbook\views\api.py:245 .\cookbook\views\api.py:246
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr "Er bestaat geen {self.basename} met id {target}"
 
-#: .\cookbook\views\api.py:251
+#: .\cookbook\views\api.py:250 .\cookbook\views\api.py:251
 msgid "Cannot merge with child object!"
 msgstr "Kan niet met kindobject samenvoegen!"
 
-#: .\cookbook\views\api.py:289
+#: .\cookbook\views\api.py:288 .\cookbook\views\api.py:289
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr "{source.name} is succesvol samengevoegd met {target.name}"
 
-#: .\cookbook\views\api.py:294
+#: .\cookbook\views\api.py:293 .\cookbook\views\api.py:294
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr ""
 "Er is een error opgetreden bij het samenvoegen van {source.name} met {target."
 "name}"
 
-#: .\cookbook\views\api.py:350
+#: .\cookbook\views\api.py:349 .\cookbook\views\api.py:350
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr "{child.name} is succesvol verplaatst naar het hoogste niveau."
 
+#: .\cookbook\views\api.py:352 .\cookbook\views\api.py:370
 #: .\cookbook\views\api.py:353 .\cookbook\views\api.py:371
 msgid "An error occurred attempting to move "
 msgstr "Er is een error opgetreden bij het verplaatsen "
 
-#: .\cookbook\views\api.py:356
+#: .\cookbook\views\api.py:355 .\cookbook\views\api.py:356
 msgid "Cannot move an object to itself!"
 msgstr "Kan object niet verplaatsen naar zichzelf!"
 
-#: .\cookbook\views\api.py:362
+#: .\cookbook\views\api.py:361 .\cookbook\views\api.py:362
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr "Er bestaat geen {self.basename} met id {parent}"
 
-#: .\cookbook\views\api.py:368
+#: .\cookbook\views\api.py:367 .\cookbook\views\api.py:368
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr "{child.name} is succesvol verplaatst naar {parent.name}"
 
-#: .\cookbook\views\api.py:590
+#: .\cookbook\views\api.py:589 .\cookbook\views\api.py:590
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} is verwijderd van het boodschappenlijstje."
 
-#: .\cookbook\views\api.py:595 .\cookbook\views\api.py:1038
-#: .\cookbook\views\api.py:1051
+#: .\cookbook\views\api.py:594 .\cookbook\views\api.py:1037
+#: .\cookbook\views\api.py:1050 .\cookbook\views\api.py:595
+#: .\cookbook\views\api.py:1038 .\cookbook\views\api.py:1051
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} is toegevoegd aan het boodschappenlijstje."
@@ -2288,30 +2290,29 @@ msgstr "{obj.name} is toegevoegd aan het boodschappenlijstje."
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filter maaltijdplannen vanaf datum (inclusief) in het formaat JJJJ-MM-DD."
 
 #: .\cookbook\views\api.py:744
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filter maaltijdplannen tot nu toe (inclusief) in het formaat JJJJ-MM-DD."
 
 #: .\cookbook\views\api.py:745
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
-"ID van het recept waar de stap onderdeel van is. Herhaal parameter voor "
-"meerdere."
+"Filter maaltijdplannen met MealType ID. Herhaal parameter voor meerdere."
 
-#: .\cookbook\views\api.py:873
+#: .\cookbook\views\api.py:872 .\cookbook\views\api.py:873
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 "ID van het recept waar de stap onderdeel van is. Herhaal parameter voor "
 "meerdere."
 
-#: .\cookbook\views\api.py:874
+#: .\cookbook\views\api.py:873 .\cookbook\views\api.py:874
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Zoekterm komt overeen (fuzzy) met object naam."
 
-#: .\cookbook\views\api.py:910
+#: .\cookbook\views\api.py:909 .\cookbook\views\api.py:910
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
@@ -2319,7 +2320,7 @@ msgstr ""
 "Zoekterm komt overeen (fuzzy) met recept naam. In de toekomst wordt zoeken "
 "op volledige tekst ondersteund."
 
-#: .\cookbook\views\api.py:911
+#: .\cookbook\views\api.py:910 .\cookbook\views\api.py:911
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -2327,109 +2328,109 @@ msgstr ""
 "ID van etiket dat een recept moet hebben. Herhaal parameter voor meerdere. "
 "Gelijkwaardig aan keywords_or"
 
-#: .\cookbook\views\api.py:912
+#: .\cookbook\views\api.py:911 .\cookbook\views\api.py:912
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Geeft recepten met elk geselecteerd etiket "
 "weer"
 
-#: .\cookbook\views\api.py:913
+#: .\cookbook\views\api.py:912 .\cookbook\views\api.py:913
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Geeft recepten met alle geselecteerde "
 "etiketten weer."
 
-#: .\cookbook\views\api.py:914
+#: .\cookbook\views\api.py:913 .\cookbook\views\api.py:914
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Sluit recepten met één van de etiketten "
 "uit."
 
-#: .\cookbook\views\api.py:915
+#: .\cookbook\views\api.py:914 .\cookbook\views\api.py:915
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Etiket ID, herhaal voor meerdere. Sluit recepten met alle etiketten uit."
 
-#: .\cookbook\views\api.py:916
+#: .\cookbook\views\api.py:915 .\cookbook\views\api.py:916
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 "ID van ingrediënt dat een recept moet hebben. Herhaal parameter voor "
 "meerdere."
 
-#: .\cookbook\views\api.py:917
+#: .\cookbook\views\api.py:916 .\cookbook\views\api.py:917
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Geeft recepten met elk ingrediënt weer"
 
-#: .\cookbook\views\api.py:918
+#: .\cookbook\views\api.py:917 .\cookbook\views\api.py:918
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Geef recepten met alle ingrediënten "
 "weer."
 
-#: .\cookbook\views\api.py:919
+#: .\cookbook\views\api.py:918 .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. sluit recepten met één van de "
 "ingrediënten uit."
 
-#: .\cookbook\views\api.py:920
+#: .\cookbook\views\api.py:919 .\cookbook\views\api.py:920
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Ingrediënt ID, herhaal voor meerdere. Sluit recepten met alle ingrediënten "
 "uit."
 
-#: .\cookbook\views\api.py:921
+#: .\cookbook\views\api.py:920 .\cookbook\views\api.py:921
 msgid "ID of unit a recipe should have."
 msgstr "ID van eenheid dat een recept moet hebben."
 
-#: .\cookbook\views\api.py:922
+#: .\cookbook\views\api.py:921 .\cookbook\views\api.py:922
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr "Een waardering van een recept gaat van 0 tot 5."
 
-#: .\cookbook\views\api.py:923
+#: .\cookbook\views\api.py:922 .\cookbook\views\api.py:923
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
 "ID van boek dat een recept moet hebben. Herhaal parameter voor meerdere."
 
-#: .\cookbook\views\api.py:924
+#: .\cookbook\views\api.py:923 .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr "Boek ID, herhaal voor meerdere. Geeft recepten uit alle boeken weer"
 
-#: .\cookbook\views\api.py:925
+#: .\cookbook\views\api.py:924 .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr "Boek IDs, herhaal voor meerdere. Geeft recepten weer uit alle boeken."
 
-#: .\cookbook\views\api.py:926
+#: .\cookbook\views\api.py:925 .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Boek IDs, herhaal voor meerdere. Sluit recepten uit elk van de boeken uit."
 
-#: .\cookbook\views\api.py:927
+#: .\cookbook\views\api.py:926 .\cookbook\views\api.py:927
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr "Boek IDs, herhaal voor meerdere. Sluit recepten uit alle boeken uit."
 
-#: .\cookbook\views\api.py:928
+#: .\cookbook\views\api.py:927 .\cookbook\views\api.py:928
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
 "Wanneer alleen interne recepten gevonden moeten worden. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:929
+#: .\cookbook\views\api.py:928 .\cookbook\views\api.py:929
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr ""
 "Geeft de resultaten in willekeurige volgorde weer. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:930
+#: .\cookbook\views\api.py:929 .\cookbook\views\api.py:930
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr "Geeft nieuwe resultaten eerst weer. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:931
+#: .\cookbook\views\api.py:930 .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
@@ -2437,7 +2438,7 @@ msgstr ""
 "Filter recepten X maal of meer bereid.  Negatieve waarden geven minder dan X "
 "keer bereide recepten weer"
 
-#: .\cookbook\views\api.py:932
+#: .\cookbook\views\api.py:931 .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
@@ -2445,7 +2446,7 @@ msgstr ""
 "Filter recepten op laatst bereid op of na JJJJ-MM-DD. Voorafgaand - filters "
 "op of voor datum."
 
-#: .\cookbook\views\api.py:933
+#: .\cookbook\views\api.py:932 .\cookbook\views\api.py:933
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
@@ -2453,7 +2454,7 @@ msgstr ""
 "Filter recepten aangemaakt op of na JJJJ-MM-DD. Voorafgaand - filters op of "
 "voor datum."
 
-#: .\cookbook\views\api.py:934
+#: .\cookbook\views\api.py:933 .\cookbook\views\api.py:934
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
@@ -2461,7 +2462,7 @@ msgstr ""
 "Filter recepten op geüpdatet op of na JJJJ-MM-DD. Voorafgaand - filters op "
 "of voor datum."
 
-#: .\cookbook\views\api.py:935
+#: .\cookbook\views\api.py:934 .\cookbook\views\api.py:935
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
@@ -2469,13 +2470,13 @@ msgstr ""
 "Filter recepten op laatst bekeken op of na JJJJ-MM-DD. Voorafgaand - filters "
 "op of voor datum."
 
-#: .\cookbook\views\api.py:936
+#: .\cookbook\views\api.py:935 .\cookbook\views\api.py:936
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Filter recepten die bereid kunnen worden met ingrediënten die op voorraad "
 "zijn. [waar/<b>onwaar</b>]"
 
-#: .\cookbook\views\api.py:1123
+#: .\cookbook\views\api.py:1122 .\cookbook\views\api.py:1123
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
@@ -2484,78 +2485,71 @@ msgstr ""
 "Meerdere waarden toegestaan."
 
 #: .\cookbook\views\api.py:1126
-#, fuzzy
-#| msgid ""
-#| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
-#| "b>]<br>  - recent includes unchecked items and recently completed items."
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
-"Filter boodschappenlijstjes op aangevinkt.  [waar,onwaar,beide,<b>recent</"
+"Filter boodschappenlijstjes op aangevinkt.  [waar, onwaar, beide,<b>recent</"
 "b>]<br>  - recent bevat niet aangevinkte en recent voltooide items."
 
-#: .\cookbook\views\api.py:1129
+#: .\cookbook\views\api.py:1128 .\cookbook\views\api.py:1129
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
 "Geeft items op boodschappenlijstjes gesorteerd per supermarktcategorie weer."
 
 #: .\cookbook\views\api.py:1211
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Filter op vermeldingen met het gegeven recept"
 
 #: .\cookbook\views\api.py:1293
-#, fuzzy
-#| msgid ""
-#| "Returns the shopping list entry with a primary key of id.  Multiple "
-#| "values allowed."
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
-"Geeft het boodschappenlijstje item met een primaire sleutel van id.  "
+"Vraag de automatiseringen die overeenkomen met het automatiseringstype op.  "
 "Meerdere waarden toegestaan."
 
-#: .\cookbook\views\api.py:1416
+#: .\cookbook\views\api.py:1415 .\cookbook\views\api.py:1416
 msgid "Nothing to do."
 msgstr "Niks te doen."
 
-#: .\cookbook\views\api.py:1443
+#: .\cookbook\views\api.py:1445 .\cookbook\views\api.py:1443
 msgid "Invalid Url"
 msgstr "Ongeldige URL"
 
-#: .\cookbook\views\api.py:1447
+#: .\cookbook\views\api.py:1449 .\cookbook\views\api.py:1447
 msgid "Connection Refused."
 msgstr "Verbinding geweigerd."
 
-#: .\cookbook\views\api.py:1449
+#: .\cookbook\views\api.py:1451 .\cookbook\views\api.py:1449
 msgid "Bad URL Schema."
 msgstr "Verkeerd URL schema."
 
-#: .\cookbook\views\api.py:1472
+#: .\cookbook\views\api.py:1474 .\cookbook\views\api.py:1472
 msgid "No usable data could be found."
 msgstr "Er is geen bruikbare data gevonden."
 
 #: .\cookbook\views\api.py:1547
 msgid "File is above space limit"
-msgstr ""
+msgstr "Bestand is boven de ruimte limiet"
 
-#: .\cookbook\views\api.py:1564 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
+#: .\cookbook\views\api.py:1564
 msgid "Importing is not implemented for this provider"
 msgstr "Importeren is voor deze provider niet geïmplementeerd"
 
-#: .\cookbook\views\api.py:1648 .\cookbook\views\data.py:30
+#: .\cookbook\views\api.py:1650 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
-#: .\cookbook\views\new.py:82
+#: .\cookbook\views\new.py:82 .\cookbook\views\api.py:1648
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "Deze optie is nog niet beschikbaar in de gehoste versie van Tandoor!"
 
-#: .\cookbook\views\api.py:1669
+#: .\cookbook\views\api.py:1671 .\cookbook\views\api.py:1669
 msgid "Sync successful!"
 msgstr "Synchronisatie succesvol!"
 
-#: .\cookbook\views\api.py:1672
+#: .\cookbook\views\api.py:1674 .\cookbook\views\api.py:1672
 msgid "Error synchronizing with Storage"
 msgstr "Er is een fout opgetreden bij het synchroniseren met Opslag"
 
@@ -2583,10 +2577,8 @@ msgstr ""
 "tenminste een Bewaker."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Opslag backend"
+msgstr "Connectors Configuratie backend"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
@@ -2609,14 +2601,12 @@ msgid "There was an error updating this storage backend!"
 msgstr "Er is een fout opgetreden bij het updaten van deze opslag backend!"
 
 #: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Config saved!"
-msgstr "Wijzigingen opgeslagen!"
+msgstr "Configuratie opgeslagen!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "ConnectorConfiguratie"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
@@ -2647,10 +2637,8 @@ msgid "Shopping List"
 msgstr "Boodschappenlijst"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Opslag backend"
+msgstr "Connector Configuratie Backend"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2674,13 +2662,11 @@ msgstr "Stappen"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "Eigenschap Types"
 
 #: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not enabled by the server admin!"
-msgstr "Deze optie is niet beschikbaar in de demo versie!"
+msgstr "Deze optie is niet ingeschakeld door de server administrator!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2696,11 +2682,9 @@ msgid "This feature is not available in the demo version!"
 msgstr "Deze optie is niet beschikbaar in de demo versie!"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Je hebt het maximaal aantal recepten voor jouw ruimte bereikt."
+msgstr "Je hebt het maximaal aantal Ruimtes die jij kan aanmaken bereikt."
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2738,49 +2722,37 @@ msgstr "'Fuzzy' zoeken is niet te gebruiken met deze zoekmethode!"
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s is verouderd.  Upgrade naar een volledig ondersteunde "
+"versie!"
 
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "Je gebruikt PostgreSQL %(v1)s.  PostgreSQL %(v2)s wordt aanbevolen"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "Kan PostgreSQL-versie niet bepalen."
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Deze applicatie draait niet met een Postgres database als "
-"backend. Dit is ok maar wordt niet aanbevolen omdat sommige functies \n"
-" alleen werken met Postgres databases.\n"
-"        "
+"Deze applicatie draait niet met een Postgres database als backend. Dit is ok "
+"maar wordt niet aanbevolen omdat sommige functies alleen werken met Postgres "
+"databases."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
 "De setup pagina kan alleen gebruikt worden om de eerste gebruiker aan te "
-"maken! Indien je de superuser inloggegevens bent vergeten zal je de django "
-"documentatie raad moeten plegen voor een methode om je wachtwoord te "
-"resetten."
+"maken!                      Indien je de superuser inloggegevens bent "
+"vergeten zal je de django documentatie moeten raadplegen voor een methode om "
+"je wachtwoord te resetten."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
@@ -2820,7 +2792,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Beheer recepten, boodschappen lijstjes, maaltijdplannen en meer."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"
@@ -2828,17 +2800,15 @@ msgstr "Plan"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Bekijk jouw maaltijdplan"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Bekijk jouw kookboeken"
 
 #: .\cookbook\views\views.py:460
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "View your shopping lists"
-msgstr "Nieuwe boodschappenlijst"
+msgstr "Bekijk jouw boodschappenlijst"
 
 #~ msgid "Default unit"
 #~ msgstr "Standaard eenheid"
@@ -2946,8 +2916,8 @@ msgstr "Nieuwe boodschappenlijst"
 #~ "You can use markdown to format this field. See the <a href=\"/docs/"
 #~ "markdown/\">docs here</a>"
 #~ msgstr ""
-#~ "Je kunt markdown gebruiken om dit veld te op te maken. Bekijk de <a href="
-#~ "\"/docs/markdown/\">documentatie hier</a>"
+#~ "Je kunt markdown gebruiken om dit veld te op te maken. Bekijk de <a "
+#~ "href=\"/docs/markdown/\">documentatie hier</a>"
 
 #~ msgid ""
 #~ "Users will see all items you add to your shopping list.  They must add "

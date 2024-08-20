@@ -20,6 +20,7 @@ CONVERSION_TABLE = {
         'gallon': 0.264172,
         'tbsp': 67.628,
         'tsp': 202.884,
+        'us_cup': 4.22675,
         'imperial_fluid_ounce': 35.1951,
         'imperial_pint': 1.75975,
         'imperial_quart': 0.879877,

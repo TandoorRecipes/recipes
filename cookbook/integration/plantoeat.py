@@ -1,8 +1,8 @@
 from io import BytesIO
 
 import requests
-import validators
 
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
@@ -75,7 +75,7 @@ class Plantoeat(Integration):
 
         if image_url:
             try:
-                if validators.url(image_url, public=True):
+                if validate_import_url(image_url):
                     response = requests.get(image_url)
                     self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-08 17:43+0200\n"
+"POT-Creation-Date: 2024-08-01 15:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,92 +36,104 @@ msgstr ""
 msgid "You do not have the required module to view this page!"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Recipe"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Recipe Keyword"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Meal Plan"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Shopping"
 msgstr ""
 
-#: .\recipes\plugins\enterprise_plugin\models.py:35
+#: .\recipes\plugins\enterprise_plugin\models.py:32
 msgid "Book"
 msgstr ""
 
-#: .\recipes\settings.py:461
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "start"
+msgstr ""
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "center"
+msgstr ""
+
+#: .\recipes\plugins\enterprise_plugin\models.py:37
+msgid "end"
+msgstr ""
+
+#: .\recipes\settings.py:478
 msgid "Armenian "
 msgstr ""
 
-#: .\recipes\settings.py:462
+#: .\recipes\settings.py:479
 msgid "Bulgarian"
 msgstr ""
 
-#: .\recipes\settings.py:463
+#: .\recipes\settings.py:480
 msgid "Catalan"
 msgstr ""
 
-#: .\recipes\settings.py:464
+#: .\recipes\settings.py:481
 msgid "Czech"
 msgstr ""
 
-#: .\recipes\settings.py:465
+#: .\recipes\settings.py:482
 msgid "Danish"
 msgstr ""
 
-#: .\recipes\settings.py:466
+#: .\recipes\settings.py:483
 msgid "Dutch"
 msgstr ""
 
-#: .\recipes\settings.py:467
+#: .\recipes\settings.py:484
 msgid "English"
 msgstr "Englisch"
 
-#: .\recipes\settings.py:468
+#: .\recipes\settings.py:485
 msgid "French"
 msgstr ""
 
-#: .\recipes\settings.py:469
+#: .\recipes\settings.py:486
 msgid "German"
 msgstr "Deutsch"
 
-#: .\recipes\settings.py:470
+#: .\recipes\settings.py:487
 msgid "Hungarian"
 msgstr ""
 
-#: .\recipes\settings.py:471
+#: .\recipes\settings.py:488
 msgid "Italian"
 msgstr ""
 
-#: .\recipes\settings.py:472
+#: .\recipes\settings.py:489
 msgid "Latvian"
 msgstr ""
 
-#: .\recipes\settings.py:473
+#: .\recipes\settings.py:490
 msgid "Norwegian "
 msgstr ""
 
-#: .\recipes\settings.py:474
+#: .\recipes\settings.py:491
 #, fuzzy
 #| msgid "English"
 msgid "Polish"
 msgstr "Englisch"
 
-#: .\recipes\settings.py:475
+#: .\recipes\settings.py:492
 msgid "Russian"
 msgstr ""
 
-#: .\recipes\settings.py:476
+#: .\recipes\settings.py:493
 msgid "Spanish"
 msgstr ""
 
-#: .\recipes\settings.py:477
+#: .\recipes\settings.py:494
 msgid "Swedish"
 msgstr ""

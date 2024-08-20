@@ -311,6 +311,7 @@ export class Models {
                         {value: "ml", text: "ml"},
                         {value: "l", text: "l"},
                         {value: "fluid_ounce", text: "fluid_ounce"},
+                        {value: "us_cup", text: "us_cup"},
                         {value: "pint", text: "pint"},
                         {value: "quart", text: "quart"},
                         {value: "gallon", text: "gallon"},
