@@ -5,9 +5,10 @@ from io import BytesIO
 from zipfile import ZipFile
 
 import requests
-import validators
 
 from django.utils.translation import gettext as _
+
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
@@ -125,7 +126,7 @@ class RecetteTek(Integration):
             else:
                 if file['originalPicture'] != '':
                     url = file['originalPicture']
-                    if validators.url(url, public=True):
+                    if validate_import_url(url):
                         response = requests.get(url)
                         if imghdr.what(BytesIO(response.content)) is not None:
                             self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))

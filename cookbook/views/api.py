@@ -13,7 +13,6 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 import requests
-import validators
 from PIL import UnidentifiedImageError
 from annoying.decorators import ajax_request
 from annoying.functions import get_object_or_None
@@ -53,7 +52,7 @@ from treebeard.exceptions import InvalidMoveToDescendant, InvalidPosition, PathO
 
 from cookbook.forms import ImportForm
 from cookbook.helper import recipe_url_import as helper
-from cookbook.helper.HelperFunctions import str2bool
+from cookbook.helper.HelperFunctions import str2bool, validate_import_url
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.open_data_importer import OpenDataImporter
@@ -994,7 +993,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             elif 'image_url' in serializer.validated_data:
                 try:
                     url = serializer.validated_data['image_url']
-                    if validators.url(url, public=True):
+                    if validate_import_url(url):
                         response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"})
                         image = File(io.BytesIO(response.content))
                         filetype = mimetypes.guess_extension(response.headers['content-type']) or filetype
@@ -1416,7 +1415,7 @@ class RecipeUrlImportView(APIView):
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
-                    if validators.url(url, public=True):
+                    if validate_import_url(url):
                         return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], }, status=status.HTTP_200_OK)
                 if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
@@ -1426,7 +1425,7 @@ class RecipeUrlImportView(APIView):
                     serialized_recipe = RecipeExportSerializer(data=recipe_json, context={'request': request})
                     if serialized_recipe.is_valid():
                         recipe = serialized_recipe.save()
-                        if validators.url(recipe_json['image'], public=True):
+                        if validate_import_url(recipe_json['image']):
                             recipe.image = File(handle_image(request,
                                                              File(io.BytesIO(requests.get(recipe_json['image']).content), name='image'),
                                                              filetype=pathlib.Path(recipe_json['image']).suffix),
@@ -1435,7 +1434,7 @@ class RecipeUrlImportView(APIView):
                         return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))}, status=status.HTTP_201_CREATED)
                 else:
                     try:
-                        if validators.url(url, public=True):
+                        if validate_import_url(url):
                             html = requests.get(
                                 url,
                                 headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0"}

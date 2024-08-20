@@ -2,8 +2,8 @@ import re
 from io import BytesIO
 
 import requests
-import validators
 
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import (get_from_scraper, get_images_from_soup,
                                                iso_duration_to_minutes)
@@ -63,7 +63,7 @@ class CookBookApp(Integration):
         if len(images) > 0:
             try:
                 url = images[0]
-                if validators.url(url, public=True):
+                if validate_import_url(url):
                     response = requests.get(url)
                     self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception as e:

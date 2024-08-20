@@ -4,8 +4,9 @@ import tempfile
 from datetime import datetime
 
 import requests
-import validators
 import webdav3.client as wc
+
+from cookbook.helper.HelperFunctions import validate_import_url
 from cookbook.models import Recipe, RecipeImport, SyncLog
 from cookbook.provider.provider import Provider
 from requests.auth import HTTPBasicAuth
@@ -93,7 +94,7 @@ class Nextcloud(Provider):
             "Content-Type": "application/json"
         }
 
-        if validators.url(url, public=True):
+        if validate_import_url(url):
             r = requests.get(
                 url,
                 headers=headers,
