@@ -6,9 +6,11 @@
     </v-row>
 
     <v-row>
-        <v-col cols="3" v-for="us in userSpaces">
+        <v-col cols="6" v-for="s in spaces">
             <v-card>
-                <v-card-title>{{us.space}}</v-card-title>
+                <v-img height="200px" :src="recipeDefaultImage" :alt="$t('Image')"> </v-img>
+                <v-card-title>{{ s.name }} <v-chip variant="tonal" density="compact" color="error" v-if="s.id == useUserPreferenceStore().activeSpace.id">{{$t('active')}}</v-chip></v-card-title>
+                <v-card-subtitle>{{ $t('created_by') }} {{ s.createdBy.displayName }} </v-card-subtitle>
             </v-card>
         </v-col>
     </v-row>
@@ -18,16 +20,18 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {ApiApi, UserSpace} from "@/openapi";
+import {ApiApi, Space} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import recipeDefaultImage from '../../assets/recipe_no_image.svg'
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
-const userSpaces = ref([] as UserSpace[])
+const spaces = ref([] as Space[])
 
 onMounted(() => {
     const api = new ApiApi()
 
-    api.apiUserSpaceList().then(r => {
-        userSpaces.value = r.results
+    api.apiSpaceList().then(r => {
+        spaces.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })

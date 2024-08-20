@@ -29,7 +29,6 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * database user settings, cache in local storage in case application is started offline
      */
     let userSettings = useStorage(USER_PREFERENCE_KEY, {} as UserPreference)
-
     /**
      * database user settings, cache in local storage in case application is started offline
      */
@@ -65,10 +64,19 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         })
     }
 
+    function loadActiveSpace(){
+        let api = new ApiApi()
+        api.apiSpaceCurrentRetrieve().then(r => {
+            activeSpace.value = r
+        })
+    }
+
     // always load user settings on first initialization of store
     loadUserSettings()
+    // always load active space on first initialization of store
+    loadActiveSpace()
 
-    return {deviceSettings, userSettings, loadUserSettings, updateUserSettings}
+    return {deviceSettings, userSettings, activeSpace, loadUserSettings, updateUserSettings}
 })
 
 // enable hot reload for store
