@@ -11,7 +11,7 @@ DETAIL_URL = 'api:space-detail'
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403, 0],
-    ['g1_s1', 403, 0],
+    ['g1_s1', 200, 1],
     ['u1_s1', 200, 1],
     ['a1_s1', 200, 1],
     ['a2_s1', 200, 1],
