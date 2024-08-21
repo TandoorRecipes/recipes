@@ -56,7 +56,7 @@
                     </v-card>
                 </v-tabs-window-item>
                 <v-tabs-window-item>
-                    TODO file List
+                    <v-data-table :items="userFiles"></v-data-table>
                 </v-tabs-window-item>
             </v-tabs-window>
         </v-card>
@@ -66,9 +66,10 @@
 <script setup lang="ts">
 
 import {ApiApi, UserFile, UserFileFromJSON} from "@/openapi";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {DateTime} from "luxon";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {getCookie} from "@/utils/cookie";
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
@@ -81,6 +82,22 @@ const model = defineModel()
 const dialog = ref(false)
 const tab = ref(0)
 const newUserFile = ref({} as UserFile)
+const userFiles = ref([] as UserFile[])
+
+onMounted(() => {
+    //TODO move to open function of file tab
+    loadFiles()
+})
+
+function loadFiles(){
+    let api = new ApiApi()
+    api.apiUserFileList().then(r => {
+        // TODO implement pagination
+        userFiles.value = r.results
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
 
 function uploadFile() {
 
@@ -93,7 +110,7 @@ function uploadFile() {
         method: 'POST',
         headers: {'X-CSRFToken': getCookie('csrftoken')},
         body: formData
-    }).then(r => {
+    }).then(r => { // TODO maybe better use existing URL clients response functions for parsing
         r.json().then(r => {
             model.value = UserFileFromJSON(r)
         })
@@ -101,22 +118,6 @@ function uploadFile() {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
-}
-
-function getCookie(name: string) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 }
 
 </script>
