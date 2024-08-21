@@ -16,6 +16,7 @@
     <v-dialog max-width="600px" v-model="dialog">
         <v-card>
             <v-card-title>{{ $t('Files') }}</v-card-title>
+            <v-btn @click="dialog = false">close</v-btn>
             <v-tabs v-model="tab" grow>
                 <v-tab v-if="model != null">Preview</v-tab>
                 <v-tab>New</v-tab>
@@ -39,16 +40,22 @@
                         <v-card-actions>
                             <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
                             <!-- TODO implement -->
-                            <v-btn color="delete" prepend-icon="$delete">{{ $t('Delete') }}</v-btn>
+                            <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
                         </v-card-actions>
                     </v-card>
 
 
                 </v-tabs-window-item>
-                <v-tabs-window-item :value="0">
-                    <v-file-input></v-file-input>
+                <v-tabs-window-item>
+                    <v-card>
+                        <v-card-text>
+                            <v-text-field :label="$t('Name')" v-model="newUserFile.name"></v-text-field>
+                            <v-file-input :label="$t('File')" v-model="newUserFile.file"></v-file-input>
+                            <v-btn color="save" prepend-icon="$save" @click="uploadFile()">{{ $t('Save') }}</v-btn>
+                        </v-card-text>
+                    </v-card>
                 </v-tabs-window-item>
-                <v-tabs-window-item :value="0">
+                <v-tabs-window-item>
                     TODO file List
                 </v-tabs-window-item>
             </v-tabs-window>
@@ -58,9 +65,10 @@
 
 <script setup lang="ts">
 
-import {UserFile} from "@/openapi";
+import {ApiApi, UserFile, UserFileFromJSON} from "@/openapi";
 import {ref} from "vue";
 import {DateTime} from "luxon";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
@@ -72,6 +80,44 @@ const model = defineModel()
 
 const dialog = ref(false)
 const tab = ref(0)
+const newUserFile = ref({} as UserFile)
+
+function uploadFile() {
+
+    let formData = new FormData()
+    formData.append('file', newUserFile.value.file)
+    formData.append('name', newUserFile.value.name)
+
+    //TODO proper URL finding (sub path setups)
+    fetch('/api/user-file/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        body: formData
+    }).then(r => {
+        r.json().then(r => {
+            model.value = UserFileFromJSON(r)
+        })
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+}
+
+function getCookie(name: string) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 </script>
 

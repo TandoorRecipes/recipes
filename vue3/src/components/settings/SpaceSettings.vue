@@ -36,7 +36,7 @@
         <v-text-field></v-text-field>
         <v-text-field></v-text-field>
 
-        <v-btn class="mt-3" color="success" @click="" prepend-icon="$save">{{ $t('Save') }}</v-btn>
+        <v-btn class="mt-3" color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
     </v-form>
 </template>
 
@@ -59,6 +59,15 @@ onMounted(() => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 })
+
+function updateSpace(){
+    let api = new ApiApi()
+    api.apiSpacePartialUpdate({id: space.value.id, patchedSpace: space.value}).then(r => {
+        space.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    })
+}
 
 </script>
 
