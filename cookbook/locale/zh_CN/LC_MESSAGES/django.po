@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-02-15 03:19+0000\n"
-"Last-Translator: dalan <xzdlj@outlook.com>\n"
+"PO-Revision-Date: 2024-08-24 14:58+0000\n"
+"Last-Translator: Known Rabbit <opensource@rabit.pw>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -86,14 +86,16 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"您的HomeAssistant示例的<a href=\"https://www.home-assistant.io/docs/"
+"authentication/#your-account-profile\">长期访问令牌</a>"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "形如 http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "例如 http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -356,7 +358,7 @@ msgstr "准备时间"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "菜谱"
+msgstr "烹饪手册"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
@@ -364,7 +366,7 @@ msgstr "部分"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "修复食谱中的重复字段 "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -400,29 +402,29 @@ msgstr "其他"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "脂肪"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "克"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "碳水化合物"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "蛋白质"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "卡路里"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "千卡"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -455,24 +457,20 @@ msgid " is part of a recipe step and cannot be deleted"
 msgstr " 是菜谱步骤的一部分，不能删除"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Automations"
 msgid "Nutrition"
-msgstr "自动化"
+msgstr "营养"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "合并"
+msgstr "过敏原"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "目标"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -511,30 +509,24 @@ msgid "Instruction Replace"
 msgstr "指示"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "新单位"
+msgstr "禁用单位识别"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "字符串转置"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "食物别名"
+msgstr "食物替换"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description Replace"
 msgid "Unit Replace"
-msgstr "描述"
+msgstr "单位替换"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "名称替换"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -979,13 +971,11 @@ msgstr "导出"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "属性"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "帐号连接"
+msgstr "单位转换"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1005,10 +995,8 @@ msgid "Space Settings"
 msgstr "空间设置"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "外部菜谱"
+msgstr "外部连接器"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1453,10 +1441,8 @@ msgid "Back"
 msgstr "返回"
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredient Editor"
 msgid "Property Editor"
-msgstr "食材编辑器"
+msgstr "属性编辑器"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1770,7 +1756,7 @@ msgstr "非常适合大型数据库"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "安装菜谱"
+msgstr "安装菜谱应用"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
@@ -1879,10 +1865,8 @@ msgid "Sign in using"
 msgstr "登录使用"
 
 #: .\cookbook\templates\space_manage.html:7
-#, fuzzy
-#| msgid "Space Membership"
 msgid "Space Management"
-msgstr "成员"
+msgstr "空间管理"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -1974,6 +1958,10 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            您需要在您的更新脚本中执行 <code>version.py</code> "
+"生成版本信息（Docker实例中会自动执行）。\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2057,7 +2045,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "域名白名单"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2067,6 +2055,10 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            您未配置域名白名单，本实例可以通过任意域名访问，某些特殊情况下可"
+"能有用，但请尽量避免这样配置，请参考文档配置 ALLOWED_HOSTS 。\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2077,10 +2069,8 @@ msgid "Info"
 msgstr "信息"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "使用分数"
+msgstr "数据库结构变更"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2093,24 +2083,28 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            正常情况下数据库迁移不应产生任何报错！\n"
+"            数据库迁移失败很可能导致本应用的功能出错或完全不可用。\n"
+"            如果您在最新版本上数据库迁移依然产生错误，"
+"请将数据库迁移日志和页面下方的信息反馈至 Github Issue 中。\n"
+"        "
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "否"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "是"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "隐藏"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
-msgstr "显示记录"
+msgstr "显示"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2184,17 +2178,15 @@ msgstr "{obj.name} 已添加到购物清单中。"
 
 #: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "指定开始日期以过滤膳食计划（包含选择的日期），日期格式为 YYYY-MM-DD。"
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
-msgstr ""
+msgstr "指定结束日期以过滤膳食计划（包含选择的日期），日期格式为 YYYY-MM-DD。"
 
 #: .\cookbook\views\api.py:744
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
-msgstr "食谱中的步骤ID。 对于多个重复参数。"
+msgstr "指定 MealType ID 以过滤膳食计划，重复此参数以选择多个对象。"
 
 #: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2341,17 +2333,13 @@ msgid ""
 msgstr "返回主键为 id 的购物清单条目。 允许多个值。"
 
 #: .\cookbook\views\api.py:1125
-#, fuzzy
-#| msgid ""
-#| "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
-#| "b>]<br>  - recent includes unchecked items and recently completed items."
 msgid ""
 "Filter shopping list entries on checked.  [true, false, both, <b>recent</"
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
-"在选中时筛选购物清单列表。  [真, 假, 两者都有, <b>最近</b>]<br>  - 最近包括未"
-"选中的项目和最近完成的项目。"
+"勾选并筛选购物清单列表。  [真, 假, 两者都有, <b>最近</b>]"
+"<br>                  - 最近包括未选中的项目和最近完成的项目。"
 
 #: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
@@ -2359,17 +2347,13 @@ msgstr "返回按超市分类排序的购物清单列表。"
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "筛选包含所选食谱的对象"
 
 #: .\cookbook\views\api.py:1292
-#, fuzzy
-#| msgid ""
-#| "Returns the shopping list entry with a primary key of id.  Multiple "
-#| "values allowed."
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
-msgstr "返回主键为 id 的购物清单条目。 允许多个值。"
+msgstr "返回与自动化类型相匹配的自动化条目。 允许多个值。"
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
@@ -2393,7 +2377,7 @@ msgstr "找不到可用的数据。"
 
 #: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
-msgstr ""
+msgstr "文件大小超出空间限值"
 
 #: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
@@ -2434,10 +2418,8 @@ msgid ""
 msgstr "无法删除此存储后端，因为它至少在一台显示器中使用。"
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "存储后端"
+msgstr "连接器后端配置"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
@@ -2460,14 +2442,12 @@ msgid "There was an error updating this storage backend!"
 msgstr "更新此存储后端时出错！"
 
 #: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Config saved!"
-msgstr "更改已保存！"
+msgstr "配置已保存！"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "连接器配置"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
@@ -2496,10 +2476,8 @@ msgid "Shopping List"
 msgstr "采购单"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "存储后端"
+msgstr "连接器后端配置"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2523,13 +2501,11 @@ msgstr "步骤"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "属性类型"
 
 #: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not enabled by the server admin!"
-msgstr "此功能在演示版本中不可用！"
+msgstr "此功能被服务器管理员禁用！"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2545,11 +2521,9 @@ msgid "This feature is not available in the demo version!"
 msgstr "此功能在演示版本中不可用！"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "你已经达到了空间的菜谱的最大数量。"
+msgstr "你拥有的空间数量已经达到上限。"
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2582,48 +2556,32 @@ msgstr "模糊搜索与此搜索方法不兼容！"
 #: .\cookbook\views\views.py:306
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
-msgstr ""
+msgstr "PostgreSQL %(v)s 版本过时。请升级到支持的版本！"
 
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "您运行的 PostgreSQL 版本是 %(v1)s。推荐版本为 PostgreSQL %(v2)s"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "无法确认 PostgreSQL 版本。"
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
-msgstr ""
-"\n"
-"            此应用程序未使用 PostgreSQL 数据库在后端运行。 这并没有关系，但这"
-"是不推荐的，\n"
-"            因为有些功能仅适用于 PostgreSQL 数据库。\n"
-"        "
+msgstr "此应用未使用 PostgreSQL 数据库作为后端。 这是可运行的配置，但不推荐，"
+"因为部分功能仅在 PostgreSQL 数据库下可用。"
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
-"设置页面只能用于创建第一个用户！如果您忘记了超级用户凭据，请参阅 Django 文"
-"档，了解如何重置密码。"
+"设置页面只能用于创建第一个用户！                     "
+"如果您忘记了超级用户凭据，请参阅 Django 文档，了解如何重置密码。"
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
@@ -2659,27 +2617,23 @@ msgstr "菜谱共享链接已被禁用！有关更多信息，请与页面管理
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "管理菜谱、购物清单、膳食计划等。"
 
 #: .\cookbook\views\views.py:458
-#, fuzzy
-#| msgid "Meal-Plan"
 msgid "Plan"
-msgstr "膳食计划"
+msgstr "计划"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "查看您的膳食计划"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "查看你的烹饪手册"
 
 #: .\cookbook\views\views.py:460
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "View your shopping lists"
-msgstr "新购物清单"
+msgstr "查看你的购物清单"
 
 #~ msgid "Default unit"
 #~ msgstr "默认单位"
