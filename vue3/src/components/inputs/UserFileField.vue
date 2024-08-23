@@ -13,10 +13,9 @@
         </v-card>
     </v-input>
 
-    <v-dialog max-width="600px" v-model="dialog">
+    <v-dialog max-width="1000px" height="90vh" v-model="dialog">
         <v-card>
             <v-card-title>{{ $t('Files') }}</v-card-title>
-            <v-btn @click="dialog = false">close</v-btn>
             <v-tabs v-model="tab" grow>
                 <v-tab v-if="model != null">Preview</v-tab>
                 <v-tab>New</v-tab>
@@ -40,7 +39,9 @@
                         <v-card-actions>
                             <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
                             <!-- TODO implement -->
+                            <v-btn color="warning" prepend-icon="fa-solid fa-link-slash" @click="model = null">{{ $t('Remove') }}</v-btn>
                             <v-btn color="delete" prepend-icon="$delete" @click="model = null">{{ $t('Delete') }}</v-btn>
+                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
                         </v-card-actions>
                     </v-card>
 
@@ -52,11 +53,15 @@
                             <v-text-field :label="$t('Name')" v-model="newUserFile.name"></v-text-field>
                             <v-file-input :label="$t('File')" v-model="newUserFile.file"></v-file-input>
                             <v-btn color="save" prepend-icon="$save" @click="uploadFile()">{{ $t('Save') }}</v-btn>
+
                         </v-card-text>
                     </v-card>
                 </v-tabs-window-item>
                 <v-tabs-window-item>
-                    <v-data-table :items="userFiles"></v-data-table>
+                    <v-container fluid>
+                        <v-text-field :label="$t('Search')" prepend-inner-icon="$search"></v-text-field>
+                        <v-data-table density="compact" :headers="tableHeaders" :items="userFiles"></v-data-table>
+                    </v-container>
                 </v-tabs-window-item>
             </v-tabs-window>
         </v-card>
@@ -70,6 +75,7 @@ import {onMounted, ref} from "vue";
 import {DateTime} from "luxon";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {getCookie} from "@/utils/cookie";
+import {useI18n} from "vue-i18n";
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
@@ -78,18 +84,24 @@ const props = defineProps({
 })
 
 const model = defineModel()
+const {t} = useI18n()
 
 const dialog = ref(false)
 const tab = ref(0)
 const newUserFile = ref({} as UserFile)
 const userFiles = ref([] as UserFile[])
 
+const tableHeaders = ref([
+    {title: 'ID', value: 'id'},
+    {title: t('Name'), value: 'name'},
+])
+
 onMounted(() => {
     //TODO move to open function of file tab
     loadFiles()
 })
 
-function loadFiles(){
+function loadFiles() {
     let api = new ApiApi()
     api.apiUserFileList().then(r => {
         // TODO implement pagination

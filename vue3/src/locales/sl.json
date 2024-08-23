@@ -172,6 +172,7 @@
 	"Recipe_Image": "Slika recepta",
 	"Recipes": "Recepti",
 	"Recipes_per_page": "Receptov na stran",
+	"Remove": "",
 	"RemoveFoodFromShopping": "Odstrani {food} iz nakupovalnega listka",
 	"Remove_nutrition_recipe": "Receptu izbriši hranilno vrednost",
 	"Reset_Search": "Ponastavi iskalnik",

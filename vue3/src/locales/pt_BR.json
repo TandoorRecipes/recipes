@@ -265,6 +265,7 @@
 	"Recipes": "Receitas",
 	"Recipes_In_Import": "Receitas no seu arquivo de importação",
 	"Recipes_per_page": "Receitas por página",
+	"Remove": "",
 	"RemoveFoodFromShopping": "Remover {food} da sua lista de compras",
 	"Remove_nutrition_recipe": "Deletar dados nutricionais da receita",
 	"Reset": "Reiniciar",

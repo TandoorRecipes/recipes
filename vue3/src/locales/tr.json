@@ -277,6 +277,7 @@
 	"Recipes": "Tarifler",
 	"Recipes_In_Import": "İçe aktarma dosyanızdaki tarifler",
 	"Recipes_per_page": "Sayfa Başına Tarif",
+	"Remove": "",
 	"RemoveFoodFromShopping": "{food}'ı alışveriş listenizden çıkarın",
 	"Remove_nutrition_recipe": "Tariften besin değeri sil",
 	"Reset": "Sıfırla",

@@ -256,6 +256,7 @@
 	"Recipes": "Opskrifter",
 	"Recipes_In_Import": "Opskrifter i din importerede fil",
 	"Recipes_per_page": "Opskrifter pr. side",
+	"Remove": "",
 	"RemoveFoodFromShopping": "Fjern {food} fra indkøbsliste",
 	"Remove_nutrition_recipe": "Fjern næringsindhold fra opskrift",
 	"Reset": "Nulstil",

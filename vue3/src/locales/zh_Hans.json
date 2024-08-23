@@ -272,6 +272,7 @@
 	"Recipes": "食谱",
 	"Recipes_In_Import": "从文件中导入食谱",
 	"Recipes_per_page": "每页食谱数量",
+	"Remove": "",
 	"RemoveFoodFromShopping": "从购物清单中移除 {food}",
 	"Remove_nutrition_recipe": "从食谱中删除营养信息",
 	"Reset": "重置",

@@ -248,6 +248,7 @@
 	"Recipes": "Συνταγές",
 	"Recipes_In_Import": "Συνταγές στο αρχείο εισαγωγής",
 	"Recipes_per_page": "Συνταγές ανά σελίδα",
+	"Remove": "",
 	"RemoveFoodFromShopping": "Αφαίρεση του φαγητού {food} από τη λίστα αγορών σας",
 	"Remove_nutrition_recipe": "Αφαίρεση διατροφικής αξίας από τη συνταγή",
 	"Reset": "Επαναφορά",

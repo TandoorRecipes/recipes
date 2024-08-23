@@ -195,6 +195,7 @@
 	"Recipe_Image": "Imagem da Receita",
 	"Recipes": "Receitas",
 	"Recipes_per_page": "Receitas por página",
+	"Remove": "",
 	"RemoveFoodFromShopping": "Remover {food} da sua lista de compras",
 	"Remove_nutrition_recipe": "Remover valor nutricional da receita",
 	"Reset": "Reiniciar",
