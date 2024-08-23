@@ -28,7 +28,9 @@ def get_from_scraper(scrape, request):
             source_url = scrape.url
         except Exception:
             pass
-    if source_url:
+    if source_url == "https://urlnotfound.none" or not source_url:
+        recipe_json['source_url'] = ''
+    else:
         recipe_json['source_url'] = source_url
         try:
             keywords.append(source_url.replace('http://', '').replace('https://', '').split('/')[0])
