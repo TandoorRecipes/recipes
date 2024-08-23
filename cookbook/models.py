@@ -205,21 +205,6 @@ class TreeModel(MP_Node):
             ancestors |= Q(path__startswith=node[0], depth__lt=node[1])
         return queryset.model.objects.filter(Q(id__in=queryset.values_list('id')) | ancestors)
 
-    # This doesn't work as expected - it excludes parrallel branches that share a common ancestor at similar lengths
-    # def exclude_ancestors(queryset=None):
-    #     """
-    #     :param queryset: Model Queryset to exclude ancestors
-    #     :param filter: Filter (include) the ancestors nodes with the provided Q filter
-    #     """
-
-    #     queryset = queryset.annotate(root=Substr('path', 1, queryset.model.steplen))
-    #     nodes = list(set(queryset.values_list('root', 'depth')))
-
-    #     ancestors = Q()
-    #     for node in nodes:
-    #         ancestors |= Q(path__startswith=node[0], depth__lt=node[1])
-    #     return queryset.model.objects.filter(id__in=queryset.values_list('id')).exclude(ancestors)
-
     class Meta:
         abstract = True
 
