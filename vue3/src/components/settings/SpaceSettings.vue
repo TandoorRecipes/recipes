@@ -29,8 +29,8 @@
             </v-col>
         </v-row>
         <v-divider class="mt-3 mb-3"></v-divider>
-        <user-file-field v-model="space.image"></user-file-field>
-        <user-file-field v-model="space.logoColor32"></user-file-field>
+        <user-file-field v-model="space.image" :label="$t('Image')"></user-file-field>
+        <user-file-field v-model="space.logoColor32" :label="$t('Logo') + ' 32x32px'"></user-file-field>
         <user-file-field v-model="space.logoColor128"></user-file-field>
 
         <v-text-field></v-text-field>

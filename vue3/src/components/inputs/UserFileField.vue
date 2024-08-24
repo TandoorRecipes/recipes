@@ -2,11 +2,20 @@
     <v-input>
         <v-card width="100%" link @click="dialog = !dialog">
             <v-card-text class="pt-2 pb-2">
-                <v-avatar v-if="model == null" color="primary"><i class="fa-solid fa-file-arrow-up"></i></v-avatar>
-                <v-avatar v-if="model != null && model.preview != ''" :image="model.preview"></v-avatar>
-                <v-avatar v-if="model != null && model.preview == ''" color="success"><i class="fa-solid fa-eye-slash"></i></v-avatar>
-                <span class="ms-2" v-if="model == null">{{ $t('select_file') }}</span>
-                <span class="ms-2" v-if="model != null">{{ model.name }}</span>
+                <div class="d-flex flex-row">
+                    <div>
+                        <v-avatar v-if="model == null" color="primary"><i class="fa-solid fa-file-arrow-up"></i></v-avatar>
+                        <v-avatar v-if="model != null && model.preview != ''" :image="model.preview"></v-avatar>
+                        <v-avatar v-if="model != null && model.preview == ''" color="success"><i class="fa-solid fa-eye-slash"></i></v-avatar>
+
+                    </div>
+                    <div class="align-content-center">
+                        <template v-if="label != ''"><span class="ms-2 text-disabled">{{ label }}</span><br/></template>
+                        <span class="ms-2" v-if="model == null">{{ $t('select_file') }}</span>
+                        <span class="ms-2" v-if="model != null">{{ model.name }}</span></div>
+                </div>
+
+
             </v-card-text>
 
             <!--TODO right floating edit/remove/delete/??? button -->
@@ -17,9 +26,9 @@
         <v-card>
             <v-card-title>{{ $t('Files') }}</v-card-title>
             <v-tabs v-model="tab" grow>
-                <v-tab v-if="model != null">Preview</v-tab>
-                <v-tab>New</v-tab>
-                <v-tab>Browse</v-tab>
+                <v-tab v-if="model != null">{{ $t('Preview') }}</v-tab>
+                <v-tab>{{ $t('New') }}</v-tab>
+                <v-tab>{{ $t('Search') }}</v-tab>
             </v-tabs>
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item v-if="model != null">
@@ -34,7 +43,7 @@
                             {{ DateTime.fromJSDate(model.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                         </v-card-text>
 
-                        <v-img class="mr-4 ml-4" rounded :src="model.preview"></v-img>
+                        <v-img class="mr-4 ml-4" max-height="50vh" rounded :src="model.preview"></v-img>
 
                         <v-card-actions>
                             <v-btn :href="model.fileDownload" target="_blank" color="success" prepend-icon="fa-solid fa-file-arrow-down">{{ $t('Download') }}</v-btn>
@@ -52,16 +61,35 @@
                         <v-card-text>
                             <v-text-field :label="$t('Name')" v-model="newUserFile.name"></v-text-field>
                             <v-file-input :label="$t('File')" v-model="newUserFile.file"></v-file-input>
-                            <v-btn color="save" prepend-icon="$save" @click="uploadFile()">{{ $t('Save') }}</v-btn>
+
 
                         </v-card-text>
+
+                        <v-card-actions>
+                            <v-btn color="save" prepend-icon="$save" @click="uploadFile()">{{ $t('Save') }}</v-btn>
+                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-tabs-window-item>
                 <v-tabs-window-item>
-                    <v-container fluid>
-                        <v-text-field :label="$t('Search')" prepend-inner-icon="$search"></v-text-field>
-                        <v-data-table density="compact" :headers="tableHeaders" :items="userFiles"></v-data-table>
-                    </v-container>
+                    <v-card>
+                        <v-card-text>
+                            <v-text-field :label="$t('Search')" prepend-inner-icon="$search" v-model="tableSearch"></v-text-field>
+                            <v-data-table density="compact" :headers="tableHeaders" :items="userFiles" v-model:search="tableSearch">
+                                <template #item.preview="{item}">
+                                    <v-avatar :image="item.preview"></v-avatar>
+                                </template>
+                                <template #item.actions="{item}">
+                                    <v-btn icon="fa-solid fa-hand-pointer" color="save" density="comfortable" @click="model = item; tab=0"></v-btn>
+                                </template>
+                            </v-data-table>
+
+                        </v-card-text>
+
+                        <v-card-actions>
+                            <v-btn @click="dialog = false">{{ $t('Close') }}</v-btn>
+                        </v-card-actions>
+                    </v-card>
                 </v-tabs-window-item>
             </v-tabs-window>
         </v-card>
@@ -80,7 +108,8 @@ import {useI18n} from "vue-i18n";
 const emit = defineEmits(['update:modelValue', 'create'])
 
 const props = defineProps({
-    model: {type: {} as UserFile, default: null}
+    model: {type: {} as UserFile, default: null},
+    label: {type: String, default: ''},
 })
 
 const model = defineModel()
@@ -91,9 +120,13 @@ const tab = ref(0)
 const newUserFile = ref({} as UserFile)
 const userFiles = ref([] as UserFile[])
 
+const tableSearch = ref('')
 const tableHeaders = ref([
-    {title: 'ID', value: 'id'},
+    {title: t('Quick actions'), key: 'actions'},
+    {title: t('Preview'), key: 'preview'},
     {title: t('Name'), value: 'name'},
+    {title: t('created_on'), key: 'createdAt', value: item => DateTime.fromJSDate(item.createdAt).toLocaleString(DateTime.DATETIME_MED)},
+    {title: t('created_by'), value: 'createdBy.displayName',},
 ])
 
 onMounted(() => {
