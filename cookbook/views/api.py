@@ -422,7 +422,7 @@ class SpaceViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'patch']
 
     def get_queryset(self):
-        return self.queryset.filter(id__in=UserSpace.objects.filter(user=self.request.user))
+        return self.queryset.filter(id__in=UserSpace.objects.filter(user=self.request.user).values_list('space_id', flat=True))
 
     @extend_schema(responses=SpaceSerializer(many=False))
     @decorators.action(detail=False, pagination_class=None, methods=['GET'], serializer_class=SpaceSerializer, )
