@@ -30,11 +30,12 @@
         </v-row>
         <v-divider class="mt-3 mb-3"></v-divider>
         <user-file-field v-model="space.image" :label="$t('Image')"></user-file-field>
+        <user-file-field v-model="space.navLogo" :label="$t('Logo')" :hint="$t('CustomNavLogoHelp')" persistent-hint></user-file-field>
         <user-file-field v-model="space.logoColor32" :label="$t('Logo') + ' 32x32px'"></user-file-field>
         <user-file-field v-model="space.logoColor128"></user-file-field>
 
-        <v-text-field></v-text-field>
-        <v-text-field></v-text-field>
+        <v-text-field :hint="$t('CustomNavLogoHelp')" persistent-hint></v-text-field>
+        <v-text-field :hint="$t('CustomNavLogoHelp')" persistent-hint></v-text-field>
 
         <v-btn class="mt-3" color="success" @click="updateSpace()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
     </v-form>

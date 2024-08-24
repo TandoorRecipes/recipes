@@ -1,6 +1,6 @@
 <template>
-    <v-input>
-        <v-card width="100%" link @click="dialog = !dialog">
+    <v-input :hint="hint" :persistent-hint="persistentHint">
+        <v-card width="100%" link @click="dialog = !dialog" >
             <v-card-text class="pt-2 pb-2">
                 <div class="d-flex flex-row">
                     <div>
@@ -14,7 +14,6 @@
                         <span class="ms-2" v-if="model == null">{{ $t('select_file') }}</span>
                         <span class="ms-2" v-if="model != null">{{ model.name }}</span></div>
                 </div>
-
 
             </v-card-text>
 
@@ -110,6 +109,8 @@ const emit = defineEmits(['update:modelValue', 'create'])
 const props = defineProps({
     model: {type: {} as UserFile, default: null},
     label: {type: String, default: ''},
+    hint: {type: String, default: ''},
+    persistentHint: {type: Boolean, default: false},
 })
 
 const model = defineModel()
