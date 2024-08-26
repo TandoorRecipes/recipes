@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-08-26 06:47+0000\n"
+"PO-Revision-Date: 2024-08-27 07:58+0000\n"
 "Last-Translator: Known Rabbit <opensource@rabit.pw>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -445,7 +445,7 @@ msgstr "膳食计划"
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
 msgid "Books"
-msgstr "书籍"
+msgstr "烹饪手册"
 
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
@@ -1111,7 +1111,7 @@ msgstr "这可能需要几分钟，取决于同步的菜谱数量，请等待。
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
-msgstr "菜谱书"
+msgstr "烹饪手册"
 
 #: .\cookbook\templates\export.html:7 .\cookbook\templates\test2.html:6
 msgid "Export Recipes"
