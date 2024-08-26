@@ -2,7 +2,7 @@
     "import_running": "Er wordt geïmporteerd, even geduld!",
     "all_fields_optional": "Alle velden zijn optioneel en kunnen leeg gelaten worden.",
     "convert_internal": "Zet om naar intern recept",
-    "Log_Recipe_Cooking": "Bereiding loggen",
+    "Log_Recipe_Cooking": "Bereiding registreren",
     "External_Recipe_Image": "Externe Afbeelding Recept",
     "Add_to_Book": "Voeg toe aan Boek",
     "Add_to_Shopping": "Voeg toe aan Boodschappen",
@@ -12,7 +12,7 @@
     "Recipe_Image": "Afbeelding Recept",
     "Import_finished": "Importeren gereed",
     "View_Recipes": "Bekijk Recepten",
-    "Log_Cooking": "Log Bereiding",
+    "Log_Cooking": "Registreer bereiding",
     "Proteins": "Eiwitten",
     "Fats": "Vetten",
     "Carbohydrates": "Koolhydraten",
@@ -77,7 +77,7 @@
     "Ok": "Ok",
     "Load_More": "Laad meer",
     "Manage_Books": "Beheer boeken",
-    "Create": "Voeg toe",
+    "Create": "Aanmaken",
     "Failure": "Storing",
     "View": "Bekijk",
     "Recipes": "Recepten",
@@ -571,5 +571,6 @@
     "Name_Replace": "Naam Vervangen",
     "Food_Replace": "Voedingsmiddelen Vervangen",
     "Never_Unit": "Nooit Eenheid",
-    "Transpose_Words": "Omzetten Woorden"
+    "Transpose_Words": "Omzetten Woorden",
+    "us_cup": "kopje (US, eenheid)"
 }
