@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-08-24 14:58+0000\n"
+"PO-Revision-Date: 2024-08-26 06:47+0000\n"
 "Last-Translator: Known Rabbit <opensource@rabit.pw>\n"
 "Language-Team: Chinese (Simplified) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/zh_Hans/>\n"
@@ -563,7 +563,7 @@ msgstr "您已被邀请至 "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr " 加入他们的泥炉食谱空间 "
+msgstr " 加入他们的 Tandoor 食谱空间 "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
@@ -581,11 +581,11 @@ msgstr "邀请有效期至 "
 #: .\cookbook\serializer.py:1280
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
-msgstr "泥炉食谱是一个开源食谱管理器。 在 GitHub 上查看 "
+msgstr "Tandoor 是一个开源食谱管理器。 在 GitHub 上查看 "
 
 #: .\cookbook\serializer.py:1283
 msgid "Tandoor Recipes Invite"
-msgstr "泥炉食谱邀请"
+msgstr "Tandoor 食谱邀请"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
@@ -1026,7 +1026,7 @@ msgstr "GitHub"
 
 #: .\cookbook\templates\base.html:376
 msgid "Translate Tandoor"
-msgstr "翻译泥炉"
+msgstr "翻译 Tandoor"
 
 #: .\cookbook\templates\base.html:380
 msgid "API Browser"
@@ -1038,7 +1038,7 @@ msgstr "退出"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
-msgstr "你正在使用免费版的泥炉"
+msgstr "你正在使用免费版的 Tandoor"
 
 #: .\cookbook\templates\base.html:407
 msgid "Upgrade Now"
@@ -2387,7 +2387,7 @@ msgstr "此提供程序未实现导入"
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr "此功能在泥炉的托管版本中尚不可用！"
+msgstr "此功能在 Tandoor 的托管版本中尚不可用！"
 
 #: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
