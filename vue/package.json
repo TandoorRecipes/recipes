@@ -61,7 +61,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^8.46.0",
     "eslint-plugin-vue": "^8.7.1",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "typescript": "~5.3.3",
     "vue-cli-plugin-i18n": "^2.3.2",
     "webpack-bundle-tracker": "3.0.1",
