@@ -37,7 +37,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig)
 from cookbook.templatetags.custom_tags import markdown
-from recipes.settings import AWS_ENABLED, MEDIA_URL
+from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
 
 class WritableNestedModelSerializer(WNMS):
@@ -1338,7 +1338,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         obj = super().create(validated_data)
 
-        if obj.email:
+        if obj.email and EMAIL_HOST is not '':
             try:
                 if InviteLink.objects.filter(space=self.context['request'].space,
                                              created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:

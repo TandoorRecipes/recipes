@@ -64,10 +64,28 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         })
     }
 
+    /**
+     * load data for currently active space
+     */
     function loadActiveSpace(){
         let api = new ApiApi()
         api.apiSpaceCurrentRetrieve().then(r => {
             activeSpace.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        })
+    }
+
+    /**
+     * switch to the given space
+     */
+    function switchSpace(space: Space){
+        let api = new ApiApi()
+
+        api.apiSwitchActiveSpaceRetrieve({spaceId: space.id}).then(r => {
+            loadActiveSpace()
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
 
@@ -76,7 +94,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     // always load active space on first initialization of store
     loadActiveSpace()
 
-    return {deviceSettings, userSettings, activeSpace, loadUserSettings, updateUserSettings}
+    return {deviceSettings, userSettings, activeSpace, loadUserSettings, updateUserSettings, switchSpace}
 })
 
 // enable hot reload for store
