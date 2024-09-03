@@ -60,7 +60,7 @@ const showSnackbar = ref(false)
  * subscribe to mutation of the snackbarQueue to detect new messages being added
  */
 useMessageStore().$subscribe((mutation, state) => {
-    if ('snackbarQueue' in state && mutation.events.type == 'add') {
+    if ('snackbarQueue' in state) {
         processQueue()
     }
 })
