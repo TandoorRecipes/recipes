@@ -468,9 +468,8 @@ class SpaceViewSet(viewsets.ModelViewSet):
         return Response(self.serializer_class(self.request.space, many=False, context={'request': self.request}).data)
 
 
-# TODO what is internal_note for?
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='internal_note', description='I have no idea what this is', type=str),
+    OpenApiParameter(name='internal_note', description='text field to store information about the invite link', type=str),
 ]))
 class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
