@@ -31,7 +31,7 @@ onMounted(() => {
     const api = new ApiApi()
 
     api.apiSpaceList().then(r => {
-        spaces.value = r
+        spaces.value = r.results
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })

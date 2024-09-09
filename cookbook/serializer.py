@@ -1338,7 +1338,7 @@ class InviteLinkSerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         obj = super().create(validated_data)
 
-        if obj.email and EMAIL_HOST is not '':
+        if obj.email and EMAIL_HOST != '':
             try:
                 if InviteLink.objects.filter(space=self.context['request'].space,
                                              created_at__gte=datetime.now() - timedelta(hours=4)).count() < 20:
@@ -1424,6 +1424,21 @@ class LocalizationSerializer(serializers.Serializer):
 
     class Meta:
         fields = '__ALL__'
+
+
+class ServerSettingsSerializer(serializers.Serializer):
+    # TODO add all other relevant settings including path/url related ones?
+    shopping_min_autosync_interval = serializers.CharField()
+    enable_pdf_export = serializers.BooleanField()
+    disable_external_connectors = serializers.BooleanField()
+    terms_url = serializers.CharField()
+    privacy_url = serializers.CharField()
+    imprint_url = serializers.CharField()
+    hosted = serializers.BooleanField()
+
+    class Meta:
+        fields = '__ALL__'
+        read_only_fields = '__ALL__'
 
 
 # Export/Import Serializers

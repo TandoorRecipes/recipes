@@ -1,10 +1,11 @@
 import {acceptHMRUpdate, defineStore} from 'pinia'
 import {useStorage} from "@vueuse/core";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {ApiApi, Space, UserPreference} from "@/openapi";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {ApiApi, ServerSettings, Space, UserPreference} from "@/openapi";
 
 const DEVICE_SETTINGS_KEY = 'TANDOOR_DEVICE_SETTINGS'
 const USER_PREFERENCE_KEY = 'TANDOOR_USER_PREFERENCE'
+const SERVER_SETTINGS_KEY = 'TANDOOR_SERVER_SETTINGS'
 const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 
 class DeviceSettings {
@@ -29,6 +30,10 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
      * database user settings, cache in local storage in case application is started offline
      */
     let userSettings = useStorage(USER_PREFERENCE_KEY, {} as UserPreference)
+    /**
+     * some defaults and values returned by server
+     */
+    let serverSettings = useStorage(SERVER_SETTINGS_KEY, {} as ServerSettings)
     /**
      * database user settings, cache in local storage in case application is started offline
      */
@@ -59,8 +64,21 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
         api.apiUserPreferencePartialUpdate({user: userSettings.value.user, patchedUserPreference: userSettings.value}).then(r => {
             userSettings.value = r
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        })
+    }
+
+    /**
+     * retrieves server settings from API
+     */
+    function loadServerSettings() {
+        let api = new ApiApi()
+        api.apiServerSettingsCurrentRetrieve().then(r => {
+            serverSettings.value = r
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
         })
     }
 
@@ -91,10 +109,12 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
     // always load user settings on first initialization of store
     loadUserSettings()
+    // always load server settings on first initialization of store
+    loadServerSettings()
     // always load active space on first initialization of store
     loadActiveSpace()
 
-    return {deviceSettings, userSettings, activeSpace, loadUserSettings, updateUserSettings, switchSpace}
+    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings,updateUserSettings, switchSpace}
 })
 
 // enable hot reload for store

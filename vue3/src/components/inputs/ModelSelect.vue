@@ -1,8 +1,9 @@
 <template>
-    <v-input>
+    <v-input :hint="hint" persistent-hint :label="label">
 
-        <!--TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
-        <!-- TODO strange behavior/layering issues with appendTo body, find soltion to make it work -->
+        <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
+        <!-- TODO strange behavior/layering issues with appendTo body, find solution to make it work -->
+        <!-- TODO label is not showing for some reason -->
 
         <Multiselect
             :id="id"
@@ -23,9 +24,9 @@
             :can-clear="canClear"
             :can-deselect="canClear"
             :limit="limit"
-            placeholder="TODO ADD LOCALIZED PLACEHOLDER"
-            noOptionsText="TODO ADD LOCALIZED NO-OPTIONS"
-            noResultsText="TODO ADD LOCALIZED NO-RESULTS"
+            :placeholder="$t('Search')"
+            :noOptionsText="$t('No_Results')"
+            :noResultsText="$t('No_Results')"
         />
 
     </v-input>
@@ -58,6 +59,9 @@ const props = defineProps({
     placeholder: {type: String, default: undefined},
     noOptionsText: {type: String, default: undefined},
     noResultsText: {type: String, default: undefined},
+
+    label: {type: String, default: ''},
+    hint: {type: String, default: ''},
 
     // not verified
     search_on_load: {type: Boolean, default: false},

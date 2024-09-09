@@ -63,6 +63,7 @@ models/PaginatedRecipeBookList.ts
 models/PaginatedRecipeOverviewList.ts
 models/PaginatedShoppingListEntryList.ts
 models/PaginatedShoppingListRecipeList.ts
+models/PaginatedSpaceList.ts
 models/PaginatedStepList.ts
 models/PaginatedSupermarketCategoryList.ts
 models/PaginatedSupermarketCategoryRelationList.ts
@@ -126,6 +127,7 @@ models/RecipeImage.ts
 models/RecipeOverview.ts
 models/RecipeShoppingUpdate.ts
 models/RecipeSimple.ts
+models/ServerSettings.ts
 models/ShareLink.ts
 models/ShoppingListEntry.ts
 models/ShoppingListEntryBulk.ts

@@ -62,6 +62,7 @@ import type {
   PaginatedRecipeOverviewList,
   PaginatedShoppingListEntryList,
   PaginatedShoppingListRecipeList,
+  PaginatedSpaceList,
   PaginatedStepList,
   PaginatedSupermarketCategoryList,
   PaginatedSupermarketCategoryRelationList,
@@ -124,6 +125,7 @@ import type {
   RecipeImage,
   RecipeShoppingUpdate,
   RecipeSimple,
+  ServerSettings,
   ShareLink,
   ShoppingListEntry,
   ShoppingListEntryBulk,
@@ -239,6 +241,8 @@ import {
     PaginatedShoppingListEntryListToJSON,
     PaginatedShoppingListRecipeListFromJSON,
     PaginatedShoppingListRecipeListToJSON,
+    PaginatedSpaceListFromJSON,
+    PaginatedSpaceListToJSON,
     PaginatedStepListFromJSON,
     PaginatedStepListToJSON,
     PaginatedSupermarketCategoryListFromJSON,
@@ -363,6 +367,8 @@ import {
     RecipeShoppingUpdateToJSON,
     RecipeSimpleFromJSON,
     RecipeSimpleToJSON,
+    ServerSettingsFromJSON,
+    ServerSettingsToJSON,
     ShareLinkFromJSON,
     ShareLinkToJSON,
     ShoppingListEntryFromJSON,
@@ -1279,6 +1285,11 @@ export interface ApiShoppingListRecipeRetrieveRequest {
 export interface ApiShoppingListRecipeUpdateRequest {
     id: number;
     shoppingListRecipe: ShoppingListRecipe;
+}
+
+export interface ApiSpaceListRequest {
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiSpacePartialUpdateRequest {
@@ -8771,6 +8782,34 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiServerSettingsCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ServerSettings>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/server-settings/current/`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => ServerSettingsFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiServerSettingsCurrentRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ServerSettings> {
+        const response = await this.apiServerSettingsCurrentRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiShareLinkRetrieveRaw(requestParameters: ApiShareLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShareLink>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
@@ -9336,8 +9375,16 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiSpaceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Space>>> {
+    async apiSpaceListRaw(requestParameters: ApiSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSpaceList>> {
         const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -9352,13 +9399,13 @@ export class ApiApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(SpaceFromJSON));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedSpaceListFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiSpaceList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Space>> {
-        const response = await this.apiSpaceListRaw(initOverrides);
+    async apiSpaceList(requestParameters: ApiSpaceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSpaceList> {
+        const response = await this.apiSpaceListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
