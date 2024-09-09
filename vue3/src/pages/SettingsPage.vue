@@ -19,7 +19,7 @@
                     <v-list-item :to="{name: 'view_settings_space_member'}" prepend-icon="fa-solid fa-users">{{ $t('SpaceMembers') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Admin</v-list-subheader>
-                    <v-list-item prepend-icon="fa-solid fa-code">{{ $t('API') }}</v-list-item>
+                    <v-list-item :to="{name: 'view_settings_api'}" prepend-icon="fa-solid fa-code">{{ $t('API') }}</v-list-item>
                     <v-list-item prepend-icon="fa-solid fa-server">{{ $t('System') }}</v-list-item>
                 </v-list>
 

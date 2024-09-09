@@ -23,6 +23,7 @@ import MealPlanSettings from "@/components/settings/MealPlanSettings.vue";
 import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 import SpaceMemberSettings from "@/components/settings/SpaceMemberSettings.vue";
 import UserSpaceSettings from "@/components/settings/UserSpaceSettings.vue";
+import ApiSettings from "@/components/settings/ApiSettings.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -36,6 +37,7 @@ const routes = [
             {path: 'space', component: SpaceSettings, name: 'view_settings_space'},
             {path: 'space-members', component: SpaceMemberSettings, name: 'view_settings_space_member'},
             {path: 'user-space', component: UserSpaceSettings, name: 'view_settings_user_space'},
+            {path: 'api', component: ApiSettings, name: 'view_settings_api'},
         ]},
     //{path: '/settings/:page', component: SettingsPage, name: 'view_settings_page', props: true},
     {path: '/search', component: SearchPage, name: 'view_search'},
