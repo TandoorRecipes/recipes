@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-08-28 12:58+0000\n"
-"Last-Translator: Stefan van der Gevel <mail@vandergevel.nl>\n"
+"PO-Revision-Date: 2024-09-03 19:58+0000\n"
+"Last-Translator: \"S. v.d. Gevel\" <stefan18_gw@hotmail.com>\n"
 "Language-Team: Dutch <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/nl/>\n"
 "Language: nl\n"
@@ -1843,7 +1843,7 @@ msgstr "Perfect voor grote databases"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "Kookboek Setup"
+msgstr "Kookboek configuratie"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
@@ -2397,24 +2397,30 @@ msgstr "Een waardering van een recept gaat van 0 tot 5."
 #: .\cookbook\views\api.py:922 .\cookbook\views\api.py:923
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
-"ID van boek dat een recept moet hebben. Herhaal parameter voor meerdere."
+"ID van een kookboek dat een recept moet bevatten. Herhaal parameter voor "
+"meerdere."
 
 #: .\cookbook\views\api.py:923 .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
-msgstr "Boek ID, herhaal voor meerdere. Geeft recepten uit alle boeken weer"
+msgstr ""
+"Kookboek ID, herhaal voor meerdere. Geeft recepten uit de geselecteerde "
+"kookboeken weer"
 
 #: .\cookbook\views\api.py:924 .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
-msgstr "Boek IDs, herhaal voor meerdere. Geeft recepten weer uit alle boeken."
+msgstr ""
+"Kookboek IDs, herhaal voor meerdere. Geeft recepten weer uit alle kookboeken."
 
 #: .\cookbook\views\api.py:925 .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
-"Boek IDs, herhaal voor meerdere. Sluit recepten uit elk van de boeken uit."
+"Kookboek IDs, herhaal voor meerdere. Sluit recepten uit elk van de "
+"geselecteerde kookboeken uit."
 
 #: .\cookbook\views\api.py:926 .\cookbook\views\api.py:927
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
-msgstr "Boek IDs, herhaal voor meerdere. Sluit recepten uit alle boeken uit."
+msgstr ""
+"Kookboek IDs, herhaal voor meerdere. Sluit recepten uit alle boeken uit."
 
 #: .\cookbook\views\api.py:927 .\cookbook\views\api.py:928
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
