@@ -36,7 +36,7 @@
             </v-list-item>
         </v-list>
 
-
+        <access-token-editor class="mt-2"></access-token-editor>
 
     </v-form>
 </template>
@@ -48,6 +48,7 @@ import {onMounted, ref} from "vue";
 import {AccessToken, ApiApi} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
+import AccessTokenEditor from "@/components/model_editors/AccessTokenEditor.vue";
 
 const accessTokenList = ref([] as AccessToken[])
 const accessToken = ref({} as AccessToken)

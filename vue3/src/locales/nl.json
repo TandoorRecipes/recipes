@@ -1,5 +1,6 @@
 {
   "API": "API",
+  "Access_Token": "",
   "Account": "Account",
   "Add": "Voeg toe",
   "AddFoodToShopping": "Voeg {food} toe aan je boodschappenlijst",
@@ -76,6 +77,7 @@
   "DelayFor": "Stel {hours} uur uit",
   "DelayUntil": "Vertraag tot",
   "Delete": "Verwijder",
+  "DeleteConfirmQuestion": "",
   "DeleteShoppingConfirm": "Weet je zeker dat je {food} van de boodschappenlijst wil verwijderen?",
   "Delete_Food": "Verwijder Eten",
   "Delete_Keyword": "Verwijder Etiket",

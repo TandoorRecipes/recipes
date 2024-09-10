@@ -82,7 +82,7 @@ import {ApiApi, Group, InviteLink, UserSpace} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {DateTime} from "luxon";
-import {VDateInput} from 'vuetify/labs/VDateInput'
+import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
 import {useClipboard} from "@vueuse/core"; //TODO remove once component is out of labs
 
 const {t} = useI18n()
