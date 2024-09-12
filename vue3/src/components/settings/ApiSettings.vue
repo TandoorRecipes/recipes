@@ -23,20 +23,36 @@
         Read and write do what the name says, the bookmarklet scope is only used for the bookmarklet to limit access to
         it.
 
-        <v-alert color="warning" variant="tonal">Make sure to save your token after creation as they cannot be viewed afterwards. </v-alert>
+        <v-alert color="warning" variant="tonal">Make sure to save your token after creation as they cannot be viewed afterwards.</v-alert>
+
+        <v-btn prepend-icon="$create" color="create">{{$t('New')}}
+             <model-editor-dialog>
+                 <access-token-editor @create="loadAccessTokens()"></access-token-editor>
+             </model-editor-dialog>
+        </v-btn>
 
         <v-list>
             <v-list-item v-for="at in accessTokenList">
-                <v-list-item-title>{{at.token}}</v-list-item-title>
-                <v-list-item-subtitle>Scope {{at.scope}} Expires {{DateTime.fromJSDate(at.expires).toLocaleString(DateTime.DATE_FULL)}}</v-list-item-subtitle>
+                <v-list-item-title>{{ at.token }}</v-list-item-title>
+                <v-list-item-subtitle>Scope {{ at.scope }}
+                    <v-chip color="error" density="compact" v-if="at.expires < DateTime.now().toJSDate()">Expired</v-chip>
+                    <span v-if="at.expires >= DateTime.now().toJSDate()">
+                        Expires {{ DateTime.fromJSDate(at.expires).toLocaleString(DateTime.DATE_FULL) }}
+                    </span>
+                </v-list-item-subtitle>
                 <template #append>
-<!--                    <v-btn icon="$edit" color="edit"></v-btn>-->
-<!--                    <v-btn icon="$delete" color="delete"></v-btn>-->
+                    <v-btn color="edit">
+                        <v-icon icon="$edit"></v-icon>
+                        <model-editor-dialog>
+                            <access-token-editor :item="at" class="mt-2" @delete="loadAccessTokens()"></access-token-editor>
+                        </model-editor-dialog>
+                    </v-btn>
+                    <!--                    <v-btn icon="$delete" color="delete"></v-btn>-->
                 </template>
             </v-list-item>
         </v-list>
 
-        <access-token-editor class="mt-2"></access-token-editor>
+
 
     </v-form>
 </template>
@@ -49,6 +65,7 @@ import {AccessToken, ApiApi} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import AccessTokenEditor from "@/components/model_editors/AccessTokenEditor.vue";
+import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
 
 const accessTokenList = ref([] as AccessToken[])
 const accessToken = ref({} as AccessToken)
@@ -57,7 +74,7 @@ onMounted(() => {
     loadAccessTokens()
 })
 
-function loadAccessTokens(){
+function loadAccessTokens() {
     const api = new ApiApi()
     api.apiAccessTokenList().then(r => {
         accessTokenList.value = r

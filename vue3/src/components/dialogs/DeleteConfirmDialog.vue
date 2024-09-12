@@ -1,6 +1,6 @@
 <template>
 
-    <v-dialog max-width="400" activator="parent" v-model="dialog">
+    <v-dialog max-width="600" activator="parent" v-model="dialog">
         <v-card>
             <v-card-title>{{ $t('Delete') }}</v-card-title>
             <v-card-text>

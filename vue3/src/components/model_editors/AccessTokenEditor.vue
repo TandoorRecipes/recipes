@@ -3,15 +3,19 @@
         <v-card-title>{{ $t(OBJ_LOCALIZATION_KEY) }}</v-card-title>
         <v-card-text>
             <v-form>
-                <v-text-field label="Token" v-model="editingObj.token" :disabled="isUpdate"></v-text-field>
+                <v-text-field label="Token" v-model="editingObj.token" disabled>
+                    <template #append>
+                        <v-btn color="info" variant="tonal" icon="$copy"></v-btn>
+                    </template>
+                </v-text-field>
                 <v-text-field label="Scope" v-model="editingObj.scope"></v-text-field>
-                <v-date-input :label="$t('Valid Until')" v-model="editingObj.scope"></v-date-input>
+                <v-date-input :label="$t('Valid Until')" v-model="editingObj.expires"></v-date-input>
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn color="save" prepend-icon="$save">{{ isUpdate ? $t('Save') : $t('Create') }}</v-btn>
-            <v-btn color="delete" prepend-icon="$delete">{{ $t('Delete') }}
-                <delete-confirm-dialog :object-name="objectName"></delete-confirm-dialog>
+            <v-btn color="save" prepend-icon="$save" @click="saveObject">{{ isUpdate ? $t('Save') : $t('Create') }}</v-btn>
+            <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate">{{ $t('Delete') }}
+                <delete-confirm-dialog :object-name="objectName" @delete="deleteObject"></delete-confirm-dialog>
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -24,11 +28,14 @@ import {computed, onMounted, ref} from "vue";
 import {AccessToken, ApiApi} from "@/openapi";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
 const {t} = useI18n()
 
+const emit = defineEmits(['create', 'save', 'delete'])
+
 const props = defineProps({
-    accessToken: {type: {} as AccessToken, required: false}
+     item: {type: {} as AccessToken, required: false},
 })
 
 const OBJ_LOCALIZATION_KEY = 'Access_Token'
@@ -50,28 +57,46 @@ const objectName = computed(() => {
 })
 
 onMounted(() => {
-    if (props.accessToken != null) {
-        editingObj.value = props.accessToken
+    if (props.item != null) {
+        editingObj.value = props.item
     }
 })
 
 /**
  * saves the edited object in the database
  */
-function saveObject() {
+async function saveObject() {
     let api = new ApiApi()
     if (isUpdate.value) {
-
+        api.apiAccessTokenUpdate({id: editingObj.value.id, accessToken: editingObj.value}).then(r => {
+            editingObj.value = r
+            emit('save', r)
+            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        })
     } else {
-
+        api.apiAccessTokenCreate({accessToken: editingObj.value}).then(r => {
+            editingObj.value = r
+            emit('create', r)
+            useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+        }).catch(err => {
+            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+        })
     }
 }
 
 /**
- * test
+ * deletes the editing object from the database
  */
-function deleteObject() {
-
+async function deleteObject() {
+    let api = new ApiApi()
+    api.apiAccessTokenDestroy({id: editingObj.value.id}).then(r => {
+        editingObj.value = {} as AccessToken // TODO make more generic with class as constant ?
+        emit('delete')
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+    })
 }
 
 </script>
