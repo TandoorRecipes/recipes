@@ -99,11 +99,23 @@ def test_add(arg, request, a1_s2, obj_1):
     assert r.status_code == arg[1]
     if r.status_code == 201:
         assert response['name'] == 'test'
+        assert response['supports_description_field'] == True
         r = c.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 200
         r = a1_s2.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 404
 
+def test_add_with_supports_description_field_false(a1_s2):
+    r = a1_s2.post(
+        reverse(LIST_URL),
+        {'name': 'test', 'url': 'http://localhost:8123/api', 'token': '1234', 'enabled': 'true', 'supports_description_field': 'false'},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    print(r.content)
+    assert r.status_code == 201
+    assert response['name'] == 'test'
+    assert response['supports_description_field'] == False
 
 def test_delete(a1_s1, a1_s2, obj_1):
     r = a1_s2.delete(

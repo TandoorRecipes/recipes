@@ -43,13 +43,15 @@ class HomeAssistant(Connector):
         data = {
             "entity_id": self._config.todo_entity,
             "item": item,
-            "description": description,
         }
+
+        if self._config.supports_description_field:
+            data["description"] = description
 
         try:
             await self.homeassistant_api_call("POST", "services/todo/add_item", data)
         except ClientError as err:
-            self._logger.warning(f"received an exception from the api: {err=}, {type(err)=}")
+            self._logger.warning(f"received an exception from the api: {err=}, {type(err)=} {data=}")
 
     async def on_shopping_list_entry_updated(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
         if not self._config.on_shopping_list_entry_updated_enabled:
