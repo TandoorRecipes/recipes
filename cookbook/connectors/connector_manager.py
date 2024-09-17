@@ -31,6 +31,15 @@ class Work:
     actionType: ActionType
 
 
+class Singleton(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+
 # The way ConnectionManager works is as follows:
 # 1. On init, it starts a worker & creates a queue for 'Work'
 # 2. Then any time its called, it verifies the type of action (create/update/delete) and if the item is of interest, pushes the Work (non-blocking) to the queue.
@@ -39,7 +48,8 @@ class Work:
 # 3.2 If work is of type REGISTERED_CLASSES, it asynchronously fires of all connectors and wait for them to finish (runtime should depend on the 'slowest' connector)
 # 4. Work is marked as consumed, and next entry of the queue is consumed.
 # Each 'Work' is processed in sequential by the worker, so the throughput is about [workers * the slowest connector]
-class ConnectorManager:
+# The Singleton class is used for ConnectorManager to have a self-reference and so Python does not garbage collect it
+class ConnectorManager(metaclass=Singleton):
     _logger: Logger
     _queue: queue.Queue
     _listening_to_classes = REGISTERED_CLASSES | ConnectorConfig

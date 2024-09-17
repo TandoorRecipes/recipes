@@ -13,6 +13,8 @@ class HomeAssistant(Connector):
     _config: ConnectorConfig
     _logger: Logger
 
+    _required_foreign_keys = ("food", "unit", "created_by")
+
     def __init__(self, config: ConnectorConfig):
         if not config.token or not config.url or not config.todo_entity:
             raise ValueError("config for HomeAssistantConnector in incomplete")
@@ -38,7 +40,7 @@ class HomeAssistant(Connector):
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"adding {item=}")
+        self._logger.debug(f"adding {item=} with {description=} to {self._config.todo_entity}")
 
         data = {
             "entity_id": self._config.todo_entity,
@@ -60,14 +62,14 @@ class HomeAssistant(Connector):
         if not self._config.on_shopping_list_entry_deleted_enabled:
             return
 
-        if not hasattr(shopping_list_entry._state.fields_cache, "food"):
+        if not all(k in shopping_list_entry._state.fields_cache for k in self._required_foreign_keys):
             # Sometimes the food foreign key is not loaded, and we cant load it from an async process
             self._logger.debug("required property was not present in ShoppingListEntry")
             return
 
         item, _ = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"removing {item=}")
+        self._logger.debug(f"removing {item=} from {self._config.todo_entity}")
 
         data = {
             "entity_id": self._config.todo_entity,
