@@ -26,9 +26,7 @@
         <v-alert color="warning" variant="tonal">Make sure to save your token after creation as they cannot be viewed afterwards.</v-alert>
 
         <v-btn prepend-icon="$create" color="create">{{$t('New')}}
-             <model-editor-dialog>
-                 <access-token-editor @create="loadAccessTokens()"></access-token-editor>
-             </model-editor-dialog>
+             <model-editor-dialog model="AccessToken" @create="loadAccessTokens()" :close-after-create="false"></model-editor-dialog>
         </v-btn>
 
         <v-list>
@@ -43,11 +41,8 @@
                 <template #append>
                     <v-btn color="edit">
                         <v-icon icon="$edit"></v-icon>
-                        <model-editor-dialog>
-                            <access-token-editor :item="at" class="mt-2" @delete="loadAccessTokens()"></access-token-editor>
-                        </model-editor-dialog>
+                        <model-editor-dialog model="AccessToken" :item="at" class="mt-2" @delete="loadAccessTokens()"></model-editor-dialog>
                     </v-btn>
-                    <!--                    <v-btn icon="$delete" color="delete"></v-btn>-->
                 </template>
             </v-list-item>
         </v-list>
@@ -61,7 +56,7 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {AccessToken, ApiApi} from "@/openapi";
+import {ApiApi} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import AccessTokenEditor from "@/components/model_editors/AccessTokenEditor.vue";

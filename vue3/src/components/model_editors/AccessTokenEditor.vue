@@ -29,6 +29,7 @@ import {AccessToken, ApiApi} from "@/openapi";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {DateTime} from "luxon";
 
 const {t} = useI18n()
 
@@ -59,6 +60,10 @@ const objectName = computed(() => {
 onMounted(() => {
     if (props.item != null) {
         editingObj.value = props.item
+    } else {
+        // functions to populate defaults
+        editingObj.value.expires = DateTime.now().plus({year: 1}).toJSDate()
+        editingObj.value.scope = 'read write'
     }
 })
 
@@ -92,7 +97,7 @@ async function saveObject() {
 async function deleteObject() {
     let api = new ApiApi()
     api.apiAccessTokenDestroy({id: editingObj.value.id}).then(r => {
-        editingObj.value = {} as AccessToken // TODO make more generic with class as constant ?
+        editingObj.value = {} as AccessToken
         emit('delete')
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
