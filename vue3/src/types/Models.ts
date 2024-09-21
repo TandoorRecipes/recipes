@@ -1,4 +1,14 @@
-import {ApiApi, Keyword as IKeyword, Food as IFood, RecipeOverview as IRecipeOverview, Recipe as IRecipe, Unit as IUnit, MealType as IMealType, User as IUser} from "@/openapi";
+import {
+    ApiApi,
+    Keyword as IKeyword,
+    Food as IFood,
+    RecipeOverview as IRecipeOverview,
+    Recipe as IRecipe,
+    Unit as IUnit,
+    MealType as IMealType,
+    User as IUser,
+    FoodInheritField as IFoodInheritField,
+} from "@/openapi";
 
 export function getModelFromStr(model_name: String) {
     switch (model_name.toLowerCase()) {
@@ -19,6 +29,9 @@ export function getModelFromStr(model_name: String) {
         }
         case 'user': {
             return new User
+        }
+        case 'foodinheritfield': {
+            return new FoodInheritField
         }
         default: {
             throw Error(`Invalid Model ${model_name}, did you forget to register it in Models.ts?`)
@@ -164,6 +177,24 @@ export class User extends GenericModel<IUser> {
     list(query: string) {
         const api = new ApiApi()
         return api.apiUserList({}).then(r => {
+            if (r) {
+                return r
+            } else {
+                return []
+            }
+        })
+    }
+}
+
+export class FoodInheritField extends GenericModel<IFoodInheritField> {
+
+    canCreate(): boolean {
+        return false
+    }
+
+    list(query: string) {
+        const api = new ApiApi()
+        return api.apiFoodInheritFieldList({}).then(r => {
             if (r) {
                 return r
             } else {

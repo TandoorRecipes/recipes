@@ -131,7 +131,7 @@ async function createObject(object: any, select$: Multiselect) {
 </script>
 
 <style src="@vueform/multiselect/themes/default.css"></style>
-<style scoped>
+<style>
 .material-multiselect {
     --ms-line-height: 2.5;
     --ms-bg: rgba(235, 235, 235, 0.75);
@@ -140,5 +140,9 @@ async function createObject(object: any, select$: Multiselect) {
     border-bottom: 4px #0f0f0f;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+.multiselect-tag {
+    background-color: #b98766 !important;
 }
 </style>

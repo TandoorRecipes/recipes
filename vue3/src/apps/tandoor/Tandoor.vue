@@ -34,6 +34,17 @@
                 </v-menu>
             </v-avatar>
         </v-app-bar>
+        <v-app-bar color="warning" density="compact" v-if="useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
+            <p class="text-center w-100">
+                {{ $t('HostedFreeVersion')}} <v-btn color="success" variant="flat" href="https://tandoor.dev/manage">{{$t('UpgradeNow')}}</v-btn>
+            </p>
+        </v-app-bar>
+
+        <v-app-bar color="info" density="compact" v-if="useUserPreferenceStore().activeSpace.message != ''">
+            <p class="text-center w-100">
+                {{ useUserPreferenceStore().activeSpace.message }}
+            </p>
+        </v-app-bar>
 
         <v-main>
             <router-view></router-view>
