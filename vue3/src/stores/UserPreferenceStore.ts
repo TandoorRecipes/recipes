@@ -19,6 +19,11 @@ class DeviceSettings {
     shopping_item_info_mealplan = false
     shopping_item_info_recipe = true
 
+    mealplan_displayPeriod = 'week'
+    mealplan_displayPeriodCount = 3
+    mealplan_startingDayOfWeek = 1
+    mealplan_displayWeekNumbers = true
+
 }
 
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {

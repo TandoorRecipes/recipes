@@ -19,7 +19,6 @@
                         </v-list-item>
                         <v-divider></v-divider>
                         <v-list-item :to="{ name: 'view_settings', params: {} }"><template #prepend><v-icon icon="fa-solid fa-sliders"></v-icon></template>Settings</v-list-item>
-                        <v-list-item><template #prepend><v-icon icon="fa-solid fa-server"></v-icon></template>System</v-list-item>
                         <v-list-item><template #prepend><v-icon icon="fa-solid fa-user-shield"></v-icon></template>Admin</v-list-item>
                         <v-list-item><template #prepend><v-icon icon="fa-solid fa-question"></v-icon></template>Help</v-list-item>
                         <v-divider></v-divider>
