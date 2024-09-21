@@ -34,10 +34,11 @@
         <v-divider></v-divider>
 
         <v-list class="mt-2">
-            <v-list-item v-for="mt in mealTypes">
+            <v-list-item v-for="mt in mealTypes.sort(compareSortMealType)">
                 <v-avatar :color="mt.color"></v-avatar>
                 {{ mt.name }}
                 <template #append>
+                    <v-chip class="me-2">{{ mt.time}}</v-chip>
                     <v-btn color="edit">
                         <v-icon icon="$edit"></v-icon>
                         <model-editor-dialog model="MealType" :item="mt" @delete="deleteMealType"></model-editor-dialog>
@@ -87,6 +88,22 @@ onMounted(() => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 })
+
+/**
+ * compare function to pass to .sort() method of MealType display
+ * sorts by meal type time
+ * @param a {MealType} MealType a
+ * @param b {MealType} MealType b
+ */
+function compareSortMealType(a: MealType, b: MealType) {
+    if (a.time < b.time) {
+        return -1
+    } else if (a.time > b.time) {
+        return 1
+    }
+    return 0
+}
+
 
 /**
  * delete mealtype from client list (database handled by editor)

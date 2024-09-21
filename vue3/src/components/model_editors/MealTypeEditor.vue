@@ -7,8 +7,28 @@
         <v-card-text>
             <v-form>
                 <v-text-field v-model="editingObj.name" :label="$t('Name')"></v-text-field>
-                <v-time-picker v-model="editingObj.time"></v-time-picker>
-                <v-color-picker v-model="editingObj.color"></v-color-picker>
+
+                <v-text-field
+                    max-width="200px"
+                    v-model="editingObj.time"
+                    :active="timePickerMenu"
+                    :focus="timePickerMenu"
+                    :label="$t('Time')"
+                    prepend-icon="fa-solid fa-clock"
+                    readonly>
+                    <v-menu
+                    v-model="timePickerMenu"
+                    :close-on-content-click="false"
+                    activator="parent"
+                    transition="scale-transition">
+                    <v-time-picker v-if="timePickerMenu" format="24hr" v-model="editingObj.time"></v-time-picker>
+                </v-menu>
+                </v-text-field>
+
+
+                <v-color-picker v-model="editingObj.color" mode="hex" :modes="['hex']" show-swatches
+                                :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
+
             </v-form>
         </v-card-text>
         <v-card-actions>
@@ -28,7 +48,8 @@ import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useClipboard} from "@vueuse/core";
-import {VTimePicker} from 'vuetify/labs/VTimePicker' // TODO remove once out of labs
+import {VTimePicker} from 'vuetify/labs/VTimePicker'
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore"; // TODO remove once out of labs
 
 
 const {t} = useI18n()
@@ -46,7 +67,7 @@ const editingObj = ref({} as MealType)
 const loading = ref(false)
 
 // object specific data (for selects/display)
-
+const timePickerMenu = ref(false)
 
 /**
  * checks if given object has ID property to determine if it needs to be updated or created

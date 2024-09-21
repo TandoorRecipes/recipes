@@ -926,7 +926,7 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        queryset = self.queryset.order_by('order', 'id').filter(created_by=self.request.user).filter(
+        queryset = self.queryset.order_by('time', 'id').filter(created_by=self.request.user).filter(
             space=self.request.space).all()
         return queryset
 
