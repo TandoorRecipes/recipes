@@ -63,6 +63,7 @@ export default createVuetify({
             create: 'fa-solid fa-circle-plus',
             search: 'fa-solid fa-magnifying-glass',
             copy: 'fa-solid fa-copy',
+            close: 'fa-solid fa-xmark',
             settings: 'fa-solid fa-sliders',
             spaces: 'fa-solid fa-database',
             shopping: 'fa-solid fa-cart-shopping',

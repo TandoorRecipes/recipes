@@ -25,20 +25,18 @@
 
         <v-alert color="warning" variant="tonal">Make sure to save your token after creation as they cannot be viewed afterwards.</v-alert>
 
-        <v-btn prepend-icon="$create" color="create">{{$t('New')}}
-             <model-editor-dialog model="AccessToken" @create="loadAccessTokens()" :close-after-create="false"></model-editor-dialog>
+        <v-btn prepend-icon="$create" color="create" class="mt-2">{{ $t('New') }}
+            <model-editor-dialog model="AccessToken" @create="loadAccessTokens()" :close-after-create="false"></model-editor-dialog>
         </v-btn>
 
-        <v-list>
-            <v-list-item v-for="at in accessTokenList">
+        <v-list class="mt-2" border>
+            <v-list-item v-for="at in accessTokenList" >
                 <v-list-item-title>{{ at.token }}</v-list-item-title>
                 <v-list-item-subtitle>Scope {{ at.scope }}
-                    <v-chip color="error" density="compact" v-if="at.expires < DateTime.now().toJSDate()">Expired</v-chip>
-                    <span v-if="at.expires >= DateTime.now().toJSDate()">
-                        Expires {{ DateTime.fromJSDate(at.expires).toLocaleString(DateTime.DATE_FULL) }}
-                    </span>
+                    Expires {{ DateTime.fromJSDate(at.expires).toLocaleString(DateTime.DATE_FULL) }}
                 </v-list-item-subtitle>
                 <template #append>
+                    <v-chip color="error" class="me-2" v-if="at.expires < DateTime.now().toJSDate()">Expired</v-chip>
                     <v-btn color="edit">
                         <v-icon icon="$edit"></v-icon>
                         <model-editor-dialog model="AccessToken" :item="at" class="mt-2" @delete="loadAccessTokens()"></model-editor-dialog>
@@ -46,7 +44,6 @@
                 </template>
             </v-list-item>
         </v-list>
-
 
 
     </v-form>

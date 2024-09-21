@@ -1,13 +1,20 @@
 <template>
     <v-card>
-        <v-card-title>{{ $t(OBJ_LOCALIZATION_KEY) }}</v-card-title>
+        <v-card-title>
+            {{ $t(OBJ_LOCALIZATION_KEY) }}
+            <v-btn class="float-right" icon="$close" variant="plain" @click="emit('close')" v-if="dialog"></v-btn>
+        </v-card-title>
         <v-card-text>
             <v-form>
-                <v-text-field label="Token" v-model="editingObj.token" disabled>
-                    <template #append>
-                        <v-btn color="info" variant="tonal" icon="$copy"></v-btn>
-                    </template>
-                </v-text-field>
+                <v-row>
+                    <v-col cols="10">
+                        <v-text-field label="Token" v-model="editingObj.token" disabled></v-text-field>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn color="info" variant="tonal" icon="$copy" @click="copy(editingObj.token)"></v-btn>
+                    </v-col>
+                </v-row>
+
                 <v-text-field label="Scope" v-model="editingObj.scope"></v-text-field>
                 <v-date-input :label="$t('Valid Until')" v-model="editingObj.expires"></v-date-input>
             </v-form>
@@ -30,13 +37,16 @@ import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
+import {useClipboard} from "@vueuse/core";
 
 const {t} = useI18n()
+const {copy} = useClipboard()
 
-const emit = defineEmits(['create', 'save', 'delete'])
+const emit = defineEmits(['create', 'save', 'delete', 'close'])
 
 const props = defineProps({
-     item: {type: {} as AccessToken, required: false},
+    item: {type: {} as AccessToken, required: false},
+    dialog: {type: Boolean, default: false}
 })
 
 const OBJ_LOCALIZATION_KEY = 'Access_Token'

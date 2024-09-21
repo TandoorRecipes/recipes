@@ -28,7 +28,7 @@ import ApiSettings from "@/components/settings/ApiSettings.vue";
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
     {path: '/test', component: TestPage, name: 'view_test'},
-    {path: '/settings', component: SettingsPage, name: 'view_settings', redirect: 'settings/account',
+    {path: '/settings', component: SettingsPage, name: 'view_settings', redirect: '/settings/account',
         children: [
             {path: 'account', component: AccountSettings, name: 'view_settings_account'},
             {path: 'cosmetic', component: CosmeticSettings, name: 'view_settings_cosmetic'},

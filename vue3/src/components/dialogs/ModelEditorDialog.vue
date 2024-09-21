@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="600" activator="parent" v-model="dialog">
-        <access-token-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" v-if="model == SupportedModels.AccessToken"></access-token-editor>
+        <access-token-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.AccessToken"></access-token-editor>
     </v-dialog>
 </template>
 
@@ -19,7 +19,7 @@ const emit = defineEmits(['create', 'save', 'delete'])
 
 const props = defineProps({
     model: {
-        type: '',
+        type: String,
         required: true,
         validator: (val) => ['AccessToken'].includes(val)
     },
