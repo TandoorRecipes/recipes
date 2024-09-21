@@ -24,6 +24,8 @@ import SpaceSettings from "@/components/settings/SpaceSettings.vue";
 import SpaceMemberSettings from "@/components/settings/SpaceMemberSettings.vue";
 import UserSpaceSettings from "@/components/settings/UserSpaceSettings.vue";
 import ApiSettings from "@/components/settings/ApiSettings.vue";
+import ModelListPage from "@/pages/ModelListPage.vue";
+import ModelEditPage from "@/pages/ModelEditPage.vue";
 
 const routes = [
     {path: '/', component: StartPage, name: 'view_home'},
@@ -46,6 +48,10 @@ const routes = [
     {path: '/books', component: ShoppingListPage, name: 'view_books'},
     {path: '/recipe/:id', component: RecipeViewPage, name: 'view_recipe', props: true},
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
+
+    {path: '/list/:model?', component: ModelListPage,  props: true, name: 'ModelListPage'},
+    {path: '/edit/:model?/:id', component: ModelEditPage,  props: true, name: 'ModelEditPage'},
+
 ]
 
 const router = createRouter({
