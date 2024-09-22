@@ -94,10 +94,10 @@ export const useMessageStore = defineStore('message_store', () => {
         if (preparedMessage == PreparedMessage.UPDATE_SUCCESS) {
             addMessage(MessageType.SUCCESS, 'Updated Successfully', 7000, {}) // TODO localize and make more useful ?
         }
-        if (preparedMessage == PreparedMessage.DELETE_SUCCESS) {
+        if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
             addMessage(MessageType.SUCCESS, 'Created Successfully', 7000, {})
         }
-        if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
+        if (preparedMessage == PreparedMessage.DELETE_SUCCESS) {
             addMessage(MessageType.SUCCESS, 'Deleted Successfully', 7000, {})
         }
     }

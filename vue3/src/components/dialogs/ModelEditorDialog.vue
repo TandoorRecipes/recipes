@@ -1,5 +1,6 @@
 <template>
     <v-dialog max-width="600" activator="parent" v-model="dialog">
+        <unit-conversion-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.UnitConversion" :disabled-fields="disabledFields"></unit-conversion-editor>
         <access-token-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.AccessToken"></access-token-editor>
         <invite-link-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.InviteLink"></invite-link-editor>
         <user-space-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.UserSpace"></user-space-editor>
@@ -11,15 +12,17 @@
 <script setup lang="ts">
 
 
-import {PropType, ref} from "vue";
+import {ref} from "vue";
 import AccessTokenEditor from "@/components/model_editors/AccessTokenEditor.vue";
 import {AccessToken, Food} from "@/openapi";
 import InviteLinkEditor from "@/components/model_editors/InviteLinkEditor.vue";
 import UserSpaceEditor from "@/components/model_editors/UserSpaceEditor.vue";
 import MealTypeEditor from "@/components/model_editors/MealTypeEditor.vue";
 import PropertyEditor from "@/components/model_editors/PropertyEditor.vue";
+import UnitConversionEditor from "@/components/model_editors/UnitConversionEditor.vue";
 
 enum SupportedModels {
+    UnitConversion = 'UnitConversion',
     AccessToken = 'AccessToken',
     InviteLink = 'InviteLink',
     UserSpace = 'UserSpace',
@@ -35,6 +38,7 @@ const props = defineProps({
         required: true,
     },
     item: {default: null},
+    disabledFields: {default: []},
     closeAfterCreate: {default: true},
     closeAfterSave: {default: true},
     closeAfterDelete: {default: true},

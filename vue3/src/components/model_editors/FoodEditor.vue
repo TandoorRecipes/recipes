@@ -34,7 +34,7 @@
                             <v-btn color="secondary" @click="addAllProperties" prepend-icon="fa-solid fa-list">{{ $t('AddAll') }}</v-btn>
                         </v-btn-group>
 
-                        <v-row class="mt-2" v-for="p in editingObj.properties" dense>
+                        <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" dense>
                             <v-col cols="0" md="5">
                                 <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked">
                                     <template #append-inner v-if="p.propertyType">
@@ -55,19 +55,84 @@
                                 </v-btn>
                             </v-col>
                         </v-row>
-                        <v-list >
+                        <v-list class="d-md-none">
                             <v-list-item v-for="p in editingObj.properties" border>
-                                <span v-if="p.propertyType">{{ p.propertyAmount }} {{p.propertyType.unit}} {{p.propertyType.name}}
-                                    <span v-if="editingObj.propertiesFoodUnit"> / {{ editingObj.propertiesFoodAmount }} {{ editingObj.propertiesFoodUnit.name  }}</span>
+                                <span v-if="p.propertyType">{{ p.propertyAmount }} {{ p.propertyType.unit }} {{ p.propertyType.name }}
+                                    <span v-if="editingObj.propertiesFoodUnit"> / {{ editingObj.propertiesFoodAmount }} {{ editingObj.propertiesFoodUnit.name }}</span>
                                 </span>
-                                <span v-else><i><{{$t('New')}}></i></span>
+                                <span v-else><i><{{ $t('New') }}></i></span>
                                 <template #append>
-                                    <v-btn color="edit"><v-icon icon="$edit"></v-icon>
-                                    <model-editor-dialog model="Property" :item="p"></model-editor-dialog>
+                                    <v-btn color="edit">
+                                        <v-icon icon="$edit"></v-icon>
+                                        <model-editor-dialog model="Property" :item="p"></model-editor-dialog>
                                     </v-btn>
                                 </template>
                             </v-list-item>
                         </v-list>
+                    </v-form>
+                </v-tabs-window-item>
+
+                <v-tabs-window-item value="conversions">
+                    <v-alert icon="$help">{{ $t('ConversionsHelp') }}</v-alert>
+                    <v-form class="mt-5">
+
+                        <v-btn color="create" @click="unitConversions.push({food: editingObj} as UnitConversion)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
+
+                        <v-card class="mt-2" border v-for="uc in unitConversions" dense>
+                            <v-card-title>
+                                <span v-if="uc.baseUnit">{{ uc.baseAmount }} {{ uc.baseUnit.name }}</span>
+                                <v-icon size="x-small" icon="fa-solid fa-arrows-left-right" class="me-2 ms-2"></v-icon>
+                                <span v-if="uc.convertedUnit">{{ uc.convertedAmount }} {{ uc.convertedUnit.name }}</span>
+                                <v-btn color="delete" class="float-right d-none d-md-block" @click="deleteUnitConversion(uc, true)">
+                                    <v-icon icon="$delete"></v-icon>
+                                </v-btn>
+                                <v-btn color="edit" class="float-right d-md-none">
+                                    <v-icon icon="$edit"></v-icon>
+                                    <model-editor-dialog model="UnitConversion" :item="uc" @delete="deleteUnitConversion(uc, false)" :disabled-fields="['food']"></model-editor-dialog>
+                                </v-btn>
+                            </v-card-title>
+                            <v-card-text class="d-none d-md-block">
+                                <v-row>
+                                    <v-col md="6">
+                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.baseAmount" control-variant="stacked"></v-number-input>
+                                    </v-col>
+                                    <v-col md="6">
+                                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
+                                        <model-select :label="$t('Unit')" v-model="uc.baseUnit" model="Unit"></model-select>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
+                                    <v-col md="6">
+                                        <v-number-input :label="$t('Amount')" :step="10" v-model="uc.convertedAmount" control-variant="stacked"></v-number-input>
+                                    </v-col>
+                                    <v-col md="6">
+                                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
+                                        <model-select :label="$t('Unit')" v-model="uc.convertedUnit" model="Unit"></model-select>
+                                    </v-col>
+                                </v-row>
+                            </v-card-text>
+
+                        </v-card>
+                    </v-form>
+                </v-tabs-window-item>
+
+                <v-tabs-window-item value="misc">
+                    <v-form class="mt-5">
+                        <ModelSelect model="Recipe" v-model="editingObj.recipe" :label="$t('Recipe')"></ModelSelect>
+                        <v-text-field :label="$t('Website')" v-model="editingObj.url"></v-text-field>
+                        <v-checkbox :label="$t('OnHand')" :hint="$t('OnHand_help')" v-model="editingObj.foodOnhand" persistent-hint></v-checkbox>
+                        <v-checkbox :label="$t('Ignore_Shopping')" :hint="$t('ignore_shopping_help')" v-model="editingObj.ignoreShopping" persistent-hint></v-checkbox>
+                        <v-divider class="mt-2 mb-2"></v-divider>
+                        <ModelSelect model="Food" v-model="editingObj.substitute" :label="$t('Substitutes')" :hint="$t('substitute_help')" mode="tags"></ModelSelect>
+
+                        <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
+                        <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
+
+                        <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')" mode="tags"></ModelSelect>
+                        <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')" mode="tags"></ModelSelect>
+
+                        <!-- TODO re-add reset inheritance button/api call /function (previously annotated field on food -->
+                        <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
                     </v-form>
                 </v-tabs-window-item>
             </v-tabs-window>
@@ -84,8 +149,8 @@
 
 <script setup lang="ts">
 
-import {computed, onMounted, Prop, ref} from "vue";
-import {ApiApi, Food, Property, Unit} from "@/openapi";
+import {computed, onMounted, Prop, ref, watch} from "vue";
+import {ApiApi, Food, Property, Unit, UnitConversion} from "@/openapi";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
@@ -108,12 +173,17 @@ const editingObj = ref({} as Food)
 const loading = ref(false)
 
 // object specific data (for selects/display)
-const tab = ref("properties")
-const propertyTableHeaders = ref([
-    {title: t('Amount'), key: 'propertyAmount'},
-    {title: t('Type'), key: 'propertyType'},
-    {title: t('Delete'), key: 'action', align: 'end'},
-])
+const tab = ref("misc")
+
+const unitConversions = ref([] as UnitConversion[])
+
+// load conversions the first time the conversions tab is opened
+const stopConversionsWatcher = watch(tab, (value, oldValue, onCleanup) => {
+    if (value == 'conversions') {
+        loadConversions()
+        stopConversionsWatcher()
+    }
+})
 
 /**
  * checks if given object has ID property to determine if it needs to be updated or created
@@ -168,6 +238,18 @@ async function saveObject() {
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         })
     }
+
+    unitConversions.value.forEach((uc) => {
+        if (uc.id) {
+            api.apiUnitConversionUpdate({id: uc.id, unitConversion: uc}).catch(err => {
+                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            })
+        } else {
+            api.apiUnitConversionCreate({id: uc.id, unitConversion: uc}).catch(err => {
+                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            })
+        }
+    })
 }
 
 /**
@@ -209,6 +291,33 @@ function addAllProperties() {
  */
 function deleteFoodProperty(property: Property) {
     editingObj.value.properties = editingObj.value.properties.filter(p => p !== property)
+}
+
+/**
+ * load conversions for currently editing food from API
+ */
+function loadConversions() {
+    const api = new ApiApi()
+    api.apiUnitConversionList({foodId: editingObj.value.id}).then(r => {
+        unitConversions.value = r.results
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+/**
+ * delete unit conversion from local list and if parameter is true also from database
+ * @param unitConversion UnitConversion to delete
+ * @param database if UnitConversion should also be deleted from database
+ */
+function deleteUnitConversion(unitConversion: UnitConversion, database = false) {
+    unitConversions.value = unitConversions.value.filter(uc => uc !== uc)
+    if (database && unitConversion.id) {
+        const api = new ApiApi()
+        api.apiUnitConversionDestroy({id: unitConversion.id}).catch(err => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        })
+    }
 }
 
 </script>
