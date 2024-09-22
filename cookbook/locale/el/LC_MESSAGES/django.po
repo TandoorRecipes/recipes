@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-08-21 09:19+0000\n"
-"Last-Translator: Theodoros Grammenos <teogramm@outlook.com>\n"
-"Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/el/>\n"
+"PO-Revision-Date: 2024-09-23 21:58+0000\n"
+"Last-Translator: Emmker <emmker@gmail.com>\n"
+"Language-Team: Greek <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -33,7 +33,7 @@ msgstr "Όνομα"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr "Λέξεις κλειδιά"
+msgstr "Λέξεις Κλειδιά"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
@@ -98,7 +98,7 @@ msgstr ""
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api για παράδειγμα"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
