@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Добавить",
+  "AddAll": "",
   "AddFoodToShopping": "Добавить {food} в ваш список покупок",
   "AddToShopping": "Добавить в лист покупок",
   "Add_Servings_to_Shopping": "Добавить {servings} порции в список покупок",
@@ -127,6 +128,7 @@
   "Meal_Types": "Типы питания",
   "Merge": "Объединить",
   "Merge_Keyword": "Объеденить ключевые слова",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Месяц",
   "Move": "Переместить",
@@ -177,6 +179,7 @@
   "Previous_Period": "Предыдущий период",
   "Print": "Распечатать",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Protected": "Защищено",
   "Proteins": "Белки",
   "Quick actions": "Быстрые действия",

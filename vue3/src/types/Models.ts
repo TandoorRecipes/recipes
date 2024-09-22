@@ -8,6 +8,8 @@ import {
     MealType as IMealType,
     User as IUser,
     FoodInheritField as IFoodInheritField,
+    SupermarketCategory as ISupermarketCategory,
+    PropertyType as IPropertyType,
 } from "@/openapi";
 
 export function getModelFromStr(model_name: String) {
@@ -32,6 +34,12 @@ export function getModelFromStr(model_name: String) {
         }
         case 'foodinheritfield': {
             return new FoodInheritField
+        }
+        case 'supermarketcategory': {
+            return new SupermarketCategory
+        }
+        case 'propertytype': {
+            return new PropertyType
         }
         default: {
             throw Error(`Invalid Model ${model_name}, did you forget to register it in Models.ts?`)
@@ -152,7 +160,7 @@ export class MealType extends GenericModel<IMealType> {
     create(name: string) {
         const api = new ApiApi()
         return api.apiMealTypeCreate({mealType: {name: name} as IMealType}).then(r => {
-            return r as unknown as IRecipeOverview
+            return r as unknown as IMealType
         })
     }
 
@@ -197,6 +205,48 @@ export class FoodInheritField extends GenericModel<IFoodInheritField> {
         return api.apiFoodInheritFieldList({}).then(r => {
             if (r) {
                 return r
+            } else {
+                return []
+            }
+        })
+    }
+}
+
+export class SupermarketCategory extends GenericModel<ISupermarketCategory> {
+
+    create(name: string) {
+        const api = new ApiApi()
+        return api.apiSupermarketCategoryCreate({supermarketCategory: {name: name} as ISupermarketCategory}).then(r => {
+            return r as unknown as ISupermarketCategory
+        })
+    }
+
+    list(query: string) {
+        const api = new ApiApi()
+        return api.apiSupermarketCategoryList({query: query}).then(r => {
+            if (r.results) {
+                return r.results
+            } else {
+                return []
+            }
+        })
+    }
+}
+
+export class PropertyType extends GenericModel<IPropertyType> {
+
+    create(name: string) {
+        const api = new ApiApi()
+        return api.apiPropertyTypeCreate({propertyType: {name: name} as IPropertyType}).then(r => {
+            return r as unknown as IPropertyType
+        })
+    }
+
+    list(query: string) {
+        const api = new ApiApi()
+        return api.apiPropertyTypeList({query: query}).then(r => {
+            if (r.results) {
+                return r.results
             } else {
                 return []
             }

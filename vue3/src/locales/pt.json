@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Adicionar",
+  "AddAll": "",
   "AddFoodToShopping": "Adicionar {food} à sua lista de compras",
   "AddToShopping": "Adicionar á lista de compras",
   "Add_Servings_to_Shopping": "Adicionar {servings} doses ás compras",
@@ -138,6 +139,7 @@
   "Meal_Types": "Tipos de refeições",
   "Merge": "Juntar",
   "Merge_Keyword": "Unir palavra-chave",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Mês",
   "Move": "Mover",
@@ -191,6 +193,7 @@
   "Private_Recipe": "Receita Privada",
   "Private_Recipe_Help": "A receita só é mostrada ás pessoas com que foi partilhada.",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Protected": "Protegido",
   "Proteins": "Proteínas",
   "Quick actions": "Acções Rápidas",

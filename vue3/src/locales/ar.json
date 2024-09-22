@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "",
+  "AddAll": "",
   "AddFoodToShopping": "",
   "AddToShopping": "",
   "Add_Servings_to_Shopping": "",
@@ -147,6 +148,7 @@
   "Merge": "",
   "Merge_Keyword": "",
   "Message": "",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "",
   "Move": "",
@@ -201,6 +203,7 @@
   "Previous_Period": "",
   "Print": "",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Protected": "",
   "Proteins": "",
   "Quick actions": "",

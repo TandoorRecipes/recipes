@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Dodaj",
+  "AddAll": "",
   "AddFoodToShopping": "Dodaj {food} v nakupovalni listek",
   "AddToShopping": "Dodaj nakupovlanemu listku",
   "Add_Step": "Dodaj korak",
@@ -123,6 +124,7 @@
   "Meal_Types": "Tipi obroka",
   "Merge": "Združi",
   "Merge_Keyword": "Združi ključno besedo",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Mesec",
   "Move": "Premakni",
@@ -172,6 +174,7 @@
   "Private_Recipe": "Zasebni Recept",
   "Private_Recipe_Help": "Recept je prikazan samo vam in osebam, s katerimi ga delite.",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Proteins": "Beljakovine",
   "QuickEntry": "Hitri vnos",
   "Rating": "Ocena",

@@ -4,6 +4,7 @@
         <invite-link-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.InviteLink"></invite-link-editor>
         <user-space-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.UserSpace"></user-space-editor>
         <meal-type-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.MealType"></meal-type-editor>
+        <property-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == SupportedModels.Property"></property-editor>
     </v-dialog>
 </template>
 
@@ -16,12 +17,14 @@ import {AccessToken, Food} from "@/openapi";
 import InviteLinkEditor from "@/components/model_editors/InviteLinkEditor.vue";
 import UserSpaceEditor from "@/components/model_editors/UserSpaceEditor.vue";
 import MealTypeEditor from "@/components/model_editors/MealTypeEditor.vue";
+import PropertyEditor from "@/components/model_editors/PropertyEditor.vue";
 
 enum SupportedModels {
     AccessToken = 'AccessToken',
     InviteLink = 'InviteLink',
     UserSpace = 'UserSpace',
     MealType = 'MealType',
+    Property = 'Property',
 }
 
 const emit = defineEmits(['create', 'save', 'delete'])

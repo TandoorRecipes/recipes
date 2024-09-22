@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Добави",
+  "AddAll": "",
   "AddFoodToShopping": "Добавете {food} към списъка си за пазаруване",
   "AddToShopping": "Добавяне към списъка за пазаруване",
   "Add_Servings_to_Shopping": "Добавете {servings} порции към Пазаруване",
@@ -141,6 +142,7 @@
   "Meal_Types": "Видове хранене",
   "Merge": "Обединяване",
   "Merge_Keyword": "Обединяване на ключова дума",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Месец",
   "Move": "Премести",
@@ -194,6 +196,7 @@
   "Previous_Period": "Предишен период",
   "Print": "Печат",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Protected": "Защитен",
   "Proteins": "Протеини (белтъчини)",
   "Quick actions": "Бързи действия",

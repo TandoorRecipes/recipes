@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Lisää",
+  "AddAll": "",
   "Add_Step": "Lisää Vaihe",
   "Add_nutrition_recipe": "Lisää ravintoaine reseptiin",
   "Add_to_Plan": "Lisää suunnitelmaan",
@@ -96,6 +97,7 @@
   "Meal_Types": "Ateriatyypit",
   "Merge": "Yhdistä",
   "Merge_Keyword": "Yhdistä Avainsana",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Kuukausi",
   "Move": "Siirry",
@@ -135,6 +137,7 @@
   "Previous_Period": "Edellinen Jakso",
   "Print": "Tulosta",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Proteins": "Proteiinit",
   "Rating": "Luokitus",
   "Recently_Viewed": "Äskettäin katsotut",

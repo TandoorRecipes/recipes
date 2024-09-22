@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "",
+  "AddAll": "",
   "Add_nutrition_recipe": "為食譜添加營養資訊",
   "Add_to_Plan": "加入計劃",
   "Add_to_Shopping": "加入購物清單",
@@ -44,6 +45,7 @@
   "ManageSubscription": "",
   "Manage_Books": "管理書籍",
   "Meal_Plan": "膳食計劃",
+  "Miscellaneous": "",
   "Monday": "",
   "New": "",
   "New_Recipe": "",
@@ -56,6 +58,7 @@
   "Preparation": "",
   "Print": "",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Proteins": "",
   "Rating": "",
   "Recently_Viewed": "",

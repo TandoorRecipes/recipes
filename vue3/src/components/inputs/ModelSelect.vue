@@ -1,9 +1,10 @@
 <template>
-    <v-input :hint="hint" persistent-hint :label="label">
+    <!-- TODO label is not showing for some reason, for now in placeholder -->
+    <!-- TODO support density prop -->
+    <v-input :hint="hint" persistent-hint :label="label" class="">
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <!-- TODO strange behavior/layering issues with appendTo body, find solution to make it work -->
-        <!-- TODO label is not showing for some reason -->
 
         <Multiselect
             :id="id"
@@ -24,7 +25,7 @@
             :can-clear="canClear"
             :can-deselect="canClear"
             :limit="limit"
-            :placeholder="$t('Search')"
+            :placeholder="label"
             :noOptionsText="$t('No_Results')"
             :noResultsText="$t('No_Results')"
         />

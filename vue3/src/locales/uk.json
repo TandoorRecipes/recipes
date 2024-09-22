@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "Додати",
+  "AddAll": "",
   "AddFoodToShopping": "Додати {food} до вашого списку покупок",
   "AddToShopping": "Додати до списку покупок",
   "Add_Servings_to_Shopping": "Додати {servings} Порції до Покупок",
@@ -152,6 +153,7 @@
   "Meal_Types": "Типи страви",
   "Merge": "Об'єднати",
   "Merge_Keyword": "Об'єднати Ключове слово",
+  "Miscellaneous": "",
   "Monday": "",
   "Month": "Місяць",
   "Move": "Перемістити",
@@ -209,6 +211,7 @@
   "Private_Recipe": "Приватний Рецепт",
   "Private_Recipe_Help": "Рецепт показаний тільки Вам і тими з ким ви поділилися їм.",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Protected": "Захищено",
   "Proteins": "Білки",
   "Quick actions": "",

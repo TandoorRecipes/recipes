@@ -1,6 +1,7 @@
 {
   "Access_Token": "",
   "Add": "",
+  "AddAll": "",
   "Add_nutrition_recipe": "Ավելացնել սննդայնություն բաղադրատոմսին",
   "Add_to_Book": "",
   "Add_to_Plan": "Ավելացնել պլանին",
@@ -61,6 +62,7 @@
   "Meal_Plan": "Ճաշացուցակ",
   "Merge": "Միացնել",
   "Merge_Keyword": "Միացնել բանալի բառը",
+  "Miscellaneous": "",
   "Monday": "",
   "Move": "Տեղափոխել",
   "Move_Food": "Տեղափոխել սննդամթերքը",
@@ -81,6 +83,7 @@
   "Preparation": "",
   "Print": "Տպել",
   "Profile": "",
+  "PropertiesFoodHelp": "",
   "Proteins": "",
   "Rating": "",
   "Recently_Viewed": "Վերջերս դիտած",
