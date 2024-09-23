@@ -9,8 +9,10 @@ import {
     User as IUser,
     FoodInheritField as IFoodInheritField,
     SupermarketCategory as ISupermarketCategory,
-    PropertyType as IPropertyType,
+    PropertyType as IPropertyType, ApiFoodListRequest, ApiUnitListRequest,
 } from "@/openapi";
+
+export const SUPPORTED_MODELS = ["Food", "Unit"]
 
 export function getModelFromStr(model_name: String) {
     switch (model_name.toLowerCase()) {
@@ -53,6 +55,9 @@ export function getModelFromStr(model_name: String) {
  */
 export abstract class GenericModel<T> {
 
+    localizedName: string
+    icon: string
+
     /**
      * override and set to false if model is read only
      */
@@ -81,7 +86,6 @@ export abstract class GenericModel<T> {
     abstract list(query: string): Promise<Array<T>>
 }
 
-//TODO this can probably be achieved by manipulating the client generation https://openapi-generator.tech/docs/templating/#models
 export class Keyword extends GenericModel<IKeyword> {
     create(name: string) {
         const api = new ApiApi()
@@ -100,39 +104,36 @@ export class Keyword extends GenericModel<IKeyword> {
     }
 }
 
+// TODO review this whole file and its usages
 export class Food extends GenericModel<IFood> {
+
+    localizedName = 'Food'
+    icon = 'fa-solid fa-carrot'
+
     create(name: string) {
         const api = new ApiApi()
         return api.apiFoodCreate({food: {name: name} as IFood})
     }
 
-    list(query: string) {
+    list(requestParameters: ApiFoodListRequest = {}) {
         const api = new ApiApi()
-        return api.apiFoodList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
+        return api.apiFoodList(requestParameters)
     }
 }
 
 export class Unit extends GenericModel<IUnit> {
+
+    localizedName = 'Unit'
+    icon = 'fa-solid fa-scale-balanced'
+
     create(name: string) {
         const api = new ApiApi()
         return api.apiUnitCreate({unit: {name: name} as IUnit})
     }
 
-    list(query: string) {
+    list(requestParameters: ApiUnitListRequest = {}) {
         const api = new ApiApi()
-        return api.apiUnitList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
+        return api.apiUnitList(requestParameters)
     }
 }
 
