@@ -61,7 +61,7 @@ export interface PatchedOpenDataStore {
      * @type {Array<OpenDataStoreCategory>}
      * @memberof PatchedOpenDataStore
      */
-    categoryToStore?: Array<OpenDataStoreCategory>;
+    categoryToStore?: Array<OpenDataStoreCategory> | null;
     /**
      * 
      * @type {string}
@@ -79,7 +79,7 @@ export interface PatchedOpenDataStore {
 /**
  * Check if a given object implements the PatchedOpenDataStore interface.
  */
-export function instanceOfPatchedOpenDataStore(value: object): boolean {
+export function instanceOfPatchedOpenDataStore(value: object): value is PatchedOpenDataStore {
     return true;
 }
 
@@ -103,7 +103,7 @@ export function PatchedOpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PatchedOpenDataStoreToJSON(value?: PatchedOpenDataStore | null): any {
+export function PatchedOpenDataStoreToJSON(value?: Omit<PatchedOpenDataStore, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

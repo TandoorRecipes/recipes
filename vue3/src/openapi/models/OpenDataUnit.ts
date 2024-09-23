@@ -128,15 +128,17 @@ export interface OpenDataUnit {
     readonly createdBy: string;
 }
 
+
+
 /**
  * Check if a given object implements the OpenDataUnit interface.
  */
-export function instanceOfOpenDataUnit(value: object): boolean {
-    if (!('version' in value)) return false;
-    if (!('slug' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('type' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfOpenDataUnit(value: object): value is OpenDataUnit {
+    if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -162,7 +164,7 @@ export function OpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataUnitToJSON(value?: OpenDataUnit | null): any {
+export function OpenDataUnitToJSON(value?: Omit<OpenDataUnit, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

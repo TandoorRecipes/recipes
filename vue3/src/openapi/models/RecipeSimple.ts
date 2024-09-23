@@ -42,9 +42,9 @@ export interface RecipeSimple {
 /**
  * Check if a given object implements the RecipeSimple interface.
  */
-export function instanceOfRecipeSimple(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('url' in value)) return false;
+export function instanceOfRecipeSimple(value: object): value is RecipeSimple {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('url' in value) || value['url'] === undefined) return false;
     return true;
 }
 
@@ -64,7 +64,7 @@ export function RecipeSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function RecipeSimpleToJSON(value?: RecipeSimple | null): any {
+export function RecipeSimpleToJSON(value?: Omit<RecipeSimple, 'url'> | null): any {
     if (value == null) {
         return value;
     }

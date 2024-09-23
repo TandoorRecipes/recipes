@@ -61,7 +61,7 @@ export interface InviteLink {
      * @type {number}
      * @memberof InviteLink
      */
-    usedBy?: number;
+    usedBy?: number | null;
     /**
      * 
      * @type {boolean}
@@ -73,7 +73,7 @@ export interface InviteLink {
      * @type {string}
      * @memberof InviteLink
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -91,11 +91,11 @@ export interface InviteLink {
 /**
  * Check if a given object implements the InviteLink interface.
  */
-export function instanceOfInviteLink(value: object): boolean {
-    if (!('uuid' in value)) return false;
-    if (!('group' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfInviteLink(value: object): value is InviteLink {
+    if (!('uuid' in value) || value['uuid'] === undefined) return false;
+    if (!('group' in value) || value['group'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -122,7 +122,7 @@ export function InviteLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function InviteLinkToJSON(value?: InviteLink | null): any {
+export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

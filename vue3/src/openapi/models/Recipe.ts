@@ -13,36 +13,36 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Keyword } from './Keyword';
-import {
-    KeywordFromJSON,
-    KeywordFromJSONTyped,
-    KeywordToJSON,
-} from './Keyword';
-import type { NutritionInformation } from './NutritionInformation';
-import {
-    NutritionInformationFromJSON,
-    NutritionInformationFromJSONTyped,
-    NutritionInformationToJSON,
-} from './NutritionInformation';
-import type { Property } from './Property';
-import {
-    PropertyFromJSON,
-    PropertyFromJSONTyped,
-    PropertyToJSON,
-} from './Property';
-import type { Step } from './Step';
-import {
-    StepFromJSON,
-    StepFromJSONTyped,
-    StepToJSON,
-} from './Step';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { Keyword } from './Keyword';
+import {
+    KeywordFromJSON,
+    KeywordFromJSONTyped,
+    KeywordToJSON,
+} from './Keyword';
+import type { Step } from './Step';
+import {
+    StepFromJSON,
+    StepFromJSONTyped,
+    StepToJSON,
+} from './Step';
+import type { Property } from './Property';
+import {
+    PropertyFromJSON,
+    PropertyFromJSONTyped,
+    PropertyToJSON,
+} from './Property';
+import type { NutritionInformation } from './NutritionInformation';
+import {
+    NutritionInformationFromJSON,
+    NutritionInformationFromJSONTyped,
+    NutritionInformationToJSON,
+} from './NutritionInformation';
 
 /**
  * Adds nested create feature
@@ -67,7 +67,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -121,7 +121,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    sourceUrl?: string;
+    sourceUrl?: string | null;
     /**
      * 
      * @type {boolean}
@@ -139,7 +139,7 @@ export interface Recipe {
      * @type {NutritionInformation}
      * @memberof Recipe
      */
-    nutrition?: NutritionInformation;
+    nutrition?: NutritionInformation | null;
     /**
      * 
      * @type {Array<Property>}
@@ -199,16 +199,16 @@ export interface Recipe {
 /**
  * Check if a given object implements the Recipe interface.
  */
-export function instanceOfRecipe(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('image' in value)) return false;
-    if (!('steps' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
-    if (!('foodProperties' in value)) return false;
-    if (!('rating' in value)) return false;
-    if (!('lastCooked' in value)) return false;
+export function instanceOfRecipe(value: object): value is Recipe {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('steps' in value) || value['steps'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
+    if (!('foodProperties' in value) || value['foodProperties'] === undefined) return false;
+    if (!('rating' in value) || value['rating'] === undefined) return false;
+    if (!('lastCooked' in value) || value['lastCooked'] === undefined) return false;
     return true;
 }
 
@@ -249,7 +249,7 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     };
 }
 
-export function RecipeToJSON(value?: Recipe | null): any {
+export function RecipeToJSON(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null): any {
     if (value == null) {
         return value;
     }

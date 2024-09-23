@@ -61,10 +61,10 @@ export interface CustomFilter {
 /**
  * Check if a given object implements the CustomFilter interface.
  */
-export function instanceOfCustomFilter(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('search' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfCustomFilter(value: object): value is CustomFilter {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('search' in value) || value['search'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -86,7 +86,7 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function CustomFilterToJSON(value?: CustomFilter | null): any {
+export function CustomFilterToJSON(value?: Omit<CustomFilter, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
-import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -73,24 +73,24 @@ export interface UnitConversion {
      * @type {Food}
      * @memberof UnitConversion
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {string}
      * @memberof UnitConversion
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the UnitConversion interface.
  */
-export function instanceOfUnitConversion(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('baseAmount' in value)) return false;
-    if (!('baseUnit' in value)) return false;
-    if (!('convertedAmount' in value)) return false;
-    if (!('convertedUnit' in value)) return false;
+export function instanceOfUnitConversion(value: object): value is UnitConversion {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('baseAmount' in value) || value['baseAmount'] === undefined) return false;
+    if (!('baseUnit' in value) || value['baseUnit'] === undefined) return false;
+    if (!('convertedAmount' in value) || value['convertedAmount'] === undefined) return false;
+    if (!('convertedUnit' in value) || value['convertedUnit'] === undefined) return false;
     return true;
 }
 
@@ -115,7 +115,7 @@ export function UnitConversionFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UnitConversionToJSON(value?: UnitConversion | null): any {
+export function UnitConversionToJSON(value?: Omit<UnitConversion, 'name'> | null): any {
     if (value == null) {
         return value;
     }

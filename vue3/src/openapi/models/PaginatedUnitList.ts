@@ -37,13 +37,13 @@ export interface PaginatedUnitList {
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUnitList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Unit>}
@@ -55,9 +55,9 @@ export interface PaginatedUnitList {
 /**
  * Check if a given object implements the PaginatedUnitList interface.
  */
-export function instanceOfPaginatedUnitList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedUnitList(value: object): value is PaginatedUnitList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

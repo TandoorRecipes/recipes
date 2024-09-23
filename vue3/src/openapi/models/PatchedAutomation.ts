@@ -49,25 +49,25 @@ export interface PatchedAutomation {
      * @type {string}
      * @memberof PatchedAutomation
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param1?: string;
+    param1?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param2?: string;
+    param2?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedAutomation
      */
-    param3?: string;
+    param3?: string | null;
     /**
      * 
      * @type {number}
@@ -88,10 +88,12 @@ export interface PatchedAutomation {
     readonly createdBy?: number;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedAutomation interface.
  */
-export function instanceOfPatchedAutomation(value: object): boolean {
+export function instanceOfPatchedAutomation(value: object): value is PatchedAutomation {
     return true;
 }
 
@@ -118,7 +120,7 @@ export function PatchedAutomationFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedAutomationToJSON(value?: PatchedAutomation | null): any {
+export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

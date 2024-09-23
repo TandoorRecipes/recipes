@@ -113,7 +113,7 @@ export interface PatchedKeyword {
 /**
  * Check if a given object implements the PatchedKeyword interface.
  */
-export function instanceOfPatchedKeyword(value: object): boolean {
+export function instanceOfPatchedKeyword(value: object): value is PatchedKeyword {
     return true;
 }
 
@@ -139,7 +139,7 @@ export function PatchedKeywordFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedKeywordToJSON(value?: PatchedKeyword | null): any {
+export function PatchedKeywordToJSON(value?: Omit<PatchedKeyword, 'label'|'parent'|'numchild'|'created_at'|'updated_at'|'full_name'> | null): any {
     if (value == null) {
         return value;
     }

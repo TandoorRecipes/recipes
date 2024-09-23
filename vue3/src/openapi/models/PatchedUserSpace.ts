@@ -67,13 +67,13 @@ export interface PatchedUserSpace {
      * @type {string}
      * @memberof PatchedUserSpace
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly inviteLink?: number;
+    readonly inviteLink?: number | null;
     /**
      * 
      * @type {Date}
@@ -91,7 +91,7 @@ export interface PatchedUserSpace {
 /**
  * Check if a given object implements the PatchedUserSpace interface.
  */
-export function instanceOfPatchedUserSpace(value: object): boolean {
+export function instanceOfPatchedUserSpace(value: object): value is PatchedUserSpace {
     return true;
 }
 
@@ -117,7 +117,7 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(value?: PatchedUserSpace | null): any {
+export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

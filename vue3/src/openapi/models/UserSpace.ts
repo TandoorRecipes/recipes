@@ -67,7 +67,7 @@ export interface UserSpace {
      * @type {string}
      * @memberof UserSpace
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -91,13 +91,13 @@ export interface UserSpace {
 /**
  * Check if a given object implements the UserSpace interface.
  */
-export function instanceOfUserSpace(value: object): boolean {
-    if (!('user' in value)) return false;
-    if (!('space' in value)) return false;
-    if (!('groups' in value)) return false;
-    if (!('inviteLink' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
+export function instanceOfUserSpace(value: object): value is UserSpace {
+    if (!('user' in value) || value['user'] === undefined) return false;
+    if (!('space' in value) || value['space'] === undefined) return false;
+    if (!('groups' in value) || value['groups'] === undefined) return false;
+    if (!('inviteLink' in value) || value['inviteLink'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
 }
 
@@ -123,7 +123,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function UserSpaceToJSON(value?: UserSpace | null): any {
+export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

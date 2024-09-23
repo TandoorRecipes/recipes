@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
-import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -73,19 +73,19 @@ export interface PatchedUnitConversion {
      * @type {Food}
      * @memberof PatchedUnitConversion
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnitConversion
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the PatchedUnitConversion interface.
  */
-export function instanceOfPatchedUnitConversion(value: object): boolean {
+export function instanceOfPatchedUnitConversion(value: object): value is PatchedUnitConversion {
     return true;
 }
 
@@ -110,7 +110,7 @@ export function PatchedUnitConversionFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedUnitConversionToJSON(value?: PatchedUnitConversion | null): any {
+export function PatchedUnitConversionToJSON(value?: Omit<PatchedUnitConversion, 'name'> | null): any {
     if (value == null) {
         return value;
     }

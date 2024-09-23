@@ -71,7 +71,7 @@ export interface PatchedProperty {
      * @type {number}
      * @memberof PatchedProperty
      */
-    propertyAmount?: number;
+    propertyAmount?: number | null;
     /**
      * 
      * @type {PropertyType}
@@ -83,7 +83,7 @@ export interface PatchedProperty {
 /**
  * Check if a given object implements the PatchedProperty interface.
  */
-export function instanceOfPatchedProperty(value: object): boolean {
+export function instanceOfPatchedProperty(value: object): value is PatchedProperty {
     return true;
 }
 

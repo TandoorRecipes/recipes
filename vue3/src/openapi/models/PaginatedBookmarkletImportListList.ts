@@ -37,13 +37,13 @@ export interface PaginatedBookmarkletImportListList {
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<BookmarkletImportList>}
@@ -55,9 +55,9 @@ export interface PaginatedBookmarkletImportListList {
 /**
  * Check if a given object implements the PaginatedBookmarkletImportListList interface.
  */
-export function instanceOfPaginatedBookmarkletImportListList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedBookmarkletImportListList(value: object): value is PaginatedBookmarkletImportListList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

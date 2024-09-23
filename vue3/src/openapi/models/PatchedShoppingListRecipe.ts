@@ -42,13 +42,13 @@ export interface PatchedShoppingListRecipe {
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    recipe?: number;
+    recipe?: number | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedShoppingListRecipe
      */
-    mealplan?: number;
+    mealplan?: number | null;
     /**
      * 
      * @type {number}
@@ -78,7 +78,7 @@ export interface PatchedShoppingListRecipe {
 /**
  * Check if a given object implements the PatchedShoppingListRecipe interface.
  */
-export function instanceOfPatchedShoppingListRecipe(value: object): boolean {
+export function instanceOfPatchedShoppingListRecipe(value: object): value is PatchedShoppingListRecipe {
     return true;
 }
 
@@ -104,7 +104,7 @@ export function PatchedShoppingListRecipeFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PatchedShoppingListRecipeToJSON(value?: PatchedShoppingListRecipe | null): any {
+export function PatchedShoppingListRecipeToJSON(value?: Omit<PatchedShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null): any {
     if (value == null) {
         return value;
     }

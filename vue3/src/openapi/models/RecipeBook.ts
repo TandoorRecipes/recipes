@@ -67,7 +67,7 @@ export interface RecipeBook {
      * @type {CustomFilter}
      * @memberof RecipeBook
      */
-    filter?: CustomFilter;
+    filter?: CustomFilter | null;
     /**
      * 
      * @type {number}
@@ -79,10 +79,10 @@ export interface RecipeBook {
 /**
  * Check if a given object implements the RecipeBook interface.
  */
-export function instanceOfRecipeBook(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('shared' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfRecipeBook(value: object): value is RecipeBook {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('shared' in value) || value['shared'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -106,7 +106,7 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeBookToJSON(value?: RecipeBook | null): any {
+export function RecipeBookToJSON(value?: Omit<RecipeBook, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

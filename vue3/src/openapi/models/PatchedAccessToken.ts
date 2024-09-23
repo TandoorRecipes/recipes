@@ -60,7 +60,7 @@ export interface PatchedAccessToken {
 /**
  * Check if a given object implements the PatchedAccessToken interface.
  */
-export function instanceOfPatchedAccessToken(value: object): boolean {
+export function instanceOfPatchedAccessToken(value: object): value is PatchedAccessToken {
     return true;
 }
 
@@ -83,7 +83,7 @@ export function PatchedAccessTokenFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedAccessTokenToJSON(value?: PatchedAccessToken | null): any {
+export function PatchedAccessTokenToJSON(value?: Omit<PatchedAccessToken, 'token'|'created'|'updated'> | null): any {
     if (value == null) {
         return value;
     }

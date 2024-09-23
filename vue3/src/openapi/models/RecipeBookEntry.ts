@@ -67,11 +67,11 @@ export interface RecipeBookEntry {
 /**
  * Check if a given object implements the RecipeBookEntry interface.
  */
-export function instanceOfRecipeBookEntry(value: object): boolean {
-    if (!('book' in value)) return false;
-    if (!('bookContent' in value)) return false;
-    if (!('recipe' in value)) return false;
-    if (!('recipeContent' in value)) return false;
+export function instanceOfRecipeBookEntry(value: object): value is RecipeBookEntry {
+    if (!('book' in value) || value['book'] === undefined) return false;
+    if (!('bookContent' in value) || value['bookContent'] === undefined) return false;
+    if (!('recipe' in value) || value['recipe'] === undefined) return false;
+    if (!('recipeContent' in value) || value['recipeContent'] === undefined) return false;
     return true;
 }
 
@@ -93,7 +93,7 @@ export function RecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RecipeBookEntryToJSON(value?: RecipeBookEntry | null): any {
+export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'book_content'|'recipe_content'> | null): any {
     if (value == null) {
         return value;
     }

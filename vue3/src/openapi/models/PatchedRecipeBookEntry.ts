@@ -67,7 +67,7 @@ export interface PatchedRecipeBookEntry {
 /**
  * Check if a given object implements the PatchedRecipeBookEntry interface.
  */
-export function instanceOfPatchedRecipeBookEntry(value: object): boolean {
+export function instanceOfPatchedRecipeBookEntry(value: object): value is PatchedRecipeBookEntry {
     return true;
 }
 
@@ -89,7 +89,7 @@ export function PatchedRecipeBookEntryFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedRecipeBookEntryToJSON(value?: PatchedRecipeBookEntry | null): any {
+export function PatchedRecipeBookEntryToJSON(value?: Omit<PatchedRecipeBookEntry, 'book_content'|'recipe_content'> | null): any {
     if (value == null) {
         return value;
     }

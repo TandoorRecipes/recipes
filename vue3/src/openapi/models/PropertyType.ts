@@ -36,13 +36,13 @@ export interface PropertyType {
      * @type {string}
      * @memberof PropertyType
      */
-    unit?: string;
+    unit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PropertyType
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {number}
@@ -54,20 +54,20 @@ export interface PropertyType {
      * @type {string}
      * @memberof PropertyType
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PropertyType
      */
-    fdcId?: number;
+    fdcId?: number | null;
 }
 
 /**
  * Check if a given object implements the PropertyType interface.
  */
-export function instanceOfPropertyType(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfPropertyType(value: object): value is PropertyType {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

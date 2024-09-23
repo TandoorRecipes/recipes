@@ -30,7 +30,7 @@ export interface BookmarkletImport {
      * @type {string}
      * @memberof BookmarkletImport
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
@@ -54,10 +54,10 @@ export interface BookmarkletImport {
 /**
  * Check if a given object implements the BookmarkletImport interface.
  */
-export function instanceOfBookmarkletImport(value: object): boolean {
-    if (!('html' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfBookmarkletImport(value: object): value is BookmarkletImport {
+    if (!('html' in value) || value['html'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -79,7 +79,7 @@ export function BookmarkletImportFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function BookmarkletImportToJSON(value?: BookmarkletImport | null): any {
+export function BookmarkletImportToJSON(value?: Omit<BookmarkletImport, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

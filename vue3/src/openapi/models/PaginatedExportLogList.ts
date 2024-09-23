@@ -37,13 +37,13 @@ export interface PaginatedExportLogList {
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedExportLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ExportLog>}
@@ -55,9 +55,9 @@ export interface PaginatedExportLogList {
 /**
  * Check if a given object implements the PaginatedExportLogList interface.
  */
-export function instanceOfPaginatedExportLogList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedExportLogList(value: object): value is PaginatedExportLogList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

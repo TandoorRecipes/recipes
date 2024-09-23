@@ -24,19 +24,19 @@ export interface RecipeImage {
      * @type {string}
      * @memberof RecipeImage
      */
-    image?: string;
+    image?: string | null;
     /**
      * 
      * @type {string}
      * @memberof RecipeImage
      */
-    imageUrl?: string;
+    imageUrl?: string | null;
 }
 
 /**
  * Check if a given object implements the RecipeImage interface.
  */
-export function instanceOfRecipeImage(value: object): boolean {
+export function instanceOfRecipeImage(value: object): value is RecipeImage {
     return true;
 }
 

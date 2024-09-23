@@ -70,14 +70,14 @@ export interface SupermarketCategory {
      * @type {string}
      * @memberof SupermarketCategory
      */
-    description?: string;
+    description?: string | null;
 }
 
 /**
  * Check if a given object implements the SupermarketCategory interface.
  */
-export function instanceOfSupermarketCategory(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfSupermarketCategory(value: object): value is SupermarketCategory {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

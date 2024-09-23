@@ -36,14 +36,14 @@ export interface RecipeFlat {
      * @type {string}
      * @memberof RecipeFlat
      */
-    image?: string;
+    image?: string | null;
 }
 
 /**
  * Check if a given object implements the RecipeFlat interface.
  */
-export function instanceOfRecipeFlat(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfRecipeFlat(value: object): value is RecipeFlat {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

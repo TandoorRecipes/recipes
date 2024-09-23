@@ -43,7 +43,7 @@ export interface RecipeOverview {
      * @type {string}
      * @memberof RecipeOverview
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -133,22 +133,22 @@ export interface RecipeOverview {
 /**
  * Check if a given object implements the RecipeOverview interface.
  */
-export function instanceOfRecipeOverview(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('image' in value)) return false;
-    if (!('keywords' in value)) return false;
-    if (!('workingTime' in value)) return false;
-    if (!('waitingTime' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
-    if (!('internal' in value)) return false;
-    if (!('servings' in value)) return false;
-    if (!('servingsText' in value)) return false;
-    if (!('rating' in value)) return false;
-    if (!('lastCooked' in value)) return false;
-    if (!('_new' in value)) return false;
-    if (!('recent' in value)) return false;
+export function instanceOfRecipeOverview(value: object): value is RecipeOverview {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('image' in value) || value['image'] === undefined) return false;
+    if (!('keywords' in value) || value['keywords'] === undefined) return false;
+    if (!('workingTime' in value) || value['workingTime'] === undefined) return false;
+    if (!('waitingTime' in value) || value['waitingTime'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
+    if (!('internal' in value) || value['internal'] === undefined) return false;
+    if (!('servings' in value) || value['servings'] === undefined) return false;
+    if (!('servingsText' in value) || value['servingsText'] === undefined) return false;
+    if (!('rating' in value) || value['rating'] === undefined) return false;
+    if (!('lastCooked' in value) || value['lastCooked'] === undefined) return false;
+    if (!('_new' in value) || value['_new'] === undefined) return false;
+    if (!('recent' in value) || value['recent'] === undefined) return false;
     return true;
 }
 
@@ -182,7 +182,7 @@ export function RecipeOverviewFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function RecipeOverviewToJSON(value?: RecipeOverview | null): any {
+export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'keywords'|'working_time'|'waiting_time'|'created_by'|'created_at'|'updated_at'|'internal'|'servings'|'servings_text'|'rating'|'last_cooked'|'new'|'recent'> | null): any {
     if (value == null) {
         return value;
     }

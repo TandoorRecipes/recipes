@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { OpenDataFood } from './OpenDataFood';
-import {
-    OpenDataFoodFromJSON,
-    OpenDataFoodFromJSONTyped,
-    OpenDataFoodToJSON,
-} from './OpenDataFood';
 import type { OpenDataUnit } from './OpenDataUnit';
 import {
     OpenDataUnitFromJSON,
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
 } from './OpenDataUnit';
+import type { OpenDataFood } from './OpenDataFood';
+import {
+    OpenDataFoodFromJSON,
+    OpenDataFoodFromJSONTyped,
+    OpenDataFoodToJSON,
+} from './OpenDataFood';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
@@ -109,7 +109,7 @@ export interface PatchedOpenDataConversion {
 /**
  * Check if a given object implements the PatchedOpenDataConversion interface.
  */
-export function instanceOfPatchedOpenDataConversion(value: object): boolean {
+export function instanceOfPatchedOpenDataConversion(value: object): value is PatchedOpenDataConversion {
     return true;
 }
 
@@ -137,7 +137,7 @@ export function PatchedOpenDataConversionFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PatchedOpenDataConversionToJSON(value?: PatchedOpenDataConversion | null): any {
+export function PatchedOpenDataConversionToJSON(value?: Omit<PatchedOpenDataConversion, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

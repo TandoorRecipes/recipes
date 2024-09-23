@@ -37,13 +37,13 @@ export interface PaginatedAutomationList {
      * @type {string}
      * @memberof PaginatedAutomationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedAutomationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Automation>}
@@ -55,9 +55,9 @@ export interface PaginatedAutomationList {
 /**
  * Check if a given object implements the PaginatedAutomationList interface.
  */
-export function instanceOfPaginatedAutomationList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedAutomationList(value: object): value is PaginatedAutomationList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

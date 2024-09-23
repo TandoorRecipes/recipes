@@ -13,24 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { DefaultPageEnum } from './DefaultPageEnum';
-import {
-    DefaultPageEnumFromJSON,
-    DefaultPageEnumFromJSONTyped,
-    DefaultPageEnumToJSON,
-} from './DefaultPageEnum';
-import type { FoodInheritField } from './FoodInheritField';
-import {
-    FoodInheritFieldFromJSON,
-    FoodInheritFieldFromJSONTyped,
-    FoodInheritFieldToJSON,
-} from './FoodInheritField';
-import type { ThemeEnum } from './ThemeEnum';
-import {
-    ThemeEnumFromJSON,
-    ThemeEnumFromJSONTyped,
-    ThemeEnumToJSON,
-} from './ThemeEnum';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -49,6 +31,24 @@ import {
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
 } from './UserPreferenceNavTextColorEnum';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
+import type { ThemeEnum } from './ThemeEnum';
+import {
+    ThemeEnumFromJSON,
+    ThemeEnumFromJSONTyped,
+    ThemeEnumToJSON,
+} from './ThemeEnum';
+import type { DefaultPageEnum } from './DefaultPageEnum';
+import {
+    DefaultPageEnumFromJSON,
+    DefaultPageEnumFromJSONTyped,
+    DefaultPageEnumToJSON,
+} from './DefaultPageEnum';
 
 /**
  * Adds nested create feature
@@ -67,7 +67,7 @@ export interface PatchedUserPreference {
      * @type {UserFileView}
      * @memberof PatchedUserPreference
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {ThemeEnum}
@@ -121,7 +121,7 @@ export interface PatchedUserPreference {
      * @type {Array<User>}
      * @memberof PatchedUserPreference
      */
-    planShare?: Array<User>;
+    planShare?: Array<User> | null;
     /**
      * 
      * @type {boolean}
@@ -181,7 +181,7 @@ export interface PatchedUserPreference {
      * @type {Array<User>}
      * @memberof PatchedUserPreference
      */
-    shoppingShare?: Array<User>;
+    shoppingShare?: Array<User> | null;
     /**
      * 
      * @type {number}
@@ -232,10 +232,12 @@ export interface PatchedUserPreference {
     readonly foodChildrenExist?: boolean;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedUserPreference interface.
  */
-export function instanceOfPatchedUserPreference(value: object): boolean {
+export function instanceOfPatchedUserPreference(value: object): value is PatchedUserPreference {
     return true;
 }
 
@@ -281,7 +283,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PatchedUserPreferenceToJSON(value?: PatchedUserPreference | null): any {
+export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 'food_inherit_default'|'food_children_exist'> | null): any {
     if (value == null) {
         return value;
     }

@@ -37,13 +37,13 @@ export interface PaginatedKeywordList {
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Keyword>}
@@ -55,9 +55,9 @@ export interface PaginatedKeywordList {
 /**
  * Check if a given object implements the PaginatedKeywordList interface.
  */
-export function instanceOfPaginatedKeywordList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedKeywordList(value: object): value is PaginatedKeywordList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

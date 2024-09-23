@@ -35,6 +35,17 @@ export const SpaceThemeEnum = {
 export type SpaceThemeEnum = typeof SpaceThemeEnum[keyof typeof SpaceThemeEnum];
 
 
+export function instanceOfSpaceThemeEnum(value: any): boolean {
+    for (const key in SpaceThemeEnum) {
+        if (Object.prototype.hasOwnProperty.call(SpaceThemeEnum, key)) {
+            if (SpaceThemeEnum[key as keyof typeof SpaceThemeEnum] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export function SpaceThemeEnumFromJSON(json: any): SpaceThemeEnum {
     return SpaceThemeEnumFromJSONTyped(json, false);
 }

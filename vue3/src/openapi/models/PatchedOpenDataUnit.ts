@@ -128,10 +128,12 @@ export interface PatchedOpenDataUnit {
     readonly createdBy?: string;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedOpenDataUnit interface.
  */
-export function instanceOfPatchedOpenDataUnit(value: object): boolean {
+export function instanceOfPatchedOpenDataUnit(value: object): value is PatchedOpenDataUnit {
     return true;
 }
 
@@ -157,7 +159,7 @@ export function PatchedOpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataUnitToJSON(value?: PatchedOpenDataUnit | null): any {
+export function PatchedOpenDataUnitToJSON(value?: Omit<PatchedOpenDataUnit, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

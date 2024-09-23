@@ -19,18 +19,18 @@ import {
     MealTypeFromJSONTyped,
     MealTypeToJSON,
 } from './MealType';
-import type { RecipeOverview } from './RecipeOverview';
-import {
-    RecipeOverviewFromJSON,
-    RecipeOverviewFromJSONTyped,
-    RecipeOverviewToJSON,
-} from './RecipeOverview';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+} from './RecipeOverview';
 
 /**
  * Adds nested create feature
@@ -55,7 +55,7 @@ export interface MealPlan {
      * @type {RecipeOverview}
      * @memberof MealPlan
      */
-    recipe?: RecipeOverview;
+    recipe?: RecipeOverview | null;
     /**
      * 
      * @type {number}
@@ -103,7 +103,7 @@ export interface MealPlan {
      * @type {Array<User>}
      * @memberof MealPlan
      */
-    shared?: Array<User>;
+    shared?: Array<User> | null;
     /**
      * 
      * @type {string}
@@ -127,15 +127,15 @@ export interface MealPlan {
 /**
  * Check if a given object implements the MealPlan interface.
  */
-export function instanceOfMealPlan(value: object): boolean {
-    if (!('servings' in value)) return false;
-    if (!('noteMarkdown' in value)) return false;
-    if (!('fromDate' in value)) return false;
-    if (!('mealType' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('recipeName' in value)) return false;
-    if (!('mealTypeName' in value)) return false;
-    if (!('shopping' in value)) return false;
+export function instanceOfMealPlan(value: object): value is MealPlan {
+    if (!('servings' in value) || value['servings'] === undefined) return false;
+    if (!('noteMarkdown' in value) || value['noteMarkdown'] === undefined) return false;
+    if (!('fromDate' in value) || value['fromDate'] === undefined) return false;
+    if (!('mealType' in value) || value['mealType'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
+    if (!('mealTypeName' in value) || value['mealTypeName'] === undefined) return false;
+    if (!('shopping' in value) || value['shopping'] === undefined) return false;
     return true;
 }
 
@@ -166,7 +166,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(value?: MealPlan | null): any {
+export function MealPlanToJSON(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null): any {
     if (value == null) {
         return value;
     }

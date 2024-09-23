@@ -113,14 +113,14 @@ export interface Keyword {
 /**
  * Check if a given object implements the Keyword interface.
  */
-export function instanceOfKeyword(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('label' in value)) return false;
-    if (!('parent' in value)) return false;
-    if (!('numchild' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
-    if (!('fullName' in value)) return false;
+export function instanceOfKeyword(value: object): value is Keyword {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('label' in value) || value['label'] === undefined) return false;
+    if (!('parent' in value) || value['parent'] === undefined) return false;
+    if (!('numchild' in value) || value['numchild'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
+    if (!('fullName' in value) || value['fullName'] === undefined) return false;
     return true;
 }
 
@@ -146,7 +146,7 @@ export function KeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): K
     };
 }
 
-export function KeywordToJSON(value?: Keyword | null): any {
+export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|'created_at'|'updated_at'|'full_name'> | null): any {
     if (value == null) {
         return value;
     }

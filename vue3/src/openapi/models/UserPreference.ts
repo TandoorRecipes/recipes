@@ -13,24 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { DefaultPageEnum } from './DefaultPageEnum';
-import {
-    DefaultPageEnumFromJSON,
-    DefaultPageEnumFromJSONTyped,
-    DefaultPageEnumToJSON,
-} from './DefaultPageEnum';
-import type { FoodInheritField } from './FoodInheritField';
-import {
-    FoodInheritFieldFromJSON,
-    FoodInheritFieldFromJSONTyped,
-    FoodInheritFieldToJSON,
-} from './FoodInheritField';
-import type { ThemeEnum } from './ThemeEnum';
-import {
-    ThemeEnumFromJSON,
-    ThemeEnumFromJSONTyped,
-    ThemeEnumToJSON,
-} from './ThemeEnum';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -49,6 +31,24 @@ import {
     UserPreferenceNavTextColorEnumFromJSONTyped,
     UserPreferenceNavTextColorEnumToJSON,
 } from './UserPreferenceNavTextColorEnum';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
+import type { ThemeEnum } from './ThemeEnum';
+import {
+    ThemeEnumFromJSON,
+    ThemeEnumFromJSONTyped,
+    ThemeEnumToJSON,
+} from './ThemeEnum';
+import type { DefaultPageEnum } from './DefaultPageEnum';
+import {
+    DefaultPageEnumFromJSON,
+    DefaultPageEnumFromJSONTyped,
+    DefaultPageEnumToJSON,
+} from './DefaultPageEnum';
 
 /**
  * Adds nested create feature
@@ -67,7 +67,7 @@ export interface UserPreference {
      * @type {UserFileView}
      * @memberof UserPreference
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {ThemeEnum}
@@ -121,7 +121,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    planShare?: Array<User>;
+    planShare?: Array<User> | null;
     /**
      * 
      * @type {boolean}
@@ -181,7 +181,7 @@ export interface UserPreference {
      * @type {Array<User>}
      * @memberof UserPreference
      */
-    shoppingShare?: Array<User>;
+    shoppingShare?: Array<User> | null;
     /**
      * 
      * @type {number}
@@ -232,13 +232,15 @@ export interface UserPreference {
     readonly foodChildrenExist: boolean;
 }
 
+
+
 /**
  * Check if a given object implements the UserPreference interface.
  */
-export function instanceOfUserPreference(value: object): boolean {
-    if (!('user' in value)) return false;
-    if (!('foodInheritDefault' in value)) return false;
-    if (!('foodChildrenExist' in value)) return false;
+export function instanceOfUserPreference(value: object): value is UserPreference {
+    if (!('user' in value) || value['user'] === undefined) return false;
+    if (!('foodInheritDefault' in value) || value['foodInheritDefault'] === undefined) return false;
+    if (!('foodChildrenExist' in value) || value['foodChildrenExist'] === undefined) return false;
     return true;
 }
 
@@ -284,7 +286,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function UserPreferenceToJSON(value?: UserPreference | null): any {
+export function UserPreferenceToJSON(value?: Omit<UserPreference, 'food_inherit_default'|'food_children_exist'> | null): any {
     if (value == null) {
         return value;
     }

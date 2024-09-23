@@ -70,8 +70,8 @@ export interface Group {
 /**
  * Check if a given object implements the Group interface.
  */
-export function instanceOfGroup(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfGroup(value: object): value is Group {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

@@ -42,13 +42,13 @@ export interface ShoppingListRecipe {
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    recipe?: number;
+    recipe?: number | null;
     /**
      * 
      * @type {number}
      * @memberof ShoppingListRecipe
      */
-    mealplan?: number;
+    mealplan?: number | null;
     /**
      * 
      * @type {number}
@@ -78,13 +78,13 @@ export interface ShoppingListRecipe {
 /**
  * Check if a given object implements the ShoppingListRecipe interface.
  */
-export function instanceOfShoppingListRecipe(value: object): boolean {
-    if (!('recipeName' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('servings' in value)) return false;
-    if (!('mealplanNote' in value)) return false;
-    if (!('mealplanFromDate' in value)) return false;
-    if (!('mealplanType' in value)) return false;
+export function instanceOfShoppingListRecipe(value: object): value is ShoppingListRecipe {
+    if (!('recipeName' in value) || value['recipeName'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('servings' in value) || value['servings'] === undefined) return false;
+    if (!('mealplanNote' in value) || value['mealplanNote'] === undefined) return false;
+    if (!('mealplanFromDate' in value) || value['mealplanFromDate'] === undefined) return false;
+    if (!('mealplanType' in value) || value['mealplanType'] === undefined) return false;
     return true;
 }
 
@@ -110,7 +110,7 @@ export function ShoppingListRecipeFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function ShoppingListRecipeToJSON(value?: ShoppingListRecipe | null): any {
+export function ShoppingListRecipeToJSON(value?: Omit<ShoppingListRecipe, 'recipe_name'|'name'|'mealplan_note'|'mealplan_from_date'|'mealplan_type'> | null): any {
     if (value == null) {
         return value;
     }

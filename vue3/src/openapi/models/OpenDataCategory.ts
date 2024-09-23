@@ -107,11 +107,11 @@ export interface OpenDataCategory {
 /**
  * Check if a given object implements the OpenDataCategory interface.
  */
-export function instanceOfOpenDataCategory(value: object): boolean {
-    if (!('version' in value)) return false;
-    if (!('slug' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfOpenDataCategory(value: object): value is OpenDataCategory {
+    if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -135,7 +135,7 @@ export function OpenDataCategoryFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function OpenDataCategoryToJSON(value?: OpenDataCategory | null): any {
+export function OpenDataCategoryToJSON(value?: Omit<OpenDataCategory, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

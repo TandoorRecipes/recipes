@@ -48,7 +48,7 @@ export interface PatchedViewLog {
 /**
  * Check if a given object implements the PatchedViewLog interface.
  */
-export function instanceOfPatchedViewLog(value: object): boolean {
+export function instanceOfPatchedViewLog(value: object): value is PatchedViewLog {
     return true;
 }
 
@@ -69,7 +69,7 @@ export function PatchedViewLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedViewLogToJSON(value?: PatchedViewLog | null): any {
+export function PatchedViewLogToJSON(value?: Omit<PatchedViewLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

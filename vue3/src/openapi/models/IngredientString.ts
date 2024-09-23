@@ -30,8 +30,8 @@ export interface IngredientString {
 /**
  * Check if a given object implements the IngredientString interface.
  */
-export function instanceOfIngredientString(value: object): boolean {
-    if (!('text' in value)) return false;
+export function instanceOfIngredientString(value: object): value is IngredientString {
+    if (!('text' in value) || value['text'] === undefined) return false;
     return true;
 }
 

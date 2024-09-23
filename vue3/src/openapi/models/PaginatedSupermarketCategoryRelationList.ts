@@ -37,13 +37,13 @@ export interface PaginatedSupermarketCategoryRelationList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -55,9 +55,9 @@ export interface PaginatedSupermarketCategoryRelationList {
 /**
  * Check if a given object implements the PaginatedSupermarketCategoryRelationList interface.
  */
-export function instanceOfPaginatedSupermarketCategoryRelationList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedSupermarketCategoryRelationList(value: object): value is PaginatedSupermarketCategoryRelationList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

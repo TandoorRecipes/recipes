@@ -85,7 +85,7 @@ export interface PatchedImportLog {
 /**
  * Check if a given object implements the PatchedImportLog interface.
  */
-export function instanceOfPatchedImportLog(value: object): boolean {
+export function instanceOfPatchedImportLog(value: object): value is PatchedImportLog {
     return true;
 }
 
@@ -111,7 +111,7 @@ export function PatchedImportLogFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedImportLogToJSON(value?: PatchedImportLog | null): any {
+export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

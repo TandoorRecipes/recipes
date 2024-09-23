@@ -79,12 +79,12 @@ export interface OpenDataStore {
 /**
  * Check if a given object implements the OpenDataStore interface.
  */
-export function instanceOfOpenDataStore(value: object): boolean {
-    if (!('version' in value)) return false;
-    if (!('slug' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('categoryToStore' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfOpenDataStore(value: object): value is OpenDataStore {
+    if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('categoryToStore' in value) || value['categoryToStore'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -108,7 +108,7 @@ export function OpenDataStoreFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function OpenDataStoreToJSON(value?: OpenDataStore | null): any {
+export function OpenDataStoreToJSON(value?: Omit<OpenDataStore, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

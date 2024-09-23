@@ -95,7 +95,7 @@ export interface PatchedOpenDataProperty {
      * @type {number}
      * @memberof PatchedOpenDataProperty
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {string}
@@ -113,7 +113,7 @@ export interface PatchedOpenDataProperty {
 /**
  * Check if a given object implements the PatchedOpenDataProperty interface.
  */
-export function instanceOfPatchedOpenDataProperty(value: object): boolean {
+export function instanceOfPatchedOpenDataProperty(value: object): value is PatchedOpenDataProperty {
     return true;
 }
 
@@ -138,7 +138,7 @@ export function PatchedOpenDataPropertyFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataPropertyToJSON(value?: PatchedOpenDataProperty | null): any {
+export function PatchedOpenDataPropertyToJSON(value?: Omit<PatchedOpenDataProperty, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -37,13 +37,13 @@ export interface FoodShoppingUpdate {
      * @type {number}
      * @memberof FoodShoppingUpdate
      */
-    amount?: number;
+    amount?: number | null;
     /**
      * ID of unit to use for the shopping list
      * @type {number}
      * @memberof FoodShoppingUpdate
      */
-    unit?: number;
+    unit?: number | null;
     /**
      * When set to true will delete all food from active shopping lists.
      * 
@@ -54,11 +54,13 @@ export interface FoodShoppingUpdate {
     _delete: DeleteEnum | null;
 }
 
+
+
 /**
  * Check if a given object implements the FoodShoppingUpdate interface.
  */
-export function instanceOfFoodShoppingUpdate(value: object): boolean {
-    if (!('_delete' in value)) return false;
+export function instanceOfFoodShoppingUpdate(value: object): value is FoodShoppingUpdate {
+    if (!('_delete' in value) || value['_delete'] === undefined) return false;
     return true;
 }
 

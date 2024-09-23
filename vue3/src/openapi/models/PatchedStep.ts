@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Ingredient } from './Ingredient';
-import {
-    IngredientFromJSON,
-    IngredientFromJSONTyped,
-    IngredientToJSON,
-} from './Ingredient';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
+import type { Ingredient } from './Ingredient';
+import {
+    IngredientFromJSON,
+    IngredientFromJSONTyped,
+    IngredientToJSON,
+} from './Ingredient';
 
 /**
  * Adds nested create feature
@@ -85,19 +85,19 @@ export interface PatchedStep {
      * @type {UserFileView}
      * @memberof PatchedStep
      */
-    file?: UserFileView;
+    file?: UserFileView | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedStep
      */
-    stepRecipe?: number;
+    stepRecipe?: number | null;
     /**
      * 
      * @type {any}
      * @memberof PatchedStep
      */
-    readonly stepRecipeData?: any;
+    readonly stepRecipeData?: any | null;
     /**
      * 
      * @type {number}
@@ -115,7 +115,7 @@ export interface PatchedStep {
 /**
  * Check if a given object implements the PatchedStep interface.
  */
-export function instanceOfPatchedStep(value: object): boolean {
+export function instanceOfPatchedStep(value: object): value is PatchedStep {
     return true;
 }
 
@@ -145,7 +145,7 @@ export function PatchedStepFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedStepToJSON(value?: PatchedStep | null): any {
+export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }

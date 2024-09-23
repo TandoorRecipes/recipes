@@ -54,10 +54,10 @@ export interface SyncLog {
 /**
  * Check if a given object implements the SyncLog interface.
  */
-export function instanceOfSyncLog(value: object): boolean {
-    if (!('sync' in value)) return false;
-    if (!('status' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfSyncLog(value: object): value is SyncLog {
+    if (!('sync' in value) || value['sync'] === undefined) return false;
+    if (!('status' in value) || value['status'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -79,7 +79,7 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function SyncLogToJSON(value?: SyncLog | null): any {
+export function SyncLogToJSON(value?: Omit<SyncLog, 'created_at'> | null): any {
     if (value == null) {
         return value;
     }

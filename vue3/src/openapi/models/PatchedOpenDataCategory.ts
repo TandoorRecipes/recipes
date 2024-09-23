@@ -107,7 +107,7 @@ export interface PatchedOpenDataCategory {
 /**
  * Check if a given object implements the PatchedOpenDataCategory interface.
  */
-export function instanceOfPatchedOpenDataCategory(value: object): boolean {
+export function instanceOfPatchedOpenDataCategory(value: object): value is PatchedOpenDataCategory {
     return true;
 }
 
@@ -131,7 +131,7 @@ export function PatchedOpenDataCategoryFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataCategoryToJSON(value?: PatchedOpenDataCategory | null): any {
+export function PatchedOpenDataCategoryToJSON(value?: Omit<PatchedOpenDataCategory, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

@@ -55,7 +55,7 @@ export interface PatchedSupermarketCategoryRelation {
 /**
  * Check if a given object implements the PatchedSupermarketCategoryRelation interface.
  */
-export function instanceOfPatchedSupermarketCategoryRelation(value: object): boolean {
+export function instanceOfPatchedSupermarketCategoryRelation(value: object): value is PatchedSupermarketCategoryRelation {
     return true;
 }
 

@@ -36,9 +36,9 @@ export interface ShoppingListEntryBulk {
 /**
  * Check if a given object implements the ShoppingListEntryBulk interface.
  */
-export function instanceOfShoppingListEntryBulk(value: object): boolean {
-    if (!('ids' in value)) return false;
-    if (!('checked' in value)) return false;
+export function instanceOfShoppingListEntryBulk(value: object): value is ShoppingListEntryBulk {
+    if (!('ids' in value) || value['ids'] === undefined) return false;
+    if (!('checked' in value) || value['checked'] === undefined) return false;
     return true;
 }
 

@@ -67,7 +67,7 @@ export interface PatchedRecipeBook {
      * @type {CustomFilter}
      * @memberof PatchedRecipeBook
      */
-    filter?: CustomFilter;
+    filter?: CustomFilter | null;
     /**
      * 
      * @type {number}
@@ -79,7 +79,7 @@ export interface PatchedRecipeBook {
 /**
  * Check if a given object implements the PatchedRecipeBook interface.
  */
-export function instanceOfPatchedRecipeBook(value: object): boolean {
+export function instanceOfPatchedRecipeBook(value: object): value is PatchedRecipeBook {
     return true;
 }
 
@@ -103,7 +103,7 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedRecipeBookToJSON(value?: PatchedRecipeBook | null): any {
+export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

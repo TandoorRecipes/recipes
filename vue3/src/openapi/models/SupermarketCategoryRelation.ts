@@ -55,9 +55,9 @@ export interface SupermarketCategoryRelation {
 /**
  * Check if a given object implements the SupermarketCategoryRelation interface.
  */
-export function instanceOfSupermarketCategoryRelation(value: object): boolean {
-    if (!('category' in value)) return false;
-    if (!('supermarket' in value)) return false;
+export function instanceOfSupermarketCategoryRelation(value: object): value is SupermarketCategoryRelation {
+    if (!('category' in value) || value['category'] === undefined) return false;
+    if (!('supermarket' in value) || value['supermarket'] === undefined) return false;
     return true;
 }
 

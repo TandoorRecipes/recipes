@@ -37,13 +37,13 @@ export interface PaginatedUserFileList {
      * @type {string}
      * @memberof PaginatedUserFileList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUserFileList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<UserFile>}
@@ -55,9 +55,9 @@ export interface PaginatedUserFileList {
 /**
  * Check if a given object implements the PaginatedUserFileList interface.
  */
-export function instanceOfPaginatedUserFileList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedUserFileList(value: object): value is PaginatedUserFileList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

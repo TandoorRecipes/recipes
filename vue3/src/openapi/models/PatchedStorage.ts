@@ -49,19 +49,19 @@ export interface PatchedStorage {
      * @type {string}
      * @memberof PatchedStorage
      */
-    username?: string;
+    username?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    password?: string;
+    password?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedStorage
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {number}
@@ -70,10 +70,12 @@ export interface PatchedStorage {
     readonly createdBy?: number;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedStorage interface.
  */
-export function instanceOfPatchedStorage(value: object): boolean {
+export function instanceOfPatchedStorage(value: object): value is PatchedStorage {
     return true;
 }
 
@@ -97,7 +99,7 @@ export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedStorageToJSON(value?: PatchedStorage | null): any {
+export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

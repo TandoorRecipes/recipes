@@ -48,10 +48,10 @@ export interface ViewLog {
 /**
  * Check if a given object implements the ViewLog interface.
  */
-export function instanceOfViewLog(value: object): boolean {
-    if (!('recipe' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfViewLog(value: object): value is ViewLog {
+    if (!('recipe' in value) || value['recipe'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -72,7 +72,7 @@ export function ViewLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): V
     };
 }
 
-export function ViewLogToJSON(value?: ViewLog | null): any {
+export function ViewLogToJSON(value?: Omit<ViewLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -48,11 +48,11 @@ export interface ParsedIngredient {
 /**
  * Check if a given object implements the ParsedIngredient interface.
  */
-export function instanceOfParsedIngredient(value: object): boolean {
-    if (!('amount' in value)) return false;
-    if (!('unit' in value)) return false;
-    if (!('food' in value)) return false;
-    if (!('note' in value)) return false;
+export function instanceOfParsedIngredient(value: object): value is ParsedIngredient {
+    if (!('amount' in value) || value['amount'] === undefined) return false;
+    if (!('unit' in value) || value['unit'] === undefined) return false;
+    if (!('food' in value) || value['food'] === undefined) return false;
+    if (!('note' in value) || value['note'] === undefined) return false;
     return true;
 }
 

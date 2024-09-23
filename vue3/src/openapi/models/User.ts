@@ -54,9 +54,9 @@ export interface User {
 /**
  * Check if a given object implements the User interface.
  */
-export function instanceOfUser(value: object): boolean {
-    if (!('username' in value)) return false;
-    if (!('displayName' in value)) return false;
+export function instanceOfUser(value: object): value is User {
+    if (!('username' in value) || value['username'] === undefined) return false;
+    if (!('displayName' in value) || value['displayName'] === undefined) return false;
     return true;
 }
 
@@ -78,7 +78,7 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     };
 }
 
-export function UserToJSON(value?: User | null): any {
+export function UserToJSON(value?: Omit<User, 'username'|'display_name'> | null): any {
     if (value == null) {
         return value;
     }

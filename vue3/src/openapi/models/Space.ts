@@ -13,24 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { FoodInheritField } from './FoodInheritField';
-import {
-    FoodInheritFieldFromJSON,
-    FoodInheritFieldFromJSONTyped,
-    FoodInheritFieldToJSON,
-} from './FoodInheritField';
-import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
-import {
-    SpaceNavTextColorEnumFromJSON,
-    SpaceNavTextColorEnumFromJSONTyped,
-    SpaceNavTextColorEnumToJSON,
-} from './SpaceNavTextColorEnum';
-import type { SpaceThemeEnum } from './SpaceThemeEnum';
-import {
-    SpaceThemeEnumFromJSON,
-    SpaceThemeEnumFromJSONTyped,
-    SpaceThemeEnumToJSON,
-} from './SpaceThemeEnum';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -43,6 +25,24 @@ import {
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
+import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
+import {
+    SpaceNavTextColorEnumFromJSON,
+    SpaceNavTextColorEnumFromJSONTyped,
+    SpaceNavTextColorEnumToJSON,
+} from './SpaceNavTextColorEnum';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
+import type { SpaceThemeEnum } from './SpaceThemeEnum';
+import {
+    SpaceThemeEnumFromJSON,
+    SpaceThemeEnumFromJSONTyped,
+    SpaceThemeEnumToJSON,
+} from './SpaceThemeEnum';
 
 /**
  * Adds nested create feature
@@ -139,13 +139,13 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    navLogo?: UserFileView;
+    navLogo?: UserFileView | null;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -157,7 +157,7 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    customSpaceTheme?: UserFileView;
+    customSpaceTheme?: UserFileView | null;
     /**
      * 
      * @type {string}
@@ -175,60 +175,62 @@ export interface Space {
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor32?: UserFileView;
+    logoColor32?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor128?: UserFileView;
+    logoColor128?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor144?: UserFileView;
+    logoColor144?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor180?: UserFileView;
+    logoColor180?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor192?: UserFileView;
+    logoColor192?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColor512?: UserFileView;
+    logoColor512?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof Space
      */
-    logoColorSvg?: UserFileView;
+    logoColorSvg?: UserFileView | null;
 }
+
+
 
 /**
  * Check if a given object implements the Space interface.
  */
-export function instanceOfSpace(value: object): boolean {
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('maxRecipes' in value)) return false;
-    if (!('maxFileStorageMb' in value)) return false;
-    if (!('maxUsers' in value)) return false;
-    if (!('allowSharing' in value)) return false;
-    if (!('demo' in value)) return false;
-    if (!('foodInherit' in value)) return false;
-    if (!('userCount' in value)) return false;
-    if (!('recipeCount' in value)) return false;
-    if (!('fileSizeMb' in value)) return false;
+export function instanceOfSpace(value: object): value is Space {
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('maxRecipes' in value) || value['maxRecipes'] === undefined) return false;
+    if (!('maxFileStorageMb' in value) || value['maxFileStorageMb'] === undefined) return false;
+    if (!('maxUsers' in value) || value['maxUsers'] === undefined) return false;
+    if (!('allowSharing' in value) || value['allowSharing'] === undefined) return false;
+    if (!('demo' in value) || value['demo'] === undefined) return false;
+    if (!('foodInherit' in value) || value['foodInherit'] === undefined) return false;
+    if (!('userCount' in value) || value['userCount'] === undefined) return false;
+    if (!('recipeCount' in value) || value['recipeCount'] === undefined) return false;
+    if (!('fileSizeMb' in value) || value['fileSizeMb'] === undefined) return false;
     return true;
 }
 
@@ -272,7 +274,7 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
     };
 }
 
-export function SpaceToJSON(value?: Space | null): any {
+export function SpaceToJSON(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null): any {
     if (value == null) {
         return value;
     }

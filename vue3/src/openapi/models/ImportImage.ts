@@ -30,8 +30,8 @@ export interface ImportImage {
 /**
  * Check if a given object implements the ImportImage interface.
  */
-export function instanceOfImportImage(value: object): boolean {
-    if (!('image' in value)) return false;
+export function instanceOfImportImage(value: object): value is ImportImage {
+    if (!('image' in value) || value['image'] === undefined) return false;
     return true;
 }
 

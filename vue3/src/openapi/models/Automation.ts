@@ -49,25 +49,25 @@ export interface Automation {
      * @type {string}
      * @memberof Automation
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param1?: string;
+    param1?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param2?: string;
+    param2?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param3?: string;
+    param3?: string | null;
     /**
      * 
      * @type {number}
@@ -88,12 +88,14 @@ export interface Automation {
     readonly createdBy: number;
 }
 
+
+
 /**
  * Check if a given object implements the Automation interface.
  */
-export function instanceOfAutomation(value: object): boolean {
-    if (!('type' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfAutomation(value: object): value is Automation {
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -120,7 +122,7 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AutomationToJSON(value?: Automation | null): any {
+export function AutomationToJSON(value?: Omit<Automation, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

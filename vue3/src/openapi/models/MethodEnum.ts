@@ -27,6 +27,17 @@ export const MethodEnum = {
 export type MethodEnum = typeof MethodEnum[keyof typeof MethodEnum];
 
 
+export function instanceOfMethodEnum(value: any): boolean {
+    for (const key in MethodEnum) {
+        if (Object.prototype.hasOwnProperty.call(MethodEnum, key)) {
+            if (MethodEnum[key as keyof typeof MethodEnum] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export function MethodEnumFromJSON(json: any): MethodEnum {
     return MethodEnumFromJSONTyped(json, false);
 }

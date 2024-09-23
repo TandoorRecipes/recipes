@@ -36,13 +36,13 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    unit?: string;
+    unit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {number}
@@ -54,19 +54,19 @@ export interface PatchedPropertyType {
      * @type {string}
      * @memberof PatchedPropertyType
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedPropertyType
      */
-    fdcId?: number;
+    fdcId?: number | null;
 }
 
 /**
  * Check if a given object implements the PatchedPropertyType interface.
  */
-export function instanceOfPatchedPropertyType(value: object): boolean {
+export function instanceOfPatchedPropertyType(value: object): value is PatchedPropertyType {
     return true;
 }
 

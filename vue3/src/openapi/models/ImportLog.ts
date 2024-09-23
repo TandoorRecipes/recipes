@@ -85,11 +85,11 @@ export interface ImportLog {
 /**
  * Check if a given object implements the ImportLog interface.
  */
-export function instanceOfImportLog(value: object): boolean {
-    if (!('type' in value)) return false;
-    if (!('keyword' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfImportLog(value: object): value is ImportLog {
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('keyword' in value) || value['keyword'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -115,7 +115,7 @@ export function ImportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ImportLogToJSON(value?: ImportLog | null): any {
+export function ImportLogToJSON(value?: Omit<ImportLog, 'keyword'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

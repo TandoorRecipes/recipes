@@ -60,11 +60,11 @@ export interface AccessToken {
 /**
  * Check if a given object implements the AccessToken interface.
  */
-export function instanceOfAccessToken(value: object): boolean {
-    if (!('token' in value)) return false;
-    if (!('expires' in value)) return false;
-    if (!('created' in value)) return false;
-    if (!('updated' in value)) return false;
+export function instanceOfAccessToken(value: object): value is AccessToken {
+    if (!('token' in value) || value['token'] === undefined) return false;
+    if (!('expires' in value) || value['expires'] === undefined) return false;
+    if (!('created' in value) || value['created'] === undefined) return false;
+    if (!('updated' in value) || value['updated'] === undefined) return false;
     return true;
 }
 
@@ -87,7 +87,7 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function AccessTokenToJSON(value?: AccessToken | null): any {
+export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null): any {
     if (value == null) {
         return value;
     }

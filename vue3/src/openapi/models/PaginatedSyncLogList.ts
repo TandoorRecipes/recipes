@@ -37,13 +37,13 @@ export interface PaginatedSyncLogList {
      * @type {string}
      * @memberof PaginatedSyncLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSyncLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<SyncLog>}
@@ -55,9 +55,9 @@ export interface PaginatedSyncLogList {
 /**
  * Check if a given object implements the PaginatedSyncLogList interface.
  */
-export function instanceOfPaginatedSyncLogList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedSyncLogList(value: object): value is PaginatedSyncLogList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

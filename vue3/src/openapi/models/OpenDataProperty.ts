@@ -95,7 +95,7 @@ export interface OpenDataProperty {
      * @type {number}
      * @memberof OpenDataProperty
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {string}
@@ -113,11 +113,11 @@ export interface OpenDataProperty {
 /**
  * Check if a given object implements the OpenDataProperty interface.
  */
-export function instanceOfOpenDataProperty(value: object): boolean {
-    if (!('version' in value)) return false;
-    if (!('slug' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfOpenDataProperty(value: object): value is OpenDataProperty {
+    if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -142,7 +142,7 @@ export function OpenDataPropertyFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function OpenDataPropertyToJSON(value?: OpenDataProperty | null): any {
+export function OpenDataPropertyToJSON(value?: Omit<OpenDataProperty, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

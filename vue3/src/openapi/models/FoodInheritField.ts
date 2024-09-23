@@ -64,19 +64,19 @@ export interface FoodInheritField {
      * @type {string}
      * @memberof FoodInheritField
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FoodInheritField
      */
-    field?: string;
+    field?: string | null;
 }
 
 /**
  * Check if a given object implements the FoodInheritField interface.
  */
-export function instanceOfFoodInheritField(value: object): boolean {
+export function instanceOfFoodInheritField(value: object): value is FoodInheritField {
     return true;
 }
 

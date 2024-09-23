@@ -37,13 +37,13 @@ export interface PaginatedStepList {
      * @type {string}
      * @memberof PaginatedStepList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedStepList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Step>}
@@ -55,9 +55,9 @@ export interface PaginatedStepList {
 /**
  * Check if a given object implements the PaginatedStepList interface.
  */
-export function instanceOfPaginatedStepList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedStepList(value: object): value is PaginatedStepList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

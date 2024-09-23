@@ -37,13 +37,13 @@ export interface PaginatedUserSpaceList {
      * @type {string}
      * @memberof PaginatedUserSpaceList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUserSpaceList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<UserSpace>}
@@ -55,9 +55,9 @@ export interface PaginatedUserSpaceList {
 /**
  * Check if a given object implements the PaginatedUserSpaceList interface.
  */
-export function instanceOfPaginatedUserSpaceList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedUserSpaceList(value: object): value is PaginatedUserSpaceList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

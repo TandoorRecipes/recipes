@@ -13,12 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { OpenDataCategory } from './OpenDataCategory';
-import {
-    OpenDataCategoryFromJSON,
-    OpenDataCategoryFromJSONTyped,
-    OpenDataCategoryToJSON,
-} from './OpenDataCategory';
 import type { OpenDataFoodProperty } from './OpenDataFoodProperty';
 import {
     OpenDataFoodPropertyFromJSON,
@@ -31,6 +25,12 @@ import {
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
 } from './OpenDataUnit';
+import type { OpenDataCategory } from './OpenDataCategory';
+import {
+    OpenDataCategoryFromJSON,
+    OpenDataCategoryFromJSONTyped,
+    OpenDataCategoryToJSON,
+} from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
@@ -119,31 +119,31 @@ export interface PatchedOpenDataFood {
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit;
+    preferredUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit;
+    preferredShoppingUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit;
+    preferredUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof PatchedOpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit;
+    preferredShoppingUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
      * @memberof PatchedOpenDataFood
      */
-    properties?: Array<OpenDataFoodProperty>;
+    properties?: Array<OpenDataFoodProperty> | null;
     /**
      * 
      * @type {number}
@@ -185,7 +185,7 @@ export interface PatchedOpenDataFood {
 /**
  * Check if a given object implements the PatchedOpenDataFood interface.
  */
-export function instanceOfPatchedOpenDataFood(value: object): boolean {
+export function instanceOfPatchedOpenDataFood(value: object): value is PatchedOpenDataFood {
     return true;
 }
 
@@ -219,7 +219,7 @@ export function PatchedOpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataFoodToJSON(value?: PatchedOpenDataFood | null): any {
+export function PatchedOpenDataFoodToJSON(value?: Omit<PatchedOpenDataFood, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

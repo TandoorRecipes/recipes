@@ -13,12 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { OpenDataCategory } from './OpenDataCategory';
-import {
-    OpenDataCategoryFromJSON,
-    OpenDataCategoryFromJSONTyped,
-    OpenDataCategoryToJSON,
-} from './OpenDataCategory';
 import type { OpenDataFoodProperty } from './OpenDataFoodProperty';
 import {
     OpenDataFoodPropertyFromJSON,
@@ -31,6 +25,12 @@ import {
     OpenDataUnitFromJSONTyped,
     OpenDataUnitToJSON,
 } from './OpenDataUnit';
+import type { OpenDataCategory } from './OpenDataCategory';
+import {
+    OpenDataCategoryFromJSON,
+    OpenDataCategoryFromJSONTyped,
+    OpenDataCategoryToJSON,
+} from './OpenDataCategory';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
@@ -119,25 +119,25 @@ export interface OpenDataFood {
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitMetric?: OpenDataUnit;
+    preferredUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitMetric?: OpenDataUnit;
+    preferredShoppingUnitMetric?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredUnitImperial?: OpenDataUnit;
+    preferredUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {OpenDataUnit}
      * @memberof OpenDataFood
      */
-    preferredShoppingUnitImperial?: OpenDataUnit;
+    preferredShoppingUnitImperial?: OpenDataUnit | null;
     /**
      * 
      * @type {Array<OpenDataFoodProperty>}
@@ -185,16 +185,16 @@ export interface OpenDataFood {
 /**
  * Check if a given object implements the OpenDataFood interface.
  */
-export function instanceOfOpenDataFood(value: object): boolean {
-    if (!('version' in value)) return false;
-    if (!('slug' in value)) return false;
-    if (!('name' in value)) return false;
-    if (!('pluralName' in value)) return false;
-    if (!('storeCategory' in value)) return false;
-    if (!('properties' in value)) return false;
-    if (!('propertiesFoodUnit' in value)) return false;
-    if (!('fdcId' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfOpenDataFood(value: object): value is OpenDataFood {
+    if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('slug' in value) || value['slug'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('pluralName' in value) || value['pluralName'] === undefined) return false;
+    if (!('storeCategory' in value) || value['storeCategory'] === undefined) return false;
+    if (!('properties' in value) || value['properties'] === undefined) return false;
+    if (!('propertiesFoodUnit' in value) || value['propertiesFoodUnit'] === undefined) return false;
+    if (!('fdcId' in value) || value['fdcId'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -228,7 +228,7 @@ export function OpenDataFoodFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OpenDataFoodToJSON(value?: OpenDataFood | null): any {
+export function OpenDataFoodToJSON(value?: Omit<OpenDataFood, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

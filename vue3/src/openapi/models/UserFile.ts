@@ -79,14 +79,14 @@ export interface UserFile {
 /**
  * Check if a given object implements the UserFile interface.
  */
-export function instanceOfUserFile(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('file' in value)) return false;
-    if (!('fileDownload' in value)) return false;
-    if (!('preview' in value)) return false;
-    if (!('fileSizeKb' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfUserFile(value: object): value is UserFile {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('file' in value) || value['file'] === undefined) return false;
+    if (!('fileDownload' in value) || value['fileDownload'] === undefined) return false;
+    if (!('preview' in value) || value['preview'] === undefined) return false;
+    if (!('fileSizeKb' in value) || value['fileSizeKb'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -111,7 +111,7 @@ export function UserFileFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function UserFileToJSON(value?: UserFile | null): any {
+export function UserFileToJSON(value?: Omit<UserFile, 'file_download'|'preview'|'file_size_kb'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

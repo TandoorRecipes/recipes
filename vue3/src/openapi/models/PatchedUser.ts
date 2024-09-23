@@ -54,7 +54,7 @@ export interface PatchedUser {
 /**
  * Check if a given object implements the PatchedUser interface.
  */
-export function instanceOfPatchedUser(value: object): boolean {
+export function instanceOfPatchedUser(value: object): value is PatchedUser {
     return true;
 }
 
@@ -76,7 +76,7 @@ export function PatchedUserFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedUserToJSON(value?: PatchedUser | null): any {
+export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'display_name'> | null): any {
     if (value == null) {
         return value;
     }

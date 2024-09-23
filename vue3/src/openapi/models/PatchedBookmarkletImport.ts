@@ -30,7 +30,7 @@ export interface PatchedBookmarkletImport {
      * @type {string}
      * @memberof PatchedBookmarkletImport
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
@@ -54,7 +54,7 @@ export interface PatchedBookmarkletImport {
 /**
  * Check if a given object implements the PatchedBookmarkletImport interface.
  */
-export function instanceOfPatchedBookmarkletImport(value: object): boolean {
+export function instanceOfPatchedBookmarkletImport(value: object): value is PatchedBookmarkletImport {
     return true;
 }
 
@@ -76,7 +76,7 @@ export function PatchedBookmarkletImportFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedBookmarkletImportToJSON(value?: PatchedBookmarkletImport | null): any {
+export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletImport, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -37,13 +37,13 @@ export interface PaginatedCustomFilterList {
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<CustomFilter>}
@@ -55,9 +55,9 @@ export interface PaginatedCustomFilterList {
 /**
  * Check if a given object implements the PaginatedCustomFilterList interface.
  */
-export function instanceOfPaginatedCustomFilterList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedCustomFilterList(value: object): value is PaginatedCustomFilterList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

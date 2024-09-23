@@ -43,19 +43,19 @@ export interface PatchedCookLog {
      * @type {number}
      * @memberof PatchedCookLog
      */
-    servings?: number;
+    servings?: number | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedCookLog
      */
-    rating?: number;
+    rating?: number | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedCookLog
      */
-    comment?: string;
+    comment?: string | null;
     /**
      * 
      * @type {User}
@@ -79,7 +79,7 @@ export interface PatchedCookLog {
 /**
  * Check if a given object implements the PatchedCookLog interface.
  */
-export function instanceOfPatchedCookLog(value: object): boolean {
+export function instanceOfPatchedCookLog(value: object): value is PatchedCookLog {
     return true;
 }
 
@@ -104,7 +104,7 @@ export function PatchedCookLogFromJSONTyped(json: any, ignoreDiscriminator: bool
     };
 }
 
-export function PatchedCookLogToJSON(value?: PatchedCookLog | null): any {
+export function PatchedCookLogToJSON(value?: Omit<PatchedCookLog, 'created_by'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

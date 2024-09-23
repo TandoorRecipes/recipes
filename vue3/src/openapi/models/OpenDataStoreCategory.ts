@@ -55,9 +55,9 @@ export interface OpenDataStoreCategory {
 /**
  * Check if a given object implements the OpenDataStoreCategory interface.
  */
-export function instanceOfOpenDataStoreCategory(value: object): boolean {
-    if (!('category' in value)) return false;
-    if (!('store' in value)) return false;
+export function instanceOfOpenDataStoreCategory(value: object): value is OpenDataStoreCategory {
+    if (!('category' in value) || value['category'] === undefined) return false;
+    if (!('store' in value) || value['store'] === undefined) return false;
     return true;
 }
 

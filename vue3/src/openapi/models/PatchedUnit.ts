@@ -70,31 +70,31 @@ export interface PatchedUnit {
      * @type {string}
      * @memberof PatchedUnit
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    baseUnit?: string;
+    baseUnit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedUnit
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the PatchedUnit interface.
  */
-export function instanceOfPatchedUnit(value: object): boolean {
+export function instanceOfPatchedUnit(value: object): value is PatchedUnit {
     return true;
 }
 

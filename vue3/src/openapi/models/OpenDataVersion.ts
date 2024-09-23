@@ -82,9 +82,9 @@ export interface OpenDataVersion {
 /**
  * Check if a given object implements the OpenDataVersion interface.
  */
-export function instanceOfOpenDataVersion(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('code' in value)) return false;
+export function instanceOfOpenDataVersion(value: object): value is OpenDataVersion {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('code' in value) || value['code'] === undefined) return false;
     return true;
 }
 

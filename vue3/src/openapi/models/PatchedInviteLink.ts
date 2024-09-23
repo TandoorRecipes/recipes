@@ -61,7 +61,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    usedBy?: number;
+    usedBy?: number | null;
     /**
      * 
      * @type {boolean}
@@ -73,7 +73,7 @@ export interface PatchedInviteLink {
      * @type {string}
      * @memberof PatchedInviteLink
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -91,7 +91,7 @@ export interface PatchedInviteLink {
 /**
  * Check if a given object implements the PatchedInviteLink interface.
  */
-export function instanceOfPatchedInviteLink(value: object): boolean {
+export function instanceOfPatchedInviteLink(value: object): value is PatchedInviteLink {
     return true;
 }
 
@@ -118,7 +118,7 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: PatchedInviteLink | null): any {
+export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

@@ -36,8 +36,8 @@ export interface KeywordLabel {
 /**
  * Check if a given object implements the KeywordLabel interface.
  */
-export function instanceOfKeywordLabel(value: object): boolean {
-    if (!('label' in value)) return false;
+export function instanceOfKeywordLabel(value: object): value is KeywordLabel {
+    if (!('label' in value) || value['label'] === undefined) return false;
     return true;
 }
 
@@ -56,7 +56,7 @@ export function KeywordLabelFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function KeywordLabelToJSON(value?: KeywordLabel | null): any {
+export function KeywordLabelToJSON(value?: Omit<KeywordLabel, 'label'> | null): any {
     if (value == null) {
         return value;
     }

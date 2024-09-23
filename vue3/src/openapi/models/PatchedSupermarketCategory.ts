@@ -70,13 +70,13 @@ export interface PatchedSupermarketCategory {
      * @type {string}
      * @memberof PatchedSupermarketCategory
      */
-    description?: string;
+    description?: string | null;
 }
 
 /**
  * Check if a given object implements the PatchedSupermarketCategory interface.
  */
-export function instanceOfPatchedSupermarketCategory(value: object): boolean {
+export function instanceOfPatchedSupermarketCategory(value: object): value is PatchedSupermarketCategory {
     return true;
 }
 

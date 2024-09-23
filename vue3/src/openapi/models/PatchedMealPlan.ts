@@ -19,18 +19,18 @@ import {
     MealTypeFromJSONTyped,
     MealTypeToJSON,
 } from './MealType';
-import type { RecipeOverview } from './RecipeOverview';
-import {
-    RecipeOverviewFromJSON,
-    RecipeOverviewFromJSONTyped,
-    RecipeOverviewToJSON,
-} from './RecipeOverview';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
 } from './User';
+import type { RecipeOverview } from './RecipeOverview';
+import {
+    RecipeOverviewFromJSON,
+    RecipeOverviewFromJSONTyped,
+    RecipeOverviewToJSON,
+} from './RecipeOverview';
 
 /**
  * Adds nested create feature
@@ -55,7 +55,7 @@ export interface PatchedMealPlan {
      * @type {RecipeOverview}
      * @memberof PatchedMealPlan
      */
-    recipe?: RecipeOverview;
+    recipe?: RecipeOverview | null;
     /**
      * 
      * @type {number}
@@ -103,7 +103,7 @@ export interface PatchedMealPlan {
      * @type {Array<User>}
      * @memberof PatchedMealPlan
      */
-    shared?: Array<User>;
+    shared?: Array<User> | null;
     /**
      * 
      * @type {string}
@@ -127,7 +127,7 @@ export interface PatchedMealPlan {
 /**
  * Check if a given object implements the PatchedMealPlan interface.
  */
-export function instanceOfPatchedMealPlan(value: object): boolean {
+export function instanceOfPatchedMealPlan(value: object): value is PatchedMealPlan {
     return true;
 }
 
@@ -158,7 +158,7 @@ export function PatchedMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedMealPlanToJSON(value?: PatchedMealPlan | null): any {
+export function PatchedMealPlanToJSON(value?: Omit<PatchedMealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null): any {
     if (value == null) {
         return value;
     }

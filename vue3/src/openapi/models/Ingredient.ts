@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
-import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -67,7 +67,7 @@ export interface Ingredient {
      * @type {string}
      * @memberof Ingredient
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -91,7 +91,7 @@ export interface Ingredient {
      * @type {string}
      * @memberof Ingredient
      */
-    originalText?: string;
+    originalText?: string | null;
     /**
      * 
      * @type {Array<any>}
@@ -115,12 +115,12 @@ export interface Ingredient {
 /**
  * Check if a given object implements the Ingredient interface.
  */
-export function instanceOfIngredient(value: object): boolean {
-    if (!('food' in value)) return false;
-    if (!('unit' in value)) return false;
-    if (!('amount' in value)) return false;
-    if (!('conversions' in value)) return false;
-    if (!('usedInRecipes' in value)) return false;
+export function instanceOfIngredient(value: object): value is Ingredient {
+    if (!('food' in value) || value['food'] === undefined) return false;
+    if (!('unit' in value) || value['unit'] === undefined) return false;
+    if (!('amount' in value) || value['amount'] === undefined) return false;
+    if (!('conversions' in value) || value['conversions'] === undefined) return false;
+    if (!('usedInRecipes' in value) || value['usedInRecipes'] === undefined) return false;
     return true;
 }
 
@@ -150,7 +150,7 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function IngredientToJSON(value?: Ingredient | null): any {
+export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'used_in_recipes'> | null): any {
     if (value == null) {
         return value;
     }

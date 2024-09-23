@@ -42,10 +42,10 @@ export interface AuthToken {
 /**
  * Check if a given object implements the AuthToken interface.
  */
-export function instanceOfAuthToken(value: object): boolean {
-    if (!('username' in value)) return false;
-    if (!('password' in value)) return false;
-    if (!('token' in value)) return false;
+export function instanceOfAuthToken(value: object): value is AuthToken {
+    if (!('username' in value) || value['username'] === undefined) return false;
+    if (!('password' in value) || value['password'] === undefined) return false;
+    if (!('token' in value) || value['token'] === undefined) return false;
     return true;
 }
 
@@ -65,7 +65,7 @@ export function AuthTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function AuthTokenToJSON(value?: AuthToken | null): any {
+export function AuthTokenToJSON(value?: Omit<AuthToken, 'token'> | null): any {
     if (value == null) {
         return value;
     }

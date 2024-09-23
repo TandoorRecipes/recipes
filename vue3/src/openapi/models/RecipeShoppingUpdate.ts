@@ -30,25 +30,25 @@ export interface RecipeShoppingUpdate {
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    listRecipe?: number;
+    listRecipe?: number | null;
     /**
      * List of ingredient IDs from the recipe to add, if not provided all ingredients will be added.
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    ingredients?: number;
+    ingredients?: number | null;
     /**
      * Providing a list_recipe ID and servings of 0 will delete that shopping list.
      * @type {number}
      * @memberof RecipeShoppingUpdate
      */
-    servings?: number;
+    servings?: number | null;
 }
 
 /**
  * Check if a given object implements the RecipeShoppingUpdate interface.
  */
-export function instanceOfRecipeShoppingUpdate(value: object): boolean {
+export function instanceOfRecipeShoppingUpdate(value: object): value is RecipeShoppingUpdate {
     return true;
 }
 

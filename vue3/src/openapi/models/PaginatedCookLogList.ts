@@ -37,13 +37,13 @@ export interface PaginatedCookLogList {
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCookLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<CookLog>}
@@ -55,9 +55,9 @@ export interface PaginatedCookLogList {
 /**
  * Check if a given object implements the PaginatedCookLogList interface.
  */
-export function instanceOfPaginatedCookLogList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedCookLogList(value: object): value is PaginatedCookLogList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

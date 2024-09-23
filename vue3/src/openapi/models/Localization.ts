@@ -36,9 +36,9 @@ export interface Localization {
 /**
  * Check if a given object implements the Localization interface.
  */
-export function instanceOfLocalization(value: object): boolean {
-    if (!('code' in value)) return false;
-    if (!('language' in value)) return false;
+export function instanceOfLocalization(value: object): value is Localization {
+    if (!('code' in value) || value['code'] === undefined) return false;
+    if (!('language' in value) || value['language'] === undefined) return false;
     return true;
 }
 
@@ -57,7 +57,7 @@ export function LocalizationFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function LocalizationToJSON(value?: Localization | null): any {
+export function LocalizationToJSON(value?: Omit<Localization, 'code'|'language'> | null): any {
     if (value == null) {
         return value;
     }

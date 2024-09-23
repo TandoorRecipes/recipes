@@ -13,24 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { FoodInheritField } from './FoodInheritField';
-import {
-    FoodInheritFieldFromJSON,
-    FoodInheritFieldFromJSONTyped,
-    FoodInheritFieldToJSON,
-} from './FoodInheritField';
-import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
-import {
-    SpaceNavTextColorEnumFromJSON,
-    SpaceNavTextColorEnumFromJSONTyped,
-    SpaceNavTextColorEnumToJSON,
-} from './SpaceNavTextColorEnum';
-import type { SpaceThemeEnum } from './SpaceThemeEnum';
-import {
-    SpaceThemeEnumFromJSON,
-    SpaceThemeEnumFromJSONTyped,
-    SpaceThemeEnumToJSON,
-} from './SpaceThemeEnum';
 import type { User } from './User';
 import {
     UserFromJSON,
@@ -43,6 +25,24 @@ import {
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
+import type { SpaceNavTextColorEnum } from './SpaceNavTextColorEnum';
+import {
+    SpaceNavTextColorEnumFromJSON,
+    SpaceNavTextColorEnumFromJSONTyped,
+    SpaceNavTextColorEnumToJSON,
+} from './SpaceNavTextColorEnum';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
+import type { SpaceThemeEnum } from './SpaceThemeEnum';
+import {
+    SpaceThemeEnumFromJSON,
+    SpaceThemeEnumFromJSONTyped,
+    SpaceThemeEnumToJSON,
+} from './SpaceThemeEnum';
 
 /**
  * Adds nested create feature
@@ -139,13 +139,13 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    image?: UserFileView;
+    image?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    navLogo?: UserFileView;
+    navLogo?: UserFileView | null;
     /**
      * 
      * @type {SpaceThemeEnum}
@@ -157,7 +157,7 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    customSpaceTheme?: UserFileView;
+    customSpaceTheme?: UserFileView | null;
     /**
      * 
      * @type {string}
@@ -175,49 +175,51 @@ export interface PatchedSpace {
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor32?: UserFileView;
+    logoColor32?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor128?: UserFileView;
+    logoColor128?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor144?: UserFileView;
+    logoColor144?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor180?: UserFileView;
+    logoColor180?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor192?: UserFileView;
+    logoColor192?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColor512?: UserFileView;
+    logoColor512?: UserFileView | null;
     /**
      * 
      * @type {UserFileView}
      * @memberof PatchedSpace
      */
-    logoColorSvg?: UserFileView;
+    logoColorSvg?: UserFileView | null;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedSpace interface.
  */
-export function instanceOfPatchedSpace(value: object): boolean {
+export function instanceOfPatchedSpace(value: object): value is PatchedSpace {
     return true;
 }
 
@@ -261,7 +263,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function PatchedSpaceToJSON(value?: PatchedSpace | null): any {
+export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'> | null): any {
     if (value == null) {
         return value;
     }

@@ -13,12 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
+import type { User } from './User';
 import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
@@ -31,12 +31,12 @@ import {
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
-import type { User } from './User';
+import type { Food } from './Food';
 import {
-    UserFromJSON,
-    UserFromJSONTyped,
-    UserToJSON,
-} from './User';
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -55,19 +55,19 @@ export interface PatchedShoppingListEntry {
      * @type {number}
      * @memberof PatchedShoppingListEntry
      */
-    listRecipe?: number;
+    listRecipe?: number | null;
     /**
      * 
      * @type {Food}
      * @memberof PatchedShoppingListEntry
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {Unit}
      * @memberof PatchedShoppingListEntry
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}
@@ -115,19 +115,19 @@ export interface PatchedShoppingListEntry {
      * @type {Date}
      * @memberof PatchedShoppingListEntry
      */
-    completedAt?: Date;
+    completedAt?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof PatchedShoppingListEntry
      */
-    delayUntil?: Date;
+    delayUntil?: Date | null;
 }
 
 /**
  * Check if a given object implements the PatchedShoppingListEntry interface.
  */
-export function instanceOfPatchedShoppingListEntry(value: object): boolean {
+export function instanceOfPatchedShoppingListEntry(value: object): value is PatchedShoppingListEntry {
     return true;
 }
 
@@ -157,7 +157,7 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PatchedShoppingListEntryToJSON(value?: PatchedShoppingListEntry | null): any {
+export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

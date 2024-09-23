@@ -42,13 +42,13 @@ export interface MealType {
      * @type {string}
      * @memberof MealType
      */
-    time?: string;
+    time?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MealType
      */
-    color?: string;
+    color?: string | null;
     /**
      * 
      * @type {boolean}
@@ -66,9 +66,9 @@ export interface MealType {
 /**
  * Check if a given object implements the MealType interface.
  */
-export function instanceOfMealType(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfMealType(value: object): value is MealType {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -92,7 +92,7 @@ export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealTypeToJSON(value?: MealType | null): any {
+export function MealTypeToJSON(value?: Omit<MealType, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

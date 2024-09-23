@@ -42,10 +42,10 @@ export interface ShareLink {
 /**
  * Check if a given object implements the ShareLink interface.
  */
-export function instanceOfShareLink(value: object): boolean {
-    if (!('pk' in value)) return false;
-    if (!('share' in value)) return false;
-    if (!('link' in value)) return false;
+export function instanceOfShareLink(value: object): value is ShareLink {
+    if (!('pk' in value) || value['pk'] === undefined) return false;
+    if (!('share' in value) || value['share'] === undefined) return false;
+    if (!('link' in value) || value['link'] === undefined) return false;
     return true;
 }
 

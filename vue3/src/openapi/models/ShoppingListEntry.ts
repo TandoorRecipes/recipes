@@ -13,12 +13,12 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
+import type { User } from './User';
 import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
+} from './User';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
@@ -31,12 +31,12 @@ import {
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
-import type { User } from './User';
+import type { Food } from './Food';
 import {
-    UserFromJSON,
-    UserFromJSONTyped,
-    UserToJSON,
-} from './User';
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -55,7 +55,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    listRecipe?: number;
+    listRecipe?: number | null;
     /**
      * 
      * @type {Food}
@@ -67,7 +67,7 @@ export interface ShoppingListEntry {
      * @type {Unit}
      * @memberof ShoppingListEntry
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}
@@ -115,25 +115,25 @@ export interface ShoppingListEntry {
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    completedAt?: Date;
+    completedAt?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    delayUntil?: Date;
+    delayUntil?: Date | null;
 }
 
 /**
  * Check if a given object implements the ShoppingListEntry interface.
  */
-export function instanceOfShoppingListEntry(value: object): boolean {
-    if (!('food' in value)) return false;
-    if (!('amount' in value)) return false;
-    if (!('recipeMealplan' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
+export function instanceOfShoppingListEntry(value: object): value is ShoppingListEntry {
+    if (!('food' in value) || value['food'] === undefined) return false;
+    if (!('amount' in value) || value['amount'] === undefined) return false;
+    if (!('recipeMealplan' in value) || value['recipeMealplan'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
 }
 
@@ -163,7 +163,7 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function ShoppingListEntryToJSON(value?: ShoppingListEntry | null): any {
+export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'recipe_mealplan'|'created_by'|'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

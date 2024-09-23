@@ -61,7 +61,7 @@ export interface AutoMealPlan {
      * @type {Array<User>}
      * @memberof AutoMealPlan
      */
-    shared?: Array<User>;
+    shared?: Array<User> | null;
     /**
      * 
      * @type {boolean}
@@ -73,13 +73,13 @@ export interface AutoMealPlan {
 /**
  * Check if a given object implements the AutoMealPlan interface.
  */
-export function instanceOfAutoMealPlan(value: object): boolean {
-    if (!('startDate' in value)) return false;
-    if (!('endDate' in value)) return false;
-    if (!('mealTypeId' in value)) return false;
-    if (!('keywordIds' in value)) return false;
-    if (!('servings' in value)) return false;
-    if (!('addshopping' in value)) return false;
+export function instanceOfAutoMealPlan(value: object): value is AutoMealPlan {
+    if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    if (!('endDate' in value) || value['endDate'] === undefined) return false;
+    if (!('mealTypeId' in value) || value['mealTypeId'] === undefined) return false;
+    if (!('keywordIds' in value) || value['keywordIds'] === undefined) return false;
+    if (!('servings' in value) || value['servings'] === undefined) return false;
+    if (!('addshopping' in value) || value['addshopping'] === undefined) return false;
     return true;
 }
 

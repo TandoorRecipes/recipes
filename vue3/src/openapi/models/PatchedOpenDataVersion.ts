@@ -82,7 +82,7 @@ export interface PatchedOpenDataVersion {
 /**
  * Check if a given object implements the PatchedOpenDataVersion interface.
  */
-export function instanceOfPatchedOpenDataVersion(value: object): boolean {
+export function instanceOfPatchedOpenDataVersion(value: object): value is PatchedOpenDataVersion {
     return true;
 }
 

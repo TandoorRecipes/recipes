@@ -37,13 +37,13 @@ export interface PaginatedRecipeOverviewList {
      * @type {string}
      * @memberof PaginatedRecipeOverviewList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedRecipeOverviewList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<RecipeOverview>}
@@ -55,9 +55,9 @@ export interface PaginatedRecipeOverviewList {
 /**
  * Check if a given object implements the PaginatedRecipeOverviewList interface.
  */
-export function instanceOfPaginatedRecipeOverviewList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedRecipeOverviewList(value: object): value is PaginatedRecipeOverviewList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

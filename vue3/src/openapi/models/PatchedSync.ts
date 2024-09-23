@@ -48,7 +48,7 @@ export interface PatchedSync {
      * @type {Date}
      * @memberof PatchedSync
      */
-    lastChecked?: Date;
+    lastChecked?: Date | null;
     /**
      * 
      * @type {Date}
@@ -66,7 +66,7 @@ export interface PatchedSync {
 /**
  * Check if a given object implements the PatchedSync interface.
  */
-export function instanceOfPatchedSync(value: object): boolean {
+export function instanceOfPatchedSync(value: object): value is PatchedSync {
     return true;
 }
 
@@ -90,7 +90,7 @@ export function PatchedSyncFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function PatchedSyncToJSON(value?: PatchedSync | null): any {
+export function PatchedSyncToJSON(value?: Omit<PatchedSync, 'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

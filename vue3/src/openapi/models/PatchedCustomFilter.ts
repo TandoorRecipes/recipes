@@ -61,7 +61,7 @@ export interface PatchedCustomFilter {
 /**
  * Check if a given object implements the PatchedCustomFilter interface.
  */
-export function instanceOfPatchedCustomFilter(value: object): boolean {
+export function instanceOfPatchedCustomFilter(value: object): value is PatchedCustomFilter {
     return true;
 }
 
@@ -83,7 +83,7 @@ export function PatchedCustomFilterFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedCustomFilterToJSON(value?: PatchedCustomFilter | null): any {
+export function PatchedCustomFilterToJSON(value?: Omit<PatchedCustomFilter, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

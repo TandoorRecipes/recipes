@@ -36,14 +36,14 @@ export interface FoodSimple {
      * @type {string}
      * @memberof FoodSimple
      */
-    pluralName?: string;
+    pluralName?: string | null;
 }
 
 /**
  * Check if a given object implements the FoodSimple interface.
  */
-export function instanceOfFoodSimple(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfFoodSimple(value: object): value is FoodSimple {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

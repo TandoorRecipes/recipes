@@ -84,10 +84,10 @@ export interface ExportLog {
 /**
  * Check if a given object implements the ExportLog interface.
  */
-export function instanceOfExportLog(value: object): boolean {
-    if (!('type' in value)) return false;
-    if (!('createdBy' in value)) return false;
-    if (!('createdAt' in value)) return false;
+export function instanceOfExportLog(value: object): value is ExportLog {
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
 
@@ -114,7 +114,7 @@ export function ExportLogFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function ExportLogToJSON(value?: ExportLog | null): any {
+export function ExportLogToJSON(value?: Omit<ExportLog, 'created_by'|'created_at'> | null): any {
     if (value == null) {
         return value;
     }

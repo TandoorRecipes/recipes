@@ -49,19 +49,19 @@ export interface Storage {
      * @type {string}
      * @memberof Storage
      */
-    username?: string;
+    username?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    password?: string;
+    password?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Storage
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {number}
@@ -70,12 +70,14 @@ export interface Storage {
     readonly createdBy: number;
 }
 
+
+
 /**
  * Check if a given object implements the Storage interface.
  */
-export function instanceOfStorage(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfStorage(value: object): value is Storage {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -99,7 +101,7 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function StorageToJSON(value?: Storage | null): any {
+export function StorageToJSON(value?: Omit<Storage, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

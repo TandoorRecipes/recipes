@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Food } from './Food';
-import {
-    FoodFromJSON,
-    FoodFromJSONTyped,
-    FoodToJSON,
-} from './Food';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
+import type { Food } from './Food';
+import {
+    FoodFromJSON,
+    FoodFromJSONTyped,
+    FoodToJSON,
+} from './Food';
 
 /**
  * Adds nested create feature
@@ -43,13 +43,13 @@ export interface PatchedIngredient {
      * @type {Food}
      * @memberof PatchedIngredient
      */
-    food?: Food;
+    food?: Food | null;
     /**
      * 
      * @type {Unit}
      * @memberof PatchedIngredient
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}
@@ -67,7 +67,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    note?: string;
+    note?: string | null;
     /**
      * 
      * @type {number}
@@ -91,7 +91,7 @@ export interface PatchedIngredient {
      * @type {string}
      * @memberof PatchedIngredient
      */
-    originalText?: string;
+    originalText?: string | null;
     /**
      * 
      * @type {Array<any>}
@@ -115,7 +115,7 @@ export interface PatchedIngredient {
 /**
  * Check if a given object implements the PatchedIngredient interface.
  */
-export function instanceOfPatchedIngredient(value: object): boolean {
+export function instanceOfPatchedIngredient(value: object): value is PatchedIngredient {
     return true;
 }
 
@@ -145,7 +145,7 @@ export function PatchedIngredientFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PatchedIngredientToJSON(value?: PatchedIngredient | null): any {
+export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'conversions'|'used_in_recipes'> | null): any {
     if (value == null) {
         return value;
     }

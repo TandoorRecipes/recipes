@@ -13,18 +13,18 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Ingredient } from './Ingredient';
-import {
-    IngredientFromJSON,
-    IngredientFromJSONTyped,
-    IngredientToJSON,
-} from './Ingredient';
 import type { UserFileView } from './UserFileView';
 import {
     UserFileViewFromJSON,
     UserFileViewFromJSONTyped,
     UserFileViewToJSON,
 } from './UserFileView';
+import type { Ingredient } from './Ingredient';
+import {
+    IngredientFromJSON,
+    IngredientFromJSONTyped,
+    IngredientToJSON,
+} from './Ingredient';
 
 /**
  * Adds nested create feature
@@ -85,13 +85,13 @@ export interface Step {
      * @type {UserFileView}
      * @memberof Step
      */
-    file?: UserFileView;
+    file?: UserFileView | null;
     /**
      * 
      * @type {number}
      * @memberof Step
      */
-    stepRecipe?: number;
+    stepRecipe?: number | null;
     /**
      * 
      * @type {any}
@@ -115,11 +115,11 @@ export interface Step {
 /**
  * Check if a given object implements the Step interface.
  */
-export function instanceOfStep(value: object): boolean {
-    if (!('ingredients' in value)) return false;
-    if (!('instructionsMarkdown' in value)) return false;
-    if (!('stepRecipeData' in value)) return false;
-    if (!('numrecipe' in value)) return false;
+export function instanceOfStep(value: object): value is Step {
+    if (!('ingredients' in value) || value['ingredients'] === undefined) return false;
+    if (!('instructionsMarkdown' in value) || value['instructionsMarkdown'] === undefined) return false;
+    if (!('stepRecipeData' in value) || value['stepRecipeData'] === undefined) return false;
+    if (!('numrecipe' in value) || value['numrecipe'] === undefined) return false;
     return true;
 }
 
@@ -149,7 +149,7 @@ export function StepFromJSONTyped(json: any, ignoreDiscriminator: boolean): Step
     };
 }
 
-export function StepToJSON(value?: Step | null): any {
+export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'step_recipe_data'|'numrecipe'> | null): any {
     if (value == null) {
         return value;
     }

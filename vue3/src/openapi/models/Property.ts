@@ -83,9 +83,9 @@ export interface Property {
 /**
  * Check if a given object implements the Property interface.
  */
-export function instanceOfProperty(value: object): boolean {
-    if (!('propertyAmount' in value)) return false;
-    if (!('propertyType' in value)) return false;
+export function instanceOfProperty(value: object): value is Property {
+    if (!('propertyAmount' in value) || value['propertyAmount'] === undefined) return false;
+    if (!('propertyType' in value) || value['propertyType'] === undefined) return false;
     return true;
 }
 

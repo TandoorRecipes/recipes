@@ -37,13 +37,13 @@ export interface PaginatedPropertyList {
      * @type {string}
      * @memberof PaginatedPropertyList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedPropertyList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Property>}
@@ -55,9 +55,9 @@ export interface PaginatedPropertyList {
 /**
  * Check if a given object implements the PaginatedPropertyList interface.
  */
-export function instanceOfPaginatedPropertyList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedPropertyList(value: object): value is PaginatedPropertyList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

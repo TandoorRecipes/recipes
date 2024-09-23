@@ -54,17 +54,17 @@ export interface NutritionInformation {
      * @type {string}
      * @memberof NutritionInformation
      */
-    source?: string;
+    source?: string | null;
 }
 
 /**
  * Check if a given object implements the NutritionInformation interface.
  */
-export function instanceOfNutritionInformation(value: object): boolean {
-    if (!('carbohydrates' in value)) return false;
-    if (!('fats' in value)) return false;
-    if (!('proteins' in value)) return false;
-    if (!('calories' in value)) return false;
+export function instanceOfNutritionInformation(value: object): value is NutritionInformation {
+    if (!('carbohydrates' in value) || value['carbohydrates'] === undefined) return false;
+    if (!('fats' in value) || value['fats'] === undefined) return false;
+    if (!('proteins' in value) || value['proteins'] === undefined) return false;
+    if (!('calories' in value) || value['calories'] === undefined) return false;
     return true;
 }
 

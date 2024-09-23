@@ -37,13 +37,13 @@ export interface PaginatedInviteLinkList {
      * @type {string}
      * @memberof PaginatedInviteLinkList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedInviteLinkList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<InviteLink>}
@@ -55,9 +55,9 @@ export interface PaginatedInviteLinkList {
 /**
  * Check if a given object implements the PaginatedInviteLinkList interface.
  */
-export function instanceOfPaginatedInviteLinkList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedInviteLinkList(value: object): value is PaginatedInviteLinkList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

@@ -48,7 +48,7 @@ export interface Sync {
      * @type {Date}
      * @memberof Sync
      */
-    lastChecked?: Date;
+    lastChecked?: Date | null;
     /**
      * 
      * @type {Date}
@@ -66,10 +66,10 @@ export interface Sync {
 /**
  * Check if a given object implements the Sync interface.
  */
-export function instanceOfSync(value: object): boolean {
-    if (!('storage' in value)) return false;
-    if (!('createdAt' in value)) return false;
-    if (!('updatedAt' in value)) return false;
+export function instanceOfSync(value: object): value is Sync {
+    if (!('storage' in value) || value['storage'] === undefined) return false;
+    if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
+    if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     return true;
 }
 
@@ -93,7 +93,7 @@ export function SyncFromJSONTyped(json: any, ignoreDiscriminator: boolean): Sync
     };
 }
 
-export function SyncToJSON(value?: Sync | null): any {
+export function SyncToJSON(value?: Omit<Sync, 'created_at'|'updated_at'> | null): any {
     if (value == null) {
         return value;
     }

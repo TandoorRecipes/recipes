@@ -66,14 +66,14 @@ export interface ServerSettings {
 /**
  * Check if a given object implements the ServerSettings interface.
  */
-export function instanceOfServerSettings(value: object): boolean {
-    if (!('shoppingMinAutosyncInterval' in value)) return false;
-    if (!('enablePdfExport' in value)) return false;
-    if (!('disableExternalConnectors' in value)) return false;
-    if (!('termsUrl' in value)) return false;
-    if (!('privacyUrl' in value)) return false;
-    if (!('imprintUrl' in value)) return false;
-    if (!('hosted' in value)) return false;
+export function instanceOfServerSettings(value: object): value is ServerSettings {
+    if (!('shoppingMinAutosyncInterval' in value) || value['shoppingMinAutosyncInterval'] === undefined) return false;
+    if (!('enablePdfExport' in value) || value['enablePdfExport'] === undefined) return false;
+    if (!('disableExternalConnectors' in value) || value['disableExternalConnectors'] === undefined) return false;
+    if (!('termsUrl' in value) || value['termsUrl'] === undefined) return false;
+    if (!('privacyUrl' in value) || value['privacyUrl'] === undefined) return false;
+    if (!('imprintUrl' in value) || value['imprintUrl'] === undefined) return false;
+    if (!('hosted' in value) || value['hosted'] === undefined) return false;
     return true;
 }
 

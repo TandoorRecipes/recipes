@@ -37,13 +37,13 @@ export interface PaginatedMealTypeList {
      * @type {string}
      * @memberof PaginatedMealTypeList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedMealTypeList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<MealType>}
@@ -55,9 +55,9 @@ export interface PaginatedMealTypeList {
 /**
  * Check if a given object implements the PaginatedMealTypeList interface.
  */
-export function instanceOfPaginatedMealTypeList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedMealTypeList(value: object): value is PaginatedMealTypeList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

@@ -36,19 +36,19 @@ export interface ConnectorConfigConfig {
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof ConnectorConfigConfig
      */
-    todoEntity?: string;
+    todoEntity?: string | null;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -90,9 +90,9 @@ export interface ConnectorConfigConfig {
 /**
  * Check if a given object implements the ConnectorConfigConfig interface.
  */
-export function instanceOfConnectorConfigConfig(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('createdBy' in value)) return false;
+export function instanceOfConnectorConfigConfig(value: object): value is ConnectorConfigConfig {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     return true;
 }
 
@@ -120,7 +120,7 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function ConnectorConfigConfigToJSON(value?: ConnectorConfigConfig | null): any {
+export function ConnectorConfigConfigToJSON(value?: Omit<ConnectorConfigConfig, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

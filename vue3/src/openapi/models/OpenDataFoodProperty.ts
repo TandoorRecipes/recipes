@@ -49,9 +49,9 @@ export interface OpenDataFoodProperty {
 /**
  * Check if a given object implements the OpenDataFoodProperty interface.
  */
-export function instanceOfOpenDataFoodProperty(value: object): boolean {
-    if (!('property' in value)) return false;
-    if (!('propertyAmount' in value)) return false;
+export function instanceOfOpenDataFoodProperty(value: object): value is OpenDataFoodProperty {
+    if (!('property' in value) || value['property'] === undefined) return false;
+    if (!('propertyAmount' in value) || value['propertyAmount'] === undefined) return false;
     return true;
 }
 

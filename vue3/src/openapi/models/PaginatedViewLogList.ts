@@ -37,13 +37,13 @@ export interface PaginatedViewLogList {
      * @type {string}
      * @memberof PaginatedViewLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedViewLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ViewLog>}
@@ -55,9 +55,9 @@ export interface PaginatedViewLogList {
 /**
  * Check if a given object implements the PaginatedViewLogList interface.
  */
-export function instanceOfPaginatedViewLogList(value: object): boolean {
-    if (!('count' in value)) return false;
-    if (!('results' in value)) return false;
+export function instanceOfPaginatedViewLogList(value: object): value is PaginatedViewLogList {
+    if (!('count' in value) || value['count'] === undefined) return false;
+    if (!('results' in value) || value['results'] === undefined) return false;
     return true;
 }
 

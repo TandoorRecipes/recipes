@@ -36,19 +36,19 @@ export interface PatchedConnectorConfigConfig {
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfigConfig
      */
-    todoEntity?: string;
+    todoEntity?: string | null;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -90,7 +90,7 @@ export interface PatchedConnectorConfigConfig {
 /**
  * Check if a given object implements the PatchedConnectorConfigConfig interface.
  */
-export function instanceOfPatchedConnectorConfigConfig(value: object): boolean {
+export function instanceOfPatchedConnectorConfigConfig(value: object): value is PatchedConnectorConfigConfig {
     return true;
 }
 
@@ -118,7 +118,7 @@ export function PatchedConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PatchedConnectorConfigConfigToJSON(value?: PatchedConnectorConfigConfig | null): any {
+export function PatchedConnectorConfigConfigToJSON(value?: Omit<PatchedConnectorConfigConfig, 'created_by'> | null): any {
     if (value == null) {
         return value;
     }

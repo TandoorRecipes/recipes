@@ -77,7 +77,7 @@ export interface PatchedSupermarket {
      * @type {string}
      * @memberof PatchedSupermarket
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -89,13 +89,13 @@ export interface PatchedSupermarket {
      * @type {string}
      * @memberof PatchedSupermarket
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the PatchedSupermarket interface.
  */
-export function instanceOfPatchedSupermarket(value: object): boolean {
+export function instanceOfPatchedSupermarket(value: object): value is PatchedSupermarket {
     return true;
 }
 
@@ -117,7 +117,7 @@ export function PatchedSupermarketFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedSupermarketToJSON(value?: PatchedSupermarket | null): any {
+export function PatchedSupermarketToJSON(value?: Omit<PatchedSupermarket, 'category_to_supermarket'> | null): any {
     if (value == null) {
         return value;
     }

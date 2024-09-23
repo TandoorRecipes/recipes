@@ -33,6 +33,17 @@ export const ThemeEnum = {
 export type ThemeEnum = typeof ThemeEnum[keyof typeof ThemeEnum];
 
 
+export function instanceOfThemeEnum(value: any): boolean {
+    for (const key in ThemeEnum) {
+        if (Object.prototype.hasOwnProperty.call(ThemeEnum, key)) {
+            if (ThemeEnum[key as keyof typeof ThemeEnum] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export function ThemeEnumFromJSON(json: any): ThemeEnum {
     return ThemeEnumFromJSONTyped(json, false);
 }

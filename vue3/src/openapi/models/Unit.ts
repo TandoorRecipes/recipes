@@ -70,32 +70,32 @@ export interface Unit {
      * @type {string}
      * @memberof Unit
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    baseUnit?: string;
+    baseUnit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the Unit interface.
  */
-export function instanceOfUnit(value: object): boolean {
-    if (!('name' in value)) return false;
+export function instanceOfUnit(value: object): value is Unit {
+    if (!('name' in value) || value['name'] === undefined) return false;
     return true;
 }
 

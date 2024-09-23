@@ -13,30 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { FoodInheritField } from './FoodInheritField';
-import {
-    FoodInheritFieldFromJSON,
-    FoodInheritFieldFromJSONTyped,
-    FoodInheritFieldToJSON,
-} from './FoodInheritField';
-import type { FoodSimple } from './FoodSimple';
-import {
-    FoodSimpleFromJSON,
-    FoodSimpleFromJSONTyped,
-    FoodSimpleToJSON,
-} from './FoodSimple';
-import type { Property } from './Property';
-import {
-    PropertyFromJSON,
-    PropertyFromJSONTyped,
-    PropertyToJSON,
-} from './Property';
-import type { RecipeSimple } from './RecipeSimple';
-import {
-    RecipeSimpleFromJSON,
-    RecipeSimpleFromJSONTyped,
-    RecipeSimpleToJSON,
-} from './RecipeSimple';
 import type { SupermarketCategory } from './SupermarketCategory';
 import {
     SupermarketCategoryFromJSON,
@@ -49,6 +25,30 @@ import {
     UnitFromJSONTyped,
     UnitToJSON,
 } from './Unit';
+import type { Property } from './Property';
+import {
+    PropertyFromJSON,
+    PropertyFromJSONTyped,
+    PropertyToJSON,
+} from './Property';
+import type { FoodInheritField } from './FoodInheritField';
+import {
+    FoodInheritFieldFromJSON,
+    FoodInheritFieldFromJSONTyped,
+    FoodInheritFieldToJSON,
+} from './FoodInheritField';
+import type { FoodSimple } from './FoodSimple';
+import {
+    FoodSimpleFromJSON,
+    FoodSimpleFromJSONTyped,
+    FoodSimpleToJSON,
+} from './FoodSimple';
+import type { RecipeSimple } from './RecipeSimple';
+import {
+    RecipeSimpleFromJSON,
+    RecipeSimpleFromJSONTyped,
+    RecipeSimpleToJSON,
+} from './RecipeSimple';
 
 /**
  * Moves `UniqueValidator`'s from the validation stage to the save stage.
@@ -107,7 +107,7 @@ export interface Food {
      * @type {string}
      * @memberof Food
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
@@ -125,19 +125,19 @@ export interface Food {
      * @type {RecipeSimple}
      * @memberof Food
      */
-    recipe?: RecipeSimple;
+    recipe?: RecipeSimple | null;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {Array<Property>}
      * @memberof Food
      */
-    properties?: Array<Property>;
+    properties?: Array<Property> | null;
     /**
      * 
      * @type {number}
@@ -149,25 +149,25 @@ export interface Food {
      * @type {Unit}
      * @memberof Food
      */
-    propertiesFoodUnit?: Unit;
+    propertiesFoodUnit?: Unit | null;
     /**
      * 
      * @type {number}
      * @memberof Food
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {boolean}
      * @memberof Food
      */
-    foodOnhand?: boolean;
+    foodOnhand?: boolean | null;
     /**
      * 
      * @type {SupermarketCategory}
      * @memberof Food
      */
-    supermarketCategory?: SupermarketCategory;
+    supermarketCategory?: SupermarketCategory | null;
     /**
      * 
      * @type {number}
@@ -185,7 +185,7 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    inheritFields?: Array<FoodInheritField>;
+    inheritFields?: Array<FoodInheritField> | null;
     /**
      * Returns a string representation of a tree node and it's ancestors,
      * e.g. 'Cuisine > Asian > Chinese > Catonese'.
@@ -204,7 +204,7 @@ export interface Food {
      * @type {Array<FoodSimple>}
      * @memberof Food
      */
-    substitute?: Array<FoodSimple>;
+    substitute?: Array<FoodSimple> | null;
     /**
      * 
      * @type {boolean}
@@ -228,25 +228,25 @@ export interface Food {
      * @type {Array<FoodInheritField>}
      * @memberof Food
      */
-    childInheritFields?: Array<FoodInheritField>;
+    childInheritFields?: Array<FoodInheritField> | null;
     /**
      * 
      * @type {string}
      * @memberof Food
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
  * Check if a given object implements the Food interface.
  */
-export function instanceOfFood(value: object): boolean {
-    if (!('name' in value)) return false;
-    if (!('shopping' in value)) return false;
-    if (!('parent' in value)) return false;
-    if (!('numchild' in value)) return false;
-    if (!('fullName' in value)) return false;
-    if (!('substituteOnhand' in value)) return false;
+export function instanceOfFood(value: object): value is Food {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('shopping' in value) || value['shopping'] === undefined) return false;
+    if (!('parent' in value) || value['parent'] === undefined) return false;
+    if (!('numchild' in value) || value['numchild'] === undefined) return false;
+    if (!('fullName' in value) || value['fullName'] === undefined) return false;
+    if (!('substituteOnhand' in value) || value['substituteOnhand'] === undefined) return false;
     return true;
 }
 
@@ -287,7 +287,7 @@ export function FoodFromJSONTyped(json: any, ignoreDiscriminator: boolean): Food
     };
 }
 
-export function FoodToJSON(value?: Food | null): any {
+export function FoodToJSON(value?: Omit<Food, 'shopping'|'parent'|'numchild'|'full_name'|'substitute_onhand'> | null): any {
     if (value == null) {
         return value;
     }

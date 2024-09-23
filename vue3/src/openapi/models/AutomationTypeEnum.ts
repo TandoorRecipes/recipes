@@ -41,6 +41,17 @@ export const AutomationTypeEnum = {
 export type AutomationTypeEnum = typeof AutomationTypeEnum[keyof typeof AutomationTypeEnum];
 
 
+export function instanceOfAutomationTypeEnum(value: any): boolean {
+    for (const key in AutomationTypeEnum) {
+        if (Object.prototype.hasOwnProperty.call(AutomationTypeEnum, key)) {
+            if (AutomationTypeEnum[key as keyof typeof AutomationTypeEnum] === value) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 export function AutomationTypeEnumFromJSON(json: any): AutomationTypeEnum {
     return AutomationTypeEnumFromJSONTyped(json, false);
 }
