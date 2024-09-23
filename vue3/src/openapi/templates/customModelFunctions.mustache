@@ -1,0 +1,12 @@
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, Api{{classname}}ListRequest, Paginated{{classname}}List} from "@/openapi";
+
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: Api{{classname}}ListRequest = {}): Promise<Paginated{{classname}}List> {
+    const api = new ApiApi()
+    return api.api{{classname}}List(requestParameters)
+}
