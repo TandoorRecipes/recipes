@@ -470,7 +470,7 @@ class ConnectorConfigConfigSerializer(SpacedModelSerializer):
         fields = (
             'id', 'name', 'url', 'token', 'todo_entity', 'enabled',
             'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled', 'created_by'
+            'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'created_by'
         )
 
         read_only_fields = ('created_by',)

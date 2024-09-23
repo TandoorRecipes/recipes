@@ -406,6 +406,7 @@ class ConnectorConfig(models.Model, PermissionModelMixin):
     on_shopping_list_entry_created_enabled = models.BooleanField(default=False)
     on_shopping_list_entry_updated_enabled = models.BooleanField(default=False)
     on_shopping_list_entry_deleted_enabled = models.BooleanField(default=False)
+    supports_description_field = models.BooleanField(default=True, help_text="Does the todo entity support the description field")
 
     url = models.URLField(blank=True, null=True)
     token = models.CharField(max_length=512, blank=True, null=True)
