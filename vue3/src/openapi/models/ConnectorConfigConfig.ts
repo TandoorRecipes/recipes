@@ -74,6 +74,12 @@ export interface ConnectorConfigConfig {
      */
     onShoppingListEntryDeletedEnabled?: boolean;
     /**
+     * Does the todo entity support the description field
+     * @type {boolean}
+     * @memberof ConnectorConfigConfig
+     */
+    supportsDescriptionField?: boolean;
+    /**
      * 
      * @type {number}
      * @memberof ConnectorConfigConfig
@@ -109,6 +115,7 @@ export function ConnectorConfigConfigFromJSONTyped(json: any, ignoreDiscriminato
         'onShoppingListEntryCreatedEnabled': json['on_shopping_list_entry_created_enabled'] == null ? undefined : json['on_shopping_list_entry_created_enabled'],
         'onShoppingListEntryUpdatedEnabled': json['on_shopping_list_entry_updated_enabled'] == null ? undefined : json['on_shopping_list_entry_updated_enabled'],
         'onShoppingListEntryDeletedEnabled': json['on_shopping_list_entry_deleted_enabled'] == null ? undefined : json['on_shopping_list_entry_deleted_enabled'],
+        'supportsDescriptionField': json['supports_description_field'] == null ? undefined : json['supports_description_field'],
         'createdBy': json['created_by'],
     };
 }
@@ -128,6 +135,7 @@ export function ConnectorConfigConfigToJSON(value?: ConnectorConfigConfig | null
         'on_shopping_list_entry_created_enabled': value['onShoppingListEntryCreatedEnabled'],
         'on_shopping_list_entry_updated_enabled': value['onShoppingListEntryUpdatedEnabled'],
         'on_shopping_list_entry_deleted_enabled': value['onShoppingListEntryDeletedEnabled'],
+        'supports_description_field': value['supportsDescriptionField'],
     };
 }
 
