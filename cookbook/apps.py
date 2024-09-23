@@ -16,15 +16,11 @@ class CookbookConfig(AppConfig):
         import cookbook.signals  # noqa
 
         if not settings.DISABLE_EXTERNAL_CONNECTORS:
-            try:
-                from cookbook.connectors.connector_manager import ConnectorManager  # Needs to be here to prevent loading race condition of oauth2 modules in models.py
-                handler = ConnectorManager()
-                post_save.connect(handler, dispatch_uid="connector_manager")
-                post_delete.connect(handler, dispatch_uid="connector_manager")
-            except Exception as e:
-                traceback.print_exc()
-                print('Failed to initialize connectors')
-                pass
+            from cookbook.connectors.connector_manager import ConnectorManager  # Needs to be here to prevent loading race condition of oauth2 modules in models.py
+            handler = ConnectorManager()
+            post_save.connect(handler, dispatch_uid="post_save-connector_manager")
+            post_delete.connect(handler, dispatch_uid="post_delete-connector_manager")
+
         # if not settings.DISABLE_TREE_FIX_STARTUP:
         #     # when starting up run fix_tree to:
         #     #   a) make sure that nodes are sorted when switching between sort modes
