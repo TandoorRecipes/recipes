@@ -182,6 +182,12 @@ class ConnectorConfigForm(forms.ModelForm):
         required=False,
     )
 
+    supports_description_field = forms.BooleanField(
+        help_text="Does the connector todo entity support the description field",
+        initial=True,
+        required=False,
+    )
+
     update_token = forms.CharField(
         widget=forms.TextInput(attrs={'autocomplete': 'update-token', 'type': 'password'}),
         required=False,
@@ -198,7 +204,7 @@ class ConnectorConfigForm(forms.ModelForm):
 
         fields = (
             'name', 'type', 'enabled', 'on_shopping_list_entry_created_enabled', 'on_shopping_list_entry_updated_enabled',
-            'on_shopping_list_entry_deleted_enabled', 'url', 'todo_entity',
+            'on_shopping_list_entry_deleted_enabled', 'supports_description_field', 'url', 'todo_entity',
         )
 
         help_texts = {
