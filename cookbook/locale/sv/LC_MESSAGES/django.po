@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-03-11 13:02+0000\n"
-"Last-Translator: Kn <kn@users.noreply.translate.tandoor.dev>\n"
+"PO-Revision-Date: 2024-09-17 11:58+0000\n"
+"Last-Translator: Bebbe K <kajolekk91@gmail.com>\n"
 "Language-Team: Swedish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sv/>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4.2\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -151,48 +151,61 @@ msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Välj typ av sökmetod. Klicka <a href=\"/docs/search/\">här</a> för "
+"fullständig beskrivning av alternativen."
 
 #: .\cookbook\forms.py:341
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Använd \"fuzzy\" matchning på enheter, nyckelord och ingredienser när du "
+"redigerar och importerar recept."
 
 #: .\cookbook\forms.py:342
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Fält att söka medan man ignorerar accenter. Val av detta alternativ kan "
+"förbättra eller försämra sökkvaliteten beroende på språk"
 
 #: .\cookbook\forms.py:343
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Fält att söka efter delvisa matchningar. (t.ex. att söka efter 'Pie' kommer "
+"att returnera 'pie' och 'piece' och 'soapie')"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Fält att söka för matchningar i början av ord. (t.ex. att söka efter 'sa' "
+"kommer att returnera 'salad' och 'sandwich')"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Fält för 'fuzzy'-sökning. (t.ex. att söka efter 'recpie' kommer att hitta "
+"'recipe'.Observera: detta alternativet kommer att komma i konflikt med "
+"sökmetoderna 'web' och 'raw'.)"
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Fält för fulltextsökning. Observera: Sökmetoderna 'web', 'phrase' och 'raw' "
+"fungerar endast med fulltextfält."
 
 #: .\cookbook\forms.py:350
-#, fuzzy
-#| msgid "Search"
 msgid "Search Method"
-msgstr "Sök"
+msgstr "Sök Metod"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
@@ -211,22 +224,20 @@ msgid "Starts With"
 msgstr "Börjar med"
 
 #: .\cookbook\forms.py:351
-#, fuzzy
-#| msgid "Search"
 msgid "Fuzzy Search"
-msgstr "Sök"
+msgstr "Fuzzy Sök"
 
 #: .\cookbook\forms.py:351
-#, fuzzy
-#| msgid "Text"
 msgid "Full Text"
-msgstr "Text"
+msgstr "Hel Text"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"För att förhindra spam, så skickades inte den begärda e-posten. Vänta några "
+"minuter och försök igen."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
@@ -255,19 +266,19 @@ msgstr "Du kan inte interagera med detta objekt för att det ägs inte av dig!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Du har nått det maximala antalet recept för din utrymme."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Du har mer användare än tillåtet för ditt utrymme."
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "reverse rotation"
-msgstr ""
+msgstr "återvänd rotering"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "försiktig rotering"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
@@ -291,7 +302,7 @@ msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Du måste ange en portionstorlek"
 
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
@@ -305,7 +316,7 @@ msgstr "Favorit"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Jag gjorde den här"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
@@ -319,6 +330,8 @@ msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Ett oväntat fel uppstod under importeringen. Se till att du har laddat upp "
+"en giltig fil."
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
@@ -330,10 +343,8 @@ msgid "Imported %s recipes."
 msgstr "Importerade %s recept."
 
 #: .\cookbook\integration\openeats.py:28
-#, fuzzy
-#| msgid "Recipe Home"
 msgid "Recipe source:"
-msgstr "Recept Hem"
+msgstr "Recept källa:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
@@ -374,23 +385,25 @@ msgstr "Sektion"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Korrigerar livsmedel med "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Återuppbygger fulltextsökningens index för Recept"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Endast Postgresql-databaser använder fulltextsökning, inget index att "
+"återuppbygga med"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Recept index återbyggning färdig."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Recept index återbyggning misslyckades."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
@@ -439,6 +452,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Maximal lagringsutrymme för utrymme i MB. 0 för obegränsad, -1 för att "
+"inaktivera filuppladdning."
 
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
@@ -462,7 +477,7 @@ msgstr "Handla"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " är en del av ett receptsteg och kan inte tas bort"
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
@@ -501,34 +516,24 @@ msgid "Food Alias"
 msgstr "Alternativt namn för mat"
 
 #: .\cookbook\models.py:1468
-#, fuzzy
-#| msgid "Units"
 msgid "Unit Alias"
-msgstr "Enheter"
+msgstr "Enhetsalias"
 
 #: .\cookbook\models.py:1469
-#, fuzzy
-#| msgid "Keywords"
 msgid "Keyword Alias"
-msgstr "Nyckelord"
+msgstr "Nyckelordsalias"
 
 #: .\cookbook\models.py:1470
-#, fuzzy
-#| msgid "Description"
 msgid "Description Replace"
-msgstr "Beskrivning"
+msgstr "Beskrivning Ersätt"
 
 #: .\cookbook\models.py:1471
-#, fuzzy
-#| msgid "Instructions"
 msgid "Instruction Replace"
-msgstr "Instruktioner"
+msgstr "Instruktioner Ersätt"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Ny enhet"
+msgstr "Aldrig Enhet"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
@@ -539,10 +544,8 @@ msgid "Food Replace"
 msgstr "Ersätt mat"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Edit Recipe"
 msgid "Unit Replace"
-msgstr "Redigera recept"
+msgstr "Ersätt Enhet"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"

@@ -45,8 +45,10 @@ class HomeAssistant(Connector):
         data = {
             "entity_id": self._config.todo_entity,
             "item": item,
-            "description": description,
         }
+
+        if self._config.supports_description_field:
+            data["description"] = description
 
         try:
             await self.homeassistant_api_call("POST", "services/todo/add_item", data)
