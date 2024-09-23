@@ -3,7 +3,7 @@ from logging import Logger
 from typing import Dict, Tuple
 from urllib.parse import urljoin
 
-from aiohttp import ClientError, request
+from aiohttp import request, ClientResponseError
 
 from cookbook.connectors.connector import Connector
 from cookbook.models import ShoppingListEntry, ConnectorConfig, Space
@@ -12,6 +12,8 @@ from cookbook.models import ShoppingListEntry, ConnectorConfig, Space
 class HomeAssistant(Connector):
     _config: ConnectorConfig
     _logger: Logger
+
+    _required_foreign_keys = ("food", "unit", "created_by")
 
     def __init__(self, config: ConnectorConfig):
         if not config.token or not config.url or not config.todo_entity:
@@ -38,7 +40,7 @@ class HomeAssistant(Connector):
 
         item, description = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"adding {item=}")
+        self._logger.debug(f"adding {item=} with {description=} to {self._config.todo_entity}")
 
         data = {
             "entity_id": self._config.todo_entity,
@@ -50,8 +52,8 @@ class HomeAssistant(Connector):
 
         try:
             await self.homeassistant_api_call("POST", "services/todo/add_item", data)
-        except ClientError as err:
-            self._logger.warning(f"received an exception from the api: {err=}, {type(err)=} {data=}")
+        except ClientResponseError as err:
+            self._logger.warning(f"received an exception from the api: {err.request_info.url=}, {err.request_info.method=}, {err.status=}, {err.message=}, {type(err)=}")
 
     async def on_shopping_list_entry_updated(self, space: Space, shopping_list_entry: ShoppingListEntry) -> None:
         if not self._config.on_shopping_list_entry_updated_enabled:
@@ -62,14 +64,14 @@ class HomeAssistant(Connector):
         if not self._config.on_shopping_list_entry_deleted_enabled:
             return
 
-        if not hasattr(shopping_list_entry._state.fields_cache, "food"):
+        if not all(k in shopping_list_entry._state.fields_cache for k in self._required_foreign_keys):
             # Sometimes the food foreign key is not loaded, and we cant load it from an async process
             self._logger.debug("required property was not present in ShoppingListEntry")
             return
 
         item, _ = _format_shopping_list_entry(shopping_list_entry)
 
-        self._logger.debug(f"removing {item=}")
+        self._logger.debug(f"removing {item=} from {self._config.todo_entity}")
 
         data = {
             "entity_id": self._config.todo_entity,
@@ -78,9 +80,9 @@ class HomeAssistant(Connector):
 
         try:
             await self.homeassistant_api_call("POST", "services/todo/remove_item", data)
-        except ClientError as err:
+        except ClientResponseError as err:
             # This error will always trigger if the item is not present/found
-            self._logger.debug(f"received an exception from the api: {err=}, {type(err)=}")
+            self._logger.debug(f"received an exception from the api: {err.request_info.url=}, {err.request_info.method=}, {err.status=}, {err.message=}, {type(err)=}")
 
     async def close(self) -> None:
         pass
