@@ -272,6 +272,7 @@
   "Properties_Food_Amount": "Množství nutriční vlastnosti",
   "Properties_Food_Unit": "Jednotka nutriční vlastnosti",
   "Property": "Nutriční vlastnost",
+  "PropertyType": "",
   "Property_Editor": "Editovat nutriční vlastnosti",
   "Protected": "Chráněný",
   "Proteins": "Proteiny",

@@ -12,227 +12,201 @@ import {
     PropertyType as IPropertyType, ApiFoodListRequest, ApiUnitListRequest,
 } from "@/openapi";
 
-export const SUPPORTED_MODELS = ["Food", "Unit"]
 
-export function getModelFromStr(model_name: String) {
-    switch (model_name.toLowerCase()) {
-        case 'food': {
-            return new Food
-        }
-        case 'unit': {
-            return new Unit
-        }
-        case 'keyword': {
-            return new Keyword
-        }
-        case 'recipe': {
-            return new Recipe
-        }
-        case 'mealtype': {
-            return new MealType
-        }
-        case 'user': {
-            return new User
-        }
-        case 'foodinheritfield': {
-            return new FoodInheritField
-        }
-        case 'supermarketcategory': {
-            return new SupermarketCategory
-        }
-        case 'propertytype': {
-            return new PropertyType
-        }
-        default: {
-            throw Error(`Invalid Model ${model_name}, did you forget to register it in Models.ts?`)
-        }
+/**
+ * returns a GenericModel instance with the given model type
+ * throws and error if no model with the given name exist
+ * @param modelName name of the model
+ * @return instance of GenericModel
+ */
+export function getModelFromStr(modelName: String) {
+    if (SUPPORTED_MODELS.has(modelName)) {
+        return new GenericModel(SUPPORTED_MODELS.get(modelName))
+    } else {
+        throw Error(`Model ${modelName} not in SUPPORTED_MODELS`)
     }
 }
 
 /**
- * Generic model used for generic model selects/requests
- * TODO should be somehow automatically created in the model but for now this works
+ * common list parameters shared by all generic models
  */
-export abstract class GenericModel<T> {
+type GenericListRequestParameter = {
+    page: number,
+    pageSize: number,
+    query: string,
+}
 
-    localizedName: string
-    icon: string
+/**
+ * custom type containing all attributes needed by the generic model system to properly handle all functions
+ */
+type Model = {
+    name: string,
+    localizationKey: string,
+    icon: string,
 
-    /**
-     * override and set to false if model is read only
-     */
-    canCreate(): boolean {
-        return true
+    disableList: boolean | undefined,
+    disableRetrieve: boolean | undefined,
+    disableCreate: boolean | undefined,
+    disableDelete: boolean | undefined,
+
+    // table headers
+    // canCreate
+    // canDelete
+}
+export let SUPPORTED_MODELS = new Map<string, Model>()
+
+export const TFood = {
+    name: 'Food',
+    localizationKey: 'Food',
+    icon: 'fa-solid fa-carrot'
+} as Model
+SUPPORTED_MODELS.set(TFood.name, TFood)
+
+export const TUnit = {
+    name: 'Unit',
+    localizationKey: 'Unit',
+    icon: 'fa-solid fa-scale-balanced',
+} as Model
+SUPPORTED_MODELS.set(TUnit.name, TUnit)
+
+export const TKeyword = {
+    name: 'Keyword',
+    localizationKey: 'Keyword',
+    icon: 'fa-solid fa-tags',
+} as Model
+SUPPORTED_MODELS.set(TKeyword.name, TKeyword)
+
+export const TRecipe = {
+    name: 'Recipe',
+    localizationKey: 'Recipe',
+    icon: 'fa-solid fa-book',
+} as Model
+SUPPORTED_MODELS.set(TRecipe.name, TRecipe)
+
+export const TMealType = {
+    name: 'MealType',
+    localizationKey: 'Meal_Type',
+    icon: 'fa-solid fa-utensils',
+} as Model
+SUPPORTED_MODELS.set(TMealType.name, TMealType)
+
+export const TUser = {
+    name: 'User',
+    localizationKey: 'User',
+    icon: 'fa-solid fa-users',
+
+    disableCreate: true,
+    disableDelete: true,
+} as Model
+SUPPORTED_MODELS.set(TUser.name, TUser)
+
+export const TSupermarketCategory = {
+    name: 'SupermarketCategory',
+    localizationKey: 'Category',
+    icon: 'fa-solid fa-boxes-stacked',
+} as Model
+SUPPORTED_MODELS.set(TSupermarketCategory.name, TSupermarketCategory)
+
+export const TPropertyType = {
+    name: 'PropertyType',
+    localizationKey: 'Property',
+    icon: 'fa-solid fa-database',
+} as Model
+SUPPORTED_MODELS.set(TPropertyType.name, TPropertyType)
+
+export const TFoodInheritField = {
+    name: 'FoodInheritField',
+    localizationKey: 'FoodInherit',
+    icon: 'fa-solid fa-list',
+
+    disableCreate: true,
+    disableDelete: true,
+    disableRetrieve: true,
+} as Model
+SUPPORTED_MODELS.set(TFoodInheritField.name, TFoodInheritField)
+
+
+/**
+ * Many of Tandoors models and model API endpoints share the same interfaces
+ * The GenericModel class allows interaction with these models in a standardized manner
+ */
+export class GenericModel {
+
+    api: Object
+    model: Model
+
+    constructor(model: Model) {
+        this.model = model
+        this.api = new ApiApi()
     }
 
     /**
-     * create a new instance of a given model
-     * do not override on models that cannot create
-     * @param name value for field name
+     * query the models list endpoint using the given generic parameters
+     * @param genericListRequestParameter parameters
+     * @return promise of request
      */
-    create(name: string): Promise<T> {
-        if (!this.canCreate()) {
-            throw new Error('Cannot create on this model!')
+    list(genericListRequestParameter: GenericListRequestParameter) {
+        if (this.model.disableList) {
+            throw new Error('Cannot list on this model!')
+        } else {
+            return this.api[`api${this.model.name}List`](genericListRequestParameter)
         }
-        return new Promise(() => {
-            return undefined
-        })
     };
 
     /**
-     * retrieves instances of given model with given query from DB
-     * @param query value for standard query parameter of endpoint
+     * create a new instance of the given model
+     * throws error if creation is not supported for given model
+     * @param obj object to create
+     * @return promise of request
      */
-    abstract list(query: string): Promise<Array<T>>
+    create(obj: any) {
+        if (this.model.disableCreate) {
+            throw new Error('Cannot create on this model!')
+        } else {
+            let createRequestParams = {}
+            createRequestParams[this.model.name.toLowerCase()] = obj
+            return this.api[`api${this.model.name}Create`](createRequestParams)
+        }
+    }
+
+    /**
+     * update a model instance with the given value
+     * throws error if updating is not supported for given model
+     * @param id id of object to update
+     * @param obj object to update
+     * @return promise of request
+     */
+    update(id: number, obj: any) {
+        if (this.model.disableCreate) {
+            throw new Error('Cannot update on this model!')
+        } else {
+            let updateRequestParams = {}
+            updateRequestParams['id'] = id
+            updateRequestParams[this.model.name.toLowerCase()] = obj
+            return this.api[`api${this.model.name}Update`](updateRequestParams)
+        }
+    }
+
+    /**
+     * deletes the given model instance
+     * throws error if creation is not supported for given model
+     * @param id object id to delete
+     * @return promise of request
+     */
+    destroy(id: number) {
+        if (this.model.disableDelete) {
+            throw new Error('Cannot delete on this model!')
+        } else {
+            let destroyRequestParams = {}
+            destroyRequestParams['id'] = id
+            return this.api[`api${this.model.name}Destroy`](createRequestParams)
+        }
+    }
+
 }
 
-export class Keyword extends GenericModel<IKeyword> {
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiKeywordCreate({keyword: {name: name} as IKeyword})
-    }
 
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiKeywordList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
-    }
-}
 
-// TODO review this whole file and its usages
-export class Food extends GenericModel<IFood> {
-
-    localizedName = 'Food'
-    icon = 'fa-solid fa-carrot'
-
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiFoodCreate({food: {name: name} as IFood})
-    }
-
-    list(requestParameters: ApiFoodListRequest = {}) {
-        const api = new ApiApi()
-        return api.apiFoodList(requestParameters)
-    }
-}
-
-export class Unit extends GenericModel<IUnit> {
-
-    localizedName = 'Unit'
-    icon = 'fa-solid fa-scale-balanced'
-
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiUnitCreate({unit: {name: name} as IUnit})
-    }
-
-    list(requestParameters: ApiUnitListRequest = {}) {
-        const api = new ApiApi()
-        return api.apiUnitList(requestParameters)
-    }
-}
-
-export class Recipe extends GenericModel<IRecipeOverview> {
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiRecipeCreate({recipe: {name: name} as IRecipe}).then(r => {
-            return r as unknown as IRecipeOverview
-        })
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiRecipeList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
-    }
-}
-
-export class MealType extends GenericModel<IMealType> {
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiMealTypeCreate({mealType: {name: name} as IMealType}).then(r => {
-            return r as unknown as IMealType
-        })
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiMealTypeList({}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
-    }
-}
-
-export class User extends GenericModel<IUser> {
-
-    canCreate(): boolean {
-        return false
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiUserList({}).then(r => {
-            if (r) {
-                return r
-            } else {
-                return []
-            }
-        })
-    }
-}
-
-export class FoodInheritField extends GenericModel<IFoodInheritField> {
-
-    canCreate(): boolean {
-        return false
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiFoodInheritFieldList({}).then(r => {
-            if (r) {
-                return r
-            } else {
-                return []
-            }
-        })
-    }
-}
-
-export class SupermarketCategory extends GenericModel<ISupermarketCategory> {
-
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiSupermarketCategoryCreate({supermarketCategory: {name: name} as ISupermarketCategory}).then(r => {
-            return r as unknown as ISupermarketCategory
-        })
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiSupermarketCategoryList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
-    }
-}
 
 export class PropertyType extends GenericModel<IPropertyType> {
 

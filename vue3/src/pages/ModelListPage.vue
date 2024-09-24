@@ -8,17 +8,17 @@
                         <v-menu activator="parent">
                             <v-list>
 
-                                <v-list-item v-for="model in supportedModels"
-                                             :to="{name: 'ModelListPage', params: {model: model}}"
+                                <v-list-item v-for="model in [TFood, TUnit, TKeyword, TSupermarketCategory, TPropertyType]"
+                                             :to="{name: 'ModelListPage', params: {model: model.name}}"
                                 >
                                      <template #prepend><v-icon :icon="model.icon"></v-icon> </template>
-                                     {{ $t(model.localizedName) }}
+                                     {{ $t(model.localizationKey) }}
                                 </v-list-item>
                             </v-list>
                         </v-menu>
                     </v-btn>
-                    <v-icon :icon="modelClass.icon"></v-icon>
-                    {{ $t(modelClass.localizedName) }}</span>
+                    <v-icon :icon="genericModel.model.icon"></v-icon>
+                    {{ $t(genericModel.model.localizationKey) }}</span>
             </v-col>
         </v-row>
         <v-row>
@@ -57,8 +57,9 @@
 import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {Food, GenericModel, getModelFromStr, SUPPORTED_MODELS, Unit} from "@/types/Models";
+import {TFood, TUnit, GenericModel, getModelFromStr, TKeyword, TSupermarketCategory, TPropertyType} from "@/types/Models";
 import {ca} from "vuetify/locale";
+import {ApiApi} from "@/openapi";
 
 const {t} = useI18n()
 
@@ -87,15 +88,13 @@ const items = ref([] as Array<any>)
 const itemCount = ref(0)
 const searchQuery = ref('')
 
-const modelClass = ref({} as GenericModel<any>)
-const supportedModels = ref([
-    new Food, new Unit
-])
+const genericModel = ref({} as GenericModel)
+
 
 // watch for changes to the prop in case its changed
 watch(() => props.model, () => {
     console.log('loading model ', props.model)
-    modelClass.value = getModelFromStr(props.model)
+    genericModel.value = getModelFromStr(props.model)
     loadItems({page: 1, itemsPerPage: 10})
 })
 
@@ -103,18 +102,19 @@ watch(() => props.model, () => {
  * select model class before mount because template renders (and requests item load) before onMounted is called
  */
 onBeforeMount(() => {
+
     try {
-        modelClass.value = getModelFromStr(props.model)
+        genericModel.value = getModelFromStr(props.model)
     } catch (Error) {
         console.error('Invalid model passed to ModelListPage, loading Food instead')
-        modelClass.value = getModelFromStr('Food')
+        genericModel.value = getModelFromStr('Food')
     }
 })
 
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     loading.value = true
 
-    modelClass.value.list({page: page, pageSize: itemsPerPage, query: search}).then(r => {
+    genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then(r => {
         items.value = r.results
         itemCount.value = r.count
     }).catch(err => {
