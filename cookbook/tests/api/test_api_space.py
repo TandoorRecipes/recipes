@@ -13,11 +13,11 @@ DETAIL_URL = 'api:space-detail'
 
 
 @pytest.mark.parametrize("arg", [
-    ['a_u', 403],
-    ['g1_s1', 200],
-    ['u1_s1', 200],
-    ['a1_s1', 200],
-    ['a2_s1', 200],
+    ['a_u', 403, 0],
+    ['g1_s1', 200, 1],
+    ['u1_s1', 200, 1],
+    ['a1_s1', 200, 1],
+    ['a2_s1', 200, 1],
 ])
 def test_list_permission(arg, request, space_1, a1_s1):
     space_1.created_by = auth.get_user(a1_s1)
@@ -25,6 +25,8 @@ def test_list_permission(arg, request, space_1, a1_s1):
     c = request.getfixturevalue(arg[0])
     result = c.get(reverse(LIST_URL))
     assert result.status_code == arg[1]
+    if arg[1] == 200:
+        assert len(json.loads(result.content)) == arg[2]
 
 
 def test_list_multiple(u1_s1, space_1, space_2):
