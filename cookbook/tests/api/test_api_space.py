@@ -26,19 +26,19 @@ def test_list_permission(arg, request, space_1, a1_s1):
     result = c.get(reverse(LIST_URL))
     assert result.status_code == arg[1]
     if arg[1] == 200:
-        assert len(json.loads(result.content)) == arg[2]
+        assert len(json.loads(result.content)['results']) == arg[2]
 
 
 def test_list_multiple(u1_s1, space_1, space_2):
     # only member of one space
     u1_response = json.loads(u1_s1.get(reverse(LIST_URL)).content)
-    assert len(u1_response) == 1
+    assert len(u1_response['results']) == 1
 
     # add user to a second space
     us = UserSpace.objects.create(user=auth.get_user(u1_s1), space=space_2)
     us.groups.add(Group.objects.get(name='admin'))
     u1_response = json.loads(u1_s1.get(reverse(LIST_URL)).content)
-    assert len(u1_response) == 2
+    assert len(u1_response['results']) == 2
 
     # test /current/ endpoint to only return active space
     u1_response = json.loads(u1_s1.get(reverse('api:space-current')).content)
