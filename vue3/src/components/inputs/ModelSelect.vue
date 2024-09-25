@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import {onMounted, PropType, ref} from "vue"
-import {GenericModel, getModelFromStr} from "@/types/Models"
+import {GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 
@@ -81,13 +81,13 @@ const props = defineProps({
 })
 
 const model = defineModel()
-const model_class = ref({} as GenericModel<any>)
+const modelClass = ref({} as GenericModel<any>)
 
 /**
  * create instance of model class when mounted
  */
 onMounted(() => {
-    model_class.value = getModelFromStr(props.model)
+    modelClass.value = getGenericModelFromString(props.model)
 })
 
 /**
@@ -95,8 +95,12 @@ onMounted(() => {
  * @param query input to search for on the API
  */
 function search(query: string) {
-    return model_class.value.list(query).then((r) => {
-        return r
+    return modelClass.value.list({query: query}).then((r) => {
+        if (modelClass.value.model.isPaginated) {
+            return r.results
+        } else {
+            return r
+        }
     }).catch((err) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
@@ -111,21 +115,13 @@ function search(query: string) {
  * @param select$ reference to multiselect instance
  */
 async function createObject(object: any, select$: Multiselect) {
-    if (model_class.value.canCreate()) {
-        console.log("CREATING NEW with -> ", object)
-
+    return await modelClass.value.create({name: object[props.itemLabel]}).then((createdObj) => {
+        useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
         emit('create', object)
-
-        return await model_class.value.create(object[props.itemLabel]).then((createdObj) => {
-            useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
-            return createdObj
-        }).catch((err) => {
-            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-        })
-    } else {
-        console.error('Cannot create using model, should probably set can_create prop to false or fix model ', model_class)
-    }
-
+        return createdObj
+    }).catch((err) => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
 }
 
 

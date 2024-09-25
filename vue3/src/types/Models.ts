@@ -19,7 +19,7 @@ import {
  * @param modelName name of the model
  * @return instance of GenericModel
  */
-export function getModelFromStr(modelName: String) {
+export function getGenericModelFromString(modelName: String) {
     if (SUPPORTED_MODELS.has(modelName)) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName))
     } else {
@@ -49,6 +49,8 @@ type Model = {
     disableCreate: boolean | undefined,
     disableDelete: boolean | undefined,
 
+    isPaginated: boolean | undefined,
+
     // table headers
     // canCreate
     // canDelete
@@ -58,7 +60,9 @@ export let SUPPORTED_MODELS = new Map<string, Model>()
 export const TFood = {
     name: 'Food',
     localizationKey: 'Food',
-    icon: 'fa-solid fa-carrot'
+    icon: 'fa-solid fa-carrot',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TFood.name, TFood)
 
@@ -66,6 +70,8 @@ export const TUnit = {
     name: 'Unit',
     localizationKey: 'Unit',
     icon: 'fa-solid fa-scale-balanced',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TUnit.name, TUnit)
 
@@ -73,6 +79,8 @@ export const TKeyword = {
     name: 'Keyword',
     localizationKey: 'Keyword',
     icon: 'fa-solid fa-tags',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TKeyword.name, TKeyword)
 
@@ -80,6 +88,8 @@ export const TRecipe = {
     name: 'Recipe',
     localizationKey: 'Recipe',
     icon: 'fa-solid fa-book',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TRecipe.name, TRecipe)
 
@@ -87,6 +97,8 @@ export const TMealType = {
     name: 'MealType',
     localizationKey: 'Meal_Type',
     icon: 'fa-solid fa-utensils',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TMealType.name, TMealType)
 
@@ -97,13 +109,26 @@ export const TUser = {
 
     disableCreate: true,
     disableDelete: true,
+
+    isPaginated: false,
 } as Model
 SUPPORTED_MODELS.set(TUser.name, TUser)
+
+export const TSupermarket = {
+    name: 'Supermarket',
+    localizationKey: 'Supermarket',
+    icon: 'fa-solid fa-store',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TSupermarket.name, TSupermarket)
 
 export const TSupermarketCategory = {
     name: 'SupermarketCategory',
     localizationKey: 'Category',
     icon: 'fa-solid fa-boxes-stacked',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TSupermarketCategory.name, TSupermarketCategory)
 
@@ -111,8 +136,55 @@ export const TPropertyType = {
     name: 'PropertyType',
     localizationKey: 'Property',
     icon: 'fa-solid fa-database',
+
+    isPaginated: true,
 } as Model
 SUPPORTED_MODELS.set(TPropertyType.name, TPropertyType)
+
+export const TUnitConversion = {
+    name: 'UnitConversion',
+    localizationKey: 'UnitConversion',
+    icon: 'fa-solid fa-exchange-alt',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TUnitConversion.name, TUnitConversion)
+
+export const TUserFile = {
+    name: 'UserFile',
+    localizationKey: 'File',
+    icon: 'fa-solid fa-file',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TUserFile.name, TUserFile)
+
+export const TAutomation = {
+    name: 'Automation',
+    localizationKey: 'Automation',
+    icon: 'fa-solid fa-robot',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TAutomation.name, TAutomation)
+
+export const TCookLog = {
+    name: 'CookLog',
+    localizationKey: 'CookLog',
+    icon: 'fa-solid fa-table-list',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TCookLog.name, TCookLog)
+
+export const TViewLog = {
+    name: 'ViewLog',
+    localizationKey: 'History',
+    icon: 'fa-solid fa-clock-rotate-left',
+
+    isPaginated: true,
+} as Model
+SUPPORTED_MODELS.set(TViewLog.name, TViewLog)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',
@@ -122,6 +194,8 @@ export const TFoodInheritField = {
     disableCreate: true,
     disableDelete: true,
     disableRetrieve: true,
+
+    isPaginated: false,
 } as Model
 SUPPORTED_MODELS.set(TFoodInheritField.name, TFoodInheritField)
 

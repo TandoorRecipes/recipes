@@ -8,8 +8,9 @@
                         <v-menu activator="parent">
                             <v-list>
 
-                                <v-list-item v-for="model in [TFood, TUnit, TKeyword, TSupermarketCategory, TPropertyType]"
-                                             :to="{name: 'ModelListPage', params: {model: model.name}}"
+                                <v-list-item
+                                    v-for="model in [TFood, TUnit, TKeyword,TSupermarket, TSupermarketCategory, TPropertyType, TUnitConversion, TAutomation, TUserFile, TCookLog, TViewLog]"
+                                    :to="{name: 'ModelListPage', params: {model: model.name}}"
                                 >
                                      <template #prepend><v-icon :icon="model.icon"></v-icon> </template>
                                      {{ $t(model.localizationKey) }}
@@ -23,8 +24,6 @@
         </v-row>
         <v-row>
             <v-col>
-
-
                 <v-text-field prepend-inner-icon="$search" :label="$t('Search')" v-model="searchQuery"></v-text-field>
                 <v-data-table-server
                     @update:options="loadItems"
@@ -57,9 +56,23 @@
 import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {TFood, TUnit, GenericModel, getModelFromStr, TKeyword, TSupermarketCategory, TPropertyType} from "@/types/Models";
+import {
+    TFood,
+    TUnit,
+    GenericModel,
+    getGenericModelFromString,
+    TKeyword,
+    TSupermarketCategory,
+    TPropertyType,
+    TSupermarket,
+    TUnitConversion,
+    TAutomation,
+    TUserFile, TCookLog, TViewLog
+} from "@/types/Models";
 import {ca} from "vuetify/locale";
 import {ApiApi} from "@/openapi";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
 
 const {t} = useI18n()
 
@@ -94,7 +107,7 @@ const genericModel = ref({} as GenericModel)
 // watch for changes to the prop in case its changed
 watch(() => props.model, () => {
     console.log('loading model ', props.model)
-    genericModel.value = getModelFromStr(props.model)
+    genericModel.value = getGenericModelFromString(props.model)
     loadItems({page: 1, itemsPerPage: 10})
 })
 
@@ -104,10 +117,10 @@ watch(() => props.model, () => {
 onBeforeMount(() => {
 
     try {
-        genericModel.value = getModelFromStr(props.model)
+        genericModel.value = getGenericModelFromString(props.model)
     } catch (Error) {
         console.error('Invalid model passed to ModelListPage, loading Food instead')
-        genericModel.value = getModelFromStr('Food')
+        genericModel.value = getGenericModelFromString('Food')
     }
 })
 
@@ -117,7 +130,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then(r => {
         items.value = r.results
         itemCount.value = r.count
-    }).catch(err => {
+    }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
