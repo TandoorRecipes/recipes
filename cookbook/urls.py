@@ -1,6 +1,6 @@
 from pydoc import locate
 
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from rest_framework import routers
@@ -76,7 +76,8 @@ for p in PLUGINS:
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('v3/', views.vue3, name='vue3'),
+    re_path(r'^v3/.*', views.vue3, name='vue3'),
+    #path('v3/', views.vue3, name='vue3'),
     path('setup/', views.setup, name='view_setup'),
     path('no-group', views.no_groups, name='view_no_group'),
     path('space-overview', views.space_overview, name='view_space_overview'),

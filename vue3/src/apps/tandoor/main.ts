@@ -1,5 +1,5 @@
 import {createApp} from "vue";
-import {createRouter, createWebHashHistory} from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 // @ts-ignore
 import App from './Tandoor.vue'
@@ -56,7 +56,7 @@ const routes = [
 
 const router = createRouter({
     // TODO configure proper history mode
-    history: createWebHashHistory(),
+    history: createWebHistory('v3/'),
     routes,
 })
 
