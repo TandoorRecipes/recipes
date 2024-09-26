@@ -33,7 +33,7 @@
                                 <ModelSelect model="User" :allow-create="false" v-model="mutableMealPlan.shared" item-label="displayName" mode="tags"></ModelSelect>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <ModelSelect model="recipe" v-model="mutableMealPlan.recipe" @update:modelValue="mutableMealPlan.servings = mutableMealPlan.recipe?.servings ? mutableMealPlan.recipe?.servings : 1"></ModelSelect>
+                                <ModelSelect model="Recipe" v-model="mutableMealPlan.recipe" @update:modelValue="mutableMealPlan.servings = mutableMealPlan.recipe?.servings ? mutableMealPlan.recipe?.servings : 1"></ModelSelect>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>--> <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="mutableMealPlan.recipe" v-if="mutableMealPlan && mutableMealPlan.recipe"></recipe-card>
                             </v-col>

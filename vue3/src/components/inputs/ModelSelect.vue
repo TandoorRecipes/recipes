@@ -7,45 +7,50 @@
         <!-- TODO strange behavior/layering issues with appendTo body, find solution to make it work -->
 
         <Multiselect
-            :id="id"
+            :id="props.id"
+            :ref="`ref_${props.id}`"
             class="material-multiselect z-max"
-            :resolve-on-load="false"
+            :resolve-on-load="searchOnLoad"
             v-model="model"
             :options="search"
             :on-create="createObject"
-            :createOption="allowCreate"
+            :createOption="props.allowCreate"
             :delay="300"
             :object="true"
-            :valueProp="itemValue"
-            :label="itemLabel"
+            :valueProp="props.itemValue"
+            :label="props.itemLabel"
             :searchable="true"
             :strict="false"
-            :disabled="disabled"
-            :mode="mode"
-            :can-clear="canClear"
-            :can-deselect="canClear"
-            :limit="limit"
-            :placeholder="label"
+            :disabled="props.disabled"
+            :mode="props.mode"
+            :can-clear="props.canClear"
+            :can-deselect="props.canClear"
+            :limit="props.limit"
+            :placeholder="$t(modelClass.model.localizationKey)"
             :noOptionsText="$t('No_Results')"
             :noResultsText="$t('No_Results')"
             :loading="loading"
+            @open="multiselect.refreshOptions()"
         />
 
     </v-input>
 </template>
 
 <script lang="ts" setup>
-import {onMounted, PropType, ref} from "vue"
+import {onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
 import {GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
 const props = defineProps({
     model: {type: String, required: true},
 
-    id: {type: String, required: false, default: Math.random().toString()},
+    id: {type: String, required: false, default: Math.floor(Math.random()*10000).toString()},
 
     itemLabel: {type: String, default: "name"},
     itemValue: {type: String, default: "id"},
@@ -65,31 +70,20 @@ const props = defineProps({
     label: {type: String, default: ''},
     hint: {type: String, default: ''},
 
-    // not verified
-    search_on_load: {type: Boolean, default: false},
-
-
-    parent_variable: {type: String, default: undefined},
-
-    sticky_options: {
-        type: Array,
-        default() {
-            return []
-        },
-    },
-
-
+    searchOnLoad: {type: Boolean, default: false},
 })
 
 const model = defineModel()
 const modelClass = ref({} as GenericModel)
 const loading = ref(false)
 
+const multiselect = useTemplateRef(`ref_${props.id}`)
+
 /**
  * create instance of model class when mounted
  */
-onMounted(() => {
-    modelClass.value = getGenericModelFromString(props.model)
+onBeforeMount(() => {
+    modelClass.value = getGenericModelFromString(props.model, t)
 })
 
 /**
@@ -97,6 +91,7 @@ onMounted(() => {
  * @param query input to search for on the API
  */
 function search(query: string) {
+    console.log('search called')
     loading.value = true
     return modelClass.value.list({query: query, page: 1, pageSize: 25}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
