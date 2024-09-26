@@ -1,10 +1,10 @@
 <template>
-    <v-card>
+    <v-card :loading="loading">
         <v-card-title>
             {{ $t(OBJ_LOCALIZATION_KEY) }} <span class="text-disabled">{{ editingObj.name }}</span>
             <v-btn class="float-right" icon="$close" variant="plain" @click="emit('close')" v-if="dialog"></v-btn>
         </v-card-title>
-        <v-tabs v-model="tab">
+        <v-tabs v-model="tab" :disabled="loading">
             <v-tab value="food">{{ $t('Food') }}</v-tab>
             <v-tab value="properties">{{ $t('Properties') }}</v-tab>
             <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
@@ -14,7 +14,7 @@
         <v-card-text>
             <v-tabs-window v-model="tab">
                 <v-tabs-window-item value="food">
-                    <v-form>
+                    <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-text-field :label="$t('Plural')" v-model="editingObj.pluralName"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
@@ -64,7 +64,7 @@
                                 <template #append>
                                     <v-btn color="edit">
                                         <v-icon icon="$edit"></v-icon>
-                                        <model-editor-dialog model="Property" :item="p"></model-editor-dialog>
+                                        <model-edit-dialog model="Property" :item="p"></model-edit-dialog>
                                     </v-btn>
                                 </template>
                             </v-list-item>
@@ -88,7 +88,7 @@
                                 </v-btn>
                                 <v-btn color="edit" class="float-right d-md-none">
                                     <v-icon icon="$edit"></v-icon>
-                                    <model-editor-dialog model="UnitConversion" :item="uc" @delete="deleteUnitConversion(uc, false)" :disabled-fields="['food']"></model-editor-dialog>
+                                    <model-edit-dialog model="UnitConversion" :item="uc" @delete="deleteUnitConversion(uc, false)" :disabled-fields="['food']"></model-edit-dialog>
                                 </v-btn>
                             </v-card-title>
                             <v-card-text class="d-none d-md-block">
@@ -138,7 +138,7 @@
             </v-tabs-window>
 
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="float-right">
             <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate">{{ $t('Delete') }}
                 <delete-confirm-dialog :object-name="objectName" @delete="deleteObject"></delete-confirm-dialog>
             </v-btn>
@@ -156,7 +156,7 @@ import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
-import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue"; //TODO remove once component is out of labs
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {t} = useI18n()
 
@@ -173,7 +173,7 @@ const editingObj = ref({} as Food)
 const loading = ref(false)
 
 // object specific data (for selects/display)
-const tab = ref("misc")
+const tab = ref("food")
 
 const unitConversions = ref([] as UnitConversion[])
 
@@ -196,7 +196,7 @@ const isUpdate = computed(() => {
  * display name for object in headers/delete dialog/...
  */
 const objectName = computed(() => {
-    return isUpdate ? `${t(OBJ_LOCALIZATION_KEY)} ${editingObj.value.token}` : `${t(OBJ_LOCALIZATION_KEY)} (${t('New')})`
+    return isUpdate ? `${t(OBJ_LOCALIZATION_KEY)} ${editingObj.value.name}` : `${t(OBJ_LOCALIZATION_KEY)} (${t('New')})`
 })
 
 onMounted(() => {
@@ -204,10 +204,13 @@ onMounted(() => {
         editingObj.value = props.item
     } else if (props.itemId != null) {
         const api = new ApiApi()
+        loading.value = true
         api.apiFoodRetrieve({id: props.itemId}).then(r => {
             editingObj.value = r
         }).catch(err => {
             useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+        }).finally(() => {
+            loading.value = false
         })
     } else {
         // functions to populate defaults for new item

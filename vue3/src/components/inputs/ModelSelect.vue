@@ -1,7 +1,7 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
     <!-- TODO support density prop -->
-    <v-input :hint="hint" persistent-hint :label="label" class="">
+    <v-input :hint="props.hint" persistent-hint :label="props.label" class="">
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
         <!-- TODO strange behavior/layering issues with appendTo body, find solution to make it work -->
@@ -28,6 +28,7 @@
             :placeholder="label"
             :noOptionsText="$t('No_Results')"
             :noResultsText="$t('No_Results')"
+            :loading="loading"
         />
 
     </v-input>
@@ -81,7 +82,8 @@ const props = defineProps({
 })
 
 const model = defineModel()
-const modelClass = ref({} as GenericModel<any>)
+const modelClass = ref({} as GenericModel)
+const loading = ref(false)
 
 /**
  * create instance of model class when mounted
@@ -95,16 +97,17 @@ onMounted(() => {
  * @param query input to search for on the API
  */
 function search(query: string) {
-    return modelClass.value.list({query: query}).then((r) => {
+    loading.value = true
+    return modelClass.value.list({query: query, page: 1, pageSize: 25}).then((r: any) => {
         if (modelClass.value.model.isPaginated) {
             return r.results
         } else {
             return r
         }
-    }).catch((err) => {
+    }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
-
+        loading.value = false
     })
 }
 
@@ -115,11 +118,11 @@ function search(query: string) {
  * @param select$ reference to multiselect instance
  */
 async function createObject(object: any, select$: Multiselect) {
-    return await modelClass.value.create({name: object[props.itemLabel]}).then((createdObj) => {
+    return await modelClass.value.create({name: object[props.itemLabel]}).then((createdObj : any) => {
         useMessageStore().addMessage(MessageType.SUCCESS, 'Created', 5000, createdObj)
         emit('create', object)
         return createdObj
-    }).catch((err) => {
+    }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
 }

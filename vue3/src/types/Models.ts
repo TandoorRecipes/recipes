@@ -11,17 +11,21 @@ import {
     SupermarketCategory as ISupermarketCategory,
     PropertyType as IPropertyType, ApiFoodListRequest, ApiUnitListRequest,
 } from "@/openapi";
+import {VDataTable} from "vuetify/components";
+import {useI18n} from "vue-i18n";
 
+type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
 /**
  * returns a GenericModel instance with the given model type
  * throws and error if no model with the given name exist
  * @param modelName name of the model
+ * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: String) {
+export function getGenericModelFromString(modelName: string, t: any) {
     if (SUPPORTED_MODELS.has(modelName)) {
-        return new GenericModel(SUPPORTED_MODELS.get(modelName))
+        return new GenericModel(SUPPORTED_MODELS.get(modelName), t)
     } else {
         throw Error(`Model ${modelName} not in SUPPORTED_MODELS`)
     }
@@ -37,6 +41,20 @@ type GenericListRequestParameter = {
 }
 
 /**
+ * if a model is shown in a table, these are the table headers
+ * structure similar to the VDataTableHeaders but simplified and
+ * extended by a "hidden" attribute to allow custom table configuration for users
+ *
+ * converted to VDataTableHeaders by the GenericModel instance
+ */
+type ModelTableHeaders = {
+    title: string,
+    key: string,
+    align: 'end'|'start',
+    hidden?: boolean,
+}
+
+/**
  * custom type containing all attributes needed by the generic model system to properly handle all functions
  */
 type Model = {
@@ -44,16 +62,14 @@ type Model = {
     localizationKey: string,
     icon: string,
 
-    disableList: boolean | undefined,
-    disableRetrieve: boolean | undefined,
-    disableCreate: boolean | undefined,
-    disableDelete: boolean | undefined,
+    disableList?: boolean | undefined,
+    disableRetrieve?: boolean | undefined,
+    disableCreate?: boolean | undefined,
+    disableDelete?: boolean | undefined,
 
     isPaginated: boolean | undefined,
 
-    // table headers
-    // canCreate
-    // canDelete
+    tableHeaders: ModelTableHeaders[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
@@ -63,6 +79,13 @@ export const TFood = {
     icon: 'fa-solid fa-carrot',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Category', key: 'supermarketCategory.name'},
+        {title: 'Plural', key: 'plural', hidden: true},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TFood.name, TFood)
 
@@ -72,6 +95,12 @@ export const TUnit = {
     icon: 'fa-solid fa-scale-balanced',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Plural', key: 'plural', hidden: true},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TUnit.name, TUnit)
 
@@ -81,6 +110,11 @@ export const TKeyword = {
     icon: 'fa-solid fa-tags',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TKeyword.name, TKeyword)
 
@@ -90,6 +124,11 @@ export const TRecipe = {
     icon: 'fa-solid fa-book',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TRecipe.name, TRecipe)
 
@@ -99,6 +138,11 @@ export const TMealType = {
     icon: 'fa-solid fa-utensils',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TMealType.name, TMealType)
 
@@ -111,6 +155,11 @@ export const TUser = {
     disableDelete: true,
 
     isPaginated: false,
+
+    tableHeaders: [
+        {title: 'Name', key: 'displayName'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TUser.name, TUser)
 
@@ -120,6 +169,11 @@ export const TSupermarket = {
     icon: 'fa-solid fa-store',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TSupermarket.name, TSupermarket)
 
@@ -129,6 +183,11 @@ export const TSupermarketCategory = {
     icon: 'fa-solid fa-boxes-stacked',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TSupermarketCategory.name, TSupermarketCategory)
 
@@ -138,6 +197,11 @@ export const TPropertyType = {
     icon: 'fa-solid fa-database',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TPropertyType.name, TPropertyType)
 
@@ -147,6 +211,15 @@ export const TUnitConversion = {
     icon: 'fa-solid fa-exchange-alt',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Food', key: 'food.name'},
+        {title: 'base_amount', key: 'baseAmount'},
+        {title: 'base_unit', key: 'baseUnit.name'},
+        {title: 'converted_amount', key: 'convertedAmount'},
+        {title: 'converted_unit', key: 'convertedUnit.name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TUnitConversion.name, TUnitConversion)
 
@@ -156,6 +229,11 @@ export const TUserFile = {
     icon: 'fa-solid fa-file',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TUserFile.name, TUserFile)
 
@@ -165,6 +243,11 @@ export const TAutomation = {
     icon: 'fa-solid fa-robot',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TAutomation.name, TAutomation)
 
@@ -174,6 +257,12 @@ export const TCookLog = {
     icon: 'fa-solid fa-table-list',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Recipe', key: 'recipe'},
+        {title: 'Created', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TCookLog.name, TCookLog)
 
@@ -183,6 +272,12 @@ export const TViewLog = {
     icon: 'fa-solid fa-clock-rotate-left',
 
     isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Recipe', key: 'recipe'},
+        {title: 'Created', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
 } as Model
 SUPPORTED_MODELS.set(TViewLog.name, TViewLog)
 
@@ -208,10 +303,29 @@ export class GenericModel {
 
     api: Object
     model: Model
+    // TODO find out the type of the t useI18n object and use it here
+    t: any
 
-    constructor(model: Model) {
+    /**
+     * create a new generic model based on the given Model type
+     * @param model instance of Model type
+     * @param t translation function from calling context
+     */
+    constructor(model: Model, t: any) {
         this.model = model
         this.api = new ApiApi()
+        this.t = t
+    }
+
+    getTableHeaders(): VDataTableProps['headers'][]{
+        let tableHeaders: VDataTableProps['headers'][] = []
+        this.model.tableHeaders.forEach(header => {
+            if(!header.hidden){
+                header.title = this.t(header.title)
+                tableHeaders.push(header as unknown as VDataTableProps['headers'])
+            }
+        })
+        return tableHeaders
     }
 
     /**
@@ -237,7 +351,7 @@ export class GenericModel {
         if (this.model.disableCreate) {
             throw new Error('Cannot create on this model!')
         } else {
-            let createRequestParams = {}
+            let createRequestParams: any = {}
             createRequestParams[this.model.name.toLowerCase()] = obj
             return this.api[`api${this.model.name}Create`](createRequestParams)
         }
@@ -254,7 +368,7 @@ export class GenericModel {
         if (this.model.disableCreate) {
             throw new Error('Cannot update on this model!')
         } else {
-            let updateRequestParams = {}
+            let updateRequestParams: any = {}
             updateRequestParams['id'] = id
             updateRequestParams[this.model.name.toLowerCase()] = obj
             return this.api[`api${this.model.name}Update`](updateRequestParams)
@@ -271,34 +385,10 @@ export class GenericModel {
         if (this.model.disableDelete) {
             throw new Error('Cannot delete on this model!')
         } else {
-            let destroyRequestParams = {}
+            let destroyRequestParams: any = {}
             destroyRequestParams['id'] = id
-            return this.api[`api${this.model.name}Destroy`](createRequestParams)
+            return this.api[`api${this.model.name}Destroy`](destroyRequestParams)
         }
     }
 
-}
-
-
-
-
-export class PropertyType extends GenericModel<IPropertyType> {
-
-    create(name: string) {
-        const api = new ApiApi()
-        return api.apiPropertyTypeCreate({propertyType: {name: name} as IPropertyType}).then(r => {
-            return r as unknown as IPropertyType
-        })
-    }
-
-    list(query: string) {
-        const api = new ApiApi()
-        return api.apiPropertyTypeList({query: query}).then(r => {
-            if (r.results) {
-                return r.results
-            } else {
-                return []
-            }
-        })
-    }
 }

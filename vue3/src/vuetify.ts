@@ -11,7 +11,11 @@ export default createVuetify({
         // disabled as this leads to cards overflowing if not careful, manually set on cards containing a multiselect until proper solution is found
         // VCard: {
         //     class: 'overflow-visible' // this is needed so that vue-multiselect options show above a card, vuetify uses overlay container to avoid this
-        // }
+        // },
+        // without this action buttons are left aligned in normal cards but right aligned in dialogs (I think)
+        VCardActions: {
+            class: 'float-right'
+        }
     },
     theme: {
         defaultTheme: 'light',

@@ -31,8 +31,7 @@
                     :items-length="itemCount"
                     :loading="loading"
                     :search="searchQuery"
-
-                    :headers="tableHeaders"
+                    :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="tableShowSelect"
                 >
@@ -44,10 +43,7 @@
                 </v-data-table-server>
             </v-col>
         </v-row>
-
     </v-container>
-
-
 </template>
 
 <script setup lang="ts">
@@ -69,10 +65,9 @@ import {
     TAutomation,
     TUserFile, TCookLog, TViewLog
 } from "@/types/Models";
-import {ca} from "vuetify/locale";
-import {ApiApi} from "@/openapi";
-import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
+import {VDataTable} from "vuetify/components";
+type VDataTableProps = InstanceType<typeof VDataTable>['$props']
+
 
 const {t} = useI18n()
 
@@ -87,10 +82,10 @@ const itemsPerPageOptions = [
     {value: 50, title: '50'},
 ]
 
-const tableHeaders = [
+const tableHeaders : VDataTableProps['headers'] = [
     {title: t('Name'), key: 'name'},
     {title: t('Category'), key: 'supermarketCategory.name'},
-    {title: t('Edit'), key: 'action', align: 'end'},
+    {title: t('Actions'), key: 'action', align: 'end'},
 ]
 
 const tableShowSelect = ref(true)
@@ -107,7 +102,7 @@ const genericModel = ref({} as GenericModel)
 // watch for changes to the prop in case its changed
 watch(() => props.model, () => {
     console.log('loading model ', props.model)
-    genericModel.value = getGenericModelFromString(props.model)
+    genericModel.value = getGenericModelFromString(props.model, t)
     loadItems({page: 1, itemsPerPage: 10})
 })
 
@@ -117,10 +112,10 @@ watch(() => props.model, () => {
 onBeforeMount(() => {
 
     try {
-        genericModel.value = getGenericModelFromString(props.model)
+        genericModel.value = getGenericModelFromString(props.model, t)
     } catch (Error) {
         console.error('Invalid model passed to ModelListPage, loading Food instead')
-        genericModel.value = getGenericModelFromString('Food')
+        genericModel.value = getGenericModelFromString('Food', t)
     }
 })
 

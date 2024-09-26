@@ -26,7 +26,7 @@
         <v-alert color="warning" variant="tonal">Make sure to save your token after creation as they cannot be viewed afterwards.</v-alert>
 
         <v-btn prepend-icon="$create" color="create" class="mt-2">{{ $t('New') }}
-            <model-editor-dialog model="AccessToken" @create="loadAccessTokens()" :close-after-create="false"></model-editor-dialog>
+            <model-edit-dialog model="AccessToken" @create="loadAccessTokens()" :close-after-create="false"></model-edit-dialog>
         </v-btn>
 
         <v-list class="mt-2" border>
@@ -39,7 +39,7 @@
                     <v-chip color="error" class="me-2" v-if="at.expires < DateTime.now().toJSDate()">Expired</v-chip>
                     <v-btn color="edit">
                         <v-icon icon="$edit"></v-icon>
-                        <model-editor-dialog model="AccessToken" :item="at" class="mt-2" @delete="loadAccessTokens()"></model-editor-dialog>
+                        <model-edit-dialog model="AccessToken" :item="at" class="mt-2" @delete="loadAccessTokens()"></model-edit-dialog>
                     </v-btn>
                 </template>
             </v-list-item>
@@ -53,14 +53,12 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {ApiApi} from "@/openapi";
+import {AccessToken, ApiApi} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
-import AccessTokenEditor from "@/components/model_editors/AccessTokenEditor.vue";
-import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const accessTokenList = ref([] as AccessToken[])
-const accessToken = ref({} as AccessToken)
 
 onMounted(() => {
     loadAccessTokens()

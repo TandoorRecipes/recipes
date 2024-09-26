@@ -27,7 +27,7 @@
         <p class="text-h6 mt-2">{{ $t('Meal_Types') }}
             <v-btn prepend-icon="$create" color="create" size="small" class="float-right">
                 {{ $t('New') }}
-                <model-editor-dialog model="MealType" @create="item => mealTypes.push(item)" @delete="deleteMealType"></model-editor-dialog>
+                <model-edit-dialog model="MealType" @create="item => mealTypes.push(item)" @delete="deleteMealType"></model-edit-dialog>
             </v-btn>
 
         </p>
@@ -41,7 +41,7 @@
                     <v-chip class="me-2">{{ mt.time}}</v-chip>
                     <v-btn color="edit">
                         <v-icon icon="$edit"></v-icon>
-                        <model-editor-dialog model="MealType" :item="mt" @delete="deleteMealType"></model-editor-dialog>
+                        <model-edit-dialog model="MealType" :item="mt" @delete="deleteMealType"></model-edit-dialog>
                     </v-btn>
                 </template>
             </v-list-item>
@@ -58,7 +58,7 @@ import {useI18n} from "vue-i18n";
 import {onMounted, ref} from "vue";
 import {ApiApi, MealType} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {t} = useI18n()
 

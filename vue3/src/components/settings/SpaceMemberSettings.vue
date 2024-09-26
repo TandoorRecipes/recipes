@@ -2,7 +2,7 @@
     <v-form>
         <p class="text-h6">{{ $t('SpaceMembers') }}</p>
         <v-divider></v-divider>
-        <p class="text-subtitle-2">{{$t('SpaceMemberHelp')}}</p>
+        <p class="text-subtitle-2">{{ $t('SpaceMemberHelp') }}</p>
 
         <v-data-table :items="spaceUserSpaces" :headers="userTableHeaders" density="compact" :hide-default-footer="spaceUserSpaces.length < 10" class="mt-3">
             <template #item.groups="{item}">
@@ -12,16 +12,16 @@
             <template #item.edit="{item}">
                 <v-btn color="edit" size="small" v-if="item.user.id != useUserPreferenceStore().activeSpace.createdBy.id">
                     <v-icon icon="$edit"></v-icon>
-                    <model-editor-dialog model="UserSpace" :item="item" @delete="deleteUserSpace(item)" class="mt-2"></model-editor-dialog>
+                    <model-edit-dialog model="UserSpace" :item="item" @delete="deleteUserSpace(item)" class="mt-2"></model-edit-dialog>
                 </v-btn>
-                <v-chip color="edit" v-else>{{$t('Owner')}}</v-chip>
+                <v-chip color="edit" v-else>{{ $t('Owner') }}</v-chip>
             </template>
         </v-data-table>
 
         <p class="text-h6 mt-3">{{ $t('Invites') }}
             <v-btn size="small" class="float-right" prepend-icon="$create" color="create">
                 {{ $t('New') }}
-                <model-editor-dialog model="InviteLink" @delete="deleteInviteLink" @create="item  => spaceInviteLinks.push(item)" class="mt-2"></model-editor-dialog>
+                <model-edit-dialog model="InviteLink" @delete="deleteInviteLink" @create="item  => spaceInviteLinks.push(item)" class="mt-2"></model-edit-dialog>
             </v-btn>
         </p>
         <v-divider class="mb-3"></v-divider>
@@ -31,7 +31,7 @@
                 <btn-copy size="small" :copy-value="inviteLinkUrl(item)" class="me-1"></btn-copy>
                 <v-btn color="edit" size="small">
                     <v-icon icon="$edit"></v-icon>
-                    <model-editor-dialog model="InviteLink" :item="item" @delete="deleteInviteLink(item)" class="mt-2"></model-editor-dialog>
+                    <model-edit-dialog model="InviteLink" :item="item" @delete="deleteInviteLink(item)" class="mt-2"></model-edit-dialog>
                 </v-btn>
             </template>
         </v-data-table>
@@ -43,14 +43,12 @@
 
 
 import {onMounted, ref} from "vue";
-import {ApiApi, Group, InviteLink, UserSpace} from "@/openapi";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {ApiApi, InviteLink, UserSpace} from "@/openapi";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
-import {DateTime} from "luxon";
-import {useClipboard} from "@vueuse/core";
-import ModelEditorDialog from "@/components/dialogs/ModelEditorDialog.vue";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {t} = useI18n()
 
