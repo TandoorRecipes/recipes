@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            {{ $t(OBJ_LOCALIZATION_KEY) }}
+            {{ $t(modelClass.model.localizationKey) }}
             <v-btn class="float-right" icon="$close" variant="plain" @click="emit('close')" v-if="dialog"></v-btn>
         </v-card-title>
         <v-card-text>
@@ -31,27 +31,26 @@
 <script setup lang="ts">
 
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
-import {computed, onMounted, ref} from "vue";
-import {AccessToken, ApiApi} from "@/openapi";
+import {computed, onBeforeMount, onMounted, PropType, ref} from "vue";
+import {AccessToken} from "@/openapi";
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
-import {useClipboard} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
+import {GenericModel, getGenericModelFromString} from "@/types/Models";
 
 const {t} = useI18n()
-const {copy} = useClipboard()
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
 
 const props = defineProps({
-    item: {type: {} as AccessToken, required: false},
+    item: {type: {} as PropType<AccessToken>, required: false},
     dialog: {type: Boolean, default: false}
 })
 
-const OBJ_LOCALIZATION_KEY = 'Access_Token'
 const editingObj = ref({} as AccessToken)
+const modelClass = ref({} as GenericModel)
 const loading = ref(false)
 
 /**
@@ -65,7 +64,11 @@ const isUpdate = computed(() => {
  * display name for object in headers/delete dialog/...
  */
 const objectName = computed(() => {
-    return isUpdate ? `${t(OBJ_LOCALIZATION_KEY)} ${editingObj.value.token}` : `${t(OBJ_LOCALIZATION_KEY)} (${t('New')})`
+    return isUpdate ? `${t(modelClass.value.model.localizationKey)} ${editingObj.value.token}` : `${t(modelClass.value.model.localizationKey)} (${t('New')})`
+})
+
+onBeforeMount(() => {
+    modelClass.value = getGenericModelFromString('AccessToken', t)
 })
 
 onMounted(() => {
@@ -82,9 +85,8 @@ onMounted(() => {
  * saves the edited object in the database
  */
 async function saveObject() {
-    let api = new ApiApi()
     if (isUpdate.value) {
-        api.apiAccessTokenUpdate({id: editingObj.value.id, accessToken: editingObj.value}).then(r => {
+        modelClass.value.update(editingObj.value.id, editingObj.value).then(r => {
             editingObj.value = r
             emit('save', r)
             useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
@@ -92,7 +94,7 @@ async function saveObject() {
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         })
     } else {
-        api.apiAccessTokenCreate({accessToken: editingObj.value}).then(r => {
+        modelClass.value.create(editingObj.value).then(r => {
             editingObj.value = r
             emit('create', r)
             useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
@@ -106,8 +108,7 @@ async function saveObject() {
  * deletes the editing object from the database
  */
 async function deleteObject() {
-    let api = new ApiApi()
-    api.apiAccessTokenDestroy({id: editingObj.value.id}).then(r => {
+    modelClass.value.destroy(editingObj.value.id).then(r => {
         editingObj.value = {} as AccessToken
         emit('delete', editingObj.value)
     }).catch(err => {

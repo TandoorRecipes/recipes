@@ -281,6 +281,21 @@ export const TViewLog = {
 } as Model
 SUPPORTED_MODELS.set(TViewLog.name, TViewLog)
 
+export const TAccessToken = {
+    name: 'AccessToken',
+    localizationKey: 'Access_Token',
+    icon: 'fa-solid fa-key',
+
+    isPaginated: true,
+
+    tableHeaders: [
+        {title: 'Access_Token', key: 'token'},
+        {title: 'Created', key: 'createdAt'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+SUPPORTED_MODELS.set(TAccessToken.name, TAccessToken)
+
 export const TFoodInheritField = {
     name: 'FoodInheritField',
     localizationKey: 'FoodInherit',
@@ -352,7 +367,7 @@ export class GenericModel {
             throw new Error('Cannot create on this model!')
         } else {
             let createRequestParams: any = {}
-            createRequestParams[this.model.name.toLowerCase()] = obj
+            createRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = obj
             return this.api[`api${this.model.name}Create`](createRequestParams)
         }
     }
@@ -370,7 +385,7 @@ export class GenericModel {
         } else {
             let updateRequestParams: any = {}
             updateRequestParams['id'] = id
-            updateRequestParams[this.model.name.toLowerCase()] = obj
+            updateRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = obj
             return this.api[`api${this.model.name}Update`](updateRequestParams)
         }
     }
