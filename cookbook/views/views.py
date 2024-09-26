@@ -32,6 +32,9 @@ from recipes.settings import PLUGINS
 
 
 def index(request):
+    if settings.V3_BETA:
+        return HttpResponseRedirect(reverse('vue3'))
+
     with scopes_disabled():
         if not request.user.is_authenticated:
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
@@ -52,6 +55,9 @@ def index(request):
 
 
 def search(request):
+    if settings.V3_BETA:
+        return HttpResponseRedirect(reverse('vue3'))
+
     if has_group_permission(request.user, ('guest', )):
         return render(request, 'search.html', {})
     else:

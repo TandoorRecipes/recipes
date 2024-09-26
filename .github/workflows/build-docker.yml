@@ -37,7 +37,7 @@ jobs:
       # Build Vue frontend
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: yarn
           cache-dependency-path: vue/yarn.lock
       - name: Install dependencies
@@ -45,6 +45,19 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build dependencies
         working-directory: ./vue
+        run: yarn build
+
+          # Build Vue 3 frontend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: vue3/yarn.lock
+      - name: Install dependencies
+        working-directory: ./vue3
+        run: yarn install --frozen-lockfile
+      - name: Build dependencies
+        working-directory: ./vue3
         run: yarn build
 
       - name: Set up QEMU

@@ -51,6 +51,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'INSECURE_STANDARD_KEY_SET_IN_ENV')
 DEBUG = extract_bool('DEBUG', True)
 DEBUG_TOOLBAR = extract_bool('DEBUG_TOOLBAR', True)
 
+V3_BETA = extract_bool('V3_BETA', False)
+
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
