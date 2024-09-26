@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-09-23 21:58+0000\n"
+"PO-Revision-Date: 2024-09-27 13:58+0000\n"
 "Last-Translator: supaeasy <crafty_renewably854@supaeasy.de>\n"
 "Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/de/>\n"
@@ -542,10 +542,8 @@ msgid "Instruction Replace"
 msgstr "Anleitung ersetzen"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Neue Einheit"
+msgstr "Nie Einheit"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
@@ -2153,6 +2151,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            Die erlaubten Hosts sind so konfiguriert, dass sie jeden Host "
+"erlauben. Das mag in einigen Fällen in Ordnung sein, sollte aber im "
+"Regelfall vermieden werden. Bitte lies in der Dokumentation dazu nach.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2578,10 +2581,8 @@ msgstr ""
 "Monitor verwendet wird."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Speicherquelle"
+msgstr "Backendkonfiguration für Konnektoren"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
@@ -2640,10 +2641,8 @@ msgid "Shopping List"
 msgstr "Einkaufsliste"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Speicherquelle"
+msgstr "Backendkonfiguration für Konnektoren"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2751,18 +2750,14 @@ msgstr ""
 "PostgreSQL-Datenbanken funktionieren."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
-"Die Setup-Seite kann nur für den ersten Nutzer verwendet werden. Zum "
-"Zurücksetzen von Passwörtern bitte der Django-Dokumentation folgen."
+"Die Setup-Seite kann nur für den ersten Nutzer verwendet "
+"werden.                      Falls du die Superuser Logindaten vergessen "
+"hast, folge bitte der Django-Dokumentation um Passwörter zurückzusetzen."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
