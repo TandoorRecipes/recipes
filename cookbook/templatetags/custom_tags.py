@@ -196,7 +196,7 @@ def bookmarklet(request):
 @register.simple_tag
 def base_path(request, path_type):
     if path_type == 'base':
-        return request._current_scheme_host + request.META.get('HTTP_X_SCRIPT_NAME', '')
+        return '//' + request._current_scheme_host.split("://")[-1] + request.META.get('HTTP_X_SCRIPT_NAME', '')
     elif path_type == 'script':
         return request.META.get('HTTP_X_SCRIPT_NAME', '')
     elif path_type == 'static_base':
