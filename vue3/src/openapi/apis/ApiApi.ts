@@ -1649,6 +1649,11 @@ export interface ApiUserSpaceRetrieveRequest {
     id: number;
 }
 
+export interface ApiUserSpaceUpdateRequest {
+    id: number;
+    userSpace: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'>;
+}
+
 export interface ApiViewLogCreateRequest {
     viewLog: Omit<ViewLog, 'created_by'|'created_at'>;
 }
@@ -12377,6 +12382,51 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiUserSpaceRetrieve(requestParameters: ApiUserSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpace> {
         const response = await this.apiUserSpaceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiUserSpaceUpdateRaw(requestParameters: ApiUserSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpace>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiUserSpaceUpdate().'
+            );
+        }
+
+        if (requestParameters['userSpace'] == null) {
+            throw new runtime.RequiredError(
+                'userSpace',
+                'Required parameter "userSpace" was null or undefined when calling apiUserSpaceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/api/user-space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSpaceToJSON(requestParameters['userSpace']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiUserSpaceUpdate(requestParameters: ApiUserSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpace> {
+        const response = await this.apiUserSpaceUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

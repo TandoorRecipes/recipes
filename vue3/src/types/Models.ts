@@ -50,7 +50,7 @@ type GenericListRequestParameter = {
 type ModelTableHeaders = {
     title: string,
     key: string,
-    align: 'end'|'start',
+    align: 'end' | 'start',
     hidden?: boolean,
 }
 
@@ -61,10 +61,12 @@ type Model = {
     name: string,
     localizationKey: string,
     icon: string,
+    toStringKeys: Array<string>,
 
     disableList?: boolean | undefined,
     disableRetrieve?: boolean | undefined,
     disableCreate?: boolean | undefined,
+    disableUpdate?: boolean | undefined,
     disableDelete?: boolean | undefined,
 
     isPaginated: boolean | undefined,
@@ -79,6 +81,7 @@ export const TFood = {
     icon: 'fa-solid fa-carrot',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -95,6 +98,7 @@ export const TUnit = {
     icon: 'fa-solid fa-scale-balanced',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -110,6 +114,7 @@ export const TKeyword = {
     icon: 'fa-solid fa-tags',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -124,6 +129,7 @@ export const TRecipe = {
     icon: 'fa-solid fa-book',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -138,6 +144,7 @@ export const TMealType = {
     icon: 'fa-solid fa-utensils',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -149,12 +156,14 @@ SUPPORTED_MODELS.set(TMealType.name, TMealType)
 export const TUser = {
     name: 'User',
     localizationKey: 'User',
-    icon: 'fa-solid fa-users',
+    icon: 'fa-solid fa-user',
 
     disableCreate: true,
     disableDelete: true,
+    disableUpdate: true,
 
     isPaginated: false,
+    toStringKeys: ['displayName'],
 
     tableHeaders: [
         {title: 'Name', key: 'displayName'},
@@ -169,6 +178,7 @@ export const TSupermarket = {
     icon: 'fa-solid fa-store',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -183,6 +193,7 @@ export const TSupermarketCategory = {
     icon: 'fa-solid fa-boxes-stacked',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -197,6 +208,7 @@ export const TPropertyType = {
     icon: 'fa-solid fa-database',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -205,12 +217,29 @@ export const TPropertyType = {
 } as Model
 SUPPORTED_MODELS.set(TPropertyType.name, TPropertyType)
 
+export const TProperty = {
+    name: 'Property',
+    localizationKey: 'Property',
+    icon: 'fa-solid fa-database',
+
+    isPaginated: true,
+    toStringKeys: ['propertyType'], // TODO improve
+
+    tableHeaders: [
+        {title: 'Amount', key: 'propertyAmount'},
+        {title: 'PropertyType', key: 'propertyType.name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+SUPPORTED_MODELS.set(TProperty.name, TProperty)
+
 export const TUnitConversion = {
     name: 'UnitConversion',
     localizationKey: 'UnitConversion',
     icon: 'fa-solid fa-exchange-alt',
 
     isPaginated: true,
+    toStringKeys: ['food'], // TODO improve
 
     tableHeaders: [
         {title: 'Food', key: 'food.name'},
@@ -229,6 +258,7 @@ export const TUserFile = {
     icon: 'fa-solid fa-file',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -243,6 +273,7 @@ export const TAutomation = {
     icon: 'fa-solid fa-robot',
 
     isPaginated: true,
+    toStringKeys: ['name'],
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
@@ -257,6 +288,7 @@ export const TCookLog = {
     icon: 'fa-solid fa-table-list',
 
     isPaginated: true,
+    toStringKeys: ['recipe'],
 
     tableHeaders: [
         {title: 'Recipe', key: 'recipe'},
@@ -272,6 +304,7 @@ export const TViewLog = {
     icon: 'fa-solid fa-clock-rotate-left',
 
     isPaginated: true,
+    toStringKeys: ['recipe'],
 
     tableHeaders: [
         {title: 'Recipe', key: 'recipe'},
@@ -287,6 +320,7 @@ export const TAccessToken = {
     icon: 'fa-solid fa-key',
 
     isPaginated: true,
+    toStringKeys: ['token'],
 
     tableHeaders: [
         {title: 'Access_Token', key: 'token'},
@@ -296,14 +330,51 @@ export const TAccessToken = {
 } as Model
 SUPPORTED_MODELS.set(TAccessToken.name, TAccessToken)
 
+export const TUserSpace = {
+    name: 'UserSpace',
+    localizationKey: 'SpaceMembers',
+    icon: 'fa-solid fa-users',
+
+    isPaginated: true,
+    toStringKeys: ['user'], // TODO improve
+
+    disableCreate: true,
+
+    tableHeaders: [
+        {title: 'User', key: 'user'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+SUPPORTED_MODELS.set(TUserSpace.name, TUserSpace)
+
+export const TInviteLink = {
+    name: 'InviteLink',
+    localizationKey: 'Invite_Link',
+    icon: 'fa-solid fa-link',
+
+    isPaginated: true,
+
+    toStringKeys: ['email', 'role'],
+
+    tableHeaders: [
+        {title: 'Email', key: 'email'},
+        {title: 'Role', key: 'group'},
+        {title: 'Valid Until', key: 'validUntil'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+SUPPORTED_MODELS.set(TInviteLink.name, TInviteLink)
+
 export const TFoodInheritField = {
     name: 'FoodInheritField',
     localizationKey: 'FoodInherit',
     icon: 'fa-solid fa-list',
 
+    toStringKeys: ['name'],
+
     disableCreate: true,
     disableDelete: true,
-    disableRetrieve: true,
+    disableUpdate: true,
 
     isPaginated: false,
 } as Model
@@ -332,10 +403,10 @@ export class GenericModel {
         this.t = t
     }
 
-    getTableHeaders(): VDataTableProps['headers'][]{
+    getTableHeaders(): VDataTableProps['headers'][] {
         let tableHeaders: VDataTableProps['headers'][] = []
         this.model.tableHeaders.forEach(header => {
-            if(!header.hidden){
+            if (!header.hidden) {
                 header.title = this.t(header.title)
                 tableHeaders.push(header as unknown as VDataTableProps['headers'])
             }
@@ -380,13 +451,29 @@ export class GenericModel {
      * @return promise of request
      */
     update(id: number, obj: any) {
-        if (this.model.disableCreate) {
+        if (this.model.disableUpdate) {
             throw new Error('Cannot update on this model!')
         } else {
             let updateRequestParams: any = {}
             updateRequestParams['id'] = id
             updateRequestParams[this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1)] = obj
             return this.api[`api${this.model.name}Update`](updateRequestParams)
+        }
+    }
+
+    /**
+     * retrieves the given model
+     * throws error if retrieving is not supported for given model
+     * @param id object id to retrieve
+     * @return promise of request
+     */
+    retrieve(id: number) {
+        if (this.model.disableRetrieve) {
+            throw new Error('Cannot delete on this model!')
+        } else {
+            let retrieveRequestParams: any = {}
+            retrieveRequestParams['id'] = id
+            return this.api[`api${this.model.name}Retrieve`](retrieveRequestParams)
         }
     }
 

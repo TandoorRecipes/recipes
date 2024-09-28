@@ -4,7 +4,8 @@
         <v-card>
             <v-card-title>{{ $t('Delete') }}</v-card-title>
             <v-card-text>
-                {{ $t('DeleteConfirmQuestion')}}
+                {{ $t('DeleteConfirmQuestion')}} <br/>
+                <b>{{ modelName }}</b><br/>
                 <b>{{ objectName }}</b>
             </v-card-text>
             <v-card-actions>
@@ -25,7 +26,8 @@ import {ref} from "vue";
 const emit = defineEmits(['delete'])
 
 const props = defineProps({
-    objectName: {type: String, default: ''}
+    objectName: {type: String, default: ''},
+    modelName: {type: String, default: ''},
 })
 
 const dialog = ref(false)

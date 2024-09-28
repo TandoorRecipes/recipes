@@ -475,7 +475,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
     permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
-    http_method_names = ['get', 'patch', 'delete']
+    http_method_names = ['get', 'put', 'patch', 'delete']
     pagination_class = DefaultPagination
 
     def destroy(self, request, *args, **kwargs):
