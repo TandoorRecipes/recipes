@@ -1,15 +1,21 @@
 <template>
-    <v-card :loading="loading">
-        <v-card-title>
-            {{ $t(OBJ_LOCALIZATION_KEY) }} <span class="text-disabled">{{ editingObj.name }}</span>
-            <v-btn class="float-right" icon="$close" variant="plain" @click="emit('close')" v-if="dialog"></v-btn>
-        </v-card-title>
+    <model-editor-base
+        :loading="loading"
+        :dialog="dialog"
+        @save="saveObject(); saveObjectConversions()"
+        @delete="deleteObject"
+        @close="emit('close')"
+        :is-update="isUpdate()"
+        :model-name="$t(modelClass.model.localizationKey)"
+        :object-name="editingObjName()">
+
         <v-tabs v-model="tab" :disabled="loading">
             <v-tab value="food">{{ $t('Food') }}</v-tab>
             <v-tab value="properties">{{ $t('Properties') }}</v-tab>
             <v-tab value="conversions">{{ $t('Conversion') }}</v-tab>
             <v-tab value="misc">{{ $t('Miscellaneous') }}</v-tab>
         </v-tabs>
+
 
         <v-card-text>
             <v-tabs-window v-model="tab">
@@ -25,7 +31,7 @@
 
                 <v-tabs-window-item value="properties">
                     <v-alert icon="$help">{{ $t('PropertiesFoodHelp') }}</v-alert>
-                    <v-form class="mt-5">
+                    <v-form :disabled="loading" class="mt-5">
                         <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount"></v-number-input>
                         <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
 
@@ -74,7 +80,7 @@
 
                 <v-tabs-window-item value="conversions">
                     <v-alert icon="$help">{{ $t('ConversionsHelp') }}</v-alert>
-                    <v-form class="mt-5">
+                    <v-form :disabled="loading" class="mt-5">
 
                         <v-btn color="create" @click="unitConversions.push({food: editingObj} as UnitConversion)" prepend-icon="$create">{{ $t('Add') }}</v-btn>
 
@@ -117,7 +123,7 @@
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="misc">
-                    <v-form class="mt-5">
+                    <v-form :disabled="loading" class="mt-5">
                         <ModelSelect model="Recipe" v-model="editingObj.recipe" :label="$t('Recipe')"></ModelSelect>
                         <v-text-field :label="$t('Website')" v-model="editingObj.url"></v-text-field>
                         <v-checkbox :label="$t('OnHand')" :hint="$t('OnHand_help')" v-model="editingObj.foodOnhand" persistent-hint></v-checkbox>
@@ -128,8 +134,10 @@
                         <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
                         <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
 
-                        <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')" mode="tags"></ModelSelect>
-                        <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')" mode="tags"></ModelSelect>
+                        <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')"
+                                     mode="tags"></ModelSelect>
+                        <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
+                                     mode="tags"></ModelSelect>
 
                         <!-- TODO re-add reset inheritance button/api call /function (previously annotated field on food -->
                         <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
@@ -138,39 +146,34 @@
             </v-tabs-window>
 
         </v-card-text>
-        <v-card-actions class="float-right">
-            <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate">{{ $t('Delete') }}
-                <delete-confirm-dialog :object-name="objectName" @delete="deleteObject"></delete-confirm-dialog>
-            </v-btn>
-            <v-btn color="save" prepend-icon="$save" @click="saveObject">{{ isUpdate ? $t('Save') : $t('Create') }}</v-btn>
-        </v-card-actions>
-    </v-card>
+
+
+    </model-editor-base>
+
 </template>
 
 <script setup lang="ts">
 
-import {computed, onMounted, Prop, ref, watch} from "vue";
+import {onMounted, PropType, ref, watch} from "vue";
 import {ApiApi, Food, Property, Unit, UnitConversion} from "@/openapi";
-import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {useI18n} from "vue-i18n";
-import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
+import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 
-const {t} = useI18n()
-
-const emit = defineEmits(['create', 'save', 'delete', 'close'])
 
 const props = defineProps({
-    item: {type: {} as Food, required: false},
-    itemId: {type: String, required: false},
+    item: {type: {} as PropType<Food>, required: false, default: null},
+    itemId: {type: Number, required: false, default: undefined},
     dialog: {type: Boolean, default: false}
 })
 
-const OBJ_LOCALIZATION_KEY = 'Food'
-const editingObj = ref({} as Food)
-const loading = ref(false)
+const emit = defineEmits(['create', 'save', 'delete', 'close'])
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<Food>('Food', emit)
+
 
 // object specific data (for selects/display)
 const tab = ref("food")
@@ -185,63 +188,21 @@ const stopConversionsWatcher = watch(tab, (value, oldValue, onCleanup) => {
     }
 })
 
-/**
- * checks if given object has ID property to determine if it needs to be updated or created
- */
-const isUpdate = computed(() => {
-    return editingObj.value.id !== undefined
-})
-
-/**
- * display name for object in headers/delete dialog/...
- */
-const objectName = computed(() => {
-    return isUpdate ? `${t(OBJ_LOCALIZATION_KEY)} ${editingObj.value.name}` : `${t(OBJ_LOCALIZATION_KEY)} (${t('New')})`
-})
 
 onMounted(() => {
-    if (props.item != null) {
-        editingObj.value = props.item
-    } else if (props.itemId != null) {
-        const api = new ApiApi()
-        loading.value = true
-        api.apiFoodRetrieve({id: props.itemId}).then(r => {
-            editingObj.value = r
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-        }).finally(() => {
-            loading.value = false
-        })
-    } else {
-        // functions to populate defaults for new item
+    if (!setupState(props.item, props.itemId)) {
+        // functions to populate defaults
         editingObj.value.propertiesFoodAmount = 100
         editingObj.value.propertiesFoodUnit = {name: 'g'} as Unit // TODO properly fetch default unit
     }
 })
 
+
 /**
  * saves the edited object in the database
  */
-async function saveObject() {
-    let api = new ApiApi()
-    if (isUpdate.value) {
-        api.apiFoodUpdate({id: editingObj.value.id, food: editingObj.value}).then(r => {
-            editingObj.value = r
-            emit('save', r)
-            useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
-        })
-    } else {
-        api.apiFoodCreate({food: editingObj.value}).then(r => {
-            editingObj.value = r
-            emit('create', r)
-            useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
-        }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-        })
-    }
-
+async function saveObjectConversions() {
+    const api = new ApiApi()
     unitConversions.value.forEach((uc) => {
         if (uc.id) {
             api.apiUnitConversionUpdate({id: uc.id, unitConversion: uc}).catch(err => {
@@ -252,19 +213,6 @@ async function saveObject() {
                 useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
             })
         }
-    })
-}
-
-/**
- * deletes the editing object from the database
- */
-async function deleteObject() {
-    let api = new ApiApi()
-    api.apiFoodDestroy({id: editingObj.value.id}).then(r => {
-        editingObj.value = {} as Food
-        emit('delete', editingObj.value)
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
     })
 }
 

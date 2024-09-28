@@ -4,11 +4,8 @@
             <router-link :to="{ name: 'view_home', params: {} }">
                 <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
             </router-link>
-            <router-link :to="{name: 'view_shopping',  params: {}}"></router-link>
-            <router-link :to="{name: 'view_mealplan',  params: {}}"></router-link>
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
-
 
             <v-avatar color="cyan" class="me-2">V
                 <v-menu activator="parent">
