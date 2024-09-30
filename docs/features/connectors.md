@@ -29,6 +29,7 @@ Step 1:
 2. Get/create a todo list entry you want to sync too.
 ![Todos Viewer](https://github.com/TandoorRecipes/recipes/assets/7824786/506c4c34-3d40-48ae-a80c-e50374c5c618)
 3. Create a connector 
-![New Connector Config](https://github.com/TandoorRecipes/recipes/assets/7824786/7f14f181-1341-4cab-959b-a6bef79e2159)
+![New Connector config](https://github.com/user-attachments/assets/503e4d52-22d9-4004-bae2-ba4c68814338)
+
 4. ???
 5. Profit
