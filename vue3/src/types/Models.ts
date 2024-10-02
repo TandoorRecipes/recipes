@@ -277,6 +277,7 @@ export const TAutomation = {
 
     tableHeaders: [
         {title: 'Name', key: 'name'},
+        {title: 'Type', key: 'type'},
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model

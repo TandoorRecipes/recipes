@@ -2,9 +2,11 @@
     <v-dialog max-width="600" activator="parent" v-model="dialog">
         <supermarket-category-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'SupermarketCategory'"></supermarket-category-editor>
         <unit-conversion-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'UnitConversion'" :disabled-fields="disabledFields"></unit-conversion-editor>
+        <property-type-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'PropertyType'" :disabled-fields="disabledFields"></property-type-editor>
         <access-token-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'AccessToken'"></access-token-editor>
         <invite-link-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'InviteLink'"></invite-link-editor>
         <supermarket-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'Supermarket'"></supermarket-editor>
+        <automation-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'Automation'"></automation-editor>
         <user-space-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'UserSpace'"></user-space-editor>
         <meal-type-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'MealType'"></meal-type-editor>
         <property-editor :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" v-if="model == 'Property'"></property-editor>
@@ -26,12 +28,14 @@ import UnitConversionEditor from "@/components/model_editors/UnitConversionEdito
 import FoodEditor from "@/components/model_editors/FoodEditor.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
 import SupermarketCategoryEditor from "@/components/model_editors/SupermarketCategoryEditor.vue";
+import PropertyTypeEditor from "@/components/model_editors/PropertyTypeEditor.vue";
+import AutomationEditor from "@/components/model_editors/AutomationEditor.vue";
 
 const emit = defineEmits(['create', 'save', 'delete'])
 
 const props = defineProps({
     model: {
-        type: String as PropType<'UnitConversion' | 'AccessToken'| 'InviteLink' | 'UserSpace' | 'MealType' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory'>,
+        type: String as PropType<'UnitConversion' | 'AccessToken'| 'InviteLink' | 'UserSpace' | 'MealType' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'>,
         required: true,
     },
     item: {default: null},

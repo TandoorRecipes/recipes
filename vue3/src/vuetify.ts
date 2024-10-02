@@ -70,6 +70,7 @@ export default createVuetify({
             close: 'fa-solid fa-xmark',
             help: 'fa-solid fa-info',
             settings: 'fa-solid fa-sliders',
+            dragHandle: 'fa-solid fa-grip-vertical',
             spaces: 'fa-solid fa-database',
             shopping: 'fa-solid fa-cart-shopping',
             mealplan: 'fa-solid fa-calendar-days',

@@ -15,6 +15,8 @@
                 <unit-editor :item-id="id" v-if="model == 'Unit'" @delete="router.go(-1)"></unit-editor>
                 <keyword-editor :item-id="id" v-if="model == 'Keyword'" @delete="router.go(-1)"></keyword-editor>
                 <supermarket-editor :item-id="id" v-if="model == 'Supermarket'" @delete="router.go(-1)"></supermarket-editor>
+                <property-type-editor :item-id="id" v-if="model == 'PropertyType'" @delete="router.go(-1)"></property-type-editor>
+                <automation-editor :item-id="id" v-if="model == 'Automation'" @delete="router.go(-1)"></automation-editor>
             </v-col>
         </v-row>
     </v-container>
@@ -29,6 +31,8 @@ import {useRouter} from "vue-router";
 import UnitEditor from "@/components/model_editors/UnitEditor.vue";
 import KeywordEditor from "@/components/model_editors/KeywordEditor.vue";
 import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue";
+import PropertyTypeEditor from "@/components/model_editors/PropertyTypeEditor.vue";
+import AutomationEditor from "@/components/model_editors/AutomationEditor.vue";
 
 const props = defineProps({
     model: {type: String, default: 'Food'},
