@@ -6,7 +6,7 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
-        :model-name="$t(modelClass.model.localizationKey)"
+        :model-class="modelClass"
         :object-name="editingObjName()">
         <v-card-text>
             <v-form>
@@ -56,7 +56,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<UnitConversion>, required: false, default: null},
-    itemId: {type: Number, required: false, default: undefined},
+    itemId: {type: [Number, String], required: false, default: undefined},
     dialog: {type: Boolean, default: false}
 })
 

@@ -11,7 +11,9 @@
         </v-row>
         <v-row>
             <v-col>
-                <food-editor :item-id="id"></food-editor>
+                <food-editor :item-id="id" v-if="model == 'Food'" @delete="router.go(-1)"></food-editor>
+                <unit-editor :item-id="id" v-if="model == 'Unit'" @delete="router.go(-1)"></unit-editor>
+                <keyword-editor :item-id="id" v-if="model == 'Keyword'" @delete="router.go(-1)"></keyword-editor>
             </v-col>
         </v-row>
     </v-container>
@@ -23,6 +25,8 @@ import FoodEditor from "@/components/model_editors/FoodEditor.vue";
 import {onMounted, ref} from "vue";
 import {ApiApi, Food} from "@/openapi";
 import {useRouter} from "vue-router";
+import UnitEditor from "@/components/model_editors/UnitEditor.vue";
+import KeywordEditor from "@/components/model_editors/KeywordEditor.vue";
 
 const props = defineProps({
     model: {type: String, default: 'Food'},

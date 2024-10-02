@@ -6,7 +6,7 @@
         @delete="deleteObject"
         @close="emit('close')"
         :is-update="isUpdate()"
-        :model-name="$t(modelClass.model.localizationKey)"
+        :model-class="modelClass"
         :object-name="editingObjName()">
         <v-card-text>
             <v-form :disabled="loading">
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 import {VDateInput} from 'vuetify/labs/VDateInput' //TODO remove once component is out of labs
-import { onMounted, PropType, ref} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {ApiApi, Group, InviteLink} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
@@ -34,7 +34,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 
 const props = defineProps({
     item: {type: {} as PropType<InviteLink>, required: false, default: null},
-    itemId: {type: Number, required: false, default: undefined},
+    itemId: {type: [Number, String], required: false, default: undefined},
     dialog: {type: Boolean, default: false}
 })
 

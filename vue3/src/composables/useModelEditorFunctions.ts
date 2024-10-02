@@ -27,7 +27,7 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
      * @param item item object to set as editingObj
      * @param itemId id of object to be retrieved and set as editingObj
      */
-    function setupState(item: T | null, itemId: number | undefined) {
+    function setupState(item: T | null, itemId: number|string | undefined) {
         if (item === null && itemId === undefined) {
             if (modelClass.value.model.disableCreate) {
                 throw Error('Trying to use a ModelEditor without an item and a model that does not allow object creation!')
@@ -37,6 +37,9 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
             editingObj.value = item
         } else if (itemId !== undefined) {
             loading.value = true
+            if(typeof itemId == "string"){
+                itemId = Number(itemId)
+            }
             modelClass.value.retrieve(itemId).then((r: T) => {
                 editingObj.value = r
             }).catch((err: any) => {

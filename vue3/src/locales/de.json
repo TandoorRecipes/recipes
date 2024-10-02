@@ -27,6 +27,8 @@
   "Automate": "Automatisieren",
   "Automation": "Automatisierung",
   "Back": "Zurück",
+  "BaseUnit": "Basiseinheit",
+  "BaseUnitHelp": "Optionale Standardeinheit zur automatischen Umrechnung",
   "Bookmarklet": "Lesezeichen",
   "Books": "Kochbücher",
   "Calculator": "Rechner",
