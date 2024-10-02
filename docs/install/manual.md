@@ -3,8 +3,7 @@
 These instructions are inspired from a standard django/gunicorn/postgresql instructions ([for example](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04))
 
 !!! warning
-    Be sure to use python 3.9 at least and pip related to python 3.9 at least. Depending on your distribution calling `python` or `pip` will use python2 instead of python 3.9. As of writing this documentation 3.10 is available as well.
-    Make sure your machine got at least 2048 MB memory, otherwise the yarn build will fail with `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory`.
+    Make sure to use Python 3.10 or higher, and ensure that `pip` is associated with Python 3. Depending on your system configuration, using `python` or `pip` might default to Python 2. Make sure your machine has at least 2048 MB of memory; otherwise, the `yarn build` process may fail with the error: `FATAL ERROR: Reached heap limit - Allocation failed: JavaScript heap out of memory`.
 
 ## Prerequisites
 
