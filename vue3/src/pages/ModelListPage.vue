@@ -18,8 +18,12 @@
                             </v-list>
                         </v-menu>
                     </v-btn>
-                    <v-icon :icon="genericModel.model.icon"></v-icon>
+                    <i :class="genericModel.model.icon"></i>
                     {{ $t(genericModel.model.localizationKey) }}</span>
+                    <v-btn class="float-right" icon="$create" color="create" >
+                          <i class="fa-solid fa-plus"></i>
+                        <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({tablePage, tablePageSize})"></model-edit-dialog>
+                    </v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -34,6 +38,8 @@
                     :headers="genericModel.getTableHeaders()"
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="tableShowSelect"
+                    :page="tablePage"
+                    :items-per-page="tablePageSize"
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn color="edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
@@ -49,7 +55,7 @@
 <script setup lang="ts">
 
 
-import {onBeforeMount, onMounted, ref, watch} from "vue";
+import {nextTick, onBeforeMount, onMounted, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {
@@ -66,10 +72,12 @@ import {
     TUserFile, TCookLog, TViewLog
 } from "@/types/Models";
 import {VDataTable} from "vuetify/components";
+import {useUrlSearchParams} from "@vueuse/core";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
-
 const {t} = useI18n()
+const params = useUrlSearchParams('history', {initialValue:{page:"1", pageSize: "10"}})
 
 const props = defineProps({
     model: {type: String, default: 'Food'},
@@ -88,6 +96,10 @@ const tableHeaders : VDataTableProps['headers'] = [
     {title: t('Actions'), key: 'action', align: 'end'},
 ]
 
+const tablePage = ref(1)
+const tablePageInitialized = ref(false) // TODO workaround until vuetify bug is fixed
+const tablePageSize = ref(params.pageSize)
+
 const tableShowSelect = ref(true)
 
 // data
@@ -103,14 +115,13 @@ const genericModel = ref({} as GenericModel)
 watch(() => props.model, () => {
     console.log('loading model ', props.model)
     genericModel.value = getGenericModelFromString(props.model, t)
-    loadItems({page: 1, itemsPerPage: 10})
+    loadItems({page: tablePage, itemsPerPage: tablePageSize})
 })
 
 /**
  * select model class before mount because template renders (and requests item load) before onMounted is called
  */
 onBeforeMount(() => {
-
     try {
         genericModel.value = getGenericModelFromString(props.model, t)
     } catch (Error) {
@@ -121,10 +132,18 @@ onBeforeMount(() => {
 
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     loading.value = true
+    // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
+    if(page == 1 && Number(params.page) > 1 && !tablePageInitialized.value){
+        page = params.page
+    }
+    tablePageInitialized.value = true
 
+    params.page = page
+    params.pageSize = itemsPerPage
     genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then(r => {
         items.value = r.results
         itemCount.value = r.count
+        tablePage.value = page // TODO remove once page bug is fixed
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {

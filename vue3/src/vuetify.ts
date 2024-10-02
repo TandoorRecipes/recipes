@@ -64,7 +64,7 @@ export default createVuetify({
             save: 'fa-solid fa-floppy-disk',
             delete: 'fa-solid fa-trash-can',
             edit: 'fa-solid fa-pencil',
-            create: 'fa-solid fa-circle-plus',
+            create: 'fa-solid fa-plus',
             search: 'fa-solid fa-magnifying-glass',
             copy: 'fa-solid fa-copy',
             close: 'fa-solid fa-xmark',
