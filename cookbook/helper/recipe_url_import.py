@@ -505,4 +505,4 @@ def clean_dict(input_dict, key):
                 for e in input_dict[x]:
                     temp_list.append(clean_dict(e, key))
 
-    return 
+    return input_dict
