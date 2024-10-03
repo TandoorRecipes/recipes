@@ -1,0 +1,40 @@
+services:
+  db_recipes:
+    restart: always
+    image: postgres:16-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # changed from bind mount to volume
+    env_file:
+      - ./.env
+
+  web_recipes:
+    restart: always
+    image: vabene1111/recipes
+    env_file:
+      - ./.env
+    volumes:
+      - staticfiles:/opt/recipes/staticfiles
+      - nginx_config:/opt/recipes/nginx/conf.d
+      - mediafiles:/opt/recipes/mediafiles  # changed from bind mount to volume
+    depends_on:
+      - db_recipes
+
+  nginx_recipes:
+    image: nginx:mainline-alpine
+    restart: always
+    ports:
+      - 80:80
+    env_file:
+      - ./.env
+    depends_on:
+      - web_recipes
+    volumes:
+      - nginx_config:/etc/nginx/conf.d:ro
+      - staticfiles:/static:ro
+      - mediafiles:/media:ro  # changed from bind mount to volume
+
+volumes:
+  nginx_config:
+  staticfiles:
+  mediafiles:  # added volume for mediafiles
+  postgres_data:  # added volume for PostgreSQL data
