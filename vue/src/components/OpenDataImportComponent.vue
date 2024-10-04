@@ -73,6 +73,8 @@ export default {
             update_existing: true,
             use_metric: true,
             import_count: {},
+            user_provided_url: "", // Store previously imported URLs
+            imported_urls: [] // User's new recipe URL 
         }
     },
     mounted() {
@@ -89,17 +91,34 @@ export default {
         }).catch(err => {
             StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
         })
+
+        // Fetch previously imported URLs
+        axios.get(resolveDjangoUrl('api_get_imported_urls')).then(r => {
+            this.imported_urls = r.data.urls;
+        }).catch(err => {
+            StandardToasts.makeStandardToast(this, StandardToasts.FAIL_FETCH, err)
+        })
     },
     methods: {
         doImport: function () {
+            // Check if the URL is already imported
+            if (this.imported_urls.includes(this.user_provided_url)) {
+                StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, "This URL has already been imported.");
+                return; 
+            }
+
             axios.post(resolveDjangoUrl('api_import_open_data'), {
                 'selected_version': this.selected_version,
                 'selected_datatypes': this.datatypes,
                 'update_existing': this.update_existing,
                 'use_metric': this.use_metric,
+                'import_url': this.user_provided_url
             }).then(r => {
                 StandardToasts.makeStandardToast(this, StandardToasts.SUCCESS_CREATE)
                 this.import_count = Object.assign({}, this.import_count, r.data);
+
+                // Add new imported URL to the list
+                this.imported_urls.push(this.user_provided_url);
             }).catch(err => {
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_CREATE, err)
             })
