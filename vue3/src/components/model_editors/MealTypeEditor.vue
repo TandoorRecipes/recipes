@@ -43,6 +43,7 @@ import {MealType} from "@/openapi";
 import {VTimePicker} from 'vuetify/labs/VTimePicker'; // TODO remove once out of labs
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
+import {DateTime} from "luxon";
 
 
 const props = defineProps({
@@ -59,9 +60,7 @@ const timePickerMenu = ref(false)
 
 
 onMounted(() => {
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-    }
+    setupState(props.item, props.itemId)
 })
 
 </script>

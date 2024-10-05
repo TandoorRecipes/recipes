@@ -48,9 +48,7 @@ onMounted(() => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
 
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-    }
+    setupState(props.item, props.itemId)
 })
 
 

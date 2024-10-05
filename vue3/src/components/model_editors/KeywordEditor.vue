@@ -27,6 +27,7 @@ import {Keyword} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
+import {DateTime} from "luxon";
 
 const {t} = useI18n()
 
@@ -42,10 +43,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-
-    }
+    setupState(props.item, props.itemId)
 })
 
 </script>

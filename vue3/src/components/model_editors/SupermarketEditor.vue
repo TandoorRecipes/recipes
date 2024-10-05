@@ -119,16 +119,13 @@ const unusedSupermarketCategories = computed(() => {
 onMounted(() => {
     const api = new ApiApi()
 
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-    }
-
     api.apiSupermarketCategoryList({pageSize: 100}).then(r => {
         supermarketCategories.value = r.results
-        
-        //TODO fix performing this in a way that async setupState works
-        editingObj.value.categoryToSupermarket.forEach(cTS => {
-            editingObjSupermarketCategories.value.push(cTS.category)
+
+        setupState(props.item, props.itemId, undefined, () => {
+            editingObj.value.categoryToSupermarket.forEach(cTS => {
+                editingObjSupermarketCategories.value.push(cTS.category)
+            })
         })
     })
 })

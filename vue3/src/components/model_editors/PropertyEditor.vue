@@ -45,9 +45,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 
 onMounted(() => {
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-    }
+    setupState(props.item, props.itemId)
 })
 
 

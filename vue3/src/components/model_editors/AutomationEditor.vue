@@ -36,6 +36,7 @@ import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {useI18n} from "vue-i18n";
 import {VNumberInput} from "vuetify/labs/VNumberInput";
+import {DateTime} from "luxon";
 
 const {t} = useI18n()
 
@@ -64,10 +65,9 @@ const AUTOMATION_TYPES = [
 ]
 
 onMounted(() => {
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
+    setupState(props.item, props.itemId, () => {
         editingObj.value.order = 0
-    }
+    })
 })
 
 </script>

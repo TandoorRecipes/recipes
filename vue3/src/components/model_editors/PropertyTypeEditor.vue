@@ -44,10 +44,7 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 onMounted(() => {
-    if (!setupState(props.item, props.itemId)) {
-        // functions to populate defaults
-
-    }
+    setupState(props.item, props.itemId)
 })
 
 </script>

@@ -50,11 +50,11 @@ onMounted(() => {
     api.apiGroupList().then(r => {
         groups.value = r
 
-        if (!setupState(props.item, props.itemId)) {
-            // functions to populate defaults
+        setupState(props.item, props.itemId, () => {
             editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
             editingObj.value.group = groups.value[0]
-        }
+        })
+
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
