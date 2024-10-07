@@ -89,6 +89,7 @@
   "DeleteShoppingConfirm": "Weet je zeker dat je {food} van de boodschappenlijst wil verwijderen?",
   "Delete_Food": "Verwijder Eten",
   "Delete_Keyword": "Verwijder Etiket",
+  "Deleted": "",
   "Description": "Beschrijving",
   "Description_Replace": "Vervang beschrijving",
   "DeviceSettings": "",

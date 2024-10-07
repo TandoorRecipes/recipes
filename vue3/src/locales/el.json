@@ -87,6 +87,7 @@
   "DeleteShoppingConfirm": "Θέλετε σίγουρα να αφαιρέσετε τα {food} από τη λίστα αγορών;",
   "Delete_Food": "Διαγραφή φαγητού",
   "Delete_Keyword": "Διαγραφή λέξης-κλειδί",
+  "Deleted": "",
   "Description": "Περιγραφή",
   "Description_Replace": "Αλλαγή περιγραφής",
   "DeviceSettings": "",

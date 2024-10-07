@@ -88,6 +88,7 @@
   "DeleteShoppingConfirm": "Er du sikker på at du vil fjerne {food} fra indkøbsliste?",
   "Delete_Food": "Slet mad",
   "Delete_Keyword": "Slet nøgleord",
+  "Deleted": "",
   "Description": "Beskrivelse",
   "Description_Replace": "Erstat beskrivelse",
   "DeviceSettings": "",

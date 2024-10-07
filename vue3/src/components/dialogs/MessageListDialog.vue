@@ -1,9 +1,9 @@
 <template>
-    <v-dialog max-width="70vw" min-height="80vh" activator="parent">
+    <v-dialog max-width="70vw" min-height="80vh" :activator="activator">
         <template v-slot:default="{ isActive }">
             <v-card>
                 <v-card-title>
-                    Nachrichten
+                    {{ $t('Messages')}}
                 </v-card-title>
 
                 <v-card-text>
@@ -27,20 +27,20 @@
                         divided
                         multiple>
                         <v-btn :value="MessageType.SUCCESS">
-                            <v-icon icon="fa-regular fa-eye" color="success"></v-icon>
-                            Success
+                            <v-icon icon="fa-regular fa-eye" color="success" class="me-2"></v-icon>
+                            {{$t('Success')}}
                         </v-btn>
                         <v-btn :value="MessageType.INFO">
-                            <v-icon icon="fa-regular fa-eye" color="info"></v-icon>
-                            Info
+                            <v-icon icon="fa-regular fa-eye" color="info" class="me-2"></v-icon>
+                            {{$t('Information')}}
                         </v-btn>
                         <v-btn :value="MessageType.WARNING">
-                            <v-icon icon="fa-regular fa-eye" color="warning"></v-icon>
-                            Warning
+                            <v-icon icon="fa-regular fa-eye" color="warning" class="me-2"></v-icon>
+                            {{$t('Warning')}}
                         </v-btn>
                         <v-btn :value="MessageType.ERROR">
-                            <v-icon icon="fa-regular fa-eye" color="error"></v-icon>
-                            Error
+                            <v-icon icon="fa-regular fa-eye" color="error" class="me-2"></v-icon>
+                            {{$t('Error')}}
                         </v-btn>
                     </v-btn-toggle>
 
@@ -61,9 +61,15 @@
                             </v-chip>
                         </template>
 
+                        <template v-slot:item.msg="{ value }">
+                            <b v-if="value.title">{{ value.title }}<br/></b>
+                            {{ value.text }}
+                        </template>
+
                         <template v-slot:item.actions="{ item }">
                             <v-icon icon="$search" @click="showDetailDialog = true; detailItem = item"></v-icon>
-                            <v-icon class="ms-1" icon="mdi-content-copy" @click="copy(JSON.stringify({'type': item.type, 'createdAt': item.createdAt, 'msg': item.msg, 'data': item.data}));"></v-icon>
+                            <v-icon class="ms-1" icon="$copy"
+                                    @click="copy(JSON.stringify({'type': item.type, 'createdAt': item.createdAt, 'msg': item.msg, 'data': item.data}));"></v-icon>
                         </template>
                     </v-data-table>
 
@@ -72,9 +78,9 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn @click="useMessageStore().deleteAllMessages()" color="error">Alle Löschen</v-btn>
-                    <v-btn @click="addTestMessage()" color="warning">Test Nachricht</v-btn>
-                    <v-btn @click="isActive.value = false">Close</v-btn>
+                    <v-btn @click="useMessageStore().deleteAllMessages()" color="error">{{$t('Delete_All')}}</v-btn>
+                    <v-btn @click="addTestMessage()" color="warning">{{$t('Add')}}</v-btn>
+                    <v-btn @click="isActive.value = false">{{ $t('Close')}}</v-btn>
                 </v-card-actions>
             </v-card>
         </template>
@@ -84,19 +90,21 @@
     <v-dialog v-model="showDetailDialog" max-width="50vw">
         <v-card>
             <v-card-title>
-                Nachricht Details <small>{{ DateTime.fromSeconds(detailItem.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small>
+                {{$t('Created')}} <small>{{ DateTime.fromSeconds(detailItem.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small>
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
-                <v-label>Typ</v-label>
+                <v-label>{{ $t('Type')}}</v-label>
                 <br/>
                 <v-chip :color="detailItem.type">{{ detailItem.type }}</v-chip>
                 <br/>
 
-                <v-label class="mt-2">Nachricht</v-label>
-                <p>{{ detailItem.msg }}</p>
+                <v-label class="mt-2">{{$t('Messages')}}</v-label>
+                <br/>
+                <b v-if="detailItem.msg.title">{{ detailItem.msg.title }}<br/></b>
+                <span class="text-pre">{{ detailItem.msg.text }}</span>
 
-                <v-label class="mt-2">Data</v-label>
+                <v-label class="mt-2">{{ $t('Information')}}</v-label>
                 <pre style="white-space: pre-wrap;" v-if="detailItem.data != null">{{ detailItem.data }}</pre>
             </v-card-text>
 
@@ -118,8 +126,14 @@ import {computed, ref} from 'vue'
 import {Message, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import {useClipboard} from "@vueuse/core";
+import {useI18n} from "vue-i18n";
 
 const {copy} = useClipboard()
+const {t} = useI18n()
+
+const props = defineProps({
+    activator: {default: 'parent'}
+})
 
 /**
  * loads messages from store and filters them according to selected message types
@@ -137,10 +151,10 @@ const displayItems = computed(() => {
 const sortBy = ref([{key: 'createdAt', order: 'desc'}])
 const search = ref('')
 const tableHeaders = ref([
-    {title: 'Typ', key: 'type'},
-    {title: 'Erstellt', key: 'createdAt'},
-    {title: 'Nachricht', key: 'msg'},
-    {title: 'Actions', key: 'actions', align: 'end'},
+    {title: t('Type'), key: 'type'},
+    {title: t('Created'), key: 'createdAt'},
+    {title: t('Message'), key: 'msg'},
+    {title: t('Actions'), key: 'actions', align: 'end'},
 ])
 const typeFilter = ref([MessageType.SUCCESS, MessageType.INFO, MessageType.WARNING, MessageType.ERROR])
 const detailItem = ref({} as Message)
@@ -151,7 +165,7 @@ const showDetailDialog = ref(false)
  */
 function addTestMessage() {
     let types = [MessageType.SUCCESS, MessageType.ERROR, MessageType.INFO, MessageType.WARNING]
-    useMessageStore().addMessage(types[Math.floor(Math.random() * types.length)], `Lorem Ipsum ${Math.random() * 1000}`, 5000, {json: "data", 'msg': 'whatever', data: 1})
+    useMessageStore().addMessage(types[Math.floor(Math.random() * types.length)], {title: 'Test', text: `Lorem Ipsum ${Math.random() * 1000}`}, 5000, {json: "data", 'msg': 'whatever', data: 1})
 }
 
 </script>

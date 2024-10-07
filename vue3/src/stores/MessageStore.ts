@@ -2,6 +2,8 @@ import {acceptHMRUpdate, defineStore} from 'pinia'
 import {ref} from "vue";
 import {useStorage} from "@vueuse/core";
 import {DateTime} from "luxon";
+import {ResponseError} from "@/openapi";
+import {useI18n} from "vue-i18n";
 
 /** @enum {string} different message types */
 export enum MessageType {
@@ -13,10 +15,10 @@ export enum MessageType {
 
 /** @enum {string} pre defined error messages */
 export enum ErrorMessageType {
-    FETCH_ERROR = 'Fetch Error',
-    UPDATE_ERROR = 'Update Error',
-    CREATE_ERROR = 'Update Error',
-    DELETE_ERROR = 'Update Error',
+    FETCH_ERROR = 'Fehler beim Laden',
+    UPDATE_ERROR = 'Fehler beim Aktualisieren',
+    DELETE_ERROR = 'Fehler beim Löschen',
+    CREATE_ERROR = 'Fehler beim Erstellen',
 }
 
 /** @enum {MessageType} prepared messages */
@@ -27,22 +29,33 @@ export enum PreparedMessage {
 }
 
 /**
+ * structured message type
+ */
+export interface StructuredMessage {
+    title: string
+    text: string
+}
+
+/**
  * Type Message holding all required contents of a message
  */
 export class Message {
     type = {} as MessageType
     createdAt = -1
     showTimeout = 0
-    msg = ""
+    msg = {} as StructuredMessage
     data = {} as any
     code = ''
 
-    constructor(type: MessageType, msg: string, showTimeout?: number, data?: any) {
+    constructor(type: MessageType, msg: string | StructuredMessage, showTimeout?: number, data?: any) {
         if (typeof showTimeout === 'undefined') {
             showTimeout = 0
         }
         if (typeof data === 'undefined') {
             data = {}
+        }
+        if (typeof msg === 'string') {
+            msg = {title: '', text: msg} as StructuredMessage
         }
 
         this.type = type
@@ -61,14 +74,19 @@ export const useMessageStore = defineStore('message_store', () => {
     let messages = useStorage('LOCAL_MESSAGES', [] as Message[])
     let snackbarQueue = ref([] as Message[])
 
+    const {t} = useI18n()
+
     /**
      * Add a message to the message store. If showTimeout is greater than 0 it is also added to the display queue.
      * @param {MessageType} type  type of message
-     * @param {String} msg message text
+     * @param {String|StructuredMessage} msg message text or structured message
      * @param {number} showTimeout optional number of ms to show message to user, set to 0 or leave undefined for silent message
      * @param {string} data optional additional data only shown in log
      */
-    function addMessage(type: MessageType, msg: string, showTimeout?: number, data?: any) {
+    function addMessage(type: MessageType, msg: string | StructuredMessage, showTimeout?: number, data?: any) {
+        if (typeof msg == 'string') {
+            msg = {title: '', text: msg} as StructuredMessage
+        }
         let message = new Message(type, msg, showTimeout, data)
 
         messages.value.push(message)
@@ -79,27 +97,67 @@ export const useMessageStore = defineStore('message_store', () => {
 
     /**
      * shorthand function to quickly add an error message
+     * automatically show additional information when given supported error types (e.g. ResponseError)
      * @param errorType pre defined error type
      * @param data optional error data
      */
     function addError(errorType: ErrorMessageType | string, data?: any) {
-        addMessage(MessageType.ERROR, errorType, 7000, data)
+        if (data instanceof ResponseError) {
+            let messageText = ""
+            messageText += `URL: ${data.response.url} \n\nErrors:\n`
+            try {
+                data.response.json().then(responseJson => {
+                    let flatResponseJson = flattenObject(responseJson)
+                    for (let key in flatResponseJson) {
+                        messageText += `    - ${key}: ${flatResponseJson[key]}\n`
+                    }
+                    addMessage(MessageType.ERROR, {
+                        title: `${errorType} - ${data.response.statusText} (${data.response.status})`,
+                        text: messageText
+                    } as StructuredMessage, 5000 + Object.keys(responseJson).length * 1500, responseJson)
+                }).catch(() => {
+                    // if response does not contain parsable JSON or parsing fails for some other reason show generic error
+                    addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+                })
+            } catch (e) {
+                addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+            }
+        } else {
+            addMessage(MessageType.ERROR, {title: errorType, text: ''} as StructuredMessage, 7000, data)
+        }
     }
 
     /**
      * shorthand function to quickly add a message
      * @param preparedMessage pre defined message
+     * @param data optional data to log along with the message
      */
-    function addPreparedMessage(preparedMessage: PreparedMessage) {
+    function addPreparedMessage(preparedMessage: PreparedMessage, data?: any) {
         if (preparedMessage == PreparedMessage.UPDATE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, 'Updated Successfully', 7000, {}) // TODO localize and make more useful ?
-        }
-        if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, 'Created Successfully', 7000, {})
+            addMessage(MessageType.SUCCESS, {title: t('Updated'), text: ''} as StructuredMessage, 6000, data)
         }
         if (preparedMessage == PreparedMessage.DELETE_SUCCESS) {
-            addMessage(MessageType.SUCCESS, 'Deleted Successfully', 7000, {})
+            addMessage(MessageType.SUCCESS, {title: t('Deleted'), text: ''} as StructuredMessage, 6000, data)
         }
+        if (preparedMessage == PreparedMessage.CREATE_SUCCESS) {
+            addMessage(MessageType.SUCCESS, {title: t('Created'), text: ''} as StructuredMessage, 6000, data)
+        }
+    }
+
+    /**
+     * recursively flatten any multi level object to a flat object with previously nested keys seperated by dots
+     * @param obj object to flatten
+     * @param keyPrefix key prefix for recursive calls to build structure
+     */
+    function flattenObject(obj: any, keyPrefix = '') {
+        return Object.keys(obj).reduce((acc, key) => {
+            if (typeof obj[key] === 'object') {
+                Object.assign(acc, flattenObject(obj[key], (keyPrefix.length ? keyPrefix + '.' : '') + key))
+            } else {
+                acc[keyPrefix] = obj[key]
+            }
+            return acc;
+        }, {});
     }
 
     /**

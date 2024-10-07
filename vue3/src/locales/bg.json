@@ -65,6 +65,7 @@
   "DeleteShoppingConfirm": "Сигурни ли сте, че искате да премахнете цялата {food} от списъка за пазаруване?",
   "Delete_Food": "Изтриване на храна",
   "Delete_Keyword": "Изтриване на ключова дума",
+  "Deleted": "",
   "Description": "Описание",
   "DeviceSettings": "",
   "DeviceSettingsHelp": "",

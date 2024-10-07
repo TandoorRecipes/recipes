@@ -9,21 +9,22 @@
                             <v-list>
 
                                 <v-list-item
-                                    v-for="model in [TFood, TUnit, TKeyword,TSupermarket, TSupermarketCategory, TPropertyType, TUnitConversion, TAutomation, TUserFile, TCookLog, TViewLog]"
-                                    :to="{name: 'ModelListPage', params: {model: model.name}}"
+                                    v-for="m in [TFood, TUnit, TKeyword,TSupermarket, TSupermarketCategory, TPropertyType, TUnitConversion, TAutomation, TUserFile, TCookLog, TViewLog]"
+                                    @click="changeModel(m)"
+                                    :active="m.name == genericModel.model.name"
                                 >
-                                     <template #prepend><v-icon :icon="model.icon"></v-icon> </template>
-                                     {{ $t(model.localizationKey) }}
+                                     <template #prepend><v-icon :icon="m.icon"></v-icon> </template>
+                                     {{ $t(m.localizationKey) }}
                                 </v-list-item>
                             </v-list>
                         </v-menu>
                     </v-btn>
                     <i :class="genericModel.model.icon"></i>
                     {{ $t(genericModel.model.localizationKey) }}</span>
-                    <v-btn class="float-right" icon="$create" color="create" >
-                          <i class="fa-solid fa-plus"></i>
-                        <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({tablePage, tablePageSize})"></model-edit-dialog>
-                    </v-btn>
+                <v-btn class="float-right" icon="$create" color="create">
+                    <i class="fa-solid fa-plus"></i>
+                    <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({tablePage, tablePageSize})"></model-edit-dialog>
+                </v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -55,7 +56,7 @@
 <script setup lang="ts">
 
 
-import {nextTick, onBeforeMount, onMounted, ref, watch} from "vue";
+import {nextTick, onBeforeMount, onMounted, PropType, ref, watch} from "vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {
@@ -69,18 +70,25 @@ import {
     TSupermarket,
     TUnitConversion,
     TAutomation,
-    TUserFile, TCookLog, TViewLog
+    TUserFile, TCookLog, TViewLog, Model, EditorSupportedModels
 } from "@/types/Models";
 import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {useRouter} from "vue-router";
+
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
 const {t} = useI18n()
-const params = useUrlSearchParams('history', {initialValue:{page:"1", pageSize: "10"}})
+const router = useRouter()
+
+const params = useUrlSearchParams('history', {initialValue: {page: "1", pageSize: "10"}})
 
 const props = defineProps({
-    model: {type: String, default: 'Food'},
+    model: {
+        type: String as PropType<EditorSupportedModels>,
+        default: 'Food'
+    },
 })
 
 // table config
@@ -90,7 +98,7 @@ const itemsPerPageOptions = [
     {value: 50, title: '50'},
 ]
 
-const tableHeaders : VDataTableProps['headers'] = [
+const tableHeaders: VDataTableProps['headers'] = [
     {title: t('Name'), key: 'name'},
     {title: t('Category'), key: 'supermarketCategory.name'},
     {title: t('Actions'), key: 'action', align: 'end'},
@@ -98,7 +106,7 @@ const tableHeaders : VDataTableProps['headers'] = [
 
 const tablePage = ref(1)
 const tablePageInitialized = ref(false) // TODO workaround until vuetify bug is fixed
-const tablePageSize = ref(params.pageSize)
+const tablePageSize = ref(10)
 
 const tableShowSelect = ref(true)
 
@@ -111,17 +119,21 @@ const searchQuery = ref('')
 const genericModel = ref({} as GenericModel)
 
 
-// watch for changes to the prop in case its changed
+// when navigating to ModelListPage from ModelListPage with a different model lifecycle hooks are not called so watch for change here
 watch(() => props.model, () => {
-    console.log('loading model ', props.model)
+    console.log('PAGE SIZE in watch params is ', params.pageSize)
     genericModel.value = getGenericModelFromString(props.model, t)
-    loadItems({page: tablePage, itemsPerPage: tablePageSize})
+    loadItems({page: 1, itemsPerPage: Number(params.pageSize)})
 })
 
 /**
  * select model class before mount because template renders (and requests item load) before onMounted is called
  */
 onBeforeMount(() => {
+    // TODO this whole params thing is strange, properly review the code once vuetify fixes their table (see below)
+    if (Number(params.pageSize) != tablePageSize.value) {
+        tablePageSize.value = Number(params.pageSize)
+    }
     try {
         genericModel.value = getGenericModelFromString(props.model, t)
     } catch (Error) {
@@ -130,25 +142,46 @@ onBeforeMount(() => {
     }
 })
 
+/**
+ * load items from API whenever the table calls for it
+ * parameters defined by vuetify
+ * @param page
+ * @param itemsPerPage
+ * @param search
+ * @param sortBy
+ * @param groupBy
+ */
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
+    console.log('load items called', page, params.page, itemsPerPage, params.pageSize)
     loading.value = true
     // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
-    if(page == 1 && Number(params.page) > 1 && !tablePageInitialized.value){
-        page = params.page
+    if (page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
+        page = Number(params.page)
     }
     tablePageInitialized.value = true
 
-    params.page = page
-    params.pageSize = itemsPerPage
-    genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then(r => {
+    genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
-        tablePage.value = page // TODO remove once page bug is fixed
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
+
+
+        nextTick(() => {
+            console.log('setting parameters to ', page.toString(), itemsPerPage.toString())
+            params.page = page.toString()
+            params.pageSize = itemsPerPage.toString()
+        })
+
+        tablePage.value = page // TODO remove once page bug is fixed
     })
+}
+
+function changeModel(m: Model) {
+    tablePage.value = 1
+    router.push({name: 'ModelListPage', params: {model: m.name}})
 }
 
 </script>

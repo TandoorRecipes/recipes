@@ -85,6 +85,7 @@
   "DeleteShoppingConfirm": "Er du sikker på at du fjerne alle {food} fra handlelisten?",
   "Delete_Food": "Slett Matrett",
   "Delete_Keyword": "Slett nøkkelord",
+  "Deleted": "",
   "Description": "Beskrivelse",
   "Description_Replace": "Erstatt beskrivelse",
   "DeviceSettings": "",

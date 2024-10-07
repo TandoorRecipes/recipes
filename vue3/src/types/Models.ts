@@ -1,18 +1,5 @@
-import {
-    ApiApi,
-    Keyword as IKeyword,
-    Food as IFood,
-    RecipeOverview as IRecipeOverview,
-    Recipe as IRecipe,
-    Unit as IUnit,
-    MealType as IMealType,
-    User as IUser,
-    FoodInheritField as IFoodInheritField,
-    SupermarketCategory as ISupermarketCategory,
-    PropertyType as IPropertyType, ApiFoodListRequest, ApiUnitListRequest,
-} from "@/openapi";
+import { ApiApi } from "@/openapi";
 import {VDataTable} from "vuetify/components";
-import {useI18n} from "vue-i18n";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -57,7 +44,7 @@ type ModelTableHeaders = {
 /**
  * custom type containing all attributes needed by the generic model system to properly handle all functions
  */
-type Model = {
+export type Model = {
     name: string,
     localizationKey: string,
     icon: string,
@@ -74,6 +61,8 @@ type Model = {
     tableHeaders: ModelTableHeaders[],
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
+
+export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'
 
 export const TFood = {
     name: 'Food',

@@ -73,6 +73,7 @@
   "DeleteShoppingConfirm": "Ви впевнені, що хочете видалити {food} з вашого списку покупок?",
   "Delete_Food": "Видалити Їжу",
   "Delete_Keyword": "Видалити Ключове слово",
+  "Deleted": "",
   "Description": "Опис",
   "Description_Replace": "Замінити Опис",
   "DeviceSettings": "",

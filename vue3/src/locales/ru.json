@@ -58,6 +58,7 @@
   "DeleteShoppingConfirm": "Вы уверены, что хотите удалить все {food} из вашего списка покупок?",
   "Delete_Food": "Удалить элемент",
   "Delete_Keyword": "Удалить ключевое слово",
+  "Deleted": "",
   "Description": "Описание",
   "Description_Replace": "Изменить описание",
   "DeviceSettings": "",

@@ -1,29 +1,35 @@
 <template>
-    <v-snackbar
-        v-model="showSnackbar"
-        :timer="true"
-        :timeout="visibleMessage.showTimeout"
-        :color="visibleMessage.type"
-        :vertical="vertical"
-        :location="location"
-        multi-line
-    >
-        <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>
-        {{ visibleMessage.msg }}
+    <div>
+        <v-snackbar
+            v-model="showSnackbar"
+            :timer="true"
+            :timeout="visibleMessage.showTimeout"
+            :color="visibleMessage.type"
+            :vertical="props.vertical"
+            :location="props.location"
+            multi-line
+        >
+            <small>{{ DateTime.fromSeconds(visibleMessage.createdAt).toLocaleString(DateTime.DATETIME_MED) }}</small> <br/>
+            <h3 v-if="visibleMessage.msg.title">{{ visibleMessage.msg.title }}</h3>
+            <span class="text-pre">{{ visibleMessage.msg.text }}</span>
 
-        <template v-slot:actions>
+            <template v-slot:actions>
 
-            <v-btn variant="text">View <message-list-dialog></message-list-dialog> </v-btn>
-            <v-btn variant="text" @click="removeItem()">
-                <span v-if="useMessageStore().snackbarQueue.length > 1">Next ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
-                <span v-else>Close</span>
-            </v-btn>
-        </template>
-    </v-snackbar>
+                <v-btn ref="ref_btn_view">View</v-btn>
+                <v-btn variant="text" @click="removeItem()">
+                    <span v-if="useMessageStore().snackbarQueue.length > 1">Next ({{ useMessageStore().snackbarQueue.length - 1 }})</span>
+                    <span v-else>Close</span>
+                </v-btn>
+            </template>
+        </v-snackbar>
+
+        <message-list-dialog :activator="viewMessageDialogBtn"></message-list-dialog>
+    </div>
+
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, useTemplateRef} from 'vue'
 import {Message, useMessageStore} from "@/stores/MessageStore";
 import {DateTime} from "luxon";
 import MessageListDialog from "@/components/dialogs/MessageListDialog.vue";
@@ -49,6 +55,8 @@ const props = defineProps({
     }
 })
 
+// ref to open message list dialog
+const viewMessageDialogBtn = useTemplateRef('ref_btn_view')
 // ID of message timeout currently running
 const timeoutId = ref(-1)
 // currently visible message

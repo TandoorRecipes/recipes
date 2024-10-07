@@ -30,12 +30,13 @@ import SupermarketEditor from "@/components/model_editors/SupermarketEditor.vue"
 import SupermarketCategoryEditor from "@/components/model_editors/SupermarketCategoryEditor.vue";
 import PropertyTypeEditor from "@/components/model_editors/PropertyTypeEditor.vue";
 import AutomationEditor from "@/components/model_editors/AutomationEditor.vue";
+import {EditorSupportedModels} from "@/types/Models";
 
 const emit = defineEmits(['create', 'save', 'delete'])
 
 const props = defineProps({
     model: {
-        type: String as PropType<'UnitConversion' | 'AccessToken'| 'InviteLink' | 'UserSpace' | 'MealType' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'>,
+        type: String as PropType<EditorSupportedModels>,
         required: true,
     },
     item: {default: null},
