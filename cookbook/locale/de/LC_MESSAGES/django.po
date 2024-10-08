@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-07-31 13:05+0000\n"
-"Last-Translator: vabene1111 <vabene1234@googlemail.com>\n"
-"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/de/>\n"
+"PO-Revision-Date: 2024-09-27 13:58+0000\n"
+"Last-Translator: supaeasy <crafty_renewably854@supaeasy.de>\n"
+"Language-Team: German <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -478,7 +478,7 @@ msgstr "Essensplan"
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
 msgid "Books"
-msgstr "Bücher"
+msgstr "Kochbücher"
 
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
@@ -542,10 +542,8 @@ msgid "Instruction Replace"
 msgstr "Anleitung ersetzen"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Neue Einheit"
+msgstr "Nie Einheit"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
@@ -2143,7 +2141,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Erlaubte Hosts"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2153,6 +2151,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            Die erlaubten Hosts sind so konfiguriert, dass sie jeden Host "
+"erlauben. Das mag in einigen Fällen in Ordnung sein, sollte aber im "
+"Regelfall vermieden werden. Bitte lies in der Dokumentation dazu nach.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2504,16 +2507,12 @@ msgid "Filter for entries with the given recipe"
 msgstr "Filter für Einträge mit dem angegebenen Rezept"
 
 #: .\cookbook\views\api.py:1292
-#, fuzzy
-#| msgid ""
-#| "Returns the shopping list entry with a primary key of id.  Multiple "
-#| "values allowed."
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
-"Zeigt denjenigen Eintrag auf der Einkaufliste mit der angegebenen ID. Kann "
-"mehrfach angegeben werden."
+"Zeigt Automationen, die dem Automationstyp entsprechen. Kann mehrfach "
+"angegeben werden."
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
@@ -2582,10 +2581,8 @@ msgstr ""
 "Monitor verwendet wird."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Speicherquelle"
+msgstr "Backendkonfiguration für Konnektoren"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
@@ -2644,10 +2641,8 @@ msgid "Shopping List"
 msgstr "Einkaufsliste"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Speicherquelle"
+msgstr "Backendkonfiguration für Konnektoren"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2743,7 +2738,7 @@ msgstr "Sie verwenden PostgreSQL %(v1)s.   PostgreSQL %(v2)s wird empfohlen"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "PostgreSQL version konnte nicht erkannt werden."
 
 #: .\cookbook\views\views.py:317
 msgid ""
@@ -2755,18 +2750,14 @@ msgstr ""
 "PostgreSQL-Datenbanken funktionieren."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
-"Die Setup-Seite kann nur für den ersten Nutzer verwendet werden. Zum "
-"Zurücksetzen von Passwörtern bitte der Django-Dokumentation folgen."
+"Die Setup-Seite kann nur für den ersten Nutzer verwendet "
+"werden.                      Falls du die Superuser Logindaten vergessen "
+"hast, folge bitte der Django-Dokumentation um Passwörter zurückzusetzen."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
