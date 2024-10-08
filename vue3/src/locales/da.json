@@ -227,6 +227,8 @@
   "NoCategory": "Ingen kategori valgt.",
   "No_ID": "ID findes ikke, kan ikke slette.",
   "No_Results": "Ingen resultater",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} er ikke i din indkøbsliste.",
   "Note": "Note",
   "Number of Objects": "Antal objekter",

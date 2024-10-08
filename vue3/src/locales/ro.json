@@ -215,6 +215,8 @@
   "NoCategory": "Nicio categorie selectată.",
   "No_ID": "ID-ul nu a fost găsit, nu se poate șterge.",
   "No_Results": "Fără rezultate",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} nu se află în lista de cumpărături.",
   "Note": "Notă",
   "Nutrition": "Nutriție",

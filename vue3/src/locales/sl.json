@@ -159,6 +159,8 @@
   "NoCategory": "Nobena kategorija ni izbrana.",
   "No_ID": "ID ni najden, ne morem izbrisati.",
   "No_Results": "Ni rezultatov",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} ni v tvojem nakupovalnem listku.",
   "Note": "Opomba",
   "Nutrition": "Prehrana",

@@ -246,6 +246,8 @@
   "NoMoreUndo": "Rückgängig: Keine Änderungen",
   "No_ID": "ID nicht gefunden und kann nicht gelöscht werden.",
   "No_Results": "Keine Ergebnisse",
+  "NotFound": "Nicht gefunden",
+  "NotFoundHelp": "Die gesuchte Seite konnte nicht gefunden werden.",
   "NotInShopping": "{food} befindet sich nicht auf Ihrer Einkaufsliste.",
   "Note": "Notiz",
   "Number of Objects": "Anzahl von Objekten",

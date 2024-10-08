@@ -2,6 +2,7 @@ import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/Messa
 import {onBeforeMount, PropType, ref} from "vue";
 import {GenericModel, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
+import {ResponseError} from "@/openapi";
 
 // TODO type emit parameter (https://mokkapps.de/vue-tips/emit-event-from-composable)
 // TODO alternatively there seems to be a getContext method to get the calling context (good practice?)
@@ -33,8 +34,10 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
      * @return promise resolving to either the editingObj or undefined if errored
      */
     function setupState(item: T | null, itemId: number | string | undefined,
-                        newItemFunction: () => void = () => {},
-                        existingItemFunction: () => void = () => {}): Promise<T | undefined> {
+                        newItemFunction: () => void = () => {
+                        },
+                        existingItemFunction: () => void = () => {
+                        }): Promise<T | undefined> {
         if (item === null && (itemId === undefined || itemId == '')) {
             // neither item nor itemId given => new item
 
@@ -64,7 +67,11 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
                 existingItemFunction()
                 return editingObj.value
             }).catch((err: any) => {
-                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+                if (err instanceof ResponseError && err.response.status == 404) {
+                    useMessageStore().addPreparedMessage(PreparedMessage.NOT_FOUND)
+                } else {
+                    useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+                }
                 return undefined
             }).finally(() => {
                 loading.value = false

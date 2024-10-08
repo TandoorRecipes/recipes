@@ -242,6 +242,8 @@
   "NoCategory": "Není vybrána žádná kategorie.",
   "No_ID": "ID nenalezeno, odstranění není možné.",
   "No_Results": "Žádné výsledky",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} není na vašem nákupním seznamu.",
   "Note": "Poznámka",
   "Number of Objects": "Počet Objektů",

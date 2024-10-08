@@ -240,6 +240,8 @@
   "NoMoreUndo": "没有可撤消的更改。",
   "No_ID": "未找到标识，不能删除。",
   "No_Results": "没有结果",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "购物清单中没有 {food}。",
   "Note": "笔记",
   "Number of Objects": "对象数量",

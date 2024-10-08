@@ -246,6 +246,8 @@
   "NoMoreUndo": "Brak zmian do wycofania.",
   "No_ID": "ID nie znaleziono, nie można usunąć.",
   "No_Results": "Brak wyników",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} nie ma na Twojej liście zakupów.",
   "Note": "Notatka",
   "Number of Objects": "Ilość obiektów",

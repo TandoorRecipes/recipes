@@ -245,6 +245,8 @@
   "NoMoreUndo": "Yapılacak değişiklik yok.",
   "No_ID": "ID bulunamadı, silinemez.",
   "No_Results": "Sonuç Yok",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} alışveriş listenizde yok.",
   "Note": "Not",
   "Number of Objects": "Nesne Sayısı",

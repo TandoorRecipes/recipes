@@ -23,7 +23,8 @@
                     {{ $t(genericModel.model.localizationKey) }}</span>
                 <v-btn class="float-right" icon="$create" color="create">
                     <i class="fa-solid fa-plus"></i>
-                    <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-edit-dialog>
+                    <model-edit-dialog :close-after-create="false" :model="model"
+                                       @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-edit-dialog>
                 </v-btn>
             </v-col>
         </v-row>
@@ -56,27 +57,32 @@
 <script setup lang="ts">
 
 
-import {nextTick, onBeforeMount, onMounted, PropType, ref, watch} from "vue";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {onBeforeMount, PropType, ref, watch} from "vue";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
 import {
-    TFood,
-    TUnit,
+    EditorSupportedModels,
     GenericModel,
     getGenericModelFromString,
+    Model,
+    TAutomation,
+    TCookLog,
+    TFood,
     TKeyword,
-    TSupermarketCategory,
     TPropertyType,
     TSupermarket,
+    TSupermarketCategory,
+    TUnit,
     TUnitConversion,
-    TAutomation,
-    TUserFile, TCookLog, TViewLog, Model, EditorSupportedModels
+    TUserFile,
+    TViewLog
 } from "@/types/Models";
 import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {ResponseError} from "@/openapi";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -149,6 +155,7 @@ onBeforeMount(() => {
 // TODO proper typescript signature, this is just taken from vuetify example, must be a better solution
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     loading.value = true
+    window.scrollTo({top: 0, behavior: 'smooth'})
     // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
     if (page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
         page = Number(params.page)
@@ -161,7 +168,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
         items.value = r.results
         itemCount.value = r.count
     }).catch((err: any) => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
         tablePage.value = page // TODO remove once page bug is fixed
@@ -171,6 +178,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
 function changeModel(m: Model) {
     tablePage.value = 1
     router.push({name: 'ModelListPage', params: {model: m.name}})
+    window.scrollTo({top: 0, behavior: 'smooth'})
 }
 
 </script>

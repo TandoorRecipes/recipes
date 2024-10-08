@@ -11,11 +11,19 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @return instance of GenericModel
  */
 export function getGenericModelFromString(modelName: string, t: any) {
-    if (SUPPORTED_MODELS.has(modelName)) {
-        return new GenericModel(SUPPORTED_MODELS.get(modelName), t)
+    if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
+        return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
         throw Error(`Model ${modelName} not in SUPPORTED_MODELS`)
     }
+}
+
+/**
+ * register a given model instance in the supported models list
+ * @param model model to register
+ */
+function registerModel(model: Model){
+    SUPPORTED_MODELS.set(model.name.toLowerCase(), model)
 }
 
 /**
@@ -79,7 +87,7 @@ export const TFood = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TFood.name, TFood)
+registerModel(TFood)
 
 export const TUnit = {
     name: 'Unit',
@@ -95,7 +103,7 @@ export const TUnit = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TUnit.name, TUnit)
+registerModel(TUnit)
 
 export const TKeyword = {
     name: 'Keyword',
@@ -110,7 +118,7 @@ export const TKeyword = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TKeyword.name, TKeyword)
+registerModel(TKeyword)
 
 export const TRecipe = {
     name: 'Recipe',
@@ -125,7 +133,7 @@ export const TRecipe = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TRecipe.name, TRecipe)
+registerModel(TRecipe)
 
 export const TMealType = {
     name: 'MealType',
@@ -140,7 +148,7 @@ export const TMealType = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TMealType.name, TMealType)
+registerModel(TMealType)
 
 export const TUser = {
     name: 'User',
@@ -159,7 +167,7 @@ export const TUser = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TUser.name, TUser)
+registerModel(TUser)
 
 export const TSupermarket = {
     name: 'Supermarket',
@@ -174,7 +182,7 @@ export const TSupermarket = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TSupermarket.name, TSupermarket)
+registerModel(TSupermarket)
 
 export const TSupermarketCategory = {
     name: 'SupermarketCategory',
@@ -189,7 +197,7 @@ export const TSupermarketCategory = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TSupermarketCategory.name, TSupermarketCategory)
+registerModel(TSupermarketCategory)
 
 export const TPropertyType = {
     name: 'PropertyType',
@@ -204,7 +212,7 @@ export const TPropertyType = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TPropertyType.name, TPropertyType)
+registerModel(TPropertyType)
 
 export const TProperty = {
     name: 'Property',
@@ -220,7 +228,7 @@ export const TProperty = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TProperty.name, TProperty)
+registerModel(TProperty)
 
 export const TUnitConversion = {
     name: 'UnitConversion',
@@ -239,7 +247,7 @@ export const TUnitConversion = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TUnitConversion.name, TUnitConversion)
+registerModel(TUnitConversion)
 
 export const TUserFile = {
     name: 'UserFile',
@@ -254,7 +262,7 @@ export const TUserFile = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TUserFile.name, TUserFile)
+registerModel(TUserFile)
 
 export const TAutomation = {
     name: 'Automation',
@@ -270,7 +278,7 @@ export const TAutomation = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TAutomation.name, TAutomation)
+registerModel(TAutomation)
 
 export const TCookLog = {
     name: 'CookLog',
@@ -286,7 +294,7 @@ export const TCookLog = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TCookLog.name, TCookLog)
+registerModel(TCookLog)
 
 export const TViewLog = {
     name: 'ViewLog',
@@ -302,7 +310,7 @@ export const TViewLog = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TViewLog.name, TViewLog)
+registerModel(TViewLog)
 
 export const TAccessToken = {
     name: 'AccessToken',
@@ -318,7 +326,7 @@ export const TAccessToken = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TAccessToken.name, TAccessToken)
+registerModel(TAccessToken)
 
 export const TUserSpace = {
     name: 'UserSpace',
@@ -335,7 +343,7 @@ export const TUserSpace = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TUserSpace.name, TUserSpace)
+registerModel(TUserSpace)
 
 export const TInviteLink = {
     name: 'InviteLink',
@@ -353,7 +361,7 @@ export const TInviteLink = {
         {title: 'Actions', key: 'action', align: 'end'},
     ]
 } as Model
-SUPPORTED_MODELS.set(TInviteLink.name, TInviteLink)
+registerModel(TInviteLink)
 
 export const TFoodInheritField = {
     name: 'FoodInheritField',
@@ -368,7 +376,7 @@ export const TFoodInheritField = {
 
     isPaginated: false,
 } as Model
-SUPPORTED_MODELS.set(TFoodInheritField.name, TFoodInheritField)
+registerModel(TFoodInheritField)
 
 
 /**

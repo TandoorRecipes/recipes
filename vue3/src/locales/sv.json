@@ -246,6 +246,8 @@
   "NoMoreUndo": "Inga ändringar att ångra.",
   "No_ID": "ID hittades inte, kan inte radera.",
   "No_Results": "Inget resultat",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} finns inte i din inköpslista.",
   "Note": "Anteckning",
   "Number of Objects": "Antal objekt",

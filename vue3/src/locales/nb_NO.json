@@ -218,6 +218,8 @@
   "NoCategory": "Ingen kategori valgt.",
   "No_ID": "ID ikke funnet, kan ikke slette.",
   "No_Results": "Ingen resultat",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} er ikke i handlelisten din.",
   "Note": "Merk",
   "Number of Objects": "Antall objekter",

@@ -235,6 +235,8 @@
   "NoMoreUndo": "Nenhuma alteração para desfazer.",
   "No_ID": "ID não encontrado, impossível deletar.",
   "No_Results": "Sem Resultados",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} não está na sua lista de compras.",
   "Note": "Nota",
   "Number of Objects": "Número de Objetos",

@@ -222,6 +222,8 @@
   "NoCategory": "Geen categorie geselecteerd.",
   "No_ID": "ID niet gevonden, verwijderen niet mogelijk.",
   "No_Results": "Geen resultaten",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} staat niet op je boodschappenlijst.",
   "Note": "Notitie",
   "Number of Objects": "Aantal Objecten",

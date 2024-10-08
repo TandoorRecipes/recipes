@@ -245,6 +245,8 @@
   "NoMoreUndo": "No changes to be undone.",
   "No_ID": "ID not found, cannot delete.",
   "No_Results": "No Results",
+  "NotFound": "Not found",
+  "NotFoundHelp": "The page or object you are looking for could not be found.",
   "NotInShopping": "{food} is not in your shopping list.",
   "Note": "Note",
   "Number of Objects": "Number of Objects",

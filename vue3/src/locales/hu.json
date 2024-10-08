@@ -222,6 +222,8 @@
   "NoCategory": "Nincs kategória kiválasztva.",
   "No_ID": "Azonosító nem található, ezért nem törölhető.",
   "No_Results": "Nincsenek találatok",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} nincs a bevásárlólistáján.",
   "Note": "Megjegyzés",
   "Number of Objects": "Objektumok száma",

@@ -245,6 +245,8 @@
   "NoMoreUndo": "אין עוד שינויים לשחזור.",
   "No_ID": "מזהה לא נמצא, בלתי ניתן למחיקה.",
   "No_Results": "אין תוצאות",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} אינו רשימת הקניות.",
   "Note": "הערה",
   "Number of Objects": "מספר אובייקטים",

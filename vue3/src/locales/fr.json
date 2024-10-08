@@ -244,6 +244,8 @@
   "NoMoreUndo": "Aucun changement à annuler.",
   "No_ID": "ID introuvable, impossible de supprimer.",
   "No_Results": "Aucun résultat",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "L’aliment {food} n’est pas dans votre liste de courses.",
   "Note": "Notes",
   "Number of Objects": "Nombre d'objets",

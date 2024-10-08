@@ -175,6 +175,8 @@
   "NoCategory": "Nenhuma categoria selecionada.",
   "No_ID": "identificação não encontrada, impossível eliminar.",
   "No_Results": "Sem resultados",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "NotInShopping": "{food} não está na sua lista de compras.",
   "Note": "Nota",
   "Nutrition": "Nutrição",

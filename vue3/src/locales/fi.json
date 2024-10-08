@@ -130,6 +130,8 @@
   "Next_Period": "Seuraava Jakso",
   "No_ID": "Poistaminen epäonnistui, ID:tä ei löytynyt.",
   "No_Results": "Ei Tuloksia",
+  "NotFound": "",
+  "NotFoundHelp": "",
   "Note": "Lisätiedot",
   "Nutrition": "Ravitsemus",
   "Ok": "Avaa",
