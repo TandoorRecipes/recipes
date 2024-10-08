@@ -108,7 +108,7 @@ const tableHeaders: VDataTableProps['headers'] = [
 const tablePage = ref(1)
 const tablePageInitialized = ref(false) // TODO workaround until vuetify bug is fixed
 
-const tableShowSelect = ref(true)
+const tableShowSelect = ref(false) // TODO enable once mass edit functions are implemented
 
 // data
 const loading = ref(false);
