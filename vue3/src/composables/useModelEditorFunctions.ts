@@ -1,13 +1,13 @@
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {onBeforeMount, PropType, ref} from "vue";
-import {GenericModel, getGenericModelFromString} from "@/types/Models";
+import {onBeforeMount, ref} from "vue";
+import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
 
 // TODO type emit parameter (https://mokkapps.de/vue-tips/emit-event-from-composable)
 // TODO alternatively there seems to be a getContext method to get the calling context (good practice?)
 
-export function useModelEditorFunctions<T>(modelName: string, emit: any) {
+export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emit: any) {
 
     const loading = ref(true)
     const editingObj = ref({} as T)

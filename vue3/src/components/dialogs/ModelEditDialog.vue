@@ -1,5 +1,5 @@
 <template>
-    <v-dialog max-width="600" activator="parent" v-model="dialog">
+    <v-dialog max-width="1400" activator="parent" v-model="dialog">
         <component :is="editorComponent" :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false"></component>
     </v-dialog>
 </template>
@@ -8,7 +8,10 @@
 
 
 import {defineAsyncComponent, PropType, ref, shallowRef} from "vue";
-import {EditorSupportedModels} from "@/types/Models";
+import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const emit = defineEmits(['create', 'save', 'delete'])
 
@@ -21,7 +24,7 @@ const props = defineProps({
     closeAfterDelete: {default: true},
 })
 
-const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${props.model}Editor.vue`)))
+const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
 
 const dialog = ref(false)
 

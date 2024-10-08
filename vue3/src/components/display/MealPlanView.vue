@@ -2,6 +2,11 @@
     <v-row class="h-100">
         <v-col>
             <!-- TODO add hint about CTRL key while drag/drop -->
+        <v-btn>
+
+            <model-edit-dialog model="MealPlan"></model-edit-dialog>
+        </v-btn>
+
             <CalendarView
                 :items="planItems"
                 class="theme-default"
@@ -32,6 +37,8 @@ import {computed, onMounted, ref} from "vue";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
+import MealPlanEditor from "@/components/model_editors/MealPlanEditor.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 const {lgAndUp} = useDisplay()
 

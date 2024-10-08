@@ -29,6 +29,8 @@
                     </v-menu>
                 </v-text-field>
 
+                <v-checkbox v-model="editingObj._default" :label="$t('Default')"></v-checkbox>
+
                 <v-color-picker v-model="editingObj.color" mode="hex" :modes="['hex']" show-swatches
                                 :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
             </v-form>

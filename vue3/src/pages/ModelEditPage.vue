@@ -20,15 +20,18 @@
 <script setup lang="ts">
 
 import {useRouter} from "vue-router";
-import {EditorSupportedModels} from "@/types/Models";
+import {EditorSupportedModels, getGenericModelFromString} from "@/types/Models";
 import {defineAsyncComponent, PropType, shallowRef} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const props = defineProps({
     model: {type: String as PropType<EditorSupportedModels>, required: true},
     id: {type: String, required: false, default: undefined},
 })
 
-const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${props.model}Editor.vue`)))
+const editorComponent = shallowRef(defineAsyncComponent(() => import(`@/components/model_editors/${getGenericModelFromString(props.model, t).model.name}Editor.vue`)))
 
 const router = useRouter()
 

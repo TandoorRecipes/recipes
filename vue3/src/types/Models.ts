@@ -10,7 +10,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
  * @param t translation function from calling context
  * @return instance of GenericModel
  */
-export function getGenericModelFromString(modelName: string, t: any) {
+export function getGenericModelFromString(modelName: EditorSupportedModels, t: any) {
     if (SUPPORTED_MODELS.has(modelName.toLowerCase())) {
         return new GenericModel(SUPPORTED_MODELS.get(modelName.toLowerCase()), t)
     } else {
@@ -70,7 +70,7 @@ export type Model = {
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
-export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'
+export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'
 
 export const TFood = {
     name: 'Food',
@@ -149,6 +149,22 @@ export const TMealType = {
     ]
 } as Model
 registerModel(TMealType)
+
+export const TMealPlan = {
+    name: 'MealPlan',
+    localizationKey: 'Meal_Plan',
+    icon: 'fa-solid fa-calendar-days',
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Title', key: 'title'},
+        {title: 'StartDate', key: 'startDate'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TMealPlan)
 
 export const TUser = {
     name: 'User',

@@ -86,6 +86,7 @@
   "Day": "天",
   "Days": "天",
   "Decimals": "小数",
+  "Default": "",
   "Default_Unit": "默认单位",
   "DelayFor": "延迟 {hours} 小时",
   "DelayUntil": "推迟到",
