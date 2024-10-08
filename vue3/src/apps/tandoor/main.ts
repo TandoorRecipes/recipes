@@ -50,7 +50,7 @@ const routes = [
     {path: '/recipe/edit/:recipe_id', component: RecipeEditPage, name: 'edit_recipe', props: true},
 
     {path: '/list/:model?', component: ModelListPage,  props: true, name: 'ModelListPage'},
-    {path: '/edit/:model?/:id', component: ModelEditPage,  props: true, name: 'ModelEditPage'},
+    {path: '/edit/:model/:id?', component: ModelEditPage,  props: true, name: 'ModelEditPage'},
 
 ]
 

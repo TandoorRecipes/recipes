@@ -35,7 +35,7 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
     function setupState(item: T | null, itemId: number | string | undefined,
                         newItemFunction: () => void = () => {},
                         existingItemFunction: () => void = () => {}): Promise<T | undefined> {
-        if (item === null && itemId === undefined) {
+        if (item === null && (itemId === undefined || itemId == '')) {
             // neither item nor itemId given => new item
 
             if (modelClass.value.model.disableCreate) {
@@ -51,7 +51,7 @@ export function useModelEditorFunctions<T>(modelName: string, emit: any) {
             existingItemFunction()
             loading.value = false
             return Promise.resolve(editingObj.value)
-        } else if (itemId !== undefined) {
+        } else if (itemId !== undefined && itemId != '') {
             // itemId is given => fetch from server and return item
             loading.value = true
 

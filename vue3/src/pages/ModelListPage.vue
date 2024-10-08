@@ -83,7 +83,7 @@ type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 const {t} = useI18n()
 const router = useRouter()
 
-const params = useUrlSearchParams('history', {initialValue: {page: "1", pageSize: "10"}})
+const params = useUrlSearchParams('history', {initialValue: {page: "1"}})
 
 const props = defineProps({
     model: {
@@ -148,7 +148,6 @@ onBeforeMount(() => {
  */
 // TODO proper typescript signature, this is just taken from vuetify example, must be a better solution
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
-    console.log('load items called', page, params.page, itemsPerPage, params.pageSize)
     loading.value = true
     // TODO workaround for initial page bug see https://github.com/vuetifyjs/vuetify/issues/17966
     if (page == 1 && Number(params.page) > 1 && !tablePageInitialized.value) {
@@ -156,6 +155,8 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     }
     tablePageInitialized.value = true
     params.page = page.toString()
+    useUserPreferenceStore().deviceSettings.general_tableItemsPerPage = itemsPerPage
+
     genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
