@@ -24,6 +24,8 @@ class DeviceSettings {
     mealplan_startingDayOfWeek = 1
     mealplan_displayWeekNumbers = true
 
+    general_tableItemsPerPage = 10
+
 }
 
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {

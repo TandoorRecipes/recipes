@@ -23,7 +23,7 @@
                     {{ $t(genericModel.model.localizationKey) }}</span>
                 <v-btn class="float-right" icon="$create" color="create">
                     <i class="fa-solid fa-plus"></i>
-                    <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({tablePage, tablePageSize})"></model-edit-dialog>
+                    <model-edit-dialog :close-after-create="false" :model="model" @create="loadItems({page: tablePage, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})"></model-edit-dialog>
                 </v-btn>
             </v-col>
         </v-row>
@@ -40,7 +40,7 @@
                     :items-per-page-options="itemsPerPageOptions"
                     :show-select="tableShowSelect"
                     :page="tablePage"
-                    :items-per-page="tablePageSize"
+                    :items-per-page="useUserPreferenceStore().deviceSettings.general_tableItemsPerPage"
                 >
                     <template v-slot:item.action="{ item }">
                         <v-btn color="edit" :to="{name: 'ModelEditPage', params: {model: model, id: item.id}}">
@@ -76,6 +76,7 @@ import {VDataTable} from "vuetify/components";
 import {useUrlSearchParams} from "@vueuse/core";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useRouter} from "vue-router";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
 
@@ -106,7 +107,6 @@ const tableHeaders: VDataTableProps['headers'] = [
 
 const tablePage = ref(1)
 const tablePageInitialized = ref(false) // TODO workaround until vuetify bug is fixed
-const tablePageSize = ref(10)
 
 const tableShowSelect = ref(true)
 
@@ -121,19 +121,14 @@ const genericModel = ref({} as GenericModel)
 
 // when navigating to ModelListPage from ModelListPage with a different model lifecycle hooks are not called so watch for change here
 watch(() => props.model, () => {
-    console.log('PAGE SIZE in watch params is ', params.pageSize)
     genericModel.value = getGenericModelFromString(props.model, t)
-    loadItems({page: 1, itemsPerPage: Number(params.pageSize)})
+    loadItems({page: 1, itemsPerPage: useUserPreferenceStore().deviceSettings.general_tableItemsPerPage})
 })
 
 /**
  * select model class before mount because template renders (and requests item load) before onMounted is called
  */
 onBeforeMount(() => {
-    // TODO this whole params thing is strange, properly review the code once vuetify fixes their table (see below)
-    if (Number(params.pageSize) != tablePageSize.value) {
-        tablePageSize.value = Number(params.pageSize)
-    }
     try {
         genericModel.value = getGenericModelFromString(props.model, t)
     } catch (Error) {
@@ -151,6 +146,7 @@ onBeforeMount(() => {
  * @param sortBy
  * @param groupBy
  */
+// TODO proper typescript signature, this is just taken from vuetify example, must be a better solution
 function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
     console.log('load items called', page, params.page, itemsPerPage, params.pageSize)
     loading.value = true
@@ -159,7 +155,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
         page = Number(params.page)
     }
     tablePageInitialized.value = true
-
+    params.page = page.toString()
     genericModel.value.list({page: page, pageSize: itemsPerPage, query: search}).then((r: any) => {
         items.value = r.results
         itemCount.value = r.count
@@ -167,14 +163,6 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
-
-
-        nextTick(() => {
-            console.log('setting parameters to ', page.toString(), itemsPerPage.toString())
-            params.page = page.toString()
-            params.pageSize = itemsPerPage.toString()
-        })
-
         tablePage.value = page // TODO remove once page bug is fixed
     })
 }

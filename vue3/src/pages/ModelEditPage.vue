@@ -25,8 +25,6 @@
 <script setup lang="ts">
 
 import FoodEditor from "@/components/model_editors/FoodEditor.vue";
-import {onMounted, ref} from "vue";
-import {ApiApi, Food} from "@/openapi";
 import {useRouter} from "vue-router";
 import UnitEditor from "@/components/model_editors/UnitEditor.vue";
 import KeywordEditor from "@/components/model_editors/KeywordEditor.vue";
