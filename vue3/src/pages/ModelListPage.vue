@@ -94,7 +94,7 @@ const params = useUrlSearchParams('history', {initialValue: {page: "1"}})
 const props = defineProps({
     model: {
         type: String as PropType<EditorSupportedModels>,
-        default: 'Food'
+        default: 'food'
     },
 })
 
@@ -177,7 +177,7 @@ function loadItems({page, itemsPerPage, search, sortBy, groupBy}) {
 
 function changeModel(m: Model) {
     tablePage.value = 1
-    router.push({name: 'ModelListPage', params: {model: m.name}})
+    router.push({name: 'ModelListPage', params: {model: m.name.toLowerCase()}})
     window.scrollTo({top: 0, behavior: 'smooth'})
 }
 
