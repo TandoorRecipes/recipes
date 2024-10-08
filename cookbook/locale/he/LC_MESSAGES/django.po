@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-07-28 08:38+0000\n"
-"Last-Translator: dudu dor <dudpon@gmail.com>\n"
-"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/recipes-"
-"backend/he/>\n"
+"PO-Revision-Date: 2024-09-08 12:58+0000\n"
+"Last-Translator: Tomer Alcavi <alcavi1991@gmail.com>\n"
+"Language-Team: Hebrew <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.4.2\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -62,15 +62,15 @@ msgstr ""
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
-msgstr "הוף את ההערות שלך:- "
+msgstr "הוסף את ההערה שלך::- "
 
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr "השאר ריק עבור dropbox והכנס סיסמאת יישום עבור nextcloud."
+msgstr "השאר ריק עבור Dropbox והכנס סיסמא עבור NextCloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr "השאר ריק עבור nextcloud והכנס טוקן API עבור dropbox."
+msgstr "השאר ריק עבור NextCloud והכנס טוקן API עבור Dropbox."
 
 #: .\cookbook\forms.py:160
 msgid ""
@@ -149,6 +149,7 @@ msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"השתמש בהתאמה גמישה ליחידות, מילות מפתח ורכיבים בעת עריכה וייבוא מתכונים."
 
 #: .\cookbook\forms.py:342
 msgid ""
@@ -237,7 +238,7 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "אינך יכול/ה לפעול על אובייקט זה כיוון שהוא לא בבעלותך!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
@@ -441,7 +442,7 @@ msgstr ""
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
 msgid "Shopping"
-msgstr ""
+msgstr "קניות"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
@@ -526,7 +527,7 @@ msgstr ""
 
 #: .\cookbook\models.py:1504
 msgid "Food"
-msgstr ""
+msgstr "אוכל"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
@@ -546,7 +547,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
-msgstr ""
+msgstr "שלום"
 
 #: .\cookbook\serializer.py:1270
 msgid "You have been invited by "
@@ -567,12 +568,12 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1278
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "ההזמנה תקפה עד "
 
 #: .\cookbook\serializer.py:1280
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
-msgstr ""
+msgstr "Tandoor Recipes הוא מנהל מתכונים בקוד פתוח. ניתן למצוא אותנו ב-GitHub. "
 
 #: .\cookbook\serializer.py:1283
 msgid "Tandoor Recipes Invite"
@@ -610,11 +611,11 @@ msgstr ""
 #: .\cookbook\templates\generic\delete_template.html:15
 #: .\cookbook\templates\generic\edit_template.html:28
 msgid "Delete"
-msgstr ""
+msgstr "מחיקה"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "שגיאה 404"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
@@ -626,12 +627,12 @@ msgstr ""
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "דווח על באג"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "כתובות אימייל"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -641,11 +642,11 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr ""
+msgstr "הגדרות"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "מייל"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
@@ -653,33 +654,33 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "מאומת"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "לא מאומת"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "ראשי"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "הגדר כראשי"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "שלח אימות מחדש"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:57
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "הסרה"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "אזהרה:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
@@ -689,11 +690,11 @@ msgstr ""
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "הוספת כתובת מייל"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "הוספת מייל"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
@@ -702,7 +703,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "אשר כתובת מייל"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -716,7 +717,7 @@ msgstr ""
 #: .\cookbook\templates\account\email_confirm.html:22
 #: .\cookbook\templates\generic\delete_template.html:72
 msgid "Confirm"
-msgstr ""
+msgstr "אשר"
 
 #: .\cookbook\templates\account\email_confirm.html:29
 #, python-format
@@ -729,7 +730,7 @@ msgstr ""
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr ""
+msgstr "התחבר"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:31
@@ -741,7 +742,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:26
 #: .\cookbook\templates\socialaccount\authentication_error.html:15
 msgid "Sign In"
-msgstr ""
+msgstr "התחבר"
 
 #: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:41
@@ -749,7 +750,7 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:57
 msgid "Sign Up"
-msgstr ""
+msgstr "הירשם"
 
 #: .\cookbook\templates\account\login.html:38
 msgid "Lost your password?"
@@ -758,7 +759,7 @@ msgstr ""
 #: .\cookbook\templates\account\login.html:39
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "איפוס סיסמא"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
@@ -772,7 +773,7 @@ msgstr ""
 #: .\cookbook\templates\account\logout.html:9
 #: .\cookbook\templates\account\logout.html:18
 msgid "Sign Out"
-msgstr ""
+msgstr "התנתק"
 
 #: .\cookbook\templates\account\logout.html:11
 msgid "Are you sure you want to sign out?"
@@ -791,7 +792,7 @@ msgstr ""
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
 msgid "Password"
-msgstr ""
+msgstr "סיסמא"
 
 #: .\cookbook\templates\account\password_change.html:22
 msgid "Forgot Password?"
@@ -846,52 +847,52 @@ msgstr ""
 #: .\cookbook\templates\account\password_set.html:16
 #: .\cookbook\templates\account\password_set.html:21
 msgid "Set Password"
-msgstr ""
+msgstr "קבע סיסמא"
 
 #: .\cookbook\templates\account\signup.html:6
 msgid "Register"
-msgstr ""
+msgstr "הירשם"
 
 #: .\cookbook\templates\account\signup.html:12
 msgid "Create an Account"
-msgstr ""
+msgstr "צור משתמש"
 
 #: .\cookbook\templates\account\signup.html:42
 #: .\cookbook\templates\socialaccount\signup.html:33
 msgid "I accept the follwoing"
-msgstr ""
+msgstr "אני מקבל את התנאים הבאים"
 
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "תנאים והגבלות"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
 msgid "and"
-msgstr ""
+msgstr "ו"
 
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr ""
+msgstr "מדיניות פרטיות"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
-msgstr ""
+msgstr "צור משתמש"
 
 #: .\cookbook\templates\account\signup.html:69
 msgid "Already have an account?"
-msgstr ""
+msgstr "יש לך חשבון?"
 
 #: .\cookbook\templates\account\signup_closed.html:5
 #: .\cookbook\templates\account\signup_closed.html:11
 msgid "Sign Up Closed"
-msgstr ""
+msgstr "ההרשמה סגורה"
 
 #: .\cookbook\templates\account\signup_closed.html:13
 msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
+msgstr "אנו מצטערים, אך ההרשמה כרגע סגורה."
 
 #: .\cookbook\templates\api_info.html:5 .\cookbook\templates\base.html:378
 #: .\cookbook\templates\rest_framework\api.html:11
@@ -900,11 +901,11 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:110 .\cookbook\templates\index.html:87
 msgid "Recipes"
-msgstr ""
+msgstr "מתכונים"
 
 #: .\cookbook\templates\base.html:161 .\cookbook\views\lists.py:120
 msgid "Foods"
-msgstr ""
+msgstr "מאכלים"
 
 #: .\cookbook\templates\base.html:173 .\cookbook\views\lists.py:137
 msgid "Units"
@@ -920,11 +921,11 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:211 .\cookbook\views\lists.py:186
 msgid "Automations"
-msgstr ""
+msgstr "אוטומציות"
 
 #: .\cookbook\templates\base.html:225 .\cookbook\views\lists.py:222
 msgid "Files"
-msgstr ""
+msgstr "קבצים"
 
 #: .\cookbook\templates\base.html:237
 msgid "Batch Edit"
@@ -945,7 +946,7 @@ msgstr ""
 #: .\cookbook\templates\export_response.html:7
 #: .\cookbook\templates\test2.html:14 .\cookbook\templates\test2.html:20
 msgid "Export"
-msgstr ""
+msgstr "יצא"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
@@ -970,7 +971,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:336 .\cookbook\templates\space_manage.html:15
 msgid "Space Settings"
-msgstr ""
+msgstr "הגדרות מרחב"
 
 #: .\cookbook\templates\base.html:340
 msgid "External Connectors"
@@ -978,21 +979,21 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
-msgstr ""
+msgstr "מערכת"
 
 #: .\cookbook\templates\base.html:347
 msgid "Admin"
-msgstr ""
+msgstr "מנהל"
 
 #: .\cookbook\templates\base.html:351
 #: .\cookbook\templates\space_overview.html:25
 msgid "Your Spaces"
-msgstr ""
+msgstr "המרחבים שלך"
 
 #: .\cookbook\templates\base.html:362
 #: .\cookbook\templates\space_overview.html:6
 msgid "Overview"
-msgstr ""
+msgstr "סקירה כללית"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
@@ -1012,7 +1013,7 @@ msgstr ""
 
 #: .\cookbook\templates\base.html:383
 msgid "Log out"
-msgstr ""
+msgstr "התנתק"
 
 #: .\cookbook\templates\base.html:406
 msgid "You are using the free version of Tandor"
@@ -1070,7 +1071,7 @@ msgstr ""
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
-msgstr ""
+msgstr "הראה מתכונים"
 
 #: .\cookbook\templates\batch\monitor.html:30
 msgid "Show Log"
@@ -1111,7 +1112,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\delete_template.html:22
 msgid "This cannot be undone!"
-msgstr ""
+msgstr "לא ניתן לבטל פעולה זו!"
 
 #: .\cookbook\templates\generic\delete_template.html:27
 msgid "Protected"
@@ -1128,7 +1129,7 @@ msgstr ""
 #: .\cookbook\templates\generic\edit_template.html:6
 #: .\cookbook\templates\generic\edit_template.html:14
 msgid "Edit"
-msgstr ""
+msgstr "ערוך"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
@@ -1162,7 +1163,7 @@ msgstr ""
 
 #: .\cookbook\templates\generic\table_template.html:98
 msgid "next"
-msgstr ""
+msgstr "הבא"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
@@ -1175,7 +1176,7 @@ msgstr ""
 #: .\cookbook\templates\import_response.html:7 .\cookbook\views\delete.py:90
 #: .\cookbook\views\edit.py:174
 msgid "Import"
-msgstr ""
+msgstr "יבא"
 
 #: .\cookbook\templates\include\storage_backend_warning.html:4
 msgid "Security Warning"
@@ -1356,7 +1357,7 @@ msgstr ""
 #: .\cookbook\templates\no_groups_info.html:5
 #: .\cookbook\templates\no_groups_info.html:12
 msgid "No Permissions"
-msgstr ""
+msgstr "אין הרשאות"
 
 #: .\cookbook\templates\no_groups_info.html:17
 msgid "You do not have any groups and therefor cannot use this application."
@@ -1365,12 +1366,12 @@ msgstr ""
 #: .\cookbook\templates\no_groups_info.html:18
 #: .\cookbook\templates\no_perm_info.html:15
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "אנא פנה למנהל המערכת."
 
 #: .\cookbook\templates\no_perm_info.html:5
 #: .\cookbook\templates\no_perm_info.html:12
 msgid "No Permission"
-msgstr ""
+msgstr "אין הרשאות"
 
 #: .\cookbook\templates\no_perm_info.html:15
 msgid ""
@@ -1380,11 +1381,11 @@ msgstr ""
 
 #: .\cookbook\templates\offline.html:6
 msgid "Offline"
-msgstr ""
+msgstr "לא מקוון"
 
 #: .\cookbook\templates\offline.html:19
 msgid "You are currently offline!"
-msgstr ""
+msgstr "אתה כרגע במצב לא מקוון!"
 
 #: .\cookbook\templates\offline.html:20
 msgid ""
@@ -1395,7 +1396,7 @@ msgstr ""
 #: .\cookbook\templates\openid\login.html:27
 #: .\cookbook\templates\socialaccount\authentication_error.html:27
 msgid "Back"
-msgstr ""
+msgstr "אחורה"
 
 #: .\cookbook\templates\property_editor.html:7
 msgid "Property Editor"
@@ -1422,7 +1423,7 @@ msgstr ""
 #: .\cookbook\templates\search_info.html:9
 #: .\cookbook\templates\settings.html:24
 msgid "Search Settings"
-msgstr ""
+msgstr "הגדרות חיפוש"
 
 #: .\cookbook\templates\search_info.html:10
 msgid ""
@@ -1438,7 +1439,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:19
 msgid "Search Methods"
-msgstr ""
+msgstr "שיטות חיפוש"
 
 #: .\cookbook\templates\search_info.html:23
 msgid ""
@@ -1521,7 +1522,7 @@ msgstr ""
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
-msgstr ""
+msgstr "שדות חיפוש"
 
 #: .\cookbook\templates\search_info.html:73
 msgid ""
