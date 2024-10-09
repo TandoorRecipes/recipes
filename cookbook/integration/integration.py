@@ -153,6 +153,19 @@ class Integration:
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 
+                        if isinstance(self, cookbook.integration.gourmet.Gourmet):
+                            self.import_zip = import_zip
+                            new_file_list = []
+                            for file in file_list:
+                                if file.file_size == 0:
+                                    next
+                                if file.filename.startswith("index.htm"):
+                                    next
+                                if file.filename.endswith(".htm"):
+                                    new_file_list += self.split_recipe_file(BytesIO(import_zip.read(file.filename)))
+                            il.total_recipes = len(new_file_list)
+                            file_list = new_file_list
+
                         for z in file_list:
                             try:
                                 if not hasattr(z, 'filename') or isinstance(z, Tag):
