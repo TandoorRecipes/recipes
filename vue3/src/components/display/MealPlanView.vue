@@ -8,7 +8,7 @@
                 :item-content-height="calendarItemHeight"
                 :enable-drag-drop="true"
                 @dropOnDate="dropCalendarItemOnDate"
-                @click-date="">
+                @click-date="newPlanDialog = true">
                 <template #header="{ headerProps }">
                     <CalendarViewHeader :header-props="headerProps"/>
                 </template>
@@ -23,6 +23,8 @@
                     ></meal-plan-calendar-item>
                 </template>
             </CalendarView>
+
+            <model-edit-dialog model="MealPlan" v-model="newPlanDialog"></model-edit-dialog>
         </v-col>
     </v-row>
 </template>
@@ -36,7 +38,7 @@ import "vue-simple-calendar/dist/css/default.css"
 
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
 import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
-import {computed, onMounted, ref} from "vue";
+import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
@@ -46,7 +48,9 @@ import {MealPlan} from "@/openapi";
 const {lgAndUp} = useDisplay()
 
 const currentlyDraggedMealplan = ref({} as IMealPlanNormalizedCalendarItem)
-const clickedMealPlan = ref({} as IMealPlanNormalizedCalendarItem)
+
+const newPlanDialog = ref(false)
+
 /**
  * computed property that converts array of MealPlan object to
  * array of CalendarItems (format required/extended from vue-simple-calendar)
