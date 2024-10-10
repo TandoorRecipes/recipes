@@ -98,7 +98,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         let name = ''
         if (editingObj.value.id) {
             modelClass.value.model.toStringKeys.forEach(key => {
-                name += ' ' + editingObj.value[key]
+                name += ' ' + key.split('.').reduce((a, b) => a[b], editingObj.value);
             })
         }
 
@@ -143,7 +143,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      */
     function deleteObject() {
         modelClass.value.destroy(editingObj.value.id).then((r: any) => {
-            emit('delete', editingObj)
+            emit('delete', editingObj.value)
             editingObj.value = {} as T
         }).catch((err: any) => {
             useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)

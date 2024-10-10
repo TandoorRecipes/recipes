@@ -21,7 +21,7 @@
                                         <div class="align-self-center">
                                             <v-btn variant="flat" icon="">
                                                 <i class="fas fa-plus"></i>
-                                                <meal-plan-dialog></meal-plan-dialog>
+                                                <model-edit-dialog model="MealPlan"></model-edit-dialog>
                                             </v-btn>
                                         </div>
                                     </div>
@@ -40,7 +40,7 @@
                                     <v-list-item-subtitle>
                                         {{ p.mealType.name }}
                                     </v-list-item-subtitle>
-                                    <meal-plan-dialog :meal-plan="p"></meal-plan-dialog>
+                                    <model-edit-dialog model="MealPlan" :item="p"></model-edit-dialog>
                                 </v-list-item>
 
                             </v-list>
@@ -55,14 +55,13 @@
 
 
 <script lang="ts" setup>
-import {computed, onMounted, PropType, ref, toRefs} from 'vue'
-import RecipeCard from "@/components/display/RecipeCard.vue";
+import {computed, onMounted, ref} from 'vue'
 import {useDisplay} from "vuetify";
-import {MealPlan, Recipe, RecipeOverview} from "@/openapi";
+import {MealPlan} from "@/openapi";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import {DateTime} from "luxon";
-import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
 import {homePageCols} from "@/utils/breakpoint_utils";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 
 
 const loading = ref(false)

@@ -156,7 +156,7 @@ export const TMealPlan = {
     icon: 'fa-solid fa-calendar-days',
 
     isPaginated: true,
-    toStringKeys: ['name'],
+    toStringKeys: ['title','recipe.name'],
 
     tableHeaders: [
         {title: 'Title', key: 'title'},
@@ -404,6 +404,7 @@ export class GenericModel {
     api: Object
     model: Model
     // TODO find out the type of the t useI18n object and use it here
+    // TODO decouple context from Generic model so t does not need to be passed
     t: any
 
     /**

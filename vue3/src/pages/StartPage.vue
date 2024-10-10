@@ -32,15 +32,12 @@ import RecipeCardComponent from "@/components/display/RecipeCard.vue"
 import GlobalSearchDialog from "@/components/inputs/GlobalSearchDialog.vue"
 import RecipeCard from "@/components/display/RecipeCard.vue"
 import HorizontalRecipeScroller from "@/components/display/HorizontalRecipeWindow.vue"
-import {DateTime} from "luxon"
-import {useMealPlanStore} from "@/stores/MealPlanStore"
 import HorizontalMealPlanWindow from "@/components/display/HorizontalMealPlanWindow.vue"
-import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue"
 import ModelSelect from "@/components/inputs/ModelSelect.vue"
 
 export default defineComponent({
     name: "StartPage",
-    components: {ModelSelect, MealPlanDialog, HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
+    components: {ModelSelect, HorizontalMealPlanWindow, HorizontalRecipeScroller, RecipeCard, GlobalSearchDialog, RecipeCardComponent, KeywordsComponent},
     computed: {},
     data() {
         return {

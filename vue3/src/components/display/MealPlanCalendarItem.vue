@@ -17,9 +17,8 @@
                     </span>
                 </div>
             </div>
-            <meal-plan-dialog :meal-plan="mealPlan"></meal-plan-dialog>
+            <model-edit-dialog model="MealPlan" :item="mealPlan" @delete="(args: MealPlan) => emit('delete', args)"></model-edit-dialog>
         </v-card-text>
-
     </v-card>
 </template>
 
@@ -28,12 +27,16 @@
 import {computed, PropType} from "vue";
 import {IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
 import RecipeImage from "@/components/display/RecipeImage.vue";
-import MealPlanDialog from "@/components/dialogs/MealPlanDialog.vue";
+import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import {MealPlan} from "@/openapi";
 
 const emit = defineEmits({
     onDragStart: (value: IMealPlanNormalizedCalendarItem, event: DragEvent) => {
         return true
     },
+    delete: (value: MealPlan) => {
+        return true
+    }
 })
 
 let props = defineProps({

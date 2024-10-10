@@ -13,10 +13,10 @@
 
                 <v-row>
                     <v-col cols="12" md="6">
-                        <v-text-field label="Title" v-model="editingObj.title"></v-text-field>
+                        <v-text-field :label="$t('Title')" v-model="editingObj.title"></v-text-field>
                         <v-date-input
                             v-model="dateRangeValue"
-                            label="Plan Date"
+                            :label="$t('Date')"
                             multiple="range"
                             prepend-icon=""
                             prepend-inner-icon="$calendar"
@@ -32,7 +32,7 @@
                         </v-input>
 
                         <ModelSelect model="MealType" :allow-create="true" v-model="editingObj.mealType"></ModelSelect>
-                        <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" label="Servings"></v-number-input>
+                        <v-number-input control-variant="split" :min="0" v-model="editingObj.servings" :label="$t('Servings')"></v-number-input>
                         <ModelSelect model="User" :allow-create="false" v-model="editingObj.shared" item-label="displayName" mode="tags"></ModelSelect>
                     </v-col>
                     <v-col cols="12" md="6">
@@ -45,7 +45,7 @@
                 </v-row>
                 <v-row>
                     <v-col>
-                        <v-textarea label="Note" v-model="editingObj.note"></v-textarea>
+                        <v-textarea :label="$t('Note')" v-model="editingObj.note"></v-textarea>
                     </v-col>
                 </v-row>
 
@@ -104,7 +104,14 @@ onMounted(() => {
             // initialize date range slider
             dateRangeValue.value.push(editingObj.value.fromDate)
         }, () => {
-            // TODO add all dates between start and end to date range
+            dateRangeValue.value.push(editingObj.value.fromDate)
+            if(editingObj.value.toDate && editingObj.value.toDate != editingObj.value.fromDate) {
+                let currentDate = DateTime.fromJSDate(editingObj.value.fromDate).plus({day: 1}).toJSDate()
+                while(currentDate <= editingObj.value.toDate){
+                    dateRangeValue.value.push(currentDate)
+                    currentDate = DateTime.fromJSDate(currentDate).plus({day: 1}).toJSDate()
+                }
+            }
         })
     })
 
@@ -119,7 +126,7 @@ function updateDate() {
         editingObj.value.fromDate = dateRangeValue.value[0]
         editingObj.value.toDate = dateRangeValue.value[dateRangeValue.value.length - 1]
     } else {
-        useMessageStore().addMessage(MessageType.WARNING, 'Food', 7000)
+        useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
         return
     }
 }
