@@ -122,10 +122,12 @@ onMounted(() => {
     api.apiSupermarketCategoryList({pageSize: 100}).then(r => {
         supermarketCategories.value = r.results
 
-        setupState(props.item, props.itemId, undefined, () => {
-            editingObj.value.categoryToSupermarket.forEach(cTS => {
-                editingObjSupermarketCategories.value.push(cTS.category)
-            })
+        setupState(props.item, props.itemId, {
+            existingItemFunction: () => {
+                editingObj.value.categoryToSupermarket.forEach(cTS => {
+                    editingObjSupermarketCategories.value.push(cTS.category)
+                })
+            }
         })
     })
 })

@@ -189,9 +189,11 @@ const stopConversionsWatcher = watch(tab, (value, oldValue, onCleanup) => {
 
 
 onMounted(() => {
-    setupState(props.item, props.itemId, () => {
-        editingObj.value.propertiesFoodAmount = 100
-        editingObj.value.propertiesFoodUnit = {name: 'g'} as Unit // TODO properly fetch default unit
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            editingObj.value.propertiesFoodAmount = 100
+            editingObj.value.propertiesFoodUnit = {name: 'g'} as Unit // TODO properly fetch default unit
+        }
     })
 })
 

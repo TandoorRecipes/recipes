@@ -8,7 +8,7 @@
                 :item-content-height="calendarItemHeight"
                 :enable-drag-drop="true"
                 @dropOnDate="dropCalendarItemOnDate"
-                @click-date="newPlanDialog = true">
+                @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                 <template #header="{ headerProps }">
                     <CalendarViewHeader :header-props="headerProps"/>
                 </template>
@@ -24,21 +24,20 @@
                 </template>
             </CalendarView>
 
-            <model-edit-dialog model="MealPlan" v-model="newPlanDialog"></model-edit-dialog>
+            <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem" @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
         </v-col>
     </v-row>
 </template>
 
 
 <script setup lang="ts">
-
 import {CalendarView, CalendarViewHeader} from "vue-simple-calendar"
 import "vue-simple-calendar/dist/style.css"
 import "vue-simple-calendar/dist/css/default.css"
 
 import MealPlanCalendarItem from "@/components/display/MealPlanCalendarItem.vue";
 import {IMealPlanCalendarItem, IMealPlanNormalizedCalendarItem} from "@/types/MealPlan";
-import {computed, nextTick, onMounted, ref, useTemplateRef} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
@@ -50,6 +49,7 @@ const {lgAndUp} = useDisplay()
 const currentlyDraggedMealplan = ref({} as IMealPlanNormalizedCalendarItem)
 
 const newPlanDialog = ref(false)
+const newPlanDialogDefaultItem = ref({} as MealPlan)
 
 /**
  * computed property that converts array of MealPlan object to

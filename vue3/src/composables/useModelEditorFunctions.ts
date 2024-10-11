@@ -22,6 +22,15 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         modelClass.value = getGenericModelFromString(modelName, t)
     })
 
+    function applyItemDefaults(itemDefaults: T) {
+        if (Object.keys(itemDefaults).length > 0) {
+            Object.keys(itemDefaults).forEach(k => {
+                console.log('applying default ', k)
+                editingObj.value[k] = itemDefaults[k]
+            })
+        }
+    }
+
     /**
      * if given an item or itemId, sets up the editingObj with that item or loads the data from the API using the ID
      * once finished loading updates the loading state to false, indicating finished initialization
@@ -29,23 +38,35 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      * @throws Error if an error if neither item or itemId are given and create is disabled
      * @param item item object to set as editingObj
      * @param itemId id of object to be retrieved and set as editingObj
-     * @param newItemFunction optional function to execute if no object is given (by either item or itemId)
-     * @param existingItemFunction optional function to execute once the existing item was loaded (instantly with item, async with itemId)
+     * @param options optional parameters
+     *                      newItemFunction: called when no item is given. When overriding you must implement applyItemDefaults if you want them to be applied.
+     *                      existingItemFunction: called when some kind of item is passed
      * @return promise resolving to either the editingObj or undefined if errored
      */
-    function setupState(item: T | null, itemId: number | string | undefined,
-                        newItemFunction: () => void = () => {
-                        },
-                        existingItemFunction: () => void = () => {
-                        }): Promise<T | undefined> {
+    function setupState(item: T | null, itemId: number | string | undefined, options: {
+                            itemDefaults?: T,
+                            newItemFunction?: () => void,
+                            existingItemFunction?: () => void,
+                        } = {}
+    ): Promise<T | undefined> {
+
+        const {
+            itemDefaults = {} as T,
+            newItemFunction = () => {
+                applyItemDefaults(itemDefaults)
+            },
+            existingItemFunction = () => {
+            }
+        } = options
+
         if (item === null && (itemId === undefined || itemId == '')) {
             // neither item nor itemId given => new item
-
             if (modelClass.value.model.disableCreate) {
                 throw Error('Trying to use a ModelEditor without an item and a model that does not allow object creation!')
             }
 
             newItemFunction()
+
             loading.value = false
             return Promise.resolve(editingObj.value)
         } else if (item !== null) {
@@ -72,11 +93,12 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 } else {
                     useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
                 }
-                return undefined
+                return Promise.resolve(undefined)
             }).finally(() => {
                 loading.value = false
             })
         }
+        return Promise.resolve(undefined)
     }
 
     /**
@@ -150,5 +172,5 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         })
     }
 
-    return {setupState, saveObject, deleteObject, isUpdate, editingObjName, loading, editingObj, modelClass}
+    return {setupState, saveObject, deleteObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, modelClass}
 }

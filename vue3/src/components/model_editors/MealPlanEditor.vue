@@ -73,12 +73,13 @@ import {MessageType, useMessageStore} from "@/stores/MessageStore";
 
 const props = defineProps({
     item: {type: {} as PropType<MealPlan>, required: false, default: null},
+    itemDefaults: {type: {} as PropType<MealPlan>, required: false, default: {} as MealPlan},
     itemId: {type: [Number, String], required: false, default: undefined},
     dialog: {type: Boolean, default: false}
 })
 
 const emit = defineEmits(['create', 'save', 'delete', 'close'])
-const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<MealPlan>('MealPlan', emit)
+const {setupState, deleteObject, saveObject, isUpdate, editingObjName, applyItemDefaults, loading, editingObj, modelClass} = useModelEditorFunctions<MealPlan>('MealPlan', emit)
 
 // object specific data (for selects/display)
 const dateRangeValue = ref([] as Date[])
@@ -87,32 +88,35 @@ onMounted(() => {
     const api = new ApiApi()
 
     api.apiMealTypeList().then(r => {
+
+        // TODO remove this once moved to user preference from MealType property
         let defaultMealType = {} as MealType
         r.results.forEach(r => {
             if (r._default) {
                 defaultMealType = r
             }
         })
+        if (Object.keys(defaultMealType).length == 0 && r.results.length > 0) {
+            defaultMealType = r.results[0]
+        }
 
-        setupState(props.item, props.itemId, () => {
-            editingObj.value.fromDate = DateTime.now().toJSDate()
-            editingObj.value.toDate = DateTime.now().toJSDate()
-            editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
-            editingObj.value.servings = 1
-            editingObj.value.mealType = defaultMealType
+        setupState(props.item, props.itemId, {
+            newItemFunction: () => {
+                console.log('running new Item Function')
+                editingObj.value.fromDate = DateTime.now().toJSDate()
+                editingObj.value.toDate = DateTime.now().toJSDate()
+                editingObj.value.shared = useUserPreferenceStore().userSettings.planShare
+                editingObj.value.servings = 1
+                editingObj.value.mealType = defaultMealType
 
-            // initialize date range slider
-            dateRangeValue.value.push(editingObj.value.fromDate)
-        }, () => {
-            dateRangeValue.value.push(editingObj.value.fromDate)
-            if(editingObj.value.toDate && editingObj.value.toDate != editingObj.value.fromDate) {
-                let currentDate = DateTime.fromJSDate(editingObj.value.fromDate).plus({day: 1}).toJSDate()
-                while(currentDate <= editingObj.value.toDate){
-                    dateRangeValue.value.push(currentDate)
-                    currentDate = DateTime.fromJSDate(currentDate).plus({day: 1}).toJSDate()
-                }
+                applyItemDefaults(props.itemDefaults)
+
+                initializeDateRange()
+                console.log(editingObj.value)
+            }, existingItemFunction: () => {
+                initializeDateRange()
             }
-        })
+        },)
     })
 
 })
@@ -128,6 +132,22 @@ function updateDate() {
     } else {
         useMessageStore().addMessage(MessageType.WARNING, 'Missing Date', 7000)
         return
+    }
+}
+
+/**
+ * initialize the dateRange selector when the editingObject is initialized
+ */
+function initializeDateRange() {
+    if (editingObj.value.toDate && DateTime.fromJSDate(editingObj.value.toDate).diff(DateTime.fromJSDate(editingObj.value.fromDate), 'days').toObject().days! >= 1) {
+        dateRangeValue.value = [editingObj.value.fromDate]
+        let currentDate = DateTime.fromJSDate(editingObj.value.fromDate).plus({day: 1}).toJSDate()
+        while (currentDate <= editingObj.value.toDate) {
+            dateRangeValue.value.push(currentDate)
+            currentDate = DateTime.fromJSDate(currentDate).plus({day: 1}).toJSDate()
+        }
+    } else {
+        dateRangeValue.value = [editingObj.value.fromDate, editingObj.value.fromDate]
     }
 }
 

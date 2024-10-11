@@ -49,9 +49,11 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 
 
 onMounted(() => {
-    setupState(props.item, props.itemId, () => {
-        editingObj.value.expires = DateTime.now().plus({year: 1}).toJSDate()
-        editingObj.value.scope = 'read write'
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            editingObj.value.expires = DateTime.now().plus({year: 1}).toJSDate()
+            editingObj.value.scope = 'read write'
+        }
     })
 })
 

@@ -50,9 +50,11 @@ onMounted(() => {
     api.apiGroupList().then(r => {
         groups.value = r
 
-        setupState(props.item, props.itemId, () => {
-            editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
-            editingObj.value.group = groups.value[0]
+        setupState(props.item, props.itemId, {
+            newItemFunction: () => {
+                editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
+                editingObj.value.group = groups.value[0]
+            }
         })
 
     }).catch(err => {

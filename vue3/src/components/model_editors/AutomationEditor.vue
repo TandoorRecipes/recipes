@@ -52,21 +52,23 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 
 const AUTOMATION_TYPES = [
-  { value: "FOOD_ALIAS", title: t("Food_Alias") },
-  { value: "UNIT_ALIAS", title: t("Unit_Alias") },
-  { value: "KEYWORD_ALIAS", title: t("Keyword_Alias") },
-  { value: "NAME_REPLACE", title: t("Name_Replace") },
-  { value: "DESCRIPTION_REPLACE", title: t("Description_Replace") },
-  { value: "INSTRUCTION_REPLACE", title: t("Instruction_Replace") },
-  { value: "FOOD_REPLACE", title: t("Food_Replace") },
-  { value: "UNIT_REPLACE", title: t("Unit_Replace") },
-  { value: "NEVER_UNIT", title: t("Never_Unit") },
-  { value: "TRANSPOSE_WORDS", title: t("Transpose_Words") }
+    {value: "FOOD_ALIAS", title: t("Food_Alias")},
+    {value: "UNIT_ALIAS", title: t("Unit_Alias")},
+    {value: "KEYWORD_ALIAS", title: t("Keyword_Alias")},
+    {value: "NAME_REPLACE", title: t("Name_Replace")},
+    {value: "DESCRIPTION_REPLACE", title: t("Description_Replace")},
+    {value: "INSTRUCTION_REPLACE", title: t("Instruction_Replace")},
+    {value: "FOOD_REPLACE", title: t("Food_Replace")},
+    {value: "UNIT_REPLACE", title: t("Unit_Replace")},
+    {value: "NEVER_UNIT", title: t("Never_Unit")},
+    {value: "TRANSPOSE_WORDS", title: t("Transpose_Words")}
 ]
 
 onMounted(() => {
-    setupState(props.item, props.itemId, () => {
-        editingObj.value.order = 0
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            editingObj.value.order = 0
+        }
     })
 })
 
