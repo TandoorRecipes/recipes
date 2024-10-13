@@ -10,7 +10,7 @@
                 @dropOnDate="dropCalendarItemOnDate"
                 @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                 <template #header="{ headerProps }">
-                    <CalendarViewHeader :header-props="headerProps"/>
+                    <CalendarViewHeader :header-props="headerProps"></CalendarViewHeader>
                 </template>
                 <template #item="{ value, weekStartDate, top }">
                     <meal-plan-calendar-item

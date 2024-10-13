@@ -27,13 +27,10 @@
                 <v-tabs-window-item value="categories">
                     <v-row>
                         <v-col cols="0" md="6">
-                            <h3>{{ $t('AvailableCategories') }}
-                                <v-btn class="float-right" color="create" prepend-icon="$create">{{ $t('New') }}
-                                    <model-edit-dialog model="SupermarketCategory" @create="args => supermarketCategories.push(args)"></model-edit-dialog>
-                                </v-btn>
-                            </h3>
+                            <h3>{{ $t('AvailableCategories') }}</h3>
 
                             <draggable class="mt-4" tag="VList" v-model="unusedSupermarketCategories" handle=".drag-handle" item-key="id" group="categories"
+                                       :move="trackMovedItem"
                             >
                                 <template #item="{element}">
                                     <v-list-item border :key="element.id">
@@ -41,6 +38,17 @@
                                             <v-icon class="drag-handle cursor-grab" icon="$dragHandle"></v-icon>
                                         </template>
                                         {{ element.name }}
+                                        <template #append>
+                                            <v-btn color="create" size="small" @click="addCategory(element)">
+                                                <i class="fa-solid fa-plus"></i>
+                                            </v-btn>
+                                        </template>
+                                    </v-list-item>
+                                </template>
+                                <template #footer>
+                                    <v-list-item class="cursor-pointer" border prepend-icon="$create" variant="tonal" base-color="create">
+                                        {{ $t('New_Supermarket_Category') }}
+                                        <model-edit-dialog model="SupermarketCategory" @create="args => supermarketCategories.push(args)"></model-edit-dialog>
                                     </v-list-item>
                                 </template>
                             </draggable>
@@ -54,8 +62,9 @@
                                 handle=".drag-handle" item-key="id" group="categories"
                                 :empty-insert-threshold="20"
                                 @sort="updateEditingObjectSupermarketCategoryRelation"
-                                @add="addTest"
-                                @remove="removeTest"
+                                :move="trackMovedItem"
+                                @add="addCategory(lastMovedCategory)"
+                                @remove="removeCategory(lastMovedCategory)"
                             >
                                 <template #item="{element}">
                                     <v-list-item border :key="element.id">
@@ -65,8 +74,8 @@
                                         {{ element.name }}
 
                                         <template #append>
-                                            <v-btn color="warning">
-                                                <i class="fa-solid fa-link-slash"></i>
+                                            <v-btn color="warning" size="small" @click="removeCategory(element)">
+                                                <i class="fa-solid fa-minus"></i>
                                             </v-btn>
                                         </template>
                                     </v-list-item>
@@ -109,11 +118,21 @@ const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, 
 // object specific data (for selects/display)
 const tab = ref("categories")
 
+// all available supermarket categories
 const supermarketCategories = ref([] as SupermarketCategory[])
+
+// all relations existing on the editing obj (internal datastructure, UI works with computed/manual list of categories)
+const editingObjectSupermarketCategoriesRelations = ref([] as SupermarketCategoryRelation[])
+
+// categories used by the selected supermarket
 const editingObjSupermarketCategories = ref([] as SupermarketCategory[])
 
+// track the last moved item in the draggable list to use in add/remove functions
+const lastMovedCategory = ref({} as SupermarketCategory)
+
+// computed: categories not yet used in editing supermarket
 const unusedSupermarketCategories = computed(() => {
-    return supermarketCategories.value.filter(e => !editingObjSupermarketCategories.value.includes(e))
+    return supermarketCategories.value.filter(e => editingObjSupermarketCategories.value.findIndex(sc => sc.id == e.id) == -1)
 })
 
 onMounted(() => {
@@ -124,7 +143,11 @@ onMounted(() => {
 
         setupState(props.item, props.itemId, {
             existingItemFunction: () => {
-                editingObj.value.categoryToSupermarket.forEach(cTS => {
+                // initialize list of supermarket category relations
+                editingObjectSupermarketCategoriesRelations.value = editingObj.value.categoryToSupermarket
+
+                // load categories from relation list
+                editingObjectSupermarketCategoriesRelations.value.forEach(cTS => {
                     editingObjSupermarketCategories.value.push(cTS.category)
                 })
             }
@@ -138,26 +161,62 @@ function updateEditingObjectSupermarketCategoryRelation(operation: any) {
     }
 }
 
-function addTest(operation: any) {
-    let api = new ApiApi()
-
-    if (typeof operation.newIndex == "number" && editingObjSupermarketCategories.value.length >= operation.newIndex) {
-        let sC = {
-            category: editingObjSupermarketCategories.value[operation.newIndex],
-            order: operation.newIndex,
-            supermarket: editingObj.value.id,
-        } as SupermarketCategoryRelation
-
-        api.apiSupermarketCategoryRelationCreate({supermarketCategoryRelation: sC}).then(r => {
-
-        }).catch((err: any) => {
-            useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-        })
-    }
+/**
+ * called whenever something in the list is moved to track the last moved element (to be used in add/remove functions)
+ * @param operation
+ */
+function trackMovedItem(operation: any) {
+    lastMovedCategory.value = operation.draggedContext.element
+    console.log('LAST MOVED', lastMovedCategory.value)
 }
 
-function removeTest(operation: any) {
-    console.log('remove', operation)
+/**
+ * create supermarket category relation from given category and save it
+ * @param sc SupermarketCategory to create relation from
+ */
+function addCategory(sc: SupermarketCategory) {
+    let api = new ApiApi()
+
+    let sC = {
+        category: sc,
+        order: editingObjSupermarketCategories.value.length + 1,
+        supermarket: editingObj.value.id,
+    } as SupermarketCategoryRelation
+
+    api.apiSupermarketCategoryRelationCreate({supermarketCategoryRelation: sC}).then(r => {
+        editingObjectSupermarketCategoriesRelations.value.push(r)
+
+        // if the category has not been added already (by draggable) add it to the end of the list
+        if(editingObjSupermarketCategories.value.findIndex(e => e.id == sc.id) == -1){
+            editingObjSupermarketCategories.value.push(sc)
+        }
+    }).catch((err: any) => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
+
+}
+
+/**
+ * remove category from supermarket category relation
+ * finds relation by looking through relation list for given category
+ * @param sc SupermarketCategory to remove from relation
+ */
+function removeCategory(sc: SupermarketCategory) {
+    let api = new ApiApi()
+
+    // find relation and delete it / remove it from frontend list
+    let relationIndex = editingObjectSupermarketCategoriesRelations.value.findIndex(e => e.category.id == sc.id)
+    if (relationIndex > -1) {
+        api.apiSupermarketCategoryRelationDestroy({id: editingObjectSupermarketCategoriesRelations.value[relationIndex].id!}).then(r => {
+            editingObjectSupermarketCategoriesRelations.value.splice(relationIndex, 1)
+
+            // remove category from list (might have already been done by draggable)
+            editingObjSupermarketCategories.value = editingObjSupermarketCategories.value.filter(e => e.id != sc.id)
+        }).catch((err: any) => {
+            useMessageStore().addError(ErrorMessageType.DELETE_ERROR, err)
+        })
+    }
+
 }
 
 </script>
