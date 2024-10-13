@@ -389,7 +389,7 @@ def parse_servings_text(servings):
             servings = ''
     if isinstance(servings, list):
         try:
-            servings = parse_servings_text(servings[1])
+            servings = parse_servings_text(servings[0])
         except Exception:
             pass
     return str(servings)[:32]
