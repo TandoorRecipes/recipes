@@ -8,6 +8,10 @@
                 :item-content-height="calendarItemHeight"
                 :enable-drag-drop="true"
                 @dropOnDate="dropCalendarItemOnDate"
+                :display-period-uom="useUserPreferenceStore().deviceSettings.mealplan_displayPeriod"
+                :display-period-count="useUserPreferenceStore().deviceSettings.mealplan_displayPeriodCount"
+                :starting-day-of-week="useUserPreferenceStore().deviceSettings.mealplan_startingDayOfWeek"
+                :display-week-numbers="useUserPreferenceStore().deviceSettings.mealplan_displayWeekNumbers"
                 @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                 <template #header="{ headerProps }">
                     <CalendarViewHeader :header-props="headerProps"></CalendarViewHeader>
@@ -24,7 +28,8 @@
                 </template>
             </CalendarView>
 
-            <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem" @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
+            <model-edit-dialog model="MealPlan" v-model="newPlanDialog" :itemDefaults="newPlanDialogDefaultItem"
+                               @create="(arg: any) => useMealPlanStore().plans.set(arg.id, arg)"></model-edit-dialog>
         </v-col>
     </v-row>
 </template>
@@ -43,6 +48,7 @@ import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {MealPlan} from "@/openapi";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const {lgAndUp} = useDisplay()
 

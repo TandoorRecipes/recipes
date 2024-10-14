@@ -9,7 +9,6 @@ const SERVER_SETTINGS_KEY = 'TANDOOR_SERVER_SETTINGS'
 const ACTIVE_SPACE_KEY = 'TANDOOR_ACTIVE_SPACE'
 
 class DeviceSettings {
-
     shopping_show_checked_entries = false
     shopping_show_delayed_entries = false
     shopping_show_selected_supermarket_only = false
@@ -25,14 +24,13 @@ class DeviceSettings {
     mealplan_displayWeekNumbers = true
 
     general_tableItemsPerPage = 10
-
 }
 
 export const useUserPreferenceStore = defineStore('user_preference_store', () => {
     /**
      * settings only saved on device to allow per device customization
      */
-    let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, {} as DeviceSettings)
+    let deviceSettings = useStorage(DEVICE_SETTINGS_KEY, new DeviceSettings(), localStorage, {mergeDefaults: true})
     /**
      * database user settings, cache in local storage in case application is started offline
      */
@@ -92,7 +90,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     /**
      * load data for currently active space
      */
-    function loadActiveSpace(){
+    function loadActiveSpace() {
         let api = new ApiApi()
         api.apiSpaceCurrentRetrieve().then(r => {
             activeSpace.value = r
@@ -104,7 +102,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     /**
      * switch to the given space
      */
-    function switchSpace(space: Space){
+    function switchSpace(space: Space) {
         let api = new ApiApi()
 
         api.apiSwitchActiveSpaceRetrieve({spaceId: space.id}).then(r => {
@@ -121,7 +119,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     // always load active space on first initialization of store
     loadActiveSpace()
 
-    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings,updateUserSettings, switchSpace}
+    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings, updateUserSettings, switchSpace}
 })
 
 // enable hot reload for store
