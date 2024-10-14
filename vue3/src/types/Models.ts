@@ -70,7 +70,7 @@ export type Model = {
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
-export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation'
+export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation' | 'Keyword' | 'UserFile'
 
 export const TFood = {
     name: 'Food',

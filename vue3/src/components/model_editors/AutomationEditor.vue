@@ -10,7 +10,6 @@
         :object-name="editingObjName()">
         <v-card-text>
             <v-form :disabled="loading">
-
                 <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                 <v-select :label="$t('Type')" :items="AUTOMATION_TYPES" v-model="editingObj.type"></v-select>
 
@@ -22,6 +21,7 @@
                 <v-number-input :label="$t('Order')" :step="10" v-model="editingObj.order" :hint="$t('OrderInformation')" control-variant="stacked"></v-number-input>
                 <v-checkbox :label="$t('Disabled')" v-model="editingObj.disabled"></v-checkbox>
 
+                <a href="https://docs.tandoor.dev/features/automation/" target="_blank">{{$t('Learn_More')}}</a>
             </v-form>
         </v-card-text>
     </model-editor-base>
