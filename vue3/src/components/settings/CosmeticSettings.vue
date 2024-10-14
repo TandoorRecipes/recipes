@@ -26,13 +26,13 @@
         <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')"></v-text-field>
         <v-text-field v-model="useUserPreferenceStore().userSettings.ingredientDecimals" :label="$t('Decimals')"></v-text-field>
 
-        <v-select
-            :label="$t('DefaultPage')"
-            v-model="useUserPreferenceStore().userSettings.defaultPage"
-            :items="availableDefaultPages"
-            item-title="label"
-            item-value="page"
-        ></v-select>
+<!--        <v-select-->
+<!--            :label="$t('DefaultPage')"-->
+<!--            v-model="useUserPreferenceStore().userSettings.defaultPage"-->
+<!--            :items="availableDefaultPages"-->
+<!--            item-title="label"-->
+<!--            item-value="page"-->
+<!--        ></v-select>-->
 
         <v-checkbox :label="$t('Use_Fractions')" :hint="$t('Use_Fractions_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.useFractions"></v-checkbox>
         <v-checkbox :label="$t('Comments_setting')" v-model="useUserPreferenceStore().userSettings.comments"></v-checkbox>

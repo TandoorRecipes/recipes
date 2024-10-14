@@ -14,8 +14,8 @@
             persistent-hint
             controlVariant="split"
             v-model="useUserPreferenceStore().userSettings.shoppingAutoSync"
-            :step="useUserPreferenceStore().serverSettings.shoppingMinAutosyncInterval"
-            min="0"
+            :step="Number(useUserPreferenceStore().serverSettings.shoppingMinAutosyncInterval)"
+            :min="(useUserPreferenceStore().userSettings.shoppingAutoSync == 0) ? 0 : Number(useUserPreferenceStore().serverSettings.shoppingMinAutosyncInterval)"
         >
             <template #append>
                 <v-btn @click="useUserPreferenceStore().userSettings.shoppingAutoSync = 0">{{$t('Disable')}}</v-btn>
@@ -35,7 +35,7 @@
             persistent-hint
             controlVariant="split"
             v-model="useUserPreferenceStore().userSettings.defaultDelay"
-            min="1"
+            :min="1"
         ></v-number-input>
 
         <v-number-input
@@ -45,7 +45,7 @@
             persistent-hint
             controlVariant="split"
             v-model="useUserPreferenceStore().userSettings.shoppingRecentDays"
-            min="0"
+            :min="0"
         ></v-number-input>
 
         <v-text-field :label="$t('csv_delim_label')" :hint="$t('csv_delim_help')" persistent-hint v-model="useUserPreferenceStore().userSettings.csvDelim"></v-text-field>
