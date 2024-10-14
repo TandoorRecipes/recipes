@@ -84,6 +84,11 @@ class Paprika(Integration):
 
             recipe.steps.add(step)
 
+            # Paprika exports can have images in either of image_url, or photo_data.
+            # If a user takes an image himself, only photo_data will be set.
+            # If a user imports an image, both will be set. But the photo_data will be a center-cropped square resized version, so the image_url is preferred.
+            
+            # Try to download image if possible
             try:
                 if recipe_json.get("image_url", None):
                     url = recipe_json.get("image_url", None)
@@ -91,6 +96,10 @@ class Paprika(Integration):
                         response = requests.get(url)
                         self.import_recipe_image(recipe, BytesIO(response.content))
             except Exception:
+                pass
+
+            # If no image downloaded, try to extract from photo_data
+            if not recipe.image:
                 if recipe_json.get("photo_data", None):
                     self.import_recipe_image(recipe, BytesIO(base64.b64decode(recipe_json['photo_data'])), filetype='.jpeg')
 
