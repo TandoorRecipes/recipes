@@ -51,7 +51,7 @@ pytest-django==4.8.0
 pytest-cov===5.0.0
 pytest-factoryboy==2.6.0
 pytest-html==4.1.1
-pytest-asyncio==0.23.5
+pytest-asyncio==0.24.0
 pytest-xdist==3.6.1
 autopep8==2.0.4
 flake8==6.1.0
