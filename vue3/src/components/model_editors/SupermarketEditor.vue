@@ -118,7 +118,7 @@ const emit = defineEmits(['create', 'save', 'delete', 'close'])
 const {setupState, deleteObject, saveObject, isUpdate, editingObjName, loading, editingObj, modelClass} = useModelEditorFunctions<Supermarket>('Supermarket', emit)
 
 // object specific data (for selects/display)
-const tab = ref("categories")
+const tab = ref("supermarket")
 
 // all available supermarket categories
 const supermarketCategories = ref([] as SupermarketCategory[])
@@ -172,7 +172,6 @@ function sortCategoryRelations(startIndex: number = 0) {
 
     if (!preventSort.value) {
         editingObjectSupermarketCategoriesRelations.value.forEach((sc, index) => {
-            console.log('sorting ', index, startIndex)
             if (index >= startIndex) {
                 if (index == 0) {
                     sc.order = 0
@@ -204,7 +203,7 @@ function addCategoryRelation(sCR: SupermarketCategoryRelation) {
         } else {
             sCR.order = 0
         }
-    } else {
+    } else if (editingObjectSupermarketCategoriesRelations.value.length > 0) {
         // item will be added last to list so give it the highest order
         sCR.order = editingObjectSupermarketCategoriesRelations.value[editingObjectSupermarketCategoriesRelations.value.length - 1].order! + 1
     }
@@ -221,8 +220,7 @@ function addCategoryRelation(sCR: SupermarketCategoryRelation) {
         }
 
         preventSort.value = false
-        // TODO reorder existing items after index
-
+        sortCategoryRelations(relationIndex)
     }).catch((err: any) => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         preventSort.value = false

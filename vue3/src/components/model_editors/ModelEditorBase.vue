@@ -15,7 +15,7 @@
                 <delete-confirm-dialog :object-name="objectName" :model-name="$t(modelClass.model.localizationKey)" @delete="emit('delete')"></delete-confirm-dialog>
             </v-btn>
             <v-btn color="save" prepend-icon="$create" @click="emit('save')" v-if="!isUpdate && !modelClass.model.disableCreate">{{ $t('Create') }}</v-btn>
-            <v-btn color="save" prepend-icon="$save" @click="emit('save')" v-if="isUpdate && !modelClass.model.disableUpdate">{{ $t('Update') }}</v-btn>
+            <v-btn color="save" prepend-icon="$save" @click="emit('save')" v-if="isUpdate && !modelClass.model.disableUpdate">{{ $t('Save') }}</v-btn>
         </v-card-actions>
     </v-card>
 </template>
