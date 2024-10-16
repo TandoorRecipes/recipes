@@ -12,7 +12,6 @@
     "@types/luxon": "^3.4.2",
     "@vueform/multiselect": "^2.6.8",
     "@vueuse/core": "^10.11.0",
-    "lodash": "^4.17.21",
     "luxon": "^3.4.4",
     "mavon-editor": "^3.0.1",
     "pinia": "^2.1.7",

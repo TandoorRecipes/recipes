@@ -15,6 +15,7 @@
 
                             <template v-for="category in useShoppingStore().getEntriesByGroup">
                                 <v-list-subheader>{{ category.name }}</v-list-subheader>
+                                {{category.stats}}
                                 <v-divider></v-divider>
 
                                 <template v-for="item in category.foods">
@@ -49,8 +50,6 @@ import {ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 
 const currentTab = ref("shopping")
-
-const shoppingStore = useShoppingStore()
 
 useShoppingStore().refreshFromAPI()
 
