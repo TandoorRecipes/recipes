@@ -2017,7 +2017,7 @@ def meal_plans_to_ical(queryset, filename):
 @api_view(['POST'])
 @permission_classes([CustomIsUser & CustomTokenHasReadWriteScope])
 def ingredient_from_string(request):
-    text = request.POST['text']
+    text = request.data['text']
 
     ingredient_parser = IngredientParser(request, False)
     amount, unit, food, note = ingredient_parser.parse(text)

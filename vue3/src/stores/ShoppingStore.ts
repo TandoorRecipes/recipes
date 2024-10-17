@@ -497,7 +497,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         }
     }
 
-    return {entries, supermarkets, supermarketCategories, getEntriesByGroup, getFlatEntries, hasFailedItems, refreshFromAPI}
+    return {entries, supermarkets, supermarketCategories, getEntriesByGroup, getFlatEntries, hasFailedItems, refreshFromAPI, createObject, deleteObject, updateObject, undoChange, setEntriesCheckedState, delayEntries}
 })
 
 // enable hot reload for store
