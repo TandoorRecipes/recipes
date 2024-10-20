@@ -42,7 +42,19 @@
             </v-container>
         </v-window-item>
         <v-window-item value="recipes">
-            {{ $t('Recipes') }}
+            <v-card>
+                <v-card-title>{{ $t('Recipes') }}</v-card-title>
+                <v-card-text>
+
+                    <v-label >{{$t('Add_to_Shopping')}}</v-label>
+                    <ModelSelect model="Recipe"></ModelSelect>
+
+                    <v-label>{{$t('Recipes')}}</v-label>
+                    <v-list>
+
+                    </v-list>
+                </v-card-text>
+            </v-card>
         </v-window-item>
     </v-window>
 
@@ -56,6 +68,7 @@ import {ApiApi, Food, IngredientString, ShoppingListEntry, Unit} from "@/openapi
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import ModelSelect from "@/components/inputs/ModelSelect.vue";
 
 const currentTab = ref("shopping")
 
