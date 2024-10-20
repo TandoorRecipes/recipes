@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="currentTab" grow>
+    <v-tabs v-model="currentTab" density="compact">
         <v-tab value="shopping"><i class="fas fa-shopping-cart fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Shopping_list') }}</span></v-tab>
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }}</span></v-tab>
     </v-tabs>
@@ -9,9 +9,10 @@
             <v-container>
                 <v-row>
                     <v-col>
-                        <v-text-field :label="$t('Shopping_input_placeholder')" @keyup.enter="addIngredient()" v-model="ingredientInput">
+                        <v-text-field :label="$t('Shopping_input_placeholder')" density="compact" @keyup.enter="addIngredient()" v-model="ingredientInput" hide-details>
                             <template #append>
                                 <v-btn
+                                    density="comfortable"
                                     @click="addIngredient()"
                                     :icon="ingredientInputIcon"
                                     color="create"
@@ -19,14 +20,20 @@
                             </template>
                         </v-text-field>
 
-                        <v-list lines="two" density="compact">
+                        <v-list class="mt-3" density="compact">
+                            <template v-for="category in useShoppingStore().getEntriesByGroup" :key="category.name">
+                                <template v-if="(category.stats.countUnchecked > 0 || useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
+                                && (category.stats.countUnchecked + category.stats.countChecked) > 0
+                                && (category.stats.countUncheckedDelayed < category.stats.countUnchecked || useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)">
 
-                            <template v-for="category in useShoppingStore().getEntriesByGroup">
-                                <v-list-subheader>{{ category.name }}</v-list-subheader>
-                                <v-divider></v-divider>
+                                    <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
+                                    <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
+                                    <v-divider></v-divider>
 
-                                <template v-for="[i, value] in category.foods" :key="i">
-                                    <shopping-line-item :entries="Array.from(value.entries.values())"></shopping-line-item>
+                                    <template v-for="[i, value] in category.foods" :key="i">
+                                        <shopping-line-item :entries="Array.from(value.entries.values())"></shopping-line-item>
+                                    </template>
+
                                 </template>
                             </template>
                         </v-list>
@@ -48,6 +55,7 @@ import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ApiApi, Food, IngredientString, ShoppingListEntry, Unit} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const currentTab = ref("shopping")
 
@@ -58,6 +66,9 @@ onMounted(() => {
     useShoppingStore().refreshFromAPI()
 })
 
+/**
+ * add new ingredient from ingredient text input
+ */
 function addIngredient() {
     const api = new ApiApi()
 

@@ -242,7 +242,7 @@
   "New_Unit": "Nueva unidad",
   "Next_Day": "Siguiente Día",
   "Next_Period": "Siguiente Período",
-  "NoCategory": "No se ha seleccionado categoría.",
+  "NoCategory": "",
   "NoMoreUndo": "No hay cambios que deshacer.",
   "No_ID": "No se ha encontrado el ID, no se puede borrar.",
   "No_Results": "No hay resutado",

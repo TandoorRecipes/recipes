@@ -22,17 +22,12 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     let supermarketCategories = ref([] as SupermarketCategory[])
     let supermarkets = ref([] as Supermarket[])
 
-    // TODO move into special type for structure ?
-    let total_unchecked = ref(0)
-    let total_checked = ref(0)
-    let total_unchecked_food = ref(0)
-    let total_checked_food = ref(0)
-
     let stats = ref({
         countChecked: 0,
         countUnchecked: 0,
         countCheckedFood: 0,
         countUncheckedFood: 0,
+        countUncheckedDelayed: 0,
     } as ShoppingListStats)
 
     // internal
@@ -47,7 +42,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     /**
      * build a multi-level data structure ready for display from shopping list entries
      * group by selected grouping key
-     * @return {{}}
      */
     const getEntriesByGroup = computed(() => {
         let structure = {} as IShoppingList
@@ -67,6 +61,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 countUnchecked: 0,
                 countCheckedFood: 0,
                 countUncheckedFood: 0,
+                countUncheckedDelayed: 0,
             } as ShoppingListStats
 
             category.foods.forEach(food => {
@@ -77,6 +72,9 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                         categoryStats.countChecked++
                     } else {
                         categoryStats.countUnchecked++
+                        if(entry.delayUntil != null) {
+                            categoryStats.countUncheckedDelayed++
+                        }
                     }
                 })
 
@@ -93,7 +91,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             stats.value.countCheckedFood += categoryStats.countCheckedFood
             stats.value.countUncheckedFood += categoryStats.countUncheckedFood
         })
-        
+
         // ordering
 
         if (structure.categories.has(UNDEFINED_CATEGORY)) {
@@ -497,7 +495,23 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         }
     }
 
-    return {entries, supermarkets, supermarketCategories, getEntriesByGroup, getFlatEntries, hasFailedItems, refreshFromAPI, createObject, deleteObject, updateObject, undoChange, setEntriesCheckedState, delayEntries}
+    return {
+        UNDEFINED_CATEGORY,
+        entries,
+        supermarkets,
+        supermarketCategories,
+        getEntriesByGroup,
+        getFlatEntries,
+        hasFailedItems,
+        refreshFromAPI,
+        createObject,
+        deleteObject,
+        updateObject,
+        undoChange,
+        setEntriesCheckedState,
+        delayEntries,
+
+    }
 })
 
 // enable hot reload for store

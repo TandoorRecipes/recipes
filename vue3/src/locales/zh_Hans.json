@@ -237,7 +237,7 @@
   "New_Unit": "新建单位",
   "Next_Day": "第二天",
   "Next_Period": "下期",
-  "NoCategory": "未选择分类。",
+  "NoCategory": "",
   "NoMoreUndo": "没有可撤消的更改。",
   "No_ID": "未找到标识，不能删除。",
   "No_Results": "没有结果",

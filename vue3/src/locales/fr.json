@@ -241,7 +241,7 @@
   "New_Unit": "Nouvelle unité",
   "Next_Day": "Prochain jour",
   "Next_Period": "Prochaine période",
-  "NoCategory": "Pas de catégorie sélectionnée.",
+  "NoCategory": "",
   "NoMoreUndo": "Aucun changement à annuler.",
   "No_ID": "ID introuvable, impossible de supprimer.",
   "No_Results": "Aucun résultat",
