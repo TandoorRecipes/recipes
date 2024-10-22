@@ -7,7 +7,8 @@
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card :title="title">
+            <v-card >
+                <v-closable-card-title :title="title" v-model="dialog"></v-closable-card-title>
 
                 <v-card-text>
 
@@ -24,10 +25,6 @@
                     </v-btn-group>
 
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn class="float-right" rounded @click="dialog = false">Close</v-btn>
-                </v-card-actions>
             </v-card>
 
         </template>
@@ -37,7 +34,8 @@
 <script setup lang="ts">
 
 import {defineComponent, onMounted, ref, watch} from 'vue'
-import {VNumberInput} from 'vuetify/labs/VNumberInput' //TODO remove once component is out of labs
+import {VNumberInput} from 'vuetify/labs/VNumberInput'
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"; //TODO remove once component is out of labs
 
 const emit = defineEmits({
     change(payload: { number: number }) {

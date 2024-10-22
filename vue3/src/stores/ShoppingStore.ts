@@ -510,6 +510,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         undoChange,
         setEntriesCheckedState,
         delayEntries,
+        getAssociatedRecipes,
 
     }
 })

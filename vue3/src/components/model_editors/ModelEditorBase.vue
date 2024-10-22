@@ -1,10 +1,7 @@
 <template>
     <v-card :loading="loading">
-        <v-card-title>
-            <i :class="modelClass.model.icon"></i> {{ $t(modelClass.model.localizationKey) }}
-            <v-btn class="float-right" icon="$close" variant="plain" @click="emit('close')" v-if="dialog"></v-btn>
-            <v-card-subtitle class="pa-0">{{ objectName }}</v-card-subtitle>
-        </v-card-title>
+        <v-closable-card-title :title="$t(modelClass.model.localizationKey)" :sub-title="objectName" :icon="modelClass.model.icon" @close="emit('close');" :hide-close="!dialog"></v-closable-card-title>
+
         <v-divider></v-divider>
         <slot name="default">
 
@@ -24,6 +21,7 @@
 
 import DeleteConfirmDialog from "@/components/dialogs/DeleteConfirmDialog.vue";
 import {GenericModel} from "@/types/Models";
+import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 
 const emit = defineEmits(['save', 'delete', 'close'])
 

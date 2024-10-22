@@ -35,6 +35,7 @@ export interface IShoppingListFood {
 }
 
 export type ShoppingLineAmount = {
+    key: number,
     amount: number,
     unit: Unit,
     checked: boolean,

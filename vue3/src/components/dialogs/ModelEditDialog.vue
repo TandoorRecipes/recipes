@@ -1,6 +1,6 @@
 <template>
     <v-dialog max-width="1400" :activator="dialogActivator" v-model="model">
-        <component :is="editorComponent" :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="dialog = false" :itemDefaults="itemDefaults"></component>
+        <component :is="editorComponent" :item="item" @create="createEvent" @save="saveEvent" @delete="deleteEvent" dialog @close="model = false" :itemDefaults="itemDefaults"></component>
     </v-dialog>
 </template>
 
