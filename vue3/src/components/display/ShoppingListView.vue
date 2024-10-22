@@ -1,5 +1,5 @@
 <template>
-    <v-tabs v-model="currentTab" density="compact">
+    <v-tabs v-model="currentTab" >
         <v-tab value="shopping"><i class="fas fa-shopping-cart fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Shopping_list') }}</span></v-tab>
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }}</span></v-tab>
     </v-tabs>
@@ -30,8 +30,8 @@
                                     <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
                                     <v-divider></v-divider>
 
-                                    <template v-for="[i, value] in category.foods" :key="i">
-                                        <shopping-line-item :entries="Array.from(value.entries.values())"></shopping-line-item>
+                                    <template v-for="[i, value] in category.foods" :key="value.food.id">
+                                        <shopping-line-item :entries="Array.from(value.entries.values())" @clicked="args => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
                                     </template>
 
                                 </template>
@@ -46,17 +46,21 @@
                 <v-card-title>{{ $t('Recipes') }}</v-card-title>
                 <v-card-text>
 
-                    <v-label >{{$t('Add_to_Shopping')}}</v-label>
+                    <v-label>{{ $t('Add_to_Shopping') }}</v-label>
                     <ModelSelect model="Recipe"></ModelSelect>
 
-                    <v-label>{{$t('Recipes')}}</v-label>
+                    <v-label>{{ $t('Recipes') }}</v-label>
                     <v-list>
-
+                        <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
+                            {{r}}
+                        </v-list-item>
                     </v-list>
                 </v-card-text>
             </v-card>
         </v-window-item>
     </v-window>
+
+    <shopping-line-item-dialog v-model="shoppingLineItemDialog" :shopping-list-food="shoppingLineItemDialogFood"></shopping-line-item-dialog>
 
 </template>
 
@@ -69,11 +73,16 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
+import {IShoppingListFood} from "@/types/Shopping";
 
 const currentTab = ref("shopping")
 
 const ingredientInput = ref('')
 const ingredientInputIcon = ref('fa-solid fa-plus')
+
+const shoppingLineItemDialog = ref(false)
+const shoppingLineItemDialogFood = ref({} as IShoppingListFood)
 
 onMounted(() => {
     useShoppingStore().refreshFromAPI()
@@ -87,7 +96,7 @@ function addIngredient() {
 
     api.apiIngredientFromStringCreate({ingredientString: {text: ingredientInput.value} as IngredientString}).then(r => {
         useShoppingStore().createObject({
-            amount: r.amount,
+            amount: Math.max(r.amount, 1),
             unit: (r.unit != null) ? {name: r.unit} as Unit : null,
             food: {name: r.food} as Food,
         } as ShoppingListEntry)

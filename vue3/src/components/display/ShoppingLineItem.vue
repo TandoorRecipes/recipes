@@ -1,7 +1,6 @@
 <template>
-    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()"
+    <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()" @click="emit('clicked', entries)"
                  v-if="(useUserPreferenceStore().deviceSettings.shopping_show_checked_entries || !isChecked) && (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries || !isDelayed)"
-                 @click="detail_modal_visible = true"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
@@ -16,13 +15,14 @@
         <div class="flex-grow-1 p-2">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
-                    <span v-for="[i, a] in amounts" v-bind:key="a">
+                    <span v-for="[i, a] in amounts" v-bind:key="a.key">
 
                         <span>
                             <i class="fas fa-check" v-if="a.checked && !isChecked"></i>
                             <i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>
                             {{ a.amount }}
-                            {{ a.unit.name }} </b>
+                            <span v-if="a.unit">{{ a.unit.name }}</span>
+                            </b>
                         </span>
                         <br/>
                     </span>
@@ -60,13 +60,11 @@ import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {ShoppingLineAmount} from "@/types/Shopping";
 
+const emit = defineEmits(['clicked'])
+
 const props = defineProps({
-    entries: {type: [] as PropType<ShoppingListEntry[]>, required: true},
+    entries: {type: Array as PropType<Array<ShoppingListEntry>>, required: true},
 })
-
-const detail_modal_visible = ref(false)
-const editing_food = ref({} as Food)
-
 
 const itemContainerId = computed(() => {
     let id = 'id_sli_'
@@ -125,6 +123,7 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
                     unitAmounts.get(unit)!.amount += e.amount
                 } else {
                     unitAmounts.set(unit, {
+                        key: e.food?.id!,
                         amount: e.amount,
                         unit: e.unit,
                         checked: e.checked,
