@@ -1,13 +1,13 @@
 <template>
-    <v-card-title >
-        <v-row align="center">
+    <v-card-title class="pb-0">
+        <v-row align="center" >
             <v-col cols="11" class="text-truncate">
                 <i :class="props.icon" v-if="props.icon != ''"></i>
                 {{ props.title }}
                 <v-card-subtitle class="pa-0" v-if="props.subTitle != ''">{{ props.subTitle}}</v-card-subtitle>
             </v-col>
             <v-col cols="1" v-if="!props.hideClose">
-                <v-btn class="float-right" icon="$close" variant="plain" @click="model = false; emit('close')"></v-btn>
+                <v-btn class="float-right pr-2" icon="$close" variant="plain" @click="model = false; emit('close')"></v-btn>
             </v-col>
         </v-row>
     </v-card-title>

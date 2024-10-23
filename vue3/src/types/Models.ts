@@ -70,7 +70,7 @@ export type Model = {
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
-export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation' | 'Keyword' | 'UserFile'
+export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation' | 'Keyword' | 'UserFile' | 'ShoppingListEntry'
 
 export const TFood = {
     name: 'Food',
@@ -215,6 +215,23 @@ export const TSupermarketCategory = {
 } as Model
 registerModel(TSupermarketCategory)
 
+export const TShoppingListEntry = {
+    name: 'ShoppingListEntry',
+    localizationKey: 'ShoppingListEntry',
+    icon: 'fa-solid fa-list-check',
+
+    isPaginated: true,
+    toStringKeys: ['amount', 'unit.name', 'food.name'],
+
+    tableHeaders: [
+        {title: 'Amount', key: 'amount'},
+        {title: 'Unit', key: 'unit.name'},
+        {title: 'Food', key: 'food.name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TShoppingListEntry)
+
 export const TPropertyType = {
     name: 'PropertyType',
     localizationKey: 'Property',
@@ -236,7 +253,7 @@ export const TProperty = {
     icon: 'fa-solid fa-database',
 
     isPaginated: true,
-    toStringKeys: ['propertyType'], // TODO improve
+    toStringKeys: ['propertyAmount','propertyType.name'],
 
     tableHeaders: [
         {title: 'Amount', key: 'propertyAmount'},
@@ -252,7 +269,7 @@ export const TUnitConversion = {
     icon: 'fa-solid fa-exchange-alt',
 
     isPaginated: true,
-    toStringKeys: ['food'], // TODO improve
+    toStringKeys: ['food.name','baseUnit.name','convertedUnit.name'],
 
     tableHeaders: [
         {title: 'Food', key: 'food.name'},
@@ -350,7 +367,7 @@ export const TUserSpace = {
     icon: 'fa-solid fa-users',
 
     isPaginated: true,
-    toStringKeys: ['user'], // TODO improve
+    toStringKeys: ['user.displayName'],
 
     disableCreate: true,
 
