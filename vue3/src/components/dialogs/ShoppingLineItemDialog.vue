@@ -10,13 +10,13 @@
 
                 <v-row>
                     <v-col class="pr-0">
-                        <v-btn height="80px" color="info" density="compact" size="small" block stacked>
+                        <v-btn height="80px" color="info" density="compact" size="small" block stacked @click="useShoppingStore().delayEntries(entriesList, !isDelayed, true); ">
                             <i class="fa-solid fa-clock-rotate-left fa-2x mb-2"></i>
-                            {{ $t('Postpone') }}
+                            {{ $t('Postpone') }} {{isDelayed}}
                         </v-btn>
                     </v-col>
                     <v-col>
-                        <v-btn height="80px" color="secondary" density="compact" size="small" block stacked>
+                        <v-btn height="80px" color="secondary" density="compact" size="small" block stacked @click="useShoppingStore().setFoodIgnoredState(entriesList,true, true);  showDialog = false">
                             <i class="fa-solid fa-eye-slash fa-2x mb-2"></i>
                             {{ $t('Ignore_Shopping') }}
                         </v-btn>
@@ -24,7 +24,7 @@
                 </v-row>
                 <v-row>
                     <v-col class="pr-0 pt-0">
-                        <v-btn height="80px" color="primary" density="compact" size="small" block stacked>
+                        <v-btn height="80px" color="primary" density="compact" size="small" :to="{name: 'ModelEditPage', params: {model: 'Food', id: props.shoppingListFood?.food.id!}}" target="_blank" block stacked>
                             <i class="fa-solid fa-pencil fa-2x mb-2"></i>
                             {{ $t('Edit_Food') }}
                         </v-btn>
@@ -67,7 +67,7 @@
                                 </v-btn>
                             </template>
 
-                            <!-- TODO make properly reactive or delete from the food instance in this component as well-->
+                            <!-- TODO make properly reactive or delete from the food instance in this component as well | ADD functionality once reactive -->
                             <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id!);" v-if="!e.recipeMealplan"></model-edit-dialog>
                         </v-list-item>
                     </template>
@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 
-import {PropType} from "vue";
+import {compile, computed, PropType, watch} from "vue";
 import {ShoppingListEntry} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {IShoppingList, IShoppingListFood} from "@/types/Shopping";
@@ -96,6 +96,7 @@ import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
+import ShoppingListEntryEditor from "@/components/model_editors/ShoppingListEntryEditor.vue";
 
 const {mobile} = useDisplay()
 
@@ -103,6 +104,28 @@ const showDialog = defineModel<Boolean>()
 
 const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
+})
+
+watch(() => {props.shoppingListFood}, () => {
+    console.log('PROP WATCH')
+})
+
+const entriesList = computed(() => {
+    let list = [] as ShoppingListEntry[]
+    props.shoppingListFood?.entries.forEach(e => {
+        list.push(e)
+    })
+    return list
+})
+
+const isDelayed = computed(() => {
+
+    let isDelayed = false
+    props.shoppingListFood.entries.forEach(e => {
+        isDelayed = isDelayed || e.delayUntil != null
+    })
+    console.log('computing is delayed', isDelayed)
+    return isDelayed
 })
 
 </script>

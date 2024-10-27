@@ -6,20 +6,15 @@
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         <!--        </div>-->
 
-        <template #prepend>
-            <v-btn color="primary" v-if="isDelayed">
-                <i class="fa-fw fas fa-hourglass-half"></i>
-            </v-btn>
-        </template>
+
 
         <div class="flex-grow-1 p-2">
             <div class="d-flex">
                 <div class="d-flex flex-column pr-2">
                     <span v-for="[i, a] in amounts" v-bind:key="a.key">
-
                         <span>
-                            <i class="fas fa-check" v-if="a.checked && !isChecked"></i>
-                            <i class="fas fa-hourglass-half" v-if="a.delayed && !a.checked"></i> <b>
+                            <i class="fas fa-check text-warning" v-if="a.checked && !isChecked"></i>
+                            <i class="fas fa-hourglass-half text-primary"  v-if="a.delayed && !a.checked"></i> <b>
                             {{ a.amount }}
                             <span v-if="a.unit">{{ a.unit.name }}</span>
                             </b>
@@ -58,12 +53,13 @@ import {useShoppingStore} from "@/stores/ShoppingStore.js";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.js";
 import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
-import {ShoppingLineAmount} from "@/types/Shopping";
+import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
 
 const emit = defineEmits(['clicked'])
 
 const props = defineProps({
     entries: {type: Array as PropType<Array<ShoppingListEntry>>, required: true},
+    shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
 })
 
 const itemContainerId = computed(() => {

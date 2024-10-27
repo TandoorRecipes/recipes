@@ -1,5 +1,5 @@
 import {acceptHMRUpdate, defineStore} from "pinia"
-import {ApiApi, ShoppingListEntry, Supermarket, SupermarketCategory} from "@/openapi";
+import {ApiApi, Food, ShoppingListEntry, Supermarket, SupermarketCategory} from "@/openapi";
 import {computed, ref} from "vue";
 import {
     IShoppingExportEntry,
@@ -7,11 +7,12 @@ import {
     IShoppingListCategory,
     IShoppingListFood,
     IShoppingSyncQueueEntry,
-    ShoppingGroupingOptions, ShoppingListStats,
+    ShoppingGroupingOptions,
+    ShoppingListStats,
     ShoppingOperationHistoryEntry,
     ShoppingOperationHistoryType
 } from "@/types/Shopping";
-import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const _STORE_ID = "shopping_store"
@@ -72,7 +73,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                         categoryStats.countChecked++
                     } else {
                         categoryStats.countUnchecked++
-                        if(entry.delayUntil != null) {
+                        if (entry.delayUntil != null) {
                             categoryStats.countUncheckedDelayed++
                         }
                     }
@@ -418,18 +419,48 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      * @param delay if entries should be delayed or if delay should be removed
      * @param undo if the user should be able to undo the change or not
      */
-    function delayEntries(entries: ShoppingListEntry[], delay: boolean, undo: boolean) {
+    function setEntriesDelayedState(entries: ShoppingListEntry[], delay: boolean, undo: boolean) {
         let delay_hours = useUserPreferenceStore().userSettings.defaultDelay!
         let delayDate = new Date(Date.now() + delay_hours * (60 * 60 * 1000))
 
         if (undo) {
             registerChange((delay ? 'DELAY' : 'UNDELAY'), entries)
         }
+        entries.forEach(entry => {
+            entry.delayUntil = (delay ? delayDate : null)
+            console.log('DELAY: ', delay, entry.delayUntil, entry)
+            updateObject(entry)
+        })
+    }
 
-        for (let i in entries) {
-            entries[i].delayUntil = (delay ? delayDate : null)
-            updateObject(entries[i])
+    /**
+     * ignore all foods of the given entries for shopping in the future and check associated entries from the list
+     * @param ignored if the food should be ignored or not ignored (for undo)
+     * @param {{}} entries set of entries associated with food to set checked
+     * @param undo if the user should be able to undo the change or not
+     */
+    function setFoodIgnoredState(entries: ShoppingListEntry[], ignored: boolean, undo: boolean) {
+        const api = new ApiApi()
+        if (undo) {
+            registerChange((ignored ? 'IGNORE' : 'UNIGNORE'), entries)
         }
+
+        let foods = [] as Food[]
+
+        entries.forEach(e => {
+            if (!foods.includes(e.food!)) {
+                foods.push(e.food!)
+            }
+        })
+
+        setEntriesCheckedState(entries, ignored, false)
+
+        foods.forEach(food => {
+            food.ignoreShopping = ignored
+            api.apiFoodUpdate({food: food, id: food.id!}).catch(err => {
+                useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            })
+        })
     }
 
     /**
@@ -482,12 +513,14 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             if (type === 'CHECKED' || type === 'UNCHECKED') {
                 setEntriesCheckedState(entries, (type === 'UNCHECKED'), false)
             } else if (type === 'DELAY' || type === 'UNDELAY') {
-                delayEntries(entries, (type === 'UNDELAY'), false)
+                setEntriesDelayedState(entries, (type === 'UNDELAY'), false)
             } else if (type === 'CREATED') {
                 for (let i in entries) {
                     let e = entries[i]
                     deleteObject(e)
                 }
+            } else if (type === 'IGNORE' || type === 'UNIGNORE') {
+                setFoodIgnoredState(entries, (type === 'UNIGNORE'), false)
             }
         } else {
             // can use localization in store
@@ -509,7 +542,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         updateObject,
         undoChange,
         setEntriesCheckedState,
-        delayEntries,
+        setFoodIgnoredState,
+        delayEntries: setEntriesDelayedState,
         getAssociatedRecipes,
 
     }

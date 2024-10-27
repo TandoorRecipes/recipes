@@ -1,7 +1,33 @@
 <template>
-    <v-tabs v-model="currentTab" >
+    <v-tabs v-model="currentTab">
         <v-tab value="shopping"><i class="fas fa-shopping-cart fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Shopping_list') }}</span></v-tab>
         <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }}</span></v-tab>
+
+        <v-menu :close-on-content-click="false">
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    class="me-4 float-right"
+                    height="100%"
+                    rounded="0"
+                    variant="plain"
+                    v-bind="props"
+
+                >
+                    <i class="fa-solid fa-sliders"></i>
+                </v-btn>
+            </template>
+
+            <v-list density="compact">
+                <v-list-item @click="useShoppingStore().undoChange()" prepend-icon="fa-solid fa-arrow-rotate-left">{{ $t('Undo') }}</v-list-item>
+                <v-divider></v-divider>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('ShowDelayed')" v-model="useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries"></v-switch>
+                </v-list-item>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')" v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
+                </v-list-item>
+            </v-list>
+        </v-menu>
     </v-tabs>
 
     <v-window v-model="currentTab">
@@ -31,7 +57,8 @@
                                     <v-divider></v-divider>
 
                                     <template v-for="[i, value] in category.foods" :key="value.food.id">
-                                        <shopping-line-item :entries="Array.from(value.entries.values())" @clicked="args => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
+                                        <shopping-line-item :shopping-list-food="value" :entries="Array.from(value.entries.values())"
+                                                            @clicked="args => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value; console.log('SETTING ITEMS')}"></shopping-line-item>
                                     </template>
 
                                 </template>
@@ -52,7 +79,7 @@
                     <v-label>{{ $t('Recipes') }}</v-label>
                     <v-list>
                         <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
-                            {{r}}
+                            {{ r }}
                         </v-list-item>
                     </v-list>
                 </v-card-text>
