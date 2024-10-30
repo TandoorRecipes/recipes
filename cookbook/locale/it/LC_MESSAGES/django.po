@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-10-30 13:30+0000\n"
+"PO-Revision-Date: 2024-10-30 16:02+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -65,7 +65,7 @@ msgid ""
 "ignored. Check this box to import everything."
 msgstr ""
 "Per prevenire duplicati, vengono ignorate le ricette che hanno lo stesso "
-"nome di quelle esistenti. Metti la spunta per importare tutto."
+"nome di quelle esistenti. Seleziona questa casella per importare tutto."
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
@@ -74,7 +74,8 @@ msgstr "Aggiungi il tuo commento: "
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
 msgstr ""
-"Lascia vuoto per dropbox e inserisci la password dell'app per nextcloud."
+"Lascia vuoto per dropbox e inserisci la password dell'applicazione per "
+"nextcloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
@@ -115,11 +116,11 @@ msgstr "Attivo"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
-msgstr "Stringa di Ricerca"
+msgstr "Stringa di ricerca"
 
 #: .\cookbook\forms.py:246
 msgid "File ID"
-msgstr "ID del File"
+msgstr "ID del file"
 
 #: .\cookbook\forms.py:262
 msgid "Maximum number of users for this space reached."
@@ -135,7 +136,7 @@ msgid ""
 "to the user."
 msgstr ""
 "Non è obbligatorio specificare l'indirizzo email, ma se presente verrà "
-"utilizzato per mandare all'utente un link di invito."
+"utilizzato per inviare all'utente un collegamento di invito."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
@@ -143,7 +144,7 @@ msgstr "Nome già in uso."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
-msgstr "Accetta i Termini d'uso e Privacy"
+msgstr "Accetta i termini d'uso e privacy"
 
 #: .\cookbook\forms.py:332
 msgid ""
@@ -159,7 +160,7 @@ msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
-"Seleziona il metodo di ricerca.  Clicca <a href=\"/docs/search/\">qui</a> "
+"Seleziona il metodo di ricerca.  Fai clic  <a href=\"/docs/search/\">qui</a> "
 "per avere maggiori informazioni."
 
 #: .\cookbook\forms.py:341
@@ -199,7 +200,7 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
-"Campi in cui usare la ricerca 'vaga'. (ad esempio cercando per 'riceta' "
+"Campi in cui usare la ricerca 'fuzzy'. (ad esempio cercando per 'riceta' "
 "verrà mostrato 'ricetta').  Nota: questa opzione non è compatibile con la "
 "ricerca 'web' o 'raw'."
 
@@ -217,7 +218,7 @@ msgstr "Metodo di ricerca"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr "Ricerche vaghe"
+msgstr "Ricerche fuzzy"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
@@ -233,7 +234,7 @@ msgstr "Inizia con"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
-msgstr "Ricerca vaga"
+msgstr "Ricerca fuzzy"
 
 #: .\cookbook\forms.py:351
 msgid "Full Text"
@@ -250,7 +251,8 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr "Non sei loggato e quindi non puoi visualizzare questa pagina!"
+msgstr ""
+"Non hai effettuato l'accesso e quindi non puoi visualizzare questa pagina!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -315,7 +317,7 @@ msgstr "Devi fornire le dimensione delle porzioni"
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
 msgid "Could not parse template code."
-msgstr "Impossibile elaborare il codice del template."
+msgstr "Impossibile elaborare il codice del modello."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
@@ -331,8 +333,8 @@ msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
-"La procedura di import necessita di un file .zip. Hai scelto il tipo di "
-"importazione corretta per i tuoi dati?"
+"La procedura di importazione necessita di un file .zip. Hai scelto il tipo "
+"di importazione corretta per i tuoi dati?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
@@ -386,15 +388,15 @@ msgstr "Tempo di preparazione"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr "Ricette"
+msgstr "Ricettario"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr "Selezione"
+msgstr "Sezione"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Corregge alimenti con "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
@@ -431,8 +433,6 @@ msgid "Other"
 msgstr "Altro"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
-#, fuzzy
-#| msgid "Fats"
 msgid "Fat"
 msgstr "Grassi"
 
@@ -524,15 +524,15 @@ msgstr "Raw"
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
-msgstr "Alias Alimento"
+msgstr "Alias alimento"
 
 #: .\cookbook\models.py:1468
 msgid "Unit Alias"
-msgstr "Alias Unità"
+msgstr "Alias unità"
 
 #: .\cookbook\models.py:1469
 msgid "Keyword Alias"
-msgstr "Alias Parola Chiave"
+msgstr "Alias parola chiave"
 
 #: .\cookbook\models.py:1470
 msgid "Description Replace"
@@ -558,7 +558,7 @@ msgstr "Sostituisci alimento"
 
 #: .\cookbook\models.py:1475
 msgid "Unit Replace"
-msgstr "Sostituisci descrizione"
+msgstr "Sostituisci unità"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
@@ -620,7 +620,7 @@ msgstr "L'invito è valido fino al "
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
-"Tandoor Recipes è un gestore di ricette Open Source. Dagli una occhiata su "
+"Tandoor Recipes è un gestore di ricette Open Source. Dagli un'occhiata su "
 "GitHub "
 
 #: .\cookbook\serializer.py:1283
@@ -742,7 +742,7 @@ msgid ""
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
 "Non hai configurato un indirizzo email. Se lo facessi, potresti ricevere "
-"notifiche, resettare la password e altro."
+"notifiche, ripristinare la password e altro."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
@@ -980,7 +980,7 @@ msgstr "Alimenti"
 
 #: .\cookbook\templates\base.html:173 .\cookbook\views\lists.py:137
 msgid "Units"
-msgstr "Unità di misura"
+msgstr "Unità"
 
 #: .\cookbook\templates\base.html:187
 msgid "Supermarket"
@@ -1011,7 +1011,7 @@ msgstr "Cronologia"
 #: .\cookbook\templates\ingredient_editor.html:7
 #: .\cookbook\templates\ingredient_editor.html:13
 msgid "Ingredient Editor"
-msgstr "Editor Ingredienti"
+msgstr "Editor degli ingredienti"
 
 #: .\cookbook\templates\base.html:275
 #: .\cookbook\templates\export_response.html:7
@@ -1029,7 +1029,7 @@ msgstr "Conversione di unità"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
-msgstr "Importa Ricetta"
+msgstr "Importa ricetta"
 
 #: .\cookbook\templates\base.html:320
 msgid "Create"
@@ -1068,7 +1068,7 @@ msgstr "Panoramica"
 
 #: .\cookbook\templates\base.html:372
 msgid "Markdown Guide"
-msgstr "Informazioni su Markdown"
+msgstr "Guida su Markdown"
 
 #: .\cookbook\templates\base.html:374
 msgid "GitHub"
@@ -1210,7 +1210,7 @@ msgstr "Modifica"
 
 #: .\cookbook\templates\generic\edit_template.html:32
 msgid "View"
-msgstr "Mostra"
+msgstr "Visualizza"
 
 #: .\cookbook\templates\generic\edit_template.html:36
 msgid "Delete original file"
@@ -1244,7 +1244,7 @@ msgstr "prossimo"
 
 #: .\cookbook\templates\history.html:20
 msgid "View Log"
-msgstr "Mostra registro"
+msgstr "Visualizza registro"
 
 #: .\cookbook\templates\history.html:24
 msgid "Cook Log"
@@ -1303,7 +1303,7 @@ msgstr "Recenti"
 
 #: .\cookbook\templates\index.html:94
 msgid "Log in to view recipes"
-msgstr "Effettua il login per vedere le ricette"
+msgstr "Effettua l'accesso per vedere le ricette"
 
 #: .\cookbook\templates\markdown_info.html:5
 #: .\cookbook\templates\markdown_info.html:13
@@ -1601,7 +1601,7 @@ msgid ""
 "            "
 msgstr ""
 " \n"
-"            Ricerche semplici ignorano la puteggiatura e parole comuni come "
+"            Ricerche semplici ignorano la punteggiatura e parole comuni come "
 "\"il\", \"un\", \"e\". E tratterà separatamente le parole come necessario.\n"
 "            Cercare \"mela o farina\" restituisce ogni ricetta che contiene "
 "sia \"mele\" che \"farina\" ovunque nei campi che sono stati selezionati per "
@@ -1667,6 +1667,10 @@ msgid ""
 "operators such as '|', '&' and '()'\n"
 "            "
 msgstr ""
+" \n"
+"            La ricerca raw è simile a quella web, ma accetta operatori di "
+"punteggiatura come '|', '&' e '()'\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:59
 msgid ""
@@ -1682,6 +1686,17 @@ msgid ""
 "methods.\n"
 "            "
 msgstr ""
+" \n"
+"            Un altro approccio alla ricerca che richiede anche Postgresql è "
+"la ricerca fuzzy o similarità di trigrammi. Un trigramma è un gruppo di tre "
+"caratteri consecutivi.\n"
+"            Ad esempio, la ricerca di \"apple\" creerà x trigrammi \"app\", "
+"\"ppl\", \"ple\" e creerà un punteggio di quanto le parole corrispondono ai "
+"trigrammi generati.\n"
+"            Un vantaggio della ricerca di trigrammi è che una ricerca di "
+"\"sandwich\" troverà parole con errori di ortografia come \"sandwhich\" che "
+"verrebbero perse con altri metodi.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:69
 msgid "Search Fields"
@@ -1803,7 +1818,7 @@ msgstr "Ideale per database grandi"
 
 #: .\cookbook\templates\setup.html:6 .\cookbook\templates\system.html:5
 msgid "Cookbook Setup"
-msgstr "Configurazione Recipes"
+msgstr "Configurazione ricettario"
 
 #: .\cookbook\templates\setup.html:14
 msgid "Setup"
@@ -1936,8 +1951,8 @@ msgid ""
 "Recipes, foods, shopping lists and more are organized in spaces of one or "
 "more people."
 msgstr ""
-"Ricette, cibi, liste della spesa e altro sono organizzati in istanze per una "
-"o più persone."
+"Ricette, alimenti, liste della spesa e altro sono organizzati in istanze per "
+"una o più persone."
 
 #: .\cookbook\templates\space_overview.html:18
 msgid ""
@@ -1966,8 +1981,8 @@ msgid ""
 "To join an existing space either enter your invite token or click on the "
 "invite link the space owner send you."
 msgstr ""
-"Per entrare in una istanza già esistente, inserisci il token di invito o "
-"clicca sul link di invito che l'amministratore ti ha mandato."
+"Per entrare in una istanza già esistente, inserisci il token di invito o fai "
+"clic sul collegamento di invito che l'amministratore ti ha mandato."
 
 #: .\cookbook\templates\space_overview.html:96
 #: .\cookbook\templates\space_overview.html:105
@@ -2012,6 +2027,11 @@ msgid ""
 "script to generate version information (done automatically in docker).\n"
 "        "
 msgstr ""
+"\n"
+"            Devi eseguire <code>version.py</code> nello script di "
+"aggiornamento per generare informazioni sulla versione (operazione eseguita "
+"automaticamente in Docker).\n"
+"        "
 
 #: .\cookbook\templates\system.html:46
 msgid "Media Serving"
@@ -2038,10 +2058,10 @@ msgid ""
 "            your installation.\n"
 "        "
 msgstr ""
-"<b>Non è raccomandato</b> erogare i file multimediali con gunicorn/pyton!\n"
+"<b>Non è raccomandato</b> erogare i file multimediali con gunicorn/python!\n"
 "            Segui i passi descritti\n"
-"            <a href=\"https://github.com/vabene1111/recipes/releases/"
-"tag/0.8.1\">qui</a> per aggiornare\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/0.8."
+"1\">qui</a> per aggiornare\n"
 "            la tua installazione.\n"
 "        "
 
@@ -2110,6 +2130,11 @@ msgid ""
 "this.\n"
 "        "
 msgstr ""
+"\n"
+"            I tuoi host consentiti sono configurati per consentire ogni "
+"host. Questo potrebbe essere accettabile in alcune configurazioni, ma "
+"andrebbe evitato. Consulta la documentazione relativa.\n"
+"        "
 
 #: .\cookbook\templates\system.html:97
 msgid "Database"
@@ -2255,6 +2280,8 @@ msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
+"Stringa di query corrispondente (fuzzy) al nome della ricetta. In futuro "
+"anche ricerca fulltext."
 
 #: .\cookbook\views\api.py:910
 msgid ""
@@ -2335,26 +2362,33 @@ msgstr ""
 #: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
+"Se devono essere restituite solo le ricette interne. [vero/<b>falso</b>]"
 
 #: .\cookbook\views\api.py:928
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "Restituisce i risultati in ordine casuale. [vero/<b>falso</b>]"
 
 #: .\cookbook\views\api.py:929
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
+"Restituisce i nuovi risultati per primi nei risultati di ricerca. [vero/"
+"<b>falso</b>]"
 
 #: .\cookbook\views\api.py:930
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Filtra le ricette cucinate X volte o più. I valori negativi restituiscono "
+"ricette cucinate meno di X volte"
 
 #: .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filtra le ricette cucinate l'ultima volta il o dopo AAAA-MM-GG. Anteponendo -"
+" filtra alla o prima della data."
 
 #: .\cookbook\views\api.py:932
 msgid ""
@@ -2401,7 +2435,7 @@ msgstr ""
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Filtra le voci con la ricetta specificata"
 
 #: .\cookbook\views\api.py:1292
 msgid ""
@@ -2431,7 +2465,7 @@ msgstr "Nessuna informazione utilizzabile è stata trovata."
 
 #: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
-msgstr ""
+msgstr "Il file eccede il limite di spazio"
 
 #: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
@@ -2442,7 +2476,7 @@ msgstr "Questo provider non permette l'importazione"
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr ""
-"Questa funzione non è ancora disponibile nella versione hostata di Tandor!"
+"Questa funzione non è ancora disponibile nella versione ospitata di Tandoor!"
 
 #: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
@@ -2473,7 +2507,7 @@ msgstr "Backend di archiviazione"
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
 msgstr ""
-"Non è possibile eliminare questo backend di archiviazione perchè è usato in "
+"Non è possibile eliminare questo backend di archiviazione perché è usato in "
 "almeno un monitoraggio."
 
 #: .\cookbook\views\delete.py:135
@@ -2588,11 +2622,9 @@ msgid "This feature is not available in the demo version!"
 msgstr "Questa funzione non è disponibile nella versione demo!"
 
 #: .\cookbook\views\views.py:74
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Hai raggiunto il numero massimo di ricette nella tua istanza."
+msgstr "Hai raggiunto il numero massimo di istanze di tua proprietà."
 
 #: .\cookbook\views\views.py:89
 msgid ""
@@ -2630,6 +2662,8 @@ msgstr "La ricerca vaga non è compatibile con questo metodo di ricerca!"
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s è deprecato. Esegui l'aggiornamento a una versione "
+"completamente supportata!"
 
 #: .\cookbook\views\views.py:309
 #, python-format
@@ -2650,11 +2684,6 @@ msgstr ""
 "database Postgres."
 
 #: .\cookbook\views\views.py:360
-#, fuzzy
-#| msgid ""
-#| "The setup page can only be used to create the first user! If you have "
-#| "forgotten your superuser credentials please consult the django "
-#| "documentation on how to reset passwords."
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
@@ -2662,7 +2691,7 @@ msgid ""
 msgstr ""
 "La pagina di configurazione può essere usata solo per creare il primo "
 "utente! Se hai dimenticato le credenziali del tuo super utente controlla la "
-"documentazione di Django per resettare le password."
+"documentazione di Django per ripristinare le password."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
@@ -2710,17 +2739,15 @@ msgstr "Piano"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Visualizza il tuo piano alimentare"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Visualizza i tuoi ricettari"
 
 #: .\cookbook\views\views.py:460
-#, fuzzy
-#| msgid "New Shopping List"
 msgid "View your shopping lists"
-msgstr "Nuova lista della spesa"
+msgstr "Visualizza le tue liste della spesa"
 
 #~ msgid "Default unit"
 #~ msgstr "Unità predefinita"
