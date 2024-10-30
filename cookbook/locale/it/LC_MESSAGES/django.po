@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-02-17 19:16+0000\n"
-"Last-Translator: Andrea <giovannibecco@mailo.com>\n"
+"PO-Revision-Date: 2024-10-30 13:30+0000\n"
+"Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
 "Language: it\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -93,14 +93,17 @@ msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Token di accesso di lunga durata</a> per la tua istanza di "
+"HomeAssistant"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Qualcosa del tipo http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api ad esempio"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
@@ -437,7 +440,7 @@ msgstr "Grassi"
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
@@ -453,7 +456,7 @@ msgstr "Calorie"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
@@ -492,18 +495,16 @@ msgid "Nutrition"
 msgstr "Nutrienti"
 
 #: .\cookbook\models.py:918
-#, fuzzy
-#| msgid "Merge"
 msgid "Allergen"
-msgstr "Unisci"
+msgstr "Allergene"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Prezzo"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Obiettivo"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -535,11 +536,11 @@ msgstr "Alias Parola Chiave"
 
 #: .\cookbook\models.py:1470
 msgid "Description Replace"
-msgstr "Sostituisci Descrizione"
+msgstr "Sostituisci descrizione"
 
 #: .\cookbook\models.py:1471
 msgid "Instruction Replace"
-msgstr "Sostituisci Istruzione"
+msgstr "Sostituisci istruzioni"
 
 #: .\cookbook\models.py:1472
 #, fuzzy
@@ -549,23 +550,19 @@ msgstr "Nuova unità di misura"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Trasponi parole"
 
 #: .\cookbook\models.py:1474
-#, fuzzy
-#| msgid "Food Alias"
 msgid "Food Replace"
-msgstr "Alias Alimento"
+msgstr "Sostituisci alimento"
 
 #: .\cookbook\models.py:1475
-#, fuzzy
-#| msgid "Description Replace"
 msgid "Unit Replace"
-msgstr "Sostituisci Descrizione"
+msgstr "Sostituisci descrizione"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Sostituisci nome"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
@@ -602,18 +599,18 @@ msgstr "Sei stato invitato da "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr " per entrare nella sua istanza di Tandoor Recipes "
+msgstr " a entrare nella sua istanza di Tandoor Recipes "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
-msgstr "Clicca il link qui di seguito per attivare il tuo account: "
+msgstr "Fai clic sul collegamento seguente per attivare il tuo account: "
 
 #: .\cookbook\serializer.py:1276
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
-"Se il link non funziona, usa il seguente codice per entrare manualmente "
-"nell'istanza: "
+"Se il collegamento non funziona, usa il seguente codice per entrare "
+"manualmente nell'istanza: "
 
 #: .\cookbook\serializer.py:1278
 msgid "The invitation is valid until "
@@ -684,7 +681,7 @@ msgstr "Portami nella Home"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr "Segnala un Bug"
+msgstr "Segnala un bug"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
@@ -753,7 +750,7 @@ msgstr "Aggiungi indirizzo email"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr "Aggiungi E-mail"
+msgstr "Aggiungi email"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
@@ -789,9 +786,9 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
-"Questo link di conferma è scaduto o non è valido. Puoi\n"
-"            <a href=\"%(email_url)s\">richiedere un nuovo link di conferma</"
-"a>."
+"Questo collegamento di conferma è scaduto o non è valido. Puoi\n"
+"            <a href=\"%(email_url)s\">richiedere un nuovo collegamento di "
+"conferma</a>."
 
 #: .\cookbook\templates\account\login.html:8 .\cookbook\templates\base.html:388
 #: .\cookbook\templates\openid\login.html:8
@@ -853,7 +850,7 @@ msgstr "Sei sicuro di voler uscire?"
 #: .\cookbook\templates\account\password_reset_from_key_done.html:7
 #: .\cookbook\templates\account\password_reset_from_key_done.html:13
 msgid "Change Password"
-msgstr "Cambia Password"
+msgstr "Cambia password"
 
 #: .\cookbook\templates\account\password_change.html:12
 #: .\cookbook\templates\account\password_set.html:12
@@ -877,7 +874,7 @@ msgid ""
 "an e-mail allowing you to reset it."
 msgstr ""
 "Hai dimenticato la password? Digita il tuo indirizzo email e riceverai una "
-"email con le istruzioni per il reset."
+"email con le istruzioni per il ripristino."
 
 #: .\cookbook\templates\account\password_reset.html:32
 msgid "Password reset is disabled on this instance."
@@ -888,8 +885,8 @@ msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
 msgstr ""
-"Ti abbiamo mandato una mail. Contattaci se non la ricevi entro qualche "
-"minuto."
+"Ti abbiamo inviato un messaggio di posta. Contattaci se non lo ricevi entro "
+"qualche minuto."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:13
 msgid "Bad Token"
@@ -903,10 +900,10 @@ msgid ""
 "                    Please request a <a href=\"%(passwd_reset_url)s\">new "
 "password reset</a>."
 msgstr ""
-"Il link per il reset della password non è corretto, probabilmente perché è "
-"stato già utilizzato.\n"
-"                    Puoi richiedere un <a href=\"%(passwd_reset_url)s"
-"\">nuovo reset della password</a>."
+"Il collegamento per il ripristino della password non è corretto, "
+"probabilmente perché è stato già utilizzato.\n"
+"                    Puoi richiedere un <a href=\"%(passwd_reset_url)s\""
+">nuovo ripristino della password</a>."
 
 #: .\cookbook\templates\account\password_reset_from_key.html:33
 msgid "change password"
@@ -939,7 +936,7 @@ msgstr "Accetto i seguenti"
 #: .\cookbook\templates\account\signup.html:45
 #: .\cookbook\templates\socialaccount\signup.html:36
 msgid "Terms and Conditions"
-msgstr "Termini e Condizioni"
+msgstr "Termini e condizioni"
 
 #: .\cookbook\templates\account\signup.html:48
 #: .\cookbook\templates\socialaccount\signup.html:39
@@ -949,7 +946,7 @@ msgstr "e"
 #: .\cookbook\templates\account\signup.html:52
 #: .\cookbook\templates\socialaccount\signup.html:43
 msgid "Privacy Policy"
-msgstr "Privacy Policy"
+msgstr "Policy di riservatezza"
 
 #: .\cookbook\templates\account\signup.html:65
 msgid "Create User"
@@ -1024,13 +1021,11 @@ msgstr "Esporta"
 
 #: .\cookbook\templates\base.html:287
 msgid "Properties"
-msgstr ""
+msgstr "Proprietà"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
-#, fuzzy
-#| msgid "Account Connections"
 msgid "Unit Conversions"
-msgstr "Collegamenti dell'account"
+msgstr "Conversione di unità"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1050,10 +1045,8 @@ msgid "Space Settings"
 msgstr "Impostazioni istanza"
 
 #: .\cookbook\templates\base.html:340
-#, fuzzy
-#| msgid "External Recipes"
 msgid "External Connectors"
-msgstr "Ricette esterne"
+msgstr "Connettori esterni"
 
 #: .\cookbook\templates\base.html:345 .\cookbook\templates\system.html:13
 msgid "System"
@@ -1520,10 +1513,8 @@ msgid "Back"
 msgstr "Indietro"
 
 #: .\cookbook\templates\property_editor.html:7
-#, fuzzy
-#| msgid "Ingredient Editor"
 msgid "Property Editor"
-msgstr "Editor Ingredienti"
+msgstr "Editor delle proprietà"
 
 #: .\cookbook\templates\recipe_view.html:36
 msgid "Comments"
@@ -1653,6 +1644,21 @@ msgid ""
 "recipe that has the word 'butter' in any field included.\n"
 "            "
 msgstr ""
+" \n"
+"            Le ricerche web simulano le funzionalità presenti in molti siti "
+"di ricerca web che supportano una sintassi speciale.\n"
+"            Inserire virgolette attorno a più parole convertirà tali parole "
+"in una frase.\n"
+"            \"o\" è riconosciuto come ricerca della parola (o frase) "
+"immediatamente prima di \"o\" OPPURE la parola (o frase) direttamente dopo.\n"
+"            \"-\" è riconosciuto come ricerca di ricette che non includono "
+"la parola (o frase) che viene immediatamente dopo.\n"
+"            Ad esempio, la ricerca di \"apple pie\" o cherry -butter "
+"restituirà qualsiasi ricetta che includa la frase \"apple pie\" o la parola "
+"\"cherry\" in qualsiasi campo incluso nella ricerca full text, ma escluderà\n"
+"            qualsiasi ricetta che abbia la parola \"butter\" in qualsiasi "
+"campo incluso.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:48
 msgid ""
@@ -1910,10 +1916,8 @@ msgid "Sign in using"
 msgstr "Accedi usando"
 
 #: .\cookbook\templates\space_manage.html:7
-#, fuzzy
-#| msgid "Space Membership"
 msgid "Space Management"
-msgstr "Spazio Membership"
+msgstr "Gestione istanze"
 
 #: .\cookbook\templates\space_manage.html:26
 msgid "Space:"
@@ -1945,10 +1949,8 @@ msgid "Owner"
 msgstr "Proprietario"
 
 #: .\cookbook\templates\space_overview.html:57
-#, fuzzy
-#| msgid "Create Space"
 msgid "Leave Space"
-msgstr "Lascia Istanza"
+msgstr "Abbandona istanza"
 
 #: .\cookbook\templates\space_overview.html:78
 #: .\cookbook\templates\space_overview.html:88
@@ -2098,7 +2100,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:86
 msgid "Allowed Hosts"
-msgstr ""
+msgstr "Host consentiti"
 
 #: .\cookbook\templates\system.html:90
 msgid ""
@@ -2118,10 +2120,8 @@ msgid "Info"
 msgstr "Info"
 
 #: .\cookbook\templates\system.html:110 .\cookbook\templates\system.html:127
-#, fuzzy
-#| msgid "Use fractions"
 msgid "Migrations"
-msgstr "Usa frazioni"
+msgstr "Migrazioni"
 
 #: .\cookbook\templates\system.html:116
 msgid ""
@@ -2137,21 +2137,19 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
-msgstr ""
+msgstr "Falso"
 
 #: .\cookbook\templates\system.html:182
 msgid "True"
-msgstr ""
+msgstr "Vero"
 
 #: .\cookbook\templates\system.html:207
 msgid "Hide"
-msgstr ""
+msgstr "Nascondi"
 
 #: .\cookbook\templates\system.html:210
-#, fuzzy
-#| msgid "Show Log"
 msgid "Show"
-msgstr "Mostra registro"
+msgstr "Mostra"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
@@ -2227,10 +2225,12 @@ msgstr "{obj.name} è stato aggiunto alla lista della spesa."
 #: .\cookbook\views\api.py:742
 msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtra i piani alimentari in base alla data (inclusa) nel formato AAAA-MM-GG."
 
 #: .\cookbook\views\api.py:743
 msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
 msgstr ""
+"Filtra i piani alimentari fino alla data (inclusa) nel formato AAAA-MM-GG."
 
 #: .\cookbook\views\api.py:744
 #, fuzzy
@@ -2488,7 +2488,7 @@ msgstr "Link di invito"
 
 #: .\cookbook\views\delete.py:168
 msgid "Space Membership"
-msgstr "Spazio Membership"
+msgstr "Appartenenza istanza"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
@@ -2505,10 +2505,8 @@ msgstr ""
 "archiviazione!"
 
 #: .\cookbook\views\edit.py:134
-#, fuzzy
-#| msgid "Changes saved!"
 msgid "Config saved!"
-msgstr "Modifiche salvate!"
+msgstr "Configurazione salvata!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
@@ -2573,10 +2571,8 @@ msgid "Property Types"
 msgstr ""
 
 #: .\cookbook\views\new.py:86
-#, fuzzy
-#| msgid "This feature is not available in the demo version!"
 msgid "This feature is not enabled by the server admin!"
-msgstr "Questa funzione non è disponibile nella versione demo!"
+msgstr "Questa funzionalità non è abilitata dall'amministratore del server!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2638,29 +2634,20 @@ msgstr ""
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "Stai eseguendo PostgreSQL %(v1)s.  PostgreSQL %(v2)s è consigliato"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "Impossibile determinare la versione di PostgreSQL."
 
 #: .\cookbook\views\views.py:317
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "            This application is not running with a Postgres database "
-#| "backend. This is ok but not recommended as some\n"
-#| "            features only work with postgres databases.\n"
-#| "        "
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
-"\n"
-"            Questa applicazione non sta girando su un database Postgres. Non "
-"è raccomandato perché alcune\n"
-"            funzionalità sono disponibili solo con un database Posgres.\n"
-"        "
+"Questa applicazione non è in esecuzione con un database Postgres. Va bene, "
+"ma non è consigliato perché alcune funzionalità sono disponibili solo con un "
+"database Postgres."
 
 #: .\cookbook\views\views.py:360
 #, fuzzy
@@ -2715,7 +2702,7 @@ msgstr ""
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Gestisci ricette, liste della spesa, piani alimentari e altro ancora."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"
