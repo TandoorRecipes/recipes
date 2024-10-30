@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-10-30 16:02+0000\n"
+"PO-Revision-Date: 2024-10-31 06:00+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -200,7 +200,7 @@ msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
-"Campi in cui usare la ricerca 'fuzzy'. (ad esempio cercando per 'riceta' "
+"Campi in cui usare la ricerca 'vaga'. (ad esempio cercando per 'riceta' "
 "verrà mostrato 'ricetta').  Nota: questa opzione non è compatibile con la "
 "ricerca 'web' o 'raw'."
 
@@ -218,7 +218,7 @@ msgstr "Metodo di ricerca"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr "Ricerche fuzzy"
+msgstr "Ricerche vaghe"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
@@ -234,7 +234,7 @@ msgstr "Inizia con"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
-msgstr "Ricerca fuzzy"
+msgstr "Ricerca vaga"
 
 #: .\cookbook\forms.py:351
 msgid "Full Text"
@@ -543,10 +543,8 @@ msgid "Instruction Replace"
 msgstr "Sostituisci istruzioni"
 
 #: .\cookbook\models.py:1472
-#, fuzzy
-#| msgid "New Unit"
 msgid "Never Unit"
-msgstr "Nuova unità di misura"
+msgstr "Mai unità"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
@@ -1388,7 +1386,7 @@ msgstr ""
 #: .\cookbook\templates\markdown_info.html:87
 #: .\cookbook\templates\markdown_info.html:108
 msgid "Ordered List"
-msgstr "Lista Ordinata"
+msgstr "Lista ordinata"
 
 #: .\cookbook\templates\markdown_info.html:89
 #: .\cookbook\templates\markdown_info.html:90
@@ -1402,7 +1400,7 @@ msgstr "elemento di lista non ordinata"
 #: .\cookbook\templates\markdown_info.html:93
 #: .\cookbook\templates\markdown_info.html:114
 msgid "Unordered List"
-msgstr "Lista Non Ordinata"
+msgstr "Lista non ordinata"
 
 #: .\cookbook\templates\markdown_info.html:95
 #: .\cookbook\templates\markdown_info.html:96
@@ -1688,7 +1686,7 @@ msgid ""
 msgstr ""
 " \n"
 "            Un altro approccio alla ricerca che richiede anche Postgresql è "
-"la ricerca fuzzy o similarità di trigrammi. Un trigramma è un gruppo di tre "
+"la ricerca vaga o similarità di trigrammi. Un trigramma è un gruppo di tre "
 "caratteri consecutivi.\n"
 "            Ad esempio, la ricerca di \"apple\" creerà x trigrammi \"app\", "
 "\"ppl\", \"ple\" e creerà un punteggio di quanto le parole corrispondono ai "
@@ -1736,6 +1734,38 @@ msgid ""
 "full text results, it does match the trigram results.\n"
 "            "
 msgstr ""
+" \n"
+"            'Senza accento' è un caso speciale in quanto consente di cercare "
+"un campo 'non accentato' per ogni stile di ricerca che tenta di ignorare i "
+"valori accentati.\n"
+"            Ad esempio, quando si abilita 'Senza accento' per 'Nome', "
+"qualsiasi ricerca (inizia con, contiene, trigramma) tenterà di ignorare i "
+"caratteri accentati.\n"
+"            \n"
+"            Per le altre opzioni, è possibile abilitare la ricerca su uno o "
+"tutti i campi e saranno combinati insieme con un presunto 'OR'.\n"
+"            Ad esempio, abilitando 'Nome' per Inizia con, 'Nome' e "
+"'Descrizione' per Corrispondenza parziale e 'Ingredienti' e 'Parole chiave' "
+"per Ricerca completa\n"
+"            e cercando 'mela' sarà generata una ricerca che restituirà "
+"ricette che hanno:\n"
+"            - Un nome di ricetta che inizia con 'mela'\n"
+"            - OPPURE un nome di ricetta che contiene 'mela'\n"
+"            - OPPURE una descrizione di ricetta che contiene 'mela'\n"
+"            - OPPURE una ricetta che avrà una corrispondenza di ricerca di "
+"testo completo ('mela' o 'mele') negli ingredienti\n"
+"            - OPPURE una ricetta che avrà una corrispondenza di ricerca di "
+"testo completo in Parole chiave\n"
+"\n"
+"            Combinare troppi campi in troppi tipi di ricerca può avere un "
+"impatto negativo sulle prestazioni, creare risultati duplicati o restituire "
+"risultati inaspettati.\n"
+"            Ad esempio, abilitare la ricerca vaga o le corrispondenze "
+"parziali interferirà con i metodi di ricerca web.nelle\n"
+"            Cercando 'apple -pie' con la ricerca vaga e la ricerca di testo "
+"completo sarà restituita la ricetta Apple Pie. Sebbene non sia inclusa nei "
+"risultati di testo completo, corrisponde ai risultati del trigramma.\n"
+"            "
 
 #: .\cookbook\templates\search_info.html:95
 msgid "Search Index"
@@ -1753,6 +1783,15 @@ msgid ""
 "the management command 'python manage.py rebuildindex'\n"
 "            "
 msgstr ""
+" \n"
+"            La ricerca di trigrammi e la ricerca di testo completo si basano "
+"entrambe sugli indici del database per funzionare in modo efficace.\n"
+"            Puoi ricostruire gli indici su tutti i campi nella pagina di "
+"amministrazione per le ricette, selezionando tutte le ricette ed eseguendo "
+"'ricostruisci indice delle ricette selezionate'\n"
+"            Puoi anche ricostruire gli indici dalla riga di comando "
+"eseguendo il comando di gestione 'python manage.py rebuildindex'\n"
+"            "
 
 #: .\cookbook\templates\settings.html:25
 msgid ""
@@ -2159,6 +2198,14 @@ msgid ""
 "issue.\n"
 "        "
 msgstr ""
+"\n"
+"            Le migrazioni non dovrebbero mai fallire!\n"
+"            Le migrazioni non andate a buon fine probabilmente causeranno il "
+"malfunzionamento di parti importanti dell'applicazione.\n"
+"            Se una migrazione non riesce, assicurati di avere la versione "
+"più recente e, in tal caso, pubblica il registro della migrazione e la "
+"panoramica di seguito in una segnalazione di problema su GitHub.\n"
+"        "
 
 #: .\cookbook\templates\system.html:182
 msgid "False"
@@ -2258,12 +2305,10 @@ msgstr ""
 "Filtra i piani alimentari fino alla data (inclusa) nel formato AAAA-MM-GG."
 
 #: .\cookbook\views\api.py:744
-#, fuzzy
-#| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
-"ID di una ricetta di cui uno step ne fa parte. Usato per parametri di "
-"ripetizione multipla."
+"Filtra i piani alimentari con ID MealType. Per più di uno, ripeti il "
+"parametro."
 
 #: .\cookbook\views\api.py:872
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
@@ -2280,7 +2325,7 @@ msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
-"Stringa di query corrispondente (fuzzy) al nome della ricetta. In futuro "
+"Stringa di query corrispondente (vaga) al nome della ricetta. In futuro "
 "anche ricerca fulltext."
 
 #: .\cookbook\views\api.py:910
@@ -2288,76 +2333,107 @@ msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr ""
+"ID della parola chiave che una ricetta dovrebbe avere. Per più di uno, "
+"ripeti il parametro. Equivalente a keywords_or"
 
 #: .\cookbook\views\api.py:911
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
+"ID delle parole chiave, ripeti per più di uno. Restituisci ricette con una "
+"qualsiasi delle parole chiave"
 
 #: .\cookbook\views\api.py:912
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
+"ID delle parole chiave, ripeti per più di uno. Restituisci le ricette con "
+"tutte le parole chiave."
 
 #: .\cookbook\views\api.py:913
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
+"ID delle parole chiave, ripeti per più di uno. Escludi le ricette con una "
+"qualsiasi delle parole chiave."
 
 #: .\cookbook\views\api.py:914
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
+"ID delle parole chiave, ripeti per più di uno. Escludi le ricette con tutte "
+"le parole chiave."
 
 #: .\cookbook\views\api.py:915
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
+"ID dell'alimento che una ricetta dovrebbe avere. Per più di uno, ripeti il "
+"parametro."
 
 #: .\cookbook\views\api.py:916
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
+"ID degli alimenti, ripeti per più di uno. Restituisci le ricette con uno "
+"qualsiasi degli alimenti"
 
 #: .\cookbook\views\api.py:917
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
+"ID degli alimenti, ripeti per più di uno. Restituisci le ricette con tutti "
+"gli alimenti."
 
 #: .\cookbook\views\api.py:918
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
+"ID degli alimenti, ripeti per più di uno. Escludi le ricette con uno "
+"qualsiasi degli alimenti."
 
 #: .\cookbook\views\api.py:919
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
+"ID degli alimenti, ripeti per più di uno. Escludi le ricette con tutti gli "
+"alimenti."
 
 #: .\cookbook\views\api.py:920
 msgid "ID of unit a recipe should have."
-msgstr ""
+msgstr "ID dell'unità che una ricetta dovrebbe avere."
 
 #: .\cookbook\views\api.py:921
 msgid ""
 "Rating a recipe should have or greater. [0 - 5] Negative value filters "
 "rating less than."
 msgstr ""
+"La valutazione di una ricetta dovrebbe avere o superiore. [0 - 5] I filtri "
+"con valore negativo filtrano le valutazioni inferiori a quanto specificato."
 
 #: .\cookbook\views\api.py:922
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
+"ID del libro in cui dovrebbe trovarsi una ricetta. Per più di uno, ripeti il "
+"parametro."
 
 #: .\cookbook\views\api.py:923
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
+"ID dei libri, ripetere per più di uno. Restituisci le ricette con uno "
+"qualsiasi dei libri"
 
 #: .\cookbook\views\api.py:924
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
+"ID dei libri, ripetere per più di uno. Restituisci le ricette con tutti i "
+"libri."
 
 #: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
+"ID dei libri, ripeti per più di uno. Escludi le ricette con uno qualsiasi "
+"dei libri."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
+"ID dei libri, ripeti per più di uno. Escludi le ricette con tutti i libri."
 
 #: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
@@ -2388,25 +2464,31 @@ msgid ""
 "or before date."
 msgstr ""
 "Filtra le ricette cucinate l'ultima volta il o dopo AAAA-MM-GG. Anteponendo -"
-" filtra alla o prima della data."
+" filtra alla data o prima della data."
 
 #: .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtra le ricette create il o dopo AAAA-MM-GG. Anteponendo: filtra alla data "
+"o prima della data."
 
 #: .\cookbook\views\api.py:933
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtra le ricette aggiornate il o dopo AAAA-MM-GG. Anteponendo - filtra alla "
+"data o prima della data."
 
 #: .\cookbook\views\api.py:934
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filtra le ricette visualizzate per ultime il o dopo AAAA-MM-GG. Anteponendo -"
+" filtra alla data o prima della data."
 
 #: .\cookbook\views\api.py:935
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
@@ -2419,6 +2501,8 @@ msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
+"Restituisce la voce della lista della spesa con una chiave primaria di id. "
+"Sono consentiti più valori."
 
 #: .\cookbook\views\api.py:1125
 msgid ""
@@ -2426,6 +2510,9 @@ msgid ""
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
+"Filtra le voci della lista della spesa selezionate. [vero, falso, entrambi, "
+"<b>recenti</b>]<br>                   - recenti include gli elementi non "
+"selezionati e quelli completati di recente."
 
 #: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
@@ -2442,6 +2529,8 @@ msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
+"Restituisce le automazioni corrispondenti al tipo di automazione. Sono "
+"consentiti più valori."
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
@@ -2511,10 +2600,8 @@ msgstr ""
 "almeno un monitoraggio."
 
 #: .\cookbook\views\delete.py:135
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connectors Config Backend"
-msgstr "Backend di archiviazione"
+msgstr "Configurazione connettori backend"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
@@ -2544,7 +2631,7 @@ msgstr "Configurazione salvata!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "Configurazione connettore"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
@@ -2575,10 +2662,8 @@ msgid "Shopping List"
 msgstr "Lista della spesa"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
-#, fuzzy
-#| msgid "Storage Backend"
 msgid "Connector Config Backend"
-msgstr "Backend di archiviazione"
+msgstr "Configurazione connettore backend"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
@@ -2602,7 +2687,7 @@ msgstr "Step"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "Tipi di proprietà"
 
 #: .\cookbook\views\new.py:86
 msgid "This feature is not enabled by the server admin!"
