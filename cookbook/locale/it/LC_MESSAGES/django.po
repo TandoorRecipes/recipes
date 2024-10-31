@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-10-31 06:00+0000\n"
+"PO-Revision-Date: 2024-11-01 06:58+0000\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/it/>\n"
@@ -824,7 +824,7 @@ msgstr "Reimposta password"
 
 #: .\cookbook\templates\account\login.html:50
 msgid "Social Login"
-msgstr "Login con social network"
+msgstr "Accesso con social network"
 
 #: .\cookbook\templates\account\login.html:51
 msgid "You can use any of the following providers to sign in."
@@ -1023,7 +1023,7 @@ msgstr "Proprietà"
 
 #: .\cookbook\templates\base.html:301 .\cookbook\views\lists.py:255
 msgid "Unit Conversions"
-msgstr "Conversione di unità"
+msgstr "Conversioni di unità"
 
 #: .\cookbook\templates\base.html:318 .\cookbook\templates\index.html:47
 msgid "Import Recipe"
@@ -1140,7 +1140,7 @@ msgstr "Gestisci archiviazione esterna"
 
 #: .\cookbook\templates\batch\monitor.html:28
 msgid "Sync Now!"
-msgstr "Sincronizza Ora!"
+msgstr "Sincronizza ora!"
 
 #: .\cookbook\templates\batch\monitor.html:29
 msgid "Show Recipes"
@@ -1153,7 +1153,7 @@ msgstr "Mostra registro"
 #: .\cookbook\templates\batch\waiting.html:4
 #: .\cookbook\templates\batch\waiting.html:10
 msgid "Importing Recipes"
-msgstr "Importando Ricette"
+msgstr "Importando ricette"
 
 #: .\cookbook\templates\batch\waiting.html:28
 msgid ""
@@ -1161,7 +1161,7 @@ msgid ""
 "please wait."
 msgstr ""
 "Questa operazione può richiedere alcuni minuti, a seconda del numero di "
-"ricette sincronizzate, attendere prego."
+"ricette sincronizzate, attendere."
 
 #: .\cookbook\templates\books.html:7
 msgid "Recipe Books"
@@ -1174,7 +1174,7 @@ msgstr "Esporta Ricette"
 #: .\cookbook\templates\forms\edit_import_recipe.html:5
 #: .\cookbook\templates\forms\edit_import_recipe.html:9
 msgid "Import new Recipe"
-msgstr "Importa nuova Ricetta"
+msgstr "Importa nuova ricetta"
 
 #: .\cookbook\templates\forms\edit_internal_recipe.html:7
 msgid "Edit Recipe"
@@ -1413,16 +1413,16 @@ msgstr "elemento di lista ordinata"
 
 #: .\cookbook\templates\markdown_info.html:125
 msgid "Images & Links"
-msgstr "Immagini & Link"
+msgstr "Immagini e collegamenti"
 
 #: .\cookbook\templates\markdown_info.html:126
 msgid ""
 "Links can be formatted with Markdown. This application also allows to paste "
 "links directly into markdown fields without any formatting."
 msgstr ""
-"I link possono essere formattati con Markdown. Questa applicazione consente "
-"anche di incollare link direttamente nei campi markdown senza alcuna "
-"formattazione."
+"I collegamenti possono essere formattati con Markdown. Questa applicazione "
+"consente anche di incollare i collegamenti direttamente nei campi markdown "
+"senza alcuna formattazione."
 
 #: .\cookbook\templates\markdown_info.html:132
 #: .\cookbook\templates\markdown_info.html:145
@@ -1553,7 +1553,7 @@ msgstr ""
 "sulla tua configurazione.  \n"
 "        Cambiare una delle opzioni di ricerca può avere impatto "
 "significativo sulla velocità e qualità dei risultati.\n"
-"        Metodi di ricerca, Trigrams e ricerca Full Text sono disponibili "
+"        Metodi di ricerca, trigrammi e ricerca Full Text sono disponibili "
 "solo se stati usando un database Postgres.\n"
 "    "
 
@@ -1876,14 +1876,14 @@ msgstr "Crea super utente"
 #: .\cookbook\templates\socialaccount\authentication_error.html:7
 #: .\cookbook\templates\socialaccount\authentication_error.html:23
 msgid "Social Network Login Failure"
-msgstr "Errore di login con Social Network"
+msgstr "Errore di accesso con social network"
 
 #: .\cookbook\templates\socialaccount\authentication_error.html:25
 msgid ""
 "An error occurred while attempting to login via your social network account."
 msgstr ""
-"Si è verificato un errore durante il tentativo di login con account social "
-"network."
+"Si è verificato un errore durante il tentativo di accesso con account di "
+"social network."
 
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:15
@@ -1950,7 +1950,7 @@ msgid ""
 msgstr ""
 "Stai per usare il tuo:\n"
 "        account %(provider_name)s per fare l'accesso a\n"
-"        %(site_name)s. Per finire, completa il modulo qui sotto:"
+"        %(site_name)s. Per finire, completa il modulo seguente:"
 
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:23
 #: .\cookbook\templates\socialaccount\snippets\provider_list.html:31
@@ -2026,11 +2026,11 @@ msgstr ""
 #: .\cookbook\templates\space_overview.html:96
 #: .\cookbook\templates\space_overview.html:105
 msgid "Create Space"
-msgstr "Crea Istanza"
+msgstr "Crea istanza"
 
 #: .\cookbook\templates\space_overview.html:99
 msgid "Create your own recipe space."
-msgstr "Crea una istanza per le tue ricette."
+msgstr "Crea un'istanza per le tue ricette."
 
 #: .\cookbook\templates\space_overview.html:101
 msgid "Start your own recipe space and invite other users to it."
@@ -2276,7 +2276,7 @@ msgstr "Non è possibile muovere un oggetto a sé stesso!"
 #: .\cookbook\views\api.py:361
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
-msgstr "Non esiste nessun {self.basename} con id {parent}"
+msgstr "Non esiste alcun {self.basename} con id {parent}"
 
 #: .\cookbook\views\api.py:367
 #, python-brace-format
@@ -2605,7 +2605,7 @@ msgstr "Configurazione connettori backend"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
-msgstr "Link di invito"
+msgstr "Collegamento di invito"
 
 #: .\cookbook\views\delete.py:168
 msgid "Space Membership"
@@ -2667,7 +2667,7 @@ msgstr "Configurazione connettore backend"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
-msgstr "Link di invito"
+msgstr "Collegamenti di invito"
 
 #: .\cookbook\views\lists.py:154
 msgid "Supermarkets"
@@ -2788,7 +2788,7 @@ msgstr "L'utente è stato creato e ora può essere usato per il login!"
 
 #: .\cookbook\views\views.py:393
 msgid "Malformed Invite Link supplied!"
-msgstr "È stato fornito un link di invito non valido!"
+msgstr "È stato fornito un collegamento di invito non valido!"
 
 #: .\cookbook\views\views.py:410
 msgid "Successfully joined space."
@@ -2796,23 +2796,23 @@ msgstr "Sei entrato a far parte di questa istanza."
 
 #: .\cookbook\views\views.py:416
 msgid "Invite Link not valid or already used!"
-msgstr "Il link di invito non è valido o è stato già usato!"
+msgstr "Il collegamento di invito non è valido o è stato già usato!"
 
 #: .\cookbook\views\views.py:432
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
-"La segnalazione dei link di condivisione non è abilitata per questa istanza. "
-"Notifica l'amministratore per segnalare i problemi."
+"La segnalazione dei collegamento di condivisione non è abilitata per questa "
+"istanza. Notifica l'amministratore per segnalare i problemi."
 
 #: .\cookbook\views\views.py:437
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
-"Il link per la condivisione delle ricette è stato disabilitato! Per maggiori "
-"informazioni contatta l'amministratore."
+"Il collegamento per la condivisione delle ricette è stato disabilitato! Per "
+"maggiori informazioni contatta l'amministratore."
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
