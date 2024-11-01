@@ -68,7 +68,7 @@
     "workbox-background-sync": "^7.0.0",
     "workbox-expiration": "^7.0.0",
     "workbox-navigation-preload": "^7.0.0",
-    "workbox-precaching": "^7.0.0",
+    "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^6.2.4"
   },
