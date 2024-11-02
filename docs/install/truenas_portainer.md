@@ -83,7 +83,7 @@ services:
     restart: always
     image: postgres:16-alpine
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     env_file:
       - stack.env
 
@@ -117,6 +117,7 @@ services:
 volumes:
   nginx_config:
   staticfiles:
+  pg_data:
 ```
 
 -Download the .env template from [HERE](https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template) and load this file by pressing the "Load Variables from .env File" button:
