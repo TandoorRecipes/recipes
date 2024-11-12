@@ -316,5 +316,9 @@
     "converted_amount": "Pretvorjena Količina",
     "base_unit": "Osnovna Enota",
     "base_amount": "Osnovna Količina",
-    "Amount": "Količina"
+    "Amount": "Količina",
+    "err_importing_recipe": "Pri uvozu recepta je prišlo do napake!",
+    "Properties_Food_Amount": "Lastnosti Količina hrane",
+    "Properties_Food_Unit": "Lastnosti Hrana Enota",
+    "Calculator": "Kalkulator"
 }

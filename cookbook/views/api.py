@@ -13,6 +13,7 @@ from urllib.parse import unquote
 from zipfile import ZipFile
 
 import PIL.Image
+import redis
 import requests
 from PIL import UnidentifiedImageError
 from django.contrib import messages
@@ -29,6 +30,7 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
@@ -109,6 +111,44 @@ from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, GOOGLE
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
 
+class LoggingMixin(object):
+    """
+    logs request counts to redis cache total/per user/
+    """
+
+    def initial(self, request, *args, **kwargs):
+        super(LoggingMixin, self).initial(request, *args, **kwargs)
+
+        if settings.REDIS_HOST:
+            d = date.today().isoformat()
+            space = request.space
+            endpoint = request.resolver_match.url_name
+
+            r = redis.StrictRedis(
+                host=settings.REDIS_HOST,
+                port=settings.REDIS_PORT,
+                username=settings.REDIS_USERNAME,
+                password=settings.REDIS_PASSWORD,
+                db=settings.REDIS_DATABASES['STATS'],
+            )
+
+            pipe = r.pipeline()
+
+            # Global and daily tallies for all URLs.
+            pipe.incr('api:request-count')
+            pipe.incr(f'api:request-count:{d}')
+
+            # Use a sorted set to store the user stats, with the score representing
+            # the number of queries the user made total or on a given day.
+            pipe.zincrby(f'api:space-request-count', 1, space.pk)
+            pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
+
+            # Use a sorted set to store all the endpoints with score representing
+            # the number of queries the endpoint received total or on a given day.
+            pipe.zincrby(f'api:endpoint-request-count', 1, endpoint)
+            pipe.zincrby(f'api:endpoint-request-count:{d}', 1, endpoint)
+
+            pipe.execute()
 
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive',
@@ -423,7 +463,7 @@ class TreeMixin(MergeMixin, FuzzyFilterMixin):
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='filter_list', description='User IDs, repeat for multiple', type=str, many=True),
 ]))
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = User.objects
     serializer_class = UserSerializer
     permission_classes = [CustomUserPermission & CustomTokenHasReadWriteScope]
@@ -442,7 +482,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class GroupViewSet(viewsets.ModelViewSet):
+class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -450,7 +490,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', ]
 
 
-class SpaceViewSet(viewsets.ModelViewSet):
+class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
     permission_classes = [IsReadOnlyDRF & CustomIsGuest | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -471,7 +511,7 @@ class SpaceViewSet(viewsets.ModelViewSet):
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='internal_note', description='text field to store information about the invite link', type=str),
 ]))
-class UserSpaceViewSet(viewsets.ModelViewSet):
+class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserSpace.objects
     serializer_class = UserSpaceSerializer
     permission_classes = [(CustomIsSpaceOwner | CustomIsOwnerReadOnly) & CustomTokenHasReadWriteScope]
@@ -494,7 +534,7 @@ class UserSpaceViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user, space=self.request.space)
 
 
-class UserPreferenceViewSet(viewsets.ModelViewSet):
+class UserPreferenceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UserPreference.objects
     serializer_class = UserPreferenceSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
@@ -506,7 +546,7 @@ class UserPreferenceViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(user=self.request.user)
 
 
-class StorageViewSet(viewsets.ModelViewSet):
+class StorageViewSet(LoggingMixin, viewsets.ModelViewSet):
     # TODO handle delete protect error and adjust test
     queryset = Storage.objects
     serializer_class = StorageSerializer
@@ -517,7 +557,7 @@ class StorageViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
+class ConnectorConfigConfigViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ConnectorConfig.objects
     serializer_class = ConnectorConfigConfigSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -527,7 +567,7 @@ class ConnectorConfigConfigViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SyncViewSet(viewsets.ModelViewSet):
+class SyncViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Sync.objects
     serializer_class = SyncSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -537,7 +577,7 @@ class SyncViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
+class SyncLogViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = SyncLog.objects
     serializer_class = SyncLogSerializer
     permission_classes = [CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -547,7 +587,7 @@ class SyncLogViewSet(viewsets.ReadOnlyModelViewSet):
         return self.queryset.filter(sync__space=self.request.space)
 
 
-class SupermarketViewSet(StandardFilterModelViewSet):
+class SupermarketViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = Supermarket.objects
     serializer_class = SupermarketSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -559,7 +599,7 @@ class SupermarketViewSet(StandardFilterModelViewSet):
 
 
 # TODO does supermarket category have settings to support fuzzy filtering and/or merge?
-class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
+class SupermarketCategoryViewSet(LoggingMixin, FuzzyFilterMixin, MergeMixin):
     queryset = SupermarketCategory.objects
     model = SupermarketCategory
     serializer_class = SupermarketCategorySerializer
@@ -571,7 +611,7 @@ class SupermarketCategoryViewSet(FuzzyFilterMixin, MergeMixin):
         return super().get_queryset()
 
 
-class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
+class SupermarketCategoryRelationViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = SupermarketCategoryRelation.objects
     serializer_class = SupermarketCategoryRelationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -582,7 +622,7 @@ class SupermarketCategoryRelationViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-class KeywordViewSet(TreeMixin):
+class KeywordViewSet(LoggingMixin, TreeMixin):
     queryset = Keyword.objects
     model = Keyword
     serializer_class = KeywordSerializer
@@ -590,7 +630,7 @@ class KeywordViewSet(TreeMixin):
     pagination_class = DefaultPagination
 
 
-class UnitViewSet(MergeMixin, FuzzyFilterMixin):
+class UnitViewSet(LoggingMixin, MergeMixin, FuzzyFilterMixin):
     queryset = Unit.objects
     model = Unit
     serializer_class = UnitSerializer
@@ -598,7 +638,7 @@ class UnitViewSet(MergeMixin, FuzzyFilterMixin):
     pagination_class = DefaultPagination
 
 
-class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
+class FoodInheritFieldViewSet(LoggingMixin, viewsets.ReadOnlyModelViewSet):
     queryset = FoodInheritField.objects
     serializer_class = FoodInheritFieldSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -610,7 +650,7 @@ class FoodInheritFieldViewSet(viewsets.ReadOnlyModelViewSet):
         return super().get_queryset()
 
 
-class FoodViewSet(TreeMixin):
+class FoodViewSet(LoggingMixin, TreeMixin):
     queryset = Food.objects
     model = Food
     serializer_class = FoodSerializer
@@ -761,7 +801,7 @@ class FoodViewSet(TreeMixin):
     OpenApiParameter(name='order_direction', description='Order ascending or descending', type=str,
                      enum=['asc', 'desc']),
 ]))
-class RecipeBookViewSet(StandardFilterModelViewSet):
+class RecipeBookViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = RecipeBook.objects
     serializer_class = RecipeBookSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -785,7 +825,7 @@ class RecipeBookViewSet(StandardFilterModelViewSet):
     OpenApiParameter(name='recipe', description='id of recipe - only return books for that recipe', type=int),
     OpenApiParameter(name='book', description='id of book - only return recipes in that book', type=int),
 ]))
-class RecipeBookEntryViewSet(viewsets.ModelViewSet):
+class RecipeBookEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = RecipeBookEntry.objects
     serializer_class = RecipeBookEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -820,7 +860,7 @@ MealPlanViewQueryParameters = [
 @extend_schema_view(list=extend_schema(parameters=MealPlanViewQueryParameters),
                     ical=extend_schema(parameters=MealPlanViewQueryParameters,
                                        responses={(200, 'text/calendar'): OpenApiTypes.STR}))
-class MealPlanViewSet(viewsets.ModelViewSet):
+class MealPlanViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = MealPlan.objects
     serializer_class = MealPlanSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -851,7 +891,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return meal_plans_to_ical(self.get_queryset(), f'meal_plan_{from_date}-{to_date}.ics')
 
 
-class AutoPlanViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class AutoPlanViewSet(LoggingMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = AutoMealPlanSerializer
     http_method_names = ['post', 'options']
 
@@ -915,7 +955,7 @@ class AutoPlanViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return Response(serializer.errors, 400)
 
 
-class MealTypeViewSet(viewsets.ModelViewSet):
+class MealTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
     """
     returns list of meal types created by the
     requesting user ordered by the order field.
@@ -935,7 +975,7 @@ class MealTypeViewSet(viewsets.ModelViewSet):
     OpenApiParameter(name='food', description='ID of food to filter for', type=int),
     OpenApiParameter(name='unit', description='ID of unit to filter for', type=int),
 ]))
-class IngredientViewSet(viewsets.ModelViewSet):
+class IngredientViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Ingredient.objects
     serializer_class = IngredientSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -964,7 +1004,7 @@ class IngredientViewSet(viewsets.ModelViewSet):
                      type=int, many=True),
     OpenApiParameter(name='query', description=_('Query string matched (fuzzy) against object name.'), type=str),
 ]))
-class StepViewSet(viewsets.ModelViewSet):
+class StepViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Step.objects
     serializer_class = StepSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1082,7 +1122,7 @@ class RecipePagination(PageNumberPagination):
                      description=_('Filter recipes that can be made with OnHand food. [''true''/''<b>false</b>'']'),
                      type=bool),
 ]))
-class RecipeViewSet(viewsets.ModelViewSet):
+class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Recipe.objects
     serializer_class = RecipeSerializer
     # TODO split read and write permission for meal plan guest
@@ -1244,7 +1284,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 @extend_schema_view(list=extend_schema(
     parameters=[OpenApiParameter(name='food_id', description='ID of food to filter for', type=int), ]))
-class UnitConversionViewSet(viewsets.ModelViewSet):
+class UnitConversionViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = UnitConversion.objects
     serializer_class = UnitConversionSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1267,7 +1307,7 @@ class UnitConversionViewSet(viewsets.ModelViewSet):
         enum=[m[0] for m in PropertyType.CHOICES])
     ]
 ))
-class PropertyTypeViewSet(viewsets.ModelViewSet):
+class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = PropertyType.objects
     serializer_class = PropertyTypeSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1281,7 +1321,7 @@ class PropertyTypeViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class PropertyViewSet(viewsets.ModelViewSet):
+class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Property.objects
     serializer_class = PropertySerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1291,7 +1331,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
+class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ShoppingListRecipe.objects
     serializer_class = ShoppingListRecipeSerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -1317,7 +1357,7 @@ class ShoppingListRecipeViewSet(viewsets.ModelViewSet):
                      description=_('Returns the shopping list entries sorted by supermarket category order.'),
                      type=int),
 ]))
-class ShoppingListEntryViewSet(viewsets.ModelViewSet):
+class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -1395,7 +1435,7 @@ class ShoppingListEntryViewSet(viewsets.ModelViewSet):
             return Response(serializer.errors, 400)
 
 
-class ViewLogViewSet(viewsets.ModelViewSet):
+class ViewLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ViewLog.objects
     serializer_class = ViewLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
@@ -1408,7 +1448,7 @@ class ViewLogViewSet(viewsets.ModelViewSet):
 
 @extend_schema_view(list=extend_schema(
     parameters=[OpenApiParameter(name='recipe', description='Filter for entries with the given recipe', type=int), ]))
-class CookLogViewSet(viewsets.ModelViewSet):
+class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = CookLog.objects
     serializer_class = CookLogSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
@@ -1420,7 +1460,7 @@ class CookLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class ImportLogViewSet(viewsets.ModelViewSet):
+class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1430,7 +1470,7 @@ class ImportLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class ExportLogViewSet(viewsets.ModelViewSet):
+class ExportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ExportLog.objects
     serializer_class = ExportLogSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1440,7 +1480,7 @@ class ExportLogViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space)
 
 
-class BookmarkletImportViewSet(viewsets.ModelViewSet):
+class BookmarkletImportViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = BookmarkletImport.objects
     serializer_class = BookmarkletImportSerializer
     permission_classes = [CustomIsUser & CustomTokenHasScope]
@@ -1456,7 +1496,7 @@ class BookmarkletImportViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(space=self.request.space).all()
 
 
-class UserFileViewSet(StandardFilterModelViewSet):
+class UserFileViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = UserFile.objects
     serializer_class = UserFileSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1468,7 +1508,7 @@ class UserFileViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-class AutomationViewSet(StandardFilterModelViewSet):
+class AutomationViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = Automation.objects
     serializer_class = AutomationSerializer
     permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
@@ -1497,7 +1537,7 @@ class AutomationViewSet(StandardFilterModelViewSet):
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='internal_note', description=_('I have no idea what internal_note is for.'), type=str)
 ]))
-class InviteLinkViewSet(StandardFilterModelViewSet):
+class InviteLinkViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = InviteLink.objects
     serializer_class = InviteLinkSerializer
     permission_classes = [CustomIsSpaceOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
@@ -1524,7 +1564,7 @@ class InviteLinkViewSet(StandardFilterModelViewSet):
         enum=[m[0] for m in CustomFilter.MODELS])
     ]
 ))
-class CustomFilterViewSet(StandardFilterModelViewSet):
+class CustomFilterViewSet(LoggingMixin, StandardFilterModelViewSet):
     queryset = CustomFilter.objects
     serializer_class = CustomFilterSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
@@ -1540,7 +1580,7 @@ class CustomFilterViewSet(StandardFilterModelViewSet):
         return super().get_queryset()
 
 
-class AccessTokenViewSet(viewsets.ModelViewSet):
+class AccessTokenViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = AccessToken.objects
     serializer_class = AccessTokenSerializer
     permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]

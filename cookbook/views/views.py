@@ -1,9 +1,10 @@
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import StringIO
 from uuid import UUID
 
+import redis
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
@@ -17,6 +18,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
@@ -353,6 +355,43 @@ def system(request):
 
     for key in migration_info.keys():
         migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(migration_info[key]['applied_migrations'])
+
+    # API endpoint logging
+    r = redis.StrictRedis(
+        host=settings.REDIS_HOST,
+        port=settings.REDIS_PORT,
+        password='',
+        username='',
+        db=settings.REDIS_DATABASES['STATS'],
+    )
+
+    api_stats = [['Endpoint', 'Total']]
+    api_space_stats = [['User', 'Total']]
+    total_stats = ['All', int(r.get('api:request-count'))]
+
+    for i in range(0, 6):
+        d = (date.today() - timedelta(days=i)).isoformat()
+        api_stats[0].append(d)
+        api_space_stats[0].append(d)
+        total_stats.append(int(r.get(f'api:request-count:{d}')) if r.get(f'api:request-count:{d}') else 0)
+
+    api_stats.append(total_stats)
+
+    for x in r.zrange('api:endpoint-request-count', 0, -1, withscores=True, desc=True):
+        endpoint = x[0].decode('utf-8')
+        endpoint_stats = [endpoint, x[1]]
+        for i in range(0, 6):
+            d = (date.today() - timedelta(days=i)).isoformat()
+            endpoint_stats.append(r.zscore(f'api:endpoint-request-count:{d}', endpoint))
+        api_stats.append(endpoint_stats)
+
+    for x in r.zrange('api:space-request-count', 0, 20, withscores=True, desc=True):
+        s = x[0].decode('utf-8')
+        space_stats = [Space.objects.get(pk=s).name, x[1]]
+        for i in range(0, 6):
+            d = (date.today() - timedelta(days=i)).isoformat()
+            space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
+        api_space_stats.append(space_stats)
 
     return render(
         request, 'system.html', {
