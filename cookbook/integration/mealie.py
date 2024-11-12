@@ -72,14 +72,14 @@ class Mealie(Integration):
             )
             recipe.steps.add(step)
 
-        if 'recipe_yield' in recipe_json:
+        if 'recipe_yield' in recipe_json and recipe_json['recipe_yield'] is not None:
             recipe.servings = parse_servings(recipe_json['recipe_yield'])
             recipe.servings_text = parse_servings_text(recipe_json['recipe_yield'])
 
         if 'total_time' in recipe_json and recipe_json['total_time'] is not None:
             recipe.working_time = parse_time(recipe_json['total_time'])
 
-        if 'org_url' in recipe_json:
+        if 'org_url' in recipe_json and recipe_json['org_url'] is not None:
             recipe.source_url = recipe_json['org_url']
 
         recipe.save()
