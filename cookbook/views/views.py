@@ -356,13 +356,13 @@ def system(request):
     )
 
     api_stats = [['Endpoint', 'Total']]
-    api_user_stats = [['User', 'Total']]
+    api_space_stats = [['User', 'Total']]
     total_stats = ['All', int(r.get('api:request-count'))]
 
     for i in range(0, 6):
         d = (date.today() - timedelta(days=i)).isoformat()
         api_stats[0].append(d)
-        api_user_stats[0].append(d)
+        api_space_stats[0].append(d)
         total_stats.append(int(r.get(f'api:request-count:{d}')) if r.get(f'api:request-count:{d}') else 0)
 
     api_stats.append(total_stats)
@@ -375,19 +375,19 @@ def system(request):
             endpoint_stats.append(r.zscore(f'api:endpoint-request-count:{d}', endpoint))
         api_stats.append(endpoint_stats)
 
-    for x in r.zrange('api:user-request-count', 0, 20, withscores=True, desc=True):
-        u = x[0].decode('utf-8')
-        user_stats = [User.objects.get(pk=u).username, x[1]]
+    for x in r.zrange('api:space-request-count', 0, 20, withscores=True, desc=True):
+        s = x[0].decode('utf-8')
+        space_stats = [Space.objects.get(pk=s).name, x[1]]
         for i in range(0, 6):
             d = (date.today() - timedelta(days=i)).isoformat()
-            user_stats.append(r.zscore(f'api:user-request-count:{d}', u))
-        api_user_stats.append(user_stats)
+            space_stats.append(r.zscore(f'api:space-request-count:{d}', s))
+        api_space_stats.append(space_stats)
 
     return render(
         request, 'system.html', {
             'gunicorn_media': settings.GUNICORN_MEDIA, 'debug': settings.DEBUG, 'postgres': postgres, 'postgres_version': postgres_ver, 'postgres_status': database_status,
             'postgres_message': database_message, 'version_info': VERSION_INFO, 'plugins': PLUGINS, 'secret_key': secret_key, 'orphans': orphans, 'migration_info': migration_info,
-            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS, 'api_stats': api_stats, 'api_user_stats': api_user_stats
+            'missing_migration': missing_migration, 'allowed_hosts': settings.ALLOWED_HOSTS, 'api_stats': api_stats, 'api_space_stats': api_space_stats
         })
 
 

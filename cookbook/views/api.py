@@ -113,7 +113,7 @@ class LoggingMixin(object):
 
         if settings.REDIS_HOST:
             d = date.today().isoformat()
-            user = request.user
+            space = request.space
             endpoint = request.resolver_match.url_name
 
             r = redis.StrictRedis(
@@ -132,8 +132,8 @@ class LoggingMixin(object):
 
             # Use a sorted set to store the user stats, with the score representing
             # the number of queries the user made total or on a given day.
-            pipe.zincrby(f'api:user-request-count', 1, user.pk)
-            pipe.zincrby(f'api:user-request-count:{d}', 1, user.pk)
+            pipe.zincrby(f'api:space-request-count', 1, space.pk)
+            pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
 
             # Use a sorted set to store all the endpoints with score representing
             # the number of queries the endpoint received total or on a given day.
