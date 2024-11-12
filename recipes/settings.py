@@ -126,6 +126,14 @@ PRIVACY_URL = os.getenv('PRIVACY_URL', '')
 IMPRINT_URL = os.getenv('IMPRINT_URL', '')
 HOSTED = bool(int(os.getenv('HOSTED', False)))
 
+REDIS_HOST = os.getenv('REDIS_HOST', None)
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+REDIS_USERNAME = os.getenv('REDIS_USERNAME', None)
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD', None)
+REDIS_DATABASES = {
+    'STATS': 0
+}
+
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
 # Application definition
