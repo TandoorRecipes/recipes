@@ -177,9 +177,9 @@
     {#    </textarea>#}
 
     <h4 class="mt-3">API Stats</h4>
-    <h6 >User Stats</h6>
+    <h6 >Space Stats</h6>
     <table class="table table-bordered table-striped">
-        {% for r in api_user_stats %}
+        {% for r in api_space_stats %}
             <tr>
                 {% for c in r %}
                     <td>
@@ -189,7 +189,7 @@
             </tr>
         {% endfor %}
     </table>
-    
+
     <h6 >Endpoint Stats</h6>
     <table class="table table-bordered table-striped">
         {% for r in api_stats %}
