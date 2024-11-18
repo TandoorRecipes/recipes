@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2024-11-17 16:58+0000\n"
+"PO-Revision-Date: 2024-11-19 06:58+0000\n"
 "Last-Translator: \"Matjaž T.\" <matjaz@moj-svet.si>\n"
 "Language-Team: Slovenian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/sl/>\n"
@@ -2205,7 +2205,7 @@ msgstr "Prikaži"
 
 #: .\cookbook\templates\url_import.html:8
 msgid "URL Import"
-msgstr "URL uvoz"
+msgstr "uvoz URL"
 
 #: .\cookbook\views\api.py:120 .\cookbook\views\api.py:213
 msgid "Parameter updated_at incorrectly formatted"
@@ -2385,63 +2385,78 @@ msgstr "ID-ji knjig, ponovite za več. Vrne recepte z vsemi knjigami."
 
 #: .\cookbook\views\api.py:925
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
-msgstr ""
+msgstr "ID-ji knjig, ponovite za več. Izključi recepte s katero koli knjigo."
 
 #: .\cookbook\views\api.py:926
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
-msgstr ""
+msgstr "ID-ji knjig, ponovite za več. Izključi recepte z vsemi knjigami."
 
 #: .\cookbook\views\api.py:927
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr ""
+"Če bi iskanje moralo vrniti samo interne recepte. [potrdi/<b>zavrzi</b>]"
 
 #: .\cookbook\views\api.py:928
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
-msgstr ""
+msgstr "Vrne rezultate v naključnem vrstnem redu. [potrdi/<b>zavrzi</b>]"
 
 #: .\cookbook\views\api.py:929
 msgid "Returns new results first in search results. [true/<b>false</b>]"
-msgstr ""
+msgstr "Vrne nove rezultate prve med rezultati iskanja. [potrdi/<b>zavrzi</b>]"
 
 #: .\cookbook\views\api.py:930
 msgid ""
 "Filter recipes cooked X times or more.  Negative values returns cooked less "
 "than X times"
 msgstr ""
+"Filtrirajte recepte, kuhane X-krat ali večkrat. Negativne vrednosti se "
+"vrnejo kuhane manj kot X-krat"
 
 #: .\cookbook\views\api.py:931
 msgid ""
 "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Filtriraj recepte, nazadnje kuhane LLLL-MM-DD ali pozneje. Pred - filtrira "
+"na ali pred datumom."
 
 #: .\cookbook\views\api.py:932
 msgid ""
 "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtrirajte recepte, ustvarjene LLLL-MM-DD ali pozneje. Pred - filtrira na "
+"ali pred datumom."
 
 #: .\cookbook\views\api.py:933
 msgid ""
 "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
 "before date."
 msgstr ""
+"Filtrirajte recepte, posodobljene LLLL-MM-DD ali pozneje. Pred - filtrira na "
+"ali pred datumom."
 
 #: .\cookbook\views\api.py:934
 msgid ""
 "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters on "
 "or before date."
 msgstr ""
+"Recepti filtrov so zadnjič prikazani LLLL-MM-DD ali pozneje. Pred - filtrira "
+"na ali pred datumom."
 
 #: .\cookbook\views\api.py:935
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
+"Filtrirajte recepte, ki jih lahko pripravite s hrano OnHand. [potrdi/"
+"<b>zavrzi</b>]"
 
 #: .\cookbook\views\api.py:1122
 msgid ""
 "Returns the shopping list entry with a primary key of id.  Multiple values "
 "allowed."
 msgstr ""
+"Vrne vnos nakupovalnega seznama s primarnim ključem id. Dovoljenih je več "
+"vrednosti."
 
 #: .\cookbook\views\api.py:1125
 msgid ""
@@ -2449,175 +2464,185 @@ msgid ""
 "b>]<br>                  - recent includes unchecked items and recently "
 "completed items."
 msgstr ""
+"Filtrirajte vnose na nakupovalnem seznamu.  [potrdi, zavrzi, oboje, "
+"<b>nedavno</b>]<br>                  - nedavno vključuje nepreverjene "
+"elemente in nedavno dokončane elemente."
 
 #: .\cookbook\views\api.py:1128
 msgid "Returns the shopping list entries sorted by supermarket category order."
 msgstr ""
+"Vrne vnose nakupovalnega seznama, razvrščene po vrstnem redu kategorije "
+"trgovine."
 
 #: .\cookbook\views\api.py:1210
 msgid "Filter for entries with the given recipe"
-msgstr ""
+msgstr "Filter za vnose z danim receptom"
 
 #: .\cookbook\views\api.py:1292
 msgid ""
 "Return the Automations matching the automation type.  Multiple values "
 "allowed."
 msgstr ""
+"Vrnite avtomatizacije, ki ustrezajo vrsti avtomatizacije.     Dovoljenih je "
+"več vrednosti."
 
 #: .\cookbook\views\api.py:1415
 msgid "Nothing to do."
-msgstr ""
+msgstr "Nič za narediti."
 
 #: .\cookbook\views\api.py:1445
 msgid "Invalid Url"
-msgstr ""
+msgstr "Neveljaven URL"
 
 #: .\cookbook\views\api.py:1449
 msgid "Connection Refused."
-msgstr ""
+msgstr "Povezava zavrnjena."
 
 #: .\cookbook\views\api.py:1451
 msgid "Bad URL Schema."
-msgstr ""
+msgstr "Slaba shema URL-ja."
 
 #: .\cookbook\views\api.py:1474
 msgid "No usable data could be found."
-msgstr ""
+msgstr "Uporabnih podatkov ni bilo mogoče najti."
 
 #: .\cookbook\views\api.py:1549
 msgid "File is above space limit"
-msgstr ""
+msgstr "Datoteka presega omejitev prostora"
 
 #: .\cookbook\views\api.py:1566 .\cookbook\views\import_export.py:114
 msgid "Importing is not implemented for this provider"
-msgstr ""
+msgstr "Uvoz ni implementiran za tega ponudnika"
 
 #: .\cookbook\views\api.py:1650 .\cookbook\views\data.py:30
 #: .\cookbook\views\edit.py:88 .\cookbook\views\new.py:63
 #: .\cookbook\views\new.py:82
 msgid "This feature is not yet available in the hosted version of tandoor!"
-msgstr ""
+msgstr "Ta funkcija še ni na voljo v gostujoči različici tandoorja!"
 
 #: .\cookbook\views\api.py:1671
 msgid "Sync successful!"
-msgstr ""
+msgstr "Sinhronizacija uspela!"
 
 #: .\cookbook\views\api.py:1674
 msgid "Error synchronizing with Storage"
-msgstr ""
+msgstr "Napaka pri sinhronizaciji s shrambo"
 
 #: .\cookbook\views\data.py:99
 #, python-format
 msgid "Batch edit done. %(count)d recipe was updated."
 msgid_plural "Batch edit done. %(count)d Recipes where updated."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Paketno urejanje opravljeno. %(count)d recept je bil posodobljen."
+msgstr[1] "Paketno urejanje opravljeno. %(count)d recepta sta bila posodobljena."
+msgstr[2] "Paketno urejanje opravljeno. %(count)d recepti je bil posodobljeni."
+msgstr[3] "Paketno urejanje opravljeno. %(count)d receptov je bil posodobljenih."
 
 #: .\cookbook\views\delete.py:102
 msgid "Monitor"
-msgstr ""
+msgstr "Nadzor"
 
 #: .\cookbook\views\delete.py:114 .\cookbook\views\lists.py:61
 #: .\cookbook\views\new.py:69
 msgid "Storage Backend"
-msgstr ""
+msgstr "Zaledje za shranjevanje"
 
 #: .\cookbook\views\delete.py:122
 msgid ""
 "Could not delete this storage backend as it is used in at least one monitor."
 msgstr ""
+"Tega ozadja za shranjevanje ni bilo mogoče izbrisati, ker se uporablja v "
+"vsaj enem nadzoru."
 
 #: .\cookbook\views\delete.py:135
 msgid "Connectors Config Backend"
-msgstr ""
+msgstr "Zaledje konfiguracije priključkov"
 
 #: .\cookbook\views\delete.py:157
 msgid "Invite Link"
-msgstr ""
+msgstr "Povezava za povabilo"
 
 #: .\cookbook\views\delete.py:168
 msgid "Space Membership"
-msgstr ""
+msgstr "Članstvo v prostoru"
 
 #: .\cookbook\views\edit.py:84
 msgid "You cannot edit this storage!"
-msgstr ""
+msgstr "Tega prostora za shranjevanje ne morete urejati!"
 
 #: .\cookbook\views\edit.py:108
 msgid "Storage saved!"
-msgstr ""
+msgstr "Prostor za shranjevanje shranjen!"
 
 #: .\cookbook\views\edit.py:110
 msgid "There was an error updating this storage backend!"
-msgstr ""
+msgstr "Pri posodabljanju tega zaledja za shranjevanje je prišlo do napake!"
 
 #: .\cookbook\views\edit.py:134
 msgid "Config saved!"
-msgstr ""
+msgstr "Konfiguracija shranjena!"
 
 #: .\cookbook\views\edit.py:142
 msgid "ConnectorConfig"
-msgstr ""
+msgstr "Priključna konfiguracija"
 
 #: .\cookbook\views\edit.py:198
 msgid "Changes saved!"
-msgstr ""
+msgstr "Spremembe shranjene!"
 
 #: .\cookbook\views\edit.py:202
 msgid "Error saving changes!"
-msgstr ""
+msgstr "Napaka pri shranjevanju sprememb!"
 
 #: .\cookbook\views\import_export.py:101
 msgid ""
 "The PDF Exporter is not enabled on this instance as it is still in an "
 "experimental state."
 msgstr ""
+"Izvoznik PDF v tem primeru ni omogočen, ker je še vedno v poskusnem stanju."
 
 #: .\cookbook\views\lists.py:23
 msgid "Import Log"
-msgstr ""
+msgstr "Dnevnik uvoza"
 
 #: .\cookbook\views\lists.py:36
 msgid "Discovery"
-msgstr ""
+msgstr "Odkritje"
 
 #: .\cookbook\views\lists.py:46
 msgid "Shopping List"
-msgstr ""
+msgstr "Nakupovalni seznam"
 
 #: .\cookbook\views\lists.py:77 .\cookbook\views\new.py:98
 msgid "Connector Config Backend"
-msgstr ""
+msgstr "Zaledje konfiguracije priključka"
 
 #: .\cookbook\views\lists.py:91
 msgid "Invite Links"
-msgstr ""
+msgstr "Povezave za povabilo"
 
 #: .\cookbook\views\lists.py:154
 msgid "Supermarkets"
-msgstr ""
+msgstr "Trgovine"
 
 #: .\cookbook\views\lists.py:170
 msgid "Shopping Categories"
-msgstr ""
+msgstr "Nakupovalne kategorije"
 
 #: .\cookbook\views\lists.py:202
 msgid "Custom Filters"
-msgstr ""
+msgstr "Filtri po meri"
 
 #: .\cookbook\views\lists.py:239
 msgid "Steps"
-msgstr ""
+msgstr "Koraki"
 
 #: .\cookbook\views\lists.py:270
 msgid "Property Types"
-msgstr ""
+msgstr "Vrste nepremičnin"
 
 #: .\cookbook\views\new.py:86
 msgid "This feature is not enabled by the server admin!"
-msgstr ""
+msgstr "Te funkcije ni omogočil skrbnik strežnika!"
 
 #: .\cookbook\views\new.py:123
 msgid "Imported new recipe!"
@@ -2625,65 +2650,73 @@ msgstr "Nov recept uvožen!"
 
 #: .\cookbook\views\new.py:126
 msgid "There was an error importing this recipe!"
-msgstr ""
+msgstr "Pri uvozu tega recepta je prišlo do napake!"
 
 #: .\cookbook\views\views.py:69 .\cookbook\views\views.py:177
 #: .\cookbook\views\views.py:204 .\cookbook\views\views.py:423
 msgid "This feature is not available in the demo version!"
-msgstr ""
+msgstr "Ta funkcija ni na voljo v demo različici!"
 
 #: .\cookbook\views\views.py:74
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr ""
+msgstr "Dosegli ste največje število prostorov, ki so lahko v vaši lasti."
 
 #: .\cookbook\views\views.py:89
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr ""
+"Uspešno ste ustvarili svoj prostor za recepte. Začnite tako, da dodate nekaj "
+"receptov ali povabite druge ljudi, da se vam pridružijo."
 
 #: .\cookbook\views\views.py:138
 msgid "You do not have the required permissions to perform this action!"
-msgstr ""
+msgstr "Nimate potrebnih dovoljenj za izvedbo tega dejanja!"
 
 #: .\cookbook\views\views.py:149
 msgid "Comment saved!"
-msgstr ""
+msgstr "Komentar shranjen!"
 
 #: .\cookbook\views\views.py:240
 msgid "You must select at least one field to search!"
-msgstr ""
+msgstr "Za iskanje morate izbrati vsaj eno polje!"
 
 #: .\cookbook\views\views.py:243
 msgid ""
 "To use this search method you must select at least one full text search "
 "field!"
 msgstr ""
+"Za uporabo te metode iskanja morate izbrati vsaj eno iskalno polje po "
+"celotnem besedilu!"
 
 #: .\cookbook\views\views.py:246
 msgid "Fuzzy search is not compatible with this search method!"
-msgstr ""
+msgstr "Mehko iskanje ni združljivo s to metodo iskanja!"
 
 #: .\cookbook\views\views.py:306
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr ""
+"PostgreSQL %(v)s je zastarel. Nadgradite na popolnoma podprto različico!"
 
 #: .\cookbook\views\views.py:309
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
-msgstr ""
+msgstr "Uporabljate PostgreSQL %(v1)s. Priporočen je PostgreSQL %(v2)s"
 
 #: .\cookbook\views\views.py:313
 msgid "Unable to determine PostgreSQL version."
-msgstr ""
+msgstr "Ni mogoče določiti različice PostgreSQL."
 
 #: .\cookbook\views\views.py:317
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
 msgstr ""
+"Ta aplikacija se ne izvaja z zaledjem baze podatkov Postgres. To je v redu, "
+"vendar ni priporočljivo, saj nekatere funkcije delujejo samo z bazami "
+"podatkov Postgres."
 
 #: .\cookbook\views\views.py:360
 msgid ""
@@ -2691,58 +2724,66 @@ msgid ""
 "user!                     If you have forgotten your superuser credentials "
 "please consult the django documentation on how to reset passwords."
 msgstr ""
+"Nastavitveno stran lahko uporabite samo za ustvarjanje prvega "
+"uporabnika!                          \n"
+"            Če ste pozabili svoje poverilnice superuporabnika, si oglejte "
+"dokumentacijo django o tem, kako ponastaviti gesla."
 
 #: .\cookbook\views\views.py:369
 msgid "Passwords dont match!"
-msgstr ""
+msgstr "Gesli se ne ujemata!"
 
 #: .\cookbook\views\views.py:377
 msgid "User has been created, please login!"
-msgstr ""
+msgstr "Uporabnik je bil ustvarjen, prijavite se!"
 
 #: .\cookbook\views\views.py:393
 msgid "Malformed Invite Link supplied!"
-msgstr ""
+msgstr "Priložena napačna povezava za povabilo!"
 
 #: .\cookbook\views\views.py:410
 msgid "Successfully joined space."
-msgstr ""
+msgstr "Uspešno pridružen prostoru."
 
 #: .\cookbook\views\views.py:416
 msgid "Invite Link not valid or already used!"
-msgstr ""
+msgstr "Povezava za povabilo ni veljavna ali je že uporabljena!"
 
 #: .\cookbook\views\views.py:432
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr ""
+"Poročanje o povezavah za skupno rabo ni omogočeno za ta primer. Za prijavo "
+"težav obvestite skrbnika strani."
 
 #: .\cookbook\views\views.py:437
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr ""
+"Povezava za deljenje receptov je onemogočena! Za dodatne informacije se "
+"obrnite na skrbnika strani."
 
 #: .\cookbook\views\views.py:451
 msgid "Manage recipes, shopping list, meal plans and more."
-msgstr ""
+msgstr "Upravljajte recepte, nakupovalne sezname, načrte obrokov in drugo."
 
 #: .\cookbook\views\views.py:458
 msgid "Plan"
-msgstr ""
+msgstr "Načrt"
 
 #: .\cookbook\views\views.py:458
 msgid "View your meal Plan"
-msgstr ""
+msgstr "Oglejte si svoj načrt obrokov"
 
 #: .\cookbook\views\views.py:459
 msgid "View your cookbooks"
-msgstr ""
+msgstr "Oglejte si svoje kuharske knjige"
 
 #: .\cookbook\views\views.py:460
 msgid "View your shopping lists"
-msgstr ""
+msgstr "Oglejte si nakupovalne sezname"
 
 #~ msgid "Default unit"
 #~ msgstr "Privzeta enota"
