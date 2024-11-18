@@ -368,7 +368,7 @@
     "Days": "Dnevi",
     "Second": "Sekunda",
     "Seconds": "Sekunde",
-    "IgnoredFood": "{food} je nastavljen tako, da ignorira nakupovanje.",
+    "IgnoredFood": "{food} je nastavljen da prezre nakup.",
     "Invites": "Povabila",
     "UnpinnedConfirmation": "{recept} je bil odpet.",
     "shopping_add_onhand_desc": "Označite hrano 'Pri roki', ko je označena na nakupovalnem seznamu.",
