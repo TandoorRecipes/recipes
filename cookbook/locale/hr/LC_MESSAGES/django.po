@@ -8,212 +8,244 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2024-11-19 06:58+0000\n"
+"Last-Translator: Daniel Legin <daniel.legin@gmail.com>\n"
+"Language-Team: Croatian <http://translate.tandoor.dev/projects/tandoor/"
+"recipes-backend/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
 "Both fields are optional. If none are given the username will be displayed "
 "instead"
 msgstr ""
+"Oba polja nisu obavezna. Ako nema nijednog, umjesto njega će se prikazati "
+"korisničko ime"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #: .\cookbook\forms.py:62 .\cookbook\forms.py:246 .\cookbook\views\lists.py:103
 msgid "Keywords"
-msgstr ""
+msgstr "Ključne riječi"
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Vrijeme pripreme u minutama"
 
 #: .\cookbook\forms.py:62
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Vrijeme čekanja (kuhanje/pečenje) u minutama"
 
 #: .\cookbook\forms.py:63 .\cookbook\forms.py:222 .\cookbook\forms.py:246
 msgid "Path"
-msgstr ""
+msgstr "Putanja"
 
 #: .\cookbook\forms.py:63
 msgid "Storage UID"
-msgstr ""
+msgstr "UID pohrane"
 
 #: .\cookbook\forms.py:93
 msgid "Default"
-msgstr ""
+msgstr "Zadano"
 
 #: .\cookbook\forms.py:121
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Kako bi spriječili duplikate, recepti s istim nazivom kao i postojeći "
+"zanemaruju se. Označite ovaj okvir za uvoz svega."
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
-msgstr ""
+msgstr "Dodaj svoj komentar: "
 
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "Ostavite prazno za dropbox i unesite zaporku aplikacije za nextcloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Ostavite prazno za nextcloud i unesite api token za dropbox."
 
 #: .\cookbook\forms.py:160
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Ostavite prazno za dropbox i unesite samo osnovni url za nextcloud "
+"(<code>/remote.php/webdav/</code> dodaje se automatski)"
 
 #: .\cookbook\forms.py:188
 msgid ""
 "<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
 "profile\">Long Lived Access Token</a> for your HomeAssistant instance"
 msgstr ""
+"<a href=\"https://www.home-assistant.io/docs/authentication/#your-account-"
+"profile\">Dugotrajni pristupni token</a> za vašu HomeAssistant instancu"
 
 #: .\cookbook\forms.py:193
 msgid "Something like http://homeassistant.local:8123/api"
-msgstr ""
+msgstr "Nešto poput http://homeassistant.local:8123/api"
 
 #: .\cookbook\forms.py:205
 msgid "http://homeassistant.local:8123/api for example"
-msgstr ""
+msgstr "http://homeassistant.local:8123/api na primjer"
 
 #: .\cookbook\forms.py:222 .\cookbook\views\edit.py:117
 msgid "Storage"
-msgstr ""
+msgstr "Pohrana"
 
 #: .\cookbook\forms.py:222
 msgid "Active"
-msgstr ""
+msgstr "Aktivan"
 
 #: .\cookbook\forms.py:226
 msgid "Search String"
-msgstr ""
+msgstr "Niz za pretraživanje"
 
 #: .\cookbook\forms.py:246
 msgid "File ID"
-msgstr ""
+msgstr "ID datoteke"
 
 #: .\cookbook\forms.py:262
 msgid "Maximum number of users for this space reached."
-msgstr ""
+msgstr "Dosegnut je maksimalan broj korisnika za ovaj prostor."
 
 #: .\cookbook\forms.py:268
 msgid "Email address already taken!"
-msgstr ""
+msgstr "Email adresa je već zauzeta!"
 
 #: .\cookbook\forms.py:275
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr ""
+"Adresa e-pošte nije potrebna, ali ako postoji, korisniku će biti poslana "
+"poveznica s pozivnicom."
 
 #: .\cookbook\forms.py:287
 msgid "Name already taken."
-msgstr ""
+msgstr "Ime je već zauzeto."
 
 #: .\cookbook\forms.py:298
 msgid "Accept Terms and Privacy"
-msgstr ""
+msgstr "Prihvatite uvjete i privatnost"
 
 #: .\cookbook\forms.py:332
 msgid ""
 "Determines how fuzzy a search is if it uses trigram similarity matching (e."
 "g. low values mean more typos are ignored)."
 msgstr ""
+"Određuje koliko je neizrazito pretraživanje ako koristi podudaranje "
+"sličnosti trigrama (npr. niske vrijednosti znače da se više pogrešaka pri "
+"upisu zanemaruje)."
 
 #: .\cookbook\forms.py:340
 msgid ""
 "Select type method of search.  Click <a href=\"/docs/search/\">here</a> for "
 "full description of choices."
 msgstr ""
+"Odaberite vrstu metode pretraživanja. Kliknite <a href=\"/docs/search/\""
+">ovdje</a> za potpuni opis izbora."
 
 #: .\cookbook\forms.py:341
 msgid ""
 "Use fuzzy matching on units, keywords and ingredients when editing and "
 "importing recipes."
 msgstr ""
+"Koristite neizrazito podudaranje jedinica, ključnih riječi i sastojaka "
+"prilikom uređivanja i uvoza recepata."
 
 #: .\cookbook\forms.py:342
 msgid ""
 "Fields to search ignoring accents.  Selecting this option can improve or "
 "degrade search quality depending on language"
 msgstr ""
+"Polja za pretraživanje zanemarujući naglaske. Odabir ove opcije može "
+"poboljšati ili pogoršati kvalitetu pretraživanja ovisno o jeziku"
 
 #: .\cookbook\forms.py:343
 msgid ""
 "Fields to search for partial matches.  (e.g. searching for 'Pie' will return "
 "'pie' and 'piece' and 'soapie')"
 msgstr ""
+"Polja za traženje djelomičnih podudaranja. (npr. traženje \"pita\" vratit će "
+"\"pita\" i \"krempita\")"
 
 #: .\cookbook\forms.py:344
 msgid ""
 "Fields to search for beginning of word matches. (e.g. searching for 'sa' "
 "will return 'salad' and 'sandwich')"
 msgstr ""
+"Polja za traženje početaka riječi. (npr. traženje 'sa' vratit će 'salata' i "
+"'salama')"
 
 #: .\cookbook\forms.py:345
 msgid ""
 "Fields to 'fuzzy' search. (e.g. searching for 'recpie' will find 'recipe'.)  "
 "Note: this option will conflict with 'web' and 'raw' methods of search."
 msgstr ""
+"Polja za 'neizrazito ' pretraživanje. (npr. traženje 'recpet' će pronaći "
+"'recept'.) Napomena: ova opcija će biti u sukobu s 'web' i 'raw' metodama "
+"pretraživanja."
 
 #: .\cookbook\forms.py:346
 msgid ""
 "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods "
 "only function with fulltext fields."
 msgstr ""
+"Polja za pretraživanje cijelog teksta. Napomena: metode pretraživanja 'web', "
+"'phrase' i 'raw' funkcioniraju samo s poljima punog teksta."
 
 #: .\cookbook\forms.py:350
 msgid "Search Method"
-msgstr ""
+msgstr "Metoda pretrage"
 
 #: .\cookbook\forms.py:350
 msgid "Fuzzy Lookups"
-msgstr ""
+msgstr "Neizrazite pretrage"
 
 #: .\cookbook\forms.py:350
 msgid "Ignore Accent"
-msgstr ""
+msgstr "Ignorirajte naglasak"
 
 #: .\cookbook\forms.py:350
 msgid "Partial Match"
-msgstr ""
+msgstr "Djelomično podudaranje"
 
 #: .\cookbook\forms.py:350
 msgid "Starts With"
-msgstr ""
+msgstr "Počinje s"
 
 #: .\cookbook\forms.py:351
 msgid "Fuzzy Search"
-msgstr ""
+msgstr "Neizrazito pretraživanje"
 
 #: .\cookbook\forms.py:351
 msgid "Full Text"
-msgstr ""
+msgstr "Cijeli tekst"
 
 #: .\cookbook\helper\AllAuthCustomAdapter.py:41
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr ""
+"Kako bismo spriječili neželjenu poštu, tražena e-pošta nije poslana. "
+"Pričekajte nekoliko minuta i pokušajte ponovno."
 
 #: .\cookbook\helper\permission_helper.py:164
 #: .\cookbook\helper\permission_helper.py:187 .\cookbook\views\views.py:117
 msgid "You are not logged in and therefore cannot view this page!"
-msgstr ""
+msgstr "Niste prijavljeni i stoga ne možete vidjeti ovu stranicu!"
 
 #: .\cookbook\helper\permission_helper.py:168
 #: .\cookbook\helper\permission_helper.py:174
@@ -226,408 +258,423 @@ msgstr ""
 #: .\cookbook\helper\permission_helper.py:341 .\cookbook\views\data.py:35
 #: .\cookbook\views\views.py:127 .\cookbook\views\views.py:131
 msgid "You do not have the required permissions to view this page!"
-msgstr ""
+msgstr "Nemate potrebna dopuštenja za pregled ove stranice!"
 
 #: .\cookbook\helper\permission_helper.py:192
 #: .\cookbook\helper\permission_helper.py:215
 #: .\cookbook\helper\permission_helper.py:237
 #: .\cookbook\helper\permission_helper.py:252
 msgid "You cannot interact with this object as it is not owned by you!"
-msgstr ""
+msgstr "Ne možete komunicirati s ovim objektom jer nije u vašem vlasništvu!"
 
 #: .\cookbook\helper\permission_helper.py:402
 msgid "You have reached the maximum number of recipes for your space."
-msgstr ""
+msgstr "Dosegli ste najveći broj recepata za svoj prostor."
 
 #: .\cookbook\helper\permission_helper.py:414
 msgid "You have more users than allowed in your space."
-msgstr ""
+msgstr "Imate više korisnika nego što je dopušteno u vašem prostoru."
 
 #: .\cookbook\helper\recipe_url_import.py:310
 msgid "reverse rotation"
-msgstr ""
+msgstr "obrnuto okretanje"
 
 #: .\cookbook\helper\recipe_url_import.py:311
 msgid "careful rotation"
-msgstr ""
+msgstr "pažljivo okretanje"
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "knead"
-msgstr ""
+msgstr "mijesiti"
 
 #: .\cookbook\helper\recipe_url_import.py:313
 msgid "thicken"
-msgstr ""
+msgstr "zgusnuti"
 
 #: .\cookbook\helper\recipe_url_import.py:314
 msgid "warm up"
-msgstr ""
+msgstr "zagrijati"
 
 #: .\cookbook\helper\recipe_url_import.py:315
 msgid "ferment"
-msgstr ""
+msgstr "kvasac"
 
 #: .\cookbook\helper\recipe_url_import.py:316
 msgid "sous-vide"
-msgstr ""
+msgstr "sous-vide"
 
 #: .\cookbook\helper\shopping_helper.py:150
 msgid "You must supply a servings size"
-msgstr ""
+msgstr "Morate navesti veličinu porcija"
 
 #: .\cookbook\helper\template_helper.py:95
 #: .\cookbook\helper\template_helper.py:97
 msgid "Could not parse template code."
-msgstr ""
+msgstr "Nije moguće analizirati kôd predloška."
 
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Omiljeni"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
-msgstr ""
+msgstr "Ja sam ovo napravio"
 
 #: .\cookbook\integration\integration.py:209
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"Uvoznik očekuje .zip datoteku. Jeste li odabrali ispravnu vrstu uvoznika za "
+"svoje podatke?"
 
 #: .\cookbook\integration\integration.py:212
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Došlo je do neočekivane pogreške tijekom uvoza. Provjerite jeste li "
+"prenijeli valjanu datoteku."
 
 #: .\cookbook\integration\integration.py:217
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "Sljedeći recepti su zanemareni jer su već postojali:"
 
 #: .\cookbook\integration\integration.py:221
 #, python-format
 msgid "Imported %s recipes."
-msgstr ""
+msgstr "Uvezeno %s recepata."
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
-msgstr ""
+msgstr "Izvor recepta:"
 
 #: .\cookbook\integration\paprika.py:49
 msgid "Notes"
-msgstr ""
+msgstr "Bilješke"
 
 #: .\cookbook\integration\paprika.py:52
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Nutritivne vrijednosti"
 
 #: .\cookbook\integration\paprika.py:56
 msgid "Source"
-msgstr ""
+msgstr "Izvor"
 
 #: .\cookbook\integration\recettetek.py:54
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
-msgstr ""
+msgstr "Uvezeno iz"
 
 #: .\cookbook\integration\saffron.py:23
 msgid "Servings"
-msgstr ""
+msgstr "Porcije"
 
 #: .\cookbook\integration\saffron.py:25
 msgid "Waiting time"
-msgstr ""
+msgstr "Vrijeme čekanja"
 
 #: .\cookbook\integration\saffron.py:27
 msgid "Preparation Time"
-msgstr ""
+msgstr "Vrijeme pripreme"
 
 #: .\cookbook\integration\saffron.py:29 .\cookbook\templates\index.html:7
 msgid "Cookbook"
-msgstr ""
+msgstr "Kuharica"
 
 #: .\cookbook\integration\saffron.py:31
 msgid "Section"
-msgstr ""
+msgstr "Odjeljak"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
 msgid "Fixes foods with "
-msgstr ""
+msgstr "Popravlja namirnice sa "
 
 #: .\cookbook\management\commands\rebuildindex.py:14
 msgid "Rebuilds full text search index on Recipe"
-msgstr ""
+msgstr "Ponovno gradi indeks pretraživanja cijelog teksta na receptu"
 
 #: .\cookbook\management\commands\rebuildindex.py:18
 msgid "Only Postgresql databases use full text search, no index to rebuild"
 msgstr ""
+"Samo Postgresql baze podataka koriste pretraživanje cijelog teksta, bez "
+"indeksa za ponovnu izgradnju"
 
 #: .\cookbook\management\commands\rebuildindex.py:29
 msgid "Recipe index rebuild complete."
-msgstr ""
+msgstr "Dovršena ponovna izgradnja indeksa recepata."
 
 #: .\cookbook\management\commands\rebuildindex.py:31
 msgid "Recipe index rebuild failed."
-msgstr ""
+msgstr "Ponovna izgradnja indeksa recepata nije uspjela."
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:14
 msgid "Breakfast"
-msgstr ""
+msgstr "Doručak"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:19
 msgid "Lunch"
-msgstr ""
+msgstr "Ručak"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:24
 msgid "Dinner"
-msgstr ""
+msgstr "Večera"
 
 #: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:919
 msgid "Other"
-msgstr ""
+msgstr "Ostalo"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
-msgstr ""
+msgstr "Masnoća"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Ugljikohidrati"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
 msgid "Proteins"
-msgstr ""
+msgstr "Proteini"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Kalorije"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "kcal"
-msgstr ""
+msgstr "kcal"
 
 #: .\cookbook\models.py:325
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
+"Maksimalna pohrana datoteka za prostor u MB. 0 za neograničeno, -1 za "
+"onemogućavanje prijenosa datoteka."
 
 #: .\cookbook\models.py:454 .\cookbook\templates\search.html:7
 #: .\cookbook\templates\settings.html:18
 msgid "Search"
-msgstr ""
+msgstr "Pretraga"
 
 #: .\cookbook\models.py:455 .\cookbook\templates\base.html:114
 #: .\cookbook\templates\meal_plan.html:7
 msgid "Meal-Plan"
-msgstr ""
+msgstr "Plan obroka"
 
 #: .\cookbook\models.py:456 .\cookbook\templates\base.html:122
 #: .\cookbook\views\views.py:459
 msgid "Books"
-msgstr ""
+msgstr "Knjige"
 
 #: .\cookbook\models.py:457 .\cookbook\templates\base.html:118
 #: .\cookbook\views\views.py:460
 msgid "Shopping"
-msgstr ""
+msgstr "Kupovina"
 
 #: .\cookbook\models.py:752
 msgid " is part of a recipe step and cannot be deleted"
-msgstr ""
+msgstr " je dio koraka recepta i ne može se izbrisati"
 
 #: .\cookbook\models.py:918
 msgid "Nutrition"
-msgstr ""
+msgstr "Nutritivna vrijednost"
 
 #: .\cookbook\models.py:918
 msgid "Allergen"
-msgstr ""
+msgstr "Alergeni"
 
 #: .\cookbook\models.py:919
 msgid "Price"
-msgstr ""
+msgstr "Cijena"
 
 #: .\cookbook\models.py:919
 msgid "Goal"
-msgstr ""
+msgstr "Cilj"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\search_info.html:28
 msgid "Simple"
-msgstr ""
+msgstr "Jednostavno"
 
 #: .\cookbook\models.py:1409 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
-msgstr ""
+msgstr "Fraza"
 
 #: .\cookbook\models.py:1410 .\cookbook\templates\search_info.html:38
 msgid "Web"
-msgstr ""
+msgstr "Web"
 
 #: .\cookbook\models.py:1411 .\cookbook\templates\search_info.html:47
 msgid "Raw"
-msgstr ""
+msgstr "Raw"
 
 #: .\cookbook\models.py:1467
 msgid "Food Alias"
-msgstr ""
+msgstr "Nadimak namirnice"
 
 #: .\cookbook\models.py:1468
 msgid "Unit Alias"
-msgstr ""
+msgstr "Jedinica nadimka"
 
 #: .\cookbook\models.py:1469
 msgid "Keyword Alias"
-msgstr ""
+msgstr "Nadimci ključnih riječi"
 
 #: .\cookbook\models.py:1470
 msgid "Description Replace"
-msgstr ""
+msgstr "Zamjena opisa"
 
 #: .\cookbook\models.py:1471
 msgid "Instruction Replace"
-msgstr ""
+msgstr "Zamjena uputa"
 
 #: .\cookbook\models.py:1472
 msgid "Never Unit"
-msgstr ""
+msgstr "Nikada jedinica"
 
 #: .\cookbook\models.py:1473
 msgid "Transpose Words"
-msgstr ""
+msgstr "Transponirajte riječi"
 
 #: .\cookbook\models.py:1474
 msgid "Food Replace"
-msgstr ""
+msgstr "Zamjena namirnice"
 
 #: .\cookbook\models.py:1475
 msgid "Unit Replace"
-msgstr ""
+msgstr "Zamjena jedinice"
 
 #: .\cookbook\models.py:1476
 msgid "Name Replace"
-msgstr ""
+msgstr "Zamjena imena"
 
 #: .\cookbook\models.py:1503 .\cookbook\views\delete.py:40
 #: .\cookbook\views\edit.py:210 .\cookbook\views\new.py:39
 msgid "Recipe"
-msgstr ""
+msgstr "Recept"
 
 #: .\cookbook\models.py:1504
 msgid "Food"
-msgstr ""
+msgstr "Namirnica"
 
 #: .\cookbook\models.py:1505 .\cookbook\templates\base.html:149
 msgid "Keyword"
-msgstr ""
+msgstr "Ključna riječ"
 
 #: .\cookbook\serializer.py:222
 msgid "File uploads are not enabled for this Space."
-msgstr ""
+msgstr "Učitavanje datoteka nije omogućeno za ovaj prostor."
 
 #: .\cookbook\serializer.py:233
 msgid "You have reached your file upload limit."
-msgstr ""
+msgstr "Dosegli ste ograničenje učitavanja datoteke."
 
 #: .\cookbook\serializer.py:328
 msgid "Cannot modify Space owner permission."
-msgstr ""
+msgstr "Nije moguće promijeniti dozvolu vlasnika prostora."
 
 #: .\cookbook\serializer.py:1270
 msgid "Hello"
-msgstr ""
+msgstr "Pozdrav"
 
 #: .\cookbook\serializer.py:1270
 msgid "You have been invited by "
-msgstr ""
+msgstr "Pozvao vas je "
 
 #: .\cookbook\serializer.py:1272
 msgid " to join their Tandoor Recipes space "
-msgstr ""
+msgstr " pridružiti se njihovom prostoru Tandoor Recipes "
 
 #: .\cookbook\serializer.py:1274
 msgid "Click the following link to activate your account: "
-msgstr ""
+msgstr "Kliknite na sljedeću poveznicu kako biste aktivirali svoj račun: "
 
 #: .\cookbook\serializer.py:1276
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr ""
+"Ako poveznica ne radi, upotrijebite sljedeći kod za ručno pridruživanje "
+"prostoru: "
 
 #: .\cookbook\serializer.py:1278
 msgid "The invitation is valid until "
-msgstr ""
+msgstr "Poziv vrijedi do "
 
 #: .\cookbook\serializer.py:1280
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr ""
+"Tandoor Recipes je upravitelj recepata otvorenog koda. Provjerite na GitHubu "
 
 #: .\cookbook\serializer.py:1283
 msgid "Tandoor Recipes Invite"
-msgstr ""
+msgstr "Tandoor Recipes pozivnica"
 
 #: .\cookbook\serializer.py:1426
 msgid "Existing shopping list to update"
-msgstr ""
+msgstr "Postojeći popis za kupovinu koji treba ažurirati"
 
 #: .\cookbook\serializer.py:1428
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr ""
+"Popis ID-ova sastojaka iz recepta koje treba dodati, ako se ne navede, svi "
+"će sastojci biti dodani."
 
 #: .\cookbook\serializer.py:1430
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
-msgstr ""
+msgstr "Navođenje ID-a list_recipe i 0 porcija izbrisat će taj popis za kupnju."
 
 #: .\cookbook\serializer.py:1439
 msgid "Amount of food to add to the shopping list"
-msgstr ""
+msgstr "Količina namirnica za dodavanje na popis za kupovinu"
 
 #: .\cookbook\serializer.py:1441
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "ID jedinice koja se koristi za popis za kupnju"
 
 #: .\cookbook\serializer.py:1443
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Kada je postavljeno na true, izbrisat će sve namirnice s aktivnih popisa za "
+"kupnju."
 
 #: .\cookbook\tables.py:69 .\cookbook\tables.py:83
 #: .\cookbook\templates\generic\delete_template.html:7
 #: .\cookbook\templates\generic\delete_template.html:15
 #: .\cookbook\templates\generic\edit_template.html:28
 msgid "Delete"
-msgstr ""
+msgstr "Izbriši"
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
-msgstr ""
+msgstr "404 Greška"
 
 #: .\cookbook\templates\404.html:18
 msgid "The page you are looking for could not be found."
-msgstr ""
+msgstr "Stranica koju tražite nije pronađena."
 
 #: .\cookbook\templates\404.html:33
 msgid "Take me Home"
-msgstr ""
+msgstr "Odvedi me doma"
 
 #: .\cookbook\templates\404.html:35
 msgid "Report a Bug"
-msgstr ""
+msgstr "Prijevi grešku"
 
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:17
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "E-maiil adrese"
 
 #: .\cookbook\templates\account\email.html:12
 #: .\cookbook\templates\account\password_change.html:11
@@ -637,68 +684,70 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:10
 #: .\cookbook\templates\user_settings.html:8
 msgid "Settings"
-msgstr ""
+msgstr "Postavke"
 
 #: .\cookbook\templates\account\email.html:13
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: .\cookbook\templates\account\email.html:19
 msgid "The following e-mail addresses are associated with your account:"
-msgstr ""
+msgstr "Sljedeće adrese e-pošte povezane su s vašim računom:"
 
 #: .\cookbook\templates\account\email.html:36
 msgid "Verified"
-msgstr ""
+msgstr "Provjereno"
 
 #: .\cookbook\templates\account\email.html:38
 msgid "Unverified"
-msgstr ""
+msgstr "Neprovjereno"
 
 #: .\cookbook\templates\account\email.html:40
 msgid "Primary"
-msgstr ""
+msgstr "Primarno"
 
 #: .\cookbook\templates\account\email.html:47
 msgid "Make Primary"
-msgstr ""
+msgstr "Postavi kao Primarno"
 
 #: .\cookbook\templates\account\email.html:49
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Ponovno slanje Provjere"
 
 #: .\cookbook\templates\account\email.html:50
 #: .\cookbook\templates\generic\delete_template.html:57
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid "Remove"
-msgstr ""
+msgstr "Ukloni"
 
 #: .\cookbook\templates\account\email.html:58
 msgid "Warning:"
-msgstr ""
+msgstr "Upozorenje:"
 
 #: .\cookbook\templates\account\email.html:58
 msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Trenutno nemate postavljenu adresu e-pošte. Zaista biste trebali dodati "
+"adresu e-pošte kako biste mogli primati obavijesti, poništiti lozinku itd."
 
 #: .\cookbook\templates\account\email.html:64
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Dodajte adresu e-pošte"
 
 #: .\cookbook\templates\account\email.html:69
 msgid "Add E-mail"
-msgstr ""
+msgstr "Dodajte e-mail"
 
 #: .\cookbook\templates\account\email.html:79
 msgid "Do you really want to remove the selected e-mail address?"
-msgstr ""
+msgstr "Želite li stvarno ukloniti odabranu adresu e-pošte?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Potvrdite adresu e-pošte"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
