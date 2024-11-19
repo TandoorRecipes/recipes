@@ -265,4 +265,15 @@ export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'created
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedRecipeListRequest, PaginatedPatchedRecipeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedRecipeListRequest = {}): Promise<PaginatedPatchedRecipeList> {
+    const api = new ApiApi()
+    return api.apiPatchedRecipeList(requestParameters)
+}

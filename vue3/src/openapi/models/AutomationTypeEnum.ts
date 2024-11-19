@@ -64,3 +64,7 @@ export function AutomationTypeEnumToJSON(value?: AutomationTypeEnum | null): any
     return value as any;
 }
 
+export function AutomationTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): AutomationTypeEnum {
+    return value as AutomationTypeEnum;
+}
+

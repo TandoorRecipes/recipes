@@ -98,4 +98,15 @@ export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'u
         'scope': value['scope'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiAccessTokenListRequest, PaginatedAccessTokenList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiAccessTokenListRequest = {}): Promise<PaginatedAccessTokenList> {
+    const api = new ApiApi()
+    return api.apiAccessTokenList(requestParameters)
+}

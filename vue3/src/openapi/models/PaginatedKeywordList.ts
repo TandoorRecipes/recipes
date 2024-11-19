@@ -90,4 +90,15 @@ export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null):
         'results': ((value['results'] as Array<any>).map(KeywordToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedKeywordListListRequest, PaginatedPaginatedKeywordListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedKeywordListListRequest = {}): Promise<PaginatedPaginatedKeywordListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedKeywordListList(requestParameters)
+}

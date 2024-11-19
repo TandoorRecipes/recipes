@@ -117,4 +117,15 @@ export function PatchedRecipeBookToJSON(value?: Omit<PatchedRecipeBook, 'created
         'order': value['order'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedRecipeBookListRequest, PaginatedPatchedRecipeBookList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedRecipeBookListRequest = {}): Promise<PaginatedPatchedRecipeBookList> {
+    const api = new ApiApi()
+    return api.apiPatchedRecipeBookList(requestParameters)
+}

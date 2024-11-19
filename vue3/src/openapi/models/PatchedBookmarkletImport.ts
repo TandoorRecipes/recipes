@@ -87,4 +87,15 @@ export function PatchedBookmarkletImportToJSON(value?: Omit<PatchedBookmarkletIm
         'html': value['html'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedBookmarkletImportListRequest, PaginatedPatchedBookmarkletImportList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedBookmarkletImportListRequest = {}): Promise<PaginatedPatchedBookmarkletImportList> {
+    const api = new ApiApi()
+    return api.apiPatchedBookmarkletImportList(requestParameters)
+}

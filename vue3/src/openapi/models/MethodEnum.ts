@@ -50,3 +50,7 @@ export function MethodEnumToJSON(value?: MethodEnum | null): any {
     return value as any;
 }
 
+export function MethodEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): MethodEnum {
+    return value as MethodEnum;
+}
+

@@ -58,4 +58,15 @@ export function ImportImageToJSON(value?: ImportImage | null): any {
         'image': value['image'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiImportImageListRequest, PaginatedImportImageList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiImportImageListRequest = {}): Promise<PaginatedImportImageList> {
+    const api = new ApiApi()
+    return api.apiImportImageList(requestParameters)
+}

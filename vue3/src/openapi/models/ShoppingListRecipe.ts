@@ -122,4 +122,15 @@ export function ShoppingListRecipeToJSON(value?: Omit<ShoppingListRecipe, 'recip
         'servings': value['servings'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiShoppingListRecipeListRequest, PaginatedShoppingListRecipeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiShoppingListRecipeListRequest = {}): Promise<PaginatedShoppingListRecipeList> {
+    const api = new ApiApi()
+    return api.apiShoppingListRecipeList(requestParameters)
+}

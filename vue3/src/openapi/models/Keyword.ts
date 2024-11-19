@@ -157,4 +157,15 @@ export function KeywordToJSON(value?: Omit<Keyword, 'label'|'parent'|'numchild'|
         'description': value['description'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiKeywordListRequest, PaginatedKeywordList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiKeywordListRequest = {}): Promise<PaginatedKeywordList> {
+    const api = new ApiApi()
+    return api.apiKeywordList(requestParameters)
+}

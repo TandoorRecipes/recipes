@@ -288,4 +288,15 @@ export function PatchedSpaceToJSON(value?: Omit<PatchedSpace, 'created_by'|'crea
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedSpaceListRequest, PaginatedPatchedSpaceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedSpaceListRequest = {}): Promise<PaginatedPatchedSpaceList> {
+    const api = new ApiApi()
+    return api.apiPatchedSpaceList(requestParameters)
+}

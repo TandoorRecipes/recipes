@@ -180,4 +180,15 @@ export function OpenDataUnitToJSON(value?: Omit<OpenDataUnit, 'created_by'> | nu
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiOpenDataUnitListRequest, PaginatedOpenDataUnitList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiOpenDataUnitListRequest = {}): Promise<PaginatedOpenDataUnitList> {
+    const api = new ApiApi()
+    return api.apiOpenDataUnitList(requestParameters)
+}

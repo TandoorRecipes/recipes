@@ -157,4 +157,15 @@ export function OpenDataPropertyToJSON(value?: Omit<OpenDataProperty, 'created_b
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiOpenDataPropertyListRequest, PaginatedOpenDataPropertyList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiOpenDataPropertyListRequest = {}): Promise<PaginatedOpenDataPropertyList> {
+    const api = new ApiApi()
+    return api.apiOpenDataPropertyList(requestParameters)
+}

@@ -122,4 +122,15 @@ export function UserFileToJSON(value?: Omit<UserFile, 'file_download'|'preview'|
         'file': value['file'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiUserFileListRequest, PaginatedUserFileList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiUserFileListRequest = {}): Promise<PaginatedUserFileList> {
+    const api = new ApiApi()
+    return api.apiUserFileList(requestParameters)
+}

@@ -321,4 +321,15 @@ export function UserPreferenceToJSON(value?: Omit<UserPreference, 'food_inherit_
         'show_step_ingredients': value['showStepIngredients'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiUserPreferenceListRequest, PaginatedUserPreferenceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiUserPreferenceListRequest = {}): Promise<PaginatedUserPreferenceList> {
+    const api = new ApiApi()
+    return api.apiUserPreferenceList(requestParameters)
+}

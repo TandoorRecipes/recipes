@@ -137,4 +137,15 @@ export function InviteLinkToJSON(value?: Omit<InviteLink, 'uuid'|'created_by'|'c
         'internal_note': value['internalNote'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiInviteLinkListRequest, PaginatedInviteLinkList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiInviteLinkListRequest = {}): Promise<PaginatedInviteLinkList> {
+    const api = new ApiApi()
+    return api.apiInviteLinkList(requestParameters)
+}

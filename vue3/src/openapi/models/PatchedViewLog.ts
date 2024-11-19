@@ -79,4 +79,15 @@ export function PatchedViewLogToJSON(value?: Omit<PatchedViewLog, 'created_by'|'
         'recipe': value['recipe'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedViewLogListRequest, PaginatedPatchedViewLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedViewLogListRequest = {}): Promise<PaginatedPatchedViewLogList> {
+    const api = new ApiApi()
+    return api.apiPatchedViewLogList(requestParameters)
+}

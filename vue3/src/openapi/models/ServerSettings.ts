@@ -112,4 +112,15 @@ export function ServerSettingsToJSON(value?: ServerSettings | null): any {
         'hosted': value['hosted'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiServerSettingsListRequest, PaginatedServerSettingsList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiServerSettingsListRequest = {}): Promise<PaginatedServerSettingsList> {
+    const api = new ApiApi()
+    return api.apiServerSettingsList(requestParameters)
+}

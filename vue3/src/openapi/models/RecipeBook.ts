@@ -120,4 +120,15 @@ export function RecipeBookToJSON(value?: Omit<RecipeBook, 'created_by'> | null):
         'order': value['order'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeBookListRequest, PaginatedRecipeBookList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeBookListRequest = {}): Promise<PaginatedRecipeBookList> {
+    const api = new ApiApi()
+    return api.apiRecipeBookList(requestParameters)
+}

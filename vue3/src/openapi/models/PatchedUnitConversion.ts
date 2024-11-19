@@ -125,4 +125,15 @@ export function PatchedUnitConversionToJSON(value?: Omit<PatchedUnitConversion, 
         'open_data_slug': value['openDataSlug'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedUnitConversionListRequest, PaginatedPatchedUnitConversionList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedUnitConversionListRequest = {}): Promise<PaginatedPatchedUnitConversionList> {
+    const api = new ApiApi()
+    return api.apiPatchedUnitConversionList(requestParameters)
+}

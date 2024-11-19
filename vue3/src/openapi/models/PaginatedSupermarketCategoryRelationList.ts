@@ -90,4 +90,15 @@ export function PaginatedSupermarketCategoryRelationListToJSON(value?: Paginated
         'results': ((value['results'] as Array<any>).map(SupermarketCategoryRelationToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedSupermarketCategoryRelationListListRequest, PaginatedPaginatedSupermarketCategoryRelationListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedSupermarketCategoryRelationListListRequest = {}): Promise<PaginatedPaginatedSupermarketCategoryRelationListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedSupermarketCategoryRelationListList(requestParameters)
+}

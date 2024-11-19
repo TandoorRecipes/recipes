@@ -90,4 +90,15 @@ export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | 
         'results': ((value['results'] as Array<any>).map(AutomationToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedAutomationListListRequest, PaginatedPaginatedAutomationListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedAutomationListListRequest = {}): Promise<PaginatedPaginatedAutomationListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedAutomationListList(requestParameters)
+}

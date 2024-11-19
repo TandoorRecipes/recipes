@@ -50,3 +50,7 @@ export function OpenDataUnitTypeEnumToJSON(value?: OpenDataUnitTypeEnum | null):
     return value as any;
 }
 
+export function OpenDataUnitTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): OpenDataUnitTypeEnum {
+    return value as OpenDataUnitTypeEnum;
+}
+

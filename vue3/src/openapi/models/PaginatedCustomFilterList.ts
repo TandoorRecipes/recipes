@@ -90,4 +90,15 @@ export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterLis
         'results': ((value['results'] as Array<any>).map(CustomFilterToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedCustomFilterListListRequest, PaginatedPaginatedCustomFilterListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedCustomFilterListListRequest = {}): Promise<PaginatedPaginatedCustomFilterListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedCustomFilterListList(requestParameters)
+}

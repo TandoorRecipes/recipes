@@ -116,4 +116,15 @@ export function PropertyToJSON(value?: Property | null): any {
         'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPropertyListRequest, PaginatedPropertyList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPropertyListRequest = {}): Promise<PaginatedPropertyList> {
+    const api = new ApiApi()
+    return api.apiPropertyList(requestParameters)
+}

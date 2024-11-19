@@ -90,4 +90,15 @@ export function PaginatedUnitListToJSON(value?: PaginatedUnitList | null): any {
         'results': ((value['results'] as Array<any>).map(UnitToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedUnitListListRequest, PaginatedPaginatedUnitListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedUnitListListRequest = {}): Promise<PaginatedPaginatedUnitListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedUnitListList(requestParameters)
+}

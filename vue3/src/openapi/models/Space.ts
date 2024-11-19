@@ -299,4 +299,15 @@ export function SpaceToJSON(value?: Omit<Space, 'created_by'|'created_at'|'max_r
         'logo_color_svg': UserFileViewToJSON(value['logoColorSvg']),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiSpaceListRequest, PaginatedSpaceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiSpaceListRequest = {}): Promise<PaginatedSpaceList> {
+    const api = new ApiApi()
+    return api.apiSpaceList(requestParameters)
+}

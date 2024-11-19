@@ -89,4 +89,15 @@ export function UserToJSON(value?: Omit<User, 'username'|'display_name'> | null)
         'last_name': value['lastName'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiUserListRequest, PaginatedUserList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiUserListRequest = {}): Promise<PaginatedUserList> {
+    const api = new ApiApi()
+    return api.apiUserList(requestParameters)
+}

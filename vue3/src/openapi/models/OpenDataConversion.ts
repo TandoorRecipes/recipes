@@ -164,4 +164,15 @@ export function OpenDataConversionToJSON(value?: Omit<OpenDataConversion, 'creat
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiOpenDataConversionListRequest, PaginatedOpenDataConversionList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiOpenDataConversionListRequest = {}): Promise<PaginatedOpenDataConversionList> {
+    const api = new ApiApi()
+    return api.apiOpenDataConversionList(requestParameters)
+}

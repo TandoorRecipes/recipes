@@ -90,4 +90,15 @@ export function PaginatedPropertyTypeListToJSON(value?: PaginatedPropertyTypeLis
         'results': ((value['results'] as Array<any>).map(PropertyTypeToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedPropertyTypeListListRequest, PaginatedPaginatedPropertyTypeListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedPropertyTypeListListRequest = {}): Promise<PaginatedPaginatedPropertyTypeListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedPropertyTypeListList(requestParameters)
+}

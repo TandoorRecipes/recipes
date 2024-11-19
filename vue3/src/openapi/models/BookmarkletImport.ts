@@ -90,4 +90,15 @@ export function BookmarkletImportToJSON(value?: Omit<BookmarkletImport, 'created
         'html': value['html'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiBookmarkletImportListRequest, PaginatedBookmarkletImportList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiBookmarkletImportListRequest = {}): Promise<PaginatedBookmarkletImportList> {
+    const api = new ApiApi()
+    return api.apiBookmarkletImportList(requestParameters)
+}

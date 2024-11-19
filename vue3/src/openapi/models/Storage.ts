@@ -115,4 +115,15 @@ export function StorageToJSON(value?: Omit<Storage, 'created_by'> | null): any {
         'token': value['token'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiStorageListRequest, PaginatedStorageList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiStorageListRequest = {}): Promise<PaginatedStorageList> {
+    const api = new ApiApi()
+    return api.apiStorageList(requestParameters)
+}

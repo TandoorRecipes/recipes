@@ -193,4 +193,15 @@ export function RecipeOverviewToJSON(value?: Omit<RecipeOverview, 'image'|'keywo
         'description': value['description'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeOverviewListRequest, PaginatedRecipeOverviewList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeOverviewListRequest = {}): Promise<PaginatedRecipeOverviewList> {
+    const api = new ApiApi()
+    return api.apiRecipeOverviewList(requestParameters)
+}

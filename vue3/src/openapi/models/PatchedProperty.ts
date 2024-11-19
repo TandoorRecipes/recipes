@@ -114,4 +114,15 @@ export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
         'property_type': PropertyTypeToJSON(value['propertyType']),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedPropertyListRequest, PaginatedPatchedPropertyList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedPropertyListRequest = {}): Promise<PaginatedPatchedPropertyList> {
+    const api = new ApiApi()
+    return api.apiPatchedPropertyList(requestParameters)
+}

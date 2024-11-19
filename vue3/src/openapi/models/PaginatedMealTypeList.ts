@@ -90,4 +90,15 @@ export function PaginatedMealTypeListToJSON(value?: PaginatedMealTypeList | null
         'results': ((value['results'] as Array<any>).map(MealTypeToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedMealTypeListListRequest, PaginatedPaginatedMealTypeListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedMealTypeListListRequest = {}): Promise<PaginatedPaginatedMealTypeListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedMealTypeListList(requestParameters)
+}

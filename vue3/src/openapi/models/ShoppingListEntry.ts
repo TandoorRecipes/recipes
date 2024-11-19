@@ -180,4 +180,15 @@ export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'recipe_
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiShoppingListEntryListRequest, PaginatedShoppingListEntryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiShoppingListEntryListRequest = {}): Promise<PaginatedShoppingListEntryList> {
+    const api = new ApiApi()
+    return api.apiShoppingListEntryList(requestParameters)
+}

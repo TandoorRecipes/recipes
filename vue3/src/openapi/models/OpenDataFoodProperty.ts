@@ -82,4 +82,15 @@ export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null):
         'property_amount': value['propertyAmount'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiOpenDataFoodPropertyListRequest, PaginatedOpenDataFoodPropertyList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiOpenDataFoodPropertyListRequest = {}): Promise<PaginatedOpenDataFoodPropertyList> {
+    const api = new ApiApi()
+    return api.apiOpenDataFoodPropertyList(requestParameters)
+}

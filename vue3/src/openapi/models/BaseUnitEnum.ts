@@ -78,3 +78,7 @@ export function BaseUnitEnumToJSON(value?: BaseUnitEnum | null): any {
     return value as any;
 }
 
+export function BaseUnitEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): BaseUnitEnum {
+    return value as BaseUnitEnum;
+}
+

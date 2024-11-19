@@ -6,17 +6,18 @@
             <v-card-text class="pt-0 pr-4 pl-4">
 
                 <v-label>{{ $t('Choose_Category') }}</v-label>
-                <ModelSelect model="SupermarketCategory"></ModelSelect>
+                <model-select model="SupermarketCategory" @update:modelValue="categoryUpdate"></model-select>
 
                 <v-row>
                     <v-col class="pr-0">
-                        <v-btn height="80px" color="info" density="compact" size="small" block stacked @click="useShoppingStore().delayEntries(entriesList, !isDelayed, true); ">
+                        <v-btn height="80px" color="info" density="compact" size="small" block stacked @click="useShoppingStore().delayEntries(entriesList, !isShoppingLineDelayed, true); ">
                             <i class="fa-solid fa-clock-rotate-left fa-2x mb-2"></i>
-                            {{ $t('Postpone') }} {{isDelayed}}
+                            {{ $t('Postpone') }}
                         </v-btn>
                     </v-col>
                     <v-col>
-                        <v-btn height="80px" color="secondary" density="compact" size="small" block stacked @click="useShoppingStore().setFoodIgnoredState(entriesList,true, true);  showDialog = false">
+                        <v-btn height="80px" color="secondary" density="compact" size="small" block stacked
+                               @click="useShoppingStore().setFoodIgnoredState(entriesList,true, true);  showDialog = false">
                             <i class="fa-solid fa-eye-slash fa-2x mb-2"></i>
                             {{ $t('Ignore_Shopping') }}
                         </v-btn>
@@ -24,7 +25,8 @@
                 </v-row>
                 <v-row>
                     <v-col class="pr-0 pt-0">
-                        <v-btn height="80px" color="primary" density="compact" size="small" :to="{name: 'ModelEditPage', params: {model: 'Food', id: props.shoppingListFood?.food.id!}}" target="_blank" block stacked>
+                        <v-btn height="80px" color="primary" density="compact" size="small"
+                               :to="{name: 'ModelEditPage', params: {model: 'Food', id: props.shoppingListFood?.food.id!}}" target="_blank" block stacked>
                             <i class="fa-solid fa-pencil fa-2x mb-2"></i>
                             {{ $t('Edit_Food') }}
                         </v-btn>
@@ -60,6 +62,9 @@
                             <v-list-item-subtitle>
                                 {{ e.createdBy.displayName }} - {{ DateTime.fromJSDate(e.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
+                            <v-list-item-subtitle v-if="e.delayUntil > new Date()">
+                                {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
+                            </v-list-item-subtitle>
 
                             <template #append>
                                 <v-btn size="small" color="delete" icon="$delete" v-if="!e.recipeMealplan">
@@ -86,17 +91,17 @@
 
 <script setup lang="ts">
 
-import {compile, computed, PropType, watch} from "vue";
-import {ShoppingListEntry} from "@/openapi";
+import {computed, PropType} from "vue";
+import {ApiApi, ShoppingListEntry, SupermarketCategory} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
-import {IShoppingList, IShoppingListFood} from "@/types/Shopping";
+import {IShoppingListFood} from "@/types/Shopping";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
-import {VNumberInput} from "vuetify/labs/VNumberInput";
 import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import ShoppingListEntryEditor from "@/components/model_editors/ShoppingListEntryEditor.vue";
+import {isShoppingListFoodDelayed} from "@/utils/logic_utils";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const {mobile} = useDisplay()
 
@@ -106,10 +111,9 @@ const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
 })
 
-watch(() => {props.shoppingListFood}, () => {
-    console.log('PROP WATCH')
-})
-
+/**
+ * returns a flat list of entries for the given shopping list food
+ */
 const entriesList = computed(() => {
     let list = [] as ShoppingListEntry[]
     props.shoppingListFood?.entries.forEach(e => {
@@ -118,15 +122,24 @@ const entriesList = computed(() => {
     return list
 })
 
-const isDelayed = computed(() => {
-
-    let isDelayed = false
-    props.shoppingListFood.entries.forEach(e => {
-        isDelayed = isDelayed || e.delayUntil != null
-    })
-    console.log('computing is delayed', isDelayed)
-    return isDelayed
+/**
+ * checks all entries associated with shopping line, if any is delayed return true else false
+ */
+const isShoppingLineDelayed = computed(() => {
+    return isShoppingListFoodDelayed(props.shoppingListFood)
 })
+
+function categoryUpdate(category: SupermarketCategory) {
+    const api = new ApiApi()
+    // TODO updating prop is not good, make properly reactive
+    let food = props.shoppingListFood.food
+    food.supermarketCategory = category
+    api.apiFoodUpdate({id: food.id, food: food}).then(r => {
+
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    })
+}
 
 </script>
 

@@ -56,3 +56,7 @@ export function ThemeEnumToJSON(value?: ThemeEnum | null): any {
     return value as any;
 }
 
+export function ThemeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): ThemeEnum {
+    return value as ThemeEnum;
+}
+

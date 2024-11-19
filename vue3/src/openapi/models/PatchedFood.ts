@@ -308,4 +308,15 @@ export function PatchedFoodToJSON(value?: Omit<PatchedFood, 'shopping'|'parent'|
         'open_data_slug': value['openDataSlug'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedFoodListRequest, PaginatedPatchedFoodList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedFoodListRequest = {}): Promise<PaginatedPatchedFoodList> {
+    const api = new ApiApi()
+    return api.apiPatchedFoodList(requestParameters)
+}

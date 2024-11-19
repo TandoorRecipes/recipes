@@ -74,4 +74,15 @@ export function FoodSimpleToJSON(value?: FoodSimple | null): any {
         'plural_name': value['pluralName'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiFoodSimpleListRequest, PaginatedFoodSimpleList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiFoodSimpleListRequest = {}): Promise<PaginatedFoodSimpleList> {
+    const api = new ApiApi()
+    return api.apiFoodSimpleList(requestParameters)
+}

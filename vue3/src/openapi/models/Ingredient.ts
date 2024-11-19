@@ -169,4 +169,15 @@ export function IngredientToJSON(value?: Omit<Ingredient, 'conversions'|'used_in
         'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiIngredientListRequest, PaginatedIngredientList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiIngredientListRequest = {}): Promise<PaginatedIngredientList> {
+    const api = new ApiApi()
+    return api.apiIngredientList(requestParameters)
+}

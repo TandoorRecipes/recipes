@@ -58,3 +58,7 @@ export function SpaceThemeEnumToJSON(value?: SpaceThemeEnum | null): any {
     return value as any;
 }
 
+export function SpaceThemeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): SpaceThemeEnum {
+    return value as SpaceThemeEnum;
+}
+

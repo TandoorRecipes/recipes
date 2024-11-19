@@ -113,4 +113,15 @@ export function PatchedStorageToJSON(value?: Omit<PatchedStorage, 'created_by'> 
         'token': value['token'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedStorageListRequest, PaginatedPatchedStorageList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedStorageListRequest = {}): Promise<PaginatedPatchedStorageList> {
+    const api = new ApiApi()
+    return api.apiPatchedStorageList(requestParameters)
+}

@@ -88,4 +88,15 @@ export function PatchedSupermarketCategoryRelationToJSON(value?: PatchedSupermar
         'order': value['order'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedSupermarketCategoryRelationListRequest, PaginatedPatchedSupermarketCategoryRelationList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedSupermarketCategoryRelationListRequest = {}): Promise<PaginatedPatchedSupermarketCategoryRelationList> {
+    const api = new ApiApi()
+    return api.apiPatchedSupermarketCategoryRelationList(requestParameters)
+}

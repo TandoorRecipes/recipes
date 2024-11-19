@@ -105,4 +105,15 @@ export function PatchedPropertyTypeToJSON(value?: PatchedPropertyType | null): a
         'fdc_id': value['fdcId'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedPropertyTypeListRequest, PaginatedPatchedPropertyTypeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedPropertyTypeListRequest = {}): Promise<PaginatedPatchedPropertyTypeList> {
+    const api = new ApiApi()
+    return api.apiPatchedPropertyTypeList(requestParameters)
+}

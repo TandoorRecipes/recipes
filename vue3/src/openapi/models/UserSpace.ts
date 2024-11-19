@@ -135,4 +135,15 @@ export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'invite_l
         'internal_note': value['internalNote'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiUserSpaceListRequest, PaginatedUserSpaceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiUserSpaceListRequest = {}): Promise<PaginatedUserSpaceList> {
+    const api = new ApiApi()
+    return api.apiUserSpaceList(requestParameters)
+}

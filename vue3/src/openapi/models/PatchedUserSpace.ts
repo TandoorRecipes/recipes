@@ -129,4 +129,15 @@ export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'sp
         'internal_note': value['internalNote'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedUserSpaceListRequest, PaginatedPatchedUserSpaceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedUserSpaceListRequest = {}): Promise<PaginatedPatchedUserSpaceList> {
+    const api = new ApiApi()
+    return api.apiPatchedUserSpaceList(requestParameters)
+}

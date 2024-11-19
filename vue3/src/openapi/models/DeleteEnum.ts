@@ -46,3 +46,7 @@ export function DeleteEnumToJSON(value?: DeleteEnum | null): any {
     return value as any;
 }
 
+export function DeleteEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): DeleteEnum {
+    return value as DeleteEnum;
+}
+

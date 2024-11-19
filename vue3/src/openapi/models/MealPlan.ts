@@ -183,4 +183,15 @@ export function MealPlanToJSON(value?: Omit<MealPlan, 'note_markdown'|'created_b
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiMealPlanListRequest, PaginatedMealPlanList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiMealPlanListRequest = {}): Promise<PaginatedMealPlanList> {
+    const api = new ApiApi()
+    return api.apiMealPlanList(requestParameters)
+}

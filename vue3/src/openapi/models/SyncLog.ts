@@ -91,4 +91,15 @@ export function SyncLogToJSON(value?: Omit<SyncLog, 'created_at'> | null): any {
         'msg': value['msg'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiSyncLogListRequest, PaginatedSyncLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiSyncLogListRequest = {}): Promise<PaginatedSyncLogList> {
+    const api = new ApiApi()
+    return api.apiSyncLogList(requestParameters)
+}

@@ -427,7 +427,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             registerChange((delay ? 'DELAY' : 'UNDELAY'), entries)
         }
         entries.forEach(entry => {
-            entry.delayUntil = (delay ? delayDate : null)
+            entry.delayUntil = (delay ? delayDate : new Date('1970-01-01'))
             console.log('DELAY: ', delay, entry.delayUntil, entry)
             updateObject(entry)
         })

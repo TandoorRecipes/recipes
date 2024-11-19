@@ -106,4 +106,15 @@ export function PropertyTypeToJSON(value?: PropertyType | null): any {
         'fdc_id': value['fdcId'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPropertyTypeListRequest, PaginatedPropertyTypeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPropertyTypeListRequest = {}): Promise<PaginatedPropertyTypeList> {
+    const api = new ApiApi()
+    return api.apiPropertyTypeList(requestParameters)
+}

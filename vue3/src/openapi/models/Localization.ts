@@ -65,4 +65,15 @@ export function LocalizationToJSON(value?: Omit<Localization, 'code'|'language'>
         
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiLocalizationListRequest, PaginatedLocalizationList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiLocalizationListRequest = {}): Promise<PaginatedLocalizationList> {
+    const api = new ApiApi()
+    return api.apiLocalizationList(requestParameters)
+}

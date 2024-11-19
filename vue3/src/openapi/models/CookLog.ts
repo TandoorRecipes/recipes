@@ -121,4 +121,15 @@ export function CookLogToJSON(value?: Omit<CookLog, 'created_by'|'updated_at'> |
         'created_at': value['createdAt'] == null ? undefined : ((value['createdAt']).toISOString()),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiCookLogListRequest, PaginatedCookLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiCookLogListRequest = {}): Promise<PaginatedCookLogList> {
+    const api = new ApiApi()
+    return api.apiCookLogList(requestParameters)
+}

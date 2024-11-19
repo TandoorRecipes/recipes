@@ -100,4 +100,15 @@ export function GroupToJSON(value?: Group | null): any {
         'name': value['name'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiGroupListRequest, PaginatedGroupList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiGroupListRequest = {}): Promise<PaginatedGroupList> {
+    const api = new ApiApi()
+    return api.apiGroupList(requestParameters)
+}

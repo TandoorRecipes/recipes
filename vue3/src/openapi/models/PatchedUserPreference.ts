@@ -318,4 +318,15 @@ export function PatchedUserPreferenceToJSON(value?: Omit<PatchedUserPreference, 
         'show_step_ingredients': value['showStepIngredients'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedUserPreferenceListRequest, PaginatedPatchedUserPreferenceList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedUserPreferenceListRequest = {}): Promise<PaginatedPatchedUserPreferenceList> {
+    const api = new ApiApi()
+    return api.apiPatchedUserPreferenceList(requestParameters)
+}

@@ -104,4 +104,15 @@ export function RecipeBookEntryToJSON(value?: Omit<RecipeBookEntry, 'book_conten
         'recipe': value['recipe'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeBookEntryListRequest, PaginatedRecipeBookEntryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeBookEntryListRequest = {}): Promise<PaginatedRecipeBookEntryList> {
+    const api = new ApiApi()
+    return api.apiRecipeBookEntryList(requestParameters)
+}

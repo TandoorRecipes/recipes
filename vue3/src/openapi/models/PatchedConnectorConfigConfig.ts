@@ -136,4 +136,15 @@ export function PatchedConnectorConfigConfigToJSON(value?: Omit<PatchedConnector
         'supports_description_field': value['supportsDescriptionField'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedConnectorConfigConfigListRequest, PaginatedPatchedConnectorConfigConfigList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedConnectorConfigConfigListRequest = {}): Promise<PaginatedPatchedConnectorConfigConfigList> {
+    const api = new ApiApi()
+    return api.apiPatchedConnectorConfigConfigList(requestParameters)
+}

@@ -87,4 +87,15 @@ export function PatchedUserToJSON(value?: Omit<PatchedUser, 'username'|'display_
         'last_name': value['lastName'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedUserListRequest, PaginatedPatchedUserList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedUserListRequest = {}): Promise<PaginatedPatchedUserList> {
+    const api = new ApiApi()
+    return api.apiPatchedUserList(requestParameters)
+}

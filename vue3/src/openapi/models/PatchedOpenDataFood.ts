@@ -243,4 +243,15 @@ export function PatchedOpenDataFoodToJSON(value?: Omit<PatchedOpenDataFood, 'cre
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataFoodListRequest, PaginatedPatchedOpenDataFoodList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataFoodListRequest = {}): Promise<PaginatedPatchedOpenDataFoodList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataFoodList(requestParameters)
+}

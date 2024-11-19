@@ -75,4 +75,15 @@ export function AuthTokenToJSON(value?: Omit<AuthToken, 'token'> | null): any {
         'password': value['password'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiAuthTokenListRequest, PaginatedAuthTokenList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiAuthTokenListRequest = {}): Promise<PaginatedAuthTokenList> {
+    const api = new ApiApi()
+    return api.apiAuthTokenList(requestParameters)
+}

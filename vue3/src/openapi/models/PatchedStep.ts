@@ -163,4 +163,15 @@ export function PatchedStepToJSON(value?: Omit<PatchedStep, 'instructions_markdo
         'show_ingredients_table': value['showIngredientsTable'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedStepListRequest, PaginatedPatchedStepList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedStepListRequest = {}): Promise<PaginatedPatchedStepList> {
+    const api = new ApiApi()
+    return api.apiPatchedStepList(requestParameters)
+}

@@ -164,4 +164,15 @@ export function PatchedIngredientToJSON(value?: Omit<PatchedIngredient, 'convers
         'always_use_plural_food': value['alwaysUsePluralFood'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedIngredientListRequest, PaginatedPatchedIngredientList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedIngredientListRequest = {}): Promise<PaginatedPatchedIngredientList> {
+    const api = new ApiApi()
+    return api.apiPatchedIngredientList(requestParameters)
+}

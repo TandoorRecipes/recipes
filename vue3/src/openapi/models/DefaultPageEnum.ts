@@ -52,3 +52,7 @@ export function DefaultPageEnumToJSON(value?: DefaultPageEnum | null): any {
     return value as any;
 }
 
+export function DefaultPageEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): DefaultPageEnum {
+    return value as DefaultPageEnum;
+}
+

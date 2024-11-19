@@ -90,4 +90,15 @@ export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
         'results': ((value['results'] as Array<any>).map(StepToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedStepListListRequest, PaginatedPaginatedStepListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedStepListListRequest = {}): Promise<PaginatedPaginatedStepListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedStepListList(requestParameters)
+}

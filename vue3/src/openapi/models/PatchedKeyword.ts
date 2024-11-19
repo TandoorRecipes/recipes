@@ -150,4 +150,15 @@ export function PatchedKeywordToJSON(value?: Omit<PatchedKeyword, 'label'|'paren
         'description': value['description'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedKeywordListRequest, PaginatedPatchedKeywordList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedKeywordListRequest = {}): Promise<PaginatedPatchedKeywordList> {
+    const api = new ApiApi()
+    return api.apiPatchedKeywordList(requestParameters)
+}

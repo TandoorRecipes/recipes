@@ -67,4 +67,15 @@ export function ShoppingListEntryBulkToJSON(value?: ShoppingListEntryBulk | null
         'checked': value['checked'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiShoppingListEntryBulkListRequest, PaginatedShoppingListEntryBulkList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiShoppingListEntryBulkListRequest = {}): Promise<PaginatedShoppingListEntryBulkList> {
+    const api = new ApiApi()
+    return api.apiShoppingListEntryBulkList(requestParameters)
+}

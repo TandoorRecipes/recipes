@@ -107,4 +107,15 @@ export function PatchedSupermarketCategoryToJSON(value?: PatchedSupermarketCateg
         'description': value['description'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedSupermarketCategoryListRequest, PaginatedPatchedSupermarketCategoryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedSupermarketCategoryListRequest = {}): Promise<PaginatedPatchedSupermarketCategoryList> {
+    const api = new ApiApi()
+    return api.apiPatchedSupermarketCategoryList(requestParameters)
+}

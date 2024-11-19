@@ -48,3 +48,7 @@ export function UserPreferenceNavTextColorEnumToJSON(value?: UserPreferenceNavTe
     return value as any;
 }
 
+export function UserPreferenceNavTextColorEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): UserPreferenceNavTextColorEnum {
+    return value as UserPreferenceNavTextColorEnum;
+}
+

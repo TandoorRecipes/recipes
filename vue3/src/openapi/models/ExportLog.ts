@@ -130,4 +130,15 @@ export function ExportLogToJSON(value?: Omit<ExportLog, 'created_by'|'created_at
         'possibly_not_expired': value['possiblyNotExpired'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiExportLogListRequest, PaginatedExportLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiExportLogListRequest = {}): Promise<PaginatedExportLogList> {
+    const api = new ApiApi()
+    return api.apiExportLogList(requestParameters)
+}

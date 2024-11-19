@@ -167,4 +167,15 @@ export function StepToJSON(value?: Omit<Step, 'instructions_markdown'|'step_reci
         'show_ingredients_table': value['showIngredientsTable'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiStepListRequest, PaginatedStepList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiStepListRequest = {}): Promise<PaginatedStepList> {
+    const api = new ApiApi()
+    return api.apiStepList(requestParameters)
+}

@@ -139,4 +139,15 @@ export function AutomationToJSON(value?: Omit<Automation, 'created_by'> | null):
         'disabled': value['disabled'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiAutomationListRequest, PaginatedAutomationList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiAutomationListRequest = {}): Promise<PaginatedAutomationList> {
+    const api = new ApiApi()
+    return api.apiAutomationList(requestParameters)
+}

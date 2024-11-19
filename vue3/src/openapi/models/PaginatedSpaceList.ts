@@ -90,4 +90,15 @@ export function PaginatedSpaceListToJSON(value?: PaginatedSpaceList | null): any
         'results': ((value['results'] as Array<any>).map(SpaceToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedSpaceListListRequest, PaginatedPaginatedSpaceListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedSpaceListListRequest = {}): Promise<PaginatedPaginatedSpaceListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedSpaceListList(requestParameters)
+}

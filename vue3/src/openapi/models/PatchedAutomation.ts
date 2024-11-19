@@ -137,4 +137,15 @@ export function PatchedAutomationToJSON(value?: Omit<PatchedAutomation, 'created
         'disabled': value['disabled'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedAutomationListRequest, PaginatedPatchedAutomationList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedAutomationListRequest = {}): Promise<PaginatedPatchedAutomationList> {
+    const api = new ApiApi()
+    return api.apiPatchedAutomationList(requestParameters)
+}

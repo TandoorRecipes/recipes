@@ -81,4 +81,15 @@ export function BookmarkletImportListToJSON(value?: Omit<BookmarkletImportList, 
         'url': value['url'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiBookmarkletImportListListRequest, PaginatedBookmarkletImportListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiBookmarkletImportListListRequest = {}): Promise<PaginatedBookmarkletImportListList> {
+    const api = new ApiApi()
+    return api.apiBookmarkletImportListList(requestParameters)
+}

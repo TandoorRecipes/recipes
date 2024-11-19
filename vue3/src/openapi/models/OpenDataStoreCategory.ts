@@ -90,4 +90,15 @@ export function OpenDataStoreCategoryToJSON(value?: OpenDataStoreCategory | null
         'order': value['order'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiOpenDataStoreCategoryListRequest, PaginatedOpenDataStoreCategoryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiOpenDataStoreCategoryListRequest = {}): Promise<PaginatedOpenDataStoreCategoryList> {
+    const api = new ApiApi()
+    return api.apiOpenDataStoreCategoryList(requestParameters)
+}

@@ -115,4 +115,15 @@ export function PatchedOpenDataVersionToJSON(value?: PatchedOpenDataVersion | nu
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataVersionListRequest, PaginatedPatchedOpenDataVersionList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataVersionListRequest = {}): Promise<PaginatedPatchedOpenDataVersionList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataVersionList(requestParameters)
+}

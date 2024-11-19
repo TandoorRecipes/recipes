@@ -133,4 +133,15 @@ export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'
         'internal_note': value['internalNote'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedInviteLinkListRequest, PaginatedPatchedInviteLinkList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedInviteLinkListRequest = {}): Promise<PaginatedPatchedInviteLinkList> {
+    const api = new ApiApi()
+    return api.apiPatchedInviteLinkList(requestParameters)
+}

@@ -101,4 +101,15 @@ export function NutritionInformationToJSON(value?: NutritionInformation | null):
         'source': value['source'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiNutritionInformationListRequest, PaginatedNutritionInformationList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiNutritionInformationListRequest = {}): Promise<PaginatedNutritionInformationList> {
+    const api = new ApiApi()
+    return api.apiNutritionInformationList(requestParameters)
+}

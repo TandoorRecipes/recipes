@@ -145,4 +145,15 @@ export function PatchedOpenDataCategoryToJSON(value?: Omit<PatchedOpenDataCatego
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataCategoryListRequest, PaginatedPatchedOpenDataCategoryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataCategoryListRequest = {}): Promise<PaginatedPatchedOpenDataCategoryList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataCategoryList(requestParameters)
+}

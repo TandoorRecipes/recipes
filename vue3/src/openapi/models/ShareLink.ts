@@ -76,4 +76,15 @@ export function ShareLinkToJSON(value?: ShareLink | null): any {
         'link': value['link'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiShareLinkListRequest, PaginatedShareLinkList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiShareLinkListRequest = {}): Promise<PaginatedShareLinkList> {
+    const api = new ApiApi()
+    return api.apiShareLinkList(requestParameters)
+}

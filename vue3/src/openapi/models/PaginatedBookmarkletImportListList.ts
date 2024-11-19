@@ -90,4 +90,15 @@ export function PaginatedBookmarkletImportListListToJSON(value?: PaginatedBookma
         'results': ((value['results'] as Array<any>).map(BookmarkletImportListToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedBookmarkletImportListListListRequest, PaginatedPaginatedBookmarkletImportListListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedBookmarkletImportListListListRequest = {}): Promise<PaginatedPaginatedBookmarkletImportListListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedBookmarkletImportListListList(requestParameters)
+}

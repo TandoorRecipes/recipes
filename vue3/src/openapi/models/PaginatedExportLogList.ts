@@ -90,4 +90,15 @@ export function PaginatedExportLogListToJSON(value?: PaginatedExportLogList | nu
         'results': ((value['results'] as Array<any>).map(ExportLogToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedExportLogListListRequest, PaginatedPaginatedExportLogListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedExportLogListListRequest = {}): Promise<PaginatedPaginatedExportLogListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedExportLogListList(requestParameters)
+}

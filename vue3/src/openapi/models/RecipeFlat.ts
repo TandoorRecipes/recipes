@@ -74,4 +74,15 @@ export function RecipeFlatToJSON(value?: RecipeFlat | null): any {
         'image': value['image'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeFlatListRequest, PaginatedRecipeFlatList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeFlatListRequest = {}): Promise<PaginatedRecipeFlatList> {
+    const api = new ApiApi()
+    return api.apiRecipeFlatList(requestParameters)
+}

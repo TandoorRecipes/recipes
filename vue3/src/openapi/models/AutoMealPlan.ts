@@ -118,4 +118,15 @@ export function AutoMealPlanToJSON(value?: AutoMealPlan | null): any {
         'addshopping': value['addshopping'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiAutoMealPlanListRequest, PaginatedAutoMealPlanList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiAutoMealPlanListRequest = {}): Promise<PaginatedAutoMealPlanList> {
+    const api = new ApiApi()
+    return api.apiAutoMealPlanList(requestParameters)
+}

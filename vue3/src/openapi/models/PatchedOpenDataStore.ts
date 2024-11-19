@@ -117,4 +117,15 @@ export function PatchedOpenDataStoreToJSON(value?: Omit<PatchedOpenDataStore, 'c
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataStoreListRequest, PaginatedPatchedOpenDataStoreList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataStoreListRequest = {}): Promise<PaginatedPatchedOpenDataStoreList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataStoreList(requestParameters)
+}

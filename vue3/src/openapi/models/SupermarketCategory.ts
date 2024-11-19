@@ -108,4 +108,15 @@ export function SupermarketCategoryToJSON(value?: SupermarketCategory | null): a
         'description': value['description'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiSupermarketCategoryListRequest, PaginatedSupermarketCategoryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiSupermarketCategoryListRequest = {}): Promise<PaginatedSupermarketCategoryList> {
+    const api = new ApiApi()
+    return api.apiSupermarketCategoryList(requestParameters)
+}

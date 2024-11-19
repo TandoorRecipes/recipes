@@ -129,4 +129,15 @@ export function ImportLogToJSON(value?: Omit<ImportLog, 'keyword'|'created_by'|'
         'imported_recipes': value['importedRecipes'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiImportLogListRequest, PaginatedImportLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiImportLogListRequest = {}): Promise<PaginatedImportLogList> {
+    const api = new ApiApi()
+    return api.apiImportLogList(requestParameters)
+}

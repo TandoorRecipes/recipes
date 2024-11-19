@@ -274,4 +274,15 @@ export function RecipeToJSON(value?: Omit<Recipe, 'image'|'created_by'|'created_
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeListRequest, PaginatedRecipeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeListRequest = {}): Promise<PaginatedRecipeList> {
+    const api = new ApiApi()
+    return api.apiRecipeList(requestParameters)
+}

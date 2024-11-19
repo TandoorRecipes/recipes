@@ -155,4 +155,15 @@ export function PatchedOpenDataConversionToJSON(value?: Omit<PatchedOpenDataConv
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataConversionListRequest, PaginatedPatchedOpenDataConversionList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataConversionListRequest = {}): Promise<PaginatedPatchedOpenDataConversionList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataConversionList(requestParameters)
+}

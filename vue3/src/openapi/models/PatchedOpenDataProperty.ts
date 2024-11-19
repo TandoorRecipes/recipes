@@ -153,4 +153,15 @@ export function PatchedOpenDataPropertyToJSON(value?: Omit<PatchedOpenDataProper
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataPropertyListRequest, PaginatedPatchedOpenDataPropertyList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataPropertyListRequest = {}): Promise<PaginatedPatchedOpenDataPropertyList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataPropertyList(requestParameters)
+}

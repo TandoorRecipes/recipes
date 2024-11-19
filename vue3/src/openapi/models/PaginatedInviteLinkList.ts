@@ -90,4 +90,15 @@ export function PaginatedInviteLinkListToJSON(value?: PaginatedInviteLinkList | 
         'results': ((value['results'] as Array<any>).map(InviteLinkToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedInviteLinkListListRequest, PaginatedPaginatedInviteLinkListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedInviteLinkListListRequest = {}): Promise<PaginatedPaginatedInviteLinkListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedInviteLinkListList(requestParameters)
+}

@@ -131,4 +131,15 @@ export function SupermarketToJSON(value?: Omit<Supermarket, 'category_to_superma
         'open_data_slug': value['openDataSlug'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiSupermarketListRequest, PaginatedSupermarketList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiSupermarketListRequest = {}): Promise<PaginatedSupermarketList> {
+    const api = new ApiApi()
+    return api.apiSupermarketList(requestParameters)
+}

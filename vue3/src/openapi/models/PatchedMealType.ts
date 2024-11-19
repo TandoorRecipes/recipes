@@ -104,4 +104,15 @@ export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'created_by'
         'default': value['_default'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedMealTypeListRequest, PaginatedPatchedMealTypeList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedMealTypeListRequest = {}): Promise<PaginatedPatchedMealTypeList> {
+    const api = new ApiApi()
+    return api.apiPatchedMealTypeList(requestParameters)
+}

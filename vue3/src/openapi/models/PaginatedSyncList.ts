@@ -90,4 +90,15 @@ export function PaginatedSyncListToJSON(value?: PaginatedSyncList | null): any {
         'results': ((value['results'] as Array<any>).map(SyncToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedSyncListListRequest, PaginatedPaginatedSyncListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedSyncListListRequest = {}): Promise<PaginatedPaginatedSyncListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedSyncListList(requestParameters)
+}

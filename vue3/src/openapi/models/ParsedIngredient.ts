@@ -85,4 +85,15 @@ export function ParsedIngredientToJSON(value?: ParsedIngredient | null): any {
         'note': value['note'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiParsedIngredientListRequest, PaginatedParsedIngredientList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiParsedIngredientListRequest = {}): Promise<PaginatedParsedIngredientList> {
+    const api = new ApiApi()
+    return api.apiParsedIngredientList(requestParameters)
+}

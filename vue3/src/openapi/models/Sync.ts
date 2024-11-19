@@ -106,4 +106,15 @@ export function SyncToJSON(value?: Omit<Sync, 'created_at'|'updated_at'> | null)
         'last_checked': value['lastChecked'] == null ? undefined : ((value['lastChecked'] as any).toISOString()),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiSyncListRequest, PaginatedSyncList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiSyncListRequest = {}): Promise<PaginatedSyncList> {
+    const api = new ApiApi()
+    return api.apiSyncList(requestParameters)
+}

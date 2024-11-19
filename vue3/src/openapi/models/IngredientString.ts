@@ -58,4 +58,15 @@ export function IngredientStringToJSON(value?: IngredientString | null): any {
         'text': value['text'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiIngredientStringListRequest, PaginatedIngredientStringList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiIngredientStringListRequest = {}): Promise<PaginatedIngredientStringList> {
+    const api = new ApiApi()
+    return api.apiIngredientStringList(requestParameters)
+}

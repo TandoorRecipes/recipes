@@ -50,3 +50,7 @@ export function SpaceNavTextColorEnumToJSON(value?: SpaceNavTextColorEnum | null
     return value as any;
 }
 
+export function SpaceNavTextColorEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): SpaceNavTextColorEnum {
+    return value as SpaceNavTextColorEnum;
+}
+

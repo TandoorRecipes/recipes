@@ -127,4 +127,15 @@ export function PatchedExportLogToJSON(value?: Omit<PatchedExportLog, 'created_b
         'possibly_not_expired': value['possiblyNotExpired'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedExportLogListRequest, PaginatedPatchedExportLogList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedExportLogListRequest = {}): Promise<PaginatedPatchedExportLogList> {
+    const api = new ApiApi()
+    return api.apiPatchedExportLogList(requestParameters)
+}

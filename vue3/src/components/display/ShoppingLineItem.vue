@@ -1,6 +1,6 @@
 <template>
     <v-list-item class="swipe-container" :id="itemContainerId" @touchend="handleSwipe()" @click="emit('clicked', entries)"
-                 v-if="(useUserPreferenceStore().deviceSettings.shopping_show_checked_entries || !isChecked) && (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries || !isDelayed)"
+                 v-if="(useUserPreferenceStore().deviceSettings.shopping_show_checked_entries || !isChecked) && (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries || !isShoppingLineDelayed)"
     >
         <!--        <div class="swipe-action" :class="{'bg-success': !isChecked , 'bg-warning': isChecked }">-->
         <!--            <i class="swipe-icon fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
@@ -54,6 +54,7 @@ import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.js";
 import {ApiApi, Food, ShoppingListEntry} from '@/openapi'
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {IShoppingListFood, ShoppingLineAmount} from "@/types/Shopping";
+import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 
 const emit = defineEmits(['clicked'])
 
@@ -79,13 +80,8 @@ const isChecked = computed(() => {
     return true
 })
 
-const isDelayed = computed(() => {
-    for (let i in props.entries) {
-        if (props.entries[i].delayUntil != null && props.entries[i].delayUntil! > new Date(Date.now())) {
-            return true
-        }
-    }
-    return false
+const isShoppingLineDelayed = computed(() => {
+    return isShoppingListFoodDelayed(props.shoppingListFood)
 })
 
 
@@ -104,9 +100,9 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
     for (let i in props.entries) {
         let e = props.entries[i]
 
-        if (!e.checked && (e.delayUntil == null)
+        if (!e.checked && !isDelayed(e)
             || (e.checked && useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
-            || (e.delayUntil !== null && useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)) {
+            || (isDelayed(e) && useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)) {
 
             let unit = -1
             if (e.unit !== undefined && e.unit !== null) {
@@ -123,7 +119,7 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
                         amount: e.amount,
                         unit: e.unit,
                         checked: e.checked,
-                        delayed: (e.delayUntil != null)
+                        delayed: isDelayed(e)
                     } as ShoppingLineAmount)
                 }
             }

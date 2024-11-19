@@ -90,4 +90,15 @@ export function PaginatedShoppingListRecipeListToJSON(value?: PaginatedShoppingL
         'results': ((value['results'] as Array<any>).map(ShoppingListRecipeToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedShoppingListRecipeListListRequest, PaginatedPaginatedShoppingListRecipeListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedShoppingListRecipeListListRequest = {}): Promise<PaginatedPaginatedShoppingListRecipeListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedShoppingListRecipeListList(requestParameters)
+}

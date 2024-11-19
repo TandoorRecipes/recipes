@@ -90,4 +90,15 @@ export function PaginatedCookLogListToJSON(value?: PaginatedCookLogList | null):
         'results': ((value['results'] as Array<any>).map(CookLogToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedCookLogListListRequest, PaginatedPaginatedCookLogListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedCookLogListListRequest = {}): Promise<PaginatedPaginatedCookLogListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedCookLogListList(requestParameters)
+}

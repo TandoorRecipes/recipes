@@ -93,4 +93,15 @@ export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any
         'delete': DeleteEnumToJSON(value['_delete']),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiFoodShoppingUpdateListRequest, PaginatedFoodShoppingUpdateList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiFoodShoppingUpdateListRequest = {}): Promise<PaginatedFoodShoppingUpdateList> {
+    const api = new ApiApi()
+    return api.apiFoodShoppingUpdateList(requestParameters)
+}

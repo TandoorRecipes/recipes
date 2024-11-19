@@ -1687,6 +1687,7 @@ export interface ApiViewLogUpdateRequest {
 export class ApiApi extends runtime.BaseAPI {
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenCreateRaw(requestParameters: ApiAccessTokenCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccessToken>> {
         if (requestParameters['accessToken'] == null) {
@@ -1718,6 +1719,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenCreate(requestParameters: ApiAccessTokenCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccessToken> {
         const response = await this.apiAccessTokenCreateRaw(requestParameters, initOverrides);
@@ -1725,6 +1727,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenDestroyRaw(requestParameters: ApiAccessTokenDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -1753,12 +1756,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenDestroy(requestParameters: ApiAccessTokenDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiAccessTokenDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<AccessToken>>> {
         const queryParameters: any = {};
@@ -1780,6 +1785,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<AccessToken>> {
         const response = await this.apiAccessTokenListRaw(initOverrides);
@@ -1787,6 +1793,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenPartialUpdateRaw(requestParameters: ApiAccessTokenPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccessToken>> {
         if (requestParameters['id'] == null) {
@@ -1818,6 +1825,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenPartialUpdate(requestParameters: ApiAccessTokenPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccessToken> {
         const response = await this.apiAccessTokenPartialUpdateRaw(requestParameters, initOverrides);
@@ -1825,6 +1833,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenRetrieveRaw(requestParameters: ApiAccessTokenRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccessToken>> {
         if (requestParameters['id'] == null) {
@@ -1853,6 +1862,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenRetrieve(requestParameters: ApiAccessTokenRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccessToken> {
         const response = await this.apiAccessTokenRetrieveRaw(requestParameters, initOverrides);
@@ -1860,6 +1870,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenUpdateRaw(requestParameters: ApiAccessTokenUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccessToken>> {
         if (requestParameters['id'] == null) {
@@ -1898,6 +1909,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAccessTokenUpdate(requestParameters: ApiAccessTokenUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccessToken> {
         const response = await this.apiAccessTokenUpdateRaw(requestParameters, initOverrides);
@@ -1905,6 +1917,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutoPlanCreateRaw(requestParameters: ApiAutoPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AutoMealPlan>> {
         if (requestParameters['autoMealPlan'] == null) {
@@ -1936,6 +1949,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutoPlanCreate(requestParameters: ApiAutoPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AutoMealPlan> {
         const response = await this.apiAutoPlanCreateRaw(requestParameters, initOverrides);
@@ -1943,6 +1957,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationCreateRaw(requestParameters: ApiAutomationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Automation>> {
         if (requestParameters['automation'] == null) {
@@ -1974,6 +1989,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationCreate(requestParameters: ApiAutomationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Automation> {
         const response = await this.apiAutomationCreateRaw(requestParameters, initOverrides);
@@ -1981,6 +1997,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationDestroyRaw(requestParameters: ApiAutomationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -2009,12 +2026,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationDestroy(requestParameters: ApiAutomationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiAutomationDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationListRaw(requestParameters: ApiAutomationListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedAutomationList>> {
         const queryParameters: any = {};
@@ -2048,6 +2067,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationList(requestParameters: ApiAutomationListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedAutomationList> {
         const response = await this.apiAutomationListRaw(requestParameters, initOverrides);
@@ -2055,6 +2075,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationPartialUpdateRaw(requestParameters: ApiAutomationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Automation>> {
         if (requestParameters['id'] == null) {
@@ -2086,6 +2107,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationPartialUpdate(requestParameters: ApiAutomationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Automation> {
         const response = await this.apiAutomationPartialUpdateRaw(requestParameters, initOverrides);
@@ -2093,6 +2115,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationRetrieveRaw(requestParameters: ApiAutomationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Automation>> {
         if (requestParameters['id'] == null) {
@@ -2121,6 +2144,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationRetrieve(requestParameters: ApiAutomationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Automation> {
         const response = await this.apiAutomationRetrieveRaw(requestParameters, initOverrides);
@@ -2128,6 +2152,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationUpdateRaw(requestParameters: ApiAutomationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Automation>> {
         if (requestParameters['id'] == null) {
@@ -2166,6 +2191,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiAutomationUpdate(requestParameters: ApiAutomationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Automation> {
         const response = await this.apiAutomationUpdateRaw(requestParameters, initOverrides);
@@ -2173,6 +2199,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportCreateRaw(requestParameters: ApiBookmarkletImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BookmarkletImport>> {
         if (requestParameters['bookmarkletImport'] == null) {
@@ -2204,6 +2231,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportCreate(requestParameters: ApiBookmarkletImportCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.apiBookmarkletImportCreateRaw(requestParameters, initOverrides);
@@ -2211,6 +2239,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportDestroyRaw(requestParameters: ApiBookmarkletImportDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -2239,12 +2268,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportDestroy(requestParameters: ApiBookmarkletImportDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiBookmarkletImportDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportListRaw(requestParameters: ApiBookmarkletImportListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedBookmarkletImportListList>> {
         const queryParameters: any = {};
@@ -2274,6 +2305,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportList(requestParameters: ApiBookmarkletImportListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedBookmarkletImportListList> {
         const response = await this.apiBookmarkletImportListRaw(requestParameters, initOverrides);
@@ -2281,6 +2313,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportPartialUpdateRaw(requestParameters: ApiBookmarkletImportPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BookmarkletImport>> {
         if (requestParameters['id'] == null) {
@@ -2312,6 +2345,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportPartialUpdate(requestParameters: ApiBookmarkletImportPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.apiBookmarkletImportPartialUpdateRaw(requestParameters, initOverrides);
@@ -2319,6 +2353,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportRetrieveRaw(requestParameters: ApiBookmarkletImportRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BookmarkletImport>> {
         if (requestParameters['id'] == null) {
@@ -2347,6 +2382,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportRetrieve(requestParameters: ApiBookmarkletImportRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.apiBookmarkletImportRetrieveRaw(requestParameters, initOverrides);
@@ -2354,6 +2390,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportUpdateRaw(requestParameters: ApiBookmarkletImportUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<BookmarkletImport>> {
         if (requestParameters['id'] == null) {
@@ -2392,6 +2429,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiBookmarkletImportUpdate(requestParameters: ApiBookmarkletImportUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<BookmarkletImport> {
         const response = await this.apiBookmarkletImportUpdateRaw(requestParameters, initOverrides);
@@ -2399,6 +2437,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigCreateRaw(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
         if (requestParameters['connectorConfigConfig'] == null) {
@@ -2430,6 +2469,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigCreate(requestParameters: ApiConnectorConfigCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
         const response = await this.apiConnectorConfigCreateRaw(requestParameters, initOverrides);
@@ -2437,6 +2477,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigDestroyRaw(requestParameters: ApiConnectorConfigDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -2465,12 +2506,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigDestroy(requestParameters: ApiConnectorConfigDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiConnectorConfigDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<ConnectorConfigConfig>>> {
         const queryParameters: any = {};
@@ -2492,6 +2535,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<ConnectorConfigConfig>> {
         const response = await this.apiConnectorConfigListRaw(initOverrides);
@@ -2499,6 +2543,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigPartialUpdateRaw(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
         if (requestParameters['id'] == null) {
@@ -2530,6 +2575,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigPartialUpdate(requestParameters: ApiConnectorConfigPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
         const response = await this.apiConnectorConfigPartialUpdateRaw(requestParameters, initOverrides);
@@ -2537,6 +2583,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigRetrieveRaw(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
         if (requestParameters['id'] == null) {
@@ -2565,6 +2612,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigRetrieve(requestParameters: ApiConnectorConfigRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
         const response = await this.apiConnectorConfigRetrieveRaw(requestParameters, initOverrides);
@@ -2572,6 +2620,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigUpdateRaw(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectorConfigConfig>> {
         if (requestParameters['id'] == null) {
@@ -2610,6 +2659,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiConnectorConfigUpdate(requestParameters: ApiConnectorConfigUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectorConfigConfig> {
         const response = await this.apiConnectorConfigUpdateRaw(requestParameters, initOverrides);
@@ -2617,6 +2667,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogCreateRaw(requestParameters: ApiCookLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters['cookLog'] == null) {
@@ -2648,6 +2699,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogCreate(requestParameters: ApiCookLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CookLog> {
         const response = await this.apiCookLogCreateRaw(requestParameters, initOverrides);
@@ -2655,6 +2707,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogDestroyRaw(requestParameters: ApiCookLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -2683,12 +2736,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogDestroy(requestParameters: ApiCookLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiCookLogDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogListRaw(requestParameters: ApiCookLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCookLogList>> {
         const queryParameters: any = {};
@@ -2722,6 +2777,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogList(requestParameters: ApiCookLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCookLogList> {
         const response = await this.apiCookLogListRaw(requestParameters, initOverrides);
@@ -2729,6 +2785,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogPartialUpdateRaw(requestParameters: ApiCookLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters['id'] == null) {
@@ -2760,6 +2817,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogPartialUpdate(requestParameters: ApiCookLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CookLog> {
         const response = await this.apiCookLogPartialUpdateRaw(requestParameters, initOverrides);
@@ -2767,6 +2825,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogRetrieveRaw(requestParameters: ApiCookLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters['id'] == null) {
@@ -2795,6 +2854,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogRetrieve(requestParameters: ApiCookLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CookLog> {
         const response = await this.apiCookLogRetrieveRaw(requestParameters, initOverrides);
@@ -2802,6 +2862,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogUpdateRaw(requestParameters: ApiCookLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CookLog>> {
         if (requestParameters['id'] == null) {
@@ -2840,6 +2901,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCookLogUpdate(requestParameters: ApiCookLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CookLog> {
         const response = await this.apiCookLogUpdateRaw(requestParameters, initOverrides);
@@ -2847,6 +2909,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterCreateRaw(requestParameters: ApiCustomFilterCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomFilter>> {
         if (requestParameters['customFilter'] == null) {
@@ -2878,6 +2941,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterCreate(requestParameters: ApiCustomFilterCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CustomFilter> {
         const response = await this.apiCustomFilterCreateRaw(requestParameters, initOverrides);
@@ -2885,6 +2949,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterDestroyRaw(requestParameters: ApiCustomFilterDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -2913,12 +2978,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterDestroy(requestParameters: ApiCustomFilterDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiCustomFilterDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterListRaw(requestParameters: ApiCustomFilterListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCustomFilterList>> {
         const queryParameters: any = {};
@@ -2968,6 +3035,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterList(requestParameters: ApiCustomFilterListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCustomFilterList> {
         const response = await this.apiCustomFilterListRaw(requestParameters, initOverrides);
@@ -2975,6 +3043,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterPartialUpdateRaw(requestParameters: ApiCustomFilterPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomFilter>> {
         if (requestParameters['id'] == null) {
@@ -3006,6 +3075,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterPartialUpdate(requestParameters: ApiCustomFilterPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CustomFilter> {
         const response = await this.apiCustomFilterPartialUpdateRaw(requestParameters, initOverrides);
@@ -3013,6 +3083,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterRetrieveRaw(requestParameters: ApiCustomFilterRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomFilter>> {
         if (requestParameters['id'] == null) {
@@ -3041,6 +3112,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterRetrieve(requestParameters: ApiCustomFilterRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CustomFilter> {
         const response = await this.apiCustomFilterRetrieveRaw(requestParameters, initOverrides);
@@ -3048,6 +3120,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterUpdateRaw(requestParameters: ApiCustomFilterUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomFilter>> {
         if (requestParameters['id'] == null) {
@@ -3086,6 +3159,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiCustomFilterUpdate(requestParameters: ApiCustomFilterUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CustomFilter> {
         const response = await this.apiCustomFilterUpdateRaw(requestParameters, initOverrides);
@@ -3129,6 +3203,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogCreateRaw(requestParameters: ApiExportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['exportLog'] == null) {
@@ -3160,6 +3235,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogCreate(requestParameters: ApiExportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ExportLog> {
         const response = await this.apiExportLogCreateRaw(requestParameters, initOverrides);
@@ -3167,6 +3243,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogDestroyRaw(requestParameters: ApiExportLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -3195,12 +3272,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogDestroy(requestParameters: ApiExportLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiExportLogDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogListRaw(requestParameters: ApiExportLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedExportLogList>> {
         const queryParameters: any = {};
@@ -3230,6 +3309,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogList(requestParameters: ApiExportLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedExportLogList> {
         const response = await this.apiExportLogListRaw(requestParameters, initOverrides);
@@ -3237,6 +3317,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogPartialUpdateRaw(requestParameters: ApiExportLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['id'] == null) {
@@ -3268,6 +3349,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogPartialUpdate(requestParameters: ApiExportLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ExportLog> {
         const response = await this.apiExportLogPartialUpdateRaw(requestParameters, initOverrides);
@@ -3275,6 +3357,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogRetrieveRaw(requestParameters: ApiExportLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['id'] == null) {
@@ -3303,6 +3386,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogRetrieve(requestParameters: ApiExportLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ExportLog> {
         const response = await this.apiExportLogRetrieveRaw(requestParameters, initOverrides);
@@ -3310,6 +3394,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogUpdateRaw(requestParameters: ApiExportLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ExportLog>> {
         if (requestParameters['id'] == null) {
@@ -3348,6 +3433,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiExportLogUpdate(requestParameters: ApiExportLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ExportLog> {
         const response = await this.apiExportLogUpdateRaw(requestParameters, initOverrides);
@@ -3355,6 +3441,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodCreateRaw(requestParameters: ApiFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['food'] == null) {
@@ -3386,6 +3473,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodCreate(requestParameters: ApiFoodCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodCreateRaw(requestParameters, initOverrides);
@@ -3393,6 +3481,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodDestroyRaw(requestParameters: ApiFoodDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -3421,6 +3510,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodDestroy(requestParameters: ApiFoodDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiFoodDestroyRaw(requestParameters, initOverrides);
@@ -3474,6 +3564,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodInheritFieldListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<FoodInheritField>>> {
         const queryParameters: any = {};
@@ -3495,6 +3586,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodInheritFieldList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<FoodInheritField>> {
         const response = await this.apiFoodInheritFieldListRaw(initOverrides);
@@ -3502,6 +3594,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodInheritFieldRetrieveRaw(requestParameters: ApiFoodInheritFieldRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodInheritField>> {
         if (requestParameters['id'] == null) {
@@ -3530,6 +3623,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodInheritFieldRetrieve(requestParameters: ApiFoodInheritFieldRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodInheritField> {
         const response = await this.apiFoodInheritFieldRetrieveRaw(requestParameters, initOverrides);
@@ -3537,6 +3631,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodListRaw(requestParameters: ApiFoodListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedFoodList>> {
         const queryParameters: any = {};
@@ -3590,6 +3685,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodList(requestParameters: ApiFoodListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedFoodList> {
         const response = await this.apiFoodListRaw(requestParameters, initOverrides);
@@ -3597,6 +3693,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodMergeUpdateRaw(requestParameters: ApiFoodMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
@@ -3642,6 +3739,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodMergeUpdate(requestParameters: ApiFoodMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodMergeUpdateRaw(requestParameters, initOverrides);
@@ -3649,6 +3747,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodMoveUpdateRaw(requestParameters: ApiFoodMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
@@ -3694,6 +3793,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodMoveUpdate(requestParameters: ApiFoodMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodMoveUpdateRaw(requestParameters, initOverrides);
@@ -3701,6 +3801,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodPartialUpdateRaw(requestParameters: ApiFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
@@ -3732,6 +3833,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodPartialUpdate(requestParameters: ApiFoodPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodPartialUpdateRaw(requestParameters, initOverrides);
@@ -3739,6 +3841,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodRetrieveRaw(requestParameters: ApiFoodRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
@@ -3767,6 +3870,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodRetrieve(requestParameters: ApiFoodRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodRetrieveRaw(requestParameters, initOverrides);
@@ -3774,6 +3878,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodShoppingUpdateRaw(requestParameters: ApiFoodShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<FoodShoppingUpdate>> {
         if (requestParameters['id'] == null) {
@@ -3812,6 +3917,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodShoppingUpdate(requestParameters: ApiFoodShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<FoodShoppingUpdate> {
         const response = await this.apiFoodShoppingUpdateRaw(requestParameters, initOverrides);
@@ -3819,6 +3925,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodUpdateRaw(requestParameters: ApiFoodUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Food>> {
         if (requestParameters['id'] == null) {
@@ -3857,6 +3964,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiFoodUpdate(requestParameters: ApiFoodUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Food> {
         const response = await this.apiFoodUpdateRaw(requestParameters, initOverrides);
@@ -3932,6 +4040,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiGroupListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Group>>> {
         const queryParameters: any = {};
@@ -3953,6 +4062,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiGroupList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Group>> {
         const response = await this.apiGroupListRaw(initOverrides);
@@ -3960,6 +4070,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiGroupRetrieveRaw(requestParameters: ApiGroupRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Group>> {
         if (requestParameters['id'] == null) {
@@ -3988,6 +4099,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiGroupRetrieve(requestParameters: ApiGroupRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Group> {
         const response = await this.apiGroupRetrieveRaw(requestParameters, initOverrides);
@@ -4062,6 +4174,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogCreateRaw(requestParameters: ApiImportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportLog>> {
         if (requestParameters['importLog'] == null) {
@@ -4093,6 +4206,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogCreate(requestParameters: ApiImportLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ImportLog> {
         const response = await this.apiImportLogCreateRaw(requestParameters, initOverrides);
@@ -4100,6 +4214,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogDestroyRaw(requestParameters: ApiImportLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -4128,12 +4243,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogDestroy(requestParameters: ApiImportLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiImportLogDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogListRaw(requestParameters: ApiImportLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedImportLogList>> {
         const queryParameters: any = {};
@@ -4163,6 +4280,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogList(requestParameters: ApiImportLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedImportLogList> {
         const response = await this.apiImportLogListRaw(requestParameters, initOverrides);
@@ -4170,6 +4288,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogPartialUpdateRaw(requestParameters: ApiImportLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportLog>> {
         if (requestParameters['id'] == null) {
@@ -4201,6 +4320,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogPartialUpdate(requestParameters: ApiImportLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ImportLog> {
         const response = await this.apiImportLogPartialUpdateRaw(requestParameters, initOverrides);
@@ -4208,6 +4328,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogRetrieveRaw(requestParameters: ApiImportLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportLog>> {
         if (requestParameters['id'] == null) {
@@ -4236,6 +4357,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogRetrieve(requestParameters: ApiImportLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ImportLog> {
         const response = await this.apiImportLogRetrieveRaw(requestParameters, initOverrides);
@@ -4243,6 +4365,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogUpdateRaw(requestParameters: ApiImportLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ImportLog>> {
         if (requestParameters['id'] == null) {
@@ -4281,6 +4404,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiImportLogUpdate(requestParameters: ApiImportLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ImportLog> {
         const response = await this.apiImportLogUpdateRaw(requestParameters, initOverrides);
@@ -4288,6 +4412,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientCreateRaw(requestParameters: ApiIngredientCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Ingredient>> {
         if (requestParameters['ingredient'] == null) {
@@ -4319,6 +4444,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientCreate(requestParameters: ApiIngredientCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientCreateRaw(requestParameters, initOverrides);
@@ -4326,6 +4452,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientDestroyRaw(requestParameters: ApiIngredientDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -4354,6 +4481,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientDestroy(requestParameters: ApiIngredientDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiIngredientDestroyRaw(requestParameters, initOverrides);
@@ -4398,6 +4526,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientListRaw(requestParameters: ApiIngredientListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedIngredientList>> {
         const queryParameters: any = {};
@@ -4435,6 +4564,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientList(requestParameters: ApiIngredientListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedIngredientList> {
         const response = await this.apiIngredientListRaw(requestParameters, initOverrides);
@@ -4442,6 +4572,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientPartialUpdateRaw(requestParameters: ApiIngredientPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Ingredient>> {
         if (requestParameters['id'] == null) {
@@ -4473,6 +4604,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientPartialUpdate(requestParameters: ApiIngredientPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientPartialUpdateRaw(requestParameters, initOverrides);
@@ -4480,6 +4612,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientRetrieveRaw(requestParameters: ApiIngredientRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Ingredient>> {
         if (requestParameters['id'] == null) {
@@ -4508,6 +4641,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientRetrieve(requestParameters: ApiIngredientRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientRetrieveRaw(requestParameters, initOverrides);
@@ -4515,6 +4649,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientUpdateRaw(requestParameters: ApiIngredientUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Ingredient>> {
         if (requestParameters['id'] == null) {
@@ -4553,6 +4688,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiIngredientUpdate(requestParameters: ApiIngredientUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientUpdateRaw(requestParameters, initOverrides);
@@ -4560,6 +4696,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkCreateRaw(requestParameters: ApiInviteLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
         if (requestParameters['inviteLink'] == null) {
@@ -4591,6 +4728,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkCreate(requestParameters: ApiInviteLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkCreateRaw(requestParameters, initOverrides);
@@ -4598,6 +4736,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkDestroyRaw(requestParameters: ApiInviteLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -4626,12 +4765,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkDestroy(requestParameters: ApiInviteLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiInviteLinkDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkListRaw(requestParameters: ApiInviteLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInviteLinkList>> {
         const queryParameters: any = {};
@@ -4681,6 +4822,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkList(requestParameters: ApiInviteLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInviteLinkList> {
         const response = await this.apiInviteLinkListRaw(requestParameters, initOverrides);
@@ -4688,6 +4830,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkPartialUpdateRaw(requestParameters: ApiInviteLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
         if (requestParameters['id'] == null) {
@@ -4719,6 +4862,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkPartialUpdate(requestParameters: ApiInviteLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkPartialUpdateRaw(requestParameters, initOverrides);
@@ -4726,6 +4870,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkRetrieveRaw(requestParameters: ApiInviteLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
         if (requestParameters['id'] == null) {
@@ -4754,6 +4899,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkRetrieve(requestParameters: ApiInviteLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkRetrieveRaw(requestParameters, initOverrides);
@@ -4761,6 +4907,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkUpdateRaw(requestParameters: ApiInviteLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InviteLink>> {
         if (requestParameters['id'] == null) {
@@ -4799,6 +4946,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiInviteLinkUpdate(requestParameters: ApiInviteLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkUpdateRaw(requestParameters, initOverrides);
@@ -4806,6 +4954,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordCreateRaw(requestParameters: ApiKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['keyword'] == null) {
@@ -4837,6 +4986,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordCreate(requestParameters: ApiKeywordCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordCreateRaw(requestParameters, initOverrides);
@@ -4844,6 +4994,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordDestroyRaw(requestParameters: ApiKeywordDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -4872,12 +5023,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordDestroy(requestParameters: ApiKeywordDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiKeywordDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordListRaw(requestParameters: ApiKeywordListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedKeywordList>> {
         const queryParameters: any = {};
@@ -4931,6 +5084,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordList(requestParameters: ApiKeywordListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedKeywordList> {
         const response = await this.apiKeywordListRaw(requestParameters, initOverrides);
@@ -4938,6 +5092,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordMergeUpdateRaw(requestParameters: ApiKeywordMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['id'] == null) {
@@ -4983,6 +5138,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordMergeUpdate(requestParameters: ApiKeywordMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordMergeUpdateRaw(requestParameters, initOverrides);
@@ -4990,6 +5146,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordMoveUpdateRaw(requestParameters: ApiKeywordMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['id'] == null) {
@@ -5035,6 +5192,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordMoveUpdate(requestParameters: ApiKeywordMoveUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordMoveUpdateRaw(requestParameters, initOverrides);
@@ -5042,6 +5200,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordPartialUpdateRaw(requestParameters: ApiKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['id'] == null) {
@@ -5073,6 +5232,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordPartialUpdate(requestParameters: ApiKeywordPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordPartialUpdateRaw(requestParameters, initOverrides);
@@ -5080,6 +5240,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordRetrieveRaw(requestParameters: ApiKeywordRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['id'] == null) {
@@ -5108,6 +5269,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordRetrieve(requestParameters: ApiKeywordRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordRetrieveRaw(requestParameters, initOverrides);
@@ -5115,6 +5277,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordUpdateRaw(requestParameters: ApiKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Keyword>> {
         if (requestParameters['id'] == null) {
@@ -5153,6 +5316,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiKeywordUpdate(requestParameters: ApiKeywordUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Keyword> {
         const response = await this.apiKeywordUpdateRaw(requestParameters, initOverrides);
@@ -5188,6 +5352,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanCreateRaw(requestParameters: ApiMealPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['mealPlan'] == null) {
@@ -5219,6 +5384,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanCreate(requestParameters: ApiMealPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanCreateRaw(requestParameters, initOverrides);
@@ -5226,6 +5392,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanDestroyRaw(requestParameters: ApiMealPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -5254,12 +5421,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanDestroy(requestParameters: ApiMealPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiMealPlanDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanIcalRetrieveRaw(requestParameters: ApiMealPlanIcalRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         const queryParameters: any = {};
@@ -5297,6 +5466,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanIcalRetrieve(requestParameters: ApiMealPlanIcalRetrieveRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
         const response = await this.apiMealPlanIcalRetrieveRaw(requestParameters, initOverrides);
@@ -5304,6 +5474,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanListRaw(requestParameters: ApiMealPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedMealPlanList>> {
         const queryParameters: any = {};
@@ -5345,6 +5516,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanList(requestParameters: ApiMealPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedMealPlanList> {
         const response = await this.apiMealPlanListRaw(requestParameters, initOverrides);
@@ -5352,6 +5524,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanPartialUpdateRaw(requestParameters: ApiMealPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5383,6 +5556,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanPartialUpdate(requestParameters: ApiMealPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanPartialUpdateRaw(requestParameters, initOverrides);
@@ -5390,6 +5564,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanRetrieveRaw(requestParameters: ApiMealPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5418,6 +5593,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanRetrieve(requestParameters: ApiMealPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanRetrieveRaw(requestParameters, initOverrides);
@@ -5425,6 +5601,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanUpdateRaw(requestParameters: ApiMealPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<MealPlan>> {
         if (requestParameters['id'] == null) {
@@ -5463,6 +5640,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiMealPlanUpdate(requestParameters: ApiMealPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<MealPlan> {
         const response = await this.apiMealPlanUpdateRaw(requestParameters, initOverrides);
@@ -7295,6 +7473,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyCreateRaw(requestParameters: ApiPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
         if (requestParameters['property'] == null) {
@@ -7326,6 +7505,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyCreate(requestParameters: ApiPropertyCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyCreateRaw(requestParameters, initOverrides);
@@ -7333,6 +7513,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyDestroyRaw(requestParameters: ApiPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -7361,12 +7542,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyDestroy(requestParameters: ApiPropertyDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiPropertyDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyListRaw(requestParameters: ApiPropertyListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyList>> {
         const queryParameters: any = {};
@@ -7396,6 +7579,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyList(requestParameters: ApiPropertyListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyList> {
         const response = await this.apiPropertyListRaw(requestParameters, initOverrides);
@@ -7403,6 +7587,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyPartialUpdateRaw(requestParameters: ApiPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
         if (requestParameters['id'] == null) {
@@ -7434,6 +7619,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyPartialUpdate(requestParameters: ApiPropertyPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyPartialUpdateRaw(requestParameters, initOverrides);
@@ -7441,6 +7627,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyRetrieveRaw(requestParameters: ApiPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
         if (requestParameters['id'] == null) {
@@ -7469,6 +7656,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyRetrieve(requestParameters: ApiPropertyRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyRetrieveRaw(requestParameters, initOverrides);
@@ -7476,6 +7664,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeCreateRaw(requestParameters: ApiPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
         if (requestParameters['propertyType'] == null) {
@@ -7507,6 +7696,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeCreate(requestParameters: ApiPropertyTypeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
         const response = await this.apiPropertyTypeCreateRaw(requestParameters, initOverrides);
@@ -7514,6 +7704,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeDestroyRaw(requestParameters: ApiPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -7542,12 +7733,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeDestroy(requestParameters: ApiPropertyTypeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiPropertyTypeDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeListRaw(requestParameters: ApiPropertyTypeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedPropertyTypeList>> {
         const queryParameters: any = {};
@@ -7581,6 +7774,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeList(requestParameters: ApiPropertyTypeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedPropertyTypeList> {
         const response = await this.apiPropertyTypeListRaw(requestParameters, initOverrides);
@@ -7588,6 +7782,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypePartialUpdateRaw(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
         if (requestParameters['id'] == null) {
@@ -7619,6 +7814,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypePartialUpdate(requestParameters: ApiPropertyTypePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
         const response = await this.apiPropertyTypePartialUpdateRaw(requestParameters, initOverrides);
@@ -7626,6 +7822,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeRetrieveRaw(requestParameters: ApiPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
         if (requestParameters['id'] == null) {
@@ -7654,6 +7851,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeRetrieve(requestParameters: ApiPropertyTypeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
         const response = await this.apiPropertyTypeRetrieveRaw(requestParameters, initOverrides);
@@ -7661,6 +7859,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeUpdateRaw(requestParameters: ApiPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PropertyType>> {
         if (requestParameters['id'] == null) {
@@ -7699,6 +7898,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyTypeUpdate(requestParameters: ApiPropertyTypeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PropertyType> {
         const response = await this.apiPropertyTypeUpdateRaw(requestParameters, initOverrides);
@@ -7706,6 +7906,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyUpdateRaw(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Property>> {
         if (requestParameters['id'] == null) {
@@ -7744,6 +7945,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiPropertyUpdate(requestParameters: ApiPropertyUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Property> {
         const response = await this.apiPropertyUpdateRaw(requestParameters, initOverrides);
@@ -7751,6 +7953,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookCreateRaw(requestParameters: ApiRecipeBookCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
         if (requestParameters['recipeBook'] == null) {
@@ -7782,6 +7985,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookCreate(requestParameters: ApiRecipeBookCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookCreateRaw(requestParameters, initOverrides);
@@ -7789,6 +7993,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookDestroyRaw(requestParameters: ApiRecipeBookDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -7817,12 +8022,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookDestroy(requestParameters: ApiRecipeBookDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiRecipeBookDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryCreateRaw(requestParameters: ApiRecipeBookEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['recipeBookEntry'] == null) {
@@ -7854,6 +8061,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryCreate(requestParameters: ApiRecipeBookEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryCreateRaw(requestParameters, initOverrides);
@@ -7861,6 +8069,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryDestroyRaw(requestParameters: ApiRecipeBookEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -7889,12 +8098,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryDestroy(requestParameters: ApiRecipeBookEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiRecipeBookEntryDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryListRaw(requestParameters: ApiRecipeBookEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeBookEntryList>> {
         const queryParameters: any = {};
@@ -7932,6 +8143,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryList(requestParameters: ApiRecipeBookEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeBookEntryList> {
         const response = await this.apiRecipeBookEntryListRaw(requestParameters, initOverrides);
@@ -7939,6 +8151,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryPartialUpdateRaw(requestParameters: ApiRecipeBookEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -7970,6 +8183,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryPartialUpdate(requestParameters: ApiRecipeBookEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryPartialUpdateRaw(requestParameters, initOverrides);
@@ -7977,6 +8191,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryRetrieveRaw(requestParameters: ApiRecipeBookEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -8005,6 +8220,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryRetrieve(requestParameters: ApiRecipeBookEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryRetrieveRaw(requestParameters, initOverrides);
@@ -8012,6 +8228,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryUpdateRaw(requestParameters: ApiRecipeBookEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBookEntry>> {
         if (requestParameters['id'] == null) {
@@ -8050,6 +8267,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookEntryUpdate(requestParameters: ApiRecipeBookEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBookEntry> {
         const response = await this.apiRecipeBookEntryUpdateRaw(requestParameters, initOverrides);
@@ -8057,6 +8275,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookListRaw(requestParameters: ApiRecipeBookListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeBookList>> {
         const queryParameters: any = {};
@@ -8110,6 +8329,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookList(requestParameters: ApiRecipeBookListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeBookList> {
         const response = await this.apiRecipeBookListRaw(requestParameters, initOverrides);
@@ -8117,6 +8337,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookPartialUpdateRaw(requestParameters: ApiRecipeBookPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
         if (requestParameters['id'] == null) {
@@ -8148,6 +8369,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookPartialUpdate(requestParameters: ApiRecipeBookPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookPartialUpdateRaw(requestParameters, initOverrides);
@@ -8155,6 +8377,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookRetrieveRaw(requestParameters: ApiRecipeBookRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
         if (requestParameters['id'] == null) {
@@ -8183,6 +8406,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookRetrieve(requestParameters: ApiRecipeBookRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookRetrieveRaw(requestParameters, initOverrides);
@@ -8190,6 +8414,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookUpdateRaw(requestParameters: ApiRecipeBookUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeBook>> {
         if (requestParameters['id'] == null) {
@@ -8228,6 +8453,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeBookUpdate(requestParameters: ApiRecipeBookUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeBook> {
         const response = await this.apiRecipeBookUpdateRaw(requestParameters, initOverrides);
@@ -8235,6 +8461,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeCreateRaw(requestParameters: ApiRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
         if (requestParameters['recipe'] == null) {
@@ -8266,6 +8493,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeCreate(requestParameters: ApiRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipeCreateRaw(requestParameters, initOverrides);
@@ -8273,6 +8501,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeDestroyRaw(requestParameters: ApiRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -8301,12 +8530,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeDestroy(requestParameters: ApiRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiRecipeDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeFlatListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RecipeFlat>>> {
         const queryParameters: any = {};
@@ -8328,6 +8559,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeFlatList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<RecipeFlat>> {
         const response = await this.apiRecipeFlatListRaw(initOverrides);
@@ -8364,6 +8596,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeImageUpdateRaw(requestParameters: ApiRecipeImageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeImage>> {
         if (requestParameters['id'] == null) {
@@ -8415,6 +8648,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeImageUpdate(requestParameters: ApiRecipeImageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeImage> {
         const response = await this.apiRecipeImageUpdateRaw(requestParameters, initOverrides);
@@ -8422,6 +8656,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeListRaw(requestParameters: ApiRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedRecipeOverviewList>> {
         const queryParameters: any = {};
@@ -8559,6 +8794,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeList(requestParameters: ApiRecipeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedRecipeOverviewList> {
         const response = await this.apiRecipeListRaw(requestParameters, initOverrides);
@@ -8566,6 +8802,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipePartialUpdateRaw(requestParameters: ApiRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
         if (requestParameters['id'] == null) {
@@ -8597,6 +8834,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipePartialUpdate(requestParameters: ApiRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipePartialUpdateRaw(requestParameters, initOverrides);
@@ -8604,6 +8842,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeRelatedRetrieveRaw(requestParameters: ApiRecipeRelatedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeSimple>> {
         if (requestParameters['id'] == null) {
@@ -8632,6 +8871,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeRelatedRetrieve(requestParameters: ApiRecipeRelatedRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeSimple> {
         const response = await this.apiRecipeRelatedRetrieveRaw(requestParameters, initOverrides);
@@ -8639,6 +8879,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeRetrieveRaw(requestParameters: ApiRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
         if (requestParameters['id'] == null) {
@@ -8667,6 +8908,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeRetrieve(requestParameters: ApiRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipeRetrieveRaw(requestParameters, initOverrides);
@@ -8674,6 +8916,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeShoppingUpdateRaw(requestParameters: ApiRecipeShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RecipeShoppingUpdate>> {
         if (requestParameters['id'] == null) {
@@ -8705,6 +8948,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeShoppingUpdate(requestParameters: ApiRecipeShoppingUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RecipeShoppingUpdate> {
         const response = await this.apiRecipeShoppingUpdateRaw(requestParameters, initOverrides);
@@ -8712,6 +8956,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeUpdateRaw(requestParameters: ApiRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Recipe>> {
         if (requestParameters['id'] == null) {
@@ -8750,6 +8995,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiRecipeUpdate(requestParameters: ApiRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Recipe> {
         const response = await this.apiRecipeUpdateRaw(requestParameters, initOverrides);
@@ -8849,6 +9095,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryBulkCreateRaw(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntryBulk>> {
         if (requestParameters['shoppingListEntryBulk'] == null) {
@@ -8880,6 +9127,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryBulkCreate(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntryBulk> {
         const response = await this.apiShoppingListEntryBulkCreateRaw(requestParameters, initOverrides);
@@ -8887,6 +9135,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryCreateRaw(requestParameters: ApiShoppingListEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['shoppingListEntry'] == null) {
@@ -8918,6 +9167,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryCreate(requestParameters: ApiShoppingListEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryCreateRaw(requestParameters, initOverrides);
@@ -8925,6 +9175,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryDestroyRaw(requestParameters: ApiShoppingListEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -8953,12 +9204,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryDestroy(requestParameters: ApiShoppingListEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiShoppingListEntryDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryListRaw(requestParameters: ApiShoppingListEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListEntryList>> {
         const queryParameters: any = {};
@@ -9000,6 +9253,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryList(requestParameters: ApiShoppingListEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListEntryList> {
         const response = await this.apiShoppingListEntryListRaw(requestParameters, initOverrides);
@@ -9007,6 +9261,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryPartialUpdateRaw(requestParameters: ApiShoppingListEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9038,6 +9293,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryPartialUpdate(requestParameters: ApiShoppingListEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryPartialUpdateRaw(requestParameters, initOverrides);
@@ -9045,6 +9301,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryRetrieveRaw(requestParameters: ApiShoppingListEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9073,6 +9330,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryRetrieve(requestParameters: ApiShoppingListEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryRetrieveRaw(requestParameters, initOverrides);
@@ -9080,6 +9338,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryUpdateRaw(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9118,6 +9377,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListEntryUpdate(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryUpdateRaw(requestParameters, initOverrides);
@@ -9125,6 +9385,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeCreateRaw(requestParameters: ApiShoppingListRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListRecipe>> {
         if (requestParameters['shoppingListRecipe'] == null) {
@@ -9156,6 +9417,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeCreate(requestParameters: ApiShoppingListRecipeCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeCreateRaw(requestParameters, initOverrides);
@@ -9163,6 +9425,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeDestroyRaw(requestParameters: ApiShoppingListRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -9191,12 +9454,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeDestroy(requestParameters: ApiShoppingListRecipeDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiShoppingListRecipeDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeListRaw(requestParameters: ApiShoppingListRecipeListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListRecipeList>> {
         const queryParameters: any = {};
@@ -9226,6 +9491,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeList(requestParameters: ApiShoppingListRecipeListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListRecipeList> {
         const response = await this.apiShoppingListRecipeListRaw(requestParameters, initOverrides);
@@ -9233,6 +9499,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipePartialUpdateRaw(requestParameters: ApiShoppingListRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListRecipe>> {
         if (requestParameters['id'] == null) {
@@ -9264,6 +9531,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipePartialUpdate(requestParameters: ApiShoppingListRecipePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipePartialUpdateRaw(requestParameters, initOverrides);
@@ -9271,6 +9539,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeRetrieveRaw(requestParameters: ApiShoppingListRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListRecipe>> {
         if (requestParameters['id'] == null) {
@@ -9299,6 +9568,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeRetrieve(requestParameters: ApiShoppingListRecipeRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeRetrieveRaw(requestParameters, initOverrides);
@@ -9306,6 +9576,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeUpdateRaw(requestParameters: ApiShoppingListRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListRecipe>> {
         if (requestParameters['id'] == null) {
@@ -9344,6 +9615,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiShoppingListRecipeUpdate(requestParameters: ApiShoppingListRecipeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListRecipe> {
         const response = await this.apiShoppingListRecipeUpdateRaw(requestParameters, initOverrides);
@@ -9351,6 +9623,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceCurrentRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
         const queryParameters: any = {};
@@ -9372,6 +9645,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceCurrentRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
         const response = await this.apiSpaceCurrentRetrieveRaw(initOverrides);
@@ -9379,6 +9653,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceListRaw(requestParameters: ApiSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSpaceList>> {
         const queryParameters: any = {};
@@ -9408,6 +9683,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceList(requestParameters: ApiSpaceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSpaceList> {
         const response = await this.apiSpaceListRaw(requestParameters, initOverrides);
@@ -9415,6 +9691,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpacePartialUpdateRaw(requestParameters: ApiSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
         if (requestParameters['id'] == null) {
@@ -9446,6 +9723,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpacePartialUpdate(requestParameters: ApiSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
         const response = await this.apiSpacePartialUpdateRaw(requestParameters, initOverrides);
@@ -9453,6 +9731,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceRetrieveRaw(requestParameters: ApiSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Space>> {
         if (requestParameters['id'] == null) {
@@ -9481,6 +9760,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSpaceRetrieve(requestParameters: ApiSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Space> {
         const response = await this.apiSpaceRetrieveRaw(requestParameters, initOverrides);
@@ -9488,6 +9768,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepCreateRaw(requestParameters: ApiStepCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Step>> {
         if (requestParameters['step'] == null) {
@@ -9519,6 +9800,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepCreate(requestParameters: ApiStepCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Step> {
         const response = await this.apiStepCreateRaw(requestParameters, initOverrides);
@@ -9526,6 +9808,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepDestroyRaw(requestParameters: ApiStepDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -9554,12 +9837,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepDestroy(requestParameters: ApiStepDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiStepDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepListRaw(requestParameters: ApiStepListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedStepList>> {
         const queryParameters: any = {};
@@ -9597,6 +9882,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepList(requestParameters: ApiStepListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedStepList> {
         const response = await this.apiStepListRaw(requestParameters, initOverrides);
@@ -9604,6 +9890,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepPartialUpdateRaw(requestParameters: ApiStepPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Step>> {
         if (requestParameters['id'] == null) {
@@ -9635,6 +9922,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepPartialUpdate(requestParameters: ApiStepPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Step> {
         const response = await this.apiStepPartialUpdateRaw(requestParameters, initOverrides);
@@ -9642,6 +9930,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepRetrieveRaw(requestParameters: ApiStepRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Step>> {
         if (requestParameters['id'] == null) {
@@ -9670,6 +9959,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepRetrieve(requestParameters: ApiStepRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Step> {
         const response = await this.apiStepRetrieveRaw(requestParameters, initOverrides);
@@ -9677,6 +9967,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepUpdateRaw(requestParameters: ApiStepUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Step>> {
         if (requestParameters['id'] == null) {
@@ -9715,6 +10006,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStepUpdate(requestParameters: ApiStepUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Step> {
         const response = await this.apiStepUpdateRaw(requestParameters, initOverrides);
@@ -9722,6 +10014,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageCreateRaw(requestParameters: ApiStorageCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
         if (requestParameters['storage'] == null) {
@@ -9753,6 +10046,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageCreate(requestParameters: ApiStorageCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStorageCreateRaw(requestParameters, initOverrides);
@@ -9760,6 +10054,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageDestroyRaw(requestParameters: ApiStorageDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -9788,12 +10083,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageDestroy(requestParameters: ApiStorageDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiStorageDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Storage>>> {
         const queryParameters: any = {};
@@ -9815,6 +10112,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Storage>> {
         const response = await this.apiStorageListRaw(initOverrides);
@@ -9822,6 +10120,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStoragePartialUpdateRaw(requestParameters: ApiStoragePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
         if (requestParameters['id'] == null) {
@@ -9853,6 +10152,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStoragePartialUpdate(requestParameters: ApiStoragePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStoragePartialUpdateRaw(requestParameters, initOverrides);
@@ -9860,6 +10160,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageRetrieveRaw(requestParameters: ApiStorageRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
         if (requestParameters['id'] == null) {
@@ -9888,6 +10189,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageRetrieve(requestParameters: ApiStorageRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStorageRetrieveRaw(requestParameters, initOverrides);
@@ -9895,6 +10197,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageUpdateRaw(requestParameters: ApiStorageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Storage>> {
         if (requestParameters['id'] == null) {
@@ -9933,6 +10236,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiStorageUpdate(requestParameters: ApiStorageUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Storage> {
         const response = await this.apiStorageUpdateRaw(requestParameters, initOverrides);
@@ -9940,6 +10244,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryCreateRaw(requestParameters: ApiSupermarketCategoryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
         if (requestParameters['supermarketCategory'] == null) {
@@ -9971,6 +10276,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryCreate(requestParameters: ApiSupermarketCategoryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryCreateRaw(requestParameters, initOverrides);
@@ -9978,6 +10284,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryDestroyRaw(requestParameters: ApiSupermarketCategoryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -10006,12 +10313,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryDestroy(requestParameters: ApiSupermarketCategoryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiSupermarketCategoryDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryListRaw(requestParameters: ApiSupermarketCategoryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSupermarketCategoryList>> {
         const queryParameters: any = {};
@@ -10057,6 +10366,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryList(requestParameters: ApiSupermarketCategoryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSupermarketCategoryList> {
         const response = await this.apiSupermarketCategoryListRaw(requestParameters, initOverrides);
@@ -10064,6 +10374,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryMergeUpdateRaw(requestParameters: ApiSupermarketCategoryMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
         if (requestParameters['id'] == null) {
@@ -10109,6 +10420,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryMergeUpdate(requestParameters: ApiSupermarketCategoryMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryMergeUpdateRaw(requestParameters, initOverrides);
@@ -10116,6 +10428,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryPartialUpdateRaw(requestParameters: ApiSupermarketCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
         if (requestParameters['id'] == null) {
@@ -10147,6 +10460,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryPartialUpdate(requestParameters: ApiSupermarketCategoryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryPartialUpdateRaw(requestParameters, initOverrides);
@@ -10154,6 +10468,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationCreateRaw(requestParameters: ApiSupermarketCategoryRelationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategoryRelation>> {
         if (requestParameters['supermarketCategoryRelation'] == null) {
@@ -10185,6 +10500,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationCreate(requestParameters: ApiSupermarketCategoryRelationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategoryRelation> {
         const response = await this.apiSupermarketCategoryRelationCreateRaw(requestParameters, initOverrides);
@@ -10192,6 +10508,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationDestroyRaw(requestParameters: ApiSupermarketCategoryRelationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -10220,12 +10537,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationDestroy(requestParameters: ApiSupermarketCategoryRelationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiSupermarketCategoryRelationDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationListRaw(requestParameters: ApiSupermarketCategoryRelationListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSupermarketCategoryRelationList>> {
         const queryParameters: any = {};
@@ -10271,6 +10590,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationList(requestParameters: ApiSupermarketCategoryRelationListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSupermarketCategoryRelationList> {
         const response = await this.apiSupermarketCategoryRelationListRaw(requestParameters, initOverrides);
@@ -10278,6 +10598,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationPartialUpdateRaw(requestParameters: ApiSupermarketCategoryRelationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategoryRelation>> {
         if (requestParameters['id'] == null) {
@@ -10309,6 +10630,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationPartialUpdate(requestParameters: ApiSupermarketCategoryRelationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategoryRelation> {
         const response = await this.apiSupermarketCategoryRelationPartialUpdateRaw(requestParameters, initOverrides);
@@ -10316,6 +10638,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationRetrieveRaw(requestParameters: ApiSupermarketCategoryRelationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategoryRelation>> {
         if (requestParameters['id'] == null) {
@@ -10344,6 +10667,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationRetrieve(requestParameters: ApiSupermarketCategoryRelationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategoryRelation> {
         const response = await this.apiSupermarketCategoryRelationRetrieveRaw(requestParameters, initOverrides);
@@ -10351,6 +10675,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationUpdateRaw(requestParameters: ApiSupermarketCategoryRelationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategoryRelation>> {
         if (requestParameters['id'] == null) {
@@ -10389,6 +10714,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRelationUpdate(requestParameters: ApiSupermarketCategoryRelationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategoryRelation> {
         const response = await this.apiSupermarketCategoryRelationUpdateRaw(requestParameters, initOverrides);
@@ -10396,6 +10722,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRetrieveRaw(requestParameters: ApiSupermarketCategoryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
         if (requestParameters['id'] == null) {
@@ -10424,6 +10751,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryRetrieve(requestParameters: ApiSupermarketCategoryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryRetrieveRaw(requestParameters, initOverrides);
@@ -10431,6 +10759,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryUpdateRaw(requestParameters: ApiSupermarketCategoryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SupermarketCategory>> {
         if (requestParameters['id'] == null) {
@@ -10469,6 +10798,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCategoryUpdate(requestParameters: ApiSupermarketCategoryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SupermarketCategory> {
         const response = await this.apiSupermarketCategoryUpdateRaw(requestParameters, initOverrides);
@@ -10476,6 +10806,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCreateRaw(requestParameters: ApiSupermarketCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
         if (requestParameters['supermarket'] == null) {
@@ -10507,6 +10838,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketCreate(requestParameters: ApiSupermarketCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Supermarket> {
         const response = await this.apiSupermarketCreateRaw(requestParameters, initOverrides);
@@ -10514,6 +10846,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketDestroyRaw(requestParameters: ApiSupermarketDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -10542,12 +10875,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketDestroy(requestParameters: ApiSupermarketDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiSupermarketDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketListRaw(requestParameters: ApiSupermarketListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSupermarketList>> {
         const queryParameters: any = {};
@@ -10593,6 +10928,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketList(requestParameters: ApiSupermarketListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSupermarketList> {
         const response = await this.apiSupermarketListRaw(requestParameters, initOverrides);
@@ -10600,6 +10936,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketPartialUpdateRaw(requestParameters: ApiSupermarketPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
         if (requestParameters['id'] == null) {
@@ -10631,6 +10968,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketPartialUpdate(requestParameters: ApiSupermarketPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Supermarket> {
         const response = await this.apiSupermarketPartialUpdateRaw(requestParameters, initOverrides);
@@ -10638,6 +10976,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketRetrieveRaw(requestParameters: ApiSupermarketRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
         if (requestParameters['id'] == null) {
@@ -10666,6 +11005,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketRetrieve(requestParameters: ApiSupermarketRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Supermarket> {
         const response = await this.apiSupermarketRetrieveRaw(requestParameters, initOverrides);
@@ -10673,6 +11013,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketUpdateRaw(requestParameters: ApiSupermarketUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Supermarket>> {
         if (requestParameters['id'] == null) {
@@ -10711,6 +11052,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSupermarketUpdate(requestParameters: ApiSupermarketUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Supermarket> {
         const response = await this.apiSupermarketUpdateRaw(requestParameters, initOverrides);
@@ -10754,6 +11096,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncCreateRaw(requestParameters: ApiSyncCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
         if (requestParameters['sync'] == null) {
@@ -10785,6 +11128,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncCreate(requestParameters: ApiSyncCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncCreateRaw(requestParameters, initOverrides);
@@ -10792,6 +11136,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncDestroyRaw(requestParameters: ApiSyncDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -10820,12 +11165,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncDestroy(requestParameters: ApiSyncDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiSyncDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncListRaw(requestParameters: ApiSyncListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSyncList>> {
         const queryParameters: any = {};
@@ -10855,6 +11202,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncList(requestParameters: ApiSyncListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSyncList> {
         const response = await this.apiSyncListRaw(requestParameters, initOverrides);
@@ -10862,6 +11210,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncLogListRaw(requestParameters: ApiSyncLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedSyncLogList>> {
         const queryParameters: any = {};
@@ -10891,6 +11240,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncLogList(requestParameters: ApiSyncLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedSyncLogList> {
         const response = await this.apiSyncLogListRaw(requestParameters, initOverrides);
@@ -10898,6 +11248,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncLogRetrieveRaw(requestParameters: ApiSyncLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SyncLog>> {
         if (requestParameters['id'] == null) {
@@ -10926,6 +11277,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncLogRetrieve(requestParameters: ApiSyncLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SyncLog> {
         const response = await this.apiSyncLogRetrieveRaw(requestParameters, initOverrides);
@@ -10933,6 +11285,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncPartialUpdateRaw(requestParameters: ApiSyncPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
         if (requestParameters['id'] == null) {
@@ -10964,6 +11317,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncPartialUpdate(requestParameters: ApiSyncPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncPartialUpdateRaw(requestParameters, initOverrides);
@@ -10971,6 +11325,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncRetrieveRaw(requestParameters: ApiSyncRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
         if (requestParameters['id'] == null) {
@@ -10999,6 +11354,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncRetrieve(requestParameters: ApiSyncRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncRetrieveRaw(requestParameters, initOverrides);
@@ -11006,6 +11362,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncUpdateRaw(requestParameters: ApiSyncUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Sync>> {
         if (requestParameters['id'] == null) {
@@ -11044,6 +11401,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiSyncUpdate(requestParameters: ApiSyncUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Sync> {
         const response = await this.apiSyncUpdateRaw(requestParameters, initOverrides);
@@ -11051,6 +11409,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionCreateRaw(requestParameters: ApiUnitConversionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitConversion>> {
         if (requestParameters['unitConversion'] == null) {
@@ -11082,6 +11441,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionCreate(requestParameters: ApiUnitConversionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UnitConversion> {
         const response = await this.apiUnitConversionCreateRaw(requestParameters, initOverrides);
@@ -11089,6 +11449,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionDestroyRaw(requestParameters: ApiUnitConversionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -11117,12 +11478,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionDestroy(requestParameters: ApiUnitConversionDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiUnitConversionDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionListRaw(requestParameters: ApiUnitConversionListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUnitConversionList>> {
         const queryParameters: any = {};
@@ -11156,6 +11519,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionList(requestParameters: ApiUnitConversionListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUnitConversionList> {
         const response = await this.apiUnitConversionListRaw(requestParameters, initOverrides);
@@ -11163,6 +11527,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionPartialUpdateRaw(requestParameters: ApiUnitConversionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitConversion>> {
         if (requestParameters['id'] == null) {
@@ -11194,6 +11559,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionPartialUpdate(requestParameters: ApiUnitConversionPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UnitConversion> {
         const response = await this.apiUnitConversionPartialUpdateRaw(requestParameters, initOverrides);
@@ -11201,6 +11567,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionRetrieveRaw(requestParameters: ApiUnitConversionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitConversion>> {
         if (requestParameters['id'] == null) {
@@ -11229,6 +11596,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionRetrieve(requestParameters: ApiUnitConversionRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UnitConversion> {
         const response = await this.apiUnitConversionRetrieveRaw(requestParameters, initOverrides);
@@ -11236,6 +11604,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionUpdateRaw(requestParameters: ApiUnitConversionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitConversion>> {
         if (requestParameters['id'] == null) {
@@ -11274,6 +11643,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitConversionUpdate(requestParameters: ApiUnitConversionUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UnitConversion> {
         const response = await this.apiUnitConversionUpdateRaw(requestParameters, initOverrides);
@@ -11281,6 +11651,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitCreateRaw(requestParameters: ApiUnitCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
         if (requestParameters['unit'] == null) {
@@ -11312,6 +11683,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitCreate(requestParameters: ApiUnitCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitCreateRaw(requestParameters, initOverrides);
@@ -11319,6 +11691,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitDestroyRaw(requestParameters: ApiUnitDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -11347,12 +11720,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitDestroy(requestParameters: ApiUnitDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiUnitDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitListRaw(requestParameters: ApiUnitListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUnitList>> {
         const queryParameters: any = {};
@@ -11398,6 +11773,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitList(requestParameters: ApiUnitListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUnitList> {
         const response = await this.apiUnitListRaw(requestParameters, initOverrides);
@@ -11405,6 +11781,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitMergeUpdateRaw(requestParameters: ApiUnitMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
         if (requestParameters['id'] == null) {
@@ -11450,6 +11827,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitMergeUpdate(requestParameters: ApiUnitMergeUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitMergeUpdateRaw(requestParameters, initOverrides);
@@ -11457,6 +11835,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitPartialUpdateRaw(requestParameters: ApiUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
         if (requestParameters['id'] == null) {
@@ -11488,6 +11867,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitPartialUpdate(requestParameters: ApiUnitPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitPartialUpdateRaw(requestParameters, initOverrides);
@@ -11495,6 +11875,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitRetrieveRaw(requestParameters: ApiUnitRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
         if (requestParameters['id'] == null) {
@@ -11523,6 +11904,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitRetrieve(requestParameters: ApiUnitRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitRetrieveRaw(requestParameters, initOverrides);
@@ -11530,6 +11912,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitUpdateRaw(requestParameters: ApiUnitUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Unit>> {
         if (requestParameters['id'] == null) {
@@ -11568,6 +11951,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUnitUpdate(requestParameters: ApiUnitUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Unit> {
         const response = await this.apiUnitUpdateRaw(requestParameters, initOverrides);
@@ -11575,6 +11959,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileCreateRaw(requestParameters: ApiUserFileCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserFile>> {
         if (requestParameters['name'] == null) {
@@ -11692,6 +12077,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileCreate(requestParameters: ApiUserFileCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserFile> {
         const response = await this.apiUserFileCreateRaw(requestParameters, initOverrides);
@@ -11699,6 +12085,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileDestroyRaw(requestParameters: ApiUserFileDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -11727,12 +12114,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileDestroy(requestParameters: ApiUserFileDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiUserFileDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileListRaw(requestParameters: ApiUserFileListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserFileList>> {
         const queryParameters: any = {};
@@ -11778,6 +12167,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileList(requestParameters: ApiUserFileListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserFileList> {
         const response = await this.apiUserFileListRaw(requestParameters, initOverrides);
@@ -11785,6 +12175,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFilePartialUpdateRaw(requestParameters: ApiUserFilePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserFile>> {
         if (requestParameters['id'] == null) {
@@ -11860,6 +12251,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFilePartialUpdate(requestParameters: ApiUserFilePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserFile> {
         const response = await this.apiUserFilePartialUpdateRaw(requestParameters, initOverrides);
@@ -11867,6 +12259,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileRetrieveRaw(requestParameters: ApiUserFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserFile>> {
         if (requestParameters['id'] == null) {
@@ -11895,6 +12288,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileRetrieve(requestParameters: ApiUserFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserFile> {
         const response = await this.apiUserFileRetrieveRaw(requestParameters, initOverrides);
@@ -11902,6 +12296,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileUpdateRaw(requestParameters: ApiUserFileUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserFile>> {
         if (requestParameters['id'] == null) {
@@ -12026,6 +12421,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserFileUpdate(requestParameters: ApiUserFileUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserFile> {
         const response = await this.apiUserFileUpdateRaw(requestParameters, initOverrides);
@@ -12033,6 +12429,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserListRaw(requestParameters: ApiUserListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<User>>> {
         const queryParameters: any = {};
@@ -12058,6 +12455,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserList(requestParameters: ApiUserListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<User>> {
         const response = await this.apiUserListRaw(requestParameters, initOverrides);
@@ -12065,6 +12463,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPartialUpdateRaw(requestParameters: ApiUserPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
         if (requestParameters['id'] == null) {
@@ -12096,6 +12495,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPartialUpdate(requestParameters: ApiUserPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.apiUserPartialUpdateRaw(requestParameters, initOverrides);
@@ -12103,6 +12503,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferenceListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserPreference>>> {
         const queryParameters: any = {};
@@ -12124,6 +12525,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferenceList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserPreference>> {
         const response = await this.apiUserPreferenceListRaw(initOverrides);
@@ -12131,6 +12533,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferencePartialUpdateRaw(requestParameters: ApiUserPreferencePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPreference>> {
         if (requestParameters['user'] == null) {
@@ -12162,6 +12565,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferencePartialUpdate(requestParameters: ApiUserPreferencePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPreference> {
         const response = await this.apiUserPreferencePartialUpdateRaw(requestParameters, initOverrides);
@@ -12169,6 +12573,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferenceRetrieveRaw(requestParameters: ApiUserPreferenceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserPreference>> {
         if (requestParameters['user'] == null) {
@@ -12197,6 +12602,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserPreferenceRetrieve(requestParameters: ApiUserPreferenceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserPreference> {
         const response = await this.apiUserPreferenceRetrieveRaw(requestParameters, initOverrides);
@@ -12204,6 +12610,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserRetrieveRaw(requestParameters: ApiUserRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
         if (requestParameters['id'] == null) {
@@ -12232,6 +12639,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserRetrieve(requestParameters: ApiUserRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
         const response = await this.apiUserRetrieveRaw(requestParameters, initOverrides);
@@ -12239,6 +12647,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceDestroyRaw(requestParameters: ApiUserSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -12267,12 +12676,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceDestroy(requestParameters: ApiUserSpaceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiUserSpaceDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceListRaw(requestParameters: ApiUserSpaceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
         const queryParameters: any = {};
@@ -12306,6 +12717,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceList(requestParameters: ApiUserSpaceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
         const response = await this.apiUserSpaceListRaw(requestParameters, initOverrides);
@@ -12313,6 +12725,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpacePartialUpdateRaw(requestParameters: ApiUserSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpace>> {
         if (requestParameters['id'] == null) {
@@ -12344,6 +12757,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpacePartialUpdate(requestParameters: ApiUserSpacePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpace> {
         const response = await this.apiUserSpacePartialUpdateRaw(requestParameters, initOverrides);
@@ -12351,6 +12765,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceRetrieveRaw(requestParameters: ApiUserSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpace>> {
         if (requestParameters['id'] == null) {
@@ -12379,6 +12794,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceRetrieve(requestParameters: ApiUserSpaceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpace> {
         const response = await this.apiUserSpaceRetrieveRaw(requestParameters, initOverrides);
@@ -12386,6 +12802,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceUpdateRaw(requestParameters: ApiUserSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpace>> {
         if (requestParameters['id'] == null) {
@@ -12424,6 +12841,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiUserSpaceUpdate(requestParameters: ApiUserSpaceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpace> {
         const response = await this.apiUserSpaceUpdateRaw(requestParameters, initOverrides);
@@ -12431,6 +12849,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogCreateRaw(requestParameters: ApiViewLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ViewLog>> {
         if (requestParameters['viewLog'] == null) {
@@ -12462,6 +12881,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogCreate(requestParameters: ApiViewLogCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ViewLog> {
         const response = await this.apiViewLogCreateRaw(requestParameters, initOverrides);
@@ -12469,6 +12889,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogDestroyRaw(requestParameters: ApiViewLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -12497,12 +12918,14 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogDestroy(requestParameters: ApiViewLogDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiViewLogDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogListRaw(requestParameters: ApiViewLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedViewLogList>> {
         const queryParameters: any = {};
@@ -12532,6 +12955,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogList(requestParameters: ApiViewLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedViewLogList> {
         const response = await this.apiViewLogListRaw(requestParameters, initOverrides);
@@ -12539,6 +12963,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogPartialUpdateRaw(requestParameters: ApiViewLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ViewLog>> {
         if (requestParameters['id'] == null) {
@@ -12570,6 +12995,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogPartialUpdate(requestParameters: ApiViewLogPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ViewLog> {
         const response = await this.apiViewLogPartialUpdateRaw(requestParameters, initOverrides);
@@ -12577,6 +13003,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogRetrieveRaw(requestParameters: ApiViewLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ViewLog>> {
         if (requestParameters['id'] == null) {
@@ -12605,6 +13032,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogRetrieve(requestParameters: ApiViewLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ViewLog> {
         const response = await this.apiViewLogRetrieveRaw(requestParameters, initOverrides);
@@ -12612,6 +13040,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogUpdateRaw(requestParameters: ApiViewLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ViewLog>> {
         if (requestParameters['id'] == null) {
@@ -12650,6 +13079,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
+     * logs request counts to redis cache total/per user/
      */
     async apiViewLogUpdate(requestParameters: ApiViewLogUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ViewLog> {
         const response = await this.apiViewLogUpdateRaw(requestParameters, initOverrides);

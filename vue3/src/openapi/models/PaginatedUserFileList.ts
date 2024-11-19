@@ -90,4 +90,15 @@ export function PaginatedUserFileListToJSON(value?: PaginatedUserFileList | null
         'results': ((value['results'] as Array<any>).map(UserFileToJSON)),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPaginatedUserFileListListRequest, PaginatedPaginatedUserFileListList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPaginatedUserFileListListRequest = {}): Promise<PaginatedPaginatedUserFileListList> {
+    const api = new ApiApi()
+    return api.apiPaginatedUserFileListList(requestParameters)
+}

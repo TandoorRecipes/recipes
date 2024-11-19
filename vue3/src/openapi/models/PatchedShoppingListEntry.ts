@@ -174,4 +174,15 @@ export function PatchedShoppingListEntryToJSON(value?: Omit<PatchedShoppingListE
         'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedShoppingListEntryListRequest, PaginatedPatchedShoppingListEntryList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedShoppingListEntryListRequest = {}): Promise<PaginatedPatchedShoppingListEntryList> {
+    const api = new ApiApi()
+    return api.apiPatchedShoppingListEntryList(requestParameters)
+}

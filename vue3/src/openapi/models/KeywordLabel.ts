@@ -65,4 +65,15 @@ export function KeywordLabelToJSON(value?: Omit<KeywordLabel, 'label'> | null): 
         'id': value['id'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiKeywordLabelListRequest, PaginatedKeywordLabelList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiKeywordLabelListRequest = {}): Promise<PaginatedKeywordLabelList> {
+    const api = new ApiApi()
+    return api.apiKeywordLabelList(requestParameters)
+}

@@ -175,4 +175,15 @@ export function PatchedOpenDataUnitToJSON(value?: Omit<PatchedOpenDataUnit, 'cre
         'comment': value['comment'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiPatchedOpenDataUnitListRequest, PaginatedPatchedOpenDataUnitList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiPatchedOpenDataUnitListRequest = {}): Promise<PaginatedPatchedOpenDataUnitList> {
+    const api = new ApiApi()
+    return api.apiPatchedOpenDataUnitList(requestParameters)
+}

@@ -74,4 +74,15 @@ export function RecipeSimpleToJSON(value?: Omit<RecipeSimple, 'url'> | null): an
         'name': value['name'],
     };
 }
+// ----------------------------------------------------------------------
+// Custom model functions added by custom openapi-generator template
+// ----------------------------------------------------------------------
+import {ApiApi, ApiRecipeSimpleListRequest, PaginatedRecipeSimpleList} from "@/openapi";
 
+/**
+ * query list endpoint using the provided request parameters
+ */
+export function list(requestParameters: ApiRecipeSimpleListRequest = {}): Promise<PaginatedRecipeSimpleList> {
+    const api = new ApiApi()
+    return api.apiRecipeSimpleList(requestParameters)
+}
