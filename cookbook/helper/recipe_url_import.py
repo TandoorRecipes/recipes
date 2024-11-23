@@ -6,7 +6,7 @@ from django.utils.dateparse import parse_duration
 from django.utils.translation import gettext as _
 from isodate import parse_duration as iso_parse_duration
 from isodate.isoerror import ISO8601Error
-from pytube import YouTube
+from pytubefix import YouTube
 from recipe_scrapers._utils import get_host_name, get_minutes
 
 from cookbook.helper.automation_helper import AutomationEngine
@@ -275,7 +275,7 @@ def get_from_youtube_scraper(url, request):
         if video.description:
             default_recipe_json['steps'][0]['instruction'] = automation_engine.apply_regex_replace_automation(video.description, Automation.INSTRUCTION_REPLACE)
     except Exception:
-        pass
+        traceback.print_exc()
 
     return default_recipe_json
 
