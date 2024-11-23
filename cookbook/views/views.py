@@ -346,6 +346,8 @@ def system(request):
     for key in migration_info.keys():
         migration_info[key]['total'] = len(migration_info[key]['unapplied_migrations']) + len(migration_info[key]['applied_migrations'])
 
+    api_stats = None
+    api_space_stats = None
     # API endpoint logging
     if settings.REDIS_HOST:
         r = redis.StrictRedis(
