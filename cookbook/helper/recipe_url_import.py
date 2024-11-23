@@ -274,7 +274,6 @@ def get_from_youtube_scraper(url, request):
         default_recipe_json['image'] = video.thumbnail_url
         if video.description:
             default_recipe_json['steps'][0]['instruction'] = automation_engine.apply_regex_replace_automation(video.description, Automation.INSTRUCTION_REPLACE)
-        print('YOUTUBE RESPONSE', default_recipe_json, video.thumbnail_url)
     except Exception:
         traceback.print_exc()
 
