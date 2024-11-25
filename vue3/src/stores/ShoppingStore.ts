@@ -34,8 +34,11 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     // internal
     let currentlyUpdating = ref(false)
-    let lastAutosync = ref(0)
-    let autosyncHasFocus = ref(true)
+
+    let autoSyncLastTimestamp = ref(new Date('1970-01-01'))
+    let autoSyncHasFocus = ref(true)
+    let autoSyncTimeoutId = ref(0)
+
     let undoStack = ref([] as ShoppingOperationHistoryEntry[])
     let queueTimeoutId = ref(-1)
     let itemCheckSyncQueue = ref([] as IShoppingSyncQueueEntry[])
@@ -168,7 +171,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function refreshFromAPI() {
         if (!currentlyUpdating.value) {
             currentlyUpdating.value = true
-            lastAutosync.value = new Date().getTime();
+            autoSyncLastTimestamp.value = new Date();
 
             let api = new ApiApi()
             api.apiShoppingListEntryList().then((r) => {
@@ -199,30 +202,24 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     /**
      * perform auto sync request to special endpoint returning only entries changed since last auto sync
-     * only updates local entries that are older than the server version
      */
-    function autosync() {
-        if (!currentlyUpdating.value && autosyncHasFocus.value) {
+    function autoSync() {
+        if (!currentlyUpdating.value && autoSyncHasFocus.value && !hasFailedItems()) {
             console.log('running autosync')
 
             currentlyUpdating.value = true
 
-            let previous_autosync = lastAutosync.value
-            lastAutosync.value = new Date().getTime();
-
             const api = new ApiApi()
-            // TODO implement parameters on backend Oepnapi
-            api.apiShoppingListEntryList({lastAutosync: previous_autosync}).then((r) => {
+            api.apiShoppingListEntryList({updatedAfter: autoSyncLastTimestamp.value}).then((r) => {
+                console.log('received auto sync response ', r)
+                autoSyncLastTimestamp.value = r.timestamp!
+
                 r.results.forEach((e) => {
-                    // dont update stale client data
-                    if (!entries.value.has(e.id!) || entries.value.get(e.id!).updatedAt < e.updatedAt) {
-                        console.log('auto sync updating entry ', e)
-                        entries.value.set(e.id!, e)
-                    }
+                    entries.value.set(e.id!, e)
                 })
                 currentlyUpdating.value = false
             }).catch((err: any) => {
-                console.warn('auto sync failed')
+                console.warn('auto sync failed', err)
                 currentlyUpdating.value = false
             })
         }
@@ -379,6 +376,11 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
                 // TODO set timeout for request (previously was 15000ms) or check that default timeout is similar
                 let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
+                    entry.ids.forEach(id => {
+                        let e = entries.value.get(id)
+                        e.updatedAt = r.timestamp
+                        entries.value.set(id, e)
+                    })
                     delete itemCheckSyncQueue.value[i]
                 }).catch((err) => {
                     if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
@@ -534,9 +536,14 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         supermarkets,
         supermarketCategories,
         getEntriesByGroup,
+        autoSyncTimeoutId,
+        autoSyncHasFocus,
+        autoSyncLastTimestamp,
+        currentlyUpdating,
         getFlatEntries,
         hasFailedItems,
         refreshFromAPI,
+        autoSync,
         createObject,
         deleteObject,
         updateObject,

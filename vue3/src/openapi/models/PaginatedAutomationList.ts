@@ -50,6 +50,12 @@ export interface PaginatedAutomationList {
      * @memberof PaginatedAutomationList
      */
     results: Array<Automation>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedAutomationList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedAutomationListFromJSONTyped(json: any, ignoreDiscrimina
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(AutomationFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | 
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(AutomationToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

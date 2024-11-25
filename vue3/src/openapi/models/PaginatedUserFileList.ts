@@ -50,6 +50,12 @@ export interface PaginatedUserFileList {
      * @memberof PaginatedUserFileList
      */
     results: Array<UserFile>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedUserFileList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedUserFileListFromJSONTyped(json: any, ignoreDiscriminato
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(UserFileFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedUserFileListToJSON(value?: PaginatedUserFileList | null
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(UserFileToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

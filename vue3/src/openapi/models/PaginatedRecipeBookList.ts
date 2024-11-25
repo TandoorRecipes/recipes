@@ -50,6 +50,12 @@ export interface PaginatedRecipeBookList {
      * @memberof PaginatedRecipeBookList
      */
     results: Array<RecipeBook>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedRecipeBookList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedRecipeBookListFromJSONTyped(json: any, ignoreDiscrimina
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(RecipeBookFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedRecipeBookListToJSON(value?: PaginatedRecipeBookList | 
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(RecipeBookToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

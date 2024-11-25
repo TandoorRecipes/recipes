@@ -50,6 +50,12 @@ export interface PaginatedSupermarketCategoryRelationList {
      * @memberof PaginatedSupermarketCategoryRelationList
      */
     results: Array<SupermarketCategoryRelation>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedSupermarketCategoryRelationList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedSupermarketCategoryRelationListFromJSONTyped(json: any,
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(SupermarketCategoryRelationFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedSupermarketCategoryRelationListToJSON(value?: Paginated
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SupermarketCategoryRelationToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

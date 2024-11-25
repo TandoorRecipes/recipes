@@ -50,6 +50,12 @@ export interface PaginatedViewLogList {
      * @memberof PaginatedViewLogList
      */
     results: Array<ViewLog>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedViewLogList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedViewLogListFromJSONTyped(json: any, ignoreDiscriminator
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(ViewLogFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedViewLogListToJSON(value?: PaginatedViewLogList | null):
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ViewLogToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

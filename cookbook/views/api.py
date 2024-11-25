@@ -30,7 +30,9 @@ from django.http import FileResponse, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from django.utils.datetime_safe import date
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.types import OpenApiTypes
@@ -111,6 +113,7 @@ from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, GOOGLE
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
 
+
 class LoggingMixin(object):
     """
     logs request counts to redis cache total/per user/
@@ -150,6 +153,7 @@ class LoggingMixin(object):
 
             pipe.execute()
 
+
 @extend_schema_view(list=extend_schema(parameters=[
     OpenApiParameter(name='query', description='lookup if query string is contained within the name, case insensitive',
                      type=str),
@@ -187,15 +191,36 @@ class StandardFilterModelViewSet(viewsets.ModelViewSet):
 
 
 class DefaultPagination(PageNumberPagination):
+    """
+    Default pagination class to set the default and maximum page size
+    also annotates the current server timestamp to all results
+    """
     page_size = 50
     page_size_query_param = 'page_size'
     max_page_size = 200
 
+    def get_paginated_response(self, data):
+        return Response({
+            'count': self.page.paginator.count,
+            'next': self.get_next_link(),
+            'previous': self.get_previous_link(),
+            'timestamp': timezone.now().isoformat(),
+            'results': data,
+        })
+
+    def get_paginated_response_schema(self, schema):
+        schema = super().get_paginated_response_schema(schema)
+        schema['properties']['timestamp'] = {
+            'type': 'string',
+            'format': 'date-time',
+        }
+        return schema
+
 
 class ExtendedRecipeMixin():
-    '''
+    """
     ExtendedRecipe annotates a queryset with recipe_image and recipe_count values
-    '''
+    """
 
     @classmethod
     def annotate_recipe(self, queryset=None, request=None, serializer=None, tree=False):
@@ -1356,6 +1381,9 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
     OpenApiParameter(name='supermarket',
                      description=_('Returns the shopping list entries sorted by supermarket category order.'),
                      type=int),
+    OpenApiParameter(name='updated_after',
+                     description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'),
+                     type=datetime.datetime),
 ]))
 class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ShoppingListEntry.objects
@@ -1381,12 +1409,14 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                                                                                                'list_recipe__mealplan__recipe',
                                                                                                ).distinct().all()
 
+        updated_after = self.request.query_params.get('updated_after', None)
+
         if pk := self.request.query_params.getlist('id', []):
             self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
 
         if 'checked' in self.request.query_params:
             return shopping_helper(self.queryset, self.request)
-        elif not self.detail:
+        elif not self.detail and not updated_after:
             today_start = timezone.now().replace(hour=0, minute=0, second=0)
             week_ago = today_start - datetime.timedelta(
                 days=min(self.request.user.userpreference.shopping_recent_days, 14))
@@ -1395,8 +1425,17 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         try:
             last_autosync = self.request.query_params.get('last_autosync', None)
             if last_autosync:
+                print('DEPRECATION WARNING: using last_autosync is deprecated and will be removed in future versions, please use updated_after')
                 last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
                 self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
+        except Exception:
+            traceback.print_exc()
+
+        try:
+            if updated_after:
+                updated_after = parse_datetime(updated_after)
+                print('adding filter updated_after', updated_after)
+                self.queryset = self.queryset.filter(updated_at__gte=updated_after)
         except Exception:
             traceback.print_exc()
 
@@ -1413,12 +1452,15 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         if serializer.is_valid():
             print(serializer.validated_data)
-            bulk_entries = ShoppingListEntry.objects.filter(Q(created_by=self.request.user)
-                                                            | Q(
-                created_by__in=list(self.request.user.get_shopping_share()))).filter(space=request.space,
-                                                                                     id__in=serializer.validated_data[
-                                                                                         'ids'])
-            bulk_entries.update(checked=(checked := serializer.validated_data['checked']), updated_at=timezone.now(), )
+            bulk_entries = ShoppingListEntry.objects.filter(
+                Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
+            ).filter(
+                space=request.space, id__in=serializer.validated_data['ids']
+            )
+
+            update_timestamp = timezone.now()
+            bulk_entries.update(checked=(checked := serializer.validated_data['checked']), updated_at=update_timestamp, )
+            serializer.validated_data['timestamp'] = update_timestamp
 
             # update the onhand for food if shopping_add_onhand is True
             if request.user.userpreference.shopping_add_onhand:
@@ -1430,7 +1472,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
                     for f in foods:
                         f.onhand_users.remove(*request.user.userpreference.shopping_share.all(), request.user)
 
-            return Response(serializer.data)
+            return Response(serializer.validated_data)
         else:
             return Response(serializer.errors, 400)
 

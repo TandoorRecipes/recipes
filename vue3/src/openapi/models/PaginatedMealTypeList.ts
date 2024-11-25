@@ -50,6 +50,12 @@ export interface PaginatedMealTypeList {
      * @memberof PaginatedMealTypeList
      */
     results: Array<MealType>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedMealTypeList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedMealTypeListFromJSONTyped(json: any, ignoreDiscriminato
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(MealTypeFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedMealTypeListToJSON(value?: PaginatedMealTypeList | null
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(MealTypeToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

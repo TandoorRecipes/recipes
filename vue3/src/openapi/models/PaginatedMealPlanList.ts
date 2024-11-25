@@ -50,6 +50,12 @@ export interface PaginatedMealPlanList {
      * @memberof PaginatedMealPlanList
      */
     results: Array<MealPlan>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedMealPlanList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedMealPlanListFromJSONTyped(json: any, ignoreDiscriminato
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(MealPlanFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedMealPlanListToJSON(value?: PaginatedMealPlanList | null
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(MealPlanToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

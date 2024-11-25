@@ -50,6 +50,12 @@ export interface PaginatedShoppingListEntryList {
      * @memberof PaginatedShoppingListEntryList
      */
     results: Array<ShoppingListEntry>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedShoppingListEntryList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedShoppingListEntryListFromJSONTyped(json: any, ignoreDis
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(ShoppingListEntryFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedShoppingListEntryListToJSON(value?: PaginatedShoppingLi
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ShoppingListEntryToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

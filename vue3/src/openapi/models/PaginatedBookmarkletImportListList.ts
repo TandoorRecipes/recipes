@@ -50,6 +50,12 @@ export interface PaginatedBookmarkletImportListList {
      * @memberof PaginatedBookmarkletImportListList
      */
     results: Array<BookmarkletImportList>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedBookmarkletImportListList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedBookmarkletImportListListFromJSONTyped(json: any, ignor
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(BookmarkletImportListFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedBookmarkletImportListListToJSON(value?: PaginatedBookma
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(BookmarkletImportListToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

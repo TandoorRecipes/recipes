@@ -50,6 +50,12 @@ export interface PaginatedStepList {
      * @memberof PaginatedStepList
      */
     results: Array<Step>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedStepList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedStepListFromJSONTyped(json: any, ignoreDiscriminator: b
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(StepFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedStepListToJSON(value?: PaginatedStepList | null): any {
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(StepToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

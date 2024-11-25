@@ -50,6 +50,12 @@ export interface PaginatedCookLogList {
      * @memberof PaginatedCookLogList
      */
     results: Array<CookLog>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedCookLogList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedCookLogListFromJSONTyped(json: any, ignoreDiscriminator
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(CookLogFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedCookLogListToJSON(value?: PaginatedCookLogList | null):
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(CookLogToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

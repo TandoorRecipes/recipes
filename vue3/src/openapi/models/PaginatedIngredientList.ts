@@ -50,6 +50,12 @@ export interface PaginatedIngredientList {
      * @memberof PaginatedIngredientList
      */
     results: Array<Ingredient>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedIngredientList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedIngredientListFromJSONTyped(json: any, ignoreDiscrimina
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(IngredientFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedIngredientListToJSON(value?: PaginatedIngredientList | 
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(IngredientToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

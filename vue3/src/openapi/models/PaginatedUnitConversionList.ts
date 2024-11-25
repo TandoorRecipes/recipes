@@ -50,6 +50,12 @@ export interface PaginatedUnitConversionList {
      * @memberof PaginatedUnitConversionList
      */
     results: Array<UnitConversion>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedUnitConversionList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedUnitConversionListFromJSONTyped(json: any, ignoreDiscri
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(UnitConversionFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedUnitConversionListToJSON(value?: PaginatedUnitConversio
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(UnitConversionToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

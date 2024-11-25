@@ -50,6 +50,12 @@ export interface PaginatedSyncList {
      * @memberof PaginatedSyncList
      */
     results: Array<Sync>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedSyncList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedSyncListFromJSONTyped(json: any, ignoreDiscriminator: b
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(SyncFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedSyncListToJSON(value?: PaginatedSyncList | null): any {
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SyncToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

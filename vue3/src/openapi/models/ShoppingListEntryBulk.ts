@@ -31,6 +31,12 @@ export interface ShoppingListEntryBulk {
      * @memberof ShoppingListEntryBulk
      */
     checked: boolean;
+    /**
+     * 
+     * @type {Date}
+     * @memberof ShoppingListEntryBulk
+     */
+    readonly timestamp: Date;
 }
 
 /**
@@ -39,6 +45,7 @@ export interface ShoppingListEntryBulk {
 export function instanceOfShoppingListEntryBulk(value: object): value is ShoppingListEntryBulk {
     if (!('ids' in value) || value['ids'] === undefined) return false;
     if (!('checked' in value) || value['checked'] === undefined) return false;
+    if (!('timestamp' in value) || value['timestamp'] === undefined) return false;
     return true;
 }
 
@@ -54,10 +61,11 @@ export function ShoppingListEntryBulkFromJSONTyped(json: any, ignoreDiscriminato
         
         'ids': json['ids'],
         'checked': json['checked'],
+        'timestamp': (new Date(json['timestamp'])),
     };
 }
 
-export function ShoppingListEntryBulkToJSON(value?: ShoppingListEntryBulk | null): any {
+export function ShoppingListEntryBulkToJSON(value?: Omit<ShoppingListEntryBulk, 'timestamp'> | null): any {
     if (value == null) {
         return value;
     }

@@ -50,6 +50,12 @@ export interface PaginatedSupermarketCategoryList {
      * @memberof PaginatedSupermarketCategoryList
      */
     results: Array<SupermarketCategory>;
+    /**
+     * 
+     * @type {Date}
+     * @memberof PaginatedSupermarketCategoryList
+     */
+    timestamp?: Date;
 }
 
 /**
@@ -75,6 +81,7 @@ export function PaginatedSupermarketCategoryListFromJSONTyped(json: any, ignoreD
         'next': json['next'] == null ? undefined : json['next'],
         'previous': json['previous'] == null ? undefined : json['previous'],
         'results': ((json['results'] as Array<any>).map(SupermarketCategoryFromJSON)),
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
@@ -88,6 +95,7 @@ export function PaginatedSupermarketCategoryListToJSON(value?: PaginatedSupermar
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SupermarketCategoryToJSON)),
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 // ----------------------------------------------------------------------

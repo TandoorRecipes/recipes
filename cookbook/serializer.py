@@ -1238,12 +1238,13 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
             'recipe_mealplan',
             'created_by', 'created_at', 'updated_at', 'completed_at', 'delay_until'
         )
-        read_only_fields = ('id', 'created_by', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'created_by', 'created_at')
 
 
 class ShoppingListEntryBulkSerializer(serializers.Serializer):
     ids = serializers.ListField()
     checked = serializers.BooleanField()
+    timestamp = serializers.DateTimeField(read_only=True, required=False)
 
 
 # TODO deprecate
