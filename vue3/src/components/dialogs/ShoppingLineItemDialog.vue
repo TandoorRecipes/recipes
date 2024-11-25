@@ -1,7 +1,7 @@
 <template>
     <v-dialog :fullscreen="mobile" v-model="showDialog" max-width="500px">
         <v-card>
-            <v-closable-card-title :title="props.shoppingListFood.food.name" v-model="showDialog"></v-closable-card-title>
+            <v-closable-card-title :title="shoppingListFood.food.name" v-model="showDialog"></v-closable-card-title>
 
             <v-card-text class="pt-0 pr-4 pl-4">
 
@@ -26,7 +26,7 @@
                 <v-row>
                     <v-col class="pr-0 pt-0">
                         <v-btn height="80px" color="primary" density="compact" size="small"
-                               :to="{name: 'ModelEditPage', params: {model: 'Food', id: props.shoppingListFood?.food.id!}}" target="_blank" block stacked>
+                               :to="{name: 'ModelEditPage', params: {model: 'Food', id: shoppingListFood?.food.id!}}" target="_blank" block stacked>
                             <i class="fa-solid fa-pencil fa-2x mb-2"></i>
                             {{ $t('Edit_Food') }}
                         </v-btn>
@@ -41,7 +41,7 @@
 
                 <v-label class="mt-3">{{ $t('Entries') }}</v-label>
                 <v-list density="compact">
-                    <template v-for="[i, e] in props.shoppingListFood.entries" :key="e.id">
+                    <template v-for="[i, e] in shoppingListFood.entries" :key="e.id">
                         <v-list-item border class="mt-1" :class="{'cursor-pointer': !e.recipeMealplan}">
                             <v-list-item-title>
                                 <b>
@@ -106,17 +106,14 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 const {mobile} = useDisplay()
 
 const showDialog = defineModel<Boolean>()
-
-const props = defineProps({
-    shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
-})
+const shoppingListFood = defineModel<IShoppingListFood>('shoppingListFood')
 
 /**
  * returns a flat list of entries for the given shopping list food
  */
 const entriesList = computed(() => {
     let list = [] as ShoppingListEntry[]
-    props.shoppingListFood?.entries.forEach(e => {
+    shoppingListFood.value.entries.forEach(e => {
         list.push(e)
     })
     return list
@@ -126,15 +123,13 @@ const entriesList = computed(() => {
  * checks all entries associated with shopping line, if any is delayed return true else false
  */
 const isShoppingLineDelayed = computed(() => {
-    return isShoppingListFoodDelayed(props.shoppingListFood)
+    return isShoppingListFoodDelayed(shoppingListFood.value)
 })
 
 function categoryUpdate(category: SupermarketCategory) {
     const api = new ApiApi()
-    // TODO updating prop is not good, make properly reactive
-    let food = props.shoppingListFood.food
-    food.supermarketCategory = category
-    api.apiFoodUpdate({id: food.id, food: food}).then(r => {
+    shoppingListFood.value.food.supermarketCategory = category
+    api.apiFoodUpdate({id: shoppingListFood.value.food.id, food: shoppingListFood.value.food}).then(r => {
 
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)

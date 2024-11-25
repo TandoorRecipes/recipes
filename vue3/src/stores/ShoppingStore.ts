@@ -14,6 +14,7 @@ import {
 } from "@/types/Shopping";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import {isDelayed} from "@/utils/logic_utils";
 
 const _STORE_ID = "shopping_store"
 const UNDEFINED_CATEGORY = 'shopping_undefined_category'
@@ -73,7 +74,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                         categoryStats.countChecked++
                     } else {
                         categoryStats.countUnchecked++
-                        if (entry.delayUntil != null) {
+                        if (isDelayed(entry)) {
                             categoryStats.countUncheckedDelayed++
                         }
                     }
@@ -428,7 +429,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         }
         entries.forEach(entry => {
             entry.delayUntil = (delay ? delayDate : new Date('1970-01-01'))
-            console.log('DELAY: ', delay, entry.delayUntil, entry)
             updateObject(entry)
         })
     }

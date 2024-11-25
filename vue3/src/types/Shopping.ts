@@ -4,9 +4,9 @@ import {Food, ShoppingListEntry, Unit} from "@/openapi";
  * enum of different options a shopping list can be grouped by
  */
 export enum ShoppingGroupingOptions {
-    CATEGORY = 'CATEGORY',
-    CREATED_BY = 'CREATED_BY',
-    RECIPE = 'RECIPE',
+    CATEGORY = 'Category',
+    CREATED_BY = 'CreatedBy',
+    RECIPE = 'Recipe',
 }
 
 /**

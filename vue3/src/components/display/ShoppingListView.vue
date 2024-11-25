@@ -21,6 +21,14 @@
                 <v-list-item @click="useShoppingStore().undoChange()" prepend-icon="fa-solid fa-arrow-rotate-left">{{ $t('Undo') }}</v-list-item>
                 <v-divider></v-divider>
                 <v-list-item>
+                    <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping" :label="$t('GroupBy')">
+                    </v-select>
+                </v-list-item>
+                <v-list-item>
+                    <model-select model="Supermarket"></model-select>
+                </v-list-item>
+
+                <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('ShowDelayed')" v-model="useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries"></v-switch>
                 </v-list-item>
                 <v-list-item>
@@ -87,13 +95,13 @@
         </v-window-item>
     </v-window>
 
-    <shopping-line-item-dialog v-model="shoppingLineItemDialog" :shopping-list-food="shoppingLineItemDialogFood"></shopping-line-item-dialog>
+    <shopping-line-item-dialog v-model="shoppingLineItemDialog" v-model:shopping-list-food="shoppingLineItemDialogFood"></shopping-line-item-dialog>
 
 </template>
 
 <script setup lang="ts">
 
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
 import {ApiApi, Food, IngredientString, ShoppingListEntry, Unit} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
@@ -101,7 +109,10 @@ import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
-import {IShoppingListFood} from "@/types/Shopping";
+import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const currentTab = ref("shopping")
 
@@ -110,6 +121,17 @@ const ingredientInputIcon = ref('fa-solid fa-plus')
 
 const shoppingLineItemDialog = ref(false)
 const shoppingLineItemDialogFood = ref({} as IShoppingListFood)
+
+/**
+ * VSelect items for shopping list grouping options with localized names
+ */
+const groupingOptionsItems = computed(() => {
+    let items = []
+    Object.keys(ShoppingGroupingOptions).forEach(x => {
+        items.push({'title': t(x), 'value': x})
+    })
+    return items
+})
 
 onMounted(() => {
     useShoppingStore().refreshFromAPI()

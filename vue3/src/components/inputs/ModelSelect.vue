@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 import {onBeforeMount, onMounted, PropType, ref, useTemplateRef} from "vue"
-import {GenericModel, getGenericModelFromString} from "@/types/Models"
+import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models"
 import Multiselect from '@vueform/multiselect'
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore";
 import {useI18n} from "vue-i18n";
@@ -48,7 +48,7 @@ const {t} = useI18n()
 const emit = defineEmits(['update:modelValue', 'create'])
 
 const props = defineProps({
-    model: {type: String, required: true},
+    model: {type: String as PropType<EditorSupportedModels>, required: true},
 
     id: {type: String, required: false, default: Math.floor(Math.random()*10000).toString()},
 
