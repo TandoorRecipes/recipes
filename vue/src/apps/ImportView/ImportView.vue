@@ -83,6 +83,11 @@
                                 <loading-spinner></loading-spinner>
                             </b-card>
 
+                            <!-- Warnings -->
+                            <b-card no-body v-if="duplicateWarning" class="warning">
+                                {{ duplicateWarning }}
+                            </b-card>
+
                             <!-- OPTIONS -->
                             <b-card no-body v-if="recipe_json !== undefined">
                                 <b-card-header header-tag="header" class="p-1" role="tab">
@@ -463,6 +468,7 @@ export default {
             },
             // URL import
             LS_IMPORT_RECENT: 'import_recent_urls', //TODO use central helper to manage all local storage keys (and maybe even access)
+            duplicateWarning: '',
             website_url: '',
             website_url_list: '',
             import_multiple: false,
@@ -643,6 +649,12 @@ export default {
                     return
                 }
 
+                if ('duplicate' in response.data && response.data['duplicate']) {
+                    this.duplicateWarning = "A recipe with this URL already exists.";
+                } else {
+                    this.duplicateWarning = "";
+                }
+
                 this.loading = false
                 this.recipe_json = response.data['recipe_json'];
 
@@ -762,6 +774,16 @@ export default {
 </script>
 
 <style>
+
+.warning {
+  color: rgb(255, 149, 0);
+  align-items: center;
+  background-color: #fff4ec;
+  padding: 10px;
+  border: 1px solid rgb(255, 149, 0);
+  border-radius: 5px;
+  margin: 10px 0;
+}
 
 .bounce {
     animation: bounce 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
