@@ -84,15 +84,6 @@
                             </b-card>
 
                             <!-- OPTIONS -->
-                            <b-card no-body v-if="modalOptions.visible">
-                                <b-card-header header-tag="header" class="card-header p-1" role="tab">
-                                    <div class="col-md-6 offset-md-3 col-12 offset-0">
-                                        <p>{{ modalOptions.message }}</p>
-                                        <button @click="navigateTo(modalOptions.editUrl)" class="btn btn-info btn-block collapsed">Edit Existing Recipe</button>
-                                        <button @click="continueImport(false)" class="btn btn-info btn-block collapsed">Import Duplicate Recipe</button>
-                                    </div>
-                                </b-card-header>
-                            </b-card>
                             <b-card no-body v-if="recipe_json !== undefined">
                                 <b-card-header header-tag="header" class="p-1" role="tab">
                                     <b-col cols="12" md="6" offset="0" offset-md="3">
@@ -480,11 +471,6 @@ export default {
             recipe_json: undefined,
             use_plural: false,
             import_loading: false,
-            modalOptions: {
-                visible: false,
-                editUrl: '',
-                existing_recipe: {},
-            },
             // recipe_html: undefined,
             // recipe_tree: undefined,
             recipe_images: [],
@@ -501,19 +487,6 @@ export default {
             // Bookmarklet
             BOOKMARKLET_CODE: window.BOOKMARKLET_CODE,
             error: undefined
-        };
-    },
-    watch: {
-        website_url(newUrl) {
-            // Hide modal options when URL changes
-            this.modalOptions.visible = false;
-            this.modalOptions.editUrl = '';
-            this.modalOptions.existing_recipe = {};
-
-            // Optionally handle the case of URL validation or custom logic
-            if (newUrl !== '') {
-                this.empty_input = false;
-            }
         }
     },
     mounted() {
@@ -544,25 +517,6 @@ export default {
         }
     },
     methods: {
-        navigateTo(url) {
-            window.location.href = url;
-        },
-        /**
-         * @param silent do not show any messages for imports
-         */
-        continueImport(silent) {
-            this.modalOptions.visible = false;
-
-            this.recipe_json = this.modalOptions.existing_recipe["recipe_json"];
-            this.recipe_images = this.modalOptions.existing_recipe["recipe_images"];
-
-            if (!silent) {
-                this.tab_index = 0 // open tab 0 with import wizard
-                this.collapse_visible.options = false // open options collapse
-            }
-            window.location = this.recipe_json
-            return
-        },
         /**
          * Import recipe based on the data configured by the client
          * @param action: action to perform after import (options are: edit, view, import)
@@ -690,14 +644,6 @@ export default {
                 }
 
                 this.loading = false
-                // Check for "options" in the response
-                if (response.data.options) {
-                    const options = response.data.options;
-                    // Show a prompt with the options
-                    this.showImportOptionsModal(response.data.msg, options.edit_recipe, options.existing_recipe);
-                    return;
-                }
-
                 this.recipe_json = response.data['recipe_json'];
 
                 this.recipe_json.keywords.map(x => {
@@ -725,20 +671,6 @@ export default {
                 }
                 StandardToasts.makeStandardToast(this, StandardToasts.FAIL_IMPORT, err)
             })
-        },
-        /**
-         * Give the user an option to edit existing recipe or continue to import duplicate
-         * @param msg prompt the user with a message
-         * @param editUrl url of existing recipe
-         * @param recipe_data existing recipe data to be displayed
-         */
-        showImportOptionsModal: function (msg, editUrl, recipe_data) {
-            this.modalOptions = {
-                visible: true,
-                message: msg,
-                editUrl: editUrl,
-                existing_recipe: recipe_data,
-            };
         },
         /**
          * Function to automatically import multiple urls

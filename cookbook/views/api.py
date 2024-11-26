@@ -1452,26 +1452,6 @@ class RecipeUrlImportView(APIView):
 
             url = serializer.validated_data.get('url', None)
             data = unquote(serializer.validated_data.get('data', None))
-
-            if url:
-                # Check for existing recipes with provided url
-                existing_recipe = Recipe.objects.filter(source_url=url).first()
-                if existing_recipe:
-
-                    return Response(
-                        {
-                            'msg': _('A recipe with this URL already exists.'),
-                            'options': {
-                                'edit_recipe': reverse('edit_recipe', args=[existing_recipe.pk]),
-                                'existing_recipe': {
-                                    'recipe_json': request.build_absolute_uri(reverse('view_recipe', args=[existing_recipe.pk])),
-                                    'recipe_images': [existing_recipe.image.url] if existing_recipe.image else [],
-                                },
-                            },
-                        },
-                        status=status.HTTP_200_OK
-                    )
-
             if not url and not data:
                 return Response({'error': True, 'msg': _('Nothing to do.')}, status=status.HTTP_400_BAD_REQUEST)
 
