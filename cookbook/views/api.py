@@ -123,35 +123,38 @@ class LoggingMixin(object):
         super(LoggingMixin, self).initial(request, *args, **kwargs)
 
         if settings.REDIS_HOST:
-            d = date.today().isoformat()
-            space = request.space
-            endpoint = request.resolver_match.url_name
+            try:
+                d = date.today().isoformat()
+                space = request.space
+                endpoint = request.resolver_match.url_name
 
-            r = redis.StrictRedis(
-                host=settings.REDIS_HOST,
-                port=settings.REDIS_PORT,
-                username=settings.REDIS_USERNAME,
-                password=settings.REDIS_PASSWORD,
-                db=settings.REDIS_DATABASES['STATS'],
-            )
+                r = redis.StrictRedis(
+                    host=settings.REDIS_HOST,
+                    port=settings.REDIS_PORT,
+                    username=settings.REDIS_USERNAME,
+                    password=settings.REDIS_PASSWORD,
+                    db=settings.REDIS_DATABASES['STATS'],
+                )
 
-            pipe = r.pipeline()
+                pipe = r.pipeline()
 
-            # Global and daily tallies for all URLs.
-            pipe.incr('api:request-count')
-            pipe.incr(f'api:request-count:{d}')
+                # Global and daily tallies for all URLs.
+                pipe.incr('api:request-count')
+                pipe.incr(f'api:request-count:{d}')
 
-            # Use a sorted set to store the user stats, with the score representing
-            # the number of queries the user made total or on a given day.
-            pipe.zincrby(f'api:space-request-count', 1, space.pk)
-            pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
+                # Use a sorted set to store the user stats, with the score representing
+                # the number of queries the user made total or on a given day.
+                pipe.zincrby(f'api:space-request-count', 1, space.pk)
+                pipe.zincrby(f'api:space-request-count:{d}', 1, space.pk)
 
-            # Use a sorted set to store all the endpoints with score representing
-            # the number of queries the endpoint received total or on a given day.
-            pipe.zincrby(f'api:endpoint-request-count', 1, endpoint)
-            pipe.zincrby(f'api:endpoint-request-count:{d}', 1, endpoint)
+                # Use a sorted set to store all the endpoints with score representing
+                # the number of queries the endpoint received total or on a given day.
+                pipe.zincrby(f'api:endpoint-request-count', 1, endpoint)
+                pipe.zincrby(f'api:endpoint-request-count:{d}', 1, endpoint)
 
-            pipe.execute()
+                pipe.execute()
+            except:
+                pass
 
 
 @extend_schema_view(list=extend_schema(parameters=[

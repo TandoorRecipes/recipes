@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-01 15:04+0200\n"
-"PO-Revision-Date: 2023-04-12 11:55+0000\n"
-"Last-Translator: noxonad <noxonad@proton.me>\n"
+"PO-Revision-Date: 2024-11-22 07:58+0000\n"
+"Last-Translator: Oleh Hudyma <oleg.hudymaa@gmail.com>\n"
 "Language-Team: Ukrainian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #: .\cookbook\forms.py:45
 msgid ""
@@ -36,47 +36,51 @@ msgstr ""
 
 #: .\cookbook\forms.py:62
 msgid "Preparation time in minutes"
-msgstr ""
+msgstr "Час приготування у хвилинах"
 
 #: .\cookbook\forms.py:62
 msgid "Waiting time (cooking/baking) in minutes"
-msgstr ""
+msgstr "Час очікування (варіння/випічка) у хвилинах"
 
 #: .\cookbook\forms.py:63 .\cookbook\forms.py:222 .\cookbook\forms.py:246
 msgid "Path"
-msgstr ""
+msgstr "Шлях"
 
 #: .\cookbook\forms.py:63
 msgid "Storage UID"
-msgstr ""
+msgstr "UID сховища"
 
 #: .\cookbook\forms.py:93
 msgid "Default"
-msgstr ""
+msgstr "За замовчуванням"
 
 #: .\cookbook\forms.py:121
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
+"Щоб запобігти дублюванням, рецепти з назвами, що вже існують, "
+"ігноруватимуться. Установіть цей прапорець, щоб імпортувати все."
 
 #: .\cookbook\forms.py:143
 msgid "Add your comment: "
-msgstr ""
+msgstr "Додайте ваш коментар: "
 
 #: .\cookbook\forms.py:151
 msgid "Leave empty for dropbox and enter app password for nextcloud."
-msgstr ""
+msgstr "Залиште порожнім для dropbox і введіть api ключі для nextcloud."
 
 #: .\cookbook\forms.py:154
 msgid "Leave empty for nextcloud and enter api token for dropbox."
-msgstr ""
+msgstr "Залиште порожнім для nextcloud і введіть api ключі для dropbox."
 
 #: .\cookbook\forms.py:160
 msgid ""
 "Leave empty for dropbox and enter only base url for nextcloud (<code>/remote."
 "php/webdav/</code> is added automatically)"
 msgstr ""
+"Залиште порожнім для dropbox і введіть лише базовий url для nextcloud "
+"(<code>/remote.php/webdav/</code> буде додано автоматично)"
 
 #: .\cookbook\forms.py:188
 msgid ""
