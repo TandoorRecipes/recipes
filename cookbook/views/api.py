@@ -1697,17 +1697,22 @@ class RecipeUrlImportView(APIView):
 
             url = serializer.validated_data.get('url', None)
             data = unquote(serializer.validated_data.get('data', None))
+
+            duplicate = False
+            if url:
+                # Check for existing recipes with provided url
+                existing_recipe = Recipe.objects.filter(source_url=url).first()
+                if existing_recipe:
+                    duplicate = True
+
             if not url and not data:
                 return Response({'error': True, 'msg': _('Nothing to do.')}, status=status.HTTP_400_BAD_REQUEST)
 
             elif url and not data:
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     if validate_import_url(url):
-                        return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], },
-                                        status=status.HTTP_200_OK)
-                if re.match(
-                        '^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
-                        url):
+                        return Response({'recipe_json': get_from_youtube_scraper(url, request), 'recipe_images': [], 'duplicate': duplicate}, status=status.HTTP_200_OK)
+                if re.match('^(.)*/view/recipe/[0-9]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', url):
                     recipe_json = requests.get(
                         url.replace('/view/recipe/', '/api/recipe/').replace(re.split('/view/recipe/[0-9]+', url)[1],
                                                                              '') + '?share='
@@ -1724,8 +1729,7 @@ class RecipeUrlImportView(APIView):
                                                              filetype=pathlib.Path(recipe_json['image']).suffix),
                                                 name=f'{uuid.uuid4()}_{recipe.pk}{pathlib.Path(recipe_json["image"]).suffix}')
                         recipe.save()
-                        return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk}))},
-                                        status=status.HTTP_201_CREATED)
+                        return Response({'link': request.build_absolute_uri(reverse('view_recipe', args={recipe.pk})), 'duplicate': duplicate}, status=status.HTTP_201_CREATED)
                 else:
                     try:
                         if validate_import_url(url):
@@ -1764,6 +1768,7 @@ class RecipeUrlImportView(APIView):
                 return Response({
                     'recipe_json': helper.get_from_scraper(scrape, request),
                     'recipe_images': list(dict.fromkeys(get_images_from_soup(scrape.soup, url))),
+                    'duplicate': duplicate
                 },
                     status=status.HTTP_200_OK)
 
