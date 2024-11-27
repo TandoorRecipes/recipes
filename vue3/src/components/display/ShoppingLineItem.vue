@@ -15,23 +15,25 @@
                         <span>
                             <i class="fas fa-check text-warning" v-if="a.checked && !isChecked"></i>
                             <i class="fas fa-hourglass-half text-primary"  v-if="a.delayed && !a.checked"></i> <b>
-                            {{ a.amount }}
+                            <span :class="{'text-decoration-line-through': a.checked}">
+                                {{ a.amount }}
+                            </span>
                             <span v-if="a.unit">{{ a.unit.name }}</span>
                             </b>
                         </span>
                         <br/>
                     </span>
                 </div>
-                <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                    {{ food.name }} <br/>
-                    <span v-if="info_row"><small class="text-disabled">{{ info_row }}</small></span>
+                <div class="d-flex  flex-column flex-grow-1 align-self-center" :class="{'text-decoration-line-through': isChecked}">
+                    {{ shoppingListFood.food.name }} <br/>
+                    <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
             </div>
         </div>
 
         <template #append>
-            <v-btn color="success" @click="useShoppingStore().setEntriesCheckedState(entries, !isChecked, true)"
-                   :class="{'btn-success': !isChecked, 'btn-warning': isChecked}" icon="fa-solid fa-check" variant="plain">
+            <v-btn color="success" @click.native.stop="useShoppingStore().setEntriesCheckedState(entries, !isChecked, true);"
+                   :class="{'btn-success': !isChecked, 'btn-warning': isChecked}" :icon="actionButtonIcon" variant="plain">
             </v-btn>
             <!--                <i class="d-print-none fa-fw fas" :class="{'fa-check': !isChecked , 'fa-cart-plus': isChecked }"></i>-->
         </template>
@@ -63,6 +65,9 @@ const props = defineProps({
     shoppingListFood: {type: {} as PropType<IShoppingListFood>, required: true},
 })
 
+/**
+ * ID of outer container, used by swipe system
+ */
 const itemContainerId = computed(() => {
     let id = 'id_sli_'
     for (let i in props.entries) {
@@ -71,6 +76,10 @@ const itemContainerId = computed(() => {
     return id
 })
 
+
+/**
+ * tests if all entries of the given food are checked
+ */
 const isChecked = computed(() => {
     for (let i in props.entries) {
         if (!props.entries[i].checked) {
@@ -80,14 +89,23 @@ const isChecked = computed(() => {
     return true
 })
 
+/**
+ * determine if any entry in a given IShoppingListFood is delayed, if so return true
+ */
 const isShoppingLineDelayed = computed(() => {
     return isShoppingListFoodDelayed(props.shoppingListFood)
 })
 
-
-const food = computed(() => {
-    return props.entries[Object.keys(props.entries)[0]]['food']
+/**
+ * style action button depending on if all items are checked or not
+ */
+const actionButtonIcon = computed(() => {
+    if (isChecked.value){
+        return 'fa-solid fa-plus'
+    }
+    return 'fa-solid fa-check'
 })
+
 
 /**
  * calculate the amounts for the given line
@@ -128,7 +146,7 @@ const amounts = computed((): Map<number, ShoppingLineAmount> => {
     return unitAmounts
 })
 
-const info_row = computed(() => {
+const infoRow = computed(() => {
     let info_row = []
 
     let authors = []
@@ -169,25 +187,6 @@ const info_row = computed(() => {
 
     return info_row.join(' - ')
 })
-
-// TODO implement
-/**
- * update the food after the category was changed
- * handle changing category to category ID as a workaround
- * @param food
- */
-function updateFoodCategory(food: Food) {
-    // if (typeof food.supermarketCategory === "number") { // not the best solution, but as long as generic multiselect does not support caching, I don't want to use a proper model
-    //     food.supermarket_category = this.useShoppingListStore().supermarket_categories.filter(sc => sc.id === food.supermarket_category)[0]
-    // }
-    //
-    // let apiClient = new ApiApiFactory()
-    // apiClient.updateFood(food.id, food).then(r => {
-    //
-    // }).catch((err) => {
-    //     StandardToasts.makeStandardToast(this, StandardToasts.FAIL_UPDATE, err)
-    // })
-}
 
 /**
  * set food on_hand status to true and check all associated entries

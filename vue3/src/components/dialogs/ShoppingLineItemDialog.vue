@@ -66,11 +66,11 @@
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
 
-                            <template #append>
-                                <v-btn size="small" color="delete" icon="$delete" v-if="!e.recipeMealplan">
-                                    <v-icon icon="$delete"></v-icon>
-                                </v-btn>
-                            </template>
+<!--                            <template #append>-->
+<!--                                <v-btn size="small" color="delete" icon="$delete" v-if="!e.recipeMealplan">-->
+<!--                                    <v-icon icon="$delete"></v-icon>-->
+<!--                                </v-btn>-->
+<!--                            </template>-->
 
                             <!-- TODO make properly reactive or delete from the food instance in this component as well | ADD functionality once reactive -->
                             <model-edit-dialog model="ShoppingListEntry" :item="e" @delete="useShoppingStore().entries.delete(e.id!);" v-if="!e.recipeMealplan"></model-edit-dialog>
@@ -126,6 +126,10 @@ const isShoppingLineDelayed = computed(() => {
     return isShoppingListFoodDelayed(shoppingListFood.value)
 })
 
+/**
+ * change category of food and update via API
+ * @param category
+ */
 function categoryUpdate(category: SupermarketCategory) {
     const api = new ApiApi()
     shoppingListFood.value.food.supermarketCategory = category

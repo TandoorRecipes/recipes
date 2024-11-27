@@ -92,6 +92,28 @@
                             </v-card-text>
                         </v-card>
                     </v-col>
+                    <v-col cols="4">
+                        <v-card>
+                            <v-card-title>Sync Queue Debug</v-card-title>
+                            <v-card-text>
+                                Length: {{ useShoppingStore().itemCheckSyncQueue.length }} <br/>
+                                Has Failed Items:  {{ useShoppingStore().hasFailedItems()}}
+                                <v-list>
+                                    <v-list-item v-for="i in useShoppingStore().itemCheckSyncQueue" :key="i">{{ i }}</v-list-item>
+                                </v-list>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                     <v-col cols="4">
+                        <v-card>
+                            <v-card-title>Undo Debug</v-card-title>
+                            <v-card-text>
+                                <v-list>
+                                    <v-list-item v-for="i in useShoppingStore().undoStack" :key="i">{{ i.type }} {{ i.entries.flatMap(e => e.food.name)}}</v-list-item>
+                                </v-list>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
                 </v-row>
             </v-container>
         </v-window-item>

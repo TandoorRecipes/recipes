@@ -1,5 +1,5 @@
 import {acceptHMRUpdate, defineStore} from "pinia"
-import {ApiApi, Food, ShoppingListEntry, Supermarket, SupermarketCategory} from "@/openapi";
+import {ApiApi, Food, ShoppingListEntry, ShoppingListEntryBulk, Supermarket, SupermarketCategory} from "@/openapi";
 import {computed, ref} from "vue";
 import {
     IShoppingExportEntry,
@@ -346,7 +346,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let entryIdList: number[] = []
         entries.forEach(entry => {
             entry.checked = checked
-            // TODO used to set updatedAt but does not make sense on client, rethink solution (as above)
             entryIdList.push(entry.id!)
         })
 
@@ -367,34 +366,30 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     function _replaySyncQueue() {
         if (navigator.onLine || document.location.href.includes('localhost')) {
             let api = new ApiApi()
-            let promises = []
+            let promises: Promise<void>[] = []
 
-            for (let i in itemCheckSyncQueue.value) {
-                let entry = itemCheckSyncQueue.value[i]
+            itemCheckSyncQueue.value.forEach((entry, index) => {
                 entry['status'] = ((entry['status'] === 'waiting') ? 'syncing' : 'syncing_failed_before')
-                itemCheckSyncQueue.value[i] = entry
 
-                // TODO set timeout for request (previously was 15000ms) or check that default timeout is similar
-                let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
+                 let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
                     entry.ids.forEach(id => {
                         let e = entries.value.get(id)
                         e.updatedAt = r.timestamp
                         entries.value.set(id, e)
                     })
-                    delete itemCheckSyncQueue.value[i]
+                    itemCheckSyncQueue.value.splice(index,1)
                 }).catch((err) => {
                     if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
                         entry['status'] = 'waiting_failed_before'
-                        itemCheckSyncQueue.value[i] = entry
                     } else {
-                        delete itemCheckSyncQueue.value[i]
+                        itemCheckSyncQueue.value.splice(index,1)
                         console.error('Failed API call for entry ', entry)
                         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
                     }
                 })
                 promises.push(p)
-            }
-
+            })
+            // TODO verify this all settled works
             Promise.allSettled(promises).finally(() => {
                 runSyncQueue(500)
             })
@@ -542,6 +537,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         currentlyUpdating,
         getFlatEntries,
         hasFailedItems,
+        itemCheckSyncQueue,
+        undoStack,
         refreshFromAPI,
         autoSync,
         createObject,
