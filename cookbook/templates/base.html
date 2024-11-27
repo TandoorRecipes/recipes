@@ -82,7 +82,7 @@
 
     {% if not request.user.userpreference.left_handed %}
         {% if not request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
-            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
+            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}/"
                aria-label="Tandoor">
                 <img class="brand-icon" src="{{ theme_values.nav_logo }}" alt="Logo">
             </a>
@@ -96,7 +96,7 @@
 
     {% if request.user.userpreference.left_handed %}
         {% if not  request.user.is_authenticated or request.user.userpreference.nav_show_logo %}
-            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}"
+            <a class="navbar-brand p-0 me-2 justify-content-center" href="{% base_path request 'base' %}/"
                aria-label="Tandoor">
                 <img class="brand-icon" src="{{ theme_values.nav_logo }}" alt="Logo">
             </a>
