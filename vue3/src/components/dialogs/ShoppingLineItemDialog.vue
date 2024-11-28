@@ -62,7 +62,7 @@
                             <v-list-item-subtitle>
                                 {{ e.createdBy.displayName }} - {{ DateTime.fromJSDate(e.createdAt).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle v-if="e.delayUntil > new Date()">
+                            <v-list-item-subtitle v-if="isDelayed(e)">
                                 {{ $t('PostponedUntil') }} {{ DateTime.fromJSDate(e.delayUntil).toLocaleString(DateTime.DATETIME_SHORT) }}
                             </v-list-item-subtitle>
 
@@ -100,7 +100,7 @@ import {DateTime} from "luxon";
 import {useDisplay} from "vuetify";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {isShoppingListFoodDelayed} from "@/utils/logic_utils";
+import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const {mobile} = useDisplay()
