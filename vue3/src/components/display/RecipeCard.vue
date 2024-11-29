@@ -28,7 +28,8 @@
                           v-for="badge in generateInfoBadges(componentProps.recipe, componentProps.info_badges)">
                     {{ badge }}
                   </v-chip>
-                  <v-chip v-for="(keyword, index) in componentProps.recipe.keywords?.slice(0, 2)" :key="index"
+                  <span v-if="componentProps.show_keywords">
+                    <v-chip v-for="(keyword, index) in componentProps.recipe.keywords?.slice(0, 2)" :key="index"
                           size="small" color="white" variant="outlined" style="margin-right: 5px">
                     {{ keyword.label }}
                   </v-chip>
@@ -36,6 +37,7 @@
                           variant="outlined" style="margin-right: 5px">
                     {{ (componentProps.recipe.keywords?.length || 0) - 2 }} more
                   </v-chip>
+                  </span>
                 </div>
 
               </v-card>
