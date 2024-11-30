@@ -26,8 +26,9 @@
                     <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping" :label="$t('GroupBy')">
                     </v-select>
                 </v-list-item>
-                 <v-list-item v-if="useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY">
-                    <v-switch color="primary" hide-details :label="$t('SupermarketCategoriesOnly')" v-model="useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only"></v-switch>
+                <v-list-item v-if="useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY">
+                    <v-switch color="primary" hide-details :label="$t('SupermarketCategoriesOnly')"
+                              v-model="useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only"></v-switch>
                 </v-list-item>
                 <v-list-item>
                     <model-select model="Supermarket" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></model-select>
@@ -122,21 +123,32 @@
             </v-container>
         </v-window-item>
         <v-window-item value="recipes">
-            <v-card>
-                <v-card-title>{{ $t('Recipes') }}</v-card-title>
-                <v-card-text>
+            <v-container>
+                <v-row>
+                    <v-col>
+                        <v-card>
+                            <v-card-title>{{ $t('Recipes') }}</v-card-title>
+                            <v-card-text>
 
-                    <v-label>{{ $t('Add_to_Shopping') }}</v-label>
-                    <ModelSelect model="Recipe"></ModelSelect>
+                                <v-label>{{ $t('Add_to_Shopping') }}</v-label>
+                                <ModelSelect model="Recipe"></ModelSelect>
 
-                    <v-label>{{ $t('Recipes') }}</v-label>
-                    <v-list>
-                        <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
-                            {{ r }}
-                        </v-list-item>
-                    </v-list>
-                </v-card-text>
-            </v-card>
+                                <v-label>{{ $t('Recipes') }}</v-label>
+                                <v-list>
+                                    <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
+                                        {{ r.recipeName }}
+                                        <template #append>
+                                            <v-btn icon="$delete" color="delete"></v-btn>
+                                            <number-scaler-dialog ></number-scaler-dialog>
+                                        </template>
+                                    </v-list-item>
+                                </v-list>
+                            </v-card-text>
+                        </v-card>
+                    </v-col>
+                </v-row>
+            </v-container>
+
         </v-window-item>
     </v-window>
 
@@ -156,6 +168,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
 import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
+import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 
 const {t} = useI18n()
 

@@ -1,5 +1,5 @@
 import {acceptHMRUpdate, defineStore} from "pinia"
-import {ApiApi, Food, ShoppingListEntry, ShoppingListEntryBulk, Supermarket, SupermarketCategory} from "@/openapi";
+import {ApiApi, Food, Recipe, ShoppingListEntry, ShoppingListEntryBulk, ShoppingListRecipe, Supermarket, SupermarketCategory} from "@/openapi";
 import {computed, ref} from "vue";
 import {
     IShoppingExportEntry,
@@ -261,26 +261,17 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         })
     }
 
-//TODO fix/verify for typescript
     /**
      * returns a distinct list of recipes associated with unchecked shopping list entries
      */
     function getAssociatedRecipes() {
-        let recipes = {} // TODO this needs a type
+        let recipes = [] as ShoppingListRecipe[]
 
-        for (let i in this.entries) {
-            let e = this.entries[i]
-            if (e.recipe_mealplan !== null) {
-                recipes[e.recipe_mealplan.recipe] = {
-                    'shopping_list_recipe_id': e.list_recipe,
-                    'recipe_id': e.recipe_mealplan.recipe,
-                    'recipe_name': e.recipe_mealplan.recipe_name,
-                    'servings': e.recipe_mealplan.servings,
-                    'mealplan_from_date': e.recipe_mealplan.mealplan_from_date,
-                    'mealplan_type': e.recipe_mealplan.mealplan_type,
-                }
+        entries.value.forEach(e => {
+            if(e.recipeMealplan != null && recipes.findIndex(x => x.id == e.recipeMealplan.id) == -1){
+                recipes.push(e.recipeMealplan)
             }
-        }
+        })
 
         return recipes
     }
