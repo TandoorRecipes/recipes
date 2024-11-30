@@ -113,6 +113,13 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         })
     }
 
+    /**
+     * resets all device settings to their default value
+     */
+    function resetDeviceSettings(){
+        deviceSettings.value = new DeviceSettings()
+    }
+
     // always load user settings on first initialization of store
     loadUserSettings()
     // always load server settings on first initialization of store
@@ -120,7 +127,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     // always load active space on first initialization of store
     loadActiveSpace()
 
-    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings, updateUserSettings, switchSpace}
+    return {deviceSettings, userSettings, serverSettings, activeSpace, loadUserSettings, loadServerSettings, updateUserSettings, switchSpace, resetDeviceSettings}
 })
 
 // enable hot reload for store

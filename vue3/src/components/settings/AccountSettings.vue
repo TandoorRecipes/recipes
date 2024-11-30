@@ -19,6 +19,12 @@
         <br/>
         <v-btn color="primary" class="mt-1" href="/accounts/social/connections/" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
         <br/>
+
+        <p class="text-h6 mt-3">{{ $t('DeviceSettings') }}</p>
+        <p class="text-disabled">{{$t('DeviceSettingsHelp')}}</p>
+
+        <v-btn @click="useUserPreferenceStore().resetDeviceSettings()">{{$t('Reset')}}</v-btn>
+
     </v-form>
 </template>
 

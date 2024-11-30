@@ -49,8 +49,16 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      * group by selected grouping key
      */
     const getEntriesByGroup = computed(() => {
+        //TODO why is this called many times on each auto sync
+        console.log('running getEntriesByGroup')
         let structure = {} as IShoppingList
         structure.categories = new Map<string, IShoppingListCategory>
+
+        if (useUserPreferenceStore().deviceSettings.shopping_selected_grouping === ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_selected_supermarket != null) {
+            useUserPreferenceStore().deviceSettings.shopping_selected_supermarket.categoryToSupermarket.forEach(cTS => {
+                structure.categories.set(cTS.category.name, {'name': cTS.category.name, 'foods': new Map<number, IShoppingListFood>} as IShoppingListCategory)
+            })
+        }
 
         let orderedStructure = [] as IShoppingListCategory[]
 
@@ -98,7 +106,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         })
 
         // ordering
-
         if (structure.categories.has(UNDEFINED_CATEGORY)) {
             orderedStructure.push(structure.categories.get(UNDEFINED_CATEGORY))
             structure.categories.delete(UNDEFINED_CATEGORY)
@@ -107,25 +114,6 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         structure.categories.forEach(category => {
             orderedStructure.push(category)
         })
-
-        // TODO implement ordering
-        // if (useUserPreferenceStore().device_settings.shopping_selected_grouping === this.GROUP_CATEGORY && 'useUserPreferenceStore().device_settings.shopping_selected_supermarket' !== null) {
-        //     for (let c of useUserPreferenceStore().device_settings.shopping_selected_supermarket.category_to_supermarket) {
-        //         if (c.category.name in structure) {
-        //             ordered_structure.push(structure[c.category.name])
-        //             Vue.delete(structure, c.category.name)
-        //         }
-        //     }
-        //     if (!useUserPreferenceStore().device_settings.shopping_show_selected_supermarket_only) {
-        //         for (let i in structure) {
-        //             ordered_structure.push(structure[i])
-        //         }
-        //     }
-        // } else {
-        //     for (let i in structure) {
-        //         ordered_structure.push(structure[i])
-        //     }
-        // }
 
         return orderedStructure
     })
@@ -205,21 +193,18 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
      */
     function autoSync() {
         if (!currentlyUpdating.value && autoSyncHasFocus.value && !hasFailedItems()) {
-            console.log('running autosync')
-
             currentlyUpdating.value = true
 
             const api = new ApiApi()
             api.apiShoppingListEntryList({updatedAfter: autoSyncLastTimestamp.value}).then((r) => {
-                console.log('received auto sync response ', r)
                 autoSyncLastTimestamp.value = r.timestamp!
 
                 r.results.forEach((e) => {
+                    console.log('updating entry by auto sync ', e)
                     entries.value.set(e.id!, e)
                 })
                 currentlyUpdating.value = false
             }).catch((err: any) => {
-                console.warn('auto sync failed', err)
                 currentlyUpdating.value = false
             })
         }
@@ -302,14 +287,15 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     // convenience methods
     /**
-     * function to set entry to its proper place in the data structure to perform grouping
-     * @param {{}} structure datastructure
-     * @param {*} entry entry to place
-     * @param {*} group group to place entry into (must be of ShoppingListStore.GROUP_XXX/dot notation of entry property)
-     * @returns {{}} datastructure including entry
+     * puts an entry into the appropriate group of the IShoppingList datastructure
+     * if a group does not yet exist and the sorting is not set to category with selected supermarket only, it will be created
+     * @param structure
+     * @param entry
      */
-    function updateEntryInStructure(structure: IShoppingList, entry: ShoppingListEntry, group: ShoppingGroupingOptions) {
+    function updateEntryInStructure(structure: IShoppingList, entry: ShoppingListEntry) {
         let groupingKey = UNDEFINED_CATEGORY
+
+        let group = useUserPreferenceStore().deviceSettings.shopping_selected_grouping
 
         if (group == ShoppingGroupingOptions.CATEGORY && entry.food != null && entry.food.supermarketCategory != null) {
             groupingKey = entry.food?.supermarketCategory?.name
@@ -319,16 +305,19 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             groupingKey = entry.recipeMealplan.recipeName
         }
 
-        if (!structure.categories.has(groupingKey)) {
+        if (!structure.categories.has(groupingKey) && !(group == ShoppingGroupingOptions.CATEGORY && useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only)) {
             structure.categories.set(groupingKey, {'name': groupingKey, 'foods': new Map<number, IShoppingListFood>} as IShoppingListCategory)
         }
-        if (!structure.categories.get(groupingKey).foods.has(entry.food.id)) {
-            structure.categories.get(groupingKey).foods.set(entry.food.id, {
-                food: entry.food,
-                entries: new Map<number, ShoppingListEntry>
-            } as IShoppingListFood)
+        if (structure.categories.has(groupingKey)) {
+            if (!structure.categories.get(groupingKey).foods.has(entry.food.id)) {
+                structure.categories.get(groupingKey).foods.set(entry.food.id, {
+                    food: entry.food,
+                    entries: new Map<number, ShoppingListEntry>
+                } as IShoppingListFood)
+            }
+            structure.categories.get(groupingKey).foods.get(entry.food.id).entries.set(entry.id, entry)
         }
-        structure.categories.get(groupingKey).foods.get(entry.food.id).entries.set(entry.id, entry)
+
         return structure
     }
 
@@ -371,19 +360,18 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             itemCheckSyncQueue.value.forEach((entry, index) => {
                 entry['status'] = ((entry['status'] === 'waiting') ? 'syncing' : 'syncing_failed_before')
 
-                 let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
+                let p = api.apiShoppingListEntryBulkCreate({shoppingListEntryBulk: entry}, {}).then((r) => {
                     entry.ids.forEach(id => {
                         let e = entries.value.get(id)
                         e.updatedAt = r.timestamp
                         entries.value.set(id, e)
                     })
-                    itemCheckSyncQueue.value.splice(index,1)
+                    itemCheckSyncQueue.value.splice(index, 1)
                 }).catch((err) => {
                     if (err.code === "ERR_NETWORK" || err.code === "ECONNABORTED") {
                         entry['status'] = 'waiting_failed_before'
                     } else {
-                        itemCheckSyncQueue.value.splice(index,1)
-                        console.error('Failed API call for entry ', entry)
+                        itemCheckSyncQueue.value.splice(index, 1)
                         useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
                     }
                 })

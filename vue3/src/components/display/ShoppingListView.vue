@@ -26,8 +26,11 @@
                     <v-select hide-details :items="groupingOptionsItems" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_grouping" :label="$t('GroupBy')">
                     </v-select>
                 </v-list-item>
+                 <v-list-item v-if="useUserPreferenceStore().deviceSettings.shopping_selected_grouping == ShoppingGroupingOptions.CATEGORY">
+                    <v-switch color="primary" hide-details :label="$t('SupermarketCategoriesOnly')" v-model="useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only"></v-switch>
+                </v-list-item>
                 <v-list-item>
-                    <model-select model="Supermarket"></model-select>
+                    <model-select model="Supermarket" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></model-select>
                 </v-list-item>
 
                 <v-list-item>
@@ -37,6 +40,7 @@
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
                 </v-list-item>
+
             </v-list>
         </v-menu>
     </v-tabs>
@@ -79,7 +83,7 @@
                 </v-row>
 
                 <v-row>
-                    <v-col cols="4">
+                    <v-col cols="12" md="4">
                         <v-card>
                             <v-card-title>Auto Sync Debug</v-card-title>
                             <v-card-text>
@@ -92,24 +96,24 @@
                             </v-card-text>
                         </v-card>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="12" md="4">
                         <v-card>
                             <v-card-title>Sync Queue Debug</v-card-title>
                             <v-card-text>
                                 Length: {{ useShoppingStore().itemCheckSyncQueue.length }} <br/>
-                                Has Failed Items:  {{ useShoppingStore().hasFailedItems()}}
+                                Has Failed Items: {{ useShoppingStore().hasFailedItems() }}
                                 <v-list>
                                     <v-list-item v-for="i in useShoppingStore().itemCheckSyncQueue" :key="i">{{ i }}</v-list-item>
                                 </v-list>
                             </v-card-text>
                         </v-card>
                     </v-col>
-                     <v-col cols="4">
+                    <v-col cols="12" md="4">
                         <v-card>
                             <v-card-title>Undo Debug</v-card-title>
                             <v-card-text>
                                 <v-list>
-                                    <v-list-item v-for="i in useShoppingStore().undoStack" :key="i">{{ i.type }} {{ i.entries.flatMap(e => e.food.name)}}</v-list-item>
+                                    <v-list-item v-for="i in useShoppingStore().undoStack" :key="i">{{ i.type }} {{ i.entries.flatMap(e => e.food.name) }}</v-list-item>
                                 </v-list>
                             </v-card-text>
                         </v-card>
@@ -167,8 +171,8 @@ const shoppingLineItemDialogFood = ref({} as IShoppingListFood)
  * VSelect items for shopping list grouping options with localized names
  */
 const groupingOptionsItems = computed(() => {
-    let items = []
-    Object.keys(ShoppingGroupingOptions).forEach(x => {
+    let items: any[] = []
+    Object.values(ShoppingGroupingOptions).forEach(x => {
         items.push({'title': t(x), 'value': x})
     })
     return items
