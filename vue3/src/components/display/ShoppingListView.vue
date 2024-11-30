@@ -2,8 +2,8 @@
     <v-tabs v-model="currentTab">
         <v-tab value="shopping"><i class="fas fa-fw"
                                    :class="{'fa-circle-notch fa-spin':useShoppingStore().currentlyUpdating, 'fa-shopping-cart ': !useShoppingStore().currentlyUpdating}"></i> <span
-            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }}</span></v-tab>
-        <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }}</span></v-tab>
+            class="d-none d-md-block ms-1">{{ $t('Shopping_list') }} ({{useShoppingStore().stats.countUnchecked}})</span></v-tab>
+        <v-tab value="recipes"><i class="fas fa-book fa-fw"></i> <span class="d-none d-md-block ms-1">{{ $t('Recipes') }} ({{useShoppingStore().getAssociatedRecipes().length}})</span></v-tab>
 
         <v-menu :close-on-content-click="false">
             <template v-slot:activator="{ props }">
@@ -13,7 +13,6 @@
                     rounded="0"
                     variant="plain"
                     v-bind="props"
-
                 >
                     <i class="fa-solid fa-sliders"></i>
                 </v-btn>
@@ -40,6 +39,16 @@
                 <v-list-item>
                     <v-switch color="primary" hide-details :label="$t('ShowRecentlyCompleted')"
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_checked_entries"></v-switch>
+                </v-list-item>
+                <v-list-subheader>{{$t('Information')}}</v-list-subheader>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('Recipe')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_recipe"></v-switch>
+                </v-list-item>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('Meal_Plan')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_mealplan"></v-switch>
+                </v-list-item>
+                <v-list-item>
+                    <v-switch color="primary" hide-details :label="$t('CreatedBy')" v-model="useUserPreferenceStore().deviceSettings.shopping_item_info_created_by"></v-switch>
                 </v-list-item>
 
             </v-list>

@@ -51,6 +51,15 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
     const getEntriesByGroup = computed(() => {
         //TODO why is this called many times on each auto sync
         console.log('running getEntriesByGroup')
+
+        stats.value = {
+            countChecked: 0,
+            countUnchecked: 0,
+            countCheckedFood: 0,
+            countUncheckedFood: 0,
+            countUncheckedDelayed: 0,
+        } as ShoppingListStats
+
         let structure = {} as IShoppingList
         structure.categories = new Map<string, IShoppingListCategory>
 
@@ -268,7 +277,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         let recipes = [] as ShoppingListRecipe[]
 
         entries.value.forEach(e => {
-            if(e.recipeMealplan != null && recipes.findIndex(x => x.id == e.recipeMealplan.id) == -1){
+            if (e.recipeMealplan != null && recipes.findIndex(x => x.id == e.recipeMealplan.id) == -1) {
                 recipes.push(e.recipeMealplan)
             }
         })
@@ -518,6 +527,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         hasFailedItems,
         itemCheckSyncQueue,
         undoStack,
+        stats,
         refreshFromAPI,
         autoSync,
         createObject,
