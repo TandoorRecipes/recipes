@@ -64,10 +64,10 @@ import {
 export interface UserPreference {
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof UserPreference
      */
-    user: number;
+    readonly user: User;
     /**
      * 
      * @type {UserFileView}
@@ -260,7 +260,7 @@ export function UserPreferenceFromJSONTyped(json: any, ignoreDiscriminator: bool
     }
     return {
         
-        'user': json['user'],
+        'user': UserFromJSON(json['user']),
         'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
         'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
@@ -296,14 +296,13 @@ export function UserPreferenceToJSON(json: any): UserPreference {
     return UserPreferenceToJSONTyped(json, false);
 }
 
-export function UserPreferenceToJSONTyped(value?: Omit<UserPreference, 'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
+export function UserPreferenceToJSONTyped(value?: Omit<UserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'user': value['user'],
         'image': UserFileViewToJSON(value['image']),
         'theme': ThemeEnumToJSON(value['theme']),
         'nav_bg_color': value['navBgColor'],

@@ -1,13 +1,5 @@
 <template>
     <v-container>
-
-        <v-row >
-            <v-col class="pb-0" cols="6" offset="3">
-                <v-text-field variant="solo" :placeholder="$t('Search') + ' (CTRL + K)'" ></v-text-field>
-            </v-col>
-        </v-row>
-
-
         <horizontal-meal-plan-window></horizontal-meal-plan-window>
 
         <!--TODO ideas for "start page": new recipes, meal plan, "last year/month/cooked long ago", high rated, random keyword -->

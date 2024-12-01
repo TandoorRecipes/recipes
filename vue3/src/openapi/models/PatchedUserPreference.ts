@@ -64,10 +64,10 @@ import {
 export interface PatchedUserPreference {
     /**
      * 
-     * @type {number}
+     * @type {User}
      * @memberof PatchedUserPreference
      */
-    user?: number;
+    readonly user?: User;
     /**
      * 
      * @type {UserFileView}
@@ -257,7 +257,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
     }
     return {
         
-        'user': json['user'] == null ? undefined : json['user'],
+        'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
         'image': json['image'] == null ? undefined : UserFileViewFromJSON(json['image']),
         'theme': json['theme'] == null ? undefined : ThemeEnumFromJSON(json['theme']),
         'navBgColor': json['nav_bg_color'] == null ? undefined : json['nav_bg_color'],
@@ -293,14 +293,13 @@ export function PatchedUserPreferenceToJSON(json: any): PatchedUserPreference {
     return PatchedUserPreferenceToJSONTyped(json, false);
 }
 
-export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
 
     return {
         
-        'user': value['user'],
         'image': UserFileViewToJSON(value['image']),
         'theme': ThemeEnumToJSON(value['theme']),
         'nav_bg_color': value['navBgColor'],

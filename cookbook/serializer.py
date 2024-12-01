@@ -401,6 +401,7 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
+    user = UserSerializer(read_only=True)
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
     plan_share = UserSerializer(many=True, allow_null=True, required=False)
     shopping_share = UserSerializer(many=True, allow_null=True, required=False)
@@ -436,6 +437,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
+        read_only_fields = ('user',)
 
 
 class StorageSerializer(SpacedModelSerializer):
@@ -1438,6 +1440,7 @@ class ServerSettingsSerializer(serializers.Serializer):
     imprint_url = serializers.CharField()
     hosted = serializers.BooleanField()
     debug = serializers.BooleanField()
+    version = serializers.CharField()
 
     class Meta:
         fields = '__ALL__'

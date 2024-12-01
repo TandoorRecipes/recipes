@@ -1239,11 +1239,8 @@ export interface ApiShoppingListEntryDestroyRequest {
 }
 
 export interface ApiShoppingListEntryListRequest {
-    checked?: string;
-    id?: number;
     page?: number;
     pageSize?: number;
-    supermarket?: number;
     updatedAfter?: Date;
 }
 
@@ -1620,7 +1617,7 @@ export interface ApiUserPartialUpdateRequest {
 
 export interface ApiUserPreferencePartialUpdateRequest {
     user: number;
-    patchedUserPreference?: Omit<PatchedUserPreference, 'food_inherit_default'|'food_children_exist'>;
+    patchedUserPreference?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'>;
 }
 
 export interface ApiUserPreferenceRetrieveRequest {
@@ -9096,7 +9093,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryBulkCreateRaw(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntryBulk>> {
         if (requestParameters['shoppingListEntryBulk'] == null) {
@@ -9128,7 +9125,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryBulkCreate(requestParameters: ApiShoppingListEntryBulkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntryBulk> {
         const response = await this.apiShoppingListEntryBulkCreateRaw(requestParameters, initOverrides);
@@ -9136,7 +9133,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryCreateRaw(requestParameters: ApiShoppingListEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['shoppingListEntry'] == null) {
@@ -9168,7 +9165,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryCreate(requestParameters: ApiShoppingListEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryCreateRaw(requestParameters, initOverrides);
@@ -9176,7 +9173,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryDestroyRaw(requestParameters: ApiShoppingListEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
@@ -9205,25 +9202,17 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryDestroy(requestParameters: ApiShoppingListEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiShoppingListEntryDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryListRaw(requestParameters: ApiShoppingListEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedShoppingListEntryList>> {
         const queryParameters: any = {};
-
-        if (requestParameters['checked'] != null) {
-            queryParameters['checked'] = requestParameters['checked'];
-        }
-
-        if (requestParameters['id'] != null) {
-            queryParameters['id'] = requestParameters['id'];
-        }
 
         if (requestParameters['page'] != null) {
             queryParameters['page'] = requestParameters['page'];
@@ -9231,10 +9220,6 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['pageSize'] != null) {
             queryParameters['page_size'] = requestParameters['pageSize'];
-        }
-
-        if (requestParameters['supermarket'] != null) {
-            queryParameters['supermarket'] = requestParameters['supermarket'];
         }
 
         if (requestParameters['updatedAfter'] != null) {
@@ -9258,7 +9243,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryList(requestParameters: ApiShoppingListEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedShoppingListEntryList> {
         const response = await this.apiShoppingListEntryListRaw(requestParameters, initOverrides);
@@ -9266,7 +9251,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryPartialUpdateRaw(requestParameters: ApiShoppingListEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9298,7 +9283,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryPartialUpdate(requestParameters: ApiShoppingListEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryPartialUpdateRaw(requestParameters, initOverrides);
@@ -9306,7 +9291,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryRetrieveRaw(requestParameters: ApiShoppingListEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9335,7 +9320,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryRetrieve(requestParameters: ApiShoppingListEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryRetrieveRaw(requestParameters, initOverrides);
@@ -9343,7 +9328,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryUpdateRaw(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ShoppingListEntry>> {
         if (requestParameters['id'] == null) {
@@ -9382,7 +9367,7 @@ export class ApiApi extends runtime.BaseAPI {
     }
 
     /**
-     * logs request counts to redis cache total/per user/
+     * individual entries of a shopping list automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
      */
     async apiShoppingListEntryUpdate(requestParameters: ApiShoppingListEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ShoppingListEntry> {
         const response = await this.apiShoppingListEntryUpdateRaw(requestParameters, initOverrides);

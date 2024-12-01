@@ -1,15 +1,14 @@
 <template>
     <!-- TODO label is not showing for some reason, for now in placeholder -->
     <!-- TODO support density prop -->
-    <v-input :hint="props.hint" persistent-hint :label="props.label" class="">
+    <v-input :hint="props.hint" persistent-hint :label="props.label" class="" >
 
         <!-- TODO resolve-on-load false for now, race condition with model class, make prop once better solution is found -->
-        <!-- TODO strange behavior/layering issues with appendTo body, find solution to make it work -->
 
         <Multiselect
-            :id="props.id"
+
             :ref="`ref_${props.id}`"
-            class="material-multiselect z-max"
+            class="material-multiselect"
             :resolve-on-load="searchOnLoad"
             v-model="model"
             :options="search"
@@ -31,6 +30,10 @@
             :noResultsText="$t('No_Results')"
             :loading="loading"
             @open="multiselect.refreshOptions()"
+            append-to-body
+            :classes="{
+                dropdown: 'multiselect-dropdown z-3000',
+            }"
         />
 
     </v-input>
@@ -139,5 +142,9 @@ async function createObject(object: any, select$: Multiselect) {
 
 .multiselect-tag {
     background-color: #b98766 !important;
+}
+
+.z-3000 {
+    z-index: 3000;
 }
 </style>

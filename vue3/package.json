@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@types/luxon": "^3.4.2",
-    "@vueform/multiselect": "^2.6.8",
+    "@vueform/multiselect": "^2.6.11",
     "@vueuse/core": "^10.11.0",
     "luxon": "^3.4.4",
     "mavon-editor": "^3.0.1",

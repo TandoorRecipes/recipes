@@ -67,6 +67,12 @@ export interface ServerSettings {
      * @memberof ServerSettings
      */
     debug: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServerSettings
+     */
+    version: string;
 }
 
 /**
@@ -81,6 +87,7 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('imprintUrl' in value) || value['imprintUrl'] === undefined) return false;
     if (!('hosted' in value) || value['hosted'] === undefined) return false;
     if (!('debug' in value) || value['debug'] === undefined) return false;
+    if (!('version' in value) || value['version'] === undefined) return false;
     return true;
 }
 
@@ -102,6 +109,7 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'imprintUrl': json['imprint_url'],
         'hosted': json['hosted'],
         'debug': json['debug'],
+        'version': json['version'],
     };
 }
 
@@ -124,6 +132,7 @@ export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreD
         'imprint_url': value['imprintUrl'],
         'hosted': value['hosted'],
         'debug': value['debug'],
+        'version': value['version'],
     };
 }
 

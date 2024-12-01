@@ -107,6 +107,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
                                  UserSerializer, UserSpaceSerializer, ViewLogSerializer, ImportImageSerializer,
                                  LocalizationSerializer, ServerSettingsSerializer
                                  )
+from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
 from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, GOOGLE_AI_API_KEY
@@ -1964,6 +1965,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['imprint_url'] = settings.IMPRINT_URL
         s['hosted'] = settings.HOSTED
         s['debug'] = settings.DEBUG
+        s['version'] = TANDOOR_VERSION
 
         return Response(ServerSettingsSerializer(s, many=False).data)
 
