@@ -13,18 +13,19 @@
                 <div class="d-flex flex-column pr-2">
                     <span v-for="[i, a] in amounts" v-bind:key="a.key">
                         <span>
-                            <i class="fas fa-check text-warning" v-if="a.checked && !isChecked"></i>
-                            <i class="fas fa-hourglass-half text-primary"  v-if="a.delayed && !a.checked"></i> <b>
-                            <span :class="{'text-decoration-line-through': a.checked}">
+                            <i class="fas fa-check text-success fa-fw" v-if="a.checked"></i>
+                            <i class="fas fa-clock-rotate-left text-info fa-fw"  v-if="a.delayed"></i> <b>
+                            <span :class="{'text-disabled': a.checked || a.delayed}">
                                 {{ a.amount }}
+                                <span v-if="a.unit">{{ a.unit.name }}</span>
                             </span>
-                            <span v-if="a.unit">{{ a.unit.name }}</span>
+
                             </b>
                         </span>
                         <br/>
                     </span>
                 </div>
-                <div class="d-flex  flex-column flex-grow-1 align-self-center" :class="{'text-decoration-line-through': isChecked}">
+                <div class="d-flex  flex-column flex-grow-1 align-self-center" >
                     {{ shoppingListFood.food.name }} <br/>
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>

@@ -34,6 +34,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
 
     // internal
     let currentlyUpdating = ref(false)
+    let initialized = ref(false)
 
     let autoSyncLastTimestamp = ref(new Date('1970-01-01'))
     let autoSyncHasFocus = ref(true)
@@ -89,9 +90,10 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                     if (entry.checked) {
                         categoryStats.countChecked++
                     } else {
-                        categoryStats.countUnchecked++
                         if (isDelayed(entry)) {
                             categoryStats.countUncheckedDelayed++
+                        } else {
+                            categoryStats.countUnchecked++
                         }
                     }
                 })
@@ -175,6 +177,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                     entries.value.set(e.id!, e)
                 })
                 currentlyUpdating.value = false
+                initialized.value = true
             }).catch((err) => {
                 currentlyUpdating.value = false
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
@@ -531,6 +534,7 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
         autoSyncHasFocus,
         autoSyncLastTimestamp,
         currentlyUpdating,
+        initialized,
         getFlatEntries,
         hasFailedItems,
         itemCheckSyncQueue,

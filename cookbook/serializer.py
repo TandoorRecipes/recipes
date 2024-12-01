@@ -1226,8 +1226,9 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         # update the onhand for food if shopping_add_onhand is True
         if user.userpreference.shopping_add_onhand:
             if checked := validated_data.get('checked', None):
+                validated_data['completed_at'] = timezone.now()
                 instance.food.onhand_users.add(*user.userpreference.shopping_share.all(), user)
-            elif checked == False:
+            elif not checked:
                 instance.food.onhand_users.remove(*user.userpreference.shopping_share.all(), user)
         return super().update(instance, validated_data)
 

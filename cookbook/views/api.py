@@ -16,6 +16,7 @@ import PIL.Image
 import redis
 import requests
 from PIL import UnidentifiedImageError
+from PIL.features import check
 from django.contrib import messages
 from django.contrib.auth.models import Group, User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -1374,21 +1375,15 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 @extend_schema_view(list=extend_schema(parameters=[
-    OpenApiParameter(name='id', description=_(
-        'Returns the shopping list entry with a primary key of id.  Multiple values allowed.'), type=int),
-    OpenApiParameter(
-        name='checked',
-        description=_('Filter shopping list entries on checked.  [''true'', ''false'', ''both'', ''<b>recent</b>'']<br>  \
-                            - ''recent'' includes unchecked items and recently completed items.')
-    ),
-    OpenApiParameter(name='supermarket',
-                     description=_('Returns the shopping list entries sorted by supermarket category order.'),
-                     type=int),
     OpenApiParameter(name='updated_after',
                      description=_('Returns only elements updated after the given timestamp in ISO 8601 format.'),
                      type=datetime.datetime),
 ]))
 class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
+    """
+    individual entries of a shopping list
+    automatically filtered to only contain unchecked items that are not older than the shopping recent days setting to not bloat endpoint
+    """
     queryset = ShoppingListEntry.objects
     serializer_class = ShoppingListEntrySerializer
     permission_classes = [(CustomIsOwner | CustomIsShared) & CustomTokenHasReadWriteScope]
@@ -1414,25 +1409,11 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
 
         updated_after = self.request.query_params.get('updated_after', None)
 
-        if pk := self.request.query_params.getlist('id', []):
-            self.queryset = self.queryset.filter(food__id__in=[int(i) for i in pk])
-
-        if 'checked' in self.request.query_params:
-            return shopping_helper(self.queryset, self.request)
-        elif not self.detail and not updated_after:
+        if not self.detail:
+            # to keep the endpoint small, only return entries as old as user preference recent days
             today_start = timezone.now().replace(hour=0, minute=0, second=0)
-            week_ago = today_start - datetime.timedelta(
-                days=min(self.request.user.userpreference.shopping_recent_days, 14))
-            self.queryset = self.queryset.filter(Q(checked=False) | Q(completed_at__gte=week_ago))
-
-        try:
-            last_autosync = self.request.query_params.get('last_autosync', None)
-            if last_autosync:
-                print('DEPRECATION WARNING: using last_autosync is deprecated and will be removed in future versions, please use updated_after')
-                last_autosync = datetime.datetime.fromtimestamp(int(last_autosync) / 1000, datetime.timezone.utc)
-                self.queryset = self.queryset.filter(updated_at__gte=last_autosync)
-        except Exception:
-            traceback.print_exc()
+            week_ago = today_start - datetime.timedelta(days=min(self.request.user.userpreference.shopping_recent_days, 14))
+            self.queryset = self.queryset.filter((Q(checked=False) | Q(completed_at__gte=week_ago)))
 
         try:
             if updated_after:
@@ -1442,7 +1423,6 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         except Exception:
             traceback.print_exc()
 
-        # TODO once old shopping list is removed this needs updated to sharing users in preferences
         if self.detail:
             return self.queryset
         else:
@@ -1454,7 +1434,6 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            print(serializer.validated_data)
             bulk_entries = ShoppingListEntry.objects.filter(
                 Q(created_by=self.request.user) | Q(created_by__in=list(self.request.user.get_shopping_share()))
             ).filter(
@@ -1462,7 +1441,11 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             )
 
             update_timestamp = timezone.now()
-            bulk_entries.update(checked=(checked := serializer.validated_data['checked']), updated_at=update_timestamp, )
+            checked = serializer.validated_data['checked']
+            if checked:
+                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=update_timestamp)
+            else:
+                bulk_entries.update(checked=checked, updated_at=update_timestamp, completed_at=False)
             serializer.validated_data['timestamp'] = update_timestamp
 
             # update the onhand for food if shopping_add_onhand is True

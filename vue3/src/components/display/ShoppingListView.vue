@@ -86,11 +86,15 @@
                             </template>
                         </v-text-field>
 
-                        <v-list class="mt-3" density="compact">
+                        <v-list class="mt-3" density="compact" v-if="!useShoppingStore().initialized">
+                            <v-skeleton-loader type="list-item"></v-skeleton-loader>
+                            <v-skeleton-loader type="list-item"></v-skeleton-loader>
+                            <v-skeleton-loader type="list-item"></v-skeleton-loader>
+                            <v-skeleton-loader type="list-item"></v-skeleton-loader>
+                        </v-list>
+                        <v-list class="mt-3" density="compact" v-else>
                             <template v-for="category in useShoppingStore().getEntriesByGroup" :key="category.name">
-                                <template v-if="(category.stats.countUnchecked > 0 || useUserPreferenceStore().deviceSettings.shopping_show_checked_entries)
-                                && (category.stats.countUnchecked + category.stats.countChecked) > 0
-                                && (category.stats.countUncheckedDelayed < category.stats.countUnchecked || useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries)">
+                                <template v-if="isCategoryVisible(category)">
 
                                     <v-list-subheader v-if="category.name === useShoppingStore().UNDEFINED_CATEGORY"><i>{{ $t('NoCategory') }}</i></v-list-subheader>
                                     <v-list-subheader v-else>{{ category.name }}</v-list-subheader>
@@ -104,6 +108,7 @@
                                 </template>
                             </template>
                         </v-list>
+
                     </v-col>
                 </v-row>
 
@@ -185,13 +190,13 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Food, IngredientString, ShoppingListEntry, Unit} from "@/openapi";
+import {ApiApi, Food, IngredientString, ShoppingListEntry, SupermarketCategory, Unit} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import ShoppingLineItemDialog from "@/components/dialogs/ShoppingLineItemDialog.vue";
-import {IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
+import {IShoppingListCategory, IShoppingListFood, ShoppingGroupingOptions} from "@/types/Shopping";
 import {useI18n} from "vue-i18n";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 
@@ -254,6 +259,22 @@ function addIngredient() {
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
     })
+}
+
+/**
+ * determines if a category as entries that should be visible
+ * @param category
+ */
+function isCategoryVisible(category: IShoppingListCategory) {
+    let entryCount = category.stats.countUnchecked
+
+    if (useUserPreferenceStore().deviceSettings.shopping_show_checked_entries){
+        entryCount += category.stats.countChecked
+    }
+    if (useUserPreferenceStore().deviceSettings.shopping_show_delayed_entries){
+        entryCount += category.stats.countUncheckedDelayed
+    }
+    return entryCount > 0
 }
 
 /**
