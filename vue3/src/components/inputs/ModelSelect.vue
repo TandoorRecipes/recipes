@@ -30,7 +30,7 @@
             :noResultsText="$t('No_Results')"
             :loading="loading"
             @open="multiselect.refreshOptions()"
-            append-to-body
+            :append-to-body="appendToBody"
             :classes="{
                 dropdown: 'multiselect-dropdown z-3000',
             }"
@@ -63,6 +63,7 @@ const props = defineProps({
     canClear: {type: Boolean, default: true},
 
     mode: {type: String as PropType<'single' | 'multiple' | 'tags'>, default: 'single'},
+    appendToBody: {type: Boolean, default: false},
 
     allowCreate: {type: Boolean, default: false},
 

@@ -1,4 +1,4 @@
-import { ApiApi } from "@/openapi";
+import {ApiApi} from "@/openapi";
 import {VDataTable} from "vuetify/components";
 
 type VDataTableProps = InstanceType<typeof VDataTable>['$props']
@@ -22,7 +22,7 @@ export function getGenericModelFromString(modelName: EditorSupportedModels, t: a
  * register a given model instance in the supported models list
  * @param model model to register
  */
-function registerModel(model: Model){
+function registerModel(model: Model) {
     SUPPORTED_MODELS.set(model.name.toLowerCase(), model)
 }
 
@@ -70,7 +70,25 @@ export type Model = {
 }
 export let SUPPORTED_MODELS = new Map<string, Model>()
 
-export type EditorSupportedModels = 'UnitConversion' | 'AccessToken' | 'InviteLink' | 'UserSpace' | 'MealType' | 'MealPlan' | 'Property' | 'Food' | 'Supermarket' | 'SupermarketCategory' | 'PropertyType' | 'Automation' | 'Keyword' | 'UserFile' | 'ShoppingListEntry'
+export type EditorSupportedModels =
+    'UnitConversion'
+    | 'AccessToken'
+    | 'InviteLink'
+    | 'UserSpace'
+    | 'MealType'
+    | 'MealPlan'
+    | 'Property'
+    | 'Recipe'
+    | 'Step'
+    | 'Ingredient'
+    | 'Food'
+    | 'Supermarket'
+    | 'SupermarketCategory'
+    | 'PropertyType'
+    | 'Automation'
+    | 'Keyword'
+    | 'UserFile'
+    | 'ShoppingListEntry'
 
 export const TFood = {
     name: 'Food',
@@ -135,6 +153,36 @@ export const TRecipe = {
 } as Model
 registerModel(TRecipe)
 
+export const TStep = {
+    name: 'Step',
+    localizationKey: 'Step',
+    icon: 'fa-solid fa-list',
+
+    isPaginated: true,
+    toStringKeys: ['name'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'name'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TStep)
+
+export const TIngredient = {
+    name: 'Ingredient',
+    localizationKey: 'Ingredient',
+    icon: 'fa-solid fa-jar',
+
+    isPaginated: true,
+    toStringKeys: ['id'],
+
+    tableHeaders: [
+        {title: 'Name', key: 'id'},
+        {title: 'Actions', key: 'action', align: 'end'},
+    ]
+} as Model
+registerModel(TIngredient)
+
 export const TMealType = {
     name: 'MealType',
     localizationKey: 'Meal_Type',
@@ -156,7 +204,7 @@ export const TMealPlan = {
     icon: 'fa-solid fa-calendar-days',
 
     isPaginated: true,
-    toStringKeys: ['title','recipe.name'],
+    toStringKeys: ['title', 'recipe.name'],
 
     tableHeaders: [
         {title: 'Title', key: 'title'},
@@ -253,7 +301,7 @@ export const TProperty = {
     icon: 'fa-solid fa-database',
 
     isPaginated: true,
-    toStringKeys: ['propertyAmount','propertyType.name'],
+    toStringKeys: ['propertyAmount', 'propertyType.name'],
 
     tableHeaders: [
         {title: 'Amount', key: 'propertyAmount'},
@@ -269,7 +317,7 @@ export const TUnitConversion = {
     icon: 'fa-solid fa-exchange-alt',
 
     isPaginated: true,
-    toStringKeys: ['food.name','baseUnit.name','convertedUnit.name'],
+    toStringKeys: ['food.name', 'baseUnit.name', 'convertedUnit.name'],
 
     tableHeaders: [
         {title: 'Food', key: 'food.name'},

@@ -35,7 +35,7 @@
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only"></v-switch>
                 </v-list-item>
                 <v-list-item>
-                    <model-select model="Supermarket" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></model-select>
+                    <model-select model="Supermarket" append-to-body v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></model-select>
                 </v-list-item>
 
                 <v-list-item>
