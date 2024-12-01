@@ -44,8 +44,19 @@
                 </v-tabs-window-item>
                 <v-tabs-window-item value="steps">
                     <v-form :disabled="loading">
+                        <v-timeline side="end" line-inset="10">
 
-
+                            <v-timeline-item v-for="(s,i) in editingObj.steps" dot-color="primary" size="small">
+                                <template #icon>
+                                    {{ i+1 }}
+                                </template>
+                                <v-card>
+                                    <v-card-text >
+                                        <v-text-field style="min-width: 60vw" v-model="s.name"></v-text-field>
+                                    </v-card-text>
+                                </v-card>
+                            </v-timeline-item>
+                        </v-timeline>
                     </v-form>
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
