@@ -105,7 +105,7 @@
 
                                     <template v-for="[i, value] in category.foods" :key="value.food.id">
                                         <shopping-line-item :shopping-list-food="value" :entries="Array.from(value.entries.values())"
-                                                            @clicked="args => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
+                                                            @clicked="() => {shoppingLineItemDialog = true; shoppingLineItemDialogFood = value;}"></shopping-line-item>
                                     </template>
 
                                 </template>
@@ -147,7 +147,10 @@
                             <v-card-title>Undo Debug</v-card-title>
                             <v-card-text>
                                 <v-list>
-                                    <v-list-item v-for="i in useShoppingStore().undoStack" :key="i">{{ i.type }} {{ i.entries.flatMap(e => e.food.name) }}</v-list-item>
+                                    <v-list-item v-for="i in useShoppingStore().undoStack" :key="i">{{ i.type }} {{
+                                            i.entries.flatMap((e: ShoppingListEntry) => e.food.name)
+                                        }}
+                                    </v-list-item>
                                 </v-list>
                             </v-card-text>
                         </v-card>
@@ -162,17 +165,21 @@
                         <v-card>
                             <v-card-title>{{ $t('Recipes') }}</v-card-title>
                             <v-card-text>
-
-                                <v-label>{{ $t('Add_to_Shopping') }}</v-label>
-                                <ModelSelect model="Recipe"></ModelSelect>
-
-                                <v-label>{{ $t('Recipes') }}</v-label>
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
-                                        {{ r.recipeName }}
+                                        <template #prepend>
+                                            <v-btn color="edit" icon>
+                                                {{ r.servings }}
+                                                <number-scaler-dialog :number="r.servings"
+                                                                      @confirm="(servings: number) => {updateRecipeServings(r, servings)}"></number-scaler-dialog>
+                                            </v-btn>
+                                        </template>
+                                        <span class="ms-2">
+                                            {{ r.recipeName }}
+                                        </span>
                                         <template #append>
+
                                             <v-btn icon="$delete" color="delete"></v-btn>
-                                            <number-scaler-dialog></number-scaler-dialog>
                                         </template>
                                     </v-list-item>
                                 </v-list>
@@ -204,8 +211,8 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useShoppingStore} from "@/stores/ShoppingStore";
-import {ApiApi, Food, IngredientString, ShoppingListEntry, Supermarket, SupermarketCategory, Unit} from "@/openapi";
-import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
+import {ApiApi, Food, IngredientString, ShoppingListEntry, ShoppingListRecipe, Supermarket, Unit} from "@/openapi";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingLineItem from "@/components/display/ShoppingLineItem.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
@@ -290,6 +297,26 @@ function isCategoryVisible(category: IShoppingListCategory) {
         entryCount += category.stats.countUncheckedDelayed
     }
     return entryCount > 0
+}
+
+/**
+ * update the number of servings for an embedded recipe and with it the ShoppingListEntry amounts
+ * @param recipe ShoppingListRecipe to update
+ * @param servings number of servings to set the recipe to
+ */
+function updateRecipeServings(recipe: ShoppingListRecipe, servings: number) {
+    let api = new ApiApi()
+    useShoppingStore().currentlyUpdating = true
+
+    recipe.servings = servings
+    api.apiShoppingListRecipeUpdate({id: recipe.id!, shoppingListRecipe: recipe}).then(r => {
+        useShoppingStore().currentlyUpdating = false
+        useShoppingStore().refreshFromAPI()
+        useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+        useShoppingStore().currentlyUpdating = false
+    })
 }
 
 /**

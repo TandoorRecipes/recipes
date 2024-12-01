@@ -1,13 +1,7 @@
 <template>
     <v-dialog width="500" activator="parent" v-model="dialog">
-        <template v-slot:activator="{ props }">
-            <slot name="activator">
-                <v-btn v-bind="props" text="Open Dialog"></v-btn>
-            </slot>
-        </template>
 
-        <template v-slot:default="{ isActive }">
-            <v-card >
+            <v-card>
                 <v-closable-card-title :title="title" v-model="dialog"></v-closable-card-title>
 
                 <v-card-text>
@@ -25,9 +19,12 @@
                     </v-btn-group>
 
                 </v-card-text>
+                <v-card-actions>
+                    <v-btn @click=" dialog=false">{{ $t('Close') }}</v-btn>
+                    <v-btn color="save" prepend-icon="$save" @click="emit('confirm', mutable_number); dialog=false">{{ $t('Save') }}</v-btn>
+                </v-card-actions>
             </v-card>
 
-        </template>
     </v-dialog>
 </template>
 
@@ -38,7 +35,10 @@ import {VNumberInput} from 'vuetify/labs/VNumberInput'
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue"; //TODO remove once component is out of labs
 
 const emit = defineEmits({
-    change(payload: { number: number }) {
+    change(payload: number) {
+        return payload
+    },
+    confirm(payload: number) {
         return payload
     }
 })
@@ -76,8 +76,8 @@ function updateNumber(operation: string) {
     if (operation === 'sub') {
         mutable_number.value = props.number - 1
     }
-    console.log(operation, mutable_number.value)
-    emit('change', {number: mutable_number.value})
+
+    emit('change', mutable_number.value)
 }
 </script>
 
